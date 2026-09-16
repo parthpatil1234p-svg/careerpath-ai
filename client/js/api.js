@@ -80,7 +80,7 @@ const API = {
     } catch (err) {
       // Re-throw structured error for catch blocks in UI scripts
       if (err.name === 'TypeError' && err.message.includes('fetch')) {
-        const networkErr = new Error('Cannot connect to backend server. Please make sure the server is running on port 5000.');
+        const networkErr = new Error(`Cannot connect to backend (${baseUrl}). If using free tier Render, it may take ~30 seconds to wake up from cold sleep.`);
         networkErr.isNetworkError = true;
         throw networkErr;
       }
