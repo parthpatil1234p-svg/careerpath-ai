@@ -11,8 +11,8 @@ let transporter = null;
 function getTransporter() {
   if (transporter) return transporter;
 
-  const emailUser = process.env.EMAIL_USER;
-  const emailPass = process.env.EMAIL_PASS;
+  const emailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.trim() : '';
+  const emailPass = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s+/g, '') : '';
 
   if (!emailUser || !emailPass) {
     return null;
@@ -20,9 +20,15 @@ function getTransporter() {
 
   transporter = nodemailer.createTransport({
     service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: emailUser,
-      pass: emailPass, // Google 16-character App Password
+      pass: emailPass, // Google 16-character App Password (all whitespace stripped)
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
