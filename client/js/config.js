@@ -21,9 +21,8 @@
   // Local development backend URL
   const LOCAL_API_URL = 'http://localhost:5000/api';
 
-  // Production Render backend URL placeholder
-  // TODO: Replace "YOUR-RENDER-SERVICE" with your real Render Web Service name upon deployment!
-  const PRODUCTION_API_URL = 'https://YOUR-RENDER-SERVICE.onrender.com/api';
+  // Production Render backend URL
+  const PRODUCTION_API_URL = 'https://careerpath-ai-bdbt.onrender.com/api';
 
   const CONFIG = {
     // Active API Base URL

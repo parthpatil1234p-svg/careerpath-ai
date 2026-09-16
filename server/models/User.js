@@ -124,6 +124,24 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    // One-Time Verification (OTP) Status
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    // 6-digit verification code with expiration
+    verificationOtp: {
+      code: {
+        type: String,
+        select: false,
+      },
+      expiresAt: {
+        type: Date,
+        select: false,
+      },
+    },
   },
   {
     // Automatically adds createdAt and updatedAt fields

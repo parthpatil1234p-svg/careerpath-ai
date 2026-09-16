@@ -485,3 +485,65 @@
   border-radius: var(--radius-sm);
 }
 
+/* --------------------------------------------------------------------------
+   11. One-Time Code (OTP) Verification Card & Inputs
+   -------------------------------------------------------------------------- */
+.otp-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.otp-digit-field {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  color: #FFFFFF;
+  transition: all var(--transition-fast);
+}
+
+.otp-digit-field:focus {
+  outline: none;
+  border-color: var(--cyan);
+  background: rgba(15, 23, 42, 1);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+}
+
+.demo-otp-banner {
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border: 1px dashed rgba(0, 242, 254, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.demo-otp-badge {
+  background: rgba(0, 242, 254, 0.18);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.demo-otp-badge:hover {
+  background: rgba(0, 242, 254, 0.3);
+  transform: scale(1.05);
+}
+
+
