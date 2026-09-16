@@ -31,6 +31,79 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Dedicated OTP Verification Styles -->
+    <style>
+      .otp-input-wrapper {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin: 1.5rem 0 !important;
+        width: 100% !important;
+      }
+
+      .otp-digit-field {
+        width: 48px !important;
+        min-width: 42px !important;
+        max-width: 52px !important;
+        height: 58px !important;
+        text-align: center !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 1.55rem !important;
+        font-weight: 800 !important;
+        background: rgba(15, 23, 42, 0.92) !important;
+        border: 2px solid rgba(0, 242, 254, 0.35) !important;
+        border-radius: 10px !important;
+        color: #00F2FE !important;
+        caret-color: #00F2FE !important;
+        transition: all 0.2s ease !important;
+        padding: 0 !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+      }
+
+      .otp-digit-field:focus {
+        outline: none !important;
+        border-color: #00F2FE !important;
+        background: rgba(15, 23, 42, 1) !important;
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.6) !important;
+        transform: translateY(-2px) !important;
+      }
+
+      .demo-otp-banner {
+        background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%) !important;
+        border: 1px dashed rgba(0, 242, 254, 0.5) !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+        margin-bottom: 1rem !important;
+      }
+
+      .demo-otp-badge {
+        background: rgba(0, 242, 254, 0.22) !important;
+        color: #00F2FE !important;
+        border: 1px solid rgba(0, 242, 254, 0.5) !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 1.05rem !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.12em !important;
+        padding: 4px 12px !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        display: inline-block !important;
+        transition: all 0.2s ease !important;
+      }
+
+      .demo-otp-badge:hover {
+        background: rgba(0, 242, 254, 0.4) !important;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.5) !important;
+        transform: scale(1.05) !important;
+      }
+    </style>
   </head>
 
   <body class="auth-page">
