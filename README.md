@@ -361,6 +361,7 @@ Detailed cloud deployment instructions are documented in **[`docs/DEPLOYMENT.md`
 | 🧪 **[TESTING.md](docs/TESTING.md)** | Complete QA test cases matrix, browser compatibility, and smoke tests |
 | 🎤 **[DEMO-SCRIPT.md](docs/DEMO-SCRIPT.md)** | Rehearsed 3–4 minute live presentation script with judge Q&A preparation |
 | 📊 **[PPT-CONTENT.md](docs/PPT-CONTENT.md)** | Complete 10-slide presentation deck layout and speaker notes |
+| 🌐 **[API-ECOSYSTEM.md](docs/API-ECOSYSTEM.md)** | External API integration architecture, live production APIs & planned extensions |
 | 📋 **[SUBMISSION-CHECKLIST.md](docs/SUBMISSION-CHECKLIST.md)** | Final verification matrix and 30-minute pre-submission countdown |
 
 ---
