@@ -51,3 +51,9 @@ tmp/
 .cache/
 *.gltf.cache
 *.bin.cache
+
+# AI Assistant Memory & Internal Files (Ignored for Hackathon)
+AI_BRAIN.md
+AI_RULES.md
+SESSION_MEMORY.md
+.claude/
