@@ -1,0 +1,225 @@
+/* ==========================================================================
+   CareerPath AI — Three.js High-Tech Canvas & Glassmorphic HUD (three.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glowing Accents
+   Hack2Ignite 2026–27 · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Canvas Containers & Visual Wrappers
+   -------------------------------------------------------------------------- */
+.three-canvas-wrapper,
+.canvas-placeholder {
+  position: relative;
+  width: 100%;
+  background: radial-gradient(circle at 50% 45%, rgba(15, 23, 42, 0.85) 0%, rgba(6, 9, 15, 0.98) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  user-select: none;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 35px -8px rgba(0, 242, 254, 0.18);
+  transition: all var(--transition-normal);
+}
+
+.three-canvas-wrapper:hover,
+.canvas-placeholder:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85), 0 0 45px -5px rgba(0, 242, 254, 0.25);
+}
+
+.three-canvas-wrapper canvas,
+.canvas-placeholder canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+  z-index: 2;
+}
+
+#canvas-container,
+#skill-orbit-canvas,
+#roadmap-canvas {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+/* Specific Container Sizes */
+#careerUniverse {
+  height: 480px;
+  width: 100%;
+  position: relative;
+}
+
+#skill-orbit {
+  height: 380px;
+  width: 100%;
+}
+
+#roadmap-path {
+  height: 300px;
+  width: 100%;
+}
+
+#progress-orb {
+  height: 240px;
+  width: 100%;
+  background: transparent;
+}
+
+/* High-Tech HUD Badges in Canvas */
+.atlas-compass-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.atlas-coord-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--cyan);
+  background: rgba(10, 15, 28, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.atlas-controls-hint {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(10, 15, 28, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   2. Interactive Glassmorphic Tooltips (HTML Overlay for 3D Nodes)
+   -------------------------------------------------------------------------- */
+.universe-tooltip,
+.orbit-tooltip,
+.path-tooltip {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  background: rgba(10, 15, 26, 0.94);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 242, 254, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.1rem;
+  z-index: 50;
+  width: 260px;
+  max-width: calc(100% - 24px);
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+.universe-tooltip.visible,
+.orbit-tooltip.visible,
+.path-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip-header {
+  padding-left: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.tooltip-code {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  display: block;
+}
+
+.tooltip-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.tooltip-body {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0 0 0.5rem 0;
+}
+
+.tooltip-cta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Accessible 2D Fallback Container
+   -------------------------------------------------------------------------- */
+.fallback-2d-container {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.fallback-career-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.fallback-career-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  text-align: left;
+}
+
+.fallback-career-item strong {
+  display: block;
+  color: var(--cyan);
+  font-size: 0.95rem;
+}
+
+.fallback-career-item span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

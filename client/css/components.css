@@ -1,0 +1,439 @@
+/* ==========================================================================
+   CareerPath AI — High-Tech Component Design System (components.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glowing Accents
+   Hack2Ignite 2026–27 · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Radiant High-Tech Buttons
+   -------------------------------------------------------------------------- */
+.btn,
+.cp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:hover,
+.cp-btn:hover {
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.btn:active,
+.cp-btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled,
+.btn.disabled,
+.cp-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Radiant Primary Button (Electric Gradient + Cyan Glow) */
+.btn-primary,
+.cp-btn-primary,
+.btn-navy {
+  background: var(--gradient-primary);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF !important;
+  box-shadow: 0 0 25px -4px rgba(0, 242, 254, 0.4);
+  font-weight: 700;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.cp-btn-primary:hover,
+.cp-btn-primary:focus,
+.btn-navy:hover,
+.btn-navy:focus {
+  background: linear-gradient(135deg, #22D3EE 0%, #60A5FA 50%, #A855F7 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #FFFFFF !important;
+  box-shadow: 0 0 35px 2px rgba(0, 242, 254, 0.55);
+}
+
+/* Radiant Teal / Secondary Action Button */
+.btn-teal,
+.cp-btn-teal,
+.btn-info {
+  background: linear-gradient(135deg, #06B6D4 0%, #10B981 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF !important;
+  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35);
+  font-weight: 700;
+}
+
+.btn-teal:hover,
+.btn-teal:focus,
+.cp-btn-teal:hover,
+.cp-btn-teal:focus {
+  background: linear-gradient(135deg, #22D3EE 0%, #34D399 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+}
+
+/* Sleek Frosted Glass Outline Button */
+.btn-outline-primary,
+.btn-secondary,
+.btn-outline-secondary,
+.btn-outline-navy,
+.cp-btn-outline {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-secondary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-navy:hover,
+.cp-btn-outline:hover,
+.cp-btn-outline:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--cyan);
+  color: var(--cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+}
+
+.btn-lg {
+  padding: 0.85rem 1.85rem;
+  font-size: 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.825rem;
+  border-radius: var(--radius-xs);
+}
+
+/* --------------------------------------------------------------------------
+   2. Glassmorphism Cards & Panels
+   -------------------------------------------------------------------------- */
+.card,
+.cp-card,
+.glass-card {
+  background: rgba(17, 24, 39, 0.65) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-md) !important;
+  color: var(--text-secondary);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover,
+.cp-card:hover,
+.glass-card:hover {
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.12) !important;
+  transform: translateY(-2px);
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.25rem 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. Modern Glowing Badges & Tags
+   -------------------------------------------------------------------------- */
+.badge,
+.atlas-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.badge-matched,
+.badge-success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34D399 !important;
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+}
+
+.badge-weak,
+.badge-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #FBBF24 !important;
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+}
+
+.badge-missing,
+.badge-danger {
+  background: rgba(244, 63, 94, 0.12);
+  color: #FB7185 !important;
+  border-color: rgba(244, 63, 94, 0.35);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.15);
+}
+
+.badge-navy,
+.badge-primary {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8 !important;
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+}
+
+.badge-teal,
+.badge-info {
+  background: rgba(6, 182, 212, 0.12);
+  color: #22D3EE !important;
+  border-color: rgba(6, 182, 212, 0.35);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+}
+
+.badge.bg-light,
+.badge-secondary,
+.badge-muted {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #CBD5E1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. High-Tech Dark Form Controls
+   -------------------------------------------------------------------------- */
+.form-control,
+.form-select {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.7rem 1rem !important;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  transition: all var(--transition-fast);
+}
+
+.form-control::placeholder {
+  color: #64748B !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border-color: var(--cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.25) !important;
+  outline: none !important;
+  color: #FFFFFF !important;
+}
+
+.form-label {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #E2E8F0 !important;
+  margin-bottom: 0.4rem;
+}
+
+.form-check-label {
+  color: #E2E8F0 !important;
+}
+
+.form-text {
+  color: #94A3B8 !important;
+  font-size: 0.825rem;
+  margin-top: 0.35rem;
+}
+
+.input-group-text {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94A3B8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Modals & Dialogs (Glassmorphic Dark HUD)
+   -------------------------------------------------------------------------- */
+.modal-content {
+  background: rgba(11, 16, 28, 0.94) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 242, 254, 0.2) !important;
+  color: var(--text-secondary);
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 1.25rem 1.5rem;
+}
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* --------------------------------------------------------------------------
+   6. Progress Bars & Meters
+   -------------------------------------------------------------------------- */
+.progress {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: var(--gradient-primary) !important;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.5);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   7. High-Tech Alerts
+   -------------------------------------------------------------------------- */
+.alert {
+  background: rgba(17, 24, 39, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}
+
+.alert-danger {
+  border-color: rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.08);
+  color: #FDA4AF;
+}
+
+.alert-success {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+  color: #6EE7B7;
+}
+
+.alert-warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+  color: #FDE68A;
+}
+
+.alert-info {
+  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(6, 182, 212, 0.08);
+  color: #67E8F9;
+}
+
+/* --------------------------------------------------------------------------
+   8. Tech Pill Tags
+   -------------------------------------------------------------------------- */
+.cp-tag,
+.career-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.25rem 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  color: #94A3B8;
+  display: inline-block;
+  transition: all var(--transition-fast);
+}
+
+.cp-tag:hover,
+.career-tag:hover {
+  background: rgba(0, 242, 254, 0.1);
+  border-color: rgba(0, 242, 254, 0.3);
+  color: var(--cyan);
+}
+
+/* --------------------------------------------------------------------------
+   9. AI Career Fit Brief & Market Telemetry Card
+   -------------------------------------------------------------------------- */
+.ai-brief-card {
+  background: linear-gradient(135deg, rgba(16, 24, 40, 0.9) 0%, rgba(10, 15, 28, 0.95) 100%);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(0, 242, 254, 0.15);
+  transition: all var(--transition-normal);
+}
+
+.ai-brief-card:hover {
+  border-color: rgba(0, 242, 254, 0.45);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.75), 0 0 25px -3px rgba(0, 242, 254, 0.25);
+}
+
+.badge-ai-pulse {
+  background: rgba(0, 242, 254, 0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ai-brief-text {
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.ai-brief-tip {
+  line-height: 1.45;
+  padding-left: 0.4rem;
+  border-left: 2px solid rgba(245, 158, 11, 0.5);
+}
+
+.ai-bottleneck-box {
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}

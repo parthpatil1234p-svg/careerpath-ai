@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Student Skill Assessment — CareerPath AI · Career Atlas"
+    />
+    <title>Student Skill Assessment — CareerPath AI · Career Atlas</title>
+
+    <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="assessment-page">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top cp-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <div class="brand-icon">
+            <i class="bi bi-compass-fill"></i>
+          </div>
+          <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+          <span class="brand-tagline-sub d-none d-sm-inline">Career Atlas</span>
+        </a>
+
+        <!-- Auth / Nav Actions -->
+        <div class="ms-auto d-flex align-items-center gap-2" id="authNavActions">
+          <a href="dashboard.html" class="btn cp-btn-outline btn-sm px-3">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+          </a>
+          <a href="index.html" class="btn cp-btn-outline btn-sm px-3">
+            <i class="bi bi-house me-1"></i> Home
+          </a>
+          <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()">
+            <i class="bi bi-box-arrow-right me-1"></i> Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Assessment Container -->
+    <main class="container assessment-layout pt-5 mt-4">
+
+      <!-- Page Header -->
+      <div class="mb-4">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="atlas-badge">
+            <i class="bi bi-compass text-teal"></i> CAREER ATLAS NAVIGATION
+          </span>
+          <span class="text-muted font-mono small">FORM-AST-01</span>
+        </div>
+        <h1 class="h2 mb-1">Student Profile & Skill Assessment</h1>
+        <p class="text-muted small mb-0">
+          Complete the four progressive checkpoints below. Our weighted matching model compares your capabilities against 5 industry paths.
+        </p>
+      </div>
+
+      <!-- Feedback Alert Area -->
+      <div id="alertContainer" role="alert" aria-live="polite"></div>
+
+      <!-- Loading Spinner for Assessment Profile sync -->
+      <div id="loadingSpinner" class="d-none text-center py-4">
+        <div class="spinner-border text-cyan" role="status">
+          <span class="visually-hidden">Loading profile...</span>
+        </div>
+      </div>
+
+      <!-- Mobile Step Progress Header (< 992px) -->
+      <div class="step-nav-mobile" id="stepIndicatorMobile">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="font-mono text-xs text-uppercase fw-bold text-cyan" id="mobileStepLabel">
+            Step 1 of 4: Academic Background
+          </span>
+          <span class="text-xs text-muted" id="mobileStepPercent">25%</span>
+        </div>
+        <div class="progress" style="height: 6px;">
+          <div
+            id="mobileProgressBar"
+            class="progress-bar bg-info"
+            role="progressbar"
+            style="width: 25%;"
+            aria-valuenow="25"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Form Grid: Left Stepper Navigation + Right Form Panels -->
+      <div class="assessment-container">
+
+        <!-- Left Column: Desktop Step Navigation -->
+        <aside class="step-nav-desktop" id="stepIndicator" aria-label="Assessment step progress">
+          <div class="text-xs font-mono text-muted text-uppercase mb-3 px-2">Navigation Steps</div>
+
+          <div class="step-nav-item active" data-step="1" id="navStep1" role="button" tabindex="0">
+            <div class="step-nav-num">1</div>
+            <div>
+              <div class="text-sm fw-bold">Academics</div>
+              <div class="text-xs text-muted">Education & college</div>
+            </div>
+          </div>
+
+          <div class="step-nav-item" data-step="2" id="navStep2" role="button" tabindex="0">
+            <div class="step-nav-num">2</div>
+            <div>
+              <div class="text-sm fw-bold">Interests</div>
+              <div class="text-xs text-muted">Curiosity & domains</div>
+            </div>
+          </div>
+
+          <div class="step-nav-item" data-step="3" id="navStep3" role="button" tabindex="0">
+            <div class="step-nav-num">3</div>
+            <div>
+              <div class="text-sm fw-bold">Skills</div>
+              <div class="text-xs text-muted">Current capabilities</div>
+            </div>
+          </div>
+
+          <div class="step-nav-item" data-step="4" id="navStep4" role="button" tabindex="0">
+            <div class="step-nav-num">4</div>
+            <div>
+              <div class="text-sm fw-bold">Goals</div>
+              <div class="text-xs text-muted">Target aspirations</div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-top px-2">
+            <div class="small text-muted" style="font-size: 0.78rem; line-height: 1.4;">
+              <i class="bi bi-shield-check text-success me-1"></i> Deterministic scoring: 60% skills, 25% interests, 15% education.
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Form Step Wizard -->
+        <div class="assessment-form-area">
+          <form id="assessmentForm" novalidate>
+
+            <!-- ========================================================
+                 STEP 1: Academic Background
+                 ======================================================== -->
+            <div class="assessment-step-panel active card p-4 p-md-5" id="stepPanel1">
+              <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <span class="step-badge-circle">01</span>
+                <div>
+                  <h2 class="h4 mb-0">Academic Background</h2>
+                  <p class="text-muted small mb-0">Your degree and branch provide context for entry-level hiring criteria</p>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <!-- Full Name -->
+                <div class="col-md-6">
+                  <label for="fullName" class="form-label">
+                    Full Name <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    class="form-control"
+                    placeholder="e.g. Parth Patil"
+                    required
+                  />
+                </div>
+
+                <!-- Degree / Course -->
+                <div class="col-md-6">
+                  <label for="course" class="form-label">
+                    Degree / Course <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="course"
+                    class="form-control"
+                    placeholder="e.g. BCA, B.Tech, B.Sc Computer Science"
+                    required
+                  />
+                  <div class="form-text">Examples: BCA, B.Tech, MCA, B.Sc IT, B.Des</div>
+                </div>
+
+                <!-- Branch / Major -->
+                <div class="col-md-4">
+                  <label for="branch" class="form-label">Branch / Major</label>
+                  <input
+                    type="text"
+                    id="branch"
+                    class="form-control"
+                    placeholder="e.g. Computer Science, AI, IT"
+                  />
+                </div>
+
+                <!-- Current Year -->
+                <div class="col-md-4">
+                  <label for="year" class="form-label">Current Year</label>
+                  <select id="year" class="form-select">
+                    <option value="">Select Year...</option>
+                    <option value="First Year">First Year</option>
+                    <option value="Second Year">Second Year</option>
+                    <option value="Third Year">Third Year</option>
+                    <option value="Final Year">Final Year</option>
+                    <option value="Recent Graduate">Recent Graduate / Fresher</option>
+                  </select>
+                </div>
+
+                <!-- College Name -->
+                <div class="col-md-4">
+                  <label for="college" class="form-label">College / Institute Name</label>
+                  <input
+                    type="text"
+                    id="college"
+                    class="form-control"
+                    placeholder="e.g. Pune Institute of Technology"
+                  />
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end mt-5 pt-3 border-top">
+                <button type="button" class="btn cp-btn-primary px-4" id="step1ContinueBtn">
+                  <span>Continue to Interests</span>
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- ========================================================
+                 STEP 2: Career Interests
+                 ======================================================== -->
+            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel2">
+              <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <span class="step-badge-circle">02</span>
+                <div>
+                  <h2 class="h4 mb-0">Domains of Interest <span class="text-danger">*</span></h2>
+                  <p class="text-muted small mb-0">Select 1 to 10 areas that excite you and represent your desired career direction</p>
+                </div>
+              </div>
+
+              <!-- Interest Chips Container -->
+              <div class="d-flex flex-wrap gap-2 mb-3" id="interestChipsWrapper">
+                <!-- Dynamically rendered via assessment.js -->
+              </div>
+
+              <div class="d-flex align-items-center justify-content-between p-3 rounded-2 stat-box-atlas mb-4">
+                <span class="small text-muted">
+                  <i class="bi bi-info-circle me-1 text-teal"></i> Select topics that spark your passion.
+                </span>
+                <span class="small fw-bold text-white">
+                  Selected: <span id="interestCount" class="text-teal">0</span> / 10
+                </span>
+              </div>
+
+              <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                <button type="button" class="btn cp-btn-outline px-4" id="step2BackBtn">
+                  <i class="bi bi-arrow-left"></i>
+                  <span>Back</span>
+                </button>
+                <button type="button" class="btn cp-btn-primary px-4" id="step2ContinueBtn">
+                  <span>Continue to Skills</span>
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- ========================================================
+                 STEP 3: Skills & Proficiency
+                 ======================================================== -->
+            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel3">
+              <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <span class="step-badge-circle">03</span>
+                <div>
+                  <h2 class="h4 mb-0">Technical & Professional Skills <span class="text-danger">*</span></h2>
+                  <p class="text-muted small mb-0">Select skills you know and mark your self-assessed proficiency level</p>
+                </div>
+              </div>
+
+              <!-- Filter & Search Toolbar -->
+              <div class="row g-2 mb-4 align-items-center">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input
+                      type="text"
+                      id="skillSearchInput"
+                      class="form-control"
+                      placeholder="Search skills (e.g. HTML, Python, Figma, SQL)..."
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="skills-category-filter" id="skillCategoryFilter">
+                    <button type="button" class="category-filter-btn active" data-cat="all">All</button>
+                    <button type="button" class="category-filter-btn" data-cat="frontend">Frontend</button>
+                    <button type="button" class="category-filter-btn" data-cat="backend">Backend</button>
+                    <button type="button" class="category-filter-btn" data-cat="data">Data</button>
+                    <button type="button" class="category-filter-btn" data-cat="design">Design</button>
+                    <button type="button" class="category-filter-btn" data-cat="security">Security</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skills Grid Container -->
+              <div class="skills-grid-container row g-2 mb-4" id="skillsGrid" style="max-height: 420px; overflow-y: auto;">
+                <!-- Dynamically populated via assessment.js -->
+              </div>
+
+              <!-- Selected Skills Summary Box -->
+              <div class="selected-skills-box mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="small fw-bold text-white">
+                    <i class="bi bi-check2-circle text-success me-1"></i> Your Selected Skills (<span id="selectedSkillsCount">0</span>/20):
+                  </span>
+                  <button type="button" id="clearAllSkillsBtn" class="btn btn-link text-danger btn-sm p-0 text-decoration-none small">
+                    Clear All
+                  </button>
+                </div>
+                <div id="selectedSkillsSummary" class="d-flex flex-wrap gap-2">
+                  <span class="text-muted small fst-italic">No skills selected yet. Click any skill above to add it.</span>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                <button type="button" class="btn cp-btn-outline px-4" id="step3BackBtn">
+                  <i class="bi bi-arrow-left"></i>
+                  <span>Back</span>
+                </button>
+                <button type="button" class="btn cp-btn-primary px-4" id="step3ContinueBtn">
+                  <span>Continue to Goals</span>
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- ========================================================
+                 STEP 4: Career Goals & Submission
+                 ======================================================== -->
+            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel4">
+              <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <span class="step-badge-circle">04</span>
+                <div>
+                  <h2 class="h4 mb-0">Career Aspirations <span class="badge cp-tag ms-2">Optional</span></h2>
+                  <p class="text-muted small mb-0">What is your target role or learning milestone for this year?</p>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="careerGoals" class="form-label">Primary Career Goal</label>
+                <input
+                  type="text"
+                  id="careerGoals"
+                  class="form-control"
+                  placeholder="e.g. Become a Front-End Developer building production web apps by 2027"
+                />
+                <div class="form-text">Optional context that helps shape project recommendations in your roadmap.</div>
+              </div>
+
+              <!-- Summary Card -->
+              <div class="p-3 rounded-2 stat-box-atlas mb-4">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-shield-check text-teal fs-5"></i>
+                  <strong class="text-white small">Ready to generate your Career Atlas</strong>
+                </div>
+                <p class="small text-muted mb-0">
+                  Clicking "Find my career matches" submits your profile to our weighted matching algorithm. You will immediately see ranked career matches, detailed skill gap breakdowns, and customizable weekly roadmaps.
+                </p>
+              </div>
+
+              <!-- Form Action Buttons -->
+              <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <button type="button" class="btn cp-btn-outline px-4" id="step4BackBtn">
+                  <i class="bi bi-arrow-left"></i>
+                  <span>Back</span>
+                </button>
+                <button
+                  type="submit"
+                  id="submitAssessmentBtn"
+                  class="btn cp-btn-primary btn-lg px-4 py-2 fw-semibold d-flex align-items-center gap-2"
+                >
+                  <span>Find my career matches</span>
+                  <i class="bi bi-compass-fill"></i>
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/assessment.js"></script>
+    <script src="js/chat.js"></script>
+  </body>
+</html>

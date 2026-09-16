@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create a free CareerPath AI account to build your profile, assess skills, and get personalized roadmaps."
+    />
+    <title>Create Account — CareerPath AI · Career Atlas</title>
+
+    <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="auth-page">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top cp-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <div class="brand-icon">
+            <i class="bi bi-compass-fill"></i>
+          </div>
+          <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+          <span class="brand-tagline-sub d-none d-sm-inline">Career Atlas</span>
+        </a>
+
+        <div class="ms-auto d-flex align-items-center gap-2">
+          <a href="index.html" class="btn cp-btn-outline btn-sm px-3">
+            <i class="bi bi-arrow-left me-1"></i> Return Home
+          </a>
+          <a href="login.html" class="btn cp-btn-outline btn-sm px-3">
+            Log In
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content: Two-Column Split Layout -->
+    <main class="auth-wrapper pt-5 mt-4">
+      <div class="container d-flex justify-content-center">
+        <div class="auth-split-grid">
+
+          <!-- Left Column: Career Atlas Orientation Panel -->
+          <div class="auth-orientation-panel">
+            <div>
+              <div class="atlas-badge mb-3 text-white border-white border-opacity-25" style="background: rgba(255,255,255,0.1);">
+                <i class="bi bi-compass me-1"></i> STUDENT ONBOARDING
+              </div>
+              <h1 class="auth-panel-heading">Begin your structured career route</h1>
+              <p class="auth-panel-desc">
+                Join CareerPath AI to build your profile, map your current skills, evaluate fit scores against 5 industry paths, and unlock an actionable roadmap.
+              </p>
+
+              <div class="auth-panel-bullets">
+                <div class="auth-panel-bullet">
+                  <i class="bi bi-mortarboard fs-5"></i>
+                  <span>Designed specifically for college students & freshers</span>
+                </div>
+                <div class="auth-panel-bullet">
+                  <i class="bi bi-sliders fs-5"></i>
+                  <span>Transparent 60/25/15 career-fit evaluation formula</span>
+                </div>
+                <div class="auth-panel-bullet">
+                  <i class="bi bi-map fs-5"></i>
+                  <span>Self-paced weekly learning plans with real tasks</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-panel-footer">
+              <div>CareerPath AI · Team 404 Brain Not Found</div>
+              <div class="text-white text-opacity-50">Hack2Ignite 2026–27</div>
+            </div>
+          </div>
+
+          <!-- Right Column: Registration Form -->
+          <div class="auth-form-card">
+            <div class="auth-form-header">
+              <span class="atlas-coordinate">NEW STUDENT ENROLLMENT · REG-01</span>
+              <h2 class="auth-form-title mt-1">Create Account</h2>
+              <p class="auth-form-subtitle mb-0">
+                Enter your details to generate your student profile.
+              </p>
+            </div>
+
+            <!-- Feedback Alert Area -->
+            <div id="alertContainer" role="alert" aria-live="polite"></div>
+
+            <!-- Registration Form -->
+            <form id="registerForm" novalidate>
+              <!-- Full Name -->
+              <div class="mb-3">
+                <label for="name" class="form-label">
+                  Full Name <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-person"></i>
+                  </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    placeholder="e.g. Parth Patil"
+                    required
+                    autocomplete="name"
+                    minlength="2"
+                    maxlength="60"
+                  />
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  Email Address <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-envelope"></i>
+                  </span>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="student@college.edu"
+                    required
+                    autocomplete="email"
+                  />
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-3">
+                <label for="password" class="form-label">
+                  Password <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-key"></i>
+                  </span>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="At least 6 characters"
+                    required
+                    autocomplete="new-password"
+                    minlength="6"
+                  />
+                </div>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="mb-4">
+                <label for="confirmPassword" class="form-label">
+                  Confirm Password <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <i class="bi bi-shield-check"></i>
+                  </span>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
+                    placeholder="Re-enter your password"
+                    required
+                    autocomplete="new-password"
+                  />
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                id="submitBtn"
+                class="btn cp-btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+              >
+                <span>Create Student Account</span>
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </form>
+
+            <!-- Switch to Login -->
+            <div class="mt-4 pt-3 border-top text-center">
+              <p class="small text-muted mb-0">
+                Already registered on CareerPath AI?
+                <a href="login.html" class="text-primary fw-semibold ms-1 text-decoration-none">
+                  Log in here
+                </a>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/register.js"></script>
+  </body>
+</html>

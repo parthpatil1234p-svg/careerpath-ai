@@ -1,0 +1,188 @@
+/* ==========================================================================
+   CareerPath AI — Learning Roadmap Stylesheet (roadmap.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glowing Accents
+   Hack2Ignite 2026–27 · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* Top Roadmap Summary Header */
+.roadmap-header-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.roadmap-header-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+/* 3D Roadmap Milestone Path Canvas Container */
+.roadmap-path-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: relative;
+}
+
+.roadmap-path-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+#roadmap-path {
+  cursor: grab;
+}
+
+#roadmap-path:active {
+  cursor: grabbing;
+}
+
+/* Timeline Layout */
+.roadmap-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.roadmap-timeline::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 41px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan) 0%, rgba(99, 102, 241, 0.3) 100%);
+  z-index: 1;
+}
+
+/* Week Cards */
+.week-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1.5rem;
+}
+
+.week-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.15);
+  transform: translateY(-2px);
+}
+
+.week-card.active-week {
+  border-color: var(--cyan);
+  box-shadow: 0 0 30px rgba(0, 242, 254, 0.25);
+}
+
+.week-card.completed-week {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.week-card.highlight-week {
+  animation: pulseHighlight 1.5s ease;
+}
+
+@keyframes pulseHighlight {
+  0% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(0, 242, 254, 0.2); transform: scale(1.01); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
+}
+
+.week-badge-pill {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--gradient-primary);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
+  flex-shrink: 0;
+}
+
+.week-card.completed-week .week-badge-pill {
+  background: linear-gradient(135deg, #10B981, #059669);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+}
+
+/* Task Checklist Items */
+.task-checklist-item {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 0.95rem 1.25rem;
+  transition: all var(--transition-fast);
+}
+
+.task-checklist-item:hover {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.task-checklist-item.is-completed {
+  opacity: 0.65;
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.task-checklist-item.is-completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-muted) !important;
+}
+
+.task-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--cyan);
+  flex-shrink: 0;
+}
+
+/* Resource Link Button */
+.resource-link-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--cyan);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.resource-link-btn:hover {
+  background: rgba(0, 242, 254, 0.12);
+  border-color: rgba(0, 242, 254, 0.35);
+  color: #FFFFFF;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+}

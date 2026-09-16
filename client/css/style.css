@@ -1,0 +1,153 @@
+/* ==========================================================================
+   CareerPath AI — Master Stylesheet (style.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glowing Accents
+   Hack2Ignite 2026–27 · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Modular Imports
+   -------------------------------------------------------------------------- */
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './pages.css';
+@import './three.css';
+@import './roadmap.css';
+@import './dashboard.css';
+@import './chat.css';
+
+/* --------------------------------------------------------------------------
+   2. Token Compatibility Bridge
+   -------------------------------------------------------------------------- */
+:root {
+  --cp-primary:          var(--cyan);
+  --cp-secondary:        var(--teal);
+  --cp-accent:           var(--rose);
+  --cp-success:          var(--emerald);
+  --cp-warning:          var(--amber);
+  --cp-danger:           var(--rose);
+  --cp-bg-dark:          var(--bg-darkest);
+  --cp-bg-light:         var(--bg-page);
+  --cp-bg-card:          var(--bg-surface);
+  --cp-bg-card-light:    var(--bg-surface);
+  --cp-text-primary:     #FFFFFF;
+  --cp-text-light:       #FFFFFF;
+  --cp-text-muted:       var(--text-muted);
+  --cp-border:           var(--line);
+  --cp-border-light:     var(--line);
+  --cp-shadow-sm:        var(--shadow-sm);
+  --cp-shadow-md:        var(--shadow-md);
+  --cp-shadow-glow:      0 0 25px rgba(0, 242, 254, 0.25);
+  --cp-gradient-primary: var(--gradient-primary);
+  --cp-gradient-accent:  var(--gradient-secondary);
+  --cp-gradient-hero:    var(--gradient-primary);
+}
+
+/* --------------------------------------------------------------------------
+   3. Recommendations Compatibility (Rendered by recommendations.js)
+   -------------------------------------------------------------------------- */
+.recommendation-card {
+  background: rgba(17, 24, 39, 0.7) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: var(--shadow-md) !important;
+  position: relative;
+  transition: all var(--transition-normal);
+  color: var(--text-secondary);
+}
+
+.recommendation-card:hover {
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.15) !important;
+}
+
+.recommendation-card.top-match-card {
+  border: 1.5px solid rgba(0, 242, 254, 0.4) !important;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 242, 254, 0.18) !important;
+}
+
+.match-score-badge {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 1rem 1.25rem !important;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+}
+
+.top-match-card .match-score-badge {
+  border-color: var(--cyan) !important;
+  background: rgba(15, 23, 42, 0.9) !important;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.25) !important;
+}
+
+.match-score-badge .score-number {
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #FFFFFF !important;
+  line-height: 1;
+}
+
+.score-factor {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.5rem 0.75rem !important;
+  text-align: center;
+}
+
+.score-factor .factor-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.score-factor .factor-value {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #FFFFFF !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. High-Tech Color Harmony
+   -------------------------------------------------------------------------- */
+.text-navy {
+  color: var(--cyan) !important;
+}
+
+.text-ink {
+  color: #FFFFFF !important;
+}
+
+.text-teal {
+  color: #22D3EE !important;
+}
+
+.text-gold {
+  color: #FBBF24 !important;
+}
+
+.text-leaf {
+  color: #34D399 !important;
+}
+
+.text-coral {
+  color: #FB7185 !important;
+}
+
+.border-line {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+  color: var(--cyan) !important;
+}
+

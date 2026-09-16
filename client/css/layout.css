@@ -1,0 +1,242 @@
+/* ==========================================================================
+   CareerPath AI — Layout & Grid (layout.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glassmorphic Navigation
+   Hack2Ignite 2026–27 · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* Global Container Constraints */
+.container,
+.container-lg,
+.container-xl {
+  max-width: var(--container-max-width, 1220px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.container-narrow {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==========================================================================
+   NAVIGATION BAR (Frosted Glassmorphism Header)
+   ========================================================================== */
+.cp-navbar,
+.atlas-navbar {
+  background: rgba(10, 14, 23, 0.82) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0.85rem 0;
+  transition: all var(--transition-normal);
+  z-index: 1040;
+}
+
+.cp-navbar.scrolled,
+.atlas-navbar.scrolled {
+  background: rgba(7, 10, 17, 0.94) !important;
+  border-bottom-color: rgba(56, 189, 248, 0.2) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-brand {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #FFFFFF !important;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon,
+.brand-compass {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(139, 92, 246, 0.2));
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  color: var(--cyan);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+  transition: all var(--transition-fast);
+}
+
+.navbar-brand:hover .brand-icon,
+.navbar-brand:hover .brand-compass {
+  transform: scale(1.05) rotate(5deg);
+  border-color: var(--cyan);
+  box-shadow: 0 0 22px rgba(0, 242, 254, 0.4);
+}
+
+.brand-name,
+.brand-title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+}
+
+.brand-accent {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+}
+
+.brand-tagline,
+.brand-tagline-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Nav Links */
+.navbar-nav .nav-link {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted) !important;
+  padding: 0.45rem 0.9rem !important;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
+}
+
+.navbar-nav .nav-link:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--cyan) !important;
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   SECTIONS & BANDS
+   ========================================================================== */
+.cp-section {
+  padding: 5.5rem 0;
+  position: relative;
+}
+
+.cp-section-hero {
+  padding-top: 7.5rem;
+  padding-bottom: 5rem;
+}
+
+.cp-section-band {
+  background: rgba(14, 20, 34, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.section-header {
+  margin-bottom: 3.5rem;
+}
+
+.section-tag,
+.atlas-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==========================================================================
+   FOOTER (High-Tech Dark Footer)
+   ========================================================================== */
+.cp-footer,
+.atlas-footer {
+  background-color: var(--bg-darkest);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3.5rem 0 2rem 0;
+  color: var(--text-muted);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-col-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: var(--cyan);
+}
+
+.footer-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  display: inline-block;
+}

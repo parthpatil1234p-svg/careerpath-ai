@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CareerPath AI — Navigable Career Atlas and skill roadmaps for Indian college students and freshers."
+    />
+    <title>CareerPath AI — Career Atlas & Practical Skill Roadmaps</title>
+
+    <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/style.css?v=2.5" />
+    <link rel="stylesheet" href="css/three.css?v=2.5" />
+  </head>
+
+  <body>
+    <!-- ============================================================
+         NAVIGATION BAR
+         ============================================================ -->
+    <nav class="navbar navbar-expand-lg fixed-top cp-navbar" id="mainNav">
+      <div class="container">
+        <!-- Brand / Logo -->
+        <a class="navbar-brand" href="index.html">
+          <div class="brand-icon">
+            <i class="bi bi-compass-fill"></i>
+          </div>
+          <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+          <span class="brand-tagline-sub d-none d-sm-inline">Career Atlas</span>
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button
+          class="navbar-toggler border-0"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navMenu"
+          aria-controls="navMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Nav Links -->
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto align-items-center gap-1">
+            <li class="nav-item">
+              <a class="nav-link" href="#how-it-works">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#careers">Career Paths</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#deliverables">What You Receive</a>
+            </li>
+            <li class="nav-item ms-lg-3 d-flex align-items-center gap-2" id="authNavActions">
+              <a class="btn cp-btn-outline btn-sm px-3" href="login.html">Log In</a>
+              <a class="btn cp-btn-primary btn-sm px-3" href="assessment.html" id="startAssessmentNavBtn">Start Assessment</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============================================================
+         HERO SECTION (High-Tech Asymmetric Split: Copy + 3D Universe)
+         ============================================================ -->
+    <section class="landing-hero" id="hero">
+      <div class="ambient-glow ambient-glow-1"></div>
+      <div class="ambient-glow ambient-glow-2"></div>
+      <div class="container pt-5 mt-4">
+        <div class="hero-grid">
+
+          <!-- Left Column: Problem, Honest Solution & Action CTAs -->
+          <div class="hero-text-col">
+            <div class="hero-meta-bar">
+              <span class="live-status-badge">
+                <span class="pulse-dot"></span> AI CAREER PLATFORM
+              </span>
+              <span class="font-mono text-xs text-muted">HACK2IGNITE 2026–27 · EDTECH</span>
+            </div>
+
+            <h1 class="hero-title">
+              Navigate your tech career with <span class="gradient-text">clarity</span>, not guesswork.
+            </h1>
+
+            <p class="hero-subtitle">
+              Answer a few structured questions about what you know and what interests you.
+              CareerPath AI compares your skills with real industry requirements, points out your exact skill gaps,
+              and builds a week-by-week learning plan you can actually follow.
+            </p>
+
+            <!-- Direct Action CTAs -->
+            <div class="hero-actions">
+              <a
+                href="assessment.html"
+                class="btn cp-btn-primary btn-lg px-4 py-3"
+                id="startAssessmentBtn"
+              >
+                <i class="bi bi-compass-fill me-2"></i>
+                Start Assessment
+              </a>
+              <a href="#careers" class="btn cp-btn-outline btn-lg px-4 py-3">
+                <i class="bi bi-map me-2"></i>
+                View Career Matches
+              </a>
+            </div>
+
+            <!-- Honest Practical Metrics -->
+            <div class="hero-stats">
+              <div class="stat-item">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Verified Tech Roles</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-number">35+</span>
+                <span class="stat-label">Mapped Industry Skills</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-number">4–12</span>
+                <span class="stat-label">Weeks Learning Pace</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: 3D Career Atlas Compass Canvas -->
+          <div class="hero-canvas-col">
+            <div class="canvas-placeholder" id="careerUniverse">
+              <div id="canvas-container" class="w-100 h-100 position-relative">
+                <!-- 2D Fallback shown if WebGL is unavailable -->
+                <div class="canvas-placeholder-inner d-none p-4" id="careerUniverse-fallback">
+                  <div id="webgl-fallback" class="fallback-2d-container">
+                  <div class="atlas-badge mb-2">2D ROUTE CATALOG</div>
+                  <h3 class="fallback-2d-title">Career Atlas Waypoints</h3>
+                  <p class="fallback-2d-desc">
+                    Explore five core technology career routes evaluated by our skill-matching algorithm.
+                  </p>
+                  <div class="fallback-career-grid">
+                    <div class="fallback-career-item">
+                      <strong>Front-End Developer</strong>
+                      <span>HTML, CSS, JS, React, Responsive</span>
+                    </div>
+                    <div class="fallback-career-item">
+                      <strong>Full-Stack Developer</strong>
+                      <span>Node.js, Express, MongoDB, REST APIs</span>
+                    </div>
+                    <div class="fallback-career-item">
+                      <strong>Data Analyst</strong>
+                      <span>Python, SQL, Excel, Visualization</span>
+                    </div>
+                    <div class="fallback-career-item">
+                      <strong>UI/UX Designer</strong>
+                      <span>Figma, Wireframing, User Research</span>
+                    </div>
+                    <div class="fallback-career-item">
+                      <strong>Cybersecurity Analyst</strong>
+                      <span>Networking, Linux, Ethical Hacking</span>
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <a href="assessment.html" class="btn cp-btn-primary btn-sm px-4">Begin Assessment</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HOW IT WORKS SECTION (Honest 3 Numbered Steps)
+         ============================================================ -->
+    <section class="cp-section cp-section-band" id="how-it-works">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Methodology</span>
+          <h2 class="section-title">How Career Atlas Works</h2>
+          <p class="section-subtitle">
+            A transparent 3-step navigation process from self-assessment to practical task completion.
+          </p>
+        </div>
+
+        <div class="step-grid">
+
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-number">
+              <span>01</span>
+              <span>· PROFILE</span>
+            </div>
+            <h3 class="step-title">Understand your profile</h3>
+            <p class="step-desc">
+              Share your degree, fields that interest you, and the technical skills you already possess along with your current self-assessed proficiency.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-number">
+              <span>02</span>
+              <span>· EVALUATION</span>
+            </div>
+            <h3 class="step-title">Compare skills with career paths</h3>
+            <p class="step-desc">
+              Our deterministic weighted model compares your capabilities against 5 industry careers: 60% skill alignment, 25% interest fit, and 15% educational relevance.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-number">
+              <span>03</span>
+              <span>· EXECUTION</span>
+            </div>
+            <h3 class="step-title">Follow your learning route</h3>
+            <p class="step-desc">
+              Receive a customized 4, 8, or 12-week roadmap that targets your missing skills first with curated documentation, practice tasks, and portfolio projects.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CAREER PATHS SECTION (5 Actual Seeded Careers)
+         ============================================================ -->
+    <section class="cp-section" id="careers">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Catalog</span>
+          <h2 class="section-title">Career Paths We Cover</h2>
+          <p class="section-subtitle">
+            Five career paths with curated skill profiles and week-by-week learning curricula.
+          </p>
+        </div>
+
+        <div class="career-grid">
+
+          <!-- 1. Front-End Developer -->
+          <div class="career-card" data-career="front-end-developer">
+            <div class="career-card-top">
+              <span class="career-card-badge">ROUTE RTE-FE</span>
+              <h3 class="career-card-title">Front-End Developer</h3>
+              <p class="career-card-desc">
+                Build responsive, accessible, and fast web user interfaces using HTML, CSS, JavaScript, and modern component practices.
+              </p>
+              <div class="career-card-tags">
+                <span class="cp-tag">HTML/CSS</span>
+                <span class="cp-tag">JavaScript</span>
+                <span class="cp-tag">Responsive Design</span>
+                <span class="cp-tag">Git</span>
+              </div>
+            </div>
+            <div>
+              <a href="assessment.html" class="btn cp-btn-outline btn-sm w-100">
+                <span>Assess for Front-End</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 2. Full-Stack Developer -->
+          <div class="career-card" data-career="full-stack-developer">
+            <div class="career-card-top">
+              <span class="career-card-badge">ROUTE RTE-FS</span>
+              <h3 class="career-card-title">Full-Stack Developer</h3>
+              <p class="career-card-desc">
+                Master end-to-end web engineering: create RESTful backend services, secure authentication, database schemas, and fluid clients.
+              </p>
+              <div class="career-card-tags">
+                <span class="cp-tag">Node.js</span>
+                <span class="cp-tag">Express.js</span>
+                <span class="cp-tag">MongoDB</span>
+                <span class="cp-tag">REST APIs</span>
+              </div>
+            </div>
+            <div>
+              <a href="assessment.html" class="btn cp-btn-outline btn-sm w-100">
+                <span>Assess for Full-Stack</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 3. Data Analyst -->
+          <div class="career-card" data-career="data-analyst">
+            <div class="career-card-top">
+              <span class="career-card-badge">ROUTE RTE-DA</span>
+              <h3 class="career-card-title">Data Analyst</h3>
+              <p class="career-card-desc">
+                Extract insights from raw datasets using SQL queries, Python data analysis, statistical methods, and dashboards.
+              </p>
+              <div class="career-card-tags">
+                <span class="cp-tag">Python</span>
+                <span class="cp-tag">SQL</span>
+                <span class="cp-tag">Excel</span>
+                <span class="cp-tag">Data Visualization</span>
+              </div>
+            </div>
+            <div>
+              <a href="assessment.html" class="btn cp-btn-outline btn-sm w-100">
+                <span>Assess for Data</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 4. UI/UX Designer -->
+          <div class="career-card" data-career="ui-ux-designer">
+            <div class="career-card-top">
+              <span class="career-card-badge">ROUTE RTE-UX</span>
+              <h3 class="career-card-title">UI / UX Designer</h3>
+              <p class="career-card-desc">
+                Design intuitive product interfaces, wireframes, interactive prototypes, and design systems grounded in user research.
+              </p>
+              <div class="career-card-tags">
+                <span class="cp-tag">Figma</span>
+                <span class="cp-tag">Wireframing</span>
+                <span class="cp-tag">User Research</span>
+                <span class="cp-tag">Prototyping</span>
+              </div>
+            </div>
+            <div>
+              <a href="assessment.html" class="btn cp-btn-outline btn-sm w-100">
+                <span>Assess for Design</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 5. Cybersecurity Analyst -->
+          <div class="career-card" data-career="cybersecurity-analyst">
+            <div class="career-card-top">
+              <span class="career-card-badge">ROUTE RTE-CS</span>
+              <h3 class="career-card-title">Cybersecurity Analyst</h3>
+              <p class="career-card-desc">
+                Identify system vulnerabilities, analyze network traffic, learn secure system configurations, and master defensive fundamentals.
+              </p>
+              <div class="career-card-tags">
+                <span class="cp-tag">Networking</span>
+                <span class="cp-tag">Linux</span>
+                <span class="cp-tag">Ethical Hacking</span>
+                <span class="cp-tag">OWASP</span>
+              </div>
+            </div>
+            <div>
+              <a href="assessment.html" class="btn cp-btn-outline btn-sm w-100">
+                <span>Assess for Security</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         WHAT YOU RECEIVE SECTION (4 Concrete Deliverables)
+         ============================================================ -->
+    <section class="cp-section cp-section-band" id="deliverables">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Outcomes</span>
+          <h2 class="section-title">What You Receive</h2>
+          <p class="section-subtitle">
+            Every student profile generates practical, self-paced learning artifacts.
+          </p>
+        </div>
+
+        <div class="deliverables-grid">
+
+          <div class="deliverable-item">
+            <div class="deliverable-icon">
+              <i class="bi bi-compass"></i>
+            </div>
+            <div>
+              <h3 class="deliverable-title">Career Matches</h3>
+              <p class="deliverable-desc">
+                Clear fit scores calculated across skills, interests, and education without exaggerated claims.
+              </p>
+            </div>
+          </div>
+
+          <div class="deliverable-item">
+            <div class="deliverable-icon">
+              <i class="bi bi-diagram-3"></i>
+            </div>
+            <div>
+              <h3 class="deliverable-title">Skill Map</h3>
+              <p class="deliverable-desc">
+                Categorized skill gap breakdown highlighting matched competencies, skills needing upgrades, and missing prerequisites.
+              </p>
+            </div>
+          </div>
+
+          <div class="deliverable-item">
+            <div class="deliverable-icon">
+              <i class="bi bi-calendar3-week"></i>
+            </div>
+            <div>
+              <h3 class="deliverable-title">Weekly Roadmap</h3>
+              <p class="deliverable-desc">
+                A weekly schedule with realistic estimated hours, official documentation links, and portfolio project suggestions.
+              </p>
+            </div>
+          </div>
+
+          <div class="deliverable-item">
+            <div class="deliverable-icon">
+              <i class="bi bi-check2-circle"></i>
+            </div>
+            <div>
+              <h3 class="deliverable-title">Progress Tracker</h3>
+              <p class="deliverable-desc">
+                A simple dashboard with a 3D Journey Marker that reflects every task completed and keeps your schedule accountable.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Callout -->
+        <div class="text-center mt-5">
+          <a href="assessment.html" class="btn cp-btn-primary btn-lg px-5 py-3">
+            <i class="bi bi-compass me-2"></i>
+            Start Assessment Now
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <footer class="cp-footer">
+      <div class="container">
+        <div class="row gy-4">
+
+          <!-- Brand & Project Info -->
+          <div class="col-lg-5">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div class="brand-icon brand-icon-sm">
+                <i class="bi bi-compass-fill"></i>
+              </div>
+              <span class="brand-name fs-5">
+                CareerPath <span class="brand-accent">AI</span>
+              </span>
+            </div>
+            <p class="small text-muted mb-2">
+              Career Atlas — Practical navigation and skill roadmaps for college students.
+            </p>
+            <p class="small text-muted mb-0">
+              <i class="bi bi-people-fill me-1"></i>
+              Team <strong>404 Brain Not Found</strong> · Hack2Ignite 2026–27
+            </p>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="col-sm-6 col-lg-3 offset-lg-1">
+            <div class="footer-heading">Platform</div>
+            <ul class="footer-links">
+              <li><a href="#how-it-works">How It Works</a></li>
+              <li><a href="#careers">Career Paths</a></li>
+              <li><a href="#deliverables">What You Receive</a></li>
+              <li><a href="assessment.html">Start Assessment</a></li>
+            </ul>
+          </div>
+
+          <!-- Account Links -->
+          <div class="col-sm-6 col-lg-3">
+            <div class="footer-heading">Account</div>
+            <ul class="footer-links">
+              <li><a href="login.html">Log In</a></li>
+              <li><a href="register.html">Sign Up</a></li>
+              <li><a href="dashboard.html">Student Dashboard</a></li>
+              <li><a href="recommendations.html">Recommendations</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Footer Colophon -->
+        <div class="footer-bottom d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+          <p class="mb-0">
+            &copy; 2026 CareerPath AI · Built by Team 404 Brain Not Found
+          </p>
+          <p class="mb-0">
+            Hack2Ignite Round 1 · Open Educational Project
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Three.js & GSAP 3D libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/three-career-universe.js?v=2.5"></script>
+    <script src="js/main.js"></script>
+    <script src="js/chat.js"></script>
+  </body>
+</html>

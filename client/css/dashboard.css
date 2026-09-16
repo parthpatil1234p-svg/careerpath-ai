@@ -1,0 +1,261 @@
+/* ==========================================================================
+   CareerPath AI — Student Dashboard Stylesheet (dashboard.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glowing Accents
+   Hack2Ignite 2026–27 · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* Page Background */
+.dashboard-page {
+  background-color: var(--bg-page);
+  color: var(--text-secondary);
+  min-height: 100vh;
+}
+
+/* Profile Header Card */
+.dashboard-profile-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+.dashboard-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.25), rgba(139, 92, 246, 0.25));
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.65rem;
+  font-weight: 800;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+  flex-shrink: 0;
+}
+
+/* Active Roadmap / Route Card */
+.active-route-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.active-route-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--emerald));
+}
+
+/* Stat Box */
+.stat-box-atlas {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.15rem;
+}
+
+.stat-box-atlas .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.stat-box-atlas .stat-value {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1.45rem;
+  line-height: 1.1;
+  color: #FFFFFF;
+}
+
+/* 3D Journey Marker Canvas Card */
+.journey-canvas-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.journey-canvas-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+#progress-orb {
+  cursor: grab;
+  margin: 0 auto;
+}
+
+#progress-orb:active {
+  cursor: grabbing;
+}
+
+/* Recommended Action Box */
+.recommended-action-box {
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);
+}
+
+/* Dashboard Task List */
+.dashboard-task-item {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 0.95rem 1.25rem;
+  transition: all var(--transition-fast);
+}
+
+.dashboard-task-item:hover {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-task-item.is-completed {
+  opacity: 0.6;
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.dashboard-task-item.is-completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-muted) !important;
+}
+
+/* Task Checkbox */
+.task-checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--cyan);
+  flex-shrink: 0;
+}
+
+/* Quick Action Shortcuts */
+.shortcut-card {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  display: block;
+  height: 100%;
+}
+
+.shortcut-card:hover {
+  background: rgba(17, 24, 39, 0.85);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.15);
+  text-decoration: none;
+}
+
+.shortcut-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.bg-teal-subtle {
+  background: rgba(0, 242, 254, 0.12) !important;
+}
+
+.bg-gold-subtle {
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+
+.bg-leaf-subtle {
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+/* Badge Types & Priorities */
+.badge-type-concept {
+  background: rgba(99, 102, 241, 0.15);
+  color: #A5B4FC;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.badge-type-practical {
+  background: rgba(0, 242, 254, 0.15);
+  color: #67E8F9;
+  border: 1px solid rgba(0, 242, 254, 0.3);
+}
+
+.badge-type-project {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FCD34D;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-type-assessment {
+  background: rgba(244, 63, 94, 0.15);
+  color: #FDA4AF;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge-priority-high {
+  background: rgba(244, 63, 94, 0.15);
+  color: #FB7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge-priority-medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-priority-low {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
