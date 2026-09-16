@@ -25,13 +25,13 @@ flowchart TD
     end
 
     subgraph LiveAPIs ["Phase 1: Active Production APIs"]
+        Adzuna["Adzuna API\n(India Localized Jobs & Salary Data)"]
         AIDev["AIDevBoard API\n(Live Developer Jobs Telemetry)"]
         GroqAI["Groq Cloud API\n(Llama 3.3 70B AI Mentor)"]
         GeminiAI["Google Gemini API\n(Gemini 2.0 Flash Fallback)"]
     end
 
     subgraph Phase2APIs ["Phase 2: Planned Ecosystem Extensions"]
-        Adzuna["Adzuna API\n(India Localized Jobs & Salary Data)"]
         Kontests["KONTESTS API\n(LeetCode & Codeforces Contests)"]
         GitHubAPI["GitHub REST API\n(Automated Skill Detection)"]
         Judge0["Judge0 CE\n(In-Browser Code Execution)"]
@@ -43,11 +43,11 @@ flowchart TD
     API_GW --> TaskTracker
     API_GW --> Failover
 
+    Failover <--> Adzuna
     Failover <--> AIDev
     Failover <--> GroqAI
     Failover <--> GeminiAI
 
-    Failover -.-> Adzuna
     Failover -.-> Kontests
     Failover -.-> GitHubAPI
     Failover -.-> Judge0
@@ -60,16 +60,25 @@ flowchart TD
 
 These APIs are fully implemented, tested, and operational on our production deployments:
 
-### 1.1. AIDevBoard API (Real-Time Developer Job Market)
+### 1.1. Adzuna Developer API (Real-Time Indian Tech Jobs & Salaries)
+- **Endpoint:** `https://api.adzuna.com/v1/api/jobs/in/search/1`
+- **Category:** Jobs & Market Intelligence
+- **Authentication:** App ID (`3ce0ab33`) + App Key (`c0782ff2d5bbc68748b2a7d193ef9d5a`)
+- **Role in Platform:**
+  - Streams real-time Indian tech job postings (TCS, Capco, Mphasis, Deutsche Bank, Birlasoft, etc. across Bengaluru, Pune, Hyderabad, Mumbai).
+  - Supplies verified Indian CTC salary insights (e.g. ₹5.5 LPA – ₹14.0 LPA).
+  - Integrated via `server/services/jobBoardService.js` and exposed via `/api/jobs/adzuna` and `/api/jobs/career/:slug`.
+
+### 1.2. AIDevBoard API (Global Developer Job Market & AI Roles)
 - **Endpoint:** `https://aidevboard.com/api/v1/jobs`
 - **Category:** Jobs & Market Intelligence
 - **Authentication:** Public Access (Zero Key Friction)
 - **Role in Platform:**
-  - Powers the **"Explore Live Jobs"** interactive modal on `recommendations.html`.
-  - Maps student-recommended career tracks (Frontend, Full-Stack, Data Analyst, UI/UX, Cybersecurity) directly to live hiring vacancies.
+  - Powers worldwide remote developer vacancies.
+  - Acts as high-availability secondary job telemetry.
 - **Failover Strategy:** Built-in resilient offline cache in `server/services/jobBoardService.js` guarantees zero-breakage during live hackathon judging even under network latency.
 
-### 1.2. Groq Cloud API (Primary AI Career Mentor)
+### 1.3. Groq Cloud API (Primary AI Career Mentor)
 - **Model:** `llama-3.3-70b-versatile`
 - **Category:** Machine Learning / Generative AI
 - **Authentication:** Bearer Token via environment variables (`GROQ_API_KEY`)
@@ -78,7 +87,7 @@ These APIs are fully implemented, tested, and operational on our production depl
   - Generates contextual answers to student questions regarding interview prep, skill upgrading, and weekly milestone execution.
   - Delivers ultra-low latency response times (<500ms).
 
-### 1.3. Google Gemini API (Secondary AI Failover)
+### 1.4. Google Gemini API (Secondary AI Failover)
 - **Model:** `gemini-2.0-flash`
 - **Category:** Machine Learning / Multimodal AI
 - **Authentication:** API Key via environment variables (`GEMINI_API_KEY`)
@@ -94,7 +103,6 @@ Curated from the open-source **Public APIs Directory** to scale CareerPath AI in
 
 | API | Category | Auth | HTTPS | CORS | Platform Feature & Implementation |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **[Adzuna API](https://developer.adzuna.com/overview)** | Jobs & Salary | `apiKey` (App ID + Key) | Yes | Yes | **Localized Indian Salary & Hiring Benchmarks:** Provides city-wise salary data (Bengaluru, Pune, Hyderabad) so students can see real compensation expectations (`country=in`). |
 | **[KONTESTS API](https://kontests.net/api)** | Programming | None | Yes | Yes | **Competitive Programming Calendar:** Feeds live LeetCode, CodeChef, and Codeforces contest schedules directly into the student dashboard. |
 | **[GitHub REST API](https://docs.github.com/en/rest)** | Development | Public/OAuth | Yes | Yes | **Automated Skill Profiling:** Scans student public repos and commit histories to automatically calculate initial skill proficiencies without manual form entry. |
 | **[Judge0 CE](https://ce.judge0.com/)** | Programming | `apiKey` | Yes | Yes | **In-Browser Sandbox Code Execution:** Lets students write and verify coding solutions directly inside their roadmap milestones. |

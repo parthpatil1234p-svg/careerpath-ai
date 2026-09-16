@@ -5,7 +5,29 @@
 
 const express = require('express');
 const router = express.Router();
-const { getJobsForCareer, searchLiveJobs, matchJobsWithSkills } = require('../services/jobBoardService');
+const { getJobsForCareer, searchLiveJobs, searchAdzunaJobs, matchJobsWithSkills } = require('../services/jobBoardService');
+
+/**
+ * GET /api/jobs/adzuna
+ * Direct real-time job search via Adzuna API (India localized tech hiring)
+ */
+router.get('/adzuna', async (req, res, next) => {
+  try {
+    const { q, country, limit } = req.query;
+    const jobs = await searchAdzunaJobs({
+      query: q || 'developer',
+      country: country || 'in',
+      limit: parseInt(limit, 10) || 8
+    });
+    return res.status(200).json({
+      success: true,
+      message: 'Adzuna real-time job openings',
+      data: { total: jobs ? jobs.length : 0, jobs: jobs || [] }
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * GET /api/jobs/career/:slug
