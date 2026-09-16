@@ -59,6 +59,7 @@ const recommendationRoutes = require('./routes/recommendationRoutes');
 const roadmapRoutes = require('./routes/roadmapRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const jobRoutes = require('./routes/jobRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect to MongoDB Atlas ───────────────────────────────
@@ -147,6 +148,7 @@ app.get('/', (req, res) => {
       toggleTask: 'PATCH /api/roadmaps/tasks/:taskId/toggle',
       archiveRoadmap: 'DELETE /api/roadmaps/current',
       dashboard: 'GET /api/dashboard',
+      liveJobs: 'GET /api/jobs/career/:slug',
     },
     note: 'To use the frontend user interface, please open http://localhost:5500 in your web browser.',
   });
@@ -205,6 +207,9 @@ app.use('/api/dashboard', dashboardRoutes);
 
 // AI Career Mentor Chatbot (Powered by Google Gemini API)
 app.use('/api/chat', chatRoutes);
+
+// AI Dev Board Live Market Jobs (Step 5 - Market Telemetry)
+app.use('/api/jobs', jobRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

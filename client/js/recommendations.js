@@ -23,13 +23,121 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnConfirmGenerate = document.getElementById('btnConfirmGenerate');
   const skillOrbitTitle = document.getElementById('skillOrbitTitle');
 
+  // Live Jobs Modal DOM Elements (AI Dev Board API)
+  const liveJobsModalEl = document.getElementById('liveJobsModal');
+  const jobsModalCareerTitle = document.getElementById('jobsModalCareerTitle');
+  const jobsLoadingState = document.getElementById('jobsLoadingState');
+  const jobsListContainer = document.getElementById('jobsListContainer');
+  const jobsEmptyState = document.getElementById('jobsEmptyState');
+  const filterGlobalRemote = document.getElementById('filterGlobalRemote');
+
   let roadmapModal = null;
   if (roadmapModalEl && typeof bootstrap !== 'undefined') {
     roadmapModal = new bootstrap.Modal(roadmapModalEl);
   }
 
+  let liveJobsModal = null;
+  if (liveJobsModalEl && typeof bootstrap !== 'undefined') {
+    liveJobsModal = new bootstrap.Modal(liveJobsModalEl);
+  }
+
   let selectedCareerSlug = null;
   let selectedCareerTitle = null;
+
+  let activeJobsCareerSlug = null;
+  let activeJobsCareerTitle = null;
+
+  // Load and render real-time market jobs for a career track
+  const loadJobsForCareer = async (slug, title, isGlobalRemote = false) => {
+    activeJobsCareerSlug = slug;
+    activeJobsCareerTitle = title;
+
+    if (jobsModalCareerTitle) jobsModalCareerTitle.textContent = title;
+    if (jobsLoadingState) jobsLoadingState.classList.remove('d-none');
+    if (jobsListContainer) {
+      jobsListContainer.classList.add('d-none');
+      jobsListContainer.innerHTML = '';
+    }
+    if (jobsEmptyState) jobsEmptyState.classList.add('d-none');
+
+    if (liveJobsModal) {
+      liveJobsModal.show();
+    }
+
+    try {
+      const res = await window.API.get(`/jobs/career/${slug}`, {
+        query: { globalRemote: isGlobalRemote ? 'true' : 'false', limit: 8 }
+      });
+
+      if (jobsLoadingState) jobsLoadingState.classList.add('d-none');
+
+      const jobs = res.data?.jobs || [];
+      if (jobs.length === 0) {
+        if (jobsEmptyState) jobsEmptyState.classList.remove('d-none');
+        return;
+      }
+
+      if (jobsListContainer) {
+        jobsListContainer.classList.remove('d-none');
+        jobsListContainer.innerHTML = jobs.map(job => `
+          <div class="job-item-card">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 mb-2">
+              <div>
+                <h4 class="h6 fw-bold text-white mb-1 d-flex align-items-center gap-2 flex-wrap">
+                  <span>${escapeHtml(job.title)}</span>
+                  ${job.globalRemote ? '<span class="atlas-badge text-teal border-teal"><i class="bi bi-globe me-1"></i>Worldwide Remote</span>' : ''}
+                </h4>
+                <div class="job-company-tag d-flex align-items-center gap-2 flex-wrap">
+                  <span><i class="bi bi-building me-1 text-cyan"></i>${escapeHtml(job.companyName)}</span>
+                  <span>•</span>
+                  <span><i class="bi bi-geo-alt me-1 text-muted"></i>${escapeHtml(job.location)}</span>
+                  <span>•</span>
+                  <span class="text-secondary font-mono small">${escapeHtml(job.source || 'Live API')}</span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="job-salary-badge">
+                  <i class="bi bi-cash-stack me-1"></i>${escapeHtml(job.salaryText)}
+                </span>
+                <span class="job-remote-badge text-uppercase">
+                  ${escapeHtml(job.workplace)}
+                </span>
+              </div>
+            </div>
+
+            <!-- Tags & Direct Apply -->
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pt-2 border-top border-line mt-2">
+              <div class="d-flex flex-wrap gap-1">
+                ${(job.tags || []).map(t => `<span class="badge skill-pill matched-pill font-mono" style="font-size: 0.68rem;">#${escapeHtml(t)}</span>`).join('')}
+              </div>
+              <a href="${escapeHtml(job.url)}" target="_blank" rel="noopener noreferrer" class="btn cp-btn-primary btn-sm px-3 py-1 text-nowrap">
+                <span>View & Apply</span>
+                <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+              </a>
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      if (jobsLoadingState) jobsLoadingState.classList.add('d-none');
+      if (jobsEmptyState) {
+        jobsEmptyState.classList.remove('d-none');
+        const h4 = jobsEmptyState.querySelector('h4');
+        const p = jobsEmptyState.querySelector('p');
+        if (h4) h4.textContent = 'Could not load live jobs';
+        if (p) p.textContent = err.message || 'Please check your connection and try again.';
+      }
+    }
+  };
+
+  // Switch filter between all and global remote
+  if (filterGlobalRemote) {
+    filterGlobalRemote.addEventListener('change', (e) => {
+      if (activeJobsCareerSlug) {
+        loadJobsForCareer(activeJobsCareerSlug, activeJobsCareerTitle, e.target.checked);
+      }
+    });
+  }
 
   // Duration option radio selection styling
   document.querySelectorAll('input[name="durationWeeks"]').forEach((radio) => {
@@ -331,17 +439,39 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="text-muted small">
             <i class="bi bi-compass me-1 text-teal"></i> ${missingSkills.length + weakSkills.length} skills to strengthen for this career trajectory
           </div>
-          <button
-            type="button"
-            class="btn ${isTopRank ? 'cp-btn-primary' : 'cp-btn-outline'} btn-sm px-4 py-2 fw-semibold choose-career-btn"
-            data-career-title="${escapeHtml(career.title)}"
-            data-career-slug="${escapeHtml(career.slug)}"
-          >
-            <span>Build Roadmap for ${escapeHtml(career.title)}</span>
-            <i class="bi bi-arrow-right ms-1"></i>
-          </button>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button
+              type="button"
+              class="btn cp-btn-outline btn-sm px-3 py-2 fw-semibold view-jobs-btn"
+              data-career-title="${escapeHtml(career.title)}"
+              data-career-slug="${escapeHtml(career.slug)}"
+            >
+              <i class="bi bi-briefcase-fill text-cyan me-1"></i>
+              <span>Live Market Jobs</span>
+            </button>
+            <button
+              type="button"
+              class="btn ${isTopRank ? 'cp-btn-primary' : 'cp-btn-outline'} btn-sm px-4 py-2 fw-semibold choose-career-btn"
+              data-career-title="${escapeHtml(career.title)}"
+              data-career-slug="${escapeHtml(career.slug)}"
+            >
+              <span>Build Roadmap for ${escapeHtml(career.title)}</span>
+              <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
         </div>
       `;
+
+      // Bind View Live Jobs button click
+      const viewJobsBtn = card.querySelector('.view-jobs-btn');
+      if (viewJobsBtn) {
+        viewJobsBtn.addEventListener('click', () => {
+          const title = viewJobsBtn.getAttribute('data-career-title');
+          const slug = viewJobsBtn.getAttribute('data-career-slug');
+          const isGlobal = filterGlobalRemote ? filterGlobalRemote.checked : false;
+          loadJobsForCareer(slug, title, isGlobal);
+        });
+      }
 
       // Bind Choose Career button click
       const chooseBtn = card.querySelector('.choose-career-btn');
