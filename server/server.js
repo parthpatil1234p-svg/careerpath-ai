@@ -166,6 +166,7 @@ app.get('/api/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
     version: '1.0.0',
     team: '404 Brain Not Found',
+    emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
   });
 });
 
