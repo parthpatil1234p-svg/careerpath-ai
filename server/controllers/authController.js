@@ -15,6 +15,7 @@
 
 const User          = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const { sendOtpEmail } = require('../services/emailService');
 
 // ── Helper: 6-Digit Secure OTP Generator ─────────────────────
 const generateOtp = () => {
@@ -70,6 +71,7 @@ const registerUser = async (req, res, next) => {
       await existingUser.save();
 
       console.log(`\n🔑 [OTP] Verification Code for ${normalizedEmail}: ${otpCode}\n`);
+      sendOtpEmail(normalizedEmail, existingUser.name, otpCode);
 
       return res.status(200).json({
         success: true,
@@ -98,6 +100,7 @@ const registerUser = async (req, res, next) => {
     await user.save();
 
     console.log(`\n🔑 [OTP] Verification Code for ${normalizedEmail}: ${otpCode}\n`);
+    sendOtpEmail(user.email, user.name, otpCode);
 
     res.status(201).json({
       success: true,
@@ -236,6 +239,7 @@ const resendOtp = async (req, res, next) => {
     await user.save();
 
     console.log(`\n🔄 [OTP RESENT] New Verification Code for ${normalizedEmail}: ${newCode}\n`);
+    sendOtpEmail(normalizedEmail, user.name, newCode);
 
     return res.status(200).json({
       success: true,
@@ -289,6 +293,7 @@ const loginUser = async (req, res, next) => {
       await user.save();
 
       console.log(`\n🔑 [LOGIN RE-VERIFY] Verification Code for ${normalizedEmail}: ${newCode}\n`);
+      sendOtpEmail(normalizedEmail, user.name, newCode);
 
       return res.status(403).json({
         success: false,
