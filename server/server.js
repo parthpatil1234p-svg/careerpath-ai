@@ -239,6 +239,7 @@ app.listen(PORT, () => {
   console.log(`🗺️  Roadmap routes    : http://localhost:${PORT}/api/roadmaps`);
   console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
   console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
   console.log('👥 Team              : 404 Brain Not Found · Hack2Ignite 2026–27');
   console.log('');
 });
