@@ -75,12 +75,11 @@ const registerUser = async (req, res, next) => {
 
       return res.status(200).json({
         success: true,
-        message: 'Verification code generated for unverified account',
+        message: 'Verification code sent to your registered Gmail address.',
         data: {
           email: normalizedEmail,
           name: existingUser.name,
           requiresVerification: true,
-          demoOtp: otpCode, // Provided for live hackathon demonstration
         },
       });
     }
@@ -104,12 +103,11 @@ const registerUser = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Student account registered! Please verify your email with the OTP code.',
+      message: 'Student account registered! Please check your Gmail for your 6-digit OTP.',
       data: {
         email: user.email,
         name: user.name,
         requiresVerification: true,
-        demoOtp: otpCode, // Provided for live hackathon demonstration
       },
     });
   } catch (error) {
@@ -243,10 +241,9 @@ const resendOtp = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: 'A fresh 6-digit verification code has been generated.',
+      message: 'A fresh 6-digit verification code has been sent to your Gmail inbox.',
       data: {
         email: normalizedEmail,
-        demoOtp: newCode,
       },
     });
   } catch (error) {
@@ -298,10 +295,9 @@ const loginUser = async (req, res, next) => {
       return res.status(403).json({
         success: false,
         requiresVerification: true,
-        message: 'Account not verified yet. Please enter the OTP verification code.',
+        message: 'Account not verified yet. Please enter the OTP verification code sent to your Gmail.',
         data: {
           email: normalizedEmail,
-          demoOtp: newCode,
         },
       });
     }

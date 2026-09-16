@@ -2,10 +2,11 @@
 
 ## Current Status: Idle / Ready
 - **Completed**:
-  - Unverified account login roadblock resolved: automatic prompt & seamless redirect to 6-digit OTP verification.
-  - OTP digit inputs aligned in horizontal row (`.otp-digit-field`, `gap: 10px`).
+  - Removed on-screen demo OTP banner and demo autofill badge.
+  - Switched to authentic Gmail OTP delivery: 6-digit verification code is delivered directly to user's Gmail inbox via Nodemailer + Gmail SMTP.
+  - Sanitized backend authController so OTP codes are not exposed in API response payloads.
+  - Updated registration verification view with clean Gmail instructions banner.
   - High-DPI glowing tech compass favicon (`favicon.svg` & `favicon.ico`) added and linked across all HTML templates.
-  - All updates committed and pushed to `main` (`e14eda1`).
   - Vercel frontend (`https://careerpath-ai-jade.vercel.app`) and Render backend (`https://careerpath-ai-bdbt.onrender.com`) synced and verified.
 
 ## Next Task

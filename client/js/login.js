@@ -83,8 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (isUnverified) {
         const targetEmail = err.data?.data?.email || email;
-        const demoOtp = err.data?.data?.demoOtp || '';
-        const verifyUrl = `register.html?verify=true&email=${encodeURIComponent(targetEmail)}${demoOtp ? '&demoOtp=' + encodeURIComponent(demoOtp) : ''}`;
+        const verifyUrl = `register.html?verify=true&email=${encodeURIComponent(targetEmail)}`;
 
         alertContainer.innerHTML = `
           <div class="alert alert-warning border border-warning border-opacity-50 p-3 mb-3" role="alert">
@@ -93,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <strong class="text-white">Email Verification Required</strong>
             </div>
             <p class="small text-white-50 mb-2">
-              Your account is not verified yet. A 6-digit verification code has been generated for <strong>${escapeHtml(targetEmail)}</strong>.
+              Your account is not verified yet. A 6-digit verification code has been sent to <strong>${escapeHtml(targetEmail)}</strong>.
             </p>
             <a href="${verifyUrl}" class="btn cp-btn-primary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2">
               <span>Enter 6-Digit OTP Code</span>

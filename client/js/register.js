@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements - Step 2 (OTP)
   const step2 = document.getElementById('registerStep2');
   const displayEmail = document.getElementById('displayTargetEmail');
-  const demoOtpBadge = document.getElementById('demoOtpBadge');
   const otpForm = document.getElementById('otpForm');
   const verifyOtpBtn = document.getElementById('verifyOtpBtn');
   const btnBackToForm = document.getElementById('btnBackToForm');
@@ -59,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Paste handling (e.g. user pastes 6 digits)
+    // Paste handling (e.g. user pastes 6 digits from Gmail)
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
@@ -71,27 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  // Autofill all digit boxes with a code
-  const fillOtpCode = (code) => {
-    if (!code) return;
-    const str = String(code).trim();
-    str.split('').slice(0, 6).forEach((digit, i) => {
-      if (digitInputs[i]) digitInputs[i].value = digit;
-    });
-    if (digitInputs[5]) digitInputs[5].focus();
-  };
-
-  // Demo OTP Badge click-to-autofill helper
-  if (demoOtpBadge) {
-    demoOtpBadge.addEventListener('click', () => {
-      const code = demoOtpBadge.textContent.trim();
-      if (code && code !== '------') {
-        fillOtpCode(code);
-        showAlert('Demo code autofilled! Click Verify to activate.', 'info');
-      }
-    });
-  }
 
   // ── Countdown Timer for Resend OTP ──────────────────────────
   const startResendCountdown = (seconds = 60) => {
@@ -114,12 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ── Transition to Step 2 (OTP) ──────────────────────────────
-  const showOtpStep = (email, demoCode) => {
+  const showOtpStep = (email) => {
     currentEmail = email;
     if (displayEmail) displayEmail.textContent = email;
-    if (demoOtpBadge && demoCode) {
-      demoOtpBadge.textContent = demoCode;
-    }
 
     step1.classList.add('d-none');
     step2.classList.remove('d-none');
@@ -130,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (digitInputs[0]) digitInputs[0].focus();
 
     startResendCountdown(60);
-    showAlert('A 6-digit verification code has been generated.', 'info');
+    showAlert('A 6-digit verification code has been sent to your Gmail inbox.', 'info');
   };
 
   // Back to registration form
@@ -187,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.innerHTML = originalBtnContent;
 
       if (response.success && response.data?.requiresVerification) {
-        showOtpStep(response.data.email, response.data.demoOtp);
+        showOtpStep(response.data.email);
       } else if (response.success && response.data?.token) {
         // Fallback direct login if already verified
         window.Auth.setToken(response.data.token);
@@ -226,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         document.getElementById('btnGoToVerify')?.addEventListener('click', () => {
-          showOtpStep(email, '');
+          showOtpStep(email);
         });
         return;
       }
@@ -248,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enteredOtp = Array.from(digitInputs).map(i => i.value.trim()).join('');
 
     if (enteredOtp.length !== 6) {
-      showAlert('Please enter the complete 6-digit verification code.');
+      showAlert('Please enter the complete 6-digit verification code sent to your Gmail.');
       return;
     }
 
@@ -293,9 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const response = await window.API.post('/auth/resend-otp', { email: currentEmail });
-      if (response.success && response.data?.demoOtp) {
-        if (demoOtpBadge) demoOtpBadge.textContent = response.data.demoOtp;
-        showAlert('New verification code generated and sent!', 'success');
+      if (response.success) {
+        showAlert('A fresh 6-digit verification code has been sent to your Gmail inbox!', 'success');
         startResendCountdown(60);
       } else {
         showAlert(response.message || 'Could not resend OTP. Please try again.');
@@ -311,8 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verify') === 'true' && urlParams.get('email')) {
     const targetEmail = urlParams.get('email');
-    const demoOtp = urlParams.get('demoOtp') || '';
-    showOtpStep(targetEmail, demoOtp);
-    showAlert('Please enter the 6-digit verification code sent to your email to activate your account.', 'info');
+    showOtpStep(targetEmail);
+    showAlert('Please enter the 6-digit verification code sent to your Gmail to activate your account.', 'info');
   }
 });

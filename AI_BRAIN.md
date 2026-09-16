@@ -13,7 +13,7 @@ CareerPath AI is an AI-powered career navigation atlas for students and fresh gr
 - `js/config.js`: Detects localhost vs production; sets `API_BASE_URL` (`http://localhost:5000/api` vs `https://careerpath-ai-bdbt.onrender.com/api`).
 - `js/api.js`: Universal fetch wrapper with token injection, timeout and network recovery messaging.
 - `js/auth.js`: Token & user profile storage in `localStorage`.
-- `register.html` & `js/register.js`: 2-step onboarding with 6-digit OTP boxes, auto-advance, demo autofill, and direct `?verify=true&email=...` query support.
+- `register.html` & `js/register.js`: 2-step onboarding with 6-digit OTP boxes, auto-advance, direct `?verify=true&email=...` query support, and real-time Gmail inbox delivery.
 - `login.html` & `js/login.js`: Student login; detects 403 unverified accounts and provides instant OTP redirection.
 - `assessment.html`: Multi-category student assessment collecting skills, domain interests, and soft skills.
 - `recommendations.html`: 60/25/15 career-fit evaluation, dynamic roadmaps, and live jobs modal via aidevboard API.

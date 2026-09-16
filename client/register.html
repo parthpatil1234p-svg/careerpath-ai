@@ -74,37 +74,11 @@
         transform: translateY(-2px) !important;
       }
 
-      .demo-otp-banner {
-        background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(139, 92, 246, 0.12) 100%) !important;
-        border: 1px dashed rgba(0, 242, 254, 0.5) !important;
-        border-radius: 8px !important;
-        padding: 10px 14px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 8px !important;
-        margin-bottom: 1rem !important;
-      }
-
-      .demo-otp-badge {
-        background: rgba(0, 242, 254, 0.22) !important;
-        color: #00F2FE !important;
-        border: 1px solid rgba(0, 242, 254, 0.5) !important;
-        font-family: 'JetBrains Mono', monospace !important;
-        font-size: 1.05rem !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.12em !important;
-        padding: 4px 12px !important;
-        border-radius: 6px !important;
-        cursor: pointer !important;
-        display: inline-block !important;
-        transition: all 0.2s ease !important;
-      }
-
-      .demo-otp-badge:hover {
-        background: rgba(0, 242, 254, 0.4) !important;
-        box-shadow: 0 0 15px rgba(0, 242, 254, 0.5) !important;
-        transform: scale(1.05) !important;
+      .email-notice-card {
+        background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%) !important;
+        border: 1px solid rgba(0, 242, 254, 0.3) !important;
+        border-radius: 10px !important;
+        padding: 12px 16px !important;
       }
     </style>
   </head>
@@ -304,16 +278,15 @@
                 </p>
               </div>
 
-              <!-- Hackathon Instant Demo Autofill Helper -->
-              <div class="demo-otp-banner mb-3" id="demoOtpBanner">
-                <div class="small text-secondary">
-                  <i class="bi bi-magic text-cyan me-1"></i>
-                  <span>Demo Code:</span>
+              <!-- Real Email Verification Notice Banner -->
+              <div class="email-notice-card mb-3 p-3 rounded border border-info border-opacity-25" style="background: rgba(0, 242, 254, 0.06);">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-envelope-check-fill text-cyan fs-5"></i>
+                  <strong class="text-white small">OTP Code Sent to Gmail</strong>
                 </div>
-                <span class="demo-otp-badge" id="demoOtpBadge" title="Click to autofill verification code">
-                  ------
-                </span>
-                <span class="small text-muted font-mono" style="font-size: 0.72rem;">Click to autofill</span>
+                <p class="text-white-50 small mb-0" style="font-size: 0.82rem;">
+                  Please check your Gmail inbox (and Spam/Updates folder) for your 6-digit activation code.
+                </p>
               </div>
 
               <form id="otpForm" novalidate>
