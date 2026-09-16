@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <!-- Glowing Border Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE" />
+      <stop offset="50%" stop-color="#4FACFE" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+
+    <!-- Compass Needle Gradient -->
+    <linearGradient id="needleNorth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE" />
+      <stop offset="100%" stop-color="#4FACFE" />
+    </linearGradient>
+    <linearGradient id="needleSouth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748B" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- Outer Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rounded App Icon Background -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2" />
+
+  <!-- Subtle Navigation Ring -->
+  <circle cx="32" cy="32" r="21" fill="none" stroke="rgba(0, 242, 254, 0.2)" stroke-width="1.5" stroke-dasharray="2 3" />
+  <circle cx="32" cy="32" r="23.5" fill="none" stroke="rgba(139, 92, 246, 0.25)" stroke-width="1" />
+
+  <!-- Cardinal Compass Tick Marks -->
+  <line x1="32" y1="9" x2="32" y2="13" stroke="#00F2FE" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="32" y1="51" x2="32" y2="55" stroke="rgba(148, 163, 184, 0.5)" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="9" y1="32" x2="13" y2="32" stroke="rgba(148, 163, 184, 0.5)" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="51" y1="32" x2="55" y2="32" stroke="#00F2FE" stroke-width="1.5" stroke-linecap="round" />
+
+  <!-- Stylized Compass Star Needle (Rotated 45deg for dynamic forward career momentum) -->
+  <g transform="rotate(45, 32, 32)" filter="url(#glow)">
+    <!-- North Pointer (Glowing Neon Cyan) -->
+    <polygon points="32,13 36,32 32,29 28,32" fill="url(#needleNorth)" />
+    <!-- East Pointer Accent -->
+    <polygon points="51,32 32,36 35,32 32,28" fill="#38BDF8" opacity="0.85" />
+    <!-- South Pointer (Slate) -->
+    <polygon points="32,51 28,32 32,35 36,32" fill="url(#needleSouth)" />
+    <!-- West Pointer (Slate) -->
+    <polygon points="13,32 32,28 29,32 32,36" fill="url(#needleSouth)" />
+  </g>
+
+  <!-- Center Core Pivot -->
+  <circle cx="32" cy="32" r="4.5" fill="#0F172A" stroke="#00F2FE" stroke-width="2" />
+  <circle cx="32" cy="32" r="2" fill="#00F2FE" filter="url(#glow)" />
+</svg>

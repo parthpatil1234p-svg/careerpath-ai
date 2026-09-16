@@ -19,6 +19,7 @@ CareerPath AI is an AI-powered career navigation atlas for students and fresh gr
 - `recommendations.html`: 60/25/15 career-fit evaluation, dynamic roadmaps, and live jobs modal via aidevboard API.
 - `roadmap.html`: Interactive 4, 8, or 12-week roadmaps with checkboxes and documentation references.
 - `chat.html`: Dual-engine AI Career Mentor with stream/markdown parsing.
+- `favicon.svg` & `favicon.ico`: High-DPI glowing neon cyan/purple tech compass icon linked across all HTML templates.
 
 ### 2. Backend (`server/`)
 - `server.js`: Express entry point, helmet, CORS (allows localhost and `*.vercel.app`), rate-limiting.
