@@ -200,6 +200,37 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnContent;
 
+      const isExisting =
+        (err.message && err.message.toLowerCase().includes('already exists')) ||
+        (err.data?.message && err.data.message.toLowerCase().includes('already exists'));
+
+      if (isExisting) {
+        alertContainer.innerHTML = `
+          <div class="alert alert-warning border border-warning border-opacity-50 p-3 mb-3" role="alert">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="bi bi-shield-exclamation text-warning fs-5"></i>
+              <strong class="text-white">Account Already Registered</strong>
+            </div>
+            <p class="small text-white-50 mb-2">
+              An account with <strong>${escapeHtml(email)}</strong> already exists. If you haven't verified your email yet:
+            </p>
+            <div class="d-flex gap-2">
+              <button type="button" id="btnGoToVerify" class="btn cp-btn-primary btn-sm flex-grow-1 py-1">
+                Enter Verification OTP →
+              </button>
+              <a href="login.html" class="btn cp-btn-outline btn-sm py-1">
+                Log In
+              </a>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('btnGoToVerify')?.addEventListener('click', () => {
+          showOtpStep(email, '');
+        });
+        return;
+      }
+
       if (err.errors && Array.isArray(err.errors) && err.errors.length > 0) {
         const errorList = err.errors.map((e) => e.message).join('; ');
         showAlert(errorList);
@@ -275,4 +306,13 @@ document.addEventListener('DOMContentLoaded', () => {
       showAlert(err.message || 'Failed to resend code.');
     }
   });
+
+  // ── Step 2 Direct Access Check (e.g. from login redirect) ─────
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('verify') === 'true' && urlParams.get('email')) {
+    const targetEmail = urlParams.get('email');
+    const demoOtp = urlParams.get('demoOtp') || '';
+    showOtpStep(targetEmail, demoOtp);
+    showAlert('Please enter the 6-digit verification code sent to your email to activate your account.', 'info');
+  }
 });

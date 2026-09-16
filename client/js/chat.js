@@ -24,7 +24,7 @@
       return window.CONFIG.API_BASE_URL;
     }
     const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-    return isLocalhost ? 'http://localhost:5000/api' : 'https://careerpath-ai-server.onrender.com/api';
+    return isLocalhost ? 'http://localhost:5000/api' : 'https://careerpath-ai-bdbt.onrender.com/api';
   }
 
   function getAuthToken() {
