@@ -75,39 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnContent;
-
-      const isUnverified =
-        err.status === 403 &&
-        (err.data?.requiresVerification ||
-          (err.message && err.message.toLowerCase().includes('verified')));
-
-      if (isUnverified) {
-        const targetEmail = err.data?.data?.email || email;
-        const verifyUrl = `register.html?verify=true&email=${encodeURIComponent(targetEmail)}`;
-
-        alertContainer.innerHTML = `
-          <div class="alert alert-warning border border-warning border-opacity-50 p-3 mb-3" role="alert">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="bi bi-shield-exclamation text-warning fs-5"></i>
-              <strong class="text-white">Email Verification Required</strong>
-            </div>
-            <p class="small text-white-50 mb-2">
-              Your account is not verified yet. A 6-digit verification code has been sent to <strong>${escapeHtml(targetEmail)}</strong>.
-            </p>
-            <a href="${verifyUrl}" class="btn cp-btn-primary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-              <span>Enter 6-Digit OTP Code</span>
-              <i class="bi bi-arrow-right"></i>
-            </a>
-          </div>
-        `;
-
-        setTimeout(() => {
-          window.location.href = verifyUrl;
-        }, 2200);
-        return;
-      }
-
-      showAlert(err.message || 'Login failed. Please try again.');
+      showAlert(err.message || 'Login failed. Please check your credentials and try again.');
     }
   });
 });

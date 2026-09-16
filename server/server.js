@@ -68,6 +68,9 @@ connectDB();
 // ── 3. Create Express app ─────────────────────────────────────
 const app = express();
 
+// Enable trust proxy for Render / Vercel reverse proxy rate-limiting
+app.set('trust proxy', 1);
+
 // ── Security: Helmet sets sensible HTTP headers ───────────────
 app.use(helmet());
 

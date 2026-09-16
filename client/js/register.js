@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled = true;
     submitBtn.innerHTML = `
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span>Generating Verification Code...</span>
+      <span>Creating Account...</span>
     `;
 
     try {
@@ -161,13 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnContent;
 
-      if (response.success && response.data?.requiresVerification) {
-        showOtpStep(response.data.email);
-      } else if (response.success && response.data?.token) {
-        // Fallback direct login if already verified
+      if (response.success && response.data?.token) {
         window.Auth.setToken(response.data.token);
         window.Auth.setCurrentUser(response.data.user);
-        window.location.href = 'assessment.html';
+        showAlert('Account created successfully! Taking you to assessment...', 'success');
+        setTimeout(() => {
+          window.location.href = 'assessment.html';
+        }, 500);
       } else {
         showAlert(response.message || 'Registration failed. Please try again.');
       }
@@ -183,26 +183,17 @@ document.addEventListener('DOMContentLoaded', () => {
         alertContainer.innerHTML = `
           <div class="alert alert-warning border border-warning border-opacity-50 p-3 mb-3" role="alert">
             <div class="d-flex align-items-center gap-2 mb-1">
-              <i class="bi bi-shield-exclamation text-warning fs-5"></i>
+              <i class="bi bi-person-check text-warning fs-5"></i>
               <strong class="text-white">Account Already Registered</strong>
             </div>
             <p class="small text-white-50 mb-2">
-              An account with <strong>${escapeHtml(email)}</strong> already exists. If you haven't verified your email yet:
+              An account with <strong>${escapeHtml(email)}</strong> already exists. You can log in directly:
             </p>
-            <div class="d-flex gap-2">
-              <button type="button" id="btnGoToVerify" class="btn cp-btn-primary btn-sm flex-grow-1 py-1">
-                Enter Verification OTP →
-              </button>
-              <a href="login.html" class="btn cp-btn-outline btn-sm py-1">
-                Log In
-              </a>
-            </div>
+            <a href="login.html" class="btn cp-btn-primary btn-sm w-100 py-1">
+              Log In to Dashboard →
+            </a>
           </div>
         `;
-
-        document.getElementById('btnGoToVerify')?.addEventListener('click', () => {
-          showOtpStep(email);
-        });
         return;
       }
 

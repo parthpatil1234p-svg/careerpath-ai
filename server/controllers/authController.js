@@ -57,57 +57,31 @@ const registerUser = async (req, res, next) => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
     if (existingUser) {
-      if (existingUser.isVerified) {
-        return res.status(409).json({
-          success: false,
-          message: 'An account with this email already exists. Please log in.',
-        });
-      }
-
-      // If existing user never completed verification, update details & resend OTP
-      existingUser.name = name.trim();
-      existingUser.password = password;
-      existingUser.verificationOtp = { code: otpCode, expiresAt };
-      await existingUser.save();
-
-      console.log(`\n🔑 [OTP] Verification Code for ${normalizedEmail}: ${otpCode}\n`);
-      sendOtpEmail(normalizedEmail, existingUser.name, otpCode);
-
-      return res.status(200).json({
-        success: true,
-        message: 'Verification code sent to your registered Gmail address.',
-        data: {
-          email: normalizedEmail,
-          name: existingUser.name,
-          requiresVerification: true,
-        },
+      return res.status(409).json({
+        success: false,
+        message: 'An account with this email already exists. Please log in directly.',
       });
     }
 
-    // Create new unverified user
+    // Create new instantly-verified user
     const user = new User({
       name: name.trim(),
       email: normalizedEmail,
       password, // hashed by pre-save hook
-      isVerified: false,
-      verificationOtp: {
-        code: otpCode,
-        expiresAt,
-      },
+      isVerified: true,
     });
 
     await user.save();
 
-    console.log(`\n🔑 [OTP] Verification Code for ${normalizedEmail}: ${otpCode}\n`);
-    await sendOtpEmail(user.email, user.name, otpCode);
+    // Generate JWT token directly for instant login
+    const token = generateToken(user);
 
     res.status(201).json({
       success: true,
-      message: 'Student account registered! Please check your Gmail for your 6-digit OTP.',
+      message: 'Student account created successfully! Welcome to CareerPath AI.',
       data: {
-        email: user.email,
-        name: user.name,
-        requiresVerification: true,
+        user: formatUser(user),
+        token,
       },
     });
   } catch (error) {
@@ -280,26 +254,10 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    // 3. Check verification status
+    // 3. Auto-verify user if needed and generate token
     if (user.isVerified === false) {
-      const newCode = generateOtp();
-      user.verificationOtp = {
-        code: newCode,
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      };
+      user.isVerified = true;
       await user.save();
-
-      console.log(`\n🔑 [LOGIN RE-VERIFY] Verification Code for ${normalizedEmail}: ${newCode}\n`);
-      await sendOtpEmail(normalizedEmail, user.name, newCode);
-
-      return res.status(403).json({
-        success: false,
-        requiresVerification: true,
-        message: 'Account not verified yet. Please enter the OTP verification code sent to your Gmail.',
-        data: {
-          email: normalizedEmail,
-        },
-      });
     }
 
     // 4. Generate token and respond
