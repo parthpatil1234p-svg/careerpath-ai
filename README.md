@@ -7,9 +7,12 @@
 
 ---
 
-> ### ⚠️ Project Status Notice
-> **Hackathon MVP — Development in progress**  
-> *This repository contains the architecture, data models, recommendation algorithms, interactive 3D WebGL experiences, and documentation for the Hack2Ignite 2026–27 qualifier. Core features are being implemented and verified per our 48-hour development roadmap.*
+> ### 🚀 Live Deployments & Project Links
+> - 🌐 **Production Web App:** [https://careerpath-ai-jade.vercel.app](https://careerpath-ai-jade.vercel.app)
+> - ⚡ **Production REST API:** [https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)
+> - 🩺 **Backend Health Check:** [https://careerpath-ai-bdbt.onrender.com/api/health](https://careerpath-ai-bdbt.onrender.com/api/health)
+> - 👥 **Team Name:** 404 Brain Not Found
+> - 🔑 **Demo Onboarding:** 1-Click Instant Registration & Direct Login (Zero OTP friction during judging)
 
 ---
 
@@ -67,6 +70,9 @@ CareerPath AI replaces confusing career tests and generic course catalogs with a
   - 🟡 **Weak / Upgrade Needed:** Student possesses the skill but requires higher depth.
   - 🔴 **Missing Skills:** Critical required skills absent from student profile.
 - 🗺️ **Personalized Roadmap Generation:** Flexible 4, 8, or 12-week structured curricula prioritizing missing and weak skills first, complete with curated documentation and tutorial links.
+- 🖨️ **1-Click Print & PDF Export:** Instant student schedule export to print or save offline via dedicated media stylesheets.
+- 💼 **Live Job Market Integration (AIDevBoard API):** Direct live query of active tech industry developer openings with failover cached vacancies.
+- 🤖 **Dual-Engine AI Career Mentor:** Intelligent chatbot powered by Groq Llama 3.3 70B primary, Google Gemini 2.0 Flash secondary fallback, and offline localized guidance.
 - ✅ **Real-Time Task Progress Tracking:** Checkbox milestone completion with atomic database persistence and dynamic progress percentage recalculation.
 - 📊 **Unified Student Dashboard:** Actionable command center showing active career goal, upcoming weekly tasks, next recommended step, and overall growth metrics.
 - 📱 **Progressive Enhancement:** Fully responsive glassmorphism UI with guaranteed 2D fallback behavior if WebGL is unavailable.

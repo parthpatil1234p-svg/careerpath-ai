@@ -186,3 +186,168 @@
   text-decoration: none;
   box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
 }
+
+/* ==========================================================================
+   Print / PDF Stylesheet (@media print)
+   Optimized for clean paper printouts and PDF exports
+   ========================================================================== */
+@media print {
+  @page {
+    margin: 1.2cm;
+    size: A4 portrait;
+  }
+
+  html, body.roadmap-page {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .cp-navbar,
+  footer,
+  .roadmap-path-card,
+  #roadmap-path,
+  .breadcrumb,
+  #alertContainer,
+  #chatWidgetContainer,
+  .chat-toggle-btn,
+  .btn,
+  button,
+  .resource-link-btn,
+  .roadmap-timeline::before {
+    display: none !important;
+  }
+
+  .print-brand-header {
+    display: block !important;
+    border-bottom: 2px solid #0284c7 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .print-brand-header h2 {
+    color: #0f172a !important;
+    font-size: 16pt !important;
+  }
+
+  main.container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .roadmap-header-card {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    padding: 1rem 1.25rem !important;
+    margin-bottom: 1.5rem !important;
+    backdrop-filter: none !important;
+  }
+
+  .roadmap-header-card::before {
+    background: #0284c7 !important;
+    height: 3px !important;
+  }
+
+  #roadmapCareerTitle {
+    color: #0f172a !important;
+    font-size: 15pt !important;
+  }
+
+  #roadmapCareerDesc {
+    color: #334155 !important;
+    font-size: 10pt !important;
+  }
+
+  .atlas-badge,
+  .badge-navy,
+  .cp-tag {
+    border: 1px solid #cbd5e1 !important;
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+  }
+
+  .match-score-badge {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+  }
+
+  #roadmapPercentage {
+    color: #0284c7 !important;
+  }
+
+  .progress-bar {
+    background: #0284c7 !important;
+  }
+
+  .roadmap-timeline {
+    padding-left: 0 !important;
+  }
+
+  .week-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    margin-bottom: 1.25rem !important;
+    padding: 1rem !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    backdrop-filter: none !important;
+  }
+
+  .week-card.active-week,
+  .week-card.completed-week {
+    border-color: #0284c7 !important;
+    box-shadow: none !important;
+  }
+
+  .week-badge-pill {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .week-card h3 {
+    color: #0f172a !important;
+    font-size: 12pt !important;
+  }
+
+  .week-card p,
+  .week-card .text-muted {
+    color: #475569 !important;
+  }
+
+  .task-checklist-item {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+    padding: 0.6rem 0.9rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .task-checklist-item.is-completed {
+    opacity: 1 !important;
+    background: #f0fdf4 !important;
+    border-color: #86efac !important;
+  }
+
+  .task-checklist-item .task-title {
+    color: #0f172a !important;
+    font-size: 10pt !important;
+  }
+
+  .task-checklist-item .text-muted {
+    color: #64748b !important;
+    font-size: 9pt !important;
+  }
+
+  .task-checkbox {
+    border: 1px solid #475569 !important;
+  }
+}
