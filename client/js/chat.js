@@ -1,6 +1,6 @@
 /**
  * chat.js — Floating AI Career Mentor Chatbot Widget
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * Team 404 Brain Not Found · CareerPath AI Platform
  */
 
 (function () {

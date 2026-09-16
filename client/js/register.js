@@ -1,6 +1,6 @@
 /**
  * register.js — Two-Step Registration & OTP Verification Controller
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * Team 404 Brain Not Found · CareerPath AI Platform
  */
 
 document.addEventListener('DOMContentLoaded', () => {

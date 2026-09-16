@@ -32,11 +32,11 @@
     TOKEN_KEY: 'careerpath_token',
     USER_KEY: 'careerpath_user',
 
-    // App & Hackathon Metadata
+    // App Metadata
     APP_NAME: 'CareerPath AI',
     TAGLINE: 'Discover Your Career. Build Your Skills.',
     TEAM_NAME: '404 Brain Not Found',
-    HACKATHON: 'Hack2Ignite 2026–27 (Round 1)',
+    EDITION: 'Production Release 2026–27',
     VERSION: '1.0.0',
   };
 

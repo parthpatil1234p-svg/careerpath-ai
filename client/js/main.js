@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'color: #167D8D; font-size: 16px; font-weight: bold;'
   );
   console.log(
-    '%cTeam 404 Brain Not Found · Hack2Ignite 2026–27',
+    '%cTeam 404 Brain Not Found · CareerPath AI Platform',
     'color: #1C355E; font-size: 12px;'
   );
 });
