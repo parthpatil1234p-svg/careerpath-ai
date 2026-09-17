@@ -140,9 +140,9 @@ Built with passion and sleepless dedication for **Hack2Ignite 2026–27**:
 | Member | Role & Focus Area | Key Technical Contributions |
 | :--- | :--- | :--- |
 | **Parth Patil** | **Team Leader & Backend Architect** | REST API architecture, Mongoose schemas, 60/25/15 scoring algorithm, roadmap generator, Render deployment, external API failover architecture |
-| **Suyog Pawar** | **Frontend & Integration Lead** | Responsive UI structuring, DOM controllers, asynchronous API client, Vercel deployment, print/PDF export engine, accessibility compliance |
+| **Aditi Vispute** | **Frontend & Integration Lead** | Responsive UI structuring, DOM controllers, asynchronous API client, Vercel deployment, print/PDF export engine, accessibility compliance |
 | **Asmita Lokhande** | **UI/UX & 3D WebGL Lead** | Glassmorphism design tokens, Three.js WebGL modules (Universe, Orbit, Path, Orb), GSAP transitions, slide deck visual identity |
-| **Aditi Vispute** | **QA, Data & Documentation Lead** | 45+ skill dataset standardization, career profiles curation, 19-point manual QA matrix, Postman test collections, demo rehearsal script |
+| **Suyog Pawar** | **QA, Data & Documentation Lead** | 45+ skill dataset standardization, career profiles curation, 19-point manual QA matrix, Postman test collections, demo rehearsal script |
 
 ---
 
