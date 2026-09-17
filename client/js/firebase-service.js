@@ -15,10 +15,19 @@
    * Checks global compat SDK first; falls back to dynamic ES module import from gstatic CDN.
    */
   async function getStorageInstance() {
+    // 0. Ensure config is fetched from server .env if not yet populated
+    if (!window.FIREBASE_CONFIG || !window.FIREBASE_CONFIG.apiKey) {
+      if (typeof window.initFirebaseConfig === 'function') {
+        await window.initFirebaseConfig();
+      }
+    }
+
     // 1. Compat SDK check
     if (typeof firebase !== 'undefined' && typeof firebase.storage === 'function') {
       if (!firebase.apps || !firebase.apps.length) {
-        firebase.initializeApp(window.FIREBASE_CONFIG);
+        if (window.FIREBASE_CONFIG) {
+          firebase.initializeApp(window.FIREBASE_CONFIG);
+        }
       }
       return {
         type: 'compat',
