@@ -85,8 +85,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     userEmail.textContent = user?.email || '';
 
-    const degreeName = user?.education?.degree ? `${user.education.degree}` : 'Degree not specified';
-    userDegree.innerHTML = `<i class="bi bi-mortarboard-fill text-warning me-1"></i> ${escapeHtml(degreeName)}`;
+    const degreeName = user?.education?.course || user?.education?.degree || 'Degree not specified';
+    const branchName = user?.education?.branch ? ` (${user.education.branch})` : '';
+    userDegree.innerHTML = `<i class="bi bi-mortarboard-fill text-warning me-1"></i> ${escapeHtml(degreeName + branchName)}`;
 
     const skillCount = user?.skills?.length || 0;
     userSkillsCount.innerHTML = `<i class="bi bi-tools text-teal me-1"></i> ${skillCount} Skills Logged`;
@@ -118,10 +119,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const pct = Math.round(activeRoadmap.progressPercentage || 0);
       statPercentage.textContent = `${pct}%`;
-      statTasks.textContent = `${activeRoadmap.completedTasksCount || 0} / ${activeRoadmap.totalTasksCount || 0}`;
+      const total = activeRoadmap.totalTasksCount ?? activeRoadmap.totalTasks ?? 0;
+      const completed = activeRoadmap.completedTasksCount ?? activeRoadmap.completedTasks ?? 0;
+      statTasks.textContent = `${completed} / ${total}`;
 
       // Estimated hours remaining (estimate 2 hours per incomplete task)
-      const remainingTasks = (activeRoadmap.totalTasksCount || 0) - (activeRoadmap.completedTasksCount || 0);
+      const remainingTasks = Math.max(0, total - completed);
       statHours.textContent = `~${remainingTasks * 2} hrs left`;
 
       btnGoToRoadmap.href = 'roadmap.html';

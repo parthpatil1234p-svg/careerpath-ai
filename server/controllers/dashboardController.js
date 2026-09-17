@@ -71,7 +71,9 @@ const getDashboard = async (req, res, next) => {
         durationWeeks: activeRoadmap.durationWeeks,
         status: activeRoadmap.status,
         totalTasks: activeRoadmap.totalTasks,
+        totalTasksCount: activeRoadmap.totalTasks,
         completedTasks: activeRoadmap.completedTasks,
+        completedTasksCount: activeRoadmap.completedTasks,
         progressPercentage: activeRoadmap.progressPercentage,
         startedAt: activeRoadmap.startedAt,
       };
