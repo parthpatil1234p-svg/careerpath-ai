@@ -233,8 +233,7 @@
 /* --------------------------------------------------------------------------
    4. High-Tech Dark Form Controls
    -------------------------------------------------------------------------- */
-.form-control,
-.form-select {
+.form-control {
   background-color: rgba(15, 23, 42, 0.85) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #FFFFFF !important;
@@ -243,6 +242,89 @@
   font-size: 0.95rem;
   font-family: var(--font-body);
   transition: all var(--transition-fast);
+}
+
+.form-select {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.65rem 2.25rem 0.65rem 1rem !important;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  transition: all var(--transition-fast);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394A3B8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 16px 12px !important;
+}
+
+.form-control-sm {
+  padding: 0.25rem 0.65rem !important;
+  font-size: 0.825rem !important;
+  min-height: 32px !important;
+  line-height: 1.4 !important;
+}
+
+.form-select-sm {
+  padding: 0.25rem 1.85rem 0.25rem 0.65rem !important;
+  font-size: 0.825rem !important;
+  min-height: 32px !important;
+  line-height: 1.4 !important;
+  background-position: right 0.6rem center !important;
+  background-size: 13px 10px !important;
+}
+
+/* Skill Assessment Proficiency Dropdown inside Cards */
+.skill-proficiency-select {
+  width: 122px !important;
+  min-width: 122px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 0.15rem 1.6rem 0.15rem 0.55rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+  border-radius: 6px !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2300F2FE' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.45rem center !important;
+  background-size: 11px 8px !important;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-proficiency-select:focus {
+  border-color: var(--cyan) !important;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.4) !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background-color: rgba(15, 23, 42, 0.98) !important;
+}
+
+.skill-proficiency-select:disabled {
+  opacity: 0.55 !important;
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+  background-color: rgba(15, 23, 42, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748B' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+  cursor: not-allowed;
+}
+
+.skill-proficiency-select option,
+.form-select option {
+  background-color: #0F172A !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  font-size: 0.85rem !important;
+  padding: 6px 10px !important;
 }
 
 .form-control::placeholder {

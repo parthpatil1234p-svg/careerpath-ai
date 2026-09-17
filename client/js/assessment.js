@@ -339,8 +339,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${skill.displayName}
               </label>
             </div>
-            <select class="form-select form-select-sm skill-proficiency-select py-0 px-2"
-                    style="width: 105px; font-size: 0.75rem; height: 26px;"
+            <select class="form-select form-select-sm skill-proficiency-select"
+                    aria-label="${skill.displayName} proficiency level"
                     ${!isSelected ? 'disabled' : ''}>
               <option value="beginner" ${currentProficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
               <option value="intermediate" ${currentProficiency === 'intermediate' ? 'selected' : ''}>Intermediate</option>
