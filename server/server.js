@@ -60,6 +60,7 @@ const roadmapRoutes = require('./routes/roadmapRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const jobRoutes = require('./routes/jobRoutes');
+const skillRoutes = require('./routes/skillRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect to MongoDB Atlas ───────────────────────────────
@@ -214,6 +215,9 @@ app.use('/api/chat', chatRoutes);
 
 // AI Dev Board Live Market Jobs (Step 5 - Market Telemetry)
 app.use('/api/jobs', jobRoutes);
+
+// Skills Directory & Custom Skill Catalog (Step 5 - Competency Intelligence)
+app.use('/api/skills', skillRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

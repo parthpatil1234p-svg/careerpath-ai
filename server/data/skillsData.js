@@ -229,6 +229,80 @@ const skillsData = [
     category: 'soft-skill',
     description: 'Collaborating effectively in agile teams, pair programming, active listening, and constructive peer reviews.',
   },
+
+  // ── Modern & Trending Industry Skills (12) ────────────────
+  {
+    name: 'typescript',
+    displayName: 'TypeScript',
+    category: 'frontend',
+    description: 'Typed superset of JavaScript for scalable, maintainable, and type-safe enterprise web applications.',
+  },
+  {
+    name: 'next.js',
+    displayName: 'Next.js',
+    category: 'frontend',
+    description: 'Production-grade React framework featuring server-side rendering, static site generation, and full-stack API routes.',
+  },
+  {
+    name: 'tailwind-css',
+    displayName: 'Tailwind CSS',
+    category: 'frontend',
+    description: 'Utility-first CSS framework for rapid, highly customized modern responsive user interface construction.',
+  },
+  {
+    name: 'flutter',
+    displayName: 'Flutter',
+    category: 'frontend',
+    description: 'Google multi-platform UI framework for building natively compiled mobile (iOS, Android), web, and desktop applications.',
+  },
+  {
+    name: 'fastapi',
+    displayName: 'FastAPI',
+    category: 'backend',
+    description: 'Modern, blazing-fast Python web framework for building REST & OpenAPI backends with automatic type validation.',
+  },
+  {
+    name: 'graphql',
+    displayName: 'GraphQL',
+    category: 'backend',
+    description: 'Declarative query language and runtime for APIs that empowers clients to request exactly what they need.',
+  },
+  {
+    name: 'docker',
+    displayName: 'Docker',
+    category: 'cloud',
+    description: 'Containerization engine for isolating and deploying lightweight, portable applications reproducibly across any cloud.',
+  },
+  {
+    name: 'kubernetes',
+    displayName: 'Kubernetes',
+    category: 'cloud',
+    description: 'Automated container orchestration platform for scaling, load balancing, and managing high-availability microservices.',
+  },
+  {
+    name: 'aws',
+    displayName: 'AWS Cloud',
+    category: 'cloud',
+    description: 'Amazon Web Services cloud architecture covering EC2, S3, Lambda serverless, IAM security, and cloud networking.',
+  },
+  {
+    name: 'langchain',
+    displayName: 'LangChain',
+    category: 'data',
+    description: 'Open-source framework for building contextual AI agents, RAG pipelines, and chaining Large Language Models.',
+  },
+  {
+    name: 'generative-ai',
+    displayName: 'Generative AI & LLMs',
+    category: 'data',
+    description: 'Prompt engineering, LLM integration, fine-tuning, vector embeddings, and building production-ready generative systems.',
+  },
+  {
+    name: 'pytorch',
+    displayName: 'PyTorch',
+    category: 'data',
+    description: 'Leading deep learning framework for training and deploying computer vision, NLP, and neural network architectures.',
+  },
 ];
 
 module.exports = skillsData;
