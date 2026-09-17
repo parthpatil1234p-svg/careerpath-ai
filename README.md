@@ -497,17 +497,35 @@ As mandated by the **Hack2Ignite 2026–27 Official Rulebook** (*Rule: "AI usage
 
 ---
 
-## 🔮 Business Model, Impact & Post-Hackathon Scalability
+## 🚀 Future Roadmap & Upcoming Updates (Post-Hackathon Scope)
 
-### Social Impact & Scalability
-- **Immediate Beneficiaries:** Tier-2 and Tier-3 college students in India who lack dedicated campus placement counseling.
-- **Cost Efficiency:** Designed to run entirely on free-tier infrastructure (Render + Vercel + Atlas Free M0) capable of supporting 5,000+ monthly active students at near-zero hosting cost.
+CareerPath AI is engineered with an extensible modular architecture. While our current MVP delivers a verified, end-to-end guidance and milestone execution experience, we have mapped out a phased development roadmap to scale from a hackathon prototype into a production-grade educational platform:
 
-### Institutional Revenue Streams (Phase 2):
-1. **B2B University SaaS:** Institutional analytics dashboard for college training & placement officers (TPOs) to identify aggregate skill gaps across entire graduating batches.
-2. **Corporate Hiring Pipeline:** Connecting students who achieve $\ge 80\%$ roadmap completion with hiring partner entry-level roles.
-3. **Automated Resume & GitHub ATS Analyzer:** Direct PDF resume parsing to auto-populate student skills without manual input.
-4. **Interactive Coding Sandbox (Judge0 CE):** In-browser code runner embedded in roadmap milestone tasks for verifiable proof-of-work.
+```
+┌───────────────────────────┐      ┌───────────────────────────┐      ┌───────────────────────────┐
+│     Phase 1: MVP (Now)    │      │  Phase 2: Scale (Q4 2026) │      │  Phase 3: B2B (Q1-Q2 2027)│
+├───────────────────────────┤      ├───────────────────────────┤      ├───────────────────────────┤
+│ • 60/25/15 Math Engine    │      │ • PDF Resume ATS Parser   │      │ • College TPO Dashboard   │
+│ • Tri-Color Skill Gaps    │ ───► │ • GitHub Proof-of-Work    │ ───► │ • Corporate Hiring Portal │
+│ • 4x Three.js 3D WebGL    │      │ • In-Browser Code Sandbox │      │ • AI Mock Video Interview │
+│ • Live Adzuna Market Data │      │ • Multilingual UI (i18n)  │      │ • WhatsApp Streak Nudges  │
+│ • Groq AI Mentor (<500ms) │      │ • Peer Study Circles      │      │ • Verified Certifications │
+└───────────────────────────┘      └───────────────────────────┘      └───────────────────────────┘
+```
+
+### 📅 Phased Release Plan:
+
+| Phase | Target Timeline | Focus Area | Key Upcoming Features & Technical Upgrades |
+| :--- | :--- | :--- | :--- |
+| **Phase 1: MVP** *(Current)* | **September 2026** | **Core Guidance Engine (Completed ✅)** | Deterministic 60/25/15 career matching, 3D WebGL cosmos & progress orb, tri-color gap analysis, Adzuna live hiring telemetry, adaptive roadmaps with 1-click PDF print export, Groq/Gemini dual AI mentor. |
+| **Phase 2: Proof-of-Work & Accessibility** | **Q4 2026 (Oct–Dec)** | **Automated Profiling & Practice** | **1. AI Resume ATS Parser:** Upload PDF resumes to auto-extract skills into the profile via OCR & LLM parsing.<br>**2. GitHub & LeetCode Proof-of-Work:** Connect GitHub APIs to verify that milestone tasks are backed by real commits, PRs, and solved algorithms.<br>**3. In-Browser Code Runner (Judge0 CE / WebContainers):** Solve coding exercises directly inside weekly milestone tasks without local setup.<br>**4. Regional Language Localization (i18n):** Hindi, Marathi, Telugu, and Tamil translations to empower rural Tier-3 college students. |
+| **Phase 3: Institutional & B2B SaaS** | **Q1–Q2 2027** | **Campus Placement & Enterprise Hiring** | **1. University TPO Placement Portal:** Institutional dashboard for college placement cells to track batch-wide skill gaps and student roadmap progress.<br>**2. Corporate Direct-Hiring Pipeline:** Partner recruiters receive pre-vetted candidate shortlists of students with $\ge 80\%$ roadmap completion.<br>**3. AI Mock Video Interviewer:** Browser-based speech and facial confidence analysis simulating real technical & behavioral rounds.<br>**4. WhatsApp Streak Bot:** Automated daily study nudges, quiz reminders, and streak tracking via WhatsApp Business API. |
+
+---
+
+### 💡 Social Impact & Long-Term Scalability:
+- **Democratizing Career Guidance:** Over 65% of engineering colleges in India lack dedicated technical career counselors. CareerPath AI provides every student with free, objective, industry-calibrated navigation.
+- **Sustainable Serverless Infrastructure:** Designed to run on lightweight microservices (Vercel CDN + Render Web Services + MongoDB Atlas), supporting 10,000+ active students at under $15/month operating cost.
 
 ---
 
