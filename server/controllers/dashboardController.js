@@ -119,6 +119,8 @@ const getDashboard = async (req, res, next) => {
           interests: user.interests || [],
           skills: user.skills || [],
           profileCompleted: isProfileComplete,
+          avatarUrl: user.avatarUrl || '',
+          resumeUrl: user.resumeUrl || '',
         },
         activeRoadmap: roadmapData,
         progress: {

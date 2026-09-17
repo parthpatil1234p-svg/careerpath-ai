@@ -119,6 +119,18 @@ const UserSchema = new mongoose.Schema(
       default: [],
     },
 
+    // Profile photo & Resume stored via Google Cloud / Firebase Storage
+    avatarUrl: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    resumeUrl: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+
     // True once the user has filled in education + interests + skills
     profileCompleted: {
       type: Boolean,

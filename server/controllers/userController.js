@@ -16,8 +16,15 @@ const User = require('../models/User');
 
 // ── Permitted update fields whitelist ─────────────────────────
 // Only these fields can be changed via PUT /api/users/me.
-// This prevents mass-assignment of sensitive fields like role or email.
-const ALLOWED_UPDATE_FIELDS = ['name', 'education', 'interests', 'skills', 'careerGoals'];
+const ALLOWED_UPDATE_FIELDS = [
+  'name',
+  'education',
+  'interests',
+  'skills',
+  'careerGoals',
+  'avatarUrl',
+  'resumeUrl',
+];
 
 // ── getMyProfile ───────────────────────────────────────────────
 /**

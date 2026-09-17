@@ -30,6 +30,8 @@ const formatUser = (user) => ({
   role:             user.role,
   profileCompleted: user.profileCompleted,
   isVerified:       user.isVerified || false,
+  avatarUrl:        user.avatarUrl || '',
+  resumeUrl:        user.resumeUrl || '',
 });
 
 // ── registerUser ───────────────────────────────────────────────
