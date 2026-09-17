@@ -24,10 +24,24 @@ const DEFAULT_GROQ_MODELS = [
   'mixtral-8x7b-32768'
 ].filter(Boolean);
 
+let isGroqDisabled = false;
+
 async function callGroq(messages, signal) {
+  if (isGroqDisabled) {
+    throw new Error('Groq engine is disabled due to invalid API key.');
+  }
+
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     throw new Error('GROQ_API_KEY is not configured in server environment.');
+  }
+
+  // 2.5s default timeout guard if no signal provided
+  let timeoutId = null;
+  if (!signal) {
+    const controller = new AbortController();
+    timeoutId = setTimeout(() => controller.abort(), 2500);
+    signal = controller.signal;
   }
 
   let lastError = null;
@@ -52,7 +66,11 @@ async function callGroq(messages, signal) {
       const data = await response.json();
 
       if (!response.ok) {
-        // If model does not exist or access denied, continue to next fallback candidate
+        if (response.status === 401 || data.error?.message?.includes('Invalid API Key')) {
+          isGroqDisabled = true;
+          console.warn('⚠️  [SpeedGuard] Groq API key is invalid. Groq engine auto-disabled for this session.');
+          throw new Error('Invalid Groq API Key');
+        }
         if (data.error?.message && (data.error.message.includes('does not exist') || data.error.message.includes('access to it'))) {
           lastError = new Error(data.error.message);
           continue;

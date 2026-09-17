@@ -115,10 +115,11 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ── Rate Limiting: protect /api from brute-force ─────────────
+// ── Rate Limiting: protect API from brute-force without choking legitimate users ────
+const isDev = process.env.NODE_ENV === 'development';
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,                  // max 100 requests per IP per window
+  max: isDev ? 5000 : 1500,  // 1500 requests per window (generous for SPA navigation)
   standardHeaders: true,     // Return rate-limit info in headers
   legacyHeaders: false,
   message: {
@@ -127,6 +128,20 @@ const apiLimiter = rateLimit({
   },
 });
 app.use('/api', apiLimiter);
+
+// Specific brute-force protection for auth login/register
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isDev ? 200 : 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many authentication attempts. Please try again later.',
+  },
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 // ── Routes ────────────────────────────────────────────────────
 

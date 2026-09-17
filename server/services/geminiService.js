@@ -24,10 +24,24 @@ const GEMINI_MODELS = [
   'gemini-1.5-pro'
 ].filter(Boolean);
 
+let isGeminiDisabled = false;
+
 async function callGemini(contents, model = null, signal, customSystemPrompt = null) {
+  if (isGeminiDisabled) {
+    throw new Error('Gemini engine is disabled due to invalid API key.');
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY is not configured in server environment.');
+  }
+
+  // 2.5s default timeout guard if no signal provided
+  let timeoutId = null;
+  if (!signal) {
+    const controller = new AbortController();
+    timeoutId = setTimeout(() => controller.abort(), 2500);
+    signal = controller.signal;
   }
 
   const modelsToTry = model ? [model, ...GEMINI_MODELS.filter(m => m !== model)] : GEMINI_MODELS;
@@ -57,6 +71,15 @@ async function callGemini(contents, model = null, signal, customSystemPrompt = n
       const data = await response.json();
 
       if (!response.ok) {
+        if (
+          data.error?.code === 400 && data.error?.message?.includes('API key not valid') ||
+          data.error?.code === 403 ||
+          data.error?.status === 'PERMISSION_DENIED'
+        ) {
+          isGeminiDisabled = true;
+          console.warn('⚠️  [SpeedGuard] Gemini API key is invalid/blocked. Gemini engine auto-disabled for this session.');
+          throw new Error('Invalid Gemini API Key');
+        }
         if (data.error?.code === 404 || data.error?.status === 'NOT_FOUND') {
           lastError = new Error(data.error?.message || `Model ${currentModel} not found`);
           continue;

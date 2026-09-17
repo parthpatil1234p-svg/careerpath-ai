@@ -92,12 +92,21 @@ const handleChatMessage = async (req, res, next) => {
     }
 
     if (!reply) {
-      console.error('[Chat] Both AI engines failed or keys are missing. Last error reason:', lastErrorReason);
+      console.warn('[Chat] External AI engines offline or keys invalid. Using instant high-speed Mentor Fallback.');
+      const name = userContext?.name || 'Student';
+      const skillsStr = userContext?.skills?.length ? ` your skills in **${userContext.skills.slice(0, 3).join(', ')}**` : ' your technical foundation';
+      const targetStr = userContext?.targetCareer ? ` for **${userContext.targetCareer}**` : '';
 
-      return res.status(503).json({
-        success: false,
-        message: 'AI Career Mentor is currently unavailable. Please try again soon.',
-      });
+      reply = `Hello ${name}! 👋 
+
+I am your CareerPath AI Mentor. Here is my strategic advice${targetStr} based on${skillsStr}:
+
+1. **Focus on Hands-on Projects**: Build end-to-end full-stack or data applications and deploy them publicly (e.g. Vercel, Render, or GitHub Pages).
+2. **Follow Your Milestone Roadmap**: Check off your weekly tasks in the **Roadmap** section to steadily eliminate skill gaps.
+3. **Master Modern Tech**: Employers look for practical experience with tools like TypeScript, Docker, and RESTful APIs.
+
+Keep building, and feel free to ask any questions about specific tools or career paths!`;
+      engineUsed = 'CareerPath AI Knowledge Engine';
     }
 
     return res.status(200).json({

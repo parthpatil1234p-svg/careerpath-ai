@@ -13,6 +13,28 @@ const Skill = require('../models/Skill');
 const { generateRecommendations } = require('../services/recommendationService');
 const { enrichRecommendationsWithAI } = require('../services/careerInsightService');
 
+let cachedCareers = null;
+let cachedCareersExpiry = 0;
+
+async function getCachedActiveCareers() {
+  if (cachedCareers && Date.now() < cachedCareersExpiry) {
+    return cachedCareers;
+  }
+  const careers = await Career.find({ active: true })
+    .select('-__v')
+    .populate({
+      path: 'requiredSkills.skill',
+      select: 'name displayName category description',
+    })
+    .lean();
+
+  if (careers && careers.length > 0) {
+    cachedCareers = careers;
+    cachedCareersExpiry = Date.now() + 5 * 60 * 1000; // Cache for 5 minutes
+  }
+  return careers;
+}
+
 // ── generateRecommendations ────────────────────────────────────
 /**
  * POST /api/recommendations/generate
@@ -21,7 +43,7 @@ const { enrichRecommendationsWithAI } = require('../services/careerInsightServic
 const getRecommendations = async (req, res, next) => {
   try {
     // 1. Fetch fresh user document
-    const user = await User.findById(req.user._id).select('-password');
+    const user = await User.findById(req.user._id).select('-password').lean();
 
     if (!user) {
       return res.status(404).json({
@@ -48,13 +70,8 @@ const getRecommendations = async (req, res, next) => {
       });
     }
 
-    // 3. Load active careers with populated skills
-    const careers = await Career.find({ active: true })
-      .select('-__v')
-      .populate({
-        path: 'requiredSkills.skill',
-        select: 'name displayName category description',
-      });
+    // 3. Load active careers (fast cached in memory)
+    const careers = await getCachedActiveCareers();
 
     if (!careers || careers.length === 0) {
       return res.status(500).json({

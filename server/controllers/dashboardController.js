@@ -17,8 +17,12 @@ const RoadmapTask = require('../models/RoadmapTask');
  */
 const getDashboard = async (req, res, next) => {
   try {
-    // 1. Fetch user
-    const user = await User.findById(req.user._id).select('-password');
+    // 1. Fetch user and active roadmap concurrently with .lean() for maximum speed
+    const [user, activeRoadmap] = await Promise.all([
+      User.findById(req.user._id).select('-password').lean(),
+      Roadmap.findOne({ user: req.user._id, status: 'active' }).lean(),
+    ]);
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -35,12 +39,6 @@ const getDashboard = async (req, res, next) => {
     const hasSkill = Array.isArray(user.skills) && user.skills.length > 0;
     const isProfileComplete = Boolean(hasEducation && hasInterest && hasSkill);
 
-    // 2. Query active roadmap
-    const activeRoadmap = await Roadmap.findOne({
-      user: user._id,
-      status: 'active',
-    });
-
     let roadmapData = null;
     let upcomingTasks = [];
     let nextRecommendedAction = '';
@@ -52,7 +50,7 @@ const getDashboard = async (req, res, next) => {
       const completedRoadmap = await Roadmap.findOne({
         user: user._id,
         status: 'completed',
-      });
+      }).lean();
 
       if (completedRoadmap) {
         nextRecommendedAction =
@@ -85,7 +83,8 @@ const getDashboard = async (req, res, next) => {
       })
         .sort({ weekNumber: 1, order: 1 })
         .limit(5)
-        .select('-__v');
+        .select('-__v')
+        .lean();
 
       if (upcomingTasks.length > 0) {
         const nextTask = upcomingTasks[0];
