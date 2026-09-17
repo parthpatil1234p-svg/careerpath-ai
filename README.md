@@ -27,6 +27,9 @@
   <a href="https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing">
     <img src="https://img.shields.io/badge/🎬_Demo_Video-Google_Drive-FF0000?style=for-the-badge&logo=googledrive&logoColor=white" alt="Demo Video" />
   </a>
+  <a href="https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing">
+    <img src="https://img.shields.io/badge/📊_Pitch_Deck_PPT-Google_Drive-orange?style=for-the-badge&logo=googleslides&logoColor=white" alt="Pitch Deck PPT" />
+  </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/📄_License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT" />
   </a>
@@ -47,11 +50,11 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | ⚡ **Live API Gateway** | **[https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)** | Node.js Express REST API hosted on Render |
 | 🩺 **Live Health Check** | **[https://careerpath-ai-bdbt.onrender.com/api/health](https://careerpath-ai-bdbt.onrender.com/api/health)** | Real-time server telemetry & uptime monitor |
 | 🔑 **Instant Demo Onboarding** | **Zero-OTP Instant Registration** | Enter any test email (e.g. `judge@hack2ignite.com`) & password to immediately jump into profiling |
-| 🎥 **Official Demo Video & PPT (Drive)** | **[Watch on Google Drive](https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing)** | Official video walkthrough recording & presentation slide deck |
+| 🎥 **Official Demo Video (Drive)** | **[Watch Demo on Google Drive](https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing)** | Official video walkthrough & prototype demonstration |
+| 📊 **Official Pitch Deck PPT (Drive)** | **[View PPT on Google Drive](https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing)** | 10-Slide presentation deck for Hack2Ignite Round 1 |
 | 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
 | 🧪 **API Test Collection** | **[`postman/CareerPath-AI.postman_collection.json`](postman/CareerPath-AI.postman_collection.json)** | Complete Postman v2.1 automated test collection |
-| 📊 **Presentation Deck Content** | **[`docs/PPT-CONTENT.md`](docs/PPT-CONTENT.md)** | Complete 10-slide pitch deck content & speaker notes |
-| 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
+| 📑 **Presentation Deck Content** | **[`docs/PPT-CONTENT.md`](docs/PPT-CONTENT.md)** | Complete 10-slide pitch deck content & speaker notes |
 
 ### ⏱️ Recommended 3-Minute Evaluation Walkthrough:
 1. **Landing (`/index.html`):** Explore the **3D Career Universe** constellation and click **"Get Started"**.
