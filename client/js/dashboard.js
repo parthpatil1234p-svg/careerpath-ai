@@ -241,6 +241,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       `;
     }
+  };
+
   // ── 4.5 Render Skills Matrix in Dashboard ───────────────────────
   const renderSkillsMatrix = (skills) => {
     const container = document.getElementById('dashboardSkillsContainer');
