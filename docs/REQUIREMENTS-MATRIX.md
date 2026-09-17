@@ -2,7 +2,7 @@
 
 > **Hack2Ignite 2026–27 | Round 1**  
 > **Project:** CareerPath AI  
-> **Team:** 404 Brain Not Found (Parth Patil, Suyog Pawar, Asmita Lokhande, Aditi Vispute)  
+> **Team:** 404 Brain Not Found (Parth Patil, Aditi Vispute, Asmita Lokhande, Suyog Pawar)  
 
 ---
 
