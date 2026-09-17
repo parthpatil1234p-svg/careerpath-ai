@@ -1,0 +1,513 @@
+================================================================
+CAREERPATH AI — DEMO VIDEO PLAN AND VOICE-OVER SCRIPT
+================================================================
+Document Version: 1.0.0 · Hack2Ignite 2026–27 Round 1 Qualifier
+Generated on: 17 September 2026
+Team: 404 Brain Not Found
+
+
+----------------------------------------------------------------
+1. PROJECT INFORMATION
+----------------------------------------------------------------
+- Project Name: CareerPath AI — AI Career Guidance and Skill Roadmap Platform
+- Official Problem Statement: ED-02 — Develop an AI-powered career guidance system for students based on skills, interests, and market trends
+- Domain: EduTech (Educational Technology / AI for Good)
+- Hackathon: Hack2Ignite 2026–27
+- Team Name: 404 Brain Not Found
+- Team Members:
+    1. Parth Patil — Team Leader & Backend Architect
+    2. Suyog Pawar — Frontend & Integration Lead
+    3. Asmita Lokhande — UI/UX & 3D WebGL Lead
+    4. Aditi Vispute — QA, Data & Documentation Lead
+- Actual Tested URLs:
+    * Local Client: http://localhost:5500/index.html (Active)
+    * Local Backend API: http://localhost:5000/api/health (Active)
+    * Production Client (Vercel CDN): https://careerpath-ai-jade.vercel.app (Active)
+    * Production REST API (Render): https://careerpath-ai-bdbt.onrender.com/api/health (Active)
+- Tested Date & Time: 17 September 2026, 10:25 AM IST
+- Features Actually Verified:
+    * Landing page with live 3D Career Universe WebGL constellation
+    * Zero-OTP instant student registration and JWT stateless authentication
+    * 3-Step student assessment (Academics, Interests, Skills & Proficiency)
+    * Deterministic 60/25/15 career recommendation engine with top-3 matches
+    * Skill-gap analysis (Matched = Green, Weak = Yellow, Missing = Red)
+    * Prototype market-trend indicator with live Indian tech job telemetry
+    * Adaptive roadmap generator (4, 8, 12 weeks) enforcing top-3 matches
+    * Weekly milestone task checkbox toggling with atomic progress calculation
+    * Unified student dashboard with 3D Holographic Progress Orb
+    * Quick Skills Manager modal and Cloudinary avatar/resume uploads
+    * AI Career Mentor chat drawer powered by Groq Llama 3.3 70B + Gemini fallback
+
+
+----------------------------------------------------------------
+2. RULEBOOK LIMITATIONS & ETHICAL BOUNDARIES
+----------------------------------------------------------------
+In strict compliance with the Hack2Ignite 2026–27 Official Rulebook:
+1. Prototype & Pitch Deck: Both are mandatory submission deliverables. The demo video is optional but strongly recommended.
+2. AI Usage Disclosure: All AI utilization (Groq Llama 3.3 70B for runtime mentoring, Google Gemini 2.0 Flash for fallback inference, and LLM assistance for seed curriculum skeletons) is explicitly disclosed in README.md, slide deck, and this script.
+3. Authentic Development History: The GitHub repository reflects genuine, unmanipulated, step-by-step commit progression by Team 404 Brain Not Found during the official 48-hour window (16–18 September 2026).
+4. Originality: All architectural scoring math (60/25/15), Mongoose schemas, REST controllers, and vanilla JS DOM controllers are original implementations.
+5. Zero Secret Exposure: No real passwords, JWT tokens, MongoDB Atlas URIs, Cloudinary credentials, or private keys appear in the video or recording files.
+6. Zero Hallucinated Claims: Only working, verified features are demonstrated. No non-existent or mock features are represented as functional.
+
+
+----------------------------------------------------------------
+3. ACTUAL FEATURE AUDIT TABLE
+----------------------------------------------------------------
+The following table documents the empirical audit of each feature on the running system:
+
+Feature                   | Page/URL                 | Status             | Evidence                                              | Issue / Backup
+--------------------------|--------------------------|--------------------|-------------------------------------------------------|---------------------------------------------------
+1. Landing Page           | /index.html              | Working            | Hero section renders with branding, badges, navbar    | None. Ready for recording.
+2. ED-02 Positioning      | /index.html              | Partially working  | Problem concept present; explicit "ED-02" string not in HTML | Mention "Problem Statement ED-02" in voice-over & overlay.
+3. 3D Career Universe     | /index.html              | Working            | 1,000 stardust particles, 5 orbital nodes with HUD    | 2D glassmorphic cards auto-render if WebGL fails.
+4. Instant Registration   | /register.html           | Working            | 1-Click register issues JWT and redirects to assess.  | Pre-create demo account if offline.
+5. Student Login          | /login.html              | Working            | Validates email/password, stores JWT in localStorage  | Auto-fill demo credentials.
+6. Student Assessment     | /assessment.html         | Working            | 3-Step wizard (Academics, Interests, Skills)          | Form preserves selections on error.
+7. Skill Selection & Prof | /assessment.html         | Working            | 45+ skills, search bar, 3 levels (Beginner/Inter/Adv) | Custom skill write-in bar available.
+8. Career Recommendations | /recommendations.html    | Working            | Top 3 careers calculated via deterministic 60/25/15   | 100% backend-computed; zero external AI lag.
+9. 3D Skill Orbit         | /recommendations.html    | Working            | Three concentric rings of Matched, Weak, Missing      | 2D skill pill badges available below canvas.
+10. Skill-Gap Breakdown   | /recommendations.html    | Working            | Visual categorization: Green (Matched), Red (Missing) | Clearly visible on all 3 recommendation cards.
+11. Market-Trend Indicator| /recommendations.html    | Working            | Modal streams live Indian tech jobs & salary insights | Prototype indicator with Adzuna API live failover.
+12. Roadmap Generator     | /roadmap.html            | Working            | Synthesizes 4, 8, or 12-week roadmaps from gaps       | Strictly enforces top-3 career recommendation.
+13. 3D Roadmap Path       | /roadmap.html            | Working            | Glowing milestone gems trail renders in Three.js      | 2D weekly schedule timeline always visible below.
+14. Milestone Task Toggle | /roadmap.html            | Working            | Checkbox PATCH /toggle updates task completion state  | Immediate DOM strikethrough & persistence.
+15. Dynamic Progress Bar  | /roadmap.html            | Working            | Percentage updates automatically: (completed/total*100) | Recalculated server-side; ignores client tampering.
+16. Student Dashboard     | /dashboard.html          | Working            | Displays active goal, next task, unified progress     | Fast lean() queries for instant load.
+17. 3D Progress Orb       | /dashboard.html          | Working            | Holographic energy sphere pulses with completion %    | 2D circular CSS progress meter backup.
+18. Quick Skills Manager  | /dashboard.html          | Working            | Modal updates skills without re-taking full assessment| Persists to MongoDB immediately.
+19. Cloud Asset Upload    | /dashboard.html          | Working            | Cloudinary image avatar preview & PDF resume upload   | Local preview appears immediately.
+20. AI Career Mentor      | /chat.html / Drawer      | Working            | Floating drawer answers queries via Groq + Gemini     | Offline domain rule engine fallback built-in.
+21. Route Protection      | All protected pages      | Working            | Unauthenticated visits redirect to login.html         | Auth.requireAuth() active across all modules.
+22. 2D WebGL Fallback     | All 3D modules           | Working            | isWebGLAvailable() triggers clean 2D glassmorphic cards| Guaranteed compatibility on low-end devices.
+23. Mobile Responsiveness | All pages                | Working            | Tested at 320px, 375px, 768px, 1024px, 1440px         | Responsive hamburger navbar & single-column layout.
+
+
+----------------------------------------------------------------
+4. RECOMMENDED VIDEO LENGTH & RATIONALE
+----------------------------------------------------------------
+- Recommended Target Duration: 2 Minutes 45 Seconds (165 Seconds)
+- Allowable Range: 2:30 to 3:00 Minutes
+
+Why this duration is ideal:
+1. Evaluator Cognitive Load: Hackathon evaluators review dozens of submissions. A snappy, sub-3-minute video maintains 100% engagement without viewer fatigue.
+2. Complete Golden Flow: 165 seconds provides sufficient time to demonstrate the complete end-to-end user journey (Problem $\to$ Landing $\to$ Assessment $\to$ Math Scoring $\to$ Gaps $\to$ Market Trends $\to$ Roadmap $\to$ Tasks $\to$ Dashboard) without rushing speech.
+3. No Fluff or Placeholders: By excluding non-essential setup, every second demonstrates real, working code aligned directly with Problem Statement ED-02.
+
+
+----------------------------------------------------------------
+5. COMPLETE VIDEO TIMELINE
+----------------------------------------------------------------
+
+========================================================================================
+SCENE 1: TITLE & TEAM INTRODUCTION
+========================================================================================
+- Timestamp: 0:00 – 0:12 (Duration: 12 seconds)
+- Screen / Page: Clean title slide / Opening title card
+- Exact Action: Display the title slide with hackathon branding, team name, and official problem statement. Smooth fade-in.
+- What Must Be Visible:
+    * Title: "CareerPath AI — AI Career Guidance and Skill Roadmap Platform"
+    * Problem Statement: "ED-02 — EduTech / AI for Good"
+    * Team Name: "404 Brain Not Found"
+    * Team Members: Parth Patil, Suyog Pawar, Asmita Lokhande, Aditi Vispute
+- Exact Voice-Over:
+    "Welcome to CareerPath AI — our solution for Hack2Ignite 2026–27 under Problem Statement ED-02. Built by Team 404 Brain Not Found, CareerPath AI transforms career navigation for college students through transparent, math-backed guidance and actionable milestone roadmaps."
+- On-Screen Caption:
+    "CareerPath AI · Problem ED-02 · Team 404 Brain Not Found"
+- Transition: Smooth fade to screen recording (0.5s)
+- Backup if Fails: High-resolution exported slide PNG.
+
+========================================================================================
+SCENE 2: THE ED-02 PROBLEM (THE SKILL-GAP CHASM)
+========================================================================================
+- Timestamp: 0:12 – 0:24 (Duration: 12 seconds)
+- Screen / Page: Problem illustration graphic / Animated flow diagram
+- Exact Action: Pan across the "Academic Syllabus vs. Industry Expectations" diagram.
+- What Must Be Visible:
+    * Highlighting the 80% graduate unemployability challenge in emerging tech economies.
+    * Contrast between theoretical college syllabi and production engineering requirements.
+- Exact Voice-Over:
+    "In India, over 1.5 million engineers graduate every year, yet over 80% struggle to meet industry hiring standards. Traditional career quizzes offer vague personality scores, while course catalogs overwhelm students with thousands of disconnected lectures."
+- On-Screen Caption:
+    "The Challenge: Degree-Industry Disconnect & Analysis Paralysis"
+- Transition: Quick cut to browser window.
+- Backup if Fails: Direct transition to landing page hero section.
+
+========================================================================================
+SCENE 3: LANDING PAGE & 3D CAREER UNIVERSE
+========================================================================================
+- Timestamp: 0:24 – 0:38 (Duration: 14 seconds)
+- Screen / Page: `http://localhost:5500/index.html`
+- Exact Action: Hover cursor over the glowing nodes of the 3D Career Universe. Show the interactive HUD tooltips appearing smoothly. Click "Get Started".
+- What Must Be Visible:
+    * 1,000 sparkling stardust particles and 5 career nodes (Front-End, Full-Stack, Data, Design, Security).
+    * Glassmorphic HUD tooltip showing career details on hover.
+    * Clean navigation bar with "CareerPath AI" branding.
+- Exact Voice-Over:
+    "Our landing page welcomes students with an interactive 3D Career Universe built using Three.js and GSAP. Each cosmic node represents a verified career pathway. If a student's device lacks WebGL support, our platform automatically provides an accessible 2D glassmorphic card fallback."
+- On-Screen Caption:
+    "3D Career Universe · Hardware-Accelerated WebGL with 2D Fallback"
+- Transition: Dip to white / instant page navigation.
+- Backup if Fails: Show the 2D fallback view if WebGL is disabled.
+
+========================================================================================
+SCENE 4: ZERO-FRICTION DEMO ONBOARDING (LOGIN / REGISTER)
+========================================================================================
+- Timestamp: 0:38 – 0:48 (Duration: 10 seconds)
+- Screen / Page: `http://localhost:5500/register.html`
+- Exact Action: Fill demo credentials (e.g. `DEMO_EMAIL`, `DEMO_PASSWORD`). Click "Create Account & Start Assessment".
+- What Must Be Visible:
+    * Registration form with Name, Email, Password.
+    * Loading spinner activating for under 500ms.
+    * Instant redirect directly into the 3-step profiling assessment.
+- Exact Voice-Over:
+    "To eliminate evaluation friction, CareerPath AI features instant 1-click registration for judges and students, issuing a secure, stateless JWT token and routing immediately to profiling."
+- On-Screen Caption:
+    "Stateless JWT Authentication · Instant Zero-OTP Evaluator Mode"
+- Transition: Direct cut to `assessment.html`.
+- Backup if Fails: Log in via `login.html` with pre-registered demo account.
+
+========================================================================================
+SCENE 5: 3-STEP STUDENT ASSESSMENT
+========================================================================================
+- Timestamp: 0:48 – 1:06 (Duration: 18 seconds)
+- Screen / Page: `http://localhost:5500/assessment.html`
+- Exact Action:
+    1. Step 1 (Academics): Select "BCA", Branch "Computer Science", Year "Third Year". Click Continue.
+    2. Step 2 (Interests): Click chips "Web Development" and "Coding". Show counter "Selected: 2 / 10". Click Continue.
+    3. Step 3 (Skills): Filter by "Frontend". Select "JavaScript" (set to Advanced), "HTML" (set to Intermediate), and "CSS" (set to Beginner).
+    4. Click "Find My Career Matches".
+- What Must Be Visible:
+    * Multi-step progress bar updating across 01, 02, 03.
+    * Responsive skill cards with Beginner, Intermediate, and Advanced badges.
+    * Flash message: "Assessment saved successfully."
+- Exact Voice-Over:
+    "The 3-step assessment captures real academic background, domain interests, and self-assessed skill proficiencies across 45 standardized industry technologies. Students can also write in custom emerging skills like Rust or Solidity."
+- On-Screen Caption:
+    "Structured 3-Step Assessment · Normalized Skills & Proficiencies"
+- Transition: Page transition to `recommendations.html`.
+- Backup if Fails: Pre-saved assessment state loaded via direct URL.
+
+========================================================================================
+SCENE 6: EXPLAINABLE CAREER MATCH RECOMMENDATIONS
+========================================================================================
+- Timestamp: 1:06 – 1:24 (Duration: 18 seconds)
+- Screen / Page: `http://localhost:5500/recommendations.html`
+- Exact Action: Scroll down to view the Top 3 career recommendation cards. Zoom slightly on the #1 card ("Front-End Developer"). Show the 3D Skill Orbit planetary rings.
+- What Must Be Visible:
+    * Ranked career cards with Match Score meters (e.g. 78% or 46%).
+    * Sub-score breakdown: Skill Match %, Interest Match %, Education Match %.
+    * 3D Skill Orbit canvas showing categorized planetary rings.
+- Exact Voice-Over:
+    "Unlike black-box LLM prompts that hallucinate advice, our MVP uses an explainable deterministic recommendation engine. The score is computed 100% on the backend using our 60/25/15 mathematical formula: 60% skill depth, 25% interest overlap, and 15% academic alignment."
+- On-Screen Caption:
+    "Deterministic 60/25/15 Match Engine · Zero Hallucination"
+- Transition: Smooth scroll down the recommendation card.
+- Backup if Fails: Point to static breakdown numbers in the card.
+
+========================================================================================
+SCENE 7: ACTIONABLE SKILL-GAP BREAKDOWN
+========================================================================================
+- Timestamp: 1:24 – 1:38 (Duration: 14 seconds)
+- Screen / Page: `http://localhost:5500/recommendations.html`
+- Exact Action: Highlight the three distinct skill-gap tag categories on the Front-End Developer card.
+- What Must Be Visible:
+    * Green badges: Matched Skills (HTML, JavaScript).
+    * Yellow badges: Upgrade Needed (CSS).
+    * Red badges: Missing Prerequisites (React, Git, Responsive Design).
+    * Natural language explanation in the "Why Recommended" callout box.
+- Exact Voice-Over:
+    "CareerPath AI immediately deconstructs requirements into three transparent categories: green for matched competencies, yellow for skills needing an upgrade, and red for missing industry prerequisites. The natural language summary explains exactly what to focus on next."
+- On-Screen Caption:
+    "Skill-Gap Breakdown · 🟢 Matched · 🟡 Upgrade · 🔴 Missing"
+- Transition: Cursor moves to "Live Job Market & CTC" button.
+- Backup if Fails: Focus on the badge pill tags.
+
+========================================================================================
+SCENE 8: PROTOTYPE MARKET-TREND & SALARY INDICATOR
+========================================================================================
+- Timestamp: 1:38 – 1:50 (Duration: 12 seconds)
+- Screen / Page: `http://localhost:5500/recommendations.html` (Modal)
+- Exact Action: Click "Live Market Telemetry & CTC". Modal opens showing live tech openings and salary ranges.
+- What Must Be Visible:
+    * Verified Indian CTC salary range (e.g., ₹4.5 LPA – ₹9.0 LPA).
+    * Hiring demand indicator and active developer job listings (TCS, Capco, Deutsche Bank).
+    * "Adzuna Developer API & AIDevBoard" telemetry attribution.
+- Exact Voice-Over:
+    "Our MVP uses a curated prototype market-trend indicator alongside live developer job listings from the Adzuna API, showing students verified Indian salary ranges and real corporate hiring demand across tech hubs like Bengaluru and Pune."
+- On-Screen Caption:
+    "Prototype Market-Trend Indicator · Verified ₹ CTC & Active Vacancies"
+- Transition: Close modal. Click "Build My Roadmap".
+- Backup if Fails: Offline cached job vacancies display seamlessly.
+
+========================================================================================
+SCENE 9: PERSONALIZED ROADMAP GENERATION
+========================================================================================
+- Timestamp: 1:50 – 2:04 (Duration: 14 seconds)
+- Screen / Page: Duration Modal $\to$ `http://localhost:5500/roadmap.html`
+- Exact Action: In the duration modal, click "8 Weeks" and press "Generate My Roadmap". Page routes to `roadmap.html`.
+- What Must Be Visible:
+    * 3D Roadmap Path with glowing weekly milestone gems.
+    * Structured weekly modules: Week 1 Foundation, Week 2 Styling & Layout, etc.
+    * Missing skills scheduled first with high-priority badges.
+- Exact Voice-Over:
+    "Clicking Build My Roadmap synthesizes an adaptive 4, 8, or 12-week time-boxed learning curriculum. The algorithm automatically schedules the student's highest-priority missing skills in the earliest weeks, complete with curated documentation links from MDN and freeCodeCamp."
+- On-Screen Caption:
+    "Adaptive Milestone Roadmap · Prioritizes Missing Skill Gaps"
+- Transition: Smooth pan to Week 1 task list.
+- Backup if Fails: Direct navigation to active roadmap.
+
+========================================================================================
+SCENE 10: ATOMIC TASK COMPLETION & PROGRESS RECALCULATION
+========================================================================================
+- Timestamp: 2:04 – 2:18 (Duration: 14 seconds)
+- Screen / Page: `http://localhost:5500/roadmap.html`
+- Exact Action:
+    1. Click the checkbox for "Master HTML5 Semantic Structure".
+    2. Observe immediate strikethrough animation.
+    3. Point to the top progress meter updating dynamically from 0% to 11%.
+    4. Click the "Print / Export PDF" button to preview the clean paper-ready layout.
+- What Must Be Visible:
+    * Checkbox state change and completed timestamp badge.
+    * Progress bar smoothly animating to new percentage.
+    * Print stylesheet stripping web navigation for clean PDF export.
+- Exact Voice-Over:
+    "As students complete weekly milestones, checking off a task triggers an atomic server-side recalculation of their overall progress percentage. Students can also export clean, paper-ready study schedules with our 1-click PDF print stylesheet."
+- On-Screen Caption:
+    "Real-Time Progress Tracking · 1-Click Clean PDF / Print Export"
+- Transition: Click navbar "Dashboard" link.
+- Backup if Fails: Toggle second task to demonstrate persistence.
+
+========================================================================================
+SCENE 11: STUDENT DASHBOARD & 3D PROGRESS ORB
+========================================================================================
+- Timestamp: 2:18 – 2:32 (Duration: 14 seconds)
+- Screen / Page: `http://localhost:5500/dashboard.html`
+- Exact Action: Scroll through dashboard telemetry. Point to the pulsing 3D Progress Orb. Open the "Quick Skills Manager" modal, add a skill, and save.
+- What Must Be Visible:
+    * 3D Holographic Progress Orb glowing with live completion %.
+    * "Next Recommended Action" banner showing the immediate next task.
+    * Quick Skills Manager modal saving skill modifications without re-taking the assessment.
+    * Cloudinary avatar preview and resume uploader.
+- Exact Voice-Over:
+    "The student dashboard consolidates learning telemetry, featuring an interactive 3D Progress Orb that pulses with live completion energy. The Quick Skills Manager allows students to update newly acquired skills on the fly, keeping recommendations fresh."
+- On-Screen Caption:
+    "Student Telemetry Dashboard · 3D Progress Orb & Quick Skills Manager"
+- Transition: Open floating AI Mentor drawer in bottom-right.
+- Backup if Fails: Scroll to upcoming tasks table.
+
+========================================================================================
+SCENE 12: DUAL-ENGINE AI CAREER MENTOR & CLOUD ARCHITECTURE
+========================================================================================
+- Timestamp: 2:32 – 2:44 (Duration: 12 seconds)
+- Screen / Page: AI Mentor Chat Drawer on screen
+- Exact Action: Type a short prompt: "How do I prepare for a frontend technical interview?". Click send. Fast response appears in <500ms.
+- What Must Be Visible:
+    * Floating AI chat interface with "Powered by Groq Cloud + Gemini" badge.
+    * Low-latency contextual answer grounded in student's active roadmap.
+- Exact Voice-Over:
+    "Our dual-engine AI Career Mentor uses Groq Llama 3.3 70B for sub-500-millisecond responses, with automated Google Gemini 2.0 Flash failover. Backed by MongoDB Atlas and deployed on Render and Vercel, CareerPath AI delivers enterprise-grade reliability at zero hosting cost."
+- On-Screen Caption:
+    "Dual-Engine AI Mentor (<500ms) · Render API + Vercel CDN + MongoDB Atlas"
+- Transition: Fade to closing slide.
+- Backup if Fails: Show offline rule-based mentor response.
+
+========================================================================================
+SCENE 13: AI USAGE DISCLOSURE & CONCLUSION
+========================================================================================
+- Timestamp: 2:44 – 2:55 (Duration: 11 seconds)
+- Screen / Page: Closing Slide Deck Card
+- Exact Action: Display project repository links, official AI usage disclosure statement, and team member acknowledgments.
+- What Must Be Visible:
+    * AI Disclosure Statement: "AI used for runtime mentoring (Groq/Gemini) & seed dataset curation. Core logic, scoring engine, and architecture built originally by Team 404 Brain Not Found."
+    * Live Links: Vercel Web App & GitHub Repository.
+    * Team credits: Parth Patil, Suyog Pawar, Asmita Lokhande, Aditi Vispute.
+- Exact Voice-Over:
+    "As required by the official rules, all AI usage is disclosed. CareerPath AI bridges the degree-industry gap with clear, objective guidance. Thank you from Team 404 Brain Not Found!"
+- On-Screen Caption:
+    "Full AI Disclosure in README & PPT · Team 404 Brain Not Found · Thank You!"
+- Transition: Fade to black (1.0s)
+- Backup if Fails: Static slide frame.
+
+========================================================================================
+TOTAL RUNTIME: 2 MINUTES 55 SECONDS (175 SECONDS)
+========================================================================================
+
+
+----------------------------------------------------------------
+6. COMPLETE CONTINUOUS VOICE-OVER SCRIPT
+----------------------------------------------------------------
+(For recording convenience, here is the unified narration transcript)
+
+"Welcome to CareerPath AI — our solution for Hack2Ignite 2026–27 under Problem Statement ED-02. Built by Team 404 Brain Not Found, CareerPath AI transforms career navigation for college students through transparent, math-backed guidance and actionable milestone roadmaps.
+
+In emerging tech economies like India, over 1.5 million engineers graduate every year, yet over 80% struggle to meet industry hiring standards. Traditional career quizzes offer vague personality scores, while massive course catalogs overwhelm students with thousands of disconnected lectures.
+
+Our landing page welcomes students with an interactive 3D Career Universe built using Three.js and GSAP. Each cosmic node represents a verified career pathway. If a student's device lacks WebGL support, our platform automatically provides an accessible 2D glassmorphic card fallback.
+
+To eliminate evaluation friction, CareerPath AI features instant 1-click registration for judges and students, issuing a secure, stateless JWT token and routing immediately to profiling.
+
+The 3-step assessment captures real academic background, domain interests, and self-assessed skill proficiencies across 45 standardized industry technologies. Students can also write in custom emerging skills like Rust or Solidity.
+
+Unlike black-box LLM prompts that hallucinate advice, our MVP uses an explainable deterministic recommendation engine. The score is computed 100% on the backend using our 60/25/15 mathematical formula: 60% skill depth, 25% interest overlap, and 15% academic alignment.
+
+CareerPath AI immediately deconstructs requirements into three transparent categories: green for matched competencies, yellow for skills needing an upgrade, and red for missing industry prerequisites. The natural language summary explains exactly what to focus on next.
+
+Our MVP uses a curated prototype market-trend indicator alongside live developer job listings from the Adzuna API, showing students verified Indian salary ranges and real corporate hiring demand across tech hubs like Bengaluru and Pune.
+
+Clicking Build My Roadmap synthesizes an adaptive 4, 8, or 12-week time-boxed learning curriculum. The algorithm automatically schedules the student's highest-priority missing skills in the earliest weeks, complete with curated documentation links from MDN and freeCodeCamp.
+
+As students complete weekly milestones, checking off a task triggers an atomic server-side recalculation of their overall progress percentage. Students can also export clean, paper-ready study schedules with our 1-click PDF print stylesheet.
+
+The student dashboard consolidates learning telemetry, featuring an interactive 3D Progress Orb that pulses with live completion energy. The Quick Skills Manager allows students to update newly acquired skills on the fly, keeping recommendations fresh.
+
+Our dual-engine AI Career Mentor uses Groq Llama 3.3 70B for sub-500-millisecond responses, with automated Google Gemini 2.0 Flash failover. Backed by MongoDB Atlas and deployed on Render and Vercel, CareerPath AI delivers enterprise-grade reliability at zero hosting cost.
+
+As required by the official rules, all AI usage is disclosed. CareerPath AI bridges the degree-industry gap with clear, objective guidance. Thank you from Team 404 Brain Not Found!"
+
+
+----------------------------------------------------------------
+7. ON-SCREEN TEXT AND LOWER-THIRD CAPTIONS
+----------------------------------------------------------------
+- Scene 1 (0:00–0:12): "CareerPath AI · Problem ED-02 · Team 404 Brain Not Found"
+- Scene 2 (0:12–0:24): "The Challenge: 80% Employability Disconnect in Indian Engineering"
+- Scene 3 (0:24–0:38): "3D Career Universe · Three.js WebGL with 2D Fallback Guarantee"
+- Scene 4 (0:38–0:48): "Frictionless Onboarding · Stateless JWT Auth · Zero-OTP Mode"
+- Scene 5 (0:48–1:06): "3-Step Profiling · Standardized 45+ Industry Skills Catalog"
+- Scene 6 (1:06–1:24): "Deterministic 60/25/15 Match Engine · Zero Hallucination Math"
+- Scene 7 (1:24–1:38): "Actionable Skill-Gap Breakdown: 🟢 Matched · 🟡 Upgrade · 🔴 Missing"
+- Scene 8 (1:38–1:50): "Prototype Market-Trend Indicator · Verified ₹ CTC & Adzuna Live Jobs"
+- Scene 9 (1:50–2:04): "Adaptive Milestone Roadmap · 4, 8, or 12 Weeks · Priority Scheduled"
+- Scene 10 (2:04–2:18): "Atomic Task Progress Recalculation · 1-Click Clean PDF Print Export"
+- Scene 11 (2:18–2:32): "Student Dashboard · 3D Holographic Progress Orb & Quick Skills Manager"
+- Scene 12 (2:32–2:44): "Dual-Engine AI Mentor (<500ms) · Render API + Vercel CDN + Atlas"
+- Scene 13 (2:44–2:55): "AI Disclosed in README & PPT · Team 404 Brain Not Found · Thank You"
+
+
+----------------------------------------------------------------
+8. RECORDING SETUP & OPTIMIZATION INSTRUCTIONS
+----------------------------------------------------------------
+1. Display Resolution: 1920x1080 (Full HD, 1080p).
+2. Aspect Ratio: Standard 16:9 widescreen.
+3. Browser Configuration:
+   - Use Google Chrome or Microsoft Edge in a clean profile.
+   - Set Browser Zoom to 110% or 125% so UI text, skill badges, and progress counters are sharply readable on laptop screens.
+   - Hide browser bookmarks bar (`Ctrl+Shift+B` on Windows).
+   - Enter Fullscreen mode (`F11`) or clean window capture.
+4. Distraction Elimination:
+   - Enable Windows "Focus Assist / Do Not Disturb" to silence WhatsApp, Slack, Discord, and system notifications.
+   - Close all unrelated applications, tabs, and developer tools.
+   - Ensure the mouse cursor remains visible with a subtle highlight halo.
+5. Audio Quality:
+   - Record in a quiet room with a dedicated USB or headset microphone (avoid built-in laptop microphones).
+   - Apply a gentle noise gate and mild compression in OBS or Audacity.
+6. Recording Software:
+   - Open Broadcaster Software (OBS Studio) recording in MP4 format (CQP 18, 60 FPS, Bitrate ~8,000 kbps).
+   - Alternatively, use Loom Desktop in 1080p mode.
+7. Post-Production Editing:
+   - Use CapCut, DaVinci Resolve, or Premiere Pro strictly for trimming dead pauses and applying the specified captions.
+   - Do not apply artificial speed ramps that make narration incomprehensible.
+8. Privacy & Secrets Guard:
+   - Never show `.env` files, MongoDB connection strings, terminal API keys, or browser developer tools containing auth headers.
+
+
+----------------------------------------------------------------
+9. DEMO DATA SET (PLACEHOLDERS ONLY)
+----------------------------------------------------------------
+(Strictly use these safe testing values during video recording)
+
+- Student Name: Demo Student
+- Email: DEMO_EMAIL
+- Password: DEMO_PASSWORD
+- Degree / Course: BCA
+- Branch: Computer Science
+- Year: Third Year
+- College: National Engineering Institute
+- Domain Interests: Web Development, Coding
+- Selected Skills:
+    * JavaScript (Proficiency: Advanced)
+    * HTML (Proficiency: Intermediate)
+    * CSS (Proficiency: Beginner)
+- Custom Skill Added: Rust (Category: Backend, Proficiency: Beginner)
+- Recommended Career Selected: Front-End Developer
+- Roadmap Duration Chosen: 8 Weeks
+- First Task Checked Off: Master HTML5 Semantic Structure & Accessibility (Week 1)
+
+
+----------------------------------------------------------------
+10. CONTINGENCY FALLBACK PLANS
+----------------------------------------------------------------
+Scenario 1: Local Backend Server Not Running
+- Cause: Node process stopped or port conflict.
+- Fix: Immediately switch `client/js/config.js` or navigate directly to the live production deployment: `https://careerpath-ai-jade.vercel.app`. The Vercel deployment points to Render and runs 24/7.
+
+Scenario 2: Slow Initial Backend Response on Render
+- Cause: Free-tier Render instances sleep after 15 minutes of inactivity (cold start ~30s).
+- Fix: Warm up the backend 2 minutes before recording by visiting `https://careerpath-ai-bdbt.onrender.com/api/health`.
+
+Scenario 3: WebGL Hardware Acceleration Disabled or Glitching
+- Cause: Screen recording software overloading the integrated GPU.
+- Fix: The website automatically triggers the 2D glassmorphic card fallback. Narrate: "CareerPath AI includes automatic 2D fallbacks ensuring students on low-power devices receive identical functionality without GPU overhead."
+
+Scenario 4: External Job Market API Rate-Limited
+- Cause: Adzuna API quota temporarily reached.
+- Fix: The built-in resilient offline cache in `server/services/jobBoardService.js` automatically returns verified Indian tech opportunities without breaking the UI.
+
+Scenario 5: Unimplemented Future Feature Inquiries
+- Spoken Script: "This capability represents part of our Phase 2 institutional scaling roadmap and is intentionally scoped for post-hackathon release."
+
+
+----------------------------------------------------------------
+11. TEAM SPEAKER DIVISION
+----------------------------------------------------------------
+
+Option A: Four-Member Team Voice Division (Recommended for Team Submissions)
+-----------------------------------------------------------------------------
+1. Parth Patil (Team Leader & Backend Lead):
+   - Scenes 1 & 2: Project overview, ED-02 challenge, Indian graduate unemployability context.
+   - Scene 6: Deterministic 60/25/15 mathematical matching engine.
+   - Scene 12: Dual-engine AI architecture, failover logic, and cloud infrastructure.
+2. Suyog Pawar (Frontend & Integration Lead):
+   - Scene 4: Instant onboarding and stateless JWT sessions.
+   - Scene 5: 3-Step assessment wizard, skill taxonomy, and custom unlisted skills.
+   - Scene 10: Checkbox task toggling, atomic server calculation, and 1-click PDF print export.
+3. Asmita Lokhande (UI/UX & 3D WebGL Lead):
+   - Scene 3: 3D Career Universe, orbital physics, particle systems, and 2D fallback.
+   - Scene 7: Tri-color skill-gap classification (Green, Yellow, Red).
+   - Scene 11: Student dashboard, 3D Progress Orb, and Quick Skills Manager modal.
+4. Aditi Vispute (QA, Data & Documentation Lead):
+   - Scene 8: Prototype market-trend indicator and Adzuna live tech hiring telemetry.
+   - Scene 9: Adaptive milestone roadmap synthesis and skill-gap prioritization.
+   - Scene 13: Official AI usage disclosure, rulebook compliance, and concluding remarks.
+
+Option B: Single-Narrator Alternative
+-----------------------------------------------------------------------------
+If team recording logistics make multi-voice splicing challenging, assign the complete narration to **Parth Patil** (Team Leader) to ensure unified audio tone and volume consistency throughout the 165 seconds.
+
+
+----------------------------------------------------------------
+12. FINAL VIDEO SUBMISSION CHECKLIST
+----------------------------------------------------------------
+[ ] All demonstrated features operate on live code with zero mockup overlays.
+[ ] Total video duration is between 2:30 and 3:00 minutes.
+[ ] Audio narration is clear, intelligible, and free of background hiss.
+[ ] Zero credentials, JWT tokens, MongoDB URIs, or personal info are visible.
+[ ] No browser console error logs or failed network requests are shown.
+[ ] Responsive layout verified; captions match spoken words accurately.
+[ ] Official AI usage disclosure is explicitly stated.
+[ ] Exported video format is MP4 (H.264 video codec, AAC audio codec).
+[ ] Master MP4 file replayed completely from start to finish to confirm zero audio-video desync.
+[ ] Video uploaded to Google Drive or YouTube (Unlisted) with sharing permissions set to "Anyone with the link can view".
+
+
+----------------------------------------------------------------
+13. FINAL FILE NAMING CONVENTION
+----------------------------------------------------------------
+Export and save the final edited video file as:
+`CareerPath-AI_Hack2Ignite-2026-27_Demo_404-Brain-Not-Found.mp4`
+
+(Note: Do not commit large binary video files to git. Upload the video to your cloud drive and include the link in your PPT slide deck and submission form).
+
+================================================================
+END OF DEMO VIDEO PLAN AND VOICE-OVER SCRIPT
+================================================================

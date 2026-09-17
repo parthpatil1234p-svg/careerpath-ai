@@ -1,6 +1,7 @@
 # CareerPath AI — Discover Your Career. Build Your Skills.
 
 > **🏆 Hack2Ignite 2026–27 · Round 1 Official Qualifier Submission**  
+> **Problem Statement ID:** **ED-02** — *Develop an AI-powered career guidance system for students based on skills, interests, and market trends*  
 > **Track:** EduTech (Educational Technology / AI for Good)  
 > **Team Name:** 404 Brain Not Found  
 > **Tagline:** Discover Your Career. Build Your Skills.  
@@ -38,6 +39,7 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | ⚡ **Live API Gateway** | **[https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)** | Node.js Express REST API hosted on Render |
 | 🩺 **Live Health Check** | **[https://careerpath-ai-bdbt.onrender.com/api/health](https://careerpath-ai-bdbt.onrender.com/api/health)** | Real-time server telemetry & uptime monitor |
 | 🔑 **Instant Demo Onboarding** | **Zero-OTP Instant Registration** | Enter any test email (e.g. `judge@hack2ignite.com`) & password to immediately jump into profiling |
+| 🎬 **Demo Video Script & Plan** | **[`../CareerPath-AI-Demo-Video-Voice-Script.txt`](../CareerPath-AI-Demo-Video-Voice-Script.txt)** | Complete 13-scene timeline, continuous voice-over & captions |
 | 🧪 **API Test Collection** | **[`postman/CareerPath-AI.postman_collection.json`](postman/CareerPath-AI.postman_collection.json)** | Complete Postman v2.1 automated test collection |
 | 📊 **Presentation Deck** | **[`docs/PPT-CONTENT.md`](docs/PPT-CONTENT.md)** | Complete 10-slide pitch deck content & speaker notes |
 | 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
