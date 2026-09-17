@@ -132,9 +132,12 @@
               </div>
             </div>
 
-            <div class="col-md-4 text-md-end">
+            <div class="col-md-4 text-md-end d-flex flex-column flex-sm-row justify-content-md-end gap-2">
+              <button type="button" class="btn cp-btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
+                <i class="bi bi-lightning-charge-fill me-1"></i> Manage Skills
+              </button>
               <a href="assessment.html" class="btn btn-outline-navy btn-sm px-3">
-                <i class="bi bi-pencil-square me-1"></i> Update Assessment Profile
+                <i class="bi bi-pencil-square me-1"></i> Full Assessment
               </a>
             </div>
           </div>
@@ -244,6 +247,29 @@
           </a>
         </div>
 
+        <!-- 3.5 Skills & Competencies Card -->
+        <div class="card p-4 rounded-3 border-line shadow-sm mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-teal font-monospace text-uppercase" style="letter-spacing: 0.5px;">Skill Matrix</span>
+                <h3 class="h5 fw-bold text-white mb-0">My Verified Skills & Competencies</h3>
+              </div>
+              <p class="text-muted small mb-0 mt-1">Real-time skill levels feeding your career match algorithm</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn cp-btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
+                <i class="bi bi-lightning-charge-fill me-1"></i> Quick Edit Skills
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Skills Chips Container -->
+          <div id="dashboardSkillsContainer" class="d-flex flex-wrap gap-2">
+            <div class="text-muted small py-2">Loading skills...</div>
+          </div>
+        </div>
+
         <!-- 4. Next Upcoming Incomplete Tasks Section -->
         <div class="row mb-4">
           <div class="col-12">
@@ -317,6 +343,113 @@
       </div>
 
     </main>
+
+    <!-- Manage Skills Modal (One-Click Edit) -->
+    <div class="modal fade" id="manageSkillsModal" tabindex="-1" aria-labelledby="manageSkillsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-line" style="background: var(--bg-card, #131d31); color: var(--text-main, #e2e8f0);">
+          <div class="modal-header border-bottom border-line">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-teal font-monospace text-uppercase" style="letter-spacing: 0.5px;">COMPETENCY MANAGER</span>
+                <h2 class="modal-title h5 fw-bold text-white mb-0" id="manageSkillsModalLabel">Manage Skills & Proficiency</h2>
+              </div>
+              <p class="text-muted small mb-0 mt-1">Add, update proficiency, or remove skills in real-time. Career matches update immediately.</p>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body p-4">
+            <!-- Modal Alert -->
+            <div id="modalSkillAlert" class="d-none alert mb-3 py-2 px-3 small" role="alert"></div>
+
+            <!-- Current Skills List -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label small fw-bold text-white text-uppercase font-monospace mb-0">
+                  <i class="bi bi-cpu text-teal me-1"></i> Current Logged Skills (<span id="modalCurrentSkillsCount">0</span>)
+                </label>
+                <span class="text-muted small" style="font-size: 0.75rem;">Click proficiency level to adjust</span>
+              </div>
+              <div id="modalSkillsList" class="d-flex flex-column gap-2" style="max-height: 230px; overflow-y: auto; padding-right: 4px;">
+                <!-- Populated dynamically via dashboard.js -->
+              </div>
+            </div>
+
+            <!-- Add Skill from Catalog -->
+            <div class="p-3 rounded-2 stat-box-atlas mb-3 border border-line">
+              <label class="form-label small fw-bold text-white text-uppercase font-monospace mb-2">
+                <i class="bi bi-plus-circle text-teal me-1"></i> Add Skill from Industry Catalog
+              </label>
+              <div class="row g-2">
+                <div class="col-md-5">
+                  <select id="catalogSkillSelect" class="form-select form-select-sm">
+                    <option value="">Select a skill to add...</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select id="catalogSkillProficiency" class="form-select form-select-sm">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate" selected>Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <button type="button" id="btnAddCatalogSkill" class="btn cp-btn-primary btn-sm w-100">
+                    <i class="bi bi-plus-lg me-1"></i> Add Skill
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Custom Skill Input -->
+            <div class="p-3 rounded-2 stat-box-atlas border border-line">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label small fw-bold text-white text-uppercase font-monospace mb-0">
+                  <i class="bi bi-pencil-square text-teal me-1"></i> Add Custom / Unlisted Skill
+                </label>
+                <span class="badge badge-navy small">Universal Write-In</span>
+              </div>
+              <div class="row g-2">
+                <div class="col-md-4">
+                  <input type="text" id="dashboardCustomSkillName" class="form-control form-control-sm" placeholder="e.g. Rust, Solidity, Blender..." maxlength="40">
+                </div>
+                <div class="col-md-3">
+                  <select id="dashboardCustomSkillCategory" class="form-select form-select-sm">
+                    <option value="frontend">Frontend</option>
+                    <option value="backend">Backend</option>
+                    <option value="data">Data / AI</option>
+                    <option value="cloud">Cloud / DevOps</option>
+                    <option value="design">Design / 3D</option>
+                    <option value="security">Security</option>
+                    <option value="tool">Tool / Other</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select id="dashboardCustomSkillProficiency" class="form-select form-select-sm">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate" selected>Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <button type="button" id="btnDashboardAddCustom" class="btn cp-btn-primary btn-sm w-100">
+                    <i class="bi bi-plus-lg me-1"></i> Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer border-top border-line d-flex justify-content-between">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" id="btnSaveQuickSkills" class="btn cp-btn-primary btn-sm px-4">
+              <i class="bi bi-check2-circle me-1"></i> Save Changes & Recalculate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="atlas-footer py-4 mt-5 border-top border-line">

@@ -325,9 +325,49 @@
                 </div>
               </div>
 
-              <!-- Skills Grid Container -->
-              <div class="skills-grid-container row g-2 mb-4" id="skillsGrid" style="max-height: 420px; overflow-y: auto;">
-                <!-- Dynamically populated via assessment.js -->
+              <!-- Custom Skill Addition Bar -->
+              <div class="custom-skill-card p-3 rounded-2 stat-box-atlas mb-4 border border-line">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="small fw-semibold text-white">
+                    <i class="bi bi-plus-circle-dotted text-teal me-1"></i> Don't see your skill? Add Custom Skill
+                  </span>
+                  <span class="badge badge-navy small">Universal Skill Input</span>
+                </div>
+                <div class="row g-2 align-items-center">
+                  <div class="col-md-5">
+                    <input
+                      type="text"
+                      id="customSkillName"
+                      class="form-control form-control-sm"
+                      placeholder="e.g. Rust, Solidity, Blender, Swift..."
+                      maxlength="40"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <select id="customSkillCategory" class="form-select form-select-sm">
+                      <option value="frontend">Frontend</option>
+                      <option value="backend">Backend</option>
+                      <option value="data">Data / AI</option>
+                      <option value="cloud">Cloud / DevOps</option>
+                      <option value="design">Design / 3D</option>
+                      <option value="security">Security</option>
+                      <option value="tool">Tool / Other</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <select id="customSkillProficiency" class="form-select form-select-sm">
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate" selected>Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <button type="button" id="btnAddCustomSkill" class="btn cp-btn-primary btn-sm w-100 py-1">
+                      <i class="bi bi-plus-lg me-1"></i> Add
+                    </button>
+                  </div>
+                </div>
+                <div id="customSkillFeedback" class="small mt-2 d-none"></div>
               </div>
 
               <!-- Selected Skills Summary Box -->

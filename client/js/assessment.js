@@ -74,6 +74,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     { name: 'problem-solving', displayName: 'Problem Solving', category: 'soft-skill' },
     { name: 'communication', displayName: 'Communication', category: 'soft-skill' },
     { name: 'teamwork', displayName: 'Teamwork', category: 'soft-skill' },
+    // Modern & Trending Skills
+    { name: 'typescript', displayName: 'TypeScript', category: 'frontend' },
+    { name: 'next.js', displayName: 'Next.js', category: 'frontend' },
+    { name: 'tailwind-css', displayName: 'Tailwind CSS', category: 'frontend' },
+    { name: 'flutter', displayName: 'Flutter', category: 'frontend' },
+    { name: 'fastapi', displayName: 'FastAPI', category: 'backend' },
+    { name: 'graphql', displayName: 'GraphQL', category: 'backend' },
+    { name: 'docker', displayName: 'Docker', category: 'cloud' },
+    { name: 'kubernetes', displayName: 'Kubernetes', category: 'cloud' },
+    { name: 'aws', displayName: 'AWS Cloud', category: 'cloud' },
+    { name: 'langchain', displayName: 'LangChain', category: 'data' },
+    { name: 'generative-ai', displayName: 'Generative AI & LLMs', category: 'data' },
+    { name: 'pytorch', displayName: 'PyTorch', category: 'data' },
   ];
 
   // 3. State
@@ -434,8 +447,108 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Custom Skill Addition Handler
+  const customSkillNameInput = document.getElementById('customSkillName');
+  const customSkillCategorySelect = document.getElementById('customSkillCategory');
+  const customSkillProficiencySelect = document.getElementById('customSkillProficiency');
+  const btnAddCustomSkill = document.getElementById('btnAddCustomSkill');
+  const customSkillFeedback = document.getElementById('customSkillFeedback');
+
+  if (btnAddCustomSkill && customSkillNameInput) {
+    const handleAddCustomSkill = async () => {
+      const rawName = customSkillNameInput.value.trim();
+      if (!rawName) {
+        if (customSkillFeedback) {
+          customSkillFeedback.className = 'small mt-2 text-danger';
+          customSkillFeedback.textContent = 'Please enter a skill name (e.g. Rust, Solidity, Blender).';
+          customSkillFeedback.classList.remove('d-none');
+        }
+        return;
+      }
+
+      if (selectedSkillsMap.size >= 20) {
+        showAlert('You can select a maximum of 20 skills for assessment.', 'warning');
+        return;
+      }
+
+      const cleanSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const category = customSkillCategorySelect?.value || 'other';
+      const proficiency = customSkillProficiencySelect?.value || 'intermediate';
+
+      // Ensure skill is registered in available list
+      let existing = allAvailableSkills.find((s) => s.name === cleanSlug);
+      if (!existing) {
+        existing = {
+          name: cleanSlug,
+          displayName: rawName,
+          category: category,
+          isCustom: true,
+        };
+        allAvailableSkills.unshift(existing);
+      }
+
+      // Add to selected map
+      selectedSkillsMap.set(cleanSlug, {
+        name: cleanSlug,
+        displayName: rawName,
+        proficiency: proficiency,
+      });
+
+      // Register with backend catalog in background
+      try {
+        window.API.post('/skills/custom', {
+          name: cleanSlug,
+          displayName: rawName,
+          category: category,
+        }, { auth: true }).catch(() => {});
+      } catch (_) {}
+
+      // Reset input & provide quick visual confirmation
+      customSkillNameInput.value = '';
+      if (customSkillFeedback) {
+        customSkillFeedback.className = 'small mt-2 text-teal';
+        customSkillFeedback.textContent = `✓ "${rawName}" added to your skills!`;
+        customSkillFeedback.classList.remove('d-none');
+        setTimeout(() => {
+          customSkillFeedback.classList.add('d-none');
+        }, 3500);
+      }
+
+      renderSkillsGrid();
+      updateSelectedSkillsUI();
+    };
+
+    btnAddCustomSkill.addEventListener('click', handleAddCustomSkill);
+    customSkillNameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAddCustomSkill();
+      }
+    });
+  }
+
+  // Load Remote Skills from Catalog
+  const loadRemoteSkills = async () => {
+    try {
+      const res = await window.API.get('/skills');
+      if (res.success && Array.isArray(res.data?.skills) && res.data.skills.length > 0) {
+        const map = new Map();
+        FALLBACK_SKILLS.forEach((s) => map.set(s.name, s));
+        res.data.skills.forEach((s) => map.set(s.name, {
+          name: s.name,
+          displayName: s.displayName,
+          category: s.category,
+        }));
+        allAvailableSkills = Array.from(map.values());
+      }
+    } catch (err) {
+      console.warn('Using local fallback skills catalog:', err.message);
+    }
+  };
+
   // 10. Preload Profile Data
   const preloadProfile = async () => {
+    await loadRemoteSkills();
     try {
       const response = await window.API.get('/users/me', { auth: true });
       if (response.success && response.data?.user) {
