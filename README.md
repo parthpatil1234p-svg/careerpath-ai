@@ -1,6 +1,8 @@
 # CareerPath AI — Discover Your Career. Build Your Skills.
 
 > **🏆 Hack2Ignite 2026–27 · Round 1 Official Qualifier Submission**  
+> **Organizer:** [G.H. Raisoni International Skill Tech University (GHRISTU)](https://ghristu.edu.in/)  
+> **Official Hackathon Portal:** [Hack 2 Ignite on Unstop](https://unstop.com/hackathons/hack-2-ignite-gh-raisoini-international-skill-tech-university-1745045)  
 > **Problem Statement ID:** **ED-02** — *Develop an AI-powered career guidance system for students based on skills, interests, and market trends*  
 > **Track:** EduTech (Educational Technology / AI for Good)  
 > **Team Name:** 404 Brain Not Found  
@@ -10,6 +12,9 @@
 ---
 
 <p align="center">
+  <a href="https://unstop.com/hackathons/hack-2-ignite-gh-raisoini-international-skill-tech-university-1745045">
+    <img src="https://img.shields.io/badge/🏆_Unstop-Hack_2_Ignite-0073E6?style=for-the-badge" alt="Unstop Hackathon" />
+  </a>
   <a href="https://careerpath-ai-jade.vercel.app">
     <img src="https://img.shields.io/badge/🌐_Production_Web_App-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Web App" />
   </a>
@@ -553,5 +558,7 @@ CareerPath AI is engineered with an extensible modular architecture. While our c
 ## 📄 License & Acknowledgements
 
 - **License:** Licensed under the [MIT Open Source License](LICENSE).
-- **Organizers:** Built for **[Hack2Ignite 2026–27](https://hack2ignite.com)** by **Team 404 Brain Not Found**.
-- **Community:** Thanks to the open-source creators of [Three.js](https://threejs.org/), [GSAP](https://greensock.com/), [Bootstrap](https://getbootstrap.com/), [Express](https://expressjs.com/), and [Mongoose](https://mongoosejs.com/).
+- **Organizer:** Organized by **[G.H. Raisoni International Skill Tech University (GHRISTU)](https://ghristu.edu.in/)**.
+- **Official Hackathon Portal:** Registered and submitted via **[Hack 2 Ignite on Unstop](https://unstop.com/hackathons/hack-2-ignite-gh-raisoini-international-skill-tech-university-1745045)**.
+- **Team:** Built with passion and dedication by **Team 404 Brain Not Found** (Parth Patil, Suyog Pawar, Asmita Lokhande, Aditi Vispute).
+- **Special Thanks:** GHRISTU mentors, evaluators, and the Unstop platform for fostering student-led AI innovations in educational technology!
