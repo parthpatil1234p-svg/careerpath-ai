@@ -8,7 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const { getSkills, addCustomSkill } = require('../controllers/skillController');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middleware/authMiddleware');
 
 // Public catalog listing with optional category & search filters
 router.get('/', getSkills);
