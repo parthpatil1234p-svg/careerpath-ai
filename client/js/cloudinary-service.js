@@ -1,9 +1,8 @@
 /**
- * firebase-service.js / media-service.js — Cloudinary Cloud Media Storage Service
+ * cloudinary-service.js — Cloudinary Media Storage Helper
  *
- * Seamlessly uploads student profile avatars and resume documents to Cloudinary.
- * Preserves complete backwards compatibility with window.FirebaseService,
- * window.CloudinaryService, and window.MediaService.
+ * Provides high-speed, secure uploads for Student Avatars and Resumes.
+ * Operates through the authenticated server API (/api/users/avatar and /api/users/resume).
  */
 
 (function () {
@@ -100,14 +99,13 @@
     throw new Error(response.message || 'Failed to upload resume document.');
   }
 
-  const mediaService = {
+  const cloudinaryService = {
     uploadAvatar,
     uploadResume,
     readFileAsDataURL,
   };
 
-  // Expose aliases on window for seamless compatibility
-  window.MediaService = mediaService;
-  window.CloudinaryService = mediaService;
-  window.FirebaseService = mediaService;
+  // Expose clean namespace on window
+  window.CloudinaryService = cloudinaryService;
+  window.MediaService = cloudinaryService;
 })();

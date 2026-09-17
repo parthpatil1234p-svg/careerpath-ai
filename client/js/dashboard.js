@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 6. Firebase Storage Upload Handlers (Avatar & Resume)
+  // 6. Cloudinary Media Storage Upload Handlers (Avatar & Resume)
   const avatarFileInput = document.getElementById('avatarFileInput');
   if (avatarFileInput && userAvatar) {
     // Open picker when avatar box is clicked
@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       try {
         showAlert('Uploading photo to Cloudinary Media Cloud...', 'info');
-        const downloadUrl = await window.FirebaseService.uploadAvatar(file, userId);
+        const downloadUrl = await window.CloudinaryService.uploadAvatar(file, userId);
 
         // Update backend user profile
         const updateRes = await window.API.put('/users/me', { avatarUrl: downloadUrl }, { auth: true });
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       try {
         showAlert('Uploading resume document to Cloudinary...', 'info');
-        const downloadUrl = await window.FirebaseService.uploadResume(file, userId);
+        const downloadUrl = await window.CloudinaryService.uploadResume(file, userId);
 
         // Save resumeUrl to profile
         const updateRes = await window.API.put('/users/me', { resumeUrl: downloadUrl }, { auth: true });

@@ -21,8 +21,5 @@
     "roadmap"
   ],
   "author": "Team 404 Brain Not Found",
-  "license": "MIT",
-  "dependencies": {
-    "firebase": "^12.19.0"
-  }
+  "license": "MIT"
 }

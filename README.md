@@ -48,7 +48,7 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 3. **Assessment (`/assessment.html`):** Select Degree (*BCA / B.Tech*), choose Interests (*Web Development*), rate 3–4 skills (*HTML, CSS, JavaScript*), and click **Save Assessment**.
 4. **Recommendations (`/recommendations.html`):** View the Top 3 matched careers calculated via our transparent **60/25/15 algorithm** and interact with the **3D Skill Orbit**.
 5. **Roadmap (`/roadmap.html`):** Click **"Build My Roadmap"**, select **8 Weeks**, toggle milestone tasks, and test the **1-Click Print / PDF Export**.
-6. **Dashboard (`/dashboard.html`):** Check live telemetry, interact with the **3D Progress Orb**, test the **Quick Skills Manager Modal**, and upload a photo/resume to **Firebase Storage**.
+6. **Dashboard (`/dashboard.html`):** Check live telemetry, interact with the **3D Progress Orb**, test the **Quick Skills Manager Modal**, and upload a photo/resume to **Cloudinary Media Storage**.
 7. **AI Career Mentor:** Open the floating chatbot drawer on any page to ask technical interview or roadmap questions powered by **Groq Llama 3.3 70B** with **Gemini 2.0 Flash** failover.
 
 ---
@@ -157,9 +157,9 @@ Students don't just learn in a vacuum — they see real industry demand:
 
 ---
 
-### ☁️ 5. Google Firebase Storage Cloud Asset Integration
-- **Student Profile Picture (Avatar):** Instant browser-to-cloud image upload with validation, client preview, and Mongoose user profile persistence.
-- **Resume & CV Attachment:** Upload PDF or DOC documents directly to Firebase Storage with instant download and review links on the dashboard.
+### ☁️ 5. Cloudinary Media Cloud Asset Integration
+- **Student Profile Picture (Avatar):** Instant browser-to-cloud image upload with validation, client preview, automatic AI face-crop, and Mongoose user profile persistence.
+- **Resume & CV Attachment:** Upload PDF or DOC documents directly to Cloudinary with instant download and review links on the dashboard.
 
 ---
 
@@ -184,10 +184,8 @@ flowchart TD
         Browser["User Web Browser"]
         UI["Glassmorphism UI (HTML5 · CSS3 · Bootstrap 5.3)"]
         ThreeJS["Three.js WebGL Engine (Universe · Orbit · Path · Orb)"]
-        FirebaseClient["Firebase Client SDK (Storage Service)"]
         Browser --> UI
         UI --> ThreeJS
-        UI --> FirebaseClient
     end
 
     subgraph Gateway ["Backend API Gateway · Render Web Service"]
@@ -196,12 +194,14 @@ flowchart TD
         Auth["JWT Stateless Guard (Bearer Token)"]
         Engine["60/25/15 Deterministic Scoring Engine"]
         RoadmapGen["Milestone & Task Generator"]
+        MediaService["Cloudinary Media Integration Service"]
         FailoverLayer["Resilient Multi-API Failover & Cache Layer"]
 
         Express --> Security
         Security --> Auth
         Auth --> Engine
         Auth --> RoadmapGen
+        Auth --> MediaService
         Express --> FailoverLayer
     end
 
@@ -210,7 +210,7 @@ flowchart TD
     end
 
     subgraph CloudAPIs ["Live External Cloud APIs"]
-        FirebaseCloud["Firebase Cloud Storage\n(Avatars & Resumes)"]
+        CloudinaryCloud["Cloudinary Media Cloud\n(Avatars & Resumes)"]
         AdzunaAPI["Adzuna API\n(Live India Tech Jobs & ₹ CTC)"]
         AIDevAPI["AIDevBoard API\n(Global Remote Tech Jobs)"]
         GroqAPI["Groq Cloud API\n(Llama 3.3 70B AI Mentor)"]
@@ -218,7 +218,7 @@ flowchart TD
     end
 
     UI -- "HTTPS REST API (JSON / JWT)" --> Express
-    FirebaseClient -- "Direct Blob Upload" --> FirebaseCloud
+    MediaService -- "Signed HTTPS API" --> CloudinaryCloud
     Engine -- "Mongoose Driver (TLS)" --> Cluster
     RoadmapGen -- "Atomic Milestone Updates" --> Cluster
     FailoverLayer <--> AdzunaAPI
@@ -237,7 +237,7 @@ flowchart TD
 | **3D & Animation** | Three.js (r128), GSAP (GreenSock) | Hardware-accelerated WebGL visuals, planetary physics orbits, smooth micro-interactions |
 | **Backend API** | Node.js (v18+), Express.js (CommonJS) | Fast asynchronous non-blocking event loop, battle-tested REST architectural style |
 | **Database & ODM** | MongoDB Atlas (M0 Free Tier), Mongoose 8.x | Flexible document schemas for nested skill matrices, multi-week roadmaps, and atomic task checkboxes |
-| **Cloud Storage** | Google Firebase Storage SDK (v10 / v12 compat) | Secure, high-throughput cloud storage for avatars and PDF resumes with direct CDN URLs |
+| **Cloud Storage** | Cloudinary Media SDK (v2) | High-speed global media delivery with automatic AI face-centering and direct CDN URLs |
 | **AI & LLM Services** | Groq Cloud (Llama 3.3 70B), Google Gemini 2.0 Flash | Ultra-fast (<500ms) inferencing with automated secondary cloud failover redundancy |
 | **Market Data** | Adzuna Developer API, AIDevBoard REST API | Real-time Indian tech job postings, verified CTC salary ranges, and remote vacancies |
 | **Security & Utilities** | bcryptjs, jsonwebtoken, helmet, express-rate-limit, cors, nodemailer | Cryptographic hashing, stateless sessions, API brute-force throttling, email OTP |
@@ -271,8 +271,7 @@ careerpath-ai/
 │   │   ├── config.js                        ← API gateway base URL configuration
 │   │   ├── api.js                           ← Asynchronous HTTP client & error handler
 │   │   ├── auth.js                          ← JWT session manager & user state
-│   │   ├── firebase-config.js               ← Firebase client credentials & app init
-│   │   ├── firebase-service.js              ← Cloud avatar & resume upload handler
+│   │   ├── cloudinary-service.js            ← Cloudinary cloud avatar & resume upload handler
 │   │   ├── assessment.js                    ← Profiling form & skill category selector
 │   │   ├── recommendations.js               ← Recommendation cards & job telemetry
 │   │   ├── roadmap.js                       ← Task toggling & print/PDF export

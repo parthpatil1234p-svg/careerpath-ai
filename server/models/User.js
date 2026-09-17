@@ -119,7 +119,7 @@ const UserSchema = new mongoose.Schema(
       default: [],
     },
 
-    // Profile photo & Resume stored via Google Cloud / Firebase Storage
+    // Profile photo & Resume stored via Cloudinary Media Storage
     avatarUrl: {
       type: String,
       default: '',
