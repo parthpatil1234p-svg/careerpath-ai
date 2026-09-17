@@ -555,6 +555,17 @@ CareerPath AI is engineered with an extensible modular architecture. While our c
 
 ---
 
+## 👥 Meet the Team Behind CareerPath AI
+
+Built with passion, engineering dedication, and late-night teamwork by **Team 404 Brain Not Found** for **Hack2Ignite 2026–27**:
+
+| <img src="https://github.com/parthpatil1234p-svg.png?size=110" width="110px;" style="border-radius:50%" alt="Parth Patil"/><br /><sub><b>Parth Patil</b></sub> | <img src="https://github.com/aditivispute25-gif.png?size=110" width="110px;" style="border-radius:50%" alt="Aditi Vispute"/><br /><sub><b>Aditi Vispute</b></sub> | <img src="https://github.com/lolhandeasmita.png?size=110" width="110px;" style="border-radius:50%" alt="Asmita Lokhande"/><br /><sub><b>Asmita Lokhande</b></sub> | <img src="https://github.com/Suyog-SP.png?size=110" width="110px;" style="border-radius:50%" alt="Suyog Pawar"/><br /><sub><b>Suyog Pawar</b></sub> |
+| :---: | :---: | :---: | :---: |
+| 👑 **Team Lead & Backend** | 💻 **Frontend & Assessment** | 🎨 **UI/UX & Career Universe** | 🗺️ **Roadmap & Presentation** |
+| [![GitHub](https://img.shields.io/badge/GitHub-parthpatil1234p--svg-181717?style=flat-square&logo=github)](https://github.com/parthpatil1234p-svg) | [![GitHub](https://img.shields.io/badge/GitHub-aditivispute25--gif-181717?style=flat-square&logo=github)](https://github.com/aditivispute25-gif) | [![GitHub](https://img.shields.io/badge/GitHub-lolhandeasmita-181717?style=flat-square&logo=github)](https://github.com/lolhandeasmita) | [![GitHub](https://img.shields.io/badge/GitHub-Suyog--SP-181717?style=flat-square&logo=github)](https://github.com/Suyog-SP) |
+
+---
+
 ## 📄 License & Acknowledgements
 
 - **License:** Licensed under the [MIT Open Source License](LICENSE).
