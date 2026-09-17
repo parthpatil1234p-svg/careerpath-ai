@@ -114,8 +114,14 @@
         <div class="dashboard-profile-card p-4 p-md-4 rounded-3 mb-4">
           <div class="row align-items-center g-3">
             <div class="col-md-8 d-flex align-items-center gap-3">
-              <div class="dashboard-avatar" id="userAvatar">
-                U
+              <div class="dashboard-avatar-container" title="Click to upload profile photo via Firebase Storage">
+                <div class="dashboard-avatar" id="userAvatar">
+                  U
+                </div>
+                <label for="avatarFileInput" class="avatar-upload-trigger" title="Change Avatar Photo (Firebase Storage)">
+                  <i class="bi bi-camera-fill"></i>
+                </label>
+                <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp,image/gif" class="d-none" />
               </div>
               <div>
                 <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
@@ -128,11 +134,20 @@
                 <div class="d-flex align-items-center gap-3 text-secondary small flex-wrap">
                   <span id="userDegree"><i class="bi bi-mortarboard-fill text-gold me-1"></i> Degree Pending</span>
                   <span id="userSkillsCount"><i class="bi bi-tools text-teal me-1"></i> 0 Skills Logged</span>
+                  <span id="userResumeStatus">
+                    <i class="bi bi-file-earmark-pdf text-teal me-1"></i>
+                    <a href="#" id="viewResumeLink" target="_blank" class="text-teal text-decoration-underline d-none">View Resume</a>
+                    <span id="noResumeText" class="text-muted">No Resume</span>
+                  </span>
                 </div>
               </div>
             </div>
 
             <div class="col-md-4 text-md-end d-flex flex-column flex-sm-row justify-content-md-end gap-2">
+              <button type="button" class="btn btn-outline-navy btn-sm px-3" id="btnUploadResumeTrigger" title="Upload Resume to Firebase Storage">
+                <i class="bi bi-file-earmark-arrow-up-fill me-1"></i> Resume
+              </button>
+              <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx" class="d-none" />
               <button type="button" class="btn cp-btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
                 <i class="bi bi-lightning-charge-fill me-1"></i> Manage Skills
               </button>
@@ -470,6 +485,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Firebase SDK (Google Cloud Services) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-service.js"></script>
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>

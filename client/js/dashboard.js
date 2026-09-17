@@ -78,14 +78,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Profile Card
     const nameStr = user?.name || 'Student';
     userName.textContent = nameStr;
-    userAvatar.textContent = nameStr.charAt(0).toUpperCase();
+    if (user?.avatarUrl) {
+      userAvatar.innerHTML = `<img src="${escapeHtml(user.avatarUrl)}" alt="${escapeHtml(nameStr)}" class="rounded-circle w-100 h-100" style="object-fit: cover;" />`;
+    } else {
+      userAvatar.textContent = nameStr.charAt(0).toUpperCase();
+    }
     userEmail.textContent = user?.email || '';
 
     const degreeName = user?.education?.degree ? `${user.education.degree}` : 'Degree not specified';
     userDegree.innerHTML = `<i class="bi bi-mortarboard-fill text-warning me-1"></i> ${escapeHtml(degreeName)}`;
 
     const skillCount = user?.skills?.length || 0;
-    userSkillsCount.innerHTML = `<i class="bi bi-tools text-info me-1"></i> ${skillCount} Skills Logged`;
+    userSkillsCount.innerHTML = `<i class="bi bi-tools text-teal me-1"></i> ${skillCount} Skills Logged`;
+
+    // Render Resume Status
+    const viewResumeLink = document.getElementById('viewResumeLink');
+    const noResumeText = document.getElementById('noResumeText');
+    if (user?.resumeUrl) {
+      if (viewResumeLink) {
+        viewResumeLink.href = user.resumeUrl;
+        viewResumeLink.classList.remove('d-none');
+      }
+      if (noResumeText) noResumeText.classList.add('d-none');
+    } else {
+      if (viewResumeLink) viewResumeLink.classList.add('d-none');
+      if (noResumeText) noResumeText.classList.remove('d-none');
+    }
 
     // Render Skills Matrix Card
     renderSkillsMatrix(user?.skills || []);
@@ -554,6 +572,95 @@ document.addEventListener('DOMContentLoaded', async () => {
       } finally {
         btnSaveQuickSkills.disabled = false;
         btnSaveQuickSkills.innerHTML = originalHtml;
+      }
+    });
+  }
+
+  // 6. Firebase Storage Upload Handlers (Avatar & Resume)
+  const avatarFileInput = document.getElementById('avatarFileInput');
+  if (avatarFileInput && userAvatar) {
+    // Open picker when avatar box is clicked
+    userAvatar.addEventListener('click', () => {
+      avatarFileInput.click();
+    });
+
+    avatarFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const userId = dashboardData?.user?.id || window.Auth?.getUser()?.id;
+      const originalAvatarContent = userAvatar.innerHTML;
+      userAvatar.innerHTML = `<span class="spinner-border spinner-border-sm text-teal" role="status"></span>`;
+
+      try {
+        showAlert('Uploading photo to Firebase Storage...', 'info');
+        const downloadUrl = await window.FirebaseService.uploadAvatar(file, userId);
+
+        // Update backend user profile
+        const updateRes = await window.API.put('/users/me', { avatarUrl: downloadUrl }, { auth: true });
+        if (updateRes.success && updateRes.data?.user) {
+          window.Auth.setCurrentUser(updateRes.data.user);
+          if (dashboardData) dashboardData.user = updateRes.data.user;
+          userAvatar.innerHTML = `<img src="${escapeHtml(downloadUrl)}" alt="Avatar" class="rounded-circle w-100 h-100" style="object-fit: cover;" />`;
+          showAlert('Profile picture uploaded and saved successfully!', 'success');
+        } else {
+          userAvatar.innerHTML = originalAvatarContent;
+          showAlert(updateRes.message || 'Failed to save updated avatar in profile.', 'danger');
+        }
+      } catch (uploadErr) {
+        userAvatar.innerHTML = originalAvatarContent;
+        showAlert(uploadErr.message || 'Failed to upload photo.', 'danger');
+      } finally {
+        avatarFileInput.value = '';
+      }
+    });
+  }
+
+  // Resume Upload Handler
+  const btnUploadResumeTrigger = document.getElementById('btnUploadResumeTrigger');
+  const resumeFileInput = document.getElementById('resumeFileInput');
+  if (btnUploadResumeTrigger && resumeFileInput) {
+    btnUploadResumeTrigger.addEventListener('click', () => {
+      resumeFileInput.click();
+    });
+
+    resumeFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const userId = dashboardData?.user?.id || window.Auth?.getUser()?.id;
+      const originalBtnHtml = btnUploadResumeTrigger.innerHTML;
+      btnUploadResumeTrigger.disabled = true;
+      btnUploadResumeTrigger.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Uploading...`;
+
+      try {
+        showAlert('Uploading resume document to Firebase Storage...', 'info');
+        const downloadUrl = await window.FirebaseService.uploadResume(file, userId);
+
+        // Save resumeUrl to profile
+        const updateRes = await window.API.put('/users/me', { resumeUrl: downloadUrl }, { auth: true });
+        if (updateRes.success && updateRes.data?.user) {
+          window.Auth.setCurrentUser(updateRes.data.user);
+          if (dashboardData) dashboardData.user = updateRes.data.user;
+
+          const viewResumeLink = document.getElementById('viewResumeLink');
+          const noResumeText = document.getElementById('noResumeText');
+          if (viewResumeLink) {
+            viewResumeLink.href = downloadUrl;
+            viewResumeLink.classList.remove('d-none');
+          }
+          if (noResumeText) noResumeText.classList.add('d-none');
+
+          showAlert('Resume uploaded to Firebase and attached to profile successfully!', 'success');
+        } else {
+          showAlert(updateRes.message || 'Failed to save resume URL in profile.', 'danger');
+        }
+      } catch (uploadErr) {
+        showAlert(uploadErr.message || 'Failed to upload resume document.', 'danger');
+      } finally {
+        btnUploadResumeTrigger.disabled = false;
+        btnUploadResumeTrigger.innerHTML = originalBtnHtml;
+        resumeFileInput.value = '';
       }
     });
   }
