@@ -55,6 +55,30 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 
 ---
 
+## 📸 Application UI Screenshots & Visual Showcase
+
+| 🌌 1. Landing Page & 3D Career Universe | 📊 2. Student Dashboard & 3D Progress Orb |
+| :---: | :---: |
+| <img src="assets/screenshots/02_landing_hero_viewport.png" width="460" alt="Landing Page" /> | <img src="assets/screenshots/05_dashboard_top_viewport.png" width="460" alt="Dashboard" /> |
+| *Three.js 3D Career Universe constellation with orbital physics* | *3D Holographic Progress Orb, active goals & quick stats* |
+
+| 📝 3. Multi-Step Student Profiling | 🎯 4. Explainable Career Recommendations |
+| :---: | :---: |
+| <img src="assets/screenshots/09_assessment_step1_academics.png" width="460" alt="Assessment" /> | <img src="assets/screenshots/14_recommendations_top_card.png" width="460" alt="Recommendations" /> |
+| *3-Step Academic, Interest & 45+ Skill evaluation wizard* | *Deterministic 60/25/15 match score & tri-color skill gaps* |
+
+| 🗺️ 5. Adaptive Milestone Roadmap | 💼 6. Live Market Telemetry & CTC |
+| :---: | :---: |
+| <img src="assets/screenshots/18_roadmap_milestones_viewport.png" width="460" alt="Roadmap" /> | <img src="assets/screenshots/16_live_market_jobs_modal.png" width="460" alt="Live Jobs" /> |
+| *Prioritized missing skills, weekly tasks & atomic progress tracking* | *Verified Indian salary ranges & live jobs via Adzuna API* |
+
+| 🤖 7. Dual-Engine AI Career Mentor | 🔐 8. Seamless Evaluator Onboarding |
+| :---: | :---: |
+| <img src="assets/screenshots/07_dashboard_ai_mentor_modal.png" width="460" alt="AI Mentor" /> | <img src="assets/screenshots/22_register_page.png" width="460" alt="Register" /> |
+| *Low-latency (<500ms) guidance via Groq Llama 3.3 70B & Gemini* | *Stateless JWT authentication with zero-OTP evaluator mode* |
+
+---
+
 ## 🎯 Problem Statement & Real-World Market Impact
 
 ### The Educational Disconnect

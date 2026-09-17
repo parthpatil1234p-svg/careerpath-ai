@@ -6,30 +6,50 @@ This directory stores visual, structural, and multimedia assets supporting the C
 
 ---
 
-## 📁 Subdirectory Guidelines
+## 📁 Subdirectory Structure & Screenshots Catalog
 
 ### 1. `screenshots/`
-- **Purpose:** Reserved strictly for **real, final application UI screenshots** captured from local or deployed builds.
-- **Rules:**
-  - Never upload mockup placeholders claiming to be working software.
-  - Ensure no personal, confidential, or private student information is visible in screenshots.
-  - Recommended naming: `landing-hero.png`, `assessment-form.png`, `recommendations.png`, `roadmap-view.png`, `dashboard-orb.png`.
+All screenshots are real, un-mocked captures of the working CareerPath AI application:
+
+| Filename | Module / Page | Visual Description |
+| :--- | :--- | :--- |
+| `01_landing_page_full.png` | Landing Page | Full-page view of hero, 3D Career Universe, features, and footer |
+| `02_landing_hero_viewport.png` | Landing Page | Above-the-fold viewport showing Three.js stardust particles & orbital nodes |
+| `03_landing_career_catalog.png` | Landing Page | Career domain exploration catalog and navigation |
+| `04_dashboard_full.png` | Dashboard | Full student dashboard with quick stats, roadmap progress, and skills |
+| `05_dashboard_top_viewport.png` | Dashboard | 3D Holographic Progress Orb and active target career card |
+| `06_dashboard_skills_and_tasks.png` | Dashboard | Quick Skills Manager and upcoming weekly milestone checklist |
+| `07_dashboard_ai_mentor_modal.png` | AI Mentor Drawer | Contextual chat drawer powered by Groq Llama 3.3 70B & Gemini |
+| `08_assessment_page_full.png` | Assessment | Full 3-step assessment wizard layout |
+| `09_assessment_step1_academics.png` | Assessment | Step 1: Degree, Branch, Year, and Institution profiling |
+| `10_assessment_step2_interests.png` | Assessment | Step 2: Domain interest chips selection with counter |
+| `11_assessment_step3_skills.png` | Assessment | Step 3: Categorized 45+ industry skills with 3-tier proficiency |
+| `12_assessment_step4_goals.png` | Assessment | Assessment review and career matching submission |
+| `13_recommendations_full.png` | Recommendations | Full recommendations page with top 3 matched careers |
+| `14_recommendations_top_card.png` | Recommendations | #1 Career card with 60/25/15 match score & tri-color skill gaps |
+| `15_roadmap_duration_modal.png` | Roadmap Setup | 4, 8, or 12-week duration selection modal |
+| `16_live_market_jobs_modal.png` | Market Telemetry | Adzuna Developer API modal showing live Indian tech jobs & CTC ranges |
+| `17_roadmap_page_full.png` | Roadmap | Full structured milestone roadmap schedule |
+| `18_roadmap_milestones_viewport.png`| Roadmap | 3D Roadmap Path and Week 1-2 prioritized missing skill gaps |
+| `19_roadmap_tasks_schedule.png` | Roadmap | Actionable step-by-step tasks with curated documentation links |
+| `20_roadmap_task_completed.png` | Roadmap | Checked-off milestone tasks with atomic progress bar update |
+| `21_login_page.png` | Authentication | Secure student login portal with JWT token persistence |
+| `22_register_page.png` | Authentication | Zero-OTP instant registration portal for evaluator testing |
+
+---
 
 ### 2. `diagrams/`
 - **Purpose:** High-resolution exports of architectural diagrams, ER schemas, and user flow charts.
-- **Rules:**
-  - Exported SVG or PNG versions of the Mermaid diagrams located in `docs/TRD.md` and `docs/APP-FLOW.md`.
 
 ### 3. `demo/`
-- **Purpose:** Optional compressed demo video recordings (e.g., 1080p MP4, maximum 3–4 minutes) and demo assets.
-- **Rules:**
-  - Check Hack2Ignite rulebook for file-size constraints before committing large binaries. If repository size limits apply, host the video on YouTube / Google Drive and document the link here.
+- **Purpose:** Optional compressed demo video recordings (e.g., 1080p MP4) and master demo scripts.
+- **Master Script:** Refer to [`CareerPath-AI-Demo-Video-Voice-Script.txt`](../CareerPath-AI-Demo-Video-Voice-Script.txt) in the project root.
 
 ---
 
 ## ⚖️ Asset Attribution & Licensing Rules
 
-- **Zero Copyrighted Material:** Only use self-created graphics or assets licensed under permissive open-source terms (MIT, Apache 2.0, Creative Commons CC0).
+- **Zero Copyrighted Material:** Only self-created screenshots and open-source assets used.
 - **Icons:** Bootstrap Icons (MIT License).
 - **Fonts:** Google Fonts — Space Grotesk (OFL) and Inter (OFL).
-- **3D Assets:** Procedurally generated Three.js geometries and shaders (no external copyrighted 3D meshes).
+- **3D Assets:** Procedurally generated Three.js geometries and buffer shaders.
