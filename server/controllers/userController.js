@@ -119,4 +119,94 @@ const updateMyProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { getMyProfile, updateMyProfile };
+const { uploadAvatar: uploadAvatarToCloudinary, uploadResume: uploadResumeToCloudinary } = require('../services/cloudinaryService');
+
+/**
+ * POST /api/users/avatar
+ * Body: { fileData: "data:image/...;base64,..." }
+ */
+const uploadAvatar = async (req, res, next) => {
+  try {
+    const { fileData } = req.body;
+    if (!fileData) {
+      return res.status(400).json({
+        success: false,
+        message: 'No image data provided',
+      });
+    }
+
+    const uploadRes = await uploadAvatarToCloudinary(fileData, req.user._id);
+    const avatarUrl = uploadRes.secure_url;
+
+    // Update user in DB
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { avatarUrl } },
+      { new: true, runValidators: false }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Avatar uploaded and saved successfully',
+      data: {
+        avatarUrl,
+        user,
+      },
+    });
+  } catch (error) {
+    console.error('Avatar upload error:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to upload avatar',
+    });
+  }
+};
+
+/**
+ * POST /api/users/resume
+ * Body: { fileData: "data:application/pdf;base64,..." }
+ */
+const uploadResume = async (req, res, next) => {
+  try {
+    const { fileData } = req.body;
+    if (!fileData) {
+      return res.status(400).json({
+        success: false,
+        message: 'No resume document provided',
+      });
+    }
+
+    const uploadRes = await uploadResumeToCloudinary(fileData, req.user._id);
+    const resumeUrl = uploadRes.secure_url;
+
+    // Update user in DB
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { resumeUrl } },
+      { new: true, runValidators: false }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Resume uploaded and attached to profile successfully',
+      data: {
+        resumeUrl,
+        user,
+      },
+    });
+  } catch (error) {
+    console.error('Resume upload error:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to upload resume',
+    });
+  }
+};
+
+module.exports = {
+  getMyProfile,
+  updateMyProfile,
+  uploadAvatar,
+  uploadResume,
+};
+

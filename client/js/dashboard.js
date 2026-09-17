@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       userAvatar.innerHTML = `<span class="spinner-border spinner-border-sm text-teal" role="status"></span>`;
 
       try {
-        showAlert('Uploading photo to Firebase Storage...', 'info');
+        showAlert('Uploading photo to Cloudinary Media Cloud...', 'info');
         const downloadUrl = await window.FirebaseService.uploadAvatar(file, userId);
 
         // Update backend user profile
@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.Auth.setCurrentUser(updateRes.data.user);
           if (dashboardData) dashboardData.user = updateRes.data.user;
           userAvatar.innerHTML = `<img src="${escapeHtml(downloadUrl)}" alt="Avatar" class="rounded-circle w-100 h-100" style="object-fit: cover;" />`;
-          showAlert('Profile picture uploaded and saved successfully!', 'success');
+          showAlert('Profile picture uploaded to Cloudinary and saved successfully!', 'success');
         } else {
           userAvatar.innerHTML = originalAvatarContent;
           showAlert(updateRes.message || 'Failed to save updated avatar in profile.', 'danger');
@@ -634,7 +634,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnUploadResumeTrigger.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Uploading...`;
 
       try {
-        showAlert('Uploading resume document to Firebase Storage...', 'info');
+        showAlert('Uploading resume document to Cloudinary...', 'info');
         const downloadUrl = await window.FirebaseService.uploadResume(file, userId);
 
         // Save resumeUrl to profile
@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
           if (noResumeText) noResumeText.classList.add('d-none');
 
-          showAlert('Resume uploaded to Firebase and attached to profile successfully!', 'success');
+          showAlert('Resume uploaded to Cloudinary and attached to profile successfully!', 'success');
         } else {
           showAlert(updateRes.message || 'Failed to save resume URL in profile.', 'danger');
         }

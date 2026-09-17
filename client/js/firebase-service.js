@@ -1,110 +1,32 @@
 /**
- * firebase-service.js — Firebase Storage Upload & Cloud Services Helper
+ * firebase-service.js / media-service.js — Cloudinary Cloud Media Storage Service
  *
- * Provides upload services for Student Profile Avatars and Resumes.
- * Operates seamlessly with both Modular CDN and Compat SDKs.
+ * Seamlessly uploads student profile avatars and resume documents to Cloudinary.
+ * Preserves complete backwards compatibility with window.FirebaseService,
+ * window.CloudinaryService, and window.MediaService.
  */
 
 (function () {
-  let modularStorageModule = null;
-  let modularAppModule = null;
-  let initializedModularStorage = null;
-
   /**
-   * Helper to ensure Firebase Storage is ready.
-   * Checks global compat SDK first; falls back to dynamic ES module import from gstatic CDN.
+   * Helper: Read a File object as a Base64 Data URI
+   * @param {File} file 
+   * @returns {Promise<string>}
    */
-  async function getStorageInstance() {
-    // 0. Ensure config is fetched from server .env if not yet populated
-    if (!window.FIREBASE_CONFIG || !window.FIREBASE_CONFIG.apiKey) {
-      if (typeof window.initFirebaseConfig === 'function') {
-        await window.initFirebaseConfig();
-      }
-    }
-
-    // 1. Compat SDK check
-    if (typeof firebase !== 'undefined' && typeof firebase.storage === 'function') {
-      if (!firebase.apps || !firebase.apps.length) {
-        if (window.FIREBASE_CONFIG) {
-          firebase.initializeApp(window.FIREBASE_CONFIG);
-        }
-      }
-      return {
-        type: 'compat',
-        storage: firebase.storage(),
-      };
-    }
-
-    // 2. Modular dynamic import
-    if (!initializedModularStorage) {
-      try {
-        if (!modularAppModule) {
-          modularAppModule = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-        }
-        if (!modularStorageModule) {
-          modularStorageModule = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js');
-        }
-
-        const app = modularAppModule.initializeApp(window.FIREBASE_CONFIG, 'careerpath-client-app');
-        initializedModularStorage = modularStorageModule.getStorage(app);
-      } catch (err) {
-        console.error('Failed to load Firebase modular SDK:', err);
-        throw new Error('Unable to initialize Firebase Storage. Please check internet connection.');
-      }
-    }
-
-    return {
-      type: 'modular',
-      storage: initializedModularStorage,
-      modules: {
-        ref: modularStorageModule.ref,
-        uploadBytes: modularStorageModule.uploadBytes,
-        getDownloadURL: modularStorageModule.getDownloadURL,
-      },
-    };
-  }
-
-  /**
-   * Upload a generic file to a destination path in Firebase Storage.
-   * @param {File|Blob} file 
-   * @param {string} destinationPath 
-   * @param {Object} metadata 
-   * @returns {Promise<string>} download URL
-   */
-  async function uploadFile(file, destinationPath, metadata = {}) {
-    const instance = await getStorageInstance();
-
-    try {
-      if (instance.type === 'compat') {
-        const storageRef = instance.storage.ref(destinationPath);
-        const snapshot = await storageRef.put(file, metadata);
-        const downloadUrl = await snapshot.ref.getDownloadURL();
-        return downloadUrl;
-      } else {
-        const { ref, uploadBytes, getDownloadURL } = instance.modules;
-        const storageRef = ref(instance.storage, destinationPath);
-        const snapshot = await uploadBytes(storageRef, file, metadata);
-        const downloadUrl = await getDownloadURL(snapshot.ref);
-        return downloadUrl;
-      }
-    } catch (error) {
-      console.error('Firebase Storage Upload Error:', error);
-      if (error.code === 'storage/unauthorized') {
-        throw new Error(
-          'Firebase Storage access denied. Please allow read/write in Firebase Console -> Storage -> Rules (e.g. allow read, write: if true; for testing).'
-        );
-      } else if (error.code === 'storage/quota-exceeded') {
-        throw new Error('Firebase Storage quota exceeded. Please check your Firebase plan limits.');
-      }
-      throw new Error(error.message || 'File upload failed. Please try again.');
-    }
+  function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
   }
 
   /**
    * Upload Student Profile Picture (Avatar)
+   * Sends image to backend /api/users/avatar which uploads to Cloudinary with face detection & auto-crop.
    * @param {File} file 
    * @param {string} userId 
-   * @returns {Promise<string>} public download URL
+   * @returns {Promise<string>} Cloudinary secure HTTPS URL
    */
   async function uploadAvatar(file, userId) {
     if (!file) throw new Error('Please select an image file to upload.');
@@ -115,30 +37,34 @@
       throw new Error('Invalid image format. Supported formats: JPG, PNG, WEBP, GIF, SVG.');
     }
 
-    // Validate size (max 5MB)
-    const MAX_SIZE = 5 * 1024 * 1024;
+    // Validate size (max 8MB)
+    const MAX_SIZE = 8 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      throw new Error('Image size exceeds 5MB limit. Please choose a smaller photo.');
+      throw new Error('Image size exceeds 8MB limit. Please choose a smaller photo.');
     }
 
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = `avatars/${userId || 'user'}_${Date.now()}_${sanitizedName}`;
-    const metadata = {
-      contentType: file.type,
-      customMetadata: {
-        uploadedAt: new Date().toISOString(),
-        userId: userId || 'anonymous',
-      },
-    };
+    const fileData = await readFileAsDataURL(file);
 
-    return await uploadFile(file, path, metadata);
+    // Call backend Cloudinary upload endpoint
+    const response = await window.API.post(
+      '/users/avatar',
+      { fileData, userId },
+      { auth: true }
+    );
+
+    if (response.success && response.data?.avatarUrl) {
+      return response.data.avatarUrl;
+    }
+
+    throw new Error(response.message || 'Failed to upload photo to Cloudinary.');
   }
 
   /**
    * Upload Student Resume / CV
+   * Sends resume to backend /api/users/resume which stores it securely on Cloudinary.
    * @param {File} file 
    * @param {string} userId 
-   * @returns {Promise<string>} public download URL
+   * @returns {Promise<string>} Cloudinary secure HTTPS URL
    */
   async function uploadResume(file, userId) {
     if (!file) throw new Error('Please select a resume file to upload.');
@@ -158,24 +84,30 @@
       throw new Error('Resume file size exceeds 10MB limit.');
     }
 
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = `resumes/${userId || 'user'}_${Date.now()}_${sanitizedName}`;
-    const metadata = {
-      contentType: file.type || 'application/pdf',
-      customMetadata: {
-        uploadedAt: new Date().toISOString(),
-        userId: userId || 'anonymous',
-      },
-    };
+    const fileData = await readFileAsDataURL(file);
 
-    return await uploadFile(file, path, metadata);
+    // Call backend Cloudinary upload endpoint
+    const response = await window.API.post(
+      '/users/resume',
+      { fileData, userId },
+      { auth: true }
+    );
+
+    if (response.success && response.data?.resumeUrl) {
+      return response.data.resumeUrl;
+    }
+
+    throw new Error(response.message || 'Failed to upload resume document.');
   }
 
-  // Expose on window
-  window.FirebaseService = {
+  const mediaService = {
     uploadAvatar,
     uploadResume,
-    uploadFile,
-    getStorageInstance,
+    readFileAsDataURL,
   };
+
+  // Expose aliases on window for seamless compatibility
+  window.MediaService = mediaService;
+  window.CloudinaryService = mediaService;
+  window.FirebaseService = mediaService;
 })();

@@ -112,8 +112,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // ── Body parsers ──────────────────────────────────────────────
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // ── Rate Limiting: protect API from brute-force without choking legitimate users ────
 const isDev = process.env.NODE_ENV === 'development';

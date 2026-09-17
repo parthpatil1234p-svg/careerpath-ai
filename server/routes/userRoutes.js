@@ -12,7 +12,12 @@
 
 const express = require('express');
 
-const { getMyProfile, updateMyProfile }  = require('../controllers/userController');
+const {
+  getMyProfile,
+  updateMyProfile,
+  uploadAvatar,
+  uploadResume,
+} = require('../controllers/userController');
 const { protect }                        = require('../middleware/authMiddleware');
 const { validateProfileUpdate }          = require('../middleware/validateRequest');
 
@@ -26,5 +31,11 @@ router.get('/me', getMyProfile);
 
 // PUT /api/users/me
 router.put('/me', validateProfileUpdate, updateMyProfile);
+
+// POST /api/users/avatar (Cloudinary Media Upload)
+router.post('/avatar', uploadAvatar);
+
+// POST /api/users/resume (Cloudinary Media Upload)
+router.post('/resume', uploadResume);
 
 module.exports = router;
