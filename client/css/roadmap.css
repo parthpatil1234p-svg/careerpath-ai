@@ -380,5 +380,21 @@
     border-color: rgba(0, 242, 254, 0.45);
     transform: translateY(-1px);
   }
+
+  /* Route canvas — taller on desktop so 3D path is clearly visible */
+  #roadmap-path {
+    min-height: 350px;
+  }
 }
 
+/* ==========================================================================
+   Roadmap Page — Container Cap (prevents 1911px stretch at 1920px)
+   The roadmap page <main> uses .container which must obey the same
+   1520px global cap as all other pages.
+   ========================================================================== */
+.roadmap-page main.container,
+.roadmap-page > main {
+  max-width: var(--container-max-width, 1520px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

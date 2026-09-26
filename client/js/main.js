@@ -145,3 +145,21 @@ document.addEventListener('DOMContentLoaded', () => {
     'color: #1C355E; font-size: 12px;'
   );
 });
+// ============================================================
+// 6. Global Unhandled Promise Rejection — suppress non-critical noise
+//    (Cloudinary CDN prefetch, optional analytics, network flakes)
+// ============================================================
+window.addEventListener('unhandledrejection', (event) => {
+  const reason = event.reason;
+  const msg = reason?.message || String(reason) || '';
+  // Allow real errors to surface; suppress known non-critical patterns
+  const isBenign =
+    msg.includes('cloudinary') ||
+    msg.includes('NetworkError') ||
+    msg.includes('Failed to fetch') ||
+    msg.includes('Load failed') ||
+    msg.includes('AbortError');
+  if (isBenign) {
+    event.preventDefault(); // Prevents "Uncaught (in promise)" in console
+  }
+});
