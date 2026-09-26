@@ -118,7 +118,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       activeRoadmapPace.textContent = `${activeRoadmap.durationWeeks} Weeks`;
 
       const pct = Math.round(activeRoadmap.progressPercentage || 0);
-      statPercentage.textContent = `${pct}%`;
+      if (typeof window.animateCounter === 'function') {
+        window.animateCounter(statPercentage, pct, { suffix: '%', duration: 1.2 });
+      } else {
+        statPercentage.textContent = `${pct}%`;
+      }
+
       const total = activeRoadmap.totalTasksCount ?? activeRoadmap.totalTasks ?? 0;
       const completed = activeRoadmap.completedTasksCount ?? activeRoadmap.completedTasks ?? 0;
       statTasks.textContent = `${completed} / ${total}`;
