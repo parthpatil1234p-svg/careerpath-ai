@@ -57,3 +57,6 @@ AI_BRAIN.md
 AI_RULES.md
 SESSION_MEMORY.md
 .claude/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
