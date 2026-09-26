@@ -10,7 +10,7 @@
 | **Parth** | Backend Architecture, Matching Engine, API Routing | Deployment |
 | **Aditi** | Frontend UI/UX, Glassmorphism, API Integration | Forms & Validation |
 | **Suyog** | UI/UX & 3D WebGL Lead (Three.js, Canvas, GSAP) | Canvas optimization |
-| *[Open Slot]* | QA, Data & Documentation Lead | Future Member Assignment |
+| **Sanika** | QA, Data & Documentation Lead (Testing, Dataset, Postman) | Manual test suites & QA matrix |
 
 ---
 
@@ -40,7 +40,7 @@ Complete **before** the 48-hour clock starts:
 | Create Mongoose schemas (User, Career, Roadmap) | Aditi | 2h | ⬜ |
 | Implement Auth routes (register + login) with JWT | Parth | 2h | ⬜ |
 | Create auth middleware for protected routes | Parth | 1h | ⬜ |
-| Test auth endpoints in Postman | Aditi | 0.5h | ⬜ |
+| Test auth endpoints in Postman | Sanika | 0.5h | ⬜ |
 | Setup HTML/CSS boilerplate (`index.html`, `login.html`) | Aditi | 2h | ⬜ |
 | Create CSS variables file + glassmorphism base class | Suyog | 1h | ⬜ |
 | Build Login/Register UI (glass panel forms) | Aditi | 2h | ⬜ |
@@ -119,7 +119,7 @@ Complete **before** the 48-hour clock starts:
 | Deploy backend to Render | Parth | 1h | ⬜ |
 | Deploy frontend to Vercel | Parth | 1h | ⬜ |
 | Verify CORS between Vercel ↔ Render | Parth + Aditi | 0.5h | ⬜ |
-| Full end-to-end testing on deployed URLs | Aditi | 2h | ⬜ |
+| Full end-to-end testing on deployed URLs | Sanika | 2h | ⬜ |
 
 ### ✅ Phase 4 Milestone
 - Task checkboxes update progress in DB and UI
@@ -140,7 +140,7 @@ Complete **before** the 48-hour clock starts:
 | Final 3D performance optimization (reduce particles on low-end) | Suyog | 1h | ⬜ |
 | Fix any remaining bugs from QA | All | 2h | ⬜ |
 | Record demo video (screen recording with voiceover) | Parth | 1h | ⬜ |
-| Prepare pitch deck (5–7 slides: Problem, Solution, Tech, Demo, Future) | Aditi + Suyog | 2h | ⬜ |
+| Prepare pitch deck (5–7 slides: Problem, Solution, Tech, Demo, Future) | Aditi + Sanika | 2h | ⬜ |
 | Practice demo presentation (3-minute walkthrough) | All | 1h | ⬜ |
 | Create 3 test user personas and rehearse live demo | All | 1h | ⬜ |
 
