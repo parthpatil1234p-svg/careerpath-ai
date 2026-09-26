@@ -161,19 +161,61 @@
     `;
     document.body.appendChild(drawer);
 
-    bindEvents(trigger, drawer);
+    // 3. Interactive Nudge Popup Bubble
+    const nudge = document.createElement('div');
+    nudge.id = 'cpChatNudge';
+    nudge.className = 'cp-chat-nudge-bubble d-none';
+    nudge.innerHTML = `
+      <span style="font-size: 1rem;">💬</span>
+      <span><strong>Need advice?</strong> Ask AI Mentor!</span>
+      <button class="cp-nudge-close" id="cpNudgeClose" title="Dismiss">&times;</button>
+      <div class="cp-chat-nudge-tail"></div>
+    `;
+    document.body.appendChild(nudge);
+
+    // Show nudge after 2.5 seconds if chat hasn't been opened
+    setTimeout(() => {
+      if (!drawer.classList.contains('open') && !sessionStorage.getItem('cp_nudge_dismissed')) {
+        nudge.classList.remove('d-none');
+      }
+    }, 2500);
+
+    bindEvents(trigger, drawer, nudge);
     renderMessages();
   }
 
-  function bindEvents(trigger, drawer) {
+  function bindEvents(trigger, drawer, nudge) {
     const closeBtn = document.getElementById('cpChatCloseBtn');
     const clearBtn = document.getElementById('cpChatClearBtn');
     const form = document.getElementById('cpChatForm');
     const input = document.getElementById('cpChatInput');
     const suggestions = document.getElementById('cpChatSuggestions');
+    const nudgeClose = document.getElementById('cpNudgeClose');
+
+    function dismissNudge() {
+      if (nudge) {
+        nudge.classList.add('dismissed');
+        setTimeout(() => nudge.remove(), 400);
+        try { sessionStorage.setItem('cp_nudge_dismissed', 'true'); } catch (e) {}
+      }
+    }
+
+    if (nudge) {
+      nudge.addEventListener('click', (e) => {
+        if (e.target.closest('#cpNudgeClose')) {
+          dismissNudge();
+          return;
+        }
+        dismissNudge();
+        drawer.classList.add('open');
+        input.focus();
+        scrollToBottom();
+      });
+    }
 
     // Toggle drawer
     trigger.addEventListener('click', () => {
+      dismissNudge();
       const isOpen = drawer.classList.contains('open');
       if (isOpen) {
         drawer.classList.remove('open');
