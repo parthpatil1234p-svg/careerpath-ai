@@ -19,7 +19,7 @@
   height: 48px;
   padding: 0;
   background: #060913;
-  border: 1.5px solid rgba(0, 242, 254, 0.45);
+  border: 1.5px solid rgba(0, 242, 254, 0.5);
   border-radius: 9999px;
   box-shadow:
     0 10px 30px rgba(0, 242, 254, 0.35),
@@ -30,43 +30,46 @@
   outline: none;
   overflow: visible;
   white-space: nowrap !important;
-  animation: cp-trigger-spring-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+  transform-origin: bottom right;
+  animation: cp-small-to-big-pop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) both,
              cp-float-breathe 4s ease-in-out 1s infinite alternate;
-  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Button Spring Pop-up Entrance Keyframes */
-@keyframes cp-trigger-spring-pop {
+/* 💥 SMALL TO BIG: Button Entrance Pop-In */
+@keyframes cp-small-to-big-pop {
   0% {
     opacity: 0;
-    transform: scale(0.3) translateY(40px) rotate(8deg);
+    transform: scale(0) translateY(50px);
+    filter: blur(8px);
   }
   65% {
     opacity: 1;
-    transform: scale(1.12) translateY(-6px) rotate(-2deg);
+    transform: scale(1.15) translateY(-8px);
+    filter: blur(0);
   }
   85% {
-    transform: scale(0.96) translateY(2px) rotate(1deg);
+    transform: scale(0.95) translateY(2px);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translateY(0) rotate(0deg);
+    transform: scale(1) translateY(0);
   }
 }
 
 /* Continuous Subtle Ambient Float/Breathe */
 @keyframes cp-float-breathe {
   0% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     box-shadow: 0 10px 30px rgba(0, 242, 254, 0.35), 0 0 25px rgba(124, 58, 237, 0.3);
   }
   100% {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 36px rgba(0, 242, 254, 0.5), 0 0 32px rgba(124, 58, 237, 0.45);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 18px 40px rgba(0, 242, 254, 0.55), 0 0 35px rgba(124, 58, 237, 0.45);
   }
 }
 
-/* Radar Sonar Wave Pulse Ring behind the button */
+/* 💥 SMALL TO BIG: Expanding Radar Sonar Wave */
 .cp-chat-trigger::before {
   content: "";
   position: absolute;
@@ -75,27 +78,37 @@
   border: 2px solid #00F2FE;
   opacity: 0;
   pointer-events: none;
-  animation: cp-sonar-ping 3.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: cp-sonar-small-to-big 3.2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
 }
 
-@keyframes cp-sonar-ping {
+@keyframes cp-sonar-small-to-big {
   0% {
-    transform: scale(0.95);
-    opacity: 0.8;
+    transform: scale(0.85);
+    opacity: 0.95;
+    border-width: 3px;
   }
-  60%, 100% {
-    transform: scale(1.35);
+  70% {
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(1.55);
     opacity: 0;
+    border-width: 1px;
   }
 }
 
+/* 💥 SMALL TO BIG: Hover Growth with Neon Glow */
 .cp-chat-trigger:hover {
-  transform: translateY(-4px) scale(1.03);
+  transform: translateY(-5px) scale(1.08);
   border-color: rgba(0, 242, 254, 0.95);
   box-shadow:
-    0 16px 42px rgba(0, 242, 254, 0.65),
-    0 0 40px rgba(124, 58, 237, 0.55),
-    inset 0 0 20px rgba(0, 242, 254, 0.4);
+    0 20px 48px rgba(0, 242, 254, 0.7),
+    0 0 45px rgba(124, 58, 237, 0.6),
+    inset 0 0 22px rgba(0, 242, 254, 0.45);
+}
+
+.cp-chat-trigger:hover .trigger-icon i {
+  transform: scale(1.3) rotate(-6deg);
 }
 
 .cp-chat-trigger:active {
@@ -103,17 +116,17 @@
 }
 
 /* --------------------------------------------------------------------------
-   Interactive Nudge Pop-up Bubble (Speech Callout)
+   💥 SMALL TO BIG: Interactive Nudge Pop-up Bubble
    -------------------------------------------------------------------------- */
 .cp-chat-nudge-bubble {
   position: fixed;
   bottom: 84px;
   right: 24px;
   z-index: 9998;
-  background: rgba(6, 11, 25, 0.95);
+  background: rgba(6, 11, 25, 0.96);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 242, 254, 0.45);
+  border: 1px solid rgba(0, 242, 254, 0.5);
   border-radius: 16px;
   padding: 0.65rem 1rem 0.65rem 0.85rem;
   color: #FFFFFF;
@@ -123,40 +136,42 @@
   align-items: center;
   gap: 0.6rem;
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.85),
-    0 0 25px rgba(0, 242, 254, 0.25);
+    0 16px 36px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(0, 242, 254, 0.3);
   cursor: pointer;
   pointer-events: auto;
   transform-origin: bottom right;
-  animation: cp-nudge-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  animation: cp-nudge-small-to-big 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes cp-nudge-pop {
+@keyframes cp-nudge-small-to-big {
   0% {
     opacity: 0;
-    transform: scale(0.4) translateY(20px);
+    transform: scale(0) translate(20px, 30px);
+    filter: blur(6px);
   }
   70% {
-    transform: scale(1.08) translateY(-3px);
+    transform: scale(1.12) translate(0, -4px);
+    filter: blur(0);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: scale(1) translate(0, 0);
   }
 }
 
 .cp-chat-nudge-bubble:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-3px) scale(1.05);
   border-color: #00F2FE;
   box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.9),
-    0 0 35px rgba(0, 242, 254, 0.4);
+    0 20px 42px rgba(0, 0, 0, 0.95),
+    0 0 40px rgba(0, 242, 254, 0.5);
 }
 
 .cp-chat-nudge-bubble.dismissed {
   opacity: 0;
-  transform: scale(0.6) translateY(10px);
+  transform: scale(0) translateY(15px);
   pointer-events: none;
 }
 
@@ -166,9 +181,9 @@
   right: 48px;
   width: 12px;
   height: 12px;
-  background: rgba(6, 11, 25, 0.95);
-  border-right: 1px solid rgba(0, 242, 254, 0.45);
-  border-bottom: 1px solid rgba(0, 242, 254, 0.45);
+  background: rgba(6, 11, 25, 0.96);
+  border-right: 1px solid rgba(0, 242, 254, 0.5);
+  border-bottom: 1px solid rgba(0, 242, 254, 0.5);
   transform: rotate(45deg);
 }
 
@@ -176,15 +191,16 @@
   background: transparent;
   border: none;
   color: #94A3B8;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   padding: 0 0 0 4px;
   cursor: pointer;
   line-height: 1;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .cp-nudge-close:hover {
   color: #EF4444;
+  transform: scale(1.2);
 }
 
 /* Eyes Container (Stationed inside the dark cyber capsule) */
@@ -297,6 +313,7 @@
   align-items: center;
   flex-shrink: 0;
   filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .cp-chat-trigger .trigger-label {
@@ -340,7 +357,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. Floating Chat Drawer / Window with Spring Pop-up Keyframes
+   💥 2. Floating Chat Drawer / Window with Small-to-Big Zoom Keyframes
    -------------------------------------------------------------------------- */
 .cp-chat-drawer {
   position: fixed;
@@ -363,31 +380,35 @@
   opacity: 0;
   pointer-events: none;
   transform-origin: bottom right;
-  transform: translateY(30px) scale(0.85);
+  transform: scale(0.05) translate(40px, 40px);
   transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.3s ease;
 }
 
 .cp-chat-drawer.open {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0) scale(1);
-  animation: cp-drawer-pop-spring 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform: scale(1) translate(0, 0);
+  animation: cp-drawer-small-to-big 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   box-shadow: 0 30px 75px -10px rgba(0, 0, 0, 0.95), 0 0 55px rgba(0, 242, 254, 0.32);
 }
 
-@keyframes cp-drawer-pop-spring {
+/* 💥 SMALL TO BIG: Chat Drawer Expansion from Button Corner */
+@keyframes cp-drawer-small-to-big {
   0% {
     opacity: 0;
-    transform: translateY(35px) scale(0.82);
+    transform: scale(0.1) translate(60px, 60px);
+    filter: blur(10px);
   }
   70% {
-    transform: translateY(-4px) scale(1.02);
+    opacity: 1;
+    transform: scale(1.03) translate(-3px, -3px);
+    filter: blur(0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1) translate(0, 0);
   }
 }
 
