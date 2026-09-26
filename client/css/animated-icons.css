@@ -34,32 +34,28 @@
 }
 
 /* --------------------------------------------------------------------------
-   💥 2. LOGO SMALL-TO-BIG POP-IN & RADAR PULSE (Brand Icon Expansion)
+   2. Dedicated Animated Icon Micro-Motions (21st.dev Style)
    -------------------------------------------------------------------------- */
+
+/* 🧭 Brand Logo & Compass (Fast Small-to-Big Pop + Dynamic Magnetic Wobble) */
 .brand-icon,
 .brand-compass {
-  position: relative;
+  animation: logo-small-to-big 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   transform-origin: center center;
-  animation: logo-small-to-big 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.35s ease,
-              border-color 0.35s ease;
+  will-change: transform;
 }
 
-/* 💥 SMALL TO BIG: Logo Entrance Keyframe */
 @keyframes logo-small-to-big {
   0% {
     opacity: 0;
-    transform: scale(0) rotate(-45deg);
-    filter: blur(6px);
+    transform: scale(0.2) rotate(-20deg);
   }
   65% {
     opacity: 1;
-    transform: scale(1.25) rotate(10deg);
-    filter: blur(0);
+    transform: scale(1.18) rotate(6deg);
   }
   85% {
-    transform: scale(0.95) rotate(-3deg);
+    transform: scale(0.95) rotate(-2deg);
   }
   100% {
     opacity: 1;
@@ -67,81 +63,39 @@
   }
 }
 
-/* 💥 SMALL TO BIG: Expanding Radar Pulse Halo behind Logo */
-.brand-icon::before,
-.brand-compass::before {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: inherit;
-  border: 1.5px solid #00F2FE;
-  opacity: 0;
-  pointer-events: none;
-  animation: logo-radar-small-to-big 3.6s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
-}
-
-@keyframes logo-radar-small-to-big {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.9;
-  }
-  70% {
-    opacity: 0.2;
-  }
-  100% {
-    transform: scale(1.65);
-    opacity: 0;
-  }
-}
-
-/* 💥 SMALL TO BIG: Logo Hover Growth with Neon Cyan Halo */
-.navbar-brand:hover .brand-icon,
-.navbar-brand:hover .brand-compass,
-.brand-icon:hover {
-  transform: scale(1.22) rotate(10deg);
-  border-color: #00F2FE !important;
-  box-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 0 15px rgba(124, 58, 237, 0.6) !important;
-}
-
-.navbar-brand:hover .brand-name,
-.navbar-brand:hover .brand-title {
-  transform: scale(1.04);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: inline-block;
-}
-
-.navbar-brand:hover .brand-accent {
-  filter: drop-shadow(0 0 12px #00F2FE);
-}
-
-/* 🧭 Compass Icon (Rotating & Magnetic Wobble) */
 .brand-icon i,
 .bi-compass-fill,
 .bi-compass,
 .anim-compass {
-  animation: anim-compass-spin 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: anim-compass-spin 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   transform-origin: center center;
   display: inline-block;
 }
 
 @keyframes anim-compass-spin {
-  0%   { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.3)); }
-  35%  { transform: rotate(35deg) scale(1.08); filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.6)); }
-  50%  { transform: rotate(20deg) scale(1.02); }
-  75%  { transform: rotate(-25deg) scale(1.06); filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.5)); }
-  100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.3)); }
+  0%   { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.4)); }
+  25%  { transform: rotate(38deg) scale(1.12); filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.75)); }
+  45%  { transform: rotate(15deg) scale(1.03); }
+  70%  { transform: rotate(-30deg) scale(1.1); filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.65)); }
+  85%  { transform: rotate(-8deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.4)); }
+}
+
+.brand-icon:hover,
+.navbar-brand:hover .brand-icon {
+  transform: scale(1.15) !important;
+  box-shadow: 0 0 24px rgba(0, 242, 254, 0.6) !important;
 }
 
 .brand-icon:hover i,
 .navbar-brand:hover .brand-icon i {
-  animation: anim-compass-hyper 1s ease-in-out infinite alternate !important;
+  animation: anim-compass-hyper 0.8s ease-in-out infinite alternate !important;
 }
 
 @keyframes anim-compass-hyper {
-  0%   { transform: rotate(-45deg) scale(1.2); filter: drop-shadow(0 0 18px #00F2FE); }
-  100% { transform: rotate(45deg) scale(1.35); filter: drop-shadow(0 0 28px #38BDF8); }
+  0%   { transform: rotate(-55deg) scale(1.22); filter: drop-shadow(0 0 18px #00F2FE); }
+  100% { transform: rotate(55deg) scale(1.3); filter: drop-shadow(0 0 28px #38BDF8); }
 }
-
 
 /* ⚡ Lightning / Spark Pulse */
 .bi-lightning-charge-fill,

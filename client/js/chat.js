@@ -173,12 +173,12 @@
     `;
     document.body.appendChild(nudge);
 
-    // Show nudge after 2.5 seconds if chat hasn't been opened
+    // Show nudge after 900ms if chat hasn't been opened
     setTimeout(() => {
       if (!drawer.classList.contains('open') && !sessionStorage.getItem('cp_nudge_dismissed')) {
         nudge.classList.remove('d-none');
       }
-    }, 2500);
+    }, 900);
 
     bindEvents(trigger, drawer, nudge);
     renderMessages();
