@@ -140,11 +140,36 @@ This leads to wrong specialization choices, wasted semesters, and growing anxiet
 
 ---
 
-## 10. Future Scope (Post-Hackathon)
+## 10. Future Scope & Product Roadmap (Post-Hackathon)
 
-- Gemini AI chatbot for conversational career advice
-- Resume upload → AI skill extraction
-- GitHub profile analysis → auto-populate coding skills
-- Admin panel for CRUD operations on the career/skill database
-- Multi-language support
-- Peer comparison and community features
+### Core Product Enhancements:
+1. **AI-Powered Mock Interview Module (`/interview`):**
+   - Web Speech API (STT & TTS) + Groq Llama 3 conversational interview engine.
+   - Dynamic technical and behavioral questions tailored to the recommended career role.
+   - Instant scorecard evaluating technical correctness, STAR-format structure, clarity, and pacing.
+
+2. **Resume & Portfolio Gap Analysis (`/resume-audit`):**
+   - Upload PDF resumes to cross-reference against industry requirements for recommended careers.
+   - ATS score, missing high-impact project suggestions (e.g., Redis pub/sub, Dockerized microservices), and bullet-point optimization using Google's XYZ formula.
+
+3. **College Faculty & Placement Mentor Dashboard (`/mentor-portal`):**
+   - Institutional dashboard for TPOs and college professors.
+   - Batch-level skill deficiency heatmaps across departments/years.
+   - Custom roadmap assignments, milestone velocity tracking, and Placement Readiness Index (PRI) exports.
+
+4. **Market-Trend Integration with Verified Job & Resource Links (`/market-pulse`):**
+   - Live job listings from Adzuna, LinkedIn, and GitHub Jobs deep-linked to student milestone skills.
+   - Verified free learning pathways per task (official documentation, interactive labs, community-vetted tutorials) with 12-hour Redis caching.
+
+5. **Personalized Dynamic Roadmap with Difficulty Adaptation (`/adaptive-roadmap`):**
+   - Bayesian Knowledge Tracing based on weekly milestone quizzes and completion pace.
+   - Self-healing roadmaps: Fast-track mode for high scorers ($\ge 90\%$) with advanced architecture topics; scaffolding/remediation mode with refresher mini-tasks for students who struggle.
+
+6. **In-Browser Code Sandbox (Judge0 CE / WebContainers):**
+   - Zero-setup interactive coding environment directly inside weekly roadmap tasks.
+
+7. **Multilingual Regional Language Localization (i18n):**
+   - Full platform localization into Hindi, Marathi, Telugu, and Tamil for rural Tier-2/3 student empowerment.
+
+8. **WhatsApp Milestone & Streak Nudge Bot:**
+   - Automated daily reminders, streak recovery alerts, and micro-quizzes delivered via WhatsApp Business API.

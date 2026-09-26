@@ -174,3 +174,18 @@ If the **matching engine** is delayed, nothing downstream works. Prioritize it a
 | MongoDB Atlas cold start is slow | Low | Use `serverSelectionTimeoutMS: 5000` in connection options |
 | Render free tier spins down | Medium | Build "wake up" ping into frontend on page load |
 | Merge conflicts on `main` | Medium | All work on feature branches; Parth reviews & merges |
+
+---
+
+## Phase 6 & Beyond: Post-Hackathon Product Roadmap 🚀
+
+| Feature Module | Technical Scope | Target Quarter |
+| :--- | :--- | :--- |
+| **AI Mock Interview Module (`/interview`)** | Voice-driven conversational interview with Web Speech API + Groq Llama 3, STAR evaluation, and fluency scorecard | Q1 2027 |
+| **Resume & Portfolio Gap Analyzer (`/resume-audit`)** | PDF ATS score parser, missing high-impact project suggestions (e.g. Redis caching, Docker), and Google XYZ bullet rewriter | Q4 2026 |
+| **College Faculty & Mentor Portal (`/mentor-portal`)** | TPO dashboard with batch-wide skill-gap heatmaps, custom roadmap assignment, and cohort placement readiness indices | Q2 2027 |
+| **Market-Trend Telemetry & Deep-Links (`/market-pulse`)** | Live verified job openings (Adzuna + LinkedIn + RemoteOK) matched to milestone skills with verified free learning labs | Q1 2027 |
+| **Performance-Adaptive Roadmaps (`/adaptive-roadmap`)** | Bayesian Knowledge Tracing with self-healing pacing (accelerated vs remediation pathways based on milestone quiz performance) | Q4 2026 |
+| **In-Browser Code Runner** | Judge0 CE / WebContainers embedded in roadmap tasks for instant hands-on verification | Q4 2026 |
+| **Regional Language Localization (i18n)** | Hindi, Marathi, Telugu, and Tamil translations for Tier-2/3 student accessibility | Q4 2026 |
+| **WhatsApp Streak & Milestone Bot** | Automated daily reminders, streak recovery alerts, and micro-quizzes delivered via WhatsApp Business API | Q1 2027 |
