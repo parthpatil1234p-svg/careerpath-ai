@@ -162,6 +162,7 @@
     document.body.appendChild(drawer);
 
     // 3. Interactive Career Question Pop-up Card
+    // 3. Interactive Pop-Up Nudge Tooltip & Career Question Card
     const nudge = document.createElement('div');
     nudge.id = 'cpChatNudge';
     nudge.className = 'cp-chat-question-popup d-none';
@@ -172,7 +173,7 @@
         </span>
         <button class="cp-question-close" id="cpQuestionClose" title="Dismiss">&times;</button>
       </div>
-      <p class="cp-chat-question-title">💡 Have a career question? Ask below:</p>
+      <p class="cp-chat-question-title">💬 <strong>Need advice?</strong> Ask AI Mentor!</p>
       <div class="cp-chat-question-list">
         <button class="cp-question-item-btn" data-q="Which tech role has the highest industry demand right now?">
           <span>⚡ Which role has highest demand?</span>
@@ -191,12 +192,12 @@
     `;
     document.body.appendChild(nudge);
 
-    // Show question popup after 800ms if chat hasn't been opened
+    // Show popup tooltip after 2.5 seconds if chat hasn't been opened
     setTimeout(() => {
       if (!drawer.classList.contains('open') && !sessionStorage.getItem('cp_nudge_dismissed')) {
         nudge.classList.remove('d-none');
       }
-    }, 800);
+    }, 2500);
 
     bindEvents(trigger, drawer, nudge);
     renderMessages();
