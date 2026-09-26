@@ -796,6 +796,18 @@
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
   }
 
+  .cp-chat-question-popup {
+    bottom: 74px !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .cp-chat-question-tail {
+    right: 20px !important;
+  }
+
   .cp-chat-trigger {
     bottom: 16px !important;
     right: 16px !important;

@@ -161,67 +161,45 @@
     `;
     document.body.appendChild(drawer);
 
-    // 3. Interactive Career Question Pop-up Card
     // 3. Interactive Pop-Up Nudge Tooltip & Career Question Card
-    const nudge = document.createElement('div');
-    nudge.id = 'cpChatNudge';
-    nudge.className = 'cp-chat-question-popup d-none';
-    nudge.innerHTML = `
-      <div class="cp-chat-question-header">
-        <span class="cp-chat-question-badge">
-          <i class="bi bi-robot"></i> AI Mentor
-        </span>
-        <button class="cp-question-close" id="cpQuestionClose" title="Dismiss">&times;</button>
-      </div>
-      <p class="cp-chat-question-title">💬 <strong>Need advice?</strong> Ask AI Mentor!</p>
-      <div class="cp-chat-question-list">
-        <button class="cp-question-item-btn" data-q="Which tech role has the highest industry demand right now?">
-          <span>⚡ Which role has highest demand?</span>
-          <i class="bi bi-arrow-right-short q-arrow"></i>
-        </button>
-        <button class="cp-question-item-btn" data-q="How should a fresher prepare for a Full-Stack role in 8 weeks?">
-          <span>🎯 How to prepare in 8 weeks?</span>
-          <i class="bi bi-arrow-right-short q-arrow"></i>
-        </button>
-        <button class="cp-question-item-btn" data-q="What portfolio projects impress tech recruiters most?">
-          <span>🛠️ Best portfolio projects to build?</span>
-          <i class="bi bi-arrow-right-short q-arrow"></i>
-        </button>
-      </div>
-      <div class="cp-chat-question-tail"></div>
-    `;
-    document.body.appendChild(nudge);
+    let popupDismissed = false;
 
-    // Show popup tooltip after 2.5 seconds if chat hasn't been opened
-    setTimeout(() => {
-      if (!drawer.classList.contains('open') && !sessionStorage.getItem('cp_nudge_dismissed')) {
-        nudge.classList.remove('d-none');
-      }
-    }, 2500);
+    function showQuestionPopup() {
+      if (popupDismissed) return;
+      if (drawer.classList.contains('open')) return;
+      if (document.getElementById('cpChatNudge')) return;
 
-    bindEvents(trigger, drawer, nudge);
-    renderMessages();
-  }
+      const nudge = document.createElement('div');
+      nudge.id = 'cpChatNudge';
+      nudge.className = 'cp-chat-question-popup';
+      nudge.innerHTML = `
+        <div class="cp-chat-question-header">
+          <span class="cp-chat-question-badge">
+            <i class="bi bi-robot"></i> AI Mentor
+          </span>
+          <button class="cp-question-close" id="cpQuestionClose" title="Dismiss" aria-label="Close popup">&times;</button>
+        </div>
+        <p class="cp-chat-question-title">💬 <strong>Need advice?</strong> Ask AI Mentor!</p>
+        <div class="cp-chat-question-list">
+          <button class="cp-question-item-btn" data-q="Which tech role has the highest industry demand right now?">
+            <span>⚡ Which role has highest demand?</span>
+            <i class="bi bi-arrow-right-short q-arrow"></i>
+          </button>
+          <button class="cp-question-item-btn" data-q="How should a fresher prepare for a Full-Stack role in 8 weeks?">
+            <span>🎯 How to prepare in 8 weeks?</span>
+            <i class="bi bi-arrow-right-short q-arrow"></i>
+          </button>
+          <button class="cp-question-item-btn" data-q="What portfolio projects impress tech recruiters most?">
+            <span>🛠️ Best portfolio projects to build?</span>
+            <i class="bi bi-arrow-right-short q-arrow"></i>
+          </button>
+        </div>
+        <div class="cp-chat-question-tail"></div>
+      `;
 
-  function bindEvents(trigger, drawer, nudge) {
-    const closeBtn = document.getElementById('cpChatCloseBtn');
-    const clearBtn = document.getElementById('cpChatClearBtn');
-    const form = document.getElementById('cpChatForm');
-    const input = document.getElementById('cpChatInput');
-    const suggestions = document.getElementById('cpChatSuggestions');
-    const questionClose = document.getElementById('cpQuestionClose');
-
-    function dismissNudge() {
-      if (nudge) {
-        nudge.classList.add('dismissed');
-        setTimeout(() => nudge.remove(), 350);
-        try { sessionStorage.setItem('cp_nudge_dismissed', 'true'); } catch (e) {}
-      }
-    }
-
-    if (nudge) {
       nudge.addEventListener('click', (e) => {
         if (e.target.closest('#cpQuestionClose')) {
+          e.stopPropagation();
           dismissNudge();
           return;
         }
@@ -240,14 +218,42 @@
 
         dismissNudge();
         drawer.classList.add('open');
-        input.focus();
+        const inputEl = document.getElementById('cpChatInput');
+        if (inputEl) inputEl.focus();
         scrollToBottom();
       });
+
+      document.body.appendChild(nudge);
     }
+
+    function dismissNudge() {
+      popupDismissed = true;
+      const nudge = document.getElementById('cpChatNudge');
+      if (nudge) {
+        nudge.classList.add('dismissed');
+        setTimeout(() => {
+          if (nudge.parentNode) nudge.parentNode.removeChild(nudge);
+        }, 350);
+      }
+    }
+
+    // Show popup tooltip after 2.5 seconds if chat hasn't been opened
+    setTimeout(showQuestionPopup, 2500);
+
+    bindEvents(trigger, drawer, dismissNudge);
+    renderMessages();
+  }
+
+  function bindEvents(trigger, drawer, dismissNudge) {
+    const closeBtn = document.getElementById('cpChatCloseBtn');
+    const clearBtn = document.getElementById('cpChatClearBtn');
+    const form = document.getElementById('cpChatForm');
+    const input = document.getElementById('cpChatInput');
+    const suggestions = document.getElementById('cpChatSuggestions');
 
     // Toggle drawer
     trigger.addEventListener('click', () => {
-      dismissNudge();
+      if (typeof dismissNudge === 'function') dismissNudge();
       const isOpen = drawer.classList.contains('open');
       if (isOpen) {
         drawer.classList.remove('open');
