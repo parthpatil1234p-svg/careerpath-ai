@@ -46,7 +46,7 @@
   --text-primary: #FFFFFF;        /* Pure white for prominent headings */
   --text-secondary: #E2E8F0;      /* Crisp light gray for primary body */
   --text-muted: #94A3B8;          /* Slate gray for supporting metadata */
-  --text-dim: #64748B;            /* Subtle captions, disabled items */
+  --text-dim: #94A3B8;            /* High-contrast subtle captions (WCAG AA Compliant) */
   --text-accent: #38BDF8;         /* Cyan highlighted text */
 
   /* ------------------------------------------------------------------------
