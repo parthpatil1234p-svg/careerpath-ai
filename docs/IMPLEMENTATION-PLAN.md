@@ -7,10 +7,10 @@
 
 | Member | Primary Role | Secondary |
 |--------|-------------|-----------|
-| **Parth** | Backend Architecture, Matching Engine, API Routing | Deployment |
-| **Aditi** | Frontend UI/UX, Glassmorphism, API Integration | Forms & Validation |
-| **Suyog** | UI/UX & 3D WebGL Lead (Three.js, Canvas, GSAP) | Canvas optimization |
-| **Sanika** | QA, Data & Documentation Lead (Testing, Dataset, Postman) | Manual test suites & QA matrix |
+| **Parth** | Team Leader & Full Stack WebDev (Backend, Engine, API Routing) | Full-stack deployment & system architecture |
+| **Aditi** | Researcher, Web Explorer & Integration Lead (Research, Resources) | Frontend integration & validation |
+| **Suyog** | UI/UX & 3D WebGL Lead (Three.js, Canvas, GSAP) | Canvas optimization & 2D fallback |
+| **Sanika** | QA, Data & Docs Lead & Presenter / Speaker | QA test suites, dataset & pitch presentation |
 
 ---
 
