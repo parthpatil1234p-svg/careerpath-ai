@@ -40,55 +40,64 @@
 
   <body>
     <!-- ============================================================
-         NAVIGATION BAR
+         VENGEANCE UI NOTCH NAVBAR
          ============================================================ -->
-    <nav class="navbar navbar-expand-lg fixed-top cp-navbar" id="mainNav">
+    <nav class="cp-navbar-notch" id="mainNav">
       <div class="container">
-        <!-- Brand / Logo -->
-        <a class="navbar-brand" href="index.html">
-          <div class="brand-icon">
-            <i class="bi bi-compass-fill"></i>
-          </div>
-          <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
-          <span class="brand-tagline-sub d-none d-sm-inline">Career Atlas</span>
-        </a>
+        <div class="notch-nav-island">
+          <!-- Brand / Logo -->
+          <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+            <div class="brand-icon">
+              <i class="bi bi-compass-fill"></i>
+            </div>
+            <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
+          </a>
 
-        <!-- Mobile Toggle -->
-        <button
-          class="navbar-toggler border-0"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navMenu"
-          aria-controls="navMenu"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Nav Links -->
-        <div class="collapse navbar-collapse" id="navMenu">
-          <ul class="navbar-nav ms-auto align-items-center gap-1">
-            <li class="nav-item">
-              <a class="nav-link" href="#how-it-works">How It Works</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#transformation">Transformation</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#careers">Career Paths</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#deliverables">What You Receive</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#future-roadmap">Future Roadmap</a>
-            </li>
-            <li class="nav-item ms-lg-3 d-flex align-items-center gap-2" id="authNavActions">
-              <a class="btn cp-btn-outline btn-sm px-3" href="login.html">Log In</a>
-              <a class="btn cp-btn-primary btn-sm px-3" href="assessment.html" id="startAssessmentNavBtn">Start Assessment</a>
-            </li>
+          <!-- Desktop Center Links -->
+          <ul class="notch-nav-links d-none d-lg-flex">
+            <li><a class="notch-nav-link" href="#how-it-works">How It Works</a></li>
+            <li><a class="notch-nav-link" href="#transformation">Transformation</a></li>
+            <li><a class="notch-nav-link" href="#careers">Career Paths</a></li>
+            <li><a class="notch-nav-link" href="#deliverables">What You Receive</a></li>
+            <li><a class="notch-nav-link" href="#future-roadmap">Roadmap</a></li>
           </ul>
+
+          <!-- Actions & Mobile Toggle -->
+          <div class="d-flex align-items-center gap-2">
+            <div class="d-none d-sm-flex align-items-center gap-2" id="authNavActions">
+              <a class="btn cp-btn-outline btn-sm px-3" href="login.html">Log In</a>
+              <a class="btn cp-btn-primary btn-sm px-3 text-nowrap" href="assessment.html" id="startAssessmentNavBtn">
+                <i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Start Assessment
+              </a>
+            </div>
+            <button
+              class="notch-mobile-toggle d-lg-none"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#notchMobileMenu"
+              aria-controls="notchMobileMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <i class="bi bi-list fs-5"></i>
+            </button>
+          </div>
+
+          <!-- Mobile Dropdown Collapse -->
+          <div class="collapse notch-mobile-collapse" id="notchMobileMenu">
+            <ul class="notch-mobile-links">
+              <li><a href="#how-it-works"><i class="bi bi-gear-wide-connected text-teal"></i> How It Works</a></li>
+              <li><a href="#transformation"><i class="bi bi-arrow-repeat text-cyan"></i> Transformation</a></li>
+              <li><a href="#careers"><i class="bi bi-signpost-split text-teal"></i> Career Paths</a></li>
+              <li><a href="#deliverables"><i class="bi bi-box-seam text-cyan"></i> What You Receive</a></li>
+              <li><a href="#future-roadmap"><i class="bi bi-map text-gold"></i> Future Roadmap</a></li>
+              <li class="pt-2 border-top border-secondary border-opacity-25 d-flex gap-2">
+                <a class="btn cp-btn-outline btn-sm flex-grow-1 text-center" href="login.html">Log In</a>
+                <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="assessment.html">Start Assessment</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>

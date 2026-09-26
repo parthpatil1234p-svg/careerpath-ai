@@ -40,6 +40,20 @@
     VERSION: '1.0.0',
   };
 
-  // Expose to window for vanilla JS scripts
-  window.CONFIG = CONFIG;
-})();
+    // Expose to window for vanilla JS scripts
+    window.CONFIG = CONFIG;
+
+    // Universal Notch Navbar Scroll Elevation
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', () => {
+        const notch = document.querySelector('.cp-navbar-notch');
+        if (notch) {
+          if (window.scrollY > 25) {
+            notch.classList.add('scrolled');
+          } else {
+            notch.classList.remove('scrolled');
+          }
+        }
+      }, { passive: true });
+    }
+  })();

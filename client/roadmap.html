@@ -39,28 +39,82 @@
 
   <body class="roadmap-page">
     <!-- Navbar -->
-    <!-- Notch Navbar -->
-    <nav class="cp-navbar-notch">
+    <!-- ============================================================
+         VENGEANCE UI NOTCH NAVBAR
+         ============================================================ -->
+    <nav class="cp-navbar-notch" id="mainNav">
       <div class="container">
         <div class="notch-nav-island">
-          <a class="navbar-brand" href="index.html">
+          <!-- Brand / Logo -->
+          <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
             <div class="brand-icon">
               <i class="bi bi-compass-fill"></i>
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
           </a>
 
           <!-- Center Links -->
-          <ul class="notch-nav-links">
-            <li><a href="dashboard.html" class="notch-nav-link"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a></li>
-            <li><a href="recommendations.html" class="notch-nav-link"><i class="bi bi-compass me-1"></i> Recommendations</a></li>
+          <ul class="notch-nav-links d-none d-lg-flex">
+            <li>
+              <a href="dashboard.html" class="notch-nav-link">
+                <i class="bi bi-speedometer2 me-1 text-teal"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="recommendations.html" class="notch-nav-link">
+                <i class="bi bi-compass me-1 text-gold"></i> Recommendations
+              </a>
+            </li>
+            <li>
+              <a href="roadmap.html" class="notch-nav-link active" aria-current="page">
+                <i class="bi bi-map me-1 text-teal"></i> Active Roadmap
+              </a>
+            </li>
           </ul>
 
-          <!-- Actions -->
+          <!-- Actions & Mobile Toggle -->
           <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()">
               <i class="bi bi-box-arrow-right me-1"></i> Logout
             </button>
+            <button
+              class="notch-mobile-toggle d-lg-none"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#notchMobileMenu"
+              aria-controls="notchMobileMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <i class="bi bi-list fs-5"></i>
+            </button>
+          </div>
+
+          <!-- Mobile Dropdown Collapse -->
+          <div class="collapse notch-mobile-collapse" id="notchMobileMenu">
+            <ul class="notch-mobile-links">
+              <li>
+                <a href="dashboard.html">
+                  <i class="bi bi-speedometer2 text-teal"></i> Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="recommendations.html">
+                  <i class="bi bi-compass text-gold"></i> Recommendations
+                </a>
+              </li>
+              <li>
+                <a class="active" href="roadmap.html">
+                  <i class="bi bi-map text-teal"></i> Active Roadmap
+                </a>
+              </li>
+              <li class="pt-2 border-top border-secondary border-opacity-25">
+                <button class="btn btn-outline-danger btn-sm w-100" onclick="Auth.logout()">
+                  <i class="bi bi-box-arrow-right me-1"></i> Logout
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

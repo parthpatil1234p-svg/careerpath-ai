@@ -36,10 +36,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  background: rgba(6, 9, 19, 0.88);
+  background: rgba(6, 9, 19, 0.90);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 242, 254, 0.25);
+  border: 1px solid rgba(0, 242, 254, 0.28);
   border-top: none;
   border-radius: 0 0 24px 24px;
   padding: 0.55rem 1.6rem 0.65rem 1.6rem;
@@ -49,6 +49,7 @@
     inset 0 -1px 1px rgba(255, 255, 255, 0.15);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0 auto;
+  max-width: min(96vw, 1300px);
 }
 
 /* Glowing Neon Top Laser Lines */
@@ -56,8 +57,8 @@
   content: "";
   position: absolute;
   top: 0;
-  left: 10%;
-  right: 10%;
+  left: 8%;
+  right: 8%;
   height: 2px;
   background: linear-gradient(90deg, transparent, #00F2FE 50%, transparent);
   box-shadow: 0 0 10px #00F2FE;
@@ -92,14 +93,31 @@
   color: #FFFFFF !important;
   margin: 0;
   padding: 0;
+  text-decoration: none;
 }
 
 .notch-nav-island .brand-icon {
-  width: 30px;
-  height: 30px;
-  font-size: 0.95rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%);
+  border: 1px solid rgba(0, 242, 254, 0.4);
   border-radius: 8px;
+  color: #00F2FE;
   box-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+  font-size: 0.95rem;
+}
+
+.notch-nav-island .brand-name {
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.notch-nav-island .brand-accent {
+  color: #00F2FE;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
 }
 
 .notch-nav-links {
@@ -119,6 +137,8 @@
   text-decoration: none;
   transition: color 0.25s ease, text-shadow 0.25s ease;
   white-space: nowrap;
+  position: relative;
+  padding: 0.25rem 0.15rem;
 }
 
 .notch-nav-link:hover {
@@ -127,7 +147,20 @@
 }
 
 .notch-nav-link.active {
-  color: #FFFFFF !important;
+  color: #00F2FE !important;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
+}
+
+.notch-nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: #00F2FE;
+  box-shadow: 0 0 8px #00F2FE;
+  border-radius: 2px;
 }
 
 /* --------------------------------------------------------------------------
@@ -145,8 +178,70 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Mobile Responsiveness
+   5. Mobile Responsiveness & Collapse
    -------------------------------------------------------------------------- */
+.notch-mobile-toggle {
+  background: transparent;
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: #00F2FE;
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.notch-mobile-toggle:hover {
+  background: rgba(0, 242, 254, 0.15);
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+}
+
+.notch-mobile-collapse {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(6, 9, 19, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 242, 254, 0.2);
+  z-index: 1050;
+}
+
+.notch-mobile-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notch-mobile-links a {
+  color: #CBD5E1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.notch-mobile-links a:hover,
+.notch-mobile-links a.active {
+  color: #00F2FE;
+  background: rgba(0, 242, 254, 0.1);
+}
+
 @media (max-width: 991.98px) {
   .notch-nav-island {
     width: calc(100% - 24px);
@@ -154,7 +249,13 @@
     border-radius: 0 0 18px 18px;
     padding: 0.55rem 1rem;
   }
-  .notch-nav-links {
-    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   6. Print View
+   -------------------------------------------------------------------------- */
+@media print {
+  .cp-navbar-notch {
+    display: none !important;
   }
 }
