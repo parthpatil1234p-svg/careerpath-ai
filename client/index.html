@@ -35,6 +35,7 @@
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="css/style.css?v=2.5" />
     <link rel="stylesheet" href="css/three.css?v=2.5" />
+    <link rel="stylesheet" href="css/scroll-dissolve.css?v=2.5" />
   </head>
 
   <body>
@@ -70,6 +71,9 @@
           <ul class="navbar-nav ms-auto align-items-center gap-1">
             <li class="nav-item">
               <a class="nav-link" href="#how-it-works">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#transformation">Transformation</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#careers">Career Paths</a>
@@ -254,6 +258,72 @@
             </p>
           </div>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TRANSFORMATION SECTION (Scroll Dissolve Reveal Shader)
+         Student Raw Skills ➔ Recommended Career Roadmap
+         ============================================================ -->
+    <section class="cp-section cp-transformation-section" id="transformation">
+      <div class="container">
+        <div class="section-header text-center mb-4">
+          <span class="section-tag">Interactive Transformation</span>
+          <h2 class="section-title">From Unclear Skills to Guided Roadmap</h2>
+          <p class="section-subtitle">
+            Scroll or drag the interactive slider to watch raw self-assessment gaps dissolve into a structured, milestone-driven execution roadmap.
+          </p>
+        </div>
+
+        <div class="transformation-wrapper">
+          <!-- Glass Viewport Container -->
+          <div class="transformation-viewport" id="scrollDissolveContainer">
+            <!-- Fallback Layers (Shown until WebGL loads) -->
+            <img src="assets/state-before-skills.svg" alt="Student Current Skills and Gaps" class="dissolve-fallback-layer front" />
+            <img src="assets/state-after-roadmap.svg" alt="Target Career Roadmap" class="dissolve-fallback-layer back" />
+
+            <!-- Three.js WebGL Shader Canvas -->
+            <canvas id="scrollDissolveCanvas"></canvas>
+
+            <!-- Floating Top Indicator Badges -->
+            <div class="transformation-overlay-bar">
+              <span class="transformation-status-pill pill-before">
+                <span class="pill-dot"></span>
+                <span>STAGE 1: RAW ASSESSMENT</span>
+              </span>
+              <span class="transformation-status-pill pill-after">
+                <span class="pill-dot"></span>
+                <span>STAGE 2: AI CAREER ATLAS</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Interactive Scrubber & State Toggles -->
+          <div class="transformation-controls">
+            <div class="transformation-buttons">
+              <button type="button" class="btn-toggle-state active" id="btnDissolveBefore">
+                <i class="bi bi-exclamation-triangle me-1 text-warning"></i> Before: Skill Gaps
+              </button>
+              <button type="button" class="btn-toggle-state" id="btnDissolveAfter">
+                <i class="bi bi-check-circle me-1 text-teal"></i> After: AI Roadmap
+              </button>
+            </div>
+
+            <div class="transformation-slider-wrap">
+              <span class="transformation-slider-label">Current State</span>
+              <input
+                type="range"
+                id="dissolveScrubber"
+                class="transformation-slider"
+                min="0"
+                max="100"
+                value="0"
+                aria-label="Transformation Progress Slider"
+              />
+              <span class="transformation-slider-label">Calibrated Roadmap</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -669,6 +739,7 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/three-career-universe.js?v=2.5"></script>
+    <script src="js/scroll-dissolve.js?v=2.5"></script>
     <script src="js/main.js"></script>
     <script src="js/chat.js"></script>
   </body>

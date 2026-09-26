@@ -1,0 +1,238 @@
+/* ==========================================================================
+   CareerPath AI — Scroll Dissolve Transformation Section
+   Vengeance UI WebGL Shader-Driven Visual Transformation
+   ========================================================================== */
+
+.cp-transformation-section {
+  position: relative;
+  padding: 5rem 0 6rem;
+  background: radial-gradient(circle at 50% 30%, rgba(0, 242, 254, 0.05) 0%, transparent 60%),
+              radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+              #060911;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.transformation-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Glass Viewport Container */
+.transformation-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 12 / 8;
+  max-height: 640px;
+  border-radius: var(--radius-lg, 16px);
+  background: #0a0e1a;
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  box-shadow:
+    0 24px 60px -12px rgba(0, 0, 0, 0.9),
+    0 0 35px rgba(0, 242, 254, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+/* WebGL Canvas */
+#scrollDissolveCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Fallback Layer for Non-WebGL */
+.dissolve-fallback-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.dissolve-fallback-layer.front {
+  z-index: 2;
+}
+
+.dissolve-fallback-layer.back {
+  z-index: 1;
+}
+
+/* Floating Status Pills */
+.transformation-overlay-bar {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.transformation-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(6, 9, 15, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  padding: 0.35rem 0.9rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #E2E8F0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.transformation-status-pill.pill-before {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.transformation-status-pill.pill-after {
+  border-color: rgba(0, 242, 254, 0.4);
+  color: #38bdf8;
+}
+
+.transformation-status-pill .pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.pill-before .pill-dot {
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+.pill-after .pill-dot {
+  background: #00f2fe;
+  box-shadow: 0 0 6px #00f2fe;
+}
+
+/* Interactive Controls & Scrubber */
+.transformation-controls {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.transformation-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 0.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-toggle-state {
+  border: none;
+  background: transparent;
+  color: #94A3B8;
+  font-family: var(--font-heading, "Outfit", sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.btn-toggle-state:hover {
+  color: #FFFFFF;
+}
+
+.btn-toggle-state.active {
+  background: linear-gradient(135deg, #00F2FE 0%, #2563EB 100%);
+  color: #FFFFFF;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+  font-weight: 700;
+}
+
+.transformation-slider-wrap {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.transformation-slider-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94A3B8;
+  white-space: nowrap;
+}
+
+.transformation-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #ef4444 0%, #00F2FE 100%);
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.25);
+}
+
+.transformation-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #00F2FE;
+  box-shadow: 0 0 12px #00F2FE;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.transformation-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.transformation-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #00F2FE;
+  box-shadow: 0 0 12px #00F2FE;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .transformation-viewport {
+    aspect-ratio: 4 / 3;
+    max-height: 480px;
+  }
+  .transformation-overlay-bar {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+  .transformation-status-pill {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.65rem;
+  }
+}
