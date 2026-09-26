@@ -161,24 +161,42 @@
     `;
     document.body.appendChild(drawer);
 
-    // 3. Interactive Nudge Popup Bubble
+    // 3. Interactive Career Question Pop-up Card
     const nudge = document.createElement('div');
     nudge.id = 'cpChatNudge';
-    nudge.className = 'cp-chat-nudge-bubble d-none';
+    nudge.className = 'cp-chat-question-popup d-none';
     nudge.innerHTML = `
-      <span style="font-size: 1rem;">💬</span>
-      <span><strong>Need advice?</strong> Ask AI Mentor!</span>
-      <button class="cp-nudge-close" id="cpNudgeClose" title="Dismiss">&times;</button>
-      <div class="cp-chat-nudge-tail"></div>
+      <div class="cp-chat-question-header">
+        <span class="cp-chat-question-badge">
+          <i class="bi bi-robot"></i> AI Mentor
+        </span>
+        <button class="cp-question-close" id="cpQuestionClose" title="Dismiss">&times;</button>
+      </div>
+      <p class="cp-chat-question-title">💡 Have a career question? Ask below:</p>
+      <div class="cp-chat-question-list">
+        <button class="cp-question-item-btn" data-q="Which tech role has the highest industry demand right now?">
+          <span>⚡ Which role has highest demand?</span>
+          <i class="bi bi-arrow-right-short q-arrow"></i>
+        </button>
+        <button class="cp-question-item-btn" data-q="How should a fresher prepare for a Full-Stack role in 8 weeks?">
+          <span>🎯 How to prepare in 8 weeks?</span>
+          <i class="bi bi-arrow-right-short q-arrow"></i>
+        </button>
+        <button class="cp-question-item-btn" data-q="What portfolio projects impress tech recruiters most?">
+          <span>🛠️ Best portfolio projects to build?</span>
+          <i class="bi bi-arrow-right-short q-arrow"></i>
+        </button>
+      </div>
+      <div class="cp-chat-question-tail"></div>
     `;
     document.body.appendChild(nudge);
 
-    // Show nudge after 900ms if chat hasn't been opened
+    // Show question popup after 800ms if chat hasn't been opened
     setTimeout(() => {
       if (!drawer.classList.contains('open') && !sessionStorage.getItem('cp_nudge_dismissed')) {
         nudge.classList.remove('d-none');
       }
-    }, 900);
+    }, 800);
 
     bindEvents(trigger, drawer, nudge);
     renderMessages();
@@ -190,22 +208,35 @@
     const form = document.getElementById('cpChatForm');
     const input = document.getElementById('cpChatInput');
     const suggestions = document.getElementById('cpChatSuggestions');
-    const nudgeClose = document.getElementById('cpNudgeClose');
+    const questionClose = document.getElementById('cpQuestionClose');
 
     function dismissNudge() {
       if (nudge) {
         nudge.classList.add('dismissed');
-        setTimeout(() => nudge.remove(), 400);
+        setTimeout(() => nudge.remove(), 350);
         try { sessionStorage.setItem('cp_nudge_dismissed', 'true'); } catch (e) {}
       }
     }
 
     if (nudge) {
       nudge.addEventListener('click', (e) => {
-        if (e.target.closest('#cpNudgeClose')) {
+        if (e.target.closest('#cpQuestionClose')) {
           dismissNudge();
           return;
         }
+
+        const qBtn = e.target.closest('.cp-question-item-btn');
+        if (qBtn) {
+          const prompt = qBtn.getAttribute('data-q');
+          dismissNudge();
+          drawer.classList.add('open');
+          scrollToBottom();
+          if (prompt) {
+            sendUserMessage(prompt);
+          }
+          return;
+        }
+
         dismissNudge();
         drawer.classList.add('open');
         input.focus();
