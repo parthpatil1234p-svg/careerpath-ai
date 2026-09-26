@@ -8,9 +8,9 @@
 | Member | Primary Role | Secondary |
 |--------|-------------|-----------|
 | **Parth** | Backend Architecture, Matching Engine, API Routing | Deployment |
-| **Asmita** | Three.js 3D Environments, GSAP Animations | Canvas optimization |
 | **Aditi** | Frontend UI/UX, Glassmorphism, API Integration | Forms & Validation |
-| **Suyog** | Database Models, Seed Data, Roadmap Logic | QA Testing |
+| **Suyog** | UI/UX & 3D WebGL Lead (Three.js, Canvas, GSAP) | Canvas optimization |
+| *[Open Slot]* | QA, Data & Documentation Lead | Future Member Assignment |
 
 ---
 
@@ -41,9 +41,9 @@ Complete **before** the 48-hour clock starts:
 | Implement Auth routes (register + login) with JWT | Parth | 2h | ⬜ |
 | Create auth middleware for protected routes | Parth | 1h | ⬜ |
 | Test auth endpoints in Postman | Aditi | 0.5h | ⬜ |
-| Setup HTML/CSS boilerplate (`index.html`, `login.html`) | Asmita | 2h | ⬜ |
-| Create CSS variables file + glassmorphism base class | Asmita | 1h | ⬜ |
-| Build Login/Register UI (glass panel forms) | Asmita | 2h | ⬜ |
+| Setup HTML/CSS boilerplate (`index.html`, `login.html`) | Aditi | 2h | ⬜ |
+| Create CSS variables file + glassmorphism base class | Suyog | 1h | ⬜ |
+| Build Login/Register UI (glass panel forms) | Aditi | 2h | ⬜ |
 | Initialize Three.js boilerplate (renderer, camera, scene) | Suyog | 2h | ⬜ |
 | Create basic starfield particle system (background) | Suyog | 2h | ⬜ |
 
@@ -66,8 +66,8 @@ Complete **before** the 48-hour clock starts:
 | Create `GET /api/users/profile` + `PUT` endpoints | Parth | 1.5h | ⬜ |
 | Generate seed data: 5 careers with full skill requirements | Aditi | 3h | ⬜ |
 | Create seed script (`data/seed.js`) + run it | Aditi | 1h | ⬜ |
-| Build student onboarding forms (education, skills slider, interest tags) | Asmita | 3h | ⬜ |
-| Connect Login/Register UI to auth APIs | Asmita | 1.5h | ⬜ |
+| Build student onboarding forms (education, skills slider, interest tags) | Aditi | 3h | ⬜ |
+| Connect Login/Register UI to auth APIs | Aditi | 1.5h | ⬜ |
 | Create Career Universe 3D scene (glowing orbs for each career) | Suyog | 4h | ⬜ |
 | Implement Raycaster hover effect on orbs | Suyog | 2h | ⬜ |
 
@@ -85,9 +85,9 @@ Complete **before** the 48-hour clock starts:
 
 | Task | Owner | Duration | Status |
 |------|-------|----------|--------|
-| Build dashboard page: profile summary + career result cards | Asmita | 3h | ⬜ |
-| Connect profile form → `PUT /api/users/profile` → `POST /api/match/recommend` | Asmita | 2h | ⬜ |
-| Display career recommendations with scores on dashboard | Asmita | 2h | ⬜ |
+| Build dashboard page: profile summary + career result cards | Aditi | 3h | ⬜ |
+| Connect profile form → `PUT /api/users/profile` → `POST /api/match/recommend` | Aditi | 2h | ⬜ |
+| Display career recommendations with scores on dashboard | Aditi | 2h | ⬜ |
 | Build skill-gap analysis logic (compare user vs career skills) | Aditi | 2h | ⬜ |
 | Build roadmap generation algorithm | Aditi | 3h | ⬜ |
 | Create `POST /api/roadmap/generate` endpoint | Parth | 1.5h | ⬜ |
@@ -109,13 +109,13 @@ Complete **before** the 48-hour clock starts:
 
 | Task | Owner | Duration | Status |
 |------|-------|----------|--------|
-| Build roadmap task completion UI (checkboxes + progress bar) | Asmita | 2h | ⬜ |
-| Connect task completion to `PUT /api/roadmap/:id/task/:taskId` | Asmita | 1h | ⬜ |
+| Build roadmap task completion UI (checkboxes + progress bar) | Aditi | 2h | ⬜ |
+| Connect task completion to `PUT /api/roadmap/:id/task/:taskId` | Aditi | 1h | ⬜ |
 | Add progress percentage animation (3D + 2D) | Suyog | 2h | ⬜ |
 | Implement mobile fallback (hide canvas, show CSS grid) | Suyog | 2h | ⬜ |
-| Add form validation (frontend) + error toasts | Asmita | 1.5h | ⬜ |
+| Add form validation (frontend) + error toasts | Aditi | 1.5h | ⬜ |
 | Add edge case handling: empty skills, no results, expired JWT | Parth | 2h | ⬜ |
-| Add loading states + empty states | Asmita | 1h | ⬜ |
+| Add loading states + empty states | Aditi | 1h | ⬜ |
 | Deploy backend to Render | Parth | 1h | ⬜ |
 | Deploy frontend to Vercel | Parth | 1h | ⬜ |
 | Verify CORS between Vercel ↔ Render | Parth + Aditi | 0.5h | ⬜ |
@@ -136,11 +136,11 @@ Complete **before** the 48-hour clock starts:
 
 | Task | Owner | Duration | Status |
 |------|-------|----------|--------|
-| Final CSS polish (spacing, alignment, responsive tweaks) | Asmita | 2h | ⬜ |
+| Final CSS polish (spacing, alignment, responsive tweaks) | Suyog | 2h | ⬜ |
 | Final 3D performance optimization (reduce particles on low-end) | Suyog | 1h | ⬜ |
 | Fix any remaining bugs from QA | All | 2h | ⬜ |
 | Record demo video (screen recording with voiceover) | Parth | 1h | ⬜ |
-| Prepare pitch deck (5–7 slides: Problem, Solution, Tech, Demo, Future) | Aditi + Asmita | 2h | ⬜ |
+| Prepare pitch deck (5–7 slides: Problem, Solution, Tech, Demo, Future) | Aditi + Suyog | 2h | ⬜ |
 | Practice demo presentation (3-minute walkthrough) | All | 1h | ⬜ |
 | Create 3 test user personas and rehearse live demo | All | 1h | ⬜ |
 
