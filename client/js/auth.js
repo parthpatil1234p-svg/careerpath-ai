@@ -93,15 +93,18 @@ const Auth = {
     if (this.isAuthenticated() && user) {
       authActions.innerHTML = `
         <div class="d-flex align-items-center gap-2">
-          <a href="dashboard.html" class="d-none d-md-flex align-items-center gap-1.5 text-decoration-none px-2.5 py-1 rounded-pill bg-dark bg-opacity-75 border border-info border-opacity-25" title="Logged in as ${escapeHtml(user.name || 'Student')}">
-            <i class="bi bi-person-circle text-info"></i>
-            <span class="text-light small font-mono">${escapeHtml(user.name || 'Student')}</span>
+          <a href="dashboard.html"
+             class="d-none d-md-flex align-items-center gap-2 text-decoration-none text-nowrap"
+             style="background:rgba(0,242,254,0.08);border:1px solid rgba(0,242,254,0.28);border-radius:20px;padding:0.3rem 0.9rem;"
+             title="Logged in as ${escapeHtml(user.name || 'Student')}">
+            <i class="bi bi-person-circle" style="color:#00F2FE;font-size:1rem;"></i>
+            <span style="color:#E2E8F0;font-size:0.82rem;font-family:monospace;letter-spacing:0.02em;">${escapeHtml(user.name || 'Student')}</span>
           </a>
           <a href="dashboard.html" class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap">
             <i class="bi bi-speedometer2"></i>
             <span>Dashboard</span>
           </a>
-          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2.5 d-inline-flex align-items-center" onclick="Auth.logout()" title="Sign Out">
+          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2 d-inline-flex align-items-center" onclick="Auth.logout()" title="Sign Out">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </div>

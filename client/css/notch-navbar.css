@@ -45,9 +45,11 @@ body.auth-page main,
 .cp-navbar-notch > .container,
 .cp-navbar-notch > .container-fluid {
   pointer-events: auto;
-  padding: 0;
+  padding: 0 12px;
   display: flex;
   justify-content: center;
+  max-width: 100% !important;
+  width: 100%;
 }
 
 /* --------------------------------------------------------------------------
@@ -55,10 +57,12 @@ body.auth-page main,
    -------------------------------------------------------------------------- */
 .notch-nav-island {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+  width: 100%;
+  max-width: min(96vw, 1300px);
   background: rgba(6, 9, 19, 0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -72,7 +76,6 @@ body.auth-page main,
     inset 0 -1px 1px rgba(255, 255, 255, 0.15);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0 auto;
-  max-width: min(96vw, 1300px);
 }
 
 /* Glowing Neon Top Laser Lines */
@@ -118,6 +121,12 @@ body.auth-page main,
   padding: 0;
   text-decoration: none;
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Right-side actions wrapper must not shrink */
+.notch-nav-island > .d-flex:last-child {
+  flex-shrink: 0;
 }
 
 .notch-nav-island .brand-icon {
