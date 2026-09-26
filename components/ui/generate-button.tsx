@@ -31,40 +31,35 @@ export function GenerateButton({
     <div className="relative inline-block group">
       <style>{`
         .gen-btn {
-          --border-radius: 24px;
-          --padding: 4px;
-          --transition: 0.4s;
-          --button-color: #101010;
+          --border-radius: 9999px;
+          --padding: 3px;
+          --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+          --btn-gradient: linear-gradient(135deg, #00F2FE 0%, #2563EB 50%, #7C3AED 100%);
           --highlight-color-hue: ${hue}deg;
 
           user-select: none;
           display: flex;
           justify-content: center;
           align-items: center;
-          padding: 0.5em 1.1em 0.5em 1.1em;
-          font-family: "Space Grotesk", "Poppins", "Inter", sans-serif;
-          font-size: 0.95em;
-          font-weight: 500;
+          padding: 0.65rem 1.6rem;
+          font-family: "Outfit", "Space Grotesk", sans-serif;
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #FFFFFF;
 
-          background-color: var(--button-color);
+          background: var(--btn-gradient);
+          background-size: 200% 200%;
 
           box-shadow:
-            inset 0px 1px 1px rgba(255, 255, 255, 0.2),
-            inset 0px 2px 2px rgba(255, 255, 255, 0.15),
-            inset 0px 4px 4px rgba(255, 255, 255, 0.1),
-            inset 0px 8px 8px rgba(255, 255, 255, 0.05),
-            inset 0px 16px 16px rgba(255, 255, 255, 0.05),
-            0px -1px 1px rgba(0, 0, 0, 0.02),
-            0px -2px 2px rgba(0, 0, 0, 0.03), 
-            0px -4px 4px rgba(0, 0, 0, 0.05),
-            0px -8px 8px rgba(0, 0, 0, 0.06), 
-            0px -16px 16px rgba(0, 0, 0, 0.08);
+            0 0 20px rgba(0, 242, 254, 0.35),
+            0 4px 16px rgba(37, 99, 235, 0.4),
+            inset 0 1px 1px rgba(255, 255, 255, 0.65);
 
-          border: solid 1px rgba(255, 255, 255, 0.133);
+          border: solid 1px rgba(255, 255, 255, 0.4);
           border-radius: var(--border-radius);
           cursor: pointer;
 
-          transition: box-shadow var(--transition), border var(--transition), background-color var(--transition);
+          transition: all var(--transition);
         }
         
         .gen-btn::before {
