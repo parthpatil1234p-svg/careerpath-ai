@@ -650,8 +650,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        <span>Calculating Career Matches...</span>
+        <span class="rg-shine"><span></span></span>
+        <span class="rg-bg"></span>
+        <span class="rg-label">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span>Calculating Career Matches...</span>
+        </span>
       `;
     }
 
