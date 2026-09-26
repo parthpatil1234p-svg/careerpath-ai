@@ -34,10 +34,87 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. Dedicated Animated Icon Micro-Motions (21st.dev Style)
+   💥 2. LOGO SMALL-TO-BIG POP-IN & RADAR PULSE (Brand Icon Expansion)
    -------------------------------------------------------------------------- */
+.brand-icon,
+.brand-compass {
+  position: relative;
+  transform-origin: center center;
+  animation: logo-small-to-big 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+}
 
-/* 🧭 Compass (Rotating & Wobble Navigation) */
+/* 💥 SMALL TO BIG: Logo Entrance Keyframe */
+@keyframes logo-small-to-big {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-45deg);
+    filter: blur(6px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.25) rotate(10deg);
+    filter: blur(0);
+  }
+  85% {
+    transform: scale(0.95) rotate(-3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* 💥 SMALL TO BIG: Expanding Radar Pulse Halo behind Logo */
+.brand-icon::before,
+.brand-compass::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 1.5px solid #00F2FE;
+  opacity: 0;
+  pointer-events: none;
+  animation: logo-radar-small-to-big 3.6s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+@keyframes logo-radar-small-to-big {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+/* 💥 SMALL TO BIG: Logo Hover Growth with Neon Cyan Halo */
+.navbar-brand:hover .brand-icon,
+.navbar-brand:hover .brand-compass,
+.brand-icon:hover {
+  transform: scale(1.22) rotate(10deg);
+  border-color: #00F2FE !important;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 0 15px rgba(124, 58, 237, 0.6) !important;
+}
+
+.navbar-brand:hover .brand-name,
+.navbar-brand:hover .brand-title {
+  transform: scale(1.04);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+
+.navbar-brand:hover .brand-accent {
+  filter: drop-shadow(0 0 12px #00F2FE);
+}
+
+/* 🧭 Compass Icon (Rotating & Magnetic Wobble) */
 .brand-icon i,
 .bi-compass-fill,
 .bi-compass,
@@ -57,13 +134,14 @@
 
 .brand-icon:hover i,
 .navbar-brand:hover .brand-icon i {
-  animation: anim-compass-hyper 1.2s ease-in-out infinite alternate !important;
+  animation: anim-compass-hyper 1s ease-in-out infinite alternate !important;
 }
 
 @keyframes anim-compass-hyper {
-  0%   { transform: rotate(-45deg) scale(1.15); filter: drop-shadow(0 0 16px #00F2FE); }
-  100% { transform: rotate(45deg) scale(1.25); filter: drop-shadow(0 0 24px #38BDF8); }
+  0%   { transform: rotate(-45deg) scale(1.2); filter: drop-shadow(0 0 18px #00F2FE); }
+  100% { transform: rotate(45deg) scale(1.35); filter: drop-shadow(0 0 28px #38BDF8); }
 }
+
 
 /* ⚡ Lightning / Spark Pulse */
 .bi-lightning-charge-fill,
