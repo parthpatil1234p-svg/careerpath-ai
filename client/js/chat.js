@@ -88,12 +88,12 @@
       <span class="cp-creepy-cover">
         <span class="trigger-icon"><i class="bi bi-robot"></i></span>
         <span class="trigger-label">AI Mentor</span>
-        <span class="trigger-badge">ONLINE</span>
+        <span class="trigger-badge"><span class="badge-dot"></span>ONLINE</span>
       </span>
       <span class="cp-creepy-placeholder" aria-hidden="true">
         <span class="trigger-icon"><i class="bi bi-robot"></i></span>
         <span class="trigger-label">AI Mentor</span>
-        <span class="trigger-badge">ONLINE</span>
+        <span class="trigger-badge"><span class="badge-dot"></span>ONLINE</span>
       </span>
     `;
     document.body.appendChild(trigger);
