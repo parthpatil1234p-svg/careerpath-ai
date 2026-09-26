@@ -1,0 +1,255 @@
+/* ==========================================================================
+   CareerPath AI — 21st.dev Animated Icons System (animated-icons.css)
+   Micro-animations · State Transitions · Spring Physics · Ambient Glow
+   CareerPath AI · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Master Icon Interactive Micro-Animations (Hover & Continuous)
+   -------------------------------------------------------------------------- */
+.bi,
+[class^="bi-"],
+[class*=" bi-"] {
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.3s ease,
+              color 0.25s ease;
+  will-change: transform;
+}
+
+/* Global button/card icon hover bounce */
+.btn:hover .bi,
+.btn:hover [class^="bi-"],
+.btn:hover [class*=" bi-"],
+.cp-btn:hover .bi,
+.notch-nav-link:hover .bi,
+.career-card:hover .bi,
+.dashboard-task-item:hover .bi,
+.task-checklist-item:hover .bi,
+.recommendation-card:hover .bi,
+.stat-box-atlas:hover .bi {
+  transform: scale(1.18) rotate(4deg);
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* --------------------------------------------------------------------------
+   2. Dedicated Animated Icon Micro-Motions (21st.dev Style)
+   -------------------------------------------------------------------------- */
+
+/* 🧭 Compass (Rotating & Wobble Navigation) */
+.brand-icon i,
+.bi-compass-fill,
+.bi-compass,
+.anim-compass {
+  animation: anim-compass-spin 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center center;
+  display: inline-block;
+}
+
+@keyframes anim-compass-spin {
+  0%   { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.3)); }
+  35%  { transform: rotate(35deg) scale(1.08); filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.6)); }
+  50%  { transform: rotate(20deg) scale(1.02); }
+  75%  { transform: rotate(-25deg) scale(1.06); filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.5)); }
+  100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.3)); }
+}
+
+.brand-icon:hover i,
+.navbar-brand:hover .brand-icon i {
+  animation: anim-compass-hyper 1.2s ease-in-out infinite alternate !important;
+}
+
+@keyframes anim-compass-hyper {
+  0%   { transform: rotate(-45deg) scale(1.15); filter: drop-shadow(0 0 16px #00F2FE); }
+  100% { transform: rotate(45deg) scale(1.25); filter: drop-shadow(0 0 24px #38BDF8); }
+}
+
+/* ⚡ Lightning / Spark Pulse */
+.bi-lightning-charge-fill,
+.bi-lightning-charge,
+.bi-lightning,
+.anim-lightning {
+  animation: anim-lightning-flicker 3.2s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes anim-lightning-flicker {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(0, 242, 254, 0.4)); }
+  45%      { transform: scale(1); filter: drop-shadow(0 0 3px rgba(0, 242, 254, 0.4)); }
+  50%      { transform: scale(1.2) translateY(-1px); filter: drop-shadow(0 0 14px #00F2FE); }
+  55%      { transform: scale(0.95); filter: drop-shadow(0 0 2px rgba(0, 242, 254, 0.2)); }
+  60%      { transform: scale(1.25) rotate(-6deg); filter: drop-shadow(0 0 18px #22D3EE); }
+  65%      { transform: scale(1); filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.4)); }
+}
+
+/* 🚀 Rocket Launch Float */
+.bi-rocket-takeoff-fill,
+.bi-rocket-takeoff,
+.bi-rocket,
+.anim-rocket {
+  animation: anim-rocket-float 3.5s ease-in-out infinite;
+  transform-origin: bottom left;
+}
+
+@keyframes anim-rocket-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.3)); }
+  50%      { transform: translate(3px, -4px) rotate(4deg); filter: drop-shadow(0 4px 12px rgba(0, 242, 254, 0.7)); }
+}
+
+/* ⏱️ Speedometer Sweep */
+.bi-speedometer2,
+.bi-speedometer,
+.anim-speedometer {
+  animation: anim-speedometer-sweep 4.5s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes anim-speedometer-sweep {
+  0%, 100% { transform: rotate(0deg); filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.3)); }
+  30%      { transform: rotate(18deg) scale(1.1); filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.65)); }
+  60%      { transform: rotate(-10deg) scale(1.05); }
+}
+
+/* ✨ Stars & Sparks Twinkle */
+.bi-stars,
+.bi-star-fill,
+.bi-magic,
+.anim-sparkle {
+  animation: anim-stars-twinkle 3s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes anim-stars-twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.3)); }
+  50%      { transform: scale(1.22) rotate(180deg); opacity: 1; filter: drop-shadow(0 0 16px #FBBF24); }
+}
+
+/* 🔥 Flame / Fire Ember Pulse */
+.bi-fire,
+.anim-flame {
+  animation: anim-fire-pulse 2.2s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes anim-fire-pulse {
+  0%, 100% { transform: scale(1) skewX(0deg); filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.4)); }
+  25%      { transform: scale(1.15, 1.22) skewX(-4deg); filter: drop-shadow(0 0 14px #EF4444); }
+  75%      { transform: scale(1.1, 1.18) skewX(4deg); filter: drop-shadow(0 0 12px #F97316); }
+}
+
+/* 🧠 CPU & Neural Graph Synapse Pulse */
+.bi-cpu-fill,
+.bi-cpu,
+.bi-diagram-3,
+.bi-diagram-3-fill,
+.anim-cpu {
+  animation: anim-cpu-pulse 4s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes anim-cpu-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.3)); }
+  50%      { transform: scale(1.12); filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.7)); }
+}
+
+/* 🗺️ Roadmap & Map Waypoint Shimmer */
+.bi-map,
+.bi-map-fill,
+.anim-map {
+  animation: anim-map-wobble 5s ease-in-out infinite;
+}
+
+@keyframes anim-map-wobble {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px) scale(1.05); filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.5)); }
+}
+
+/* ✅ Success Checkmark Pop */
+.bi-check2-circle,
+.bi-check-circle-fill,
+.bi-patch-check-fill,
+.anim-check {
+  animation: anim-check-pop 3.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+@keyframes anim-check-pop {
+  0%, 80%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.3)); }
+  88%           { transform: scale(1.28); filter: drop-shadow(0 0 14px #10B981); }
+  94%           { transform: scale(0.95); }
+}
+
+/* 🎓 Graduation Cap / Education Bounce */
+.bi-mortarboard,
+.bi-mortarboard-fill,
+.anim-education {
+  animation: anim-cap-tilt 4s ease-in-out infinite;
+  transform-origin: center 70%;
+}
+
+@keyframes anim-cap-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  35%      { transform: rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5)); }
+  70%      { transform: rotate(6deg) scale(1.04); }
+}
+
+/* 🏆 Trophy Glow Shimmer */
+.bi-trophy,
+.bi-trophy-fill,
+.bi-award,
+.bi-award-fill,
+.anim-trophy {
+  animation: anim-trophy-sheen 3.6s ease-in-out infinite;
+}
+
+@keyframes anim-trophy-sheen {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.4)); }
+  50%      { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 18px #EAB308); }
+}
+
+/* 🎯 Target / Crosshair Pulse */
+.bi-bullseye,
+.bi-crosshair,
+.anim-target {
+  animation: anim-target-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes anim-target-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.3)); }
+  50%      { transform: scale(1.18); filter: drop-shadow(0 0 14px #F43F5E); }
+}
+
+/* 💻 Code / Brackets Squeeze */
+.bi-code-slash,
+.bi-terminal,
+.bi-terminal-fill,
+.anim-code {
+  animation: anim-code-squeeze 3.5s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes anim-code-squeeze {
+  0%, 100% { transform: scale(1); }
+  45%      { transform: scaleX(0.85) scaleY(1.12); filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.6)); }
+  55%      { transform: scaleX(1.18) scaleY(0.92); }
+}
+
+/* --------------------------------------------------------------------------
+   3. Animated Live Morphing SVG Icon Wrapper (21st.dev Spec)
+   -------------------------------------------------------------------------- */
+.anim-state-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  vertical-align: middle;
+}
+
+.anim-state-icon-wrapper svg {
+  overflow: visible;
+  transition: all 0.3s ease;
+}
+
+.anim-state-icon-wrapper:hover svg {
+  filter: drop-shadow(0 0 12px #00F2FE);
+}
