@@ -527,6 +527,58 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Hackathon Judge Demo Profile Auto-Fill Handler
+  const btnJudgeDemoFill = document.getElementById('btnJudgeDemoFill');
+  if (btnJudgeDemoFill) {
+    btnJudgeDemoFill.addEventListener('click', () => {
+      // 1. Fill Academics
+      const nameInput = document.getElementById('fullName');
+      const courseInput = document.getElementById('course');
+      const branchInput = document.getElementById('branch');
+      const yearInput = document.getElementById('year');
+      const collegeInput = document.getElementById('college');
+
+      if (nameInput) nameInput.value = 'Parth Patil';
+      if (courseInput) courseInput.value = 'B.Tech Computer Science';
+      if (branchInput) branchInput.value = 'Information Technology';
+      if (yearInput) yearInput.value = 'Third Year';
+      if (collegeInput) collegeInput.value = 'Pune Institute of Technology';
+
+      // 2. Fill Interests
+      selectedInterests.clear();
+      ['web development', 'artificial intelligence', 'problem solving', 'cloud computing'].forEach((i) => {
+        selectedInterests.add(i);
+      });
+      renderInterests();
+
+      // 3. Fill Skills
+      selectedSkillsMap.clear();
+      const demoSkills = [
+        { name: 'html', displayName: 'HTML', proficiency: 'intermediate' },
+        { name: 'css', displayName: 'CSS', proficiency: 'intermediate' },
+        { name: 'javascript', displayName: 'JavaScript', proficiency: 'advanced' },
+        { name: 'react', displayName: 'React', proficiency: 'intermediate' },
+        { name: 'node.js', displayName: 'Node.js', proficiency: 'intermediate' },
+        { name: 'python', displayName: 'Python', proficiency: 'intermediate' },
+      ];
+      demoSkills.forEach((s) => selectedSkillsMap.set(s.name, s));
+      renderSkillsGrid();
+      updateSelectedSkillsUI();
+
+      // 4. Fill Career Goal in Step 4
+      const careerGoalsInput = document.getElementById('careerGoals');
+      if (careerGoalsInput) {
+        careerGoalsInput.value = 'Full-Stack Web & AI Application Developer';
+      }
+
+      showAlert('✓ Demo profile loaded successfully! You can review each step or proceed to submission.', 'success');
+
+      // Scroll smoothly to step 1 form
+      const formEl = document.getElementById('assessmentForm');
+      if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   // Load Remote Skills from Catalog
   const loadRemoteSkills = async () => {
     try {

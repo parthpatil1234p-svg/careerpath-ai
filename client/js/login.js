@@ -25,6 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   };
 
+  const judgeBtn = document.getElementById('btnJudgeAutoFill');
+  if (judgeBtn) {
+    judgeBtn.addEventListener('click', () => {
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      if (emailInput && passInput) {
+        emailInput.value = 'kajimew275@blobapps.com';
+        passInput.value = '123456';
+        showAlert('Demo account credentials auto-filled! Click "Log In to Dashboard" to enter.', 'info');
+      }
+    });
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     alertContainer.innerHTML = '';

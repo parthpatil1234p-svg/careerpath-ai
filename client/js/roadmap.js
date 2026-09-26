@@ -303,6 +303,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
   // Notch Navbar Scroll Elevation
   const notchNav = document.querySelector('.cp-navbar-notch');
   if (notchNav) {
