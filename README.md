@@ -142,7 +142,7 @@ Built with passion and sleepless dedication for **Hack2Ignite 2026–27**:
 | **Parth Patil** | **Team Leader & Backend Architect** | REST API architecture, Mongoose schemas, 60/25/15 scoring algorithm, roadmap generator, Render deployment, external API failover architecture |
 | **Aditi Vispute** | **Frontend & Integration Lead** | Responsive UI structuring, DOM controllers, asynchronous API client, Vercel deployment, print/PDF export engine, accessibility compliance |
 | **Suyog Pawar** | **UI/UX & 3D WebGL Lead** | Three.js WebGL modules (Universe, Orbit, Path, Orb), GSAP transitions, design system tokens, 2D fallback engine, interactive 3D physics |
-| **Sanika Bodhanwar** | **QA, Data & Documentation Lead** | 45+ skill dataset standardization, career profiles curation, 19-point manual QA matrix, Postman test collections, API contract verification |
+| **Sanika Bodhnawar** | **QA, Data & Documentation Lead** | 45+ skill dataset standardization, career profiles curation, 19-point manual QA matrix, Postman test collections, API contract verification |
 
 ---
 
@@ -597,7 +597,7 @@ CareerPath AI is engineered with an extensible modular architecture. While our c
 
 Built with passion, engineering dedication, and late-night teamwork by **Team 404 Brain Not Found** for **Hack2Ignite 2026–27**:
 
-| <img src="https://github.com/parthpatil1234p-svg.png?size=110" width="110px;" style="border-radius:50%" alt="Parth Patil"/><br /><sub><b>Parth Patil</b></sub> | <img src="https://github.com/aditivispute25-gif.png?size=110" width="110px;" style="border-radius:50%" alt="Aditi Vispute"/><br /><sub><b>Aditi Vispute</b></sub> | <img src="https://github.com/Suyog-SP.png?size=110" width="110px;" style="border-radius:50%" alt="Suyog Pawar"/><br /><sub><b>Suyog Pawar</b></sub> | <img src="https://github.com/SanikaMB.png?size=110" width="110px;" style="border-radius:50%" alt="Sanika Bodhanwar"/><br /><sub><b>Sanika Bodhanwar</b></sub> |
+| <img src="https://github.com/parthpatil1234p-svg.png?size=110" width="110px;" style="border-radius:50%" alt="Parth Patil"/><br /><sub><b>Parth Patil</b></sub> | <img src="https://github.com/aditivispute25-gif.png?size=110" width="110px;" style="border-radius:50%" alt="Aditi Vispute"/><br /><sub><b>Aditi Vispute</b></sub> | <img src="https://github.com/Suyog-SP.png?size=110" width="110px;" style="border-radius:50%" alt="Suyog Pawar"/><br /><sub><b>Suyog Pawar</b></sub> | <img src="https://github.com/SanikaMB.png?size=110" width="110px;" style="border-radius:50%" alt="Sanika Bodhnawar"/><br /><sub><b>Sanika Bodhanwar</b></sub> |
 | :---: | :---: | :---: | :---: |
 | 👑 **Team Leader & Backend Architect** | 💻 **Frontend & Integration Lead** | 🎨 **UI/UX & 3D WebGL Lead** | 📊 **QA, Data & Docs Lead** |
 | [![GitHub](https://img.shields.io/badge/GitHub-parthpatil1234p--svg-181717?style=flat-square&logo=github)](https://github.com/parthpatil1234p-svg) | [![GitHub](https://img.shields.io/badge/GitHub-aditivispute25--gif-181717?style=flat-square&logo=github)](https://github.com/aditivispute25-gif) | [![GitHub](https://img.shields.io/badge/GitHub-Suyog--SP-181717?style=flat-square&logo=github)](https://github.com/Suyog-SP) | [![GitHub](https://img.shields.io/badge/GitHub-SanikaMB-181717?style=flat-square&logo=github)](https://github.com/SanikaMB) |
