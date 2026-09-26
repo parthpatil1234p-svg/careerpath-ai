@@ -7,7 +7,8 @@ const express = require('express');
 const router = express.Router();
 const { handleChatMessage } = require('../controllers/chatController');
 
-// POST /api/chat/message (public with optional JWT context)
+// POST /api/chat/message and POST /api/chat (public with optional JWT context)
 router.post('/message', handleChatMessage);
+router.post('/', handleChatMessage);
 
 module.exports = router;

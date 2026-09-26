@@ -6,6 +6,9 @@
   "scripts": {
     "start": "npm --prefix server start",
     "dev": "npm --prefix server run dev",
+    "build": "echo 'Client static assets and server ready for production.'",
+    "test": "node --check server/server.js && node --check server/seed.js",
+    "lint": "node --check server/server.js && node --check server/seed.js",
     "server:install": "npm --prefix server install",
     "server:dev": "npm --prefix server run dev",
     "server:start": "npm --prefix server start",

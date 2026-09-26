@@ -1,0 +1,12 @@
+# Robots.txt for CareerPath AI — AI Career Guidance and Skill Roadmap Platform
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /login.html
+Allow: /register.html
+Disallow: /dashboard.html
+Disallow: /assessment.html
+Disallow: /recommendations.html
+Disallow: /roadmap.html
+
+Sitemap: https://careerpath-ai-bdbt.onrender.com/sitemap.xml
