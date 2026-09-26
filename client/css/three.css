@@ -49,11 +49,29 @@
   pointer-events: none;
 }
 
-/* Specific Container Sizes */
+/* Specific Container Sizes with Desktop Scaling */
 #careerUniverse {
   height: 480px;
   width: 100%;
   position: relative;
+}
+
+@media (min-width: 992px) {
+  #careerUniverse {
+    height: 520px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #careerUniverse {
+    height: 560px;
+  }
+}
+
+@media (min-width: 1400px) {
+  #careerUniverse {
+    height: 600px;
+  }
 }
 
 #skill-orbit {
@@ -61,15 +79,33 @@
   width: 100%;
 }
 
+@media (min-width: 992px) {
+  #skill-orbit {
+    height: 440px;
+  }
+}
+
 #roadmap-path {
   height: 300px;
   width: 100%;
+}
+
+@media (min-width: 992px) {
+  #roadmap-path {
+    height: 360px;
+  }
 }
 
 #progress-orb {
   height: 240px;
   width: 100%;
   background: transparent;
+}
+
+@media (min-width: 992px) {
+  #progress-orb {
+    height: 280px;
+  }
 }
 
 /* High-Tech HUD Badges in Canvas */

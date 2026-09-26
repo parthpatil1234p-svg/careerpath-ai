@@ -351,3 +351,34 @@
     border: 1px solid #475569 !important;
   }
 }
+
+/* ==========================================================================
+   Desktop UX Enhancements for Roadmap (min-width: 992px)
+   ========================================================================== */
+@media (min-width: 992px) {
+  .roadmap-header-card {
+    padding: 2.25rem 2.5rem;
+  }
+  .week-card {
+    padding: 1.75rem 2rem;
+  }
+  .task-checklist-item {
+    padding: 1.15rem 1.5rem;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .task-checklist-item:hover {
+    transform: translateX(4px);
+    border-color: rgba(56, 189, 248, 0.45);
+    background: rgba(15, 23, 42, 0.95);
+  }
+  .resource-link-btn {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.78rem;
+  }
+  .resource-link-btn:hover {
+    background: rgba(0, 242, 254, 0.15);
+    border-color: rgba(0, 242, 254, 0.45);
+    transform: translateY(-1px);
+  }
+}
+

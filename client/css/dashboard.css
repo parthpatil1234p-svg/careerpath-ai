@@ -305,3 +305,32 @@
   color: #34D399;
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
+
+/* ==========================================================================
+   Desktop UX Enhancements for Dashboard (min-width: 992px)
+   ========================================================================== */
+@media (min-width: 992px) {
+  .dashboard-profile-card {
+    padding: 2.25rem 2.5rem;
+  }
+  .active-route-card {
+    padding: 2.25rem 2.5rem;
+  }
+  .dashboard-task-item {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .dashboard-task-item:hover {
+    transform: translateX(4px);
+    border-color: rgba(56, 189, 248, 0.45);
+    background: rgba(15, 23, 42, 0.95);
+  }
+  .shortcut-card {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .shortcut-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.2);
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+}
+

@@ -48,6 +48,20 @@
   z-index: 1;
 }
 
+@media (min-width: 1200px) {
+  .hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .hero-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 4.5rem;
+  }
+}
+
 @media (max-width: 991px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -288,6 +302,21 @@
   gap: 1.5rem;
 }
 
+@media (min-width: 1200px) {
+  .deliverables-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .deliverable-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+  }
+  .deliverable-icon {
+    margin-bottom: 0.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .deliverables-grid {
     grid-template-columns: 1fr;
@@ -460,6 +489,20 @@
   grid-template-columns: 280px 1fr;
   gap: 2rem;
   align-items: start;
+}
+
+@media (min-width: 1200px) {
+  .assessment-container {
+    grid-template-columns: 320px 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .assessment-container {
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+  }
 }
 
 @media (max-width: 991px) {
@@ -722,4 +765,75 @@
 .task-item.is-completed .task-title {
   text-decoration: line-through;
   color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Desktop Scaling Overrides (pages.css)
+   ========================================================================== */
+
+/* 1. Landing Hero — more vertical space on wide monitors */
+@media (min-width: 1200px) {
+  .landing-hero {
+    padding: 7.5rem 0 6rem;
+  }
+}
+@media (min-width: 1400px) {
+  .landing-hero {
+    padding: 8.5rem 0 7rem;
+  }
+}
+
+/* 2. Hero Subtitle — wider readable line on desktop */
+@media (min-width: 1200px) {
+  .hero-subtitle {
+    max-width: 640px;
+    font-size: 1.175rem;
+  }
+}
+@media (min-width: 1400px) {
+  .hero-subtitle {
+    max-width: 720px;
+    font-size: 1.2rem;
+  }
+}
+
+/* 3. Auth Split Grid — slightly wider on large desktop */
+@media (min-width: 1200px) {
+  .auth-split-grid {
+    max-width: 1020px;
+  }
+  .auth-orientation-panel,
+  .auth-form-card {
+    padding: 3rem;
+  }
+  .auth-panel-heading {
+    font-size: 2rem;
+  }
+}
+@media (min-width: 1400px) {
+  .auth-split-grid {
+    max-width: 1080px;
+  }
+  .auth-orientation-panel,
+  .auth-form-card {
+    padding: 3.5rem;
+  }
+}
+
+/* 4. Hero Grid — fine column balance & font scaling */
+@media (min-width: 1200px) {
+  .hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .hero-title {
+    font-size: clamp(3rem, 3.5vw, 4rem);
+  }
+}
+@media (min-width: 1400px) {
+  .hero-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 4.5rem;
+  }
 }
