@@ -71,15 +71,30 @@
   function injectWidgetDOM() {
     if (document.getElementById('cpChatDrawer')) return;
 
-    // 1. Trigger button
+    // 1. Trigger button (VengeanceUI Creepy eye-tracking AI Mentor)
     const trigger = document.createElement('button');
     trigger.id = 'cpChatTrigger';
-    trigger.className = 'cp-chat-trigger';
+    trigger.className = 'cp-chat-trigger cp-creepy-mentor-btn';
     trigger.setAttribute('aria-label', 'Open AI Career Mentor Chat');
     trigger.innerHTML = `
-      <span class="trigger-icon"><i class="bi bi-robot"></i></span>
-      <span class="trigger-label">AI Mentor</span>
-      <span class="trigger-badge">ONLINE</span>
+      <span class="cp-creepy-eyes-container" aria-hidden="true">
+        <span class="cp-creepy-eye cp-creepy-eye-left">
+          <span class="cp-creepy-pupil"></span>
+        </span>
+        <span class="cp-creepy-eye cp-creepy-eye-right">
+          <span class="cp-creepy-pupil"></span>
+        </span>
+      </span>
+      <span class="cp-creepy-cover">
+        <span class="trigger-icon"><i class="bi bi-robot"></i></span>
+        <span class="trigger-label">AI Mentor</span>
+        <span class="trigger-badge">ONLINE</span>
+      </span>
+      <span class="cp-creepy-placeholder" aria-hidden="true">
+        <span class="trigger-icon"><i class="bi bi-robot"></i></span>
+        <span class="trigger-label">AI Mentor</span>
+        <span class="trigger-badge">ONLINE</span>
+      </span>
     `;
     document.body.appendChild(trigger);
 
@@ -200,6 +215,46 @@
           sendUserMessage(prompt);
         }
       }
+    });
+
+    // Dynamic Eye Tracking for VengeanceUI Creepy AI Mentor Button
+    function updateCreepyEyes(e) {
+      const pupils = trigger.querySelectorAll('.cp-creepy-pupil');
+      if (!pupils.length) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const eyesX = rect.left + rect.width - 24;
+      const eyesY = rect.top + rect.height * 0.5;
+
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      const dx = clientX - eyesX;
+      const dy = clientY - eyesY;
+      const angle = Math.atan2(-dy, dx) + Math.PI / 2;
+      const distance = Math.hypot(dx, dy);
+
+      const visionRangeX = 260;
+      const visionRangeY = 140;
+      const normX = (Math.sin(angle) * Math.min(distance, visionRangeX)) / visionRangeX;
+      const normY = (Math.cos(angle) * Math.min(distance, visionRangeY)) / visionRangeY;
+
+      const px = normX * 4;
+      const py = normY * 4;
+
+      pupils.forEach((p) => {
+        p.style.transform = `translate(calc(-50% + ${px.toFixed(1)}px), calc(-50% + ${py.toFixed(1)}px))`;
+      });
+    }
+
+    window.addEventListener('mousemove', updateCreepyEyes, { passive: true });
+    window.addEventListener('touchmove', updateCreepyEyes, { passive: true });
+
+    trigger.addEventListener('mouseleave', () => {
+      const pupils = trigger.querySelectorAll('.cp-creepy-pupil');
+      pupils.forEach((p) => {
+        p.style.transform = 'translate(-50%, -50%)';
+      });
     });
   }
 
