@@ -34,6 +34,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/generate-button.css" />
   </head>
 
   <body class="recommendations-page">
@@ -218,9 +219,19 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" id="btnConfirmGenerate" class="btn cp-btn-primary btn-sm px-4">
-              <span class="btn-text"><i class="bi bi-map me-1"></i> Build My Roadmap</span>
-              <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+            <button type="button" id="btnConfirmGenerate" class="gen-btn">
+              <svg class="gen-btn-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"></path>
+              </svg>
+              <div class="gen-txt-wrapper">
+                <div class="gen-txt-1">
+                  <span class="gen-btn-letter">B</span><span class="gen-btn-letter">u</span><span class="gen-btn-letter">i</span><span class="gen-btn-letter">l</span><span class="gen-btn-letter">d</span>
+                  <span class="gen-btn-letter">&nbsp;</span><span class="gen-btn-letter">R</span><span class="gen-btn-letter">o</span><span class="gen-btn-letter">a</span><span class="gen-btn-letter">d</span><span class="gen-btn-letter">m</span><span class="gen-btn-letter">a</span><span class="gen-btn-letter">p</span>
+                </div>
+                <div class="gen-txt-2">
+                  <span class="gen-btn-letter">G</span><span class="gen-btn-letter">e</span><span class="gen-btn-letter">n</span><span class="gen-btn-letter">e</span><span class="gen-btn-letter">r</span><span class="gen-btn-letter">a</span><span class="gen-btn-letter">t</span><span class="gen-btn-letter">i</span><span class="gen-btn-letter">n</span><span class="gen-btn-letter">g</span><span class="gen-btn-letter">.</span><span class="gen-btn-letter">.</span><span class="gen-btn-letter">.</span>
+                </div>
+              </div>
             </button>
           </div>
         </div>

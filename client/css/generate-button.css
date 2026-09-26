@@ -1,0 +1,169 @@
+/* ==========================================================================
+   Vengeance UI — Generate Button (@vengeanceui/generate-button)
+   Standalone CSS for CareerPath AI Live Client
+   ========================================================================== */
+
+.gen-btn {
+  --border-radius: 24px;
+  --padding: 4px;
+  --transition: 0.4s;
+  --button-color: #0b1120;
+  --highlight-color-hue: 200deg;
+
+  user-select: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.55em 1.25em;
+  font-family: var(--font-display, "Space Grotesk", sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f8fafc;
+  background-color: var(--button-color);
+  position: relative;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  box-shadow:
+    inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+    inset 0px 4px 4px rgba(255, 255, 255, 0.08),
+    0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all var(--transition);
+}
+
+.gen-btn::before {
+  content: "";
+  position: absolute;
+  top: calc(0px - var(--padding));
+  left: calc(0px - var(--padding));
+  width: calc(100% + var(--padding) * 2);
+  height: calc(100% + var(--padding) * 2);
+  border-radius: calc(var(--border-radius) + var(--padding));
+  pointer-events: none;
+  transition: box-shadow var(--transition);
+}
+
+.gen-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius);
+  background: radial-gradient(circle at 50% 0%, hsla(var(--highlight-color-hue), 100%, 75%, 0.45), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+
+.gen-btn-letter {
+  display: inline-block;
+  color: #f1f5f9;
+  transition: transform 0.3s, filter 0.3s;
+}
+
+@keyframes gen-letter-anim {
+  50% {
+    text-shadow: 0 0 4px rgba(56, 189, 248, 0.8);
+    color: #fff;
+  }
+}
+
+.gen-btn-svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.55rem;
+  fill: #38bdf8;
+  animation: gen-flicker 2s linear infinite;
+  animation-delay: 0.5s;
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.8));
+  transition: fill var(--transition), filter var(--transition), opacity var(--transition);
+}
+
+@keyframes gen-flicker {
+  50% { opacity: 0.4; }
+}
+
+.gen-txt-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 6.8em;
+}
+
+.gen-txt-1,
+.gen-txt-2 {
+  position: absolute;
+  white-space: nowrap;
+}
+
+.gen-txt-1 {
+  animation: gen-appear-anim 0.4s ease-in-out forwards;
+}
+
+.gen-txt-2 {
+  opacity: 0;
+}
+
+@keyframes gen-appear-anim {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Generating State */
+.gen-btn[data-generating="true"] .gen-txt-1 {
+  animation: gen-opacity-anim 0.3s ease-in-out forwards;
+}
+.gen-btn[data-generating="true"] .gen-txt-2 {
+  animation: gen-opacity-anim 0.3s ease-in-out reverse forwards;
+}
+
+@keyframes gen-opacity-anim {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.gen-btn[data-generating="true"] .gen-btn-letter {
+  animation: gen-focused-letter-anim 1s ease-in-out forwards, gen-letter-anim 1.2s ease-in-out infinite;
+}
+
+@keyframes gen-focused-letter-anim {
+  0%, 100% { filter: blur(0px); }
+  50% {
+    transform: scale(1.15);
+    filter: blur(1.5px) brightness(150%) drop-shadow(0 0 8px hsl(var(--highlight-color-hue), 100%, 70%));
+  }
+}
+
+.gen-btn[data-generating="true"]::before {
+  box-shadow:
+    0 -8px 12px -6px rgba(255, 255, 255, 0.2) inset,
+    0 -16px 16px -8px hsla(var(--highlight-color-hue), 100%, 70%, 25%) inset,
+    1px 1px 1px rgba(255, 255, 255, 0.2), 
+    -1px -1px 1px rgba(0, 0, 0, 0.133);
+}
+
+.gen-btn[data-generating="true"]::after {
+  opacity: 0.7;
+  mask-image: linear-gradient(0deg, #fff, transparent);
+}
+
+.gen-btn:hover {
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+.gen-btn:hover::before {
+  box-shadow:
+    0 -8px 8px -6px rgba(255, 255, 255, 0.4) inset,
+    0 -16px 16px -8px hsla(var(--highlight-color-hue), 100%, 70%, 30%) inset;
+}
+.gen-btn:hover::after {
+  opacity: 1;
+}
+.gen-btn:hover .gen-btn-svg {
+  fill: #fff;
+  filter: drop-shadow(0 0 6px hsl(var(--highlight-color-hue), 100%, 70%));
+}

@@ -502,6 +502,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       try {
         btnConfirmGenerate.disabled = true;
+        btnConfirmGenerate.setAttribute('data-generating', 'true');
         if (btnText) btnText.textContent = 'Generating Roadmap...';
         if (spinner) spinner.classList.remove('d-none');
 
@@ -527,6 +528,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } finally {
         if (!window.location.href.includes('roadmap.html')) {
           btnConfirmGenerate.disabled = false;
+          btnConfirmGenerate.removeAttribute('data-generating');
           if (btnText) btnText.innerHTML = '<i class="bi bi-map me-1"></i> Build My Roadmap';
           if (spinner) spinner.classList.add('d-none');
         }
