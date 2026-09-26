@@ -303,6 +303,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  // Notch Navbar Scroll Elevation
+  const notchNav = document.querySelector('.cp-navbar-notch');
+  if (notchNav) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 30) {
+        notchNav.classList.add('scrolled');
+      } else {
+        notchNav.classList.remove('scrolled');
+      }
+    }, { passive: true });
   }
 
   loadRoadmap();

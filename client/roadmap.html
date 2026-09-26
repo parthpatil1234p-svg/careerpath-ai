@@ -39,27 +39,29 @@
 
   <body class="roadmap-page">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top cp-navbar">
+    <!-- Notch Navbar -->
+    <nav class="cp-navbar-notch">
       <div class="container">
-        <a class="navbar-brand" href="index.html">
-          <div class="brand-icon">
-            <i class="bi bi-compass-fill"></i>
-          </div>
-          <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
-          <span class="brand-tagline-sub d-none d-sm-inline">Career Atlas</span>
-        </a>
+        <div class="notch-nav-island">
+          <a class="navbar-brand" href="index.html">
+            <div class="brand-icon">
+              <i class="bi bi-compass-fill"></i>
+            </div>
+            <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+          </a>
 
-        <!-- Actions -->
-        <div class="ms-auto d-flex align-items-center gap-2">
-          <a href="dashboard.html" class="btn cp-btn-outline btn-sm px-3">
-            <i class="bi bi-speedometer2 me-1"></i> Dashboard
-          </a>
-          <a href="recommendations.html" class="btn cp-btn-outline btn-sm px-3">
-            <i class="bi bi-compass me-1"></i> Recommendations
-          </a>
-          <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()">
-            <i class="bi bi-box-arrow-right me-1"></i> Logout
-          </button>
+          <!-- Center Links -->
+          <ul class="notch-nav-links">
+            <li><a href="dashboard.html" class="notch-nav-link"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a></li>
+            <li><a href="recommendations.html" class="notch-nav-link"><i class="bi bi-compass me-1"></i> Recommendations</a></li>
+          </ul>
+
+          <!-- Actions -->
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()">
+              <i class="bi bi-box-arrow-right me-1"></i> Logout
+            </button>
+          </div>
         </div>
       </div>
     </nav>

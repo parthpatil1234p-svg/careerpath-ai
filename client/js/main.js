@@ -13,16 +13,16 @@
 // ============================================================
 // 1. Navbar — Add 'scrolled' class on scroll for background state
 // ============================================================
-const mainNav = document.getElementById('mainNav');
+const mainNav = document.getElementById('mainNav') || document.querySelector('.cp-navbar') || document.querySelector('.cp-navbar-notch');
 
 if (mainNav) {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
+    if (window.scrollY > 30) {
       mainNav.classList.add('scrolled');
     } else {
       mainNav.classList.remove('scrolled');
     }
-  });
+  }, { passive: true });
 }
 
 // ============================================================
