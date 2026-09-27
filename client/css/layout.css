@@ -108,6 +108,12 @@
   transition: all var(--transition-fast);
 }
 
+.brand-icon.brand-icon-sm {
+  width: 30px;
+  height: 30px;
+  font-size: 0.95rem;
+}
+
 .navbar-brand:hover .brand-icon,
 .navbar-brand:hover .brand-compass {
   transform: scale(1.05) rotate(5deg);
@@ -239,7 +245,8 @@
   margin-bottom: 0.75rem;
 }
 
-.footer-col-title {
+.footer-col-title,
+.footer-heading {
   font-family: var(--font-heading);
   font-size: 0.95rem;
   font-weight: 700;
@@ -278,4 +285,12 @@
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-pill);
   display: inline-block;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
