@@ -20,73 +20,124 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 2. Constants & Data
   const ALL_INTERESTS = [
     { id: 'web development', label: 'Web Development', icon: 'bi-code-slash' },
-    { id: 'app development', label: 'App Development', icon: 'bi-phone' },
-    { id: 'data analysis', label: 'Data Analysis', icon: 'bi-graph-up-arrow' },
-    { id: 'artificial intelligence', label: 'Artificial Intelligence', icon: 'bi-cpu' },
+    { id: 'app development', label: 'Mobile App Development', icon: 'bi-phone' },
+    { id: 'data analysis', label: 'Data Analysis & BI', icon: 'bi-graph-up-arrow' },
+    { id: 'artificial intelligence', label: 'Artificial Intelligence & ML', icon: 'bi-cpu' },
     { id: 'design', label: 'Creative Design & UI/UX', icon: 'bi-palette' },
-    { id: 'cybersecurity', label: 'Cybersecurity', icon: 'bi-shield-shaded' },
-    { id: 'problem solving', label: 'Problem Solving & Logic', icon: 'bi-lightbulb' },
-    { id: 'business', label: 'Business & Tech Analytics', icon: 'bi-briefcase' },
-    { id: 'gaming', label: 'Game Development & 3D', icon: 'bi-controller' },
+    { id: 'cybersecurity', label: 'Cybersecurity & Defense', icon: 'bi-shield-shaded' },
     { id: 'cloud computing', label: 'Cloud Computing & DevOps', icon: 'bi-cloud' },
+    { id: 'backend engineering', label: 'Backend & Distributed Systems', icon: 'bi-hdd-network' },
+    { id: 'data science', label: 'Data Science & Deep Learning', icon: 'bi-clipboard-data' },
+    { id: 'qa testing', label: 'QA & Test Automation', icon: 'bi-check2-circle' },
+    { id: 'gaming', label: 'Game Development & 3D', icon: 'bi-controller' },
+    { id: 'blockchain', label: 'Blockchain & Web3', icon: 'bi-link-45deg' },
+    { id: 'cloud security', label: 'Cloud Security & DevSecOps', icon: 'bi-shield-lock' },
+    { id: 'product management', label: 'Technical Product Strategy', icon: 'bi-kanban' },
+    { id: 'problem solving', label: 'Problem Solving & Logic', icon: 'bi-lightbulb' },
   ];
 
   const FALLBACK_SKILLS = [
-    // Frontend
+    // Frontend (9)
     { name: 'html', displayName: 'HTML', category: 'frontend' },
     { name: 'css', displayName: 'CSS', category: 'frontend' },
     { name: 'javascript', displayName: 'JavaScript', category: 'frontend' },
     { name: 'responsive-design', displayName: 'Responsive Design', category: 'frontend' },
     { name: 'react', displayName: 'React', category: 'frontend' },
     { name: 'bootstrap', displayName: 'Bootstrap', category: 'frontend' },
-    // Backend
+    { name: 'typescript', displayName: 'TypeScript', category: 'frontend' },
+    { name: 'next.js', displayName: 'Next.js', category: 'frontend' },
+    { name: 'tailwind-css', displayName: 'Tailwind CSS', category: 'frontend' },
+
+    // Backend (10)
     { name: 'node.js', displayName: 'Node.js', category: 'backend' },
     { name: 'express.js', displayName: 'Express.js', category: 'backend' },
     { name: 'rest-apis', displayName: 'REST APIs', category: 'backend' },
     { name: 'authentication', displayName: 'Authentication', category: 'backend' },
     { name: 'python', displayName: 'Python', category: 'backend' },
-    // Database
+    { name: 'fastapi', displayName: 'FastAPI', category: 'backend' },
+    { name: 'graphql', displayName: 'GraphQL', category: 'backend' },
+    { name: 'java', displayName: 'Java', category: 'backend' },
+    { name: 'spring-boot', displayName: 'Spring Boot', category: 'backend' },
+    { name: 'kafka', displayName: 'Apache Kafka', category: 'backend' },
+    { name: 'csharp', displayName: 'C# Programming', category: 'backend' },
+    { name: 'cpp', displayName: 'C++ Programming', category: 'backend' },
+
+    // Database (6)
     { name: 'mongodb', displayName: 'MongoDB', category: 'database' },
     { name: 'sql', displayName: 'SQL', category: 'database' },
     { name: 'mysql', displayName: 'MySQL', category: 'database' },
     { name: 'database-design', displayName: 'Database Design', category: 'database' },
-    // Data
+    { name: 'postgresql', displayName: 'PostgreSQL', category: 'database' },
+    { name: 'redis', displayName: 'Redis Caching', category: 'database' },
+
+    // Data & AI (13)
     { name: 'excel', displayName: 'Excel', category: 'data' },
     { name: 'statistics', displayName: 'Statistics', category: 'data' },
     { name: 'power-bi', displayName: 'Power BI', category: 'data' },
     { name: 'data-visualization', displayName: 'Data Visualization', category: 'data' },
     { name: 'data-cleaning', displayName: 'Data Cleaning', category: 'data' },
-    // Design
+    { name: 'pandas', displayName: 'Pandas & NumPy', category: 'data' },
+    { name: 'langchain', displayName: 'LangChain', category: 'ai' },
+    { name: 'generative-ai', displayName: 'Generative AI & LLMs', category: 'ai' },
+    { name: 'pytorch', displayName: 'PyTorch', category: 'ai' },
+    { name: 'tensorflow', displayName: 'TensorFlow', category: 'ai' },
+    { name: 'scikit-learn', displayName: 'Scikit-Learn', category: 'ai' },
+    { name: 'deep-learning', displayName: 'Deep Learning', category: 'ai' },
+    { name: 'natural-language-processing', displayName: 'NLP (Natural Language Processing)', category: 'ai' },
+
+    // Design (5)
     { name: 'figma', displayName: 'Figma', category: 'design' },
     { name: 'wireframing', displayName: 'Wireframing', category: 'design' },
     { name: 'prototyping', displayName: 'Prototyping', category: 'design' },
     { name: 'user-research', displayName: 'User Research', category: 'design' },
     { name: 'visual-design', displayName: 'Visual Design', category: 'design' },
-    // Security
+
+    // Security (5)
     { name: 'networking', displayName: 'Networking', category: 'security' },
     { name: 'linux', displayName: 'Linux', category: 'security' },
     { name: 'cybersecurity-fundamentals', displayName: 'Cybersecurity Fundamentals', category: 'security' },
     { name: 'ethical-hacking', displayName: 'Ethical Hacking', category: 'security' },
     { name: 'owasp-basics', displayName: 'OWASP Basics', category: 'security' },
-    // Soft & Tool
-    { name: 'git', displayName: 'Git', category: 'tool' },
-    { name: 'github', displayName: 'GitHub', category: 'tool' },
-    { name: 'problem-solving', displayName: 'Problem Solving', category: 'soft-skill' },
-    { name: 'communication', displayName: 'Communication', category: 'soft-skill' },
-    { name: 'teamwork', displayName: 'Teamwork', category: 'soft-skill' },
-    // Modern & Trending Skills
-    { name: 'typescript', displayName: 'TypeScript', category: 'frontend' },
-    { name: 'next.js', displayName: 'Next.js', category: 'frontend' },
-    { name: 'tailwind-css', displayName: 'Tailwind CSS', category: 'frontend' },
-    { name: 'flutter', displayName: 'Flutter', category: 'frontend' },
-    { name: 'fastapi', displayName: 'FastAPI', category: 'backend' },
-    { name: 'graphql', displayName: 'GraphQL', category: 'backend' },
+
+    // Cloud & DevOps (5)
     { name: 'docker', displayName: 'Docker', category: 'cloud' },
     { name: 'kubernetes', displayName: 'Kubernetes', category: 'cloud' },
     { name: 'aws', displayName: 'AWS Cloud', category: 'cloud' },
-    { name: 'langchain', displayName: 'LangChain', category: 'data' },
-    { name: 'generative-ai', displayName: 'Generative AI & LLMs', category: 'data' },
-    { name: 'pytorch', displayName: 'PyTorch', category: 'data' },
+    { name: 'terraform', displayName: 'Terraform & IaC', category: 'cloud' },
+    { name: 'firebase', displayName: 'Firebase & Firestore', category: 'cloud' },
+
+    // Mobile (3)
+    { name: 'flutter', displayName: 'Flutter', category: 'mobile' },
+    { name: 'react-native', displayName: 'React Native', category: 'mobile' },
+    { name: 'dart', displayName: 'Dart', category: 'mobile' },
+
+    // QA & Testing (4)
+    { name: 'cypress', displayName: 'Cypress E2E Testing', category: 'testing' },
+    { name: 'selenium', displayName: 'Selenium WebDriver', category: 'testing' },
+    { name: 'playwright', displayName: 'Playwright Automation', category: 'testing' },
+    { name: 'postman', displayName: 'Postman & API Testing', category: 'testing' },
+
+    // Gaming (2)
+    { name: 'unity', displayName: 'Unity Engine', category: 'gaming' },
+    { name: 'unreal-engine', displayName: 'Unreal Engine 5', category: 'gaming' },
+
+    // Web3 (3)
+    { name: 'solidity', displayName: 'Solidity Smart Contracts', category: 'web3' },
+    { name: 'web3js', displayName: 'Web3.js & Ethers.js', category: 'web3' },
+    { name: 'smart-contracts', displayName: 'Smart Contract Architecture', category: 'web3' },
+
+    // Product & Management (3)
+    { name: 'agile-scrum', displayName: 'Agile & Scrum Methodology', category: 'product' },
+    { name: 'product-management', displayName: 'Product Management & PRDs', category: 'product' },
+    { name: 'user-stories', displayName: 'User Story Mapping & JIRA', category: 'product' },
+
+    // Soft Skills & Tools (5)
+    { name: 'git', displayName: 'Git', category: 'tool' },
+    { name: 'github', displayName: 'GitHub', category: 'tool' },
+    { name: 'ci-cd', displayName: 'CI/CD & GitHub Actions', category: 'tool' },
+    { name: 'problem-solving', displayName: 'Problem Solving', category: 'soft-skill' },
+    { name: 'communication', displayName: 'Communication', category: 'soft-skill' },
+    { name: 'teamwork', displayName: 'Teamwork', category: 'soft-skill' },
   ];
 
   // 3. State
@@ -300,7 +351,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const matchesCategory =
         currentCategoryFilter === 'all' ||
         skill.category === currentCategoryFilter ||
-        (currentCategoryFilter === 'data' && ['database', 'data'].includes(skill.category));
+        (currentCategoryFilter === 'data' && ['database', 'data', 'ai'].includes(skill.category)) ||
+        (currentCategoryFilter === 'cloud' && ['cloud', 'tool'].includes(skill.category)) ||
+        (currentCategoryFilter === 'security' && ['security'].includes(skill.category)) ||
+        (currentCategoryFilter === 'frontend' && ['frontend', 'mobile'].includes(skill.category)) ||
+        (currentCategoryFilter === 'backend' && ['backend', 'database'].includes(skill.category));
 
       const matchesSearch =
         !currentSearchQuery ||
