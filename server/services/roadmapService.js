@@ -25,10 +25,96 @@ const { calculateSkillScore } = require('./recommendationService');
  */
 const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
   const careerSlug = career.slug.toLowerCase().trim();
-  const template = roadmapTemplates[careerSlug];
+  let template = roadmapTemplates[careerSlug];
 
+  // Dynamic fallback generator if dedicated template is not predefined
   if (!template) {
-    throw new Error(`No roadmap template found for career slug: "${careerSlug}"`);
+    const reqSkills = Array.isArray(career.requiredSkills) ? career.requiredSkills : [];
+    const weeks = [];
+    const skillsPerWeek = Math.max(1, Math.ceil(reqSkills.length / durationWeeks));
+
+    for (let w = 1; w <= durationWeeks; w++) {
+      const startIdx = (w - 1) * skillsPerWeek;
+      const weekSkills = reqSkills.slice(startIdx, startIdx + skillsPerWeek);
+      const tasks = [];
+
+      if (weekSkills.length === 0) {
+        tasks.push({
+          order: 1,
+          title: `${career.title} Capstone Project & Production Readiness`,
+          description: `Synthesize all competencies learned so far into an end-to-end production-grade portfolio project demonstrating real-world readiness for ${career.title} roles.`,
+          type: 'project',
+          skillName: (reqSkills[0]?.skill?.name || reqSkills[0]?.skillName || 'problem-solving'),
+          priority: 'high',
+          estimatedHours: 8,
+          resource: {
+            title: `${career.title} Open Source Reference Projects`,
+            url: 'https://github.com/topics/portfolio-project',
+            provider: 'GitHub & Open Source Community',
+          },
+        });
+        tasks.push({
+          order: 2,
+          title: `${career.title} Technical Screening & Mock Interview`,
+          description: `Review foundational algorithms, domain-specific architecture questions, and refine resume project impact bullets.`,
+          type: 'interview',
+          skillName: 'communication',
+          priority: 'high',
+          estimatedHours: 4,
+          resource: {
+            title: 'Technical Interview Preparation Handbook',
+            url: 'https://github.com/jwasham/coding-interview-university',
+            provider: 'Tech Interview Handbook',
+          },
+        });
+      } else {
+        weekSkills.forEach((rs, i) => {
+          const sName = rs.skill?.displayName || rs.skill?.name || rs.skillName || 'Core Competency';
+          const sKey = (rs.skill?.name || rs.skillName || 'skill').toLowerCase();
+
+          tasks.push({
+            order: i * 2 + 1,
+            title: `Master ${sName} Architecture & Core Principles`,
+            description: `Deep dive into theoretical foundations, syntactical patterns, and industry best practices for ${sName} in modern enterprise software.`,
+            type: 'learn',
+            skillName: sKey,
+            priority: rs.importance === 'high' ? 'high' : 'medium',
+            estimatedHours: rs.importance === 'high' ? 5 : 3,
+            resource: {
+              title: `${sName} Official Documentation & Guides`,
+              url: `https://devdocs.io/`,
+              provider: 'DevDocs & Official Documentation',
+            },
+          });
+
+          tasks.push({
+            order: i * 2 + 2,
+            title: `Hands-On Lab: Build & Test ${sName} Implementation`,
+            description: `Construct a functional component or module demonstrating practical proficiency with ${sName}, including error handling and unit validation.`,
+            type: 'practice',
+            skillName: sKey,
+            priority: rs.importance === 'high' ? 'high' : 'medium',
+            estimatedHours: 4,
+            resource: {
+              title: `${sName} Interactive Hands-On Lab`,
+              url: `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(sName)}`,
+              provider: 'Interactive Learning Resource',
+            },
+          });
+        });
+      }
+
+      weeks.push({
+        weekNumber: w,
+        tasks,
+      });
+    }
+
+    template = {
+      title: career.title,
+      category: career.category || 'development',
+      weeks,
+    };
   }
 
   // 1. Re-evaluate real user skill gaps securely

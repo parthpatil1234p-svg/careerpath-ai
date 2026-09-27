@@ -30,6 +30,11 @@ const CareerCategoryEnum = [
   'security',
   'cloud',
   'ai',
+  'mobile',
+  'testing',
+  'gaming',
+  'web3',
+  'product',
 ];
 
 const RequiredSkillSchema = new mongoose.Schema(

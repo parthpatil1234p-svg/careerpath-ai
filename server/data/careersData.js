@@ -131,6 +131,251 @@ const careersData = [
       { skillName: 'problem-solving', importance: 'medium', requiredProficiency: 'beginner' },
     ],
   },
+
+  // ── 6. AI / Machine Learning Engineer ──────────────────────
+  {
+    title: 'AI / Machine Learning Engineer',
+    slug: 'ai-ml-engineer',
+    shortDescription: 'Architect, train, and deploy neural networks, foundation models, and LLM-powered autonomous systems.',
+    longDescription:
+      'AI & Machine Learning Engineers design and train predictive models and multi-layer neural networks using PyTorch and TensorFlow. They build Retrieval-Augmented Generation (RAG) pipelines with LangChain, fine-tune open-source LLMs, engineer vector embeddings, and operationalize high-performance ML inference endpoints for real-world enterprise applications.',
+    category: 'ai',
+    icon: 'bi-cpu-fill',
+    color: '#8B5CF6', // Violet
+    educationPreferences: ['B.Tech', 'B.E.', 'BCA', 'MCA', 'B.Sc Computer Science', 'Data Science', 'Artificial Intelligence'],
+    interestTags: ['artificial intelligence', 'data analysis', 'problem solving', 'coding', 'app development'],
+    requiredSkills: [
+      { skillName: 'python', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'pytorch', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'tensorflow', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'scikit-learn', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'generative-ai', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'langchain', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'deep-learning', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'pandas', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'git', importance: 'low', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 7. DevOps & Cloud Engineer ─────────────────────────────
+  {
+    title: 'DevOps & Cloud Engineer',
+    slug: 'devops-cloud-engineer',
+    shortDescription: 'Automate multi-cloud infrastructure, CI/CD pipelines, and high-availability container clusters.',
+    longDescription:
+      'DevOps Engineers bridge software development and cloud operations. They orchestrate resilient microservice clusters using Kubernetes and Docker, declare reproducible cloud infrastructure using Terraform on AWS, and architect automated GitHub Actions CI/CD pipelines to guarantee zero-downtime deployments at global scale.',
+    category: 'cloud',
+    icon: 'bi-cloud-check-fill',
+    color: '#06B6D4', // Cyan
+    educationPreferences: ['B.Tech', 'B.E.', 'BCA', 'MCA', 'Information Technology', 'Computer Engineering'],
+    interestTags: ['cloud computing', 'problem solving', 'cybersecurity', 'web development'],
+    requiredSkills: [
+      { skillName: 'aws', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'docker', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'kubernetes', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'linux', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'terraform', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'ci-cd', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'networking', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'git', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'github', importance: 'low', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 8. Mobile App Developer ────────────────────────────────
+  {
+    title: 'Mobile App Developer',
+    slug: 'mobile-app-developer',
+    shortDescription: 'Build high-performance, fluid native and cross-platform apps for iOS and Android devices.',
+    longDescription:
+      'Mobile App Developers craft silky smooth, responsive mobile experiences using Flutter, Dart, and React Native. They integrate cloud authentication and real-time NoSQL storage via Firebase, connect backend RESTful APIs, manage mobile state architectures, and publish polished applications to the Google Play Store and Apple App Store.',
+    category: 'mobile',
+    icon: 'bi-phone-fill',
+    color: '#3B82F6', // Blue
+    educationPreferences: ['BCA', 'B.Tech', 'B.E.', 'B.Sc Computer Science', 'MCA', 'App Development'],
+    interestTags: ['app development', 'web development', 'design', 'problem solving'],
+    requiredSkills: [
+      { skillName: 'flutter', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'dart', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'react-native', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'javascript', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'firebase', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'rest-apis', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'wireframing', importance: 'low', requiredProficiency: 'beginner' },
+      { skillName: 'git', importance: 'medium', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 9. Backend Engineer ────────────────────────────────────
+  {
+    title: 'Backend Engineer',
+    slug: 'backend-engineer',
+    shortDescription: 'Design high-throughput distributed microservices, caching layers, and enterprise databases.',
+    longDescription:
+      'Backend Engineers architect the resilient server engines that power enterprise platforms. They write high-performance microservices in Java Spring Boot and Node.js, manage relational schemas in PostgreSQL and NoSQL in MongoDB, accelerate read-heavy queries with Redis caching, and coordinate event-driven streams using Apache Kafka.',
+    category: 'development',
+    icon: 'bi-server',
+    color: '#6366F1', // Indigo
+    educationPreferences: ['B.Tech', 'B.E.', 'BCA', 'MCA', 'B.Sc Computer Science', 'Computer Engineering'],
+    interestTags: ['web development', 'problem solving', 'cloud computing', 'coding'],
+    requiredSkills: [
+      { skillName: 'java', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'spring-boot', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'node.js', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'express.js', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'postgresql', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'mongodb', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'redis', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'rest-apis', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'kafka', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'docker', importance: 'medium', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 10. Data Scientist ─────────────────────────────────────
+  {
+    title: 'Data Scientist',
+    slug: 'data-scientist',
+    shortDescription: 'Uncover hidden patterns, build statistical models, and extract high-value insights from big data.',
+    longDescription:
+      'Data Scientists combine statistical rigor, mathematical algorithms, and programming to extract actionable value from massive complex datasets. They engineer exploratory pipelines in Pandas and NumPy, build predictive classification and regression models in Scikit-Learn, and construct deep neural networks for computer vision and NLP.',
+    category: 'data',
+    icon: 'bi-graph-up-arrow',
+    color: '#10B981', // Emerald
+    educationPreferences: ['B.Tech', 'B.Sc Statistics', 'B.Sc Mathematics', 'Data Science', 'MCA', 'BCA', 'Artificial Intelligence'],
+    interestTags: ['data analysis', 'artificial intelligence', 'problem solving', 'business'],
+    requiredSkills: [
+      { skillName: 'python', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'sql', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'statistics', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'scikit-learn', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'pandas', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'data-visualization', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'data-cleaning', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'deep-learning', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'power-bi', importance: 'low', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 11. QA Automation Engineer ─────────────────────────────
+  {
+    title: 'QA Automation Engineer',
+    slug: 'qa-automation-engineer',
+    shortDescription: 'Guarantee rock-solid software quality through automated end-to-end testing and CI/CD validation.',
+    longDescription:
+      'QA Automation Engineers architect comprehensive testing frameworks that validate modern web applications across multiple viewports and browsers. They write resilient end-to-end test suites in Cypress, Playwright, and Selenium, conduct rigorous API contract testing in Postman, and integrate automated regression suites into CI/CD pipelines.',
+    category: 'testing',
+    icon: 'bi-check2-circle',
+    color: '#14B8A6', // Teal
+    educationPreferences: ['BCA', 'B.Tech', 'B.E.', 'B.Sc IT', 'MCA', 'Computer Science'],
+    interestTags: ['problem solving', 'web development', 'app development', 'coding'],
+    requiredSkills: [
+      { skillName: 'cypress', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'playwright', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'selenium', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'postman', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'javascript', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'python', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'ci-cd', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'git', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'intermediate' },
+    ],
+  },
+
+  // ── 12. Game Developer ─────────────────────────────────────
+  {
+    title: 'Game Developer',
+    slug: 'game-developer',
+    shortDescription: 'Program immersive 2D/3D gameplay mechanics, physics simulations, and interactive virtual worlds.',
+    longDescription:
+      'Game Developers bring virtual worlds to life by engineering gameplay mechanics, particle effects, player physics, and audio engines. Using Unity (C#) and Unreal Engine 5 (C++), they build high-fidelity interactive experiences, optimize frame rate budgets, manage asset pipelines, and publish cross-platform desktop and mobile games.',
+    category: 'gaming',
+    icon: 'bi-controller',
+    color: '#F43F5E', // Rose
+    educationPreferences: ['B.Tech', 'B.E.', 'BCA', 'B.Sc Gaming & Animation', 'MCA', 'Computer Science'],
+    interestTags: ['gaming', 'design', 'app development', 'problem solving'],
+    requiredSkills: [
+      { skillName: 'unity', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'csharp', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'unreal-engine', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'cpp', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'visual-design', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'git', importance: 'medium', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 13. Blockchain & Web3 Developer ────────────────────────
+  {
+    title: 'Blockchain & Web3 Developer',
+    slug: 'blockchain-web3-developer',
+    shortDescription: 'Build decentralized applications, trustless smart contracts, and cryptographic protocols.',
+    longDescription:
+      'Blockchain Developers build on the Ethereum Virtual Machine (EVM) and decentralized networks. They write secure, gas-optimized smart contracts in Solidity, connect decentralized web frontends using Web3.js and Ethers.js, implement ERC token standards, and audit smart contract security vulnerabilities to prevent financial exploits.',
+    category: 'web3',
+    icon: 'bi-link-45deg',
+    color: '#F59E0B', // Amber
+    educationPreferences: ['B.Tech', 'B.E.', 'BCA', 'MCA', 'B.Sc Computer Science', 'Cybersecurity'],
+    interestTags: ['web development', 'cybersecurity', 'problem solving', 'cloud computing'],
+    requiredSkills: [
+      { skillName: 'solidity', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'smart-contracts', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'web3js', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'javascript', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'node.js', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'cybersecurity-fundamentals', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'rest-apis', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'git', importance: 'medium', requiredProficiency: 'beginner' },
+    ],
+  },
+
+  // ── 14. Cloud Security & DevSecOps Engineer ─────────────────
+  {
+    title: 'Cloud Security & DevSecOps Engineer',
+    slug: 'cloud-security-engineer',
+    shortDescription: 'Integrate security automation into cloud pipelines, enforce zero-trust, and harden infrastructure.',
+    longDescription:
+      'Cloud Security & DevSecOps Engineers bake security into every stage of the software delivery lifecycle. They enforce Zero Trust IAM policies on AWS, scan container images in Docker and Kubernetes for zero-day vulnerabilities, implement OWASP defense-in-depth, and conduct automated penetration testing inside CI/CD pipelines.',
+    category: 'security',
+    icon: 'bi-shield-check',
+    color: '#EF4444', // Red
+    educationPreferences: ['B.Tech', 'B.E.', 'BCA', 'MCA', 'Cybersecurity', 'Information Technology'],
+    interestTags: ['cybersecurity', 'cloud computing', 'problem solving', 'web development'],
+    requiredSkills: [
+      { skillName: 'cybersecurity-fundamentals', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'linux', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'networking', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'aws', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'docker', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'owasp-basics', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'ethical-hacking', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'ci-cd', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+
+  // ── 15. Technical Product Manager ──────────────────────────
+  {
+    title: 'Technical Product Manager',
+    slug: 'technical-product-manager',
+    shortDescription: 'Bridge business strategy, user experience, and technical architecture to deliver high-impact software.',
+    longDescription:
+      'Technical Product Managers define product strategy, craft detailed Product Requirement Documents (PRDs), and prioritize roadmaps using Agile/Scrum sprint frameworks. They translate complex user research into actionable JIRA user stories, partner with engineering leads on architectural feasibility, and analyze product KPIs to maximize user value.',
+    category: 'product',
+    icon: 'bi-kanban-fill',
+    color: '#EAB308', // Yellow Gold
+    educationPreferences: ['B.Tech', 'BCA', 'BBA', 'MBA', 'MCA', 'Product Management', 'Computer Science'],
+    interestTags: ['business', 'design', 'problem solving', 'artificial intelligence'],
+    requiredSkills: [
+      { skillName: 'product-management', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'agile-scrum', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'user-stories', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'user-research', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'communication', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'statistics', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'wireframing', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
 ];
 
 module.exports = careersData;
