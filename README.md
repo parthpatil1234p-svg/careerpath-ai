@@ -88,7 +88,7 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 📝 3. Multi-Step Student Profiling | 🎯 4. Explainable Career Recommendations |
 | :---: | :---: |
 | <img src="assets/screenshots/09_assessment_step1_academics.png" width="460" alt="Assessment" /> | <img src="assets/screenshots/14_recommendations_top_card.png" width="460" alt="Recommendations" /> |
-| *3-Step Academic, Interest & 45+ Skill evaluation wizard* | *Deterministic 60/25/15 match score & tri-color skill gaps* |
+| *3-Step Academic, Interest & 76+ Skill evaluation wizard* | *Deterministic 60/25/15 match score & tri-color skill gaps* |
 
 | 🗺️ 5. Adaptive Milestone Roadmap | 💼 6. Live Market Telemetry & CTC |
 | :---: | :---: |
@@ -126,7 +126,7 @@ In emerging tech economies like India, over **1.5 million engineers and computer
 
 ### The CareerPath AI Solution
 CareerPath AI acts as a digital navigation system for students:
-1. **Deterministic, Explainable AI Match Engine:** Evaluates degrees, interests, and granular skill proficiencies against real industry job standards.
+1. **Deterministic, Explainable AI Match Engine:** Evaluates degrees, interests, and granular skill proficiencies against real industry job standards across **15 high-demand tech careers** and **76 standardized skills**.
 2. **Skill-Gap Classification:** Instantly separates skills into **Matched (🟢)**, **Needs Upgrade (🟡)**, and **Missing (🔴)**.
 3. **Structured Milestone Roadmaps:** Automatically synthesizes 4, 8, or 12-week time-boxed roadmaps prioritizing missing competencies first.
 4. **Live Job Market Telemetry:** Connects learning goals directly to active corporate tech hiring and verified ₹ CTC salary data.
@@ -142,7 +142,7 @@ Built with passion and sleepless dedication for **Hack2Ignite 2026–27**:
 | **Parth Patil** | **Team Leader & Full Stack WebDev** | End-to-end full stack architecture, REST APIs, Mongoose schemas, 60/25/15 scoring algorithm, roadmap generator, Render deployment, external API failover architecture |
 | **Aditi Vispute** | **Researcher, Web Explorer & Integration Lead** | Tech & domain research, web explorer & resource discovery, responsive UI structuring, DOM controllers, asynchronous API client, Vercel deployment |
 | **Suyog Pawar** | **UI/UX & 3D WebGL Lead** | Three.js WebGL modules (Universe, Orbit, Path, Orb), GSAP transitions, design system tokens, 2D fallback engine, interactive 3D physics |
-| **Sanika Bodhnawar** | **QA, Data & Docs Lead & Presenter / Speaker** | 45+ skill dataset standardization, career profiles curation, 19-point manual QA matrix, Postman test collections, API contract verification, pitch presentation & team speaker |
+| **Sanika Bodhnawar** | **QA, Data & Docs Lead & Presenter / Speaker** | 76+ skill dataset standardization, 15 tech career profiles curation, 19-point manual QA matrix, Postman test collections, API contract verification, pitch presentation & team speaker |
 
 ---
 
@@ -162,6 +162,30 @@ $$\text{Career Match Score} = (\text{Skill Match} \times 0.60) + (\text{Interest
   - 🟢 **Matched Skills:** Student meets or exceeds required industry proficiency.
   - 🟡 **Upgrade Needed:** Student knows the technology but lacks required depth.
   - 🔴 **Missing Skills:** Critical industry prerequisite completely absent from student profile.
+
+---
+
+### 💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem
+
+CareerPath AI dynamically evaluates, visualizes, and roadmaps **15 high-demand tech roles** mapped across **76 standardized industry skills**:
+
+| # | Role Title | Category | Slug | Primary Key Skills |
+| :---: | :--- | :---: | :--- | :--- |
+| 1 | 💻 **Front-End Developer** | Development | `front-end-developer` | HTML, CSS, JavaScript, React, Tailwind CSS, Responsive Design, TypeScript |
+| 2 | ⚡ **Full-Stack Developer** | Development | `full-stack-developer` | JavaScript, React, Node.js, Express, MongoDB, REST APIs, Next.js, Docker |
+| 3 | 📊 **Data Analyst** | Data | `data-analyst` | SQL, Python, Excel, Statistics, Power BI, Data Visualization, Data Cleaning |
+| 4 | 🎨 **UI/UX Designer** | Design | `ui-ux-designer` | Figma, Wireframing, Prototyping, Visual Design, User Research, Design Systems |
+| 5 | 🛡️ **Cybersecurity Analyst** | Security | `cybersecurity-analyst` | Networking, Linux, Cybersecurity Fundamentals, OWASP Basics, Ethical Hacking |
+| 6 | 🤖 **AI / Machine Learning Engineer** | AI & Data | `ai-ml-engineer` | Python, PyTorch, TensorFlow, Scikit-Learn, Generative AI, LangChain, Deep Learning |
+| 7 | ☁️ **DevOps & Cloud Engineer** | Cloud | `devops-cloud-engineer` | AWS, Docker, Kubernetes, Linux, Terraform, CI/CD GitHub Actions, Networking |
+| 8 | 📱 **Mobile App Developer** | Mobile | `mobile-app-developer` | Flutter, Dart, React Native, JavaScript, Firebase, REST APIs, UI/UX |
+| 9 | ⚙️ **Backend Engineer** | Development | `backend-engineer` | Java, Spring Boot, Node.js, PostgreSQL, MongoDB, Redis, REST APIs, Kafka |
+| 10 | 🧠 **Data Scientist** | Data | `data-scientist` | Python, SQL, Statistics, Scikit-Learn, Pandas, Deep Learning, Data Visualization |
+| 11 | 🧪 **QA Automation Engineer** | Testing | `qa-automation-engineer` | Cypress, Playwright, Selenium, Postman, JavaScript, CI/CD, Python |
+| 12 | 🎮 **Game Developer** | Gaming | `game-developer` | Unity, C#, Unreal Engine 5, C++, Visual Design, 3D Mathematics |
+| 13 | 🔗 **Blockchain & Web3 Developer** | Web3 | `blockchain-web3-developer` | Solidity, Smart Contracts, Web3.js, JavaScript, Node.js, REST APIs |
+| 14 | 🚨 **Cloud Security & DevSecOps** | Security | `cloud-security-engineer` | Cybersecurity Fundamentals, Linux, Networking, AWS, Docker, OWASP, CI/CD |
+| 15 | 📋 **Technical Product Manager** | Product | `technical-product-manager` | Product Management, Agile & Scrum, User Stories, User Research, Communication |
 
 ---
 
@@ -337,7 +361,7 @@ careerpath-ai/
 │   ├── package.json                         ← Backend dependencies & scripts
 │   ├── render.yaml                          ← Render web service blueprint
 │   ├── .env.example                         ← Backend environment configuration template
-│   ├── seed.js                              ← Database seed runner (npm run seed)
+│   ├── seed.js                              ← Database seed runner (76+ skills, 15 careers)
 │   ├── config/db.js                         ← MongoDB Atlas connection manager
 │   ├── models/                              ← Mongoose schemas
 │   │   ├── User.js                          ← Student schema with skills, avatar & resume
@@ -363,7 +387,7 @@ careerpath-ai/
 │   │   ├── chatService.js                   ← Groq + Gemini AI orchestrator
 │   │   └── jobBoardService.js               ← Adzuna & AIDevBoard integration
 │   ├── middleware/                          ← Security & request validation
-│   ├── data/                                ← Curated seed datasets (45+ skills, 5 careers)
+│   ├── data/                                ← Curated seed datasets (76+ skills, 15 careers)
 │   └── README.md                            ← Backend API documentation
 │
 ├── docs/                                    ← Complete technical documentation suite
@@ -489,7 +513,7 @@ All backend API routes are prefixed with `/api`. Protected routes require the he
 | **GET** | `/api/users/me` | Protected | Fetch authenticated student profile |
 | **PUT** | `/api/users/me` | Protected | Update profile fields (skills, avatarUrl, resumeUrl) |
 | **PUT** | `/api/assessment` | Protected | Save initial 3-step student evaluation |
-| **GET** | `/api/careers` | Public | List all 5 core career target tracks |
+| **GET** | `/api/careers` | Public | List all 15 core career target tracks |
 | **GET** | `/api/careers/:slug` | Public | Fetch career details with required skill proficiencies |
 | **GET** | `/api/skills` | Public | Search & filter standardized skills catalog by category |
 | **POST** | `/api/skills/custom` | Protected | Register a custom user-defined skill |
