@@ -90,7 +90,7 @@
       compassOverlay.className = 'atlas-compass-overlay';
       compassOverlay.innerHTML = `
         <span class="atlas-coord-tag"><span class="pulse-dot"></span> LIVE 3D TELEMETRY</span>
-        <span class="atlas-coord-tag">5 VERIFIED PATHS</span>
+        <span class="atlas-coord-tag">15 TECH TRACKS CATALOG</span>
       `;
       container.appendChild(compassOverlay);
     }
@@ -222,13 +222,13 @@
     universeGroup.add(centerGroup);
 
     // ------------------------------------------------------------------------
-    // 3. The 15 Core Career Constellation Nodes
+    // 3. Clean Anchor Career Clusters (Spacious, Elegant & Uncluttered)
     // ------------------------------------------------------------------------
     const careers = [
       {
         slug: 'front-end-developer',
         name: 'Front-End Developer',
-        desc: 'Master React, modern JavaScript, UI architecture, and high-performance web applications.',
+        desc: 'Master React, modern JavaScript, UI architecture, and responsive web applications.',
         color: 0x00F2FE, // Electric Cyan
         colorHex: '#00F2FE',
         icon: 'bi-code-slash',
@@ -247,13 +247,13 @@
       },
       {
         slug: 'data-analyst',
-        name: 'Data Analyst',
+        name: 'Data Analyst & AI',
         desc: 'Extract commercial intelligence with Python, SQL, statistical modeling and BI dashboards.',
         color: 0x10B981, // Emerald Green
         colorHex: '#10B981',
         icon: 'bi-graph-up-arrow',
         code: 'ROLE 03',
-        pos: [1.2, -6.2, 1.8],
+        pos: [1.2, -5.8, 1.8],
       },
       {
         slug: 'ui-ux-designer',
@@ -275,106 +275,6 @@
         code: 'ROLE 05',
         pos: [7.8, -3.2, 0.8],
       },
-      {
-        slug: 'ai-ml-engineer',
-        name: 'AI / ML Engineer',
-        desc: 'Build neural networks, Generative AI pipelines, LangChain agents, and PyTorch models.',
-        color: 0xA855F7, // Neon Purple
-        colorHex: '#A855F7',
-        icon: 'bi-cpu-fill',
-        code: 'ROLE 06',
-        pos: [-4.2, 6.2, -1.8],
-      },
-      {
-        slug: 'devops-cloud-engineer',
-        name: 'DevOps & Cloud Engineer',
-        desc: 'Orchestrate scalable cloud infrastructure using AWS, Docker, Kubernetes, and CI/CD.',
-        color: 0x38BDF8, // Sky Blue
-        colorHex: '#38BDF8',
-        icon: 'bi-cloud-check-fill',
-        code: 'ROLE 07',
-        pos: [4.8, 6.0, 1.5],
-      },
-      {
-        slug: 'mobile-app-developer',
-        name: 'Mobile App Developer',
-        desc: 'Build cross-platform iOS & Android mobile experiences with Flutter, React Native, and Firebase.',
-        color: 0x84CC16, // Lime
-        colorHex: '#84CC16',
-        icon: 'bi-phone-fill',
-        code: 'ROLE 08',
-        pos: [-8.2, 0.2, -2.2],
-      },
-      {
-        slug: 'backend-engineer',
-        name: 'Backend Engineer',
-        desc: 'Design high-throughput distributed microservices with Java, Spring Boot, PostgreSQL, and Kafka.',
-        color: 0xFB923C, // Orange
-        colorHex: '#FB923C',
-        icon: 'bi-hdd-network-fill',
-        code: 'ROLE 09',
-        pos: [8.2, 0.5, 2.0],
-      },
-      {
-        slug: 'data-scientist',
-        name: 'Data Scientist',
-        desc: 'Leverage predictive modeling, deep learning architectures, and statistical experimentation.',
-        color: 0x14B8A6, // Teal
-        colorHex: '#14B8A6',
-        icon: 'bi-clipboard-data-fill',
-        code: 'ROLE 10',
-        pos: [-3.8, -6.5, 1.5],
-      },
-      {
-        slug: 'qa-automation-engineer',
-        name: 'QA Automation Engineer',
-        desc: 'Ensure software reliability with Playwright, Cypress, Selenium, and automated testing.',
-        color: 0xEC4899, // Pink
-        colorHex: '#EC4899',
-        icon: 'bi-check2-circle',
-        code: 'ROLE 11',
-        pos: [5.2, -6.2, -1.6],
-      },
-      {
-        slug: 'game-developer',
-        name: 'Game Developer',
-        desc: 'Create immersive 2D/3D games and interactive experiences with Unity, Unreal Engine 5, and C#.',
-        color: 0xE11D48, // Crimson
-        colorHex: '#E11D48',
-        icon: 'bi-controller',
-        code: 'ROLE 12',
-        pos: [-6.5, 2.2, 3.2],
-      },
-      {
-        slug: 'blockchain-web3-developer',
-        name: 'Blockchain & Web3 Developer',
-        desc: 'Deploy decentralized smart contracts, Solidity protocols, and Web3 applications.',
-        color: 0xEAB308, // Gold
-        colorHex: '#EAB308',
-        icon: 'bi-link-45deg',
-        code: 'ROLE 13',
-        pos: [6.2, 2.0, -3.2],
-      },
-      {
-        slug: 'cloud-security-engineer',
-        name: 'Cloud Security & DevSecOps',
-        desc: 'Harden cloud workloads, enforce DevSecOps pipelines, and defend modern cloud estates.',
-        color: 0xEF4444, // Bright Red
-        colorHex: '#EF4444',
-        icon: 'bi-shield-lock-fill',
-        code: 'ROLE 14',
-        pos: [-1.5, 7.2, 2.2],
-      },
-      {
-        slug: 'technical-product-manager',
-        name: 'Technical Product Manager',
-        desc: 'Bridge engineering and business strategy with Agile sprints, user stories, and product vision.',
-        color: 0x3B82F6, // Royal Blue
-        colorHex: '#3B82F6',
-        icon: 'bi-kanban-fill',
-        code: 'ROLE 15',
-        pos: [1.8, 7.0, -2.4],
-      },
     ];
 
     const interactiveMeshes = [];
@@ -385,7 +285,7 @@
       nodeGroup.position.set(c.pos[0], c.pos[1], c.pos[2]);
 
       // Glowing Sphere Core
-      const sphereGeo = new THREE.SphereGeometry(0.95, 32, 32);
+      const sphereGeo = new THREE.SphereGeometry(1.15, 32, 32);
       const sphereMat = new THREE.MeshStandardMaterial({
         color: c.color,
         emissive: c.color,
@@ -424,7 +324,7 @@
 
       universeGroup.add(nodeGroup);
 
-      // Luminous Connecting Laser Line to Center
+      // Clean Laser Route Line connecting Node to Center (Uncluttered)
       const lineGeo = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(c.pos[0], c.pos[1], c.pos[2]),
@@ -432,33 +332,12 @@
       const lineMat = new THREE.LineBasicMaterial({
         color: c.color,
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.35,
         blending: THREE.AdditiveBlending,
       });
       const line = new THREE.Line(lineGeo, lineMat);
       universeGroup.add(line);
     });
-
-    // ------------------------------------------------------------------------
-    // Inter-Career Constellation Lines (Connecting outer nodes)
-    // ------------------------------------------------------------------------
-    for (let i = 0; i < careers.length; i++) {
-      const nextIdx = (i + 1) % careers.length;
-      const c1 = careers[i];
-      const c2 = careers[nextIdx];
-      const interLineGeo = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(c1.pos[0], c1.pos[1], c1.pos[2]),
-        new THREE.Vector3(c2.pos[0], c2.pos[1], c2.pos[2]),
-      ]);
-      const interLineMat = new THREE.LineBasicMaterial({
-        color: 0x38BDF8,
-        transparent: true,
-        opacity: 0.18,
-        blending: THREE.AdditiveBlending,
-      });
-      const interLine = new THREE.Line(interLineGeo, interLineMat);
-      universeGroup.add(interLine);
-    }
 
     // ------------------------------------------------------------------------
     // Raycasting & Tooltips
