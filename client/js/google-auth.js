@@ -242,37 +242,70 @@ window.GoogleAuth = (function () {
       console.warn('Could not fetch Google auth config from server, using local config:', e.message);
     }
 
+    let tokenClient = null;
+
     // 2. If client ID is present, initialize Google Identity Services
     if (googleClientId && !googleClientId.includes('your_google_client_id')) {
       const loaded = await loadGsiScript();
-      if (loaded && window.google?.accounts?.id) {
+      if (loaded && window.google?.accounts) {
         try {
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            callback: (response) => {
-              if (response.credential) {
-                sendGoogleAuthPayload({ credential: response.credential }, { showAlert, setLoadingState, onSuccess });
-              }
-            },
-            auto_select: false,
-            cancel_on_tap_outside: true,
-          });
-
-          isGsiInitialized = true;
-
-          // Render official GSI button in wrapper if requested
-          const wrapper = document.getElementById(wrapperId);
-          if (wrapper) {
-            window.google.accounts.id.renderButton(wrapper, {
-              type: 'standard',
-              shape: 'pill',
-              theme: 'filled_blue',
-              text: mode === 'signup' ? 'signup_with' : 'signin_with',
-              size: 'large',
-              logo_alignment: 'left',
-              width: 320,
+          // Initialize One-Tap (optional background prompt)
+          if (window.google.accounts.id) {
+            window.google.accounts.id.initialize({
+              client_id: googleClientId,
+              callback: (response) => {
+                if (response.credential) {
+                  sendGoogleAuthPayload({ credential: response.credential }, { showAlert, setLoadingState, onSuccess });
+                }
+              },
+              auto_select: false,
+              cancel_on_tap_outside: true,
             });
-            wrapper.classList.remove('d-none');
+            isGsiInitialized = true;
+          }
+
+          // Initialize OAuth2 Token Client for the custom button
+          if (window.google.accounts.oauth2) {
+            tokenClient = window.google.accounts.oauth2.initTokenClient({
+              client_id: googleClientId,
+              scope: 'email profile openid',
+              callback: async (tokenResponse) => {
+                if (tokenResponse.error) {
+                  console.warn('Google OAuth token error:', tokenResponse);
+                  if (setLoadingState) setLoadingState(false);
+                  if (tokenResponse.error !== 'popup_closed_by_user') {
+                    showFastTrackGoogleModal({ showAlert, setLoadingState, onSuccess });
+                  }
+                  return;
+                }
+                if (tokenResponse.access_token) {
+                  try {
+                    if (setLoadingState) setLoadingState(true);
+                    const userinfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                      headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+                    });
+                    const profile = await userinfoRes.json();
+                    if (profile && profile.email) {
+                      await sendGoogleAuthPayload(
+                        {
+                          email: profile.email,
+                          name: profile.name || profile.email.split('@')[0],
+                          picture: profile.picture || '',
+                          googleId: profile.sub,
+                        },
+                        { showAlert, setLoadingState, onSuccess }
+                      );
+                    } else {
+                      throw new Error('Could not retrieve Google profile');
+                    }
+                  } catch (fetchErr) {
+                    console.error('Error fetching Google user profile:', fetchErr);
+                    if (setLoadingState) setLoadingState(false);
+                    showFastTrackGoogleModal({ showAlert, setLoadingState, onSuccess });
+                  }
+                }
+              },
+            });
           }
         } catch (initErr) {
           console.warn('GSI Initialization warning:', initErr);
@@ -284,11 +317,13 @@ window.GoogleAuth = (function () {
     btnGoogle.addEventListener('click', (e) => {
       e.preventDefault();
 
-      if (isGsiInitialized && window.google?.accounts?.id) {
+      if (tokenClient) {
+        // Direct click opens the official Google OAuth account selector popup!
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+      } else if (isGsiInitialized && window.google?.accounts?.id) {
         // Trigger Google One-Tap or native account selector
         window.google.accounts.id.prompt((notification) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.log('Google prompt not displayed / dismissed; showing fast-track modal');
             showFastTrackGoogleModal({ showAlert, setLoadingState, onSuccess });
           }
         });
