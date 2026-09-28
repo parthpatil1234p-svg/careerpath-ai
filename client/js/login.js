@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const emailInput = document.getElementById('email');
       const passInput = document.getElementById('password');
       if (emailInput && passInput) {
-        emailInput.value = 'kajimew275@blobapps.com';
-        passInput.value = '123456';
+        emailInput.value = 'demouser@gmail.com';
+        passInput.value = 'demo123';
         showAlert('Demo account credentials auto-filled! Click "Log In to Dashboard" to enter.', 'info');
       }
     });
