@@ -399,82 +399,10 @@
     indicator.id = 'cpChatTypingIndicator';
     indicator.className = 'cp-chat-row ai';
     indicator.innerHTML = `
-      <div class="cp-chat-typing cp-chat-typing-mascot">
-        <!-- Animated Robot Mascot -->
-        <div class="cp-bot-typing-avatar">
-          <svg class="cp-bot-typing-svg" viewBox="0 0 64 64" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="botGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00F2FE"/>
-                <stop offset="100%" stop-color="#2563EB"/>
-              </linearGradient>
-              <linearGradient id="botVisorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#020617"/>
-                <stop offset="100%" stop-color="#0F172A"/>
-              </linearGradient>
-              <filter id="botGlow">
-                <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
-                <feMerge>
-                  <feMergeNode in="coloredBlur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-
-            <!-- Bot Floating Body Group -->
-            <g class="bot-floating-body">
-              <!-- Antenna & Pulsing Beacon -->
-              <line x1="32" y1="13" x2="32" y2="4" stroke="#00F2FE" stroke-width="2" stroke-linecap="round"/>
-              <circle cx="32" cy="3" r="2.5" class="bot-antenna-beacon"/>
-
-              <!-- Ear nodes -->
-              <rect x="11" y="21" width="4" height="12" rx="2" fill="#00F2FE" opacity="0.8"/>
-              <rect x="49" y="21" width="4" height="12" rx="2" fill="#00F2FE" opacity="0.8"/>
-
-              <!-- Head Shell -->
-              <rect x="14" y="13" width="36" height="28" rx="8" fill="#1E293B" stroke="url(#botGrad)" stroke-width="1.8"/>
-
-              <!-- Visor Screen -->
-              <rect x="18" y="17" width="28" height="18" rx="5" fill="url(#botVisorGrad)" stroke="rgba(0, 242, 254, 0.4)" stroke-width="1"/>
-
-              <!-- Digital Eyes (Scanning/Blinking) -->
-              <g class="bot-visor-eyes">
-                <ellipse cx="26" cy="25" rx="3" ry="3.5" fill="#00F2FE" filter="url(#botGlow)"/>
-                <circle cx="25" cy="24" r="0.9" fill="#FFFFFF"/>
-
-                <ellipse cx="38" cy="25" rx="3" ry="3.5" fill="#00F2FE" filter="url(#botGlow)"/>
-                <circle cx="37" cy="24" r="0.9" fill="#FFFFFF"/>
-              </g>
-            </g>
-
-            <!-- Holographic Keyboard Surface -->
-            <path d="M12 55 L52 55 L46 61 L18 61 Z" fill="rgba(0, 242, 254, 0.15)" stroke="#00F2FE" stroke-width="1" class="bot-holo-keyboard"/>
-            <line x1="20" y1="57.5" x2="44" y2="57.5" stroke="rgba(0, 242, 254, 0.6)" stroke-width="1" stroke-dasharray="2,2"/>
-
-            <!-- Rapid Alternating Typing Hands -->
-            <g class="bot-hand-left-typing">
-              <circle cx="24" cy="48" r="3.5" fill="#00F2FE" filter="url(#botGlow)"/>
-            </g>
-            <g class="bot-hand-right-typing">
-              <circle cx="40" cy="48" r="3.5" fill="#38BDF8" filter="url(#botGlow)"/>
-            </g>
-          </svg>
-        </div>
-
-        <!-- Status Text & Equalizer Waveform -->
-        <div class="cp-chat-typing-info">
-          <div class="cp-chat-typing-label">
-            <span class="cp-typing-name">Atlas AI</span>
-            <span class="cp-typing-status">is thinking & typing...</span>
-          </div>
-          <div class="cp-chat-typing-wave">
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-            <span class="cp-wave-bar"></span>
-          </div>
-        </div>
+      <div class="cp-chat-typing">
+        <div class="cp-chat-typing-dot"></div>
+        <div class="cp-chat-typing-dot"></div>
+        <div class="cp-chat-typing-dot"></div>
       </div>
     `;
     container.appendChild(indicator);

@@ -687,172 +687,20 @@
 }
 
 /* --------------------------------------------------------------------------
-   6. Typing Indicator & Cyber Typing Robot Mascot
+   6. Typing Indicator
    -------------------------------------------------------------------------- */
 .cp-chat-typing {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.4rem;
   padding: 0.65rem 1rem;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(0, 242, 254, 0.25);
+  background: rgba(22, 31, 51, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
   border-bottom-left-radius: 2px;
   width: fit-content;
-  max-width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 15px rgba(0, 242, 254, 0.1);
-  backdrop-filter: blur(8px);
 }
 
-.cp-chat-typing-mascot {
-  padding: 0.55rem 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Avatar Wrapper */
-.cp-bot-typing-avatar {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cp-bot-typing-svg {
-  overflow: visible;
-  filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
-}
-
-/* 1. Floating Head & Body Animation */
-.bot-floating-body {
-  animation: botHoverFloat 2.4s ease-in-out infinite alternate;
-  transform-origin: 32px 30px;
-}
-
-@keyframes botHoverFloat {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-2.5px) rotate(-1.5deg); }
-  100% { transform: translateY(1.5px) rotate(1.5deg); }
-}
-
-/* 2. Pulsing Antenna Beacon */
-.bot-antenna-beacon {
-  fill: #00F2FE;
-  animation: botAntennaFlash 1.2s infinite ease-in-out alternate;
-}
-
-@keyframes botAntennaFlash {
-  0% { fill: #00F2FE; filter: drop-shadow(0 0 2px #00F2FE); opacity: 0.6; }
-  100% { fill: #38BDF8; filter: drop-shadow(0 0 8px #00F2FE); opacity: 1; }
-}
-
-/* 3. Visor Eyes Scanning & Blinking */
-.bot-visor-eyes {
-  animation: botVisorScan 3.2s infinite ease-in-out;
-  transform-origin: 32px 25px;
-}
-
-@keyframes botVisorScan {
-  0%, 100% { transform: translateX(0px) scaleY(1); }
-  25% { transform: translateX(-2.5px) scaleY(1); }
-  45% { transform: translateX(2.5px) scaleY(1); }
-  70% { transform: translateX(0px) scaleY(1); }
-  72% { transform: translateX(0px) scaleY(0.1); }
-  75% { transform: translateX(0px) scaleY(1); }
-}
-
-/* 4. Holographic Keyboard Grid */
-.bot-holo-keyboard {
-  animation: botHoloGlow 1.8s infinite ease-in-out alternate;
-}
-
-@keyframes botHoloGlow {
-  0% { stroke: rgba(0, 242, 254, 0.4); fill: rgba(0, 242, 254, 0.08); }
-  100% { stroke: rgba(0, 242, 254, 0.9); fill: rgba(0, 242, 254, 0.22); }
-}
-
-/* 5. Left and Right Rapid Typing Hands */
-.bot-hand-left-typing {
-  animation: botLeftHandTap 0.26s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-  transform-origin: 24px 48px;
-}
-
-.bot-hand-right-typing {
-  animation: botRightHandTap 0.26s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-  animation-delay: -0.13s;
-  transform-origin: 40px 48px;
-}
-
-@keyframes botLeftHandTap {
-  0% { transform: translateY(0px) scale(0.95); opacity: 0.75; }
-  100% { transform: translateY(6px) scale(1.15); opacity: 1; filter: drop-shadow(0 0 6px #00F2FE); }
-}
-
-@keyframes botRightHandTap {
-  0% { transform: translateY(0px) scale(0.95); opacity: 0.75; }
-  100% { transform: translateY(6px) scale(1.15); opacity: 1; filter: drop-shadow(0 0 6px #38BDF8); }
-}
-
-/* 6. Typing Info & Waveform Equalizer */
-.cp-chat-typing-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.cp-chat-typing-label {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.78rem;
-  line-height: 1.2;
-}
-
-.cp-typing-name {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  color: var(--cyan);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-}
-
-.cp-typing-status {
-  color: var(--text-secondary);
-  font-size: 0.74rem;
-}
-
-.cp-chat-typing-wave {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  height: 12px;
-  padding-top: 2px;
-}
-
-.cp-wave-bar {
-  width: 3px;
-  height: 100%;
-  background: linear-gradient(180deg, #00F2FE 0%, #3B82F6 100%);
-  border-radius: 2px;
-  animation: cpWaveEqualizer 1s ease-in-out infinite alternate;
-}
-
-.cp-wave-bar:nth-child(1) { animation-delay: 0.0s; height: 35%; }
-.cp-wave-bar:nth-child(2) { animation-delay: 0.15s; height: 75%; }
-.cp-wave-bar:nth-child(3) { animation-delay: 0.3s; height: 100%; }
-.cp-wave-bar:nth-child(4) { animation-delay: 0.45s; height: 60%; }
-.cp-wave-bar:nth-child(5) { animation-delay: 0.6s; height: 40%; }
-
-@keyframes cpWaveEqualizer {
-  0% { transform: scaleY(0.25); opacity: 0.5; }
-  100% { transform: scaleY(1); opacity: 1; filter: drop-shadow(0 0 4px #00F2FE); }
-}
-
-/* Fallback Typing Dots */
 .cp-chat-typing-dot {
   width: 6px;
   height: 6px;

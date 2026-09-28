@@ -1,0 +1,158 @@
+/* ==========================================================================
+   CareerPath AI — Kinetic Character Typing & Particle Effects (typing-effects.css)
+   Ultra-Sleek Modern Tech Aesthetics · Glowing Character Pops & Spark Bursts
+   CareerPath AI · Team: 404 Brain Not Found
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Floating Character Pop Element
+   -------------------------------------------------------------------------- */
+.cp-char-pop {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  font-family: 'JetBrains Mono', 'Outfit', monospace;
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: #00F2FE;
+  text-shadow:
+    0 0 8px rgba(0, 242, 254, 0.9),
+    0 0 16px rgba(121, 40, 202, 0.8),
+    0 0 24px rgba(32, 227, 178, 0.6);
+  transform: translate(-50%, -50%) scale(1.1);
+  animation: cpCharPopFloat 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+.cp-char-pop.accent-purple {
+  color: #C084FC;
+  text-shadow:
+    0 0 8px rgba(192, 132, 252, 0.9),
+    0 0 16px rgba(236, 72, 153, 0.8);
+}
+
+.cp-char-pop.accent-teal {
+  color: #20E3B2;
+  text-shadow:
+    0 0 8px rgba(32, 227, 178, 0.9),
+    0 0 16px rgba(0, 242, 254, 0.8);
+}
+
+.cp-char-pop.accent-gold {
+  color: #FCD34D;
+  text-shadow:
+    0 0 8px rgba(252, 211, 77, 0.9),
+    0 0 16px rgba(245, 158, 11, 0.8);
+}
+
+.cp-char-pop.accent-rose {
+  color: #FB7185;
+  text-shadow:
+    0 0 8px rgba(251, 113, 133, 0.9),
+    0 0 16px rgba(244, 63, 94, 0.8);
+}
+
+@keyframes cpCharPopFloat {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -10%) scale(0.7);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -90%) scale(1.35);
+  }
+  70% {
+    opacity: 0.85;
+    transform: translate(-50%, -140%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -190%) scale(0.65);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Kinetic Neon Micro-Particles
+   -------------------------------------------------------------------------- */
+.cp-type-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999998;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: cpParticleFade 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes cpParticleFade {
+  0% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx, 0px) * 2.4), calc(-50% + var(--dy, 0px) * 2.4 + 12px)) scale(0.2);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Input Field Electric Pulse & Active Ripple
+   -------------------------------------------------------------------------- */
+.cp-input-typing-active {
+  box-shadow:
+    0 0 0 2px rgba(0, 242, 254, 0.35),
+    0 0 20px -2px rgba(0, 242, 254, 0.4) !important;
+  border-color: #00F2FE !important;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Typing Combo Streak Badge
+   -------------------------------------------------------------------------- */
+.cp-typing-combo-badge {
+  position: absolute;
+  top: -24px;
+  right: 8px;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.95), rgba(121, 40, 202, 0.95));
+  color: #FFFFFF;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(6px) scale(0.85);
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  letter-spacing: 0.04em;
+}
+
+.cp-typing-combo-badge.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.cp-typing-combo-badge.fire {
+  background: linear-gradient(135deg, #FF007A, #F59E0B);
+  box-shadow: 0 0 18px rgba(255, 0, 122, 0.8);
+  animation: cpComboPulse 0.4s infinite alternate ease-in-out;
+}
+
+@keyframes cpComboPulse {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-2px) scale(1.08); }
+}
+
+/* Reduced motion preference support */
+@media (prefers-reduced-motion: reduce) {
+  .cp-char-pop,
+  .cp-type-particle,
+  .cp-typing-combo-badge {
+    animation: none !important;
+    display: none !important;
+  }
+}

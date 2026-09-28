@@ -146,9 +146,6 @@
 
           <!-- Right Column: Authentication Form -->
           <div class="auth-form-card">
-            <!-- Interactive Character Mascot (Tracks Typing & Peeks on Password) -->
-            <div id="authMascotContainer" class="auth-mascot-container"></div>
-
             <div class="auth-form-header">
               <span class="atlas-coordinate">SECURITY CHECKPOINT · SEC-01</span>
               <h2 class="auth-form-title mt-1">Student Sign In</h2>
@@ -176,7 +173,7 @@
               </button>
             </div>
 
-            <!-- Social Authentication (Google) -->
+            <!-- Social Authentication (Google & GitHub) -->
             <div class="social-auth-stack mb-3">
               <button
                 type="button"
@@ -240,9 +237,6 @@
                     required
                     autocomplete="current-password"
                   />
-                  <button class="btn btn-outline-secondary toggle-password-btn" type="button" id="btnTogglePassword" tabindex="-1" title="Toggle password visibility">
-                    <i class="bi bi-eye"></i>
-                  </button>
                 </div>
               </div>
 
@@ -278,7 +272,7 @@
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
     <script src="js/animated-icons.js"></script>
-    <script src="js/auth-mascot.js"></script>
+    <script src="js/typing-effects.js"></script>
     <script src="js/google-auth.js"></script>
     <script src="js/login.js"></script>
   </body>
