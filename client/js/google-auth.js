@@ -228,14 +228,18 @@ window.GoogleAuth = (function () {
     const btnGoogle = document.getElementById(buttonId);
     if (!btnGoogle) return;
 
-    // 1. Fetch configured Client ID from server
+    // 1. Resolve configured Client ID from window.CONFIG or server
+    if (window.CONFIG?.GOOGLE_CLIENT_ID && !window.CONFIG.GOOGLE_CLIENT_ID.includes('your_google_client_id')) {
+      googleClientId = window.CONFIG.GOOGLE_CLIENT_ID.trim();
+    }
+
     try {
       const configRes = await window.API.get('/auth/google/config');
       if (configRes.success && configRes.data?.clientId) {
         googleClientId = configRes.data.clientId.trim();
       }
     } catch (e) {
-      console.warn('Could not fetch Google auth config:', e.message);
+      console.warn('Could not fetch Google auth config from server, using local config:', e.message);
     }
 
     // 2. If client ID is present, initialize Google Identity Services

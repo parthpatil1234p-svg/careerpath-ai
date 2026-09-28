@@ -32,6 +32,9 @@
     TOKEN_KEY: 'careerpath_token',
     USER_KEY: 'careerpath_user',
 
+    // Google OAuth 2.0 Web Client ID
+    GOOGLE_CLIENT_ID: '775964648976-uch5uo5ho5185b4sqsuaknkpc2r64g27.apps.googleusercontent.com',
+
     // App Metadata
     APP_NAME: 'CareerPath AI',
     TAGLINE: 'Discover Your Career. Build Your Skills.',
