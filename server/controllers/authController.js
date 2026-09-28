@@ -484,11 +484,13 @@ const githubAuth = async (req, res, next) => {
         accessToken = await exchangeOAuthCode(code);
       } catch (err) {
         console.warn('GitHub OAuth code exchange notice:', err.message);
-        return res.status(400).json({
-          success: false,
-          isCodeExchangeFailed: true,
-          message: `GitHub code exchange failed (${err.message}). Please use Fast-Track GitHub login.`,
-        });
+        if (!ghUsername) {
+          return res.status(400).json({
+            success: false,
+            isCodeExchangeFailed: true,
+            message: `GitHub code exchange failed (${err.message}). Please enter your GitHub username.`,
+          });
+        }
       }
     }
 

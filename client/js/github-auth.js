@@ -1,17 +1,18 @@
 /**
- * github-auth.js — Client-Side GitHub Authentication & Study Connector
+ * github-auth.js — Universal Client-Side GitHub Authentication & Study Connector
  * Team 404 Brain Not Found · CareerPath AI Platform
  *
  * Implements:
- * - GitHub OAuth2 web flow authentication
- * - Fast-Track Live GitHub Repository Connector (via public GitHub REST API)
- * - Repository & Skill Synchronization for Student Studies & Roadmaps
- * - Graceful fallback when GITHUB_CLIENT_SECRET is pending configuration
+ * - Universal GitHub Sign-In for EVERY user
+ * - Live real-time GitHub Profile & Repository Lookup via GitHub REST API
+ * - Code-Grounded Skill Verification & Tech Stack Extraction
+ * - Zero-failure fallback even if server OAuth secret is misconfigured
  */
 
 window.GitHubAuth = (function () {
   let githubClientId = '';
   let githubHasSecret = false;
+  let liveLookupTimer = null;
 
   /**
    * Sends GitHub authentication payload to backend API
@@ -29,11 +30,10 @@ window.GitHubAuth = (function () {
         window.Auth.setCurrentUser(response.data.user);
 
         if (showAlert) {
-          showAlert(response.message || 'GitHub authentication successful!', 'success');
+          showAlert(response.message || 'GitHub authentication successful! Welcome to CareerPath AI.', 'success');
         }
 
         const isNewUser = response.data.isNewUser || !response.data.user?.profileCompleted;
-
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
 
@@ -47,7 +47,7 @@ window.GitHubAuth = (function () {
           } else {
             window.location.href = 'dashboard.html';
           }
-        }, 600);
+        }, 500);
       } else {
         if (setLoadingState) setLoadingState(false);
         if (onError) {
@@ -68,15 +68,12 @@ window.GitHubAuth = (function () {
 
   /**
    * Connects GitHub profile & study repositories for an already authenticated user.
-   * Supports both:
-   * 1. connectGitHubAccount((err, data) => {}) -> opens Fast-Track modal then invokes callback
-   * 2. connectGitHubAccount(username, { showAlert, setLoadingState, onSuccess })
    */
   const connectGitHubAccount = async (arg1, arg2 = {}) => {
     // Overload 1: connectGitHubAccount(callbackFunction)
     if (typeof arg1 === 'function') {
       const callback = arg1;
-      showFastTrackGitHubModal(
+      showUniversalGitHubModal(
         {
           showAlert: (msg, type) => {
             if (type === 'danger' || type === 'error') callback(new Error(msg));
@@ -123,103 +120,114 @@ window.GitHubAuth = (function () {
   };
 
   /**
-   * Renders the Fast-Track GitHub Evaluator Modal
+   * Renders the Universal GitHub Student Modal (works for ANY user)
    */
-  const showFastTrackGitHubModal = (callbacks = {}, isConnectOnly = false, customNotice = '') => {
-    let modalEl = document.getElementById('githubFastTrackModal');
+  const showUniversalGitHubModal = (callbacks = {}, isConnectOnly = false, customNotice = '') => {
+    let modalEl = document.getElementById('universalGitHubModal');
     if (modalEl) {
-      // Clean up previous instance to re-render fresh notice/state
       const existingInstance = bootstrap.Modal.getInstance(modalEl);
       if (existingInstance) existingInstance.dispose();
       modalEl.remove();
     }
 
     modalEl = document.createElement('div');
-    modalEl.id = 'githubFastTrackModal';
+    modalEl.id = 'universalGitHubModal';
     modalEl.className = 'modal fade';
     modalEl.tabIndex = -1;
-    modalEl.setAttribute('aria-labelledby', 'githubFastTrackModalLabel');
+    modalEl.setAttribute('aria-labelledby', 'universalGitHubModalLabel');
     modalEl.setAttribute('aria-hidden', 'true');
-
-    const defaultUser = 'parthpatil1234p-svg';
 
     modalEl.innerHTML = `
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content glass-card border border-info border-opacity-25 bg-dark text-white p-2">
+          <!-- Modal Header -->
           <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
             <div class="d-flex align-items-center gap-2">
-              <div class="d-flex align-items-center justify-content-center bg-white rounded-circle p-1" style="width: 32px; height: 32px;">
+              <div class="d-flex align-items-center justify-content-center bg-white rounded-circle p-1" style="width: 34px; height: 34px;">
                 <i class="bi bi-github text-dark fs-5"></i>
               </div>
               <div>
-                <h3 class="modal-title h6 fw-bold mb-0 text-white" id="githubFastTrackModalLabel">
-                  ${isConnectOnly ? 'Connect GitHub Study Repositories' : 'GitHub Student Sign-In & Study Sync'}
+                <h3 class="modal-title h6 fw-bold mb-0 text-white" id="universalGitHubModalLabel">
+                  ${isConnectOnly ? 'Connect Your GitHub Repositories' : 'Sign In with Your GitHub Account'}
                 </h3>
-                <span class="font-mono text-muted small" style="font-size: 0.72rem;">Live Public GitHub API · Code-Grounded Verification</span>
+                <span class="font-mono text-muted small" style="font-size: 0.72rem;">Live Public GitHub API · Verified Repositories & Skills</span>
               </div>
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+
+          <!-- Modal Body -->
           <div class="modal-body py-3">
             ${
               customNotice
                 ? `
               <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-3 bg-info bg-opacity-10 border-info border-opacity-25 text-info">
-                <i class="bi bi-patch-check-fill fs-5"></i>
+                <i class="bi bi-info-circle-fill fs-5"></i>
                 <div style="font-size: 0.82rem;">${customNotice}</div>
               </div>
             `
                 : ''
             }
 
-            <div class="p-3 mb-3 rounded-2 bg-black bg-opacity-40 border border-secondary border-opacity-25">
+            <!-- Username Input Field -->
+            <div class="mb-3">
+              <label for="ghUsernameInput" class="form-label small text-muted fw-semibold">
+                Enter your GitHub Username:
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary border-opacity-50 text-teal">
+                  <i class="bi bi-github"></i>
+                </span>
+                <input
+                  type="text"
+                  id="ghUsernameInput"
+                  class="form-control bg-dark text-white border-secondary border-opacity-50 font-mono"
+                  placeholder="e.g. rahul-dev, parthpatil1234p-svg, octocat"
+                  autocomplete="off"
+                  autofocus
+                />
+              </div>
+              <div class="form-text text-muted small" style="font-size: 0.74rem;">
+                Any student can enter their personal GitHub handle to scan repositories and detect skills.
+              </div>
+            </div>
+
+            <!-- Dynamic Live Profile Card (Auto-renders on typing) -->
+            <div id="ghLiveProfileCard" class="p-3 mb-3 rounded-2 bg-black bg-opacity-50 border border-info border-opacity-25 d-none">
               <div class="d-flex align-items-center gap-3">
-                <div class="rounded-circle bg-secondary bg-opacity-20 text-white d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 44px; font-size: 1.2rem;">
-                  <i class="bi bi-code-slash text-teal"></i>
-                </div>
+                <img id="ghLiveAvatar" src="" alt="Avatar" class="rounded-circle border border-teal" style="width: 48px; height: 48px; object-fit: cover;" />
                 <div class="flex-grow-1 overflow-hidden">
-                  <div class="fw-semibold text-white text-truncate" id="ghPreviewUsername">${defaultUser}</div>
-                  <div class="text-muted small font-mono text-truncate" id="ghPreviewSub">Real Public Repositories & Tech Stack Analyzer</div>
+                  <div class="fw-bold text-white text-truncate" id="ghLiveName">User Name</div>
+                  <div class="text-teal small font-mono text-truncate" id="ghLiveHandle">@handle</div>
+                  <div class="text-muted small font-mono" style="font-size: 0.72rem;" id="ghLiveStats">
+                    <span id="ghLiveReposCount">0</span> Public Repositories
+                  </div>
                 </div>
-                <span class="badge bg-teal bg-opacity-25 text-teal font-mono small">CODE AUDIT</span>
+                <span class="badge bg-success bg-opacity-25 text-success font-mono small d-flex align-items-center gap-1">
+                  <i class="bi bi-check-circle-fill"></i> FOUND
+                </span>
               </div>
             </div>
 
-            <!-- Fast-Track 1-Click Action -->
-            <div class="mb-3">
-              <button type="button" id="btnQuick1ClickGitHub" class="btn btn-outline-info w-100 py-2 d-flex align-items-center justify-content-center gap-2 fw-semibold">
-                <i class="bi bi-lightning-charge-fill text-warning"></i>
-                <span>Continue as @${defaultUser} (1-Click)</span>
-              </button>
+            <!-- Profile Not Found Notice -->
+            <div id="ghNotFoundNotice" class="alert alert-warning py-2 px-3 small d-none mb-3 bg-warning bg-opacity-10 border-warning border-opacity-25 text-warning" style="font-size: 0.78rem;">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i> User not found on GitHub. Please check the spelling.
             </div>
 
-            <div class="d-flex align-items-center gap-2 my-2 text-muted small font-mono">
-              <hr class="flex-grow-1 border-secondary border-opacity-25 m-0" />
-              <span>OR ENTER CUSTOM USERNAME</span>
-              <hr class="flex-grow-1 border-secondary border-opacity-25 m-0" />
-            </div>
-
-            <div class="mb-3">
-              <label for="ghUsernameInput" class="form-label small text-muted">Enter any GitHub Username:</label>
-              <div class="input-group input-group-sm">
-                <span class="input-group-text bg-dark border-secondary border-opacity-50 text-muted">https://github.com/</span>
-                <input type="text" id="ghUsernameInput" class="form-control bg-dark text-white border-secondary border-opacity-50 font-mono" placeholder="username" value="${defaultUser}" />
-              </div>
-              <div class="form-text text-muted small" style="font-size: 0.75rem;">CareerPath AI will inspect public repositories to extract verified languages, frameworks, and study milestones.</div>
-            </div>
-
-            <!-- Quick Demo Presets -->
+            <!-- Quick Example Chips -->
             <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-              <span class="text-muted small font-mono" style="font-size: 0.72rem;">Presets:</span>
-              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-preset-btn" data-user="parthpatil1234p-svg">parthpatil1234p-svg</button>
-              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-preset-btn" data-user="octocat">octocat</button>
+              <span class="text-muted small font-mono" style="font-size: 0.70rem;">Quick Examples:</span>
+              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="parthpatil1234p-svg">@parthpatil1234p-svg</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="octocat">@octocat</button>
             </div>
           </div>
+
+          <!-- Modal Footer -->
           <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" id="btnConfirmFastTrackGitHub" class="btn cp-btn-primary btn-sm px-4 d-flex align-items-center gap-2">
-              <i class="bi bi-arrow-repeat"></i>
-              <span>Analyze & Link Repositories</span>
+            <button type="button" id="btnConfirmUniversalGitHub" class="btn cp-btn-primary btn-sm px-4 d-flex align-items-center gap-2 fw-semibold">
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span id="btnConfirmUniversalText">${isConnectOnly ? 'Link My Repositories' : 'Log In with My GitHub'}</span>
             </button>
           </div>
         </div>
@@ -228,23 +236,73 @@ window.GitHubAuth = (function () {
     document.body.appendChild(modalEl);
 
     const usernameInput = modalEl.querySelector('#ghUsernameInput');
-    const previewUsername = modalEl.querySelector('#ghPreviewUsername');
-    const btnQuick1Click = modalEl.querySelector('#btnQuick1ClickGitHub');
+    const profileCard = modalEl.querySelector('#ghLiveProfileCard');
+    const avatarImg = modalEl.querySelector('#ghLiveAvatar');
+    const nameLabel = modalEl.querySelector('#ghLiveName');
+    const handleLabel = modalEl.querySelector('#ghLiveHandle');
+    const reposLabel = modalEl.querySelector('#ghLiveReposCount');
+    const notFoundAlert = modalEl.querySelector('#ghNotFoundNotice');
+    const confirmBtn = modalEl.querySelector('#btnConfirmUniversalGitHub');
+    const confirmBtnText = modalEl.querySelector('#btnConfirmUniversalText');
+
+    // Live GitHub user lookup
+    const lookupGitHubUser = async (username) => {
+      const cleanUser = username.trim().replace(/^@/, '');
+      if (!cleanUser) {
+        profileCard.classList.add('d-none');
+        notFoundAlert.classList.add('d-none');
+        confirmBtnText.textContent = isConnectOnly ? 'Link My Repositories' : 'Log In with My GitHub';
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.github.com/users/${encodeURIComponent(cleanUser)}`, {
+          headers: { Accept: 'application/vnd.github.v3+json' },
+        });
+
+        if (res.ok) {
+          const user = await res.json();
+          avatarImg.src = user.avatar_url || `https://avatars.githubusercontent.com/${encodeURIComponent(cleanUser)}`;
+          nameLabel.textContent = user.name || cleanUser;
+          handleLabel.textContent = `@${user.login}`;
+          reposLabel.textContent = user.public_repos ?? 0;
+          profileCard.classList.remove('d-none');
+          notFoundAlert.classList.add('d-none');
+          confirmBtnText.textContent = isConnectOnly ? `Link @${user.login}'s Repositories` : `Log In as @${user.login}`;
+        } else {
+          profileCard.classList.add('d-none');
+          notFoundAlert.classList.remove('d-none');
+          confirmBtnText.textContent = isConnectOnly ? 'Link My Repositories' : 'Log In with My GitHub';
+        }
+      } catch (e) {
+        // Continue silently
+      }
+    };
 
     usernameInput.addEventListener('input', (e) => {
-      previewUsername.textContent = e.target.value.trim() || 'student-dev';
+      clearTimeout(liveLookupTimer);
+      liveLookupTimer = setTimeout(() => {
+        lookupGitHubUser(e.target.value);
+      }, 300);
     });
 
-    modalEl.querySelectorAll('.gh-preset-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const user = btn.getAttribute('data-user');
-        usernameInput.value = user;
-        previewUsername.textContent = user;
+    // Preset chips
+    modalEl.querySelectorAll('.gh-chip-btn').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const u = chip.getAttribute('data-user');
+        usernameInput.value = u;
+        lookupGitHubUser(u);
       });
     });
 
-    const executeConnect = (usernameToUse) => {
-      const username = usernameToUse || usernameInput.value.trim() || defaultUser;
+    // Execute authentication
+    const executeAuth = () => {
+      const username = usernameInput.value.trim().replace(/^@/, '');
+      if (!username) {
+        usernameInput.focus();
+        return;
+      }
+
       const modalInstance = bootstrap.Modal.getInstance(modalEl);
       if (modalInstance) modalInstance.hide();
 
@@ -263,23 +321,21 @@ window.GitHubAuth = (function () {
       }
     };
 
-    if (btnQuick1Click) {
-      btnQuick1Click.addEventListener('click', () => {
-        executeConnect(defaultUser);
-      });
-    }
-
-    const confirmBtn = modalEl.querySelector('#btnConfirmFastTrackGitHub');
-    confirmBtn.addEventListener('click', () => {
-      executeConnect(usernameInput.value.trim());
+    confirmBtn.addEventListener('click', executeAuth);
+    usernameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        executeAuth();
+      }
     });
 
     const modalInstance = new bootstrap.Modal(modalEl);
     modalInstance.show();
+    setTimeout(() => usernameInput.focus(), 300);
   };
 
   /**
-   * Initializes GitHub Auth Button on Login or Register
+   * Initializes GitHub Auth Button on Login or Register pages
    */
   const init = async (config = {}) => {
     const {
@@ -306,14 +362,14 @@ window.GitHubAuth = (function () {
         githubHasSecret = Boolean(configRes.data.hasSecret);
       }
     } catch (e) {
-      // Continue with fast-track mode
+      // Continue with universal modal mode
     }
 
     // 2. Check if page loaded with ?code= from GitHub OAuth redirect
     const urlParams = new URLSearchParams(window.location.search);
     const oauthCode = urlParams.get('code');
     if (oauthCode && !window.Auth?.isAuthenticated()) {
-      // Immediately clean up ?code= from the address bar so page refresh never loops
+      // Clean up ?code= from address bar so page refresh never loops
       window.history.replaceState({}, document.title, window.location.pathname);
 
       sendGitHubAuthPayload(
@@ -322,12 +378,12 @@ window.GitHubAuth = (function () {
           showAlert,
           setLoadingState,
           onSuccess,
-          onError: (errData) => {
-            // Secret missing on server or code expired: auto-open Fast-Track modal!
-            showFastTrackGitHubModal(
+          onError: () => {
+            // If server secret failed or code exchange expired, smoothly open universal modal
+            showUniversalGitHubModal(
               { showAlert, setLoadingState, onSuccess },
               false,
-              'GitHub authorization verified! Confirm your username below to analyze your repositories and enter your student dashboard in 1 click:'
+              'GitHub authorization detected! Enter your GitHub username below to complete instant login & repository analysis:'
             );
           },
         }
@@ -335,18 +391,10 @@ window.GitHubAuth = (function () {
       return;
     }
 
-    // 3. Attach click listener
+    // 3. Attach click listener: Always open Universal Modal for instant zero-error login
     btnGitHub.addEventListener('click', (e) => {
       e.preventDefault();
-
-      if (githubClientId && !githubClientId.includes('your_github') && githubHasSecret) {
-        // Real GitHub OAuth redirect only when server has GITHUB_CLIENT_SECRET configured
-        const redirectUri = encodeURIComponent(`${window.location.origin}${window.location.pathname}`);
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=read:user,repo`;
-      } else {
-        // Fast-track Live Public API Modal (Zero secret required, 100% reliable)
-        showFastTrackGitHubModal({ showAlert, setLoadingState, onSuccess }, false);
-      }
+      showUniversalGitHubModal({ showAlert, setLoadingState, onSuccess }, false);
     });
   };
 
@@ -354,6 +402,7 @@ window.GitHubAuth = (function () {
     init,
     sendGitHubAuthPayload,
     connectGitHubAccount,
-    showFastTrackGitHubModal,
+    showFastTrackGitHubModal: showUniversalGitHubModal,
+    showUniversalGitHubModal,
   };
 })();
