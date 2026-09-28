@@ -71,32 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Initialize GitHub Authentication ────────────────────────
-  if (window.GitHubAuth) {
-    window.GitHubAuth.init({
-      buttonId: 'btnGitHubAuth',
-      showAlert,
-      setLoadingState: (loading) => {
-        const btn = document.getElementById('btnGitHubAuth');
-        if (!btn) return;
-        if (loading) {
-          btn.disabled = true;
-          btn.innerHTML = `
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <span>Connecting to GitHub...</span>
-          `;
-        } else {
-          btn.disabled = false;
-          btn.innerHTML = `
-            <i class="bi bi-github fs-5"></i>
-            <span class="fw-semibold">Sign Up with GitHub</span>
-          `;
-        }
-      },
-      mode: 'signup',
-    });
-  }
-
   // ── OTP Digit Input Auto-Focus Navigation ───────────────────
   digitInputs.forEach((input, index) => {
     // Digit typing

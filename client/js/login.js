@@ -70,32 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Initialize GitHub Authentication ────────────────────────
-  if (window.GitHubAuth) {
-    window.GitHubAuth.init({
-      buttonId: 'btnGitHubAuth',
-      showAlert,
-      setLoadingState: (loading) => {
-        const btn = document.getElementById('btnGitHubAuth');
-        if (!btn) return;
-        if (loading) {
-          btn.disabled = true;
-          btn.innerHTML = `
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <span>Connecting to GitHub...</span>
-          `;
-        } else {
-          btn.disabled = false;
-          btn.innerHTML = `
-            <i class="bi bi-github fs-5"></i>
-            <span class="fw-semibold">Sign In with GitHub</span>
-          `;
-        }
-      },
-      mode: 'signin',
-    });
-  }
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     alertContainer.innerHTML = '';
