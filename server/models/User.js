@@ -80,9 +80,29 @@ const UserSchema = new mongoose.Schema(
     // select: false → password is NEVER returned in a query unless explicitly asked
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: function () {
+        return !this.googleId && this.authProvider === 'local';
+      },
       minlength: [6, 'Password must be at least 6 characters'],
       select: false,
+    },
+
+    // Google OAuth integration
+    googleId: {
+      type: String,
+      sparse: true,
+      index: true,
+      default: null,
+    },
+
+    // Identity provider ('local' or 'google')
+    authProvider: {
+      type: String,
+      enum: {
+        values: ['local', 'google'],
+        message: 'Auth provider must be local or google',
+      },
+      default: 'local',
     },
 
     // Role-based access control (student vs admin)
@@ -164,7 +184,7 @@ const UserSchema = new mongoose.Schema(
 // ── Pre-save hook: Hash password before saving ────────────────
 // Only runs when the password field has been modified (new user or password change).
 UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
 
   try {
     // 12 salt rounds — secure enough for 2024 hardware, reasonable performance
@@ -179,6 +199,7 @@ UserSchema.pre('save', async function (next) {
 // ── Instance method: compare a plain password with the stored hash ────
 UserSchema.methods.comparePassword = async function (enteredPassword) {
   // `this.password` is only available if the document was queried with .select('+password')
+  if (!this.password) return false;
   return bcrypt.compare(enteredPassword, this.password);
 };
 

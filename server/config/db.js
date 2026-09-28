@@ -6,6 +6,17 @@
  */
 
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Resilient DNS resolution for MongoDB Atlas SRV connection on Windows/Node v22+
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+  if (dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+  }
+} catch (e) {
+  // Ignore in environments where setting DNS servers is restricted
+}
 
 const connectDB = async () => {
   try {

@@ -50,6 +50,7 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | ⚡ **Live API Gateway** | **[https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)** | Node.js Express REST API hosted on Render |
 | 🩺 **Live Health Check** | **[https://careerpath-ai-bdbt.onrender.com/api/health](https://careerpath-ai-bdbt.onrender.com/api/health)** | Real-time server telemetry & uptime monitor |
 | 🔑 **Official Demo Account** | **`demouser@gmail.com`** &nbsp;•&nbsp; Pass: **`demo123`** | Pre-seeded with rich student profile, skills & active roadmap (or 1-Click Auto-Fill) |
+| 🌐 **Google Authentication** | **1-Click Google Sign-In & Sign-Up** | Integrated Google OAuth 2.0 & fast-track evaluator sign-in on `/login.html` & `/register.html` |
 | ⚡ **Instant New Onboarding** | **Zero-OTP Instant Registration** | Enter any test email & password on `/register.html` to jump into instant profiling |
 | 🎥 **Official Demo Video (Drive)** | **[Watch Demo on Google Drive](https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing)** | Official video walkthrough & prototype demonstration |
 | 📊 **Official Pitch Deck PPT (Drive)** | **[View PPT on Google Drive](https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing)** | 10-Slide presentation deck for Hack2Ignite Round 1 |

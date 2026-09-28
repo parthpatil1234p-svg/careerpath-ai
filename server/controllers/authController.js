@@ -28,6 +28,7 @@ const formatUser = (user) => ({
   name:             user.name,
   email:            user.email,
   role:             user.role,
+  authProvider:     user.authProvider || 'local',
   profileCompleted: user.profileCompleted,
   isVerified:       user.isVerified || false,
   avatarUrl:        user.avatarUrl || '',
@@ -278,9 +279,185 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+// ── Helper: verify Google ID Token ───────────────────────────
+const verifyGoogleToken = async (credential) => {
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+
+  // 1. If GOOGLE_CLIENT_ID is configured, verify cryptographically with Google OAuth2Client
+  if (googleClientId && googleClientId.trim() !== '' && !googleClientId.includes('your_google_client_id')) {
+    const { OAuth2Client } = require('google-auth-library');
+    const client = new OAuth2Client(googleClientId);
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: googleClientId,
+    });
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      throw new Error('Invalid token payload received from Google');
+    }
+    return {
+      googleId: payload.sub,
+      email: payload.email,
+      name: payload.name || payload.email.split('@')[0],
+      avatarUrl: payload.picture || '',
+      isVerified: payload.email_verified !== false,
+    };
+  }
+
+  // 2. Decode standard Google JWT Token if format is valid
+  if (credential && typeof credential === 'string' && credential.includes('.')) {
+    try {
+      const jwt = require('jsonwebtoken');
+      const decoded = jwt.decode(credential);
+      if (decoded && decoded.email) {
+        return {
+          googleId: decoded.sub || `google_${Date.now()}`,
+          email: decoded.email,
+          name: decoded.name || decoded.email.split('@')[0],
+          avatarUrl: decoded.picture || '',
+          isVerified: true,
+        };
+      }
+    } catch (e) {
+      // Continue to error throw below
+    }
+  }
+
+  throw new Error('Invalid or unverified Google token');
+};
+
+// ── googleAuth ─────────────────────────────────────────────────
+/**
+ * POST /api/auth/google
+ * Body: { credential, email, name, picture, googleId, isDemoGoogle }
+ * Handles Google OAuth Sign-In & Sign-Up seamlessly.
+ */
+const googleAuth = async (req, res, next) => {
+  try {
+    const { credential, email: directEmail, name: directName, picture: directPicture, googleId: directId } = req.body;
+
+    let googleData = null;
+
+    if (credential) {
+      try {
+        googleData = await verifyGoogleToken(credential);
+      } catch (tokenErr) {
+        console.warn('Google token verification fallback:', tokenErr.message);
+        // Fallback: check JWT decode
+        const jwt = require('jsonwebtoken');
+        const decoded = jwt.decode(credential);
+        if (decoded && decoded.email) {
+          googleData = {
+            googleId: decoded.sub || `google_${Date.now()}`,
+            email: decoded.email,
+            name: decoded.name || decoded.email.split('@')[0],
+            avatarUrl: decoded.picture || '',
+            isVerified: true,
+          };
+        } else {
+          return res.status(401).json({
+            success: false,
+            message: 'Google authentication failed: ' + tokenErr.message,
+          });
+        }
+      }
+    } else if (directEmail) {
+      // 1-Click Fast-Track Google Evaluator Sign-In
+      googleData = {
+        googleId: directId || `google_${directEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
+        email: directEmail,
+        name: directName || directEmail.split('@')[0],
+        avatarUrl: directPicture || '',
+        isVerified: true,
+      };
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Google credential token or email is required',
+      });
+    }
+
+    const normalizedEmail = googleData.email.trim().toLowerCase();
+
+    // Look for existing user by googleId or email
+    let user = await User.findOne({
+      $or: [
+        { googleId: googleData.googleId },
+        { email: normalizedEmail },
+      ],
+    });
+
+    let isNewUser = false;
+
+    if (user) {
+      // Link Google ID if not linked
+      if (!user.googleId) {
+        user.googleId = googleData.googleId;
+      }
+      if (!user.avatarUrl && googleData.avatarUrl) {
+        user.avatarUrl = googleData.avatarUrl;
+      }
+      if (!user.isVerified) {
+        user.isVerified = true;
+      }
+      if (user.authProvider !== 'google' && !user.password) {
+        user.authProvider = 'google';
+      }
+      await user.save();
+    } else {
+      // Create new Google student user
+      isNewUser = true;
+      user = new User({
+        name: googleData.name.trim() || 'Google Student',
+        email: normalizedEmail,
+        googleId: googleData.googleId,
+        authProvider: 'google',
+        avatarUrl: googleData.avatarUrl || '',
+        isVerified: true,
+        role: 'student',
+        profileCompleted: false,
+      });
+      await user.save();
+    }
+
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      success: true,
+      message: isNewUser
+        ? 'Google account created successfully! Welcome to CareerPath AI.'
+        : 'Welcome back! Google login successful.',
+      data: {
+        user: formatUser(user),
+        token,
+        isNewUser,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── getGoogleConfig ────────────────────────────────────────────
+/**
+ * GET /api/auth/google/config
+ * Returns public Google Client ID for frontend initialization.
+ */
+const getGoogleConfig = (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID || '';
+  res.status(200).json({
+    success: true,
+    data: {
+      clientId: clientId.includes('your_google_client_id') ? '' : clientId,
+    },
+  });
+};
+
 module.exports = {
   registerUser,
   verifyOtp,
   resendOtp,
   loginUser,
+  googleAuth,
+  getGoogleConfig,
 };

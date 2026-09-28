@@ -12,7 +12,7 @@
 
 const express = require('express');
 
-const { registerUser, verifyOtp, resendOtp, loginUser } = require('../controllers/authController');
+const { registerUser, verifyOtp, resendOtp, loginUser, googleAuth, getGoogleConfig } = require('../controllers/authController');
 const { validateRegister, validateLogin }               = require('../middleware/validateRequest');
 
 const router = express.Router();
@@ -28,5 +28,11 @@ router.post('/resend-otp', resendOtp);
 
 // POST /api/auth/login
 router.post('/login', validateLogin, loginUser);
+
+// POST /api/auth/google — Google OAuth2 Sign-In & Sign-Up
+router.post('/google', googleAuth);
+
+// GET /api/auth/google/config — Public Google Client ID
+router.get('/google/config', getGoogleConfig);
 
 module.exports = router;
