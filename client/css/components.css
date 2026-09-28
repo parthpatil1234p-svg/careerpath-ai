@@ -624,6 +624,109 @@
   transform: translateY(0);
 }
 
+/* --------------------------------------------------------------------------
+   13. GitHub Authentication Button & Study Repository Cards
+   -------------------------------------------------------------------------- */
+.btn-github {
+  background: rgba(20, 24, 33, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF !important;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
+  position: relative;
+  letter-spacing: 0.01em;
+}
+
+.btn-github:hover {
+  background: rgba(36, 41, 54, 0.95);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  color: #FFFFFF !important;
+}
+
+.btn-github:active {
+  transform: translateY(0);
+}
+
+/* Social Buttons Dual Grid on Auth Pages */
+.social-auth-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* GitHub Study Lab Card in Dashboard */
+.github-study-card {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.85) 0%, rgba(22, 27, 34, 0.6) 100%) !important;
+  border: 1px solid rgba(0, 242, 254, 0.2) !important;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.github-study-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00f2fe, #4facfe, #8a2be2);
+}
+
+/* Individual Repo Card */
+.repo-card-study {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.repo-card-study:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 242, 254, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -5px rgba(0, 242, 254, 0.15);
+}
+
+/* Code Verified Skill Badge */
+.badge-code-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(0, 242, 254, 0.12);
+  color: #00f2fe;
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Language Distribution Bar */
+.lang-distribution-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.5rem 0 1rem 0;
+}
+
+.lang-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
 .auth-divider {
   display: flex;
   align-items: center;
@@ -647,6 +750,7 @@
   text-transform: uppercase;
   color: var(--text-muted);
 }
+
 
 
 

@@ -38,6 +38,14 @@ const SkillSchema = new mongoose.Schema(
       required: [true, 'Skill proficiency is required'],
       lowercase: true,
     },
+    isCodeVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verifiedSource: {
+      type: String,
+      default: '',
+    },
   },
   { _id: false } // No separate _id for sub-documents
 );
@@ -49,6 +57,36 @@ const EducationSchema = new mongoose.Schema(
     branch:  { type: String, trim: true, default: '' },
     year:    { type: String, trim: true, default: '' },
     college: { type: String, trim: true, default: '' },
+  },
+  { _id: false }
+);
+
+// ── Sub-schema: GitHub Repository for Study Tracking ─────────
+const GithubRepoSchema = new mongoose.Schema(
+  {
+    name: { type: String, trim: true },
+    description: { type: String, trim: true, default: '' },
+    htmlUrl: { type: String, trim: true },
+    language: { type: String, trim: true, default: '' },
+    stars: { type: Number, default: 0 },
+    forks: { type: Number, default: 0 },
+    topics: { type: [String], default: [] },
+    detectedSkills: { type: [String], default: [] },
+    studyRelevance: { type: String, default: '' },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
+// ── Sub-schema: GitHub Profile Details ────────────────────────
+const GithubProfileSchema = new mongoose.Schema(
+  {
+    username: { type: String, trim: true, default: '' },
+    profileUrl: { type: String, trim: true, default: '' },
+    publicReposCount: { type: Number, default: 0 },
+    followers: { type: Number, default: 0 },
+    topLanguages: { type: [String], default: [] },
+    connectedAt: { type: Date, default: null },
   },
   { _id: false }
 );
@@ -81,7 +119,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: function () {
-        return !this.googleId && this.authProvider === 'local';
+        return !this.googleId && !this.githubId && this.authProvider === 'local';
       },
       minlength: [6, 'Password must be at least 6 characters'],
       select: false,
@@ -95,12 +133,28 @@ const UserSchema = new mongoose.Schema(
       default: null,
     },
 
-    // Identity provider ('local' or 'google')
+    // GitHub OAuth & Study Integration
+    githubId: {
+      type: String,
+      sparse: true,
+      index: true,
+      default: null,
+    },
+    githubProfile: {
+      type: GithubProfileSchema,
+      default: () => ({}),
+    },
+    githubRepos: {
+      type: [GithubRepoSchema],
+      default: [],
+    },
+
+    // Identity provider ('local', 'google', or 'github')
     authProvider: {
       type: String,
       enum: {
-        values: ['local', 'google'],
-        message: 'Auth provider must be local or google',
+        values: ['local', 'google', 'github'],
+        message: 'Auth provider must be local, google, or github',
       },
       default: 'local',
     },

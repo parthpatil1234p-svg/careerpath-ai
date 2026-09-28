@@ -119,6 +119,8 @@ const getDashboard = async (req, res, next) => {
           education: user.education || {},
           interests: user.interests || [],
           skills: user.skills || [],
+          githubProfile: user.githubProfile || null,
+          githubRepos: user.githubRepos || [],
           profileCompleted: isProfileComplete,
           avatarUrl: user.avatarUrl || '',
           resumeUrl: user.resumeUrl || '',

@@ -16,6 +16,7 @@
 const User          = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const { sendOtpEmail } = require('../services/emailService');
+const { exchangeOAuthCode, fetchGitHubData, analyzeGitHubRepos } = require('../services/githubService');
 
 // ── Helper: 6-Digit Secure OTP Generator ─────────────────────
 const generateOtp = () => {
@@ -33,6 +34,9 @@ const formatUser = (user) => ({
   isVerified:       user.isVerified || false,
   avatarUrl:        user.avatarUrl || '',
   resumeUrl:        user.resumeUrl || '',
+  githubProfile:    user.githubProfile || null,
+  githubRepos:      user.githubRepos || [],
+  skills:           user.skills || [],
 });
 
 // ── registerUser ───────────────────────────────────────────────
@@ -453,6 +457,252 @@ const getGoogleConfig = (req, res) => {
   });
 };
 
+// ── githubAuth ─────────────────────────────────────────────────
+/**
+ * POST /api/auth/github
+ * Body: { code, username, email, name, avatarUrl, githubId }
+ * Handles GitHub OAuth Sign-In & Sign-Up, analyzes student repositories,
+ * auto-detects code-grounded skills, and generates JWT.
+ */
+const githubAuth = async (req, res, next) => {
+  try {
+    const { code, username: directUser, email: directEmail, name: directName, avatarUrl: directAvatar, githubId: directId } = req.body;
+
+    let accessToken = null;
+    let ghUsername = directUser ? directUser.trim() : '';
+
+    if (code) {
+      try {
+        accessToken = await exchangeOAuthCode(code);
+      } catch (err) {
+        console.warn('GitHub OAuth code exchange notice:', err.message);
+      }
+    }
+
+    // Fetch user profile and public repos from GitHub
+    const { profile, repos } = await fetchGitHubData(ghUsername, accessToken);
+
+    if (!profile) {
+      return res.status(400).json({
+        success: false,
+        message: 'Could not resolve GitHub profile. Please check the username or credentials.',
+      });
+    }
+
+    const githubId = String(profile.id || directId || `github_${profile.login}`);
+    const username = profile.login || ghUsername;
+    const email = (profile.email || directEmail || `${username.toLowerCase()}@users.noreply.github.com`).trim().toLowerCase();
+    const name = profile.name || directName || username;
+    const avatarUrl = profile.avatar_url || directAvatar || `https://avatars.githubusercontent.com/${encodeURIComponent(username)}`;
+
+    // Analyze public repositories for languages, frameworks, and study relevance
+    const analysis = analyzeGitHubRepos(repos);
+
+    // Look for existing user by githubId, email, or githubProfile.username
+    let user = await User.findOne({
+      $or: [
+        { githubId },
+        { email },
+        { 'githubProfile.username': username },
+      ],
+    });
+
+    let isNewUser = false;
+
+    if (user) {
+      if (!user.githubId) user.githubId = githubId;
+      if (!user.avatarUrl && avatarUrl) user.avatarUrl = avatarUrl;
+      if (!user.isVerified) user.isVerified = true;
+      if (user.authProvider !== 'github' && !user.password) {
+        user.authProvider = 'github';
+      }
+
+      // Update GitHub profile and repositories
+      user.githubProfile = {
+        username,
+        profileUrl: profile.html_url || `https://github.com/${username}`,
+        publicReposCount: profile.public_repos || repos.length,
+        followers: profile.followers || 0,
+        topLanguages: analysis.topLanguages,
+        connectedAt: new Date(),
+      };
+      user.githubRepos = analysis.parsedRepos;
+
+      // Merge verified skills into student's existing skills
+      if (analysis.verifiedSkills && analysis.verifiedSkills.length > 0) {
+        const existingSkillMap = new Map();
+        (user.skills || []).forEach((s) => existingSkillMap.set(s.name.toLowerCase(), s));
+
+        analysis.verifiedSkills.forEach((vSkill) => {
+          if (existingSkillMap.has(vSkill.name.toLowerCase())) {
+            const existing = existingSkillMap.get(vSkill.name.toLowerCase());
+            existing.isCodeVerified = true;
+            existing.verifiedSource = vSkill.verifiedSource;
+          } else {
+            user.skills.push(vSkill);
+          }
+        });
+      }
+
+      await user.save();
+    } else {
+      isNewUser = true;
+      user = new User({
+        name: name.trim() || 'GitHub Student Developer',
+        email,
+        githubId,
+        authProvider: 'github',
+        avatarUrl,
+        isVerified: true,
+        role: 'student',
+        profileCompleted: false,
+        githubProfile: {
+          username,
+          profileUrl: profile.html_url || `https://github.com/${username}`,
+          publicReposCount: profile.public_repos || repos.length,
+          followers: profile.followers || 0,
+          topLanguages: analysis.topLanguages,
+          connectedAt: new Date(),
+        },
+        githubRepos: analysis.parsedRepos,
+        skills: analysis.verifiedSkills,
+      });
+      await user.save();
+    }
+
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      success: true,
+      message: isNewUser
+        ? 'GitHub student account created! Repositories analyzed for study roadmap.'
+        : 'Welcome back! GitHub account and repositories synchronized.',
+      data: {
+        user: formatUser(user),
+        token,
+        isNewUser,
+        detectedSkills: analysis.verifiedSkills,
+        topLanguages: analysis.topLanguages,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── connectGitHub ──────────────────────────────────────────────
+/**
+ * POST /api/auth/github/connect
+ * Protected route: Connects or re-syncs GitHub study repositories for the authenticated user
+ * Body: { username, code }
+ */
+const connectGitHub = async (req, res, next) => {
+  try {
+    const { username: directUser, code } = req.body;
+    const userId = req.user.id;
+
+    let accessToken = null;
+    let ghUsername = directUser ? directUser.trim() : '';
+
+    if (code) {
+      try {
+        accessToken = await exchangeOAuthCode(code);
+      } catch (err) {
+        console.warn('OAuth code exchange warning during connect:', err.message);
+      }
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Student account not found.',
+      });
+    }
+
+    if (!ghUsername && user.githubProfile?.username) {
+      ghUsername = user.githubProfile.username;
+    }
+
+    if (!ghUsername && !accessToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'GitHub username or OAuth authorization code is required.',
+      });
+    }
+
+    const { profile, repos } = await fetchGitHubData(ghUsername, accessToken);
+
+    if (!profile) {
+      return res.status(400).json({
+        success: false,
+        message: 'Could not retrieve GitHub profile for this username.',
+      });
+    }
+
+    const username = profile.login || ghUsername;
+    const analysis = analyzeGitHubRepos(repos);
+
+    user.githubId = String(profile.id || user.githubId || `github_${username}`);
+    user.githubProfile = {
+      username,
+      profileUrl: profile.html_url || `https://github.com/${username}`,
+      publicReposCount: profile.public_repos || repos.length,
+      followers: profile.followers || 0,
+      topLanguages: analysis.topLanguages,
+      connectedAt: new Date(),
+    };
+    user.githubRepos = analysis.parsedRepos;
+
+    // Merge code-verified skills into student's profile
+    if (analysis.verifiedSkills && analysis.verifiedSkills.length > 0) {
+      const existingSkillMap = new Map();
+      (user.skills || []).forEach((s) => existingSkillMap.set(s.name.toLowerCase(), s));
+
+      analysis.verifiedSkills.forEach((vSkill) => {
+        if (existingSkillMap.has(vSkill.name.toLowerCase())) {
+          const existing = existingSkillMap.get(vSkill.name.toLowerCase());
+          existing.isCodeVerified = true;
+          existing.verifiedSource = vSkill.verifiedSource;
+          if (vSkill.proficiency === 'advanced') existing.proficiency = 'advanced';
+        } else {
+          user.skills.push(vSkill);
+        }
+      });
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Successfully connected @${username}! Analyzed ${analysis.parsedRepos.length} study repositories.`,
+      data: {
+        user: formatUser(user),
+        detectedSkills: analysis.verifiedSkills,
+        topLanguages: analysis.topLanguages,
+        repositories: analysis.parsedRepos,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── getGitHubConfig ────────────────────────────────────────────
+/**
+ * GET /api/auth/github/config
+ * Returns public GitHub Client ID for frontend OAuth redirection.
+ */
+const getGitHubConfig = (req, res) => {
+  const clientId = process.env.GITHUB_CLIENT_ID || '';
+  res.status(200).json({
+    success: true,
+    data: {
+      clientId: clientId.includes('your_github_client_id') ? '' : clientId,
+    },
+  });
+};
+
 module.exports = {
   registerUser,
   verifyOtp,
@@ -460,4 +710,7 @@ module.exports = {
   loginUser,
   googleAuth,
   getGoogleConfig,
+  githubAuth,
+  connectGitHub,
+  getGitHubConfig,
 };

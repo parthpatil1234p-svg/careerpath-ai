@@ -376,7 +376,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     filtered.forEach((skill) => {
       const isSelected = selectedSkillsMap.has(skill.name);
-      const currentProficiency = isSelected ? selectedSkillsMap.get(skill.name).proficiency : 'beginner';
+      const selectedObj = isSelected ? selectedSkillsMap.get(skill.name) : null;
+      const currentProficiency = selectedObj ? selectedObj.proficiency : 'beginner';
+      const isVerified = selectedObj?.isCodeVerified;
+      const verifiedBadge = isVerified
+        ? `<span class="badge-code-verified ms-1" title="Verified by real GitHub repo code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i></span>`
+        : '';
 
       const col = document.createElement('div');
       col.className = 'col-sm-6 col-md-4';
@@ -390,8 +395,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 id="skill_${skill.name}"
                 ${isSelected ? 'checked' : ''}
               />
-              <label class="form-check-label text-truncate fw-medium" for="skill_${skill.name}" title="${skill.displayName}">
-                ${skill.displayName}
+              <label class="form-check-label text-truncate fw-medium d-inline-flex align-items-center gap-1" for="skill_${skill.name}" title="${skill.displayName}">
+                <span class="text-truncate">${skill.displayName}</span>
+                ${verifiedBadge}
               </label>
             </div>
             <select class="form-select form-select-sm skill-proficiency-select"
@@ -418,7 +424,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           selectedSkillsMap.set(skill.name, {
             name: skill.name,
             displayName: skill.displayName,
+            category: skill.category || 'tool',
             proficiency: select.value || 'beginner',
+            isCodeVerified: false,
+            verifiedSource: 'self'
           });
           select.disabled = false;
         } else {
@@ -459,9 +468,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectedSkillsMap.forEach((skill) => {
       const pill = document.createElement('span');
       pill.className = 'badge badge-navy border d-inline-flex align-items-center gap-1 py-1 px-2 small';
+      const verifiedTag = skill.isCodeVerified
+        ? `<span class="badge-code-verified ms-1" title="Verified by GitHub Repo Code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i> Verified</span>`
+        : '';
       pill.innerHTML = `
         <span class="text-white">${escapeHtml(skill.displayName)}</span>
         <span class="text-teal fw-bold font-mono" style="font-size: 0.68rem;">(${skill.proficiency.slice(0, 3)})</span>
+        ${verifiedTag}
         <i class="bi bi-x ms-1 cursor-pointer" title="Remove" style="cursor: pointer;"></i>
       `;
 
@@ -634,6 +647,103 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Auto-Detect Skills from GitHub Repos Handler
+  const btnAutoDetectGitHubSkills = document.getElementById('btnAutoDetectGitHubSkills');
+  if (btnAutoDetectGitHubSkills) {
+    btnAutoDetectGitHubSkills.addEventListener('click', async () => {
+      const originalText = btnAutoDetectGitHubSkills.innerHTML;
+      btnAutoDetectGitHubSkills.disabled = true;
+      btnAutoDetectGitHubSkills.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Scanning Repos...`;
+
+      try {
+        const user = window.Auth?.getUser();
+
+        // 1. If user already has connected GitHub repos and verified skills in their profile
+        if (user?.githubProfile?.username && Array.isArray(user.skills) && user.skills.some(s => s.isCodeVerified)) {
+          let countAdded = 0;
+          user.skills.forEach(s => {
+            if (s.isCodeVerified) {
+              const key = s.name.toLowerCase();
+              if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
+                allAvailableSkills.unshift({
+                  name: key,
+                  displayName: s.displayName || s.name,
+                  category: s.category || 'backend'
+                });
+              }
+              selectedSkillsMap.set(key, {
+                name: key,
+                displayName: s.displayName || s.name,
+                category: s.category || 'backend',
+                proficiency: s.proficiency || 'intermediate',
+                isCodeVerified: true,
+                verifiedSource: 'github_repo'
+              });
+              countAdded++;
+            }
+          });
+
+          renderSkillsGrid();
+          updateSelectedSkillsUI();
+          showAlert(`✓ Auto-detected ${countAdded} verified skills directly from your connected GitHub (@${user.githubProfile.username}) repositories!`, 'success');
+          btnAutoDetectGitHubSkills.disabled = false;
+          btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>${countAdded} Skills Verified</span>`;
+          return;
+        }
+
+        // 2. Otherwise trigger 1-Click Fast-Track GitHub modal
+        if (window.GitHubAuth?.connectGitHubAccount) {
+          window.GitHubAuth.connectGitHubAccount((err, data) => {
+            btnAutoDetectGitHubSkills.disabled = false;
+            btnAutoDetectGitHubSkills.innerHTML = originalText;
+
+            if (err) {
+              showAlert(err.message || 'GitHub scan canceled or failed.', 'danger');
+              return;
+            }
+
+            const verifiedSkills = data?.verifiedSkills || [];
+            let countAdded = 0;
+
+            verifiedSkills.forEach(s => {
+              const key = s.name.toLowerCase();
+              if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
+                allAvailableSkills.unshift({
+                  name: key,
+                  displayName: s.displayName || s.name,
+                  category: s.category || 'backend'
+                });
+              }
+              selectedSkillsMap.set(key, {
+                name: key,
+                displayName: s.displayName || s.name,
+                category: s.category || 'backend',
+                proficiency: s.proficiency || 'intermediate',
+                isCodeVerified: true,
+                verifiedSource: 'github_repo'
+              });
+              countAdded++;
+            });
+
+            renderSkillsGrid();
+            updateSelectedSkillsUI();
+            showAlert(`✓ Scanned @${data.profile?.username} (${data.repos?.length || 0} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
+            btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>${countAdded} Skills Verified</span>`;
+          });
+        } else {
+          showAlert('GitHub integration script not loaded. Please refresh.', 'warning');
+          btnAutoDetectGitHubSkills.disabled = false;
+          btnAutoDetectGitHubSkills.innerHTML = originalText;
+        }
+      } catch (err) {
+        console.error('GitHub auto-detect error:', err);
+        showAlert(err.message || 'Failed to auto-detect skills from GitHub.', 'danger');
+        btnAutoDetectGitHubSkills.disabled = false;
+        btnAutoDetectGitHubSkills.innerHTML = originalText;
+      }
+    });
+  }
+
   // Load Remote Skills from Catalog
   const loadRemoteSkills = async () => {
     try {
@@ -675,10 +785,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (Array.isArray(user.skills)) {
           user.skills.forEach((s) => {
-            selectedSkillsMap.set(s.name.toLowerCase(), {
-              name: s.name.toLowerCase(),
+            const key = s.name.toLowerCase();
+            if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
+              allAvailableSkills.unshift({
+                name: key,
+                displayName: s.displayName || s.name,
+                category: s.category || 'tool'
+              });
+            }
+            selectedSkillsMap.set(key, {
+              name: key,
               displayName: s.displayName || s.name,
+              category: s.category || 'tool',
               proficiency: s.proficiency || 'beginner',
+              isCodeVerified: !!s.isCodeVerified,
+              verifiedSource: s.verifiedSource || 'self'
             });
           });
         }

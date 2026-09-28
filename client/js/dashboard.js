@@ -109,6 +109,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Render Skills Matrix Card
     renderSkillsMatrix(user?.skills || []);
 
+    // Render GitHub Study Lab & Repositories Card
+    renderGitHubStudyLab(user);
+
     // Active Roadmap & 3D Progress Orb
     if (activeRoadmap) {
       activeCareerTitle.textContent = activeRoadmap.career?.title || 'Selected Career';
@@ -303,6 +306,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         icon = 'bi-arrow-up-circle-fill text-warning';
       }
 
+      const verifiedBadge = s.isCodeVerified
+        ? `<span class="badge-code-verified ms-1" title="Verified from real GitHub repository code"><i class="bi bi-github"></i> Verified</span>`
+        : '';
+
       return `
         <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2 stat-box-atlas border border-line">
           <i class="bi ${icon} small"></i>
@@ -310,9 +317,199 @@ document.addEventListener('DOMContentLoaded', async () => {
           <span class="badge ${badgeClass} text-uppercase font-monospace" style="font-size: 0.68rem; letter-spacing: 0.5px;">
             ${escapeHtml(prof)}
           </span>
+          ${verifiedBadge}
         </div>
       `;
     }).join('');
+  };
+
+  // ── 4.55 Render GitHub Study Lab & Repositories ─────────────────
+  const renderGitHubStudyLab = (user) => {
+    const githubStatusBadge = document.getElementById('githubStatusBadge');
+    const btnConnectGitHubDashboard = document.getElementById('btnConnectGitHubDashboard');
+    const btnConnectGitHubText = document.getElementById('btnConnectGitHubText');
+    const githubConnectedDetails = document.getElementById('githubConnectedDetails');
+    const ghUserAvatar = document.getElementById('ghUserAvatar');
+    const ghUserName = document.getElementById('ghUserName');
+    const ghUserLink = document.getElementById('ghUserLink');
+    const ghUserHandle = document.getElementById('ghUserHandle');
+    const ghRepoCount = document.getElementById('ghRepoCount');
+    const ghFollowerCount = document.getElementById('ghFollowerCount');
+    const ghTopLanguagesContainer = document.getElementById('ghTopLanguagesContainer');
+    const githubReposContainer = document.getElementById('githubReposContainer');
+    const btnConnectGitHubBanner = document.getElementById('btnConnectGitHubBanner');
+
+    const profile = user?.githubProfile;
+    const repos = user?.githubRepos || [];
+    const isConnected = !!(profile && (profile.username || profile.id));
+
+    const handleConnectClick = () => {
+      if (window.GitHubAuth?.connectGitHubAccount) {
+        window.GitHubAuth.connectGitHubAccount(async (err, data) => {
+          if (err) {
+            showAlert(err.message || 'GitHub connection failed.', 'danger');
+          } else {
+            showAlert(`GitHub account @${data.profile?.username || 'user'} connected with ${data.repos?.length || 0} study repos!`, 'success');
+            await loadDashboard();
+          }
+        });
+      }
+    };
+
+    if (btnConnectGitHubDashboard) {
+      btnConnectGitHubDashboard.onclick = handleConnectClick;
+    }
+    if (btnConnectGitHubBanner) {
+      btnConnectGitHubBanner.onclick = handleConnectClick;
+    }
+
+    if (isConnected) {
+      if (githubStatusBadge) {
+        githubStatusBadge.className = 'badge-code-verified bg-success bg-opacity-20 text-success border border-success border-opacity-40';
+        githubStatusBadge.innerHTML = '<i class="bi bi-patch-check-fill text-success me-1"></i> Connected & Verified';
+      }
+      if (btnConnectGitHubText) {
+        btnConnectGitHubText.textContent = 'Sync Repos';
+      }
+      if (githubConnectedDetails) {
+        githubConnectedDetails.classList.remove('d-none');
+      }
+
+      if (ghUserAvatar) {
+        ghUserAvatar.src = profile.avatarUrl || 'assets/images/default-avatar.png';
+      }
+      if (ghUserName) {
+        ghUserName.textContent = profile.name || profile.username || 'GitHub Developer';
+      }
+      if (ghUserHandle) {
+        ghUserHandle.textContent = profile.username || '';
+      }
+      if (ghUserLink) {
+        ghUserLink.href = profile.htmlUrl || `https://github.com/${profile.username}`;
+      }
+      if (ghRepoCount) {
+        ghRepoCount.textContent = profile.publicRepos != null ? profile.publicRepos : repos.length;
+      }
+      if (ghFollowerCount) {
+        ghFollowerCount.textContent = profile.followers != null ? profile.followers : 0;
+      }
+
+      // Top languages
+      if (ghTopLanguagesContainer) {
+        let langs = Array.isArray(profile.topLanguages) ? profile.topLanguages : [];
+        if (langs.length === 0 && repos.length > 0) {
+          const counts = {};
+          repos.forEach(r => {
+            if (r.language) counts[r.language] = (counts[r.language] || 0) + 1;
+          });
+          langs = Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, 5);
+        }
+
+        if (langs.length > 0) {
+          ghTopLanguagesContainer.innerHTML = langs.map(lang => `
+            <span class="badge bg-secondary bg-opacity-30 border border-secondary border-opacity-50 text-white font-monospace" style="font-size: 0.72rem;">
+              <span class="rounded-circle d-inline-block me-1" style="width: 7px; height: 7px; background-color: var(--teal, #00d2d3);"></span>
+              ${escapeHtml(lang)}
+            </span>
+          `).join('');
+        } else {
+          ghTopLanguagesContainer.innerHTML = `<span class="text-muted small">Multi-language code repository</span>`;
+        }
+      }
+
+      // Repositories Grid
+      if (githubReposContainer) {
+        if (repos.length === 0) {
+          githubReposContainer.innerHTML = `
+            <div class="col-12 text-center py-4 text-muted small">
+              <div class="p-3 border border-secondary border-opacity-25 rounded-2 bg-dark bg-opacity-25">
+                <i class="bi bi-folder-check display-6 text-teal opacity-75 mb-2 d-block"></i>
+                <div class="fw-semibold text-white mb-1">0 Public Repositories Found</div>
+                <div class="text-secondary small mb-3">Push public coding projects to your GitHub account to showcase your work here.</div>
+                <button type="button" class="btn btn-navy btn-sm px-4 py-2" id="btnSyncEmptyRepos">
+                  <i class="bi bi-arrow-repeat me-1"></i> Re-scan Repos
+                </button>
+              </div>
+            </div>
+          `;
+          const btnSyncEmpty = document.getElementById('btnSyncEmptyRepos');
+          if (btnSyncEmpty) btnSyncEmpty.onclick = handleConnectClick;
+        } else {
+          githubReposContainer.innerHTML = repos.map(repo => {
+            const starCount = repo.stargazersCount || 0;
+            const starBadge = starCount > 0
+              ? `<span class="badge bg-warning bg-opacity-10 text-warning font-monospace" style="font-size: 0.65rem;"><i class="bi bi-star-fill me-1"></i>${starCount}</span>`
+              : '';
+
+            const lang = repo.language || 'Code';
+            const relevance = repo.studyRelevance || 'Skill Practice & Code Exploration';
+
+            return `
+              <div class="col-md-6 col-lg-4">
+                <div class="repo-card-study h-100 p-3 rounded-2 border border-secondary border-opacity-25 bg-dark bg-opacity-40 d-flex flex-column justify-content-between">
+                  <div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <div class="d-flex align-items-center gap-1.5 overflow-hidden me-2">
+                        <i class="bi bi-journal-code text-teal flex-shrink-0"></i>
+                        <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="fw-bold text-white text-truncate text-decoration-none small" title="${escapeHtml(repo.name)}">
+                          ${escapeHtml(repo.name)}
+                        </a>
+                      </div>
+                      ${starBadge}
+                    </div>
+                    <p class="text-secondary small mb-3" style="font-size: 0.78rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.3em; line-height: 1.4;">
+                      ${escapeHtml(repo.description || 'Open-source project and study artifacts.')}
+                    </p>
+                  </div>
+                  <div>
+                    <div class="mb-2 p-1.5 rounded-1 bg-teal-subtle bg-opacity-10 border border-info border-opacity-20 text-info font-monospace" style="font-size: 0.68rem; line-height: 1.3;">
+                      <i class="bi bi-lightbulb-fill text-warning me-1"></i><strong>Study Relevance:</strong> ${escapeHtml(relevance)}
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between pt-2 border-top border-secondary border-opacity-25 text-muted font-monospace" style="font-size: 0.72rem;">
+                      <span class="d-flex align-items-center gap-1.5 text-white">
+                        <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: var(--teal, #00d2d3);"></span>
+                        ${escapeHtml(lang)}
+                      </span>
+                      <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="text-teal text-decoration-none hover-underline">
+                        Open Repo <i class="bi bi-box-arrow-up-right ms-0.5" style="font-size: 0.65rem;"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    } else {
+      // Not connected
+      if (githubStatusBadge) {
+        githubStatusBadge.className = 'badge-code-verified text-secondary border border-secondary border-opacity-30';
+        githubStatusBadge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Not Connected';
+      }
+      if (btnConnectGitHubText) {
+        btnConnectGitHubText.textContent = 'Connect GitHub Account';
+      }
+      if (githubConnectedDetails) {
+        githubConnectedDetails.classList.add('d-none');
+      }
+      if (githubReposContainer) {
+        githubReposContainer.innerHTML = `
+          <div class="col-12 text-center py-4 text-muted small">
+            <div class="p-3 border border-secondary border-opacity-25 rounded-2 bg-dark bg-opacity-25">
+              <i class="bi bi-code-square display-6 text-teal opacity-75 mb-2 d-block"></i>
+              <div class="fw-semibold text-white mb-1">No GitHub Repositories Linked Yet</div>
+              <div class="text-secondary small mb-3">Connect your GitHub profile to auto-detect verified skills, audit your study projects, and map them to your active roadmap.</div>
+              <button type="button" class="btn btn-navy btn-sm px-4 py-2" id="btnConnectGitHubBanner">
+                <i class="bi bi-github me-1"></i> Connect GitHub Account (1-Click)
+              </button>
+            </div>
+          </div>
+        `;
+        const bannerBtn = document.getElementById('btnConnectGitHubBanner');
+        if (bannerBtn) bannerBtn.onclick = handleConnectClick;
+      }
+    }
   };
 
   // ── 4.6 Quick Skills Manager Modal Controller ───────────────────
