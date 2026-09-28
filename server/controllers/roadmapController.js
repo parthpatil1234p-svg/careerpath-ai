@@ -91,24 +91,13 @@ const generateRoadmap = async (req, res, next) => {
       });
     }
 
-    const topRecommendations = generateRecommendations(user, allCareers, 3);
-    const topCareerSlugs = topRecommendations.map((r) => r.career.slug.toLowerCase().trim());
-
-    // 4. Verify selected career is in user's top three recommendations
+    // 4. Find target career document with populated skills
     const targetSlug = careerSlug.toLowerCase().trim();
-    if (!topCareerSlugs.includes(targetSlug)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please choose a career from your top recommendations',
-      });
-    }
-
-    // 5. Find target career document with populated skills
     const selectedCareer = allCareers.find((c) => c.slug.toLowerCase().trim() === targetSlug);
     if (!selectedCareer) {
       return res.status(404).json({
         success: false,
-        message: `Career "${careerSlug}" not found`,
+        message: `Career "${careerSlug}" not found. Please select from active career roles.`,
       });
     }
 

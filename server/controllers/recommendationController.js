@@ -80,8 +80,9 @@ const getRecommendations = async (req, res, next) => {
       });
     }
 
-    // 4. Generate Top 3 recommendations using our deterministic mathematical engine
-    const baseRecommendations = generateRecommendations(user, careers, 3);
+    // 4. Generate Top recommendations using our deterministic mathematical engine (default 5, up to 15)
+    const limit = Math.min(Math.max(parseInt(req.body.limit || req.query.limit || 5, 10), 1), 15);
+    const baseRecommendations = generateRecommendations(user, careers, limit);
 
     // 4b. Enrich with AI-Powered Career Fit Brief & Market Insights
     const recommendations = await enrichRecommendationsWithAI(baseRecommendations, user);

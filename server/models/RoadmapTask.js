@@ -41,8 +41,8 @@ const RoadmapTaskSchema = new mongoose.Schema(
     type: {
       type: String,
       enum: {
-        values: ['learn', 'practice', 'project', 'assessment'],
-        message: 'Task type must be learn, practice, project, or assessment',
+        values: ['learn', 'practice', 'project', 'assessment', 'interview'],
+        message: 'Task type must be learn, practice, project, assessment, or interview',
       },
       default: 'learn',
       lowercase: true,

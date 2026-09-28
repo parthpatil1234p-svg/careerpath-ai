@@ -43,6 +43,76 @@ const DEFAULT_MARKET_INSIGHTS = {
     whyYouFit: 'Your interest in networks and systems security aligns directly with SOC defense and vulnerability assessments.',
     keyBottleneck: 'Practical hands-on familiarity with Linux CLI security tools, network packet analysis, and OWASP Top 10.',
     actionableTip: 'Document practical labs on TryHackMe or HackTheBox and write technical walkthroughs of security fundamentals.'
+  },
+  'ai-ml-engineer': {
+    salaryRange: '₹7.0 – ₹15.0 LPA (Entry-Level)',
+    hiringDemand: 'Exponential Growth · Surging demand across generative AI, autonomous systems, and predictive models',
+    whyYouFit: 'Your interest in artificial intelligence and algorithmic models positions you perfectly for modern AI/ML development.',
+    keyBottleneck: 'Mastering model fine-tuning, tensor operations, and production LLM orchestration with LangChain or PyTorch.',
+    actionableTip: 'Deploy an end-to-end machine learning model pipeline or RAG application with an active demo on Hugging Face or GitHub.'
+  },
+  'devops-cloud-engineer': {
+    salaryRange: '₹6.5 – ₹13.0 LPA (Entry-Level)',
+    hiringDemand: 'Critical Need · 40,000+ vacancies across cloud infrastructure, CI/CD, and Kubernetes engineering',
+    whyYouFit: 'Your systems knowledge and cloud curiosity provide an ideal foundation for automated platform and infrastructure reliability.',
+    keyBottleneck: 'Hands-on production proficiency with Docker containerization, Kubernetes clustering, and Terraform IaC.',
+    actionableTip: 'Containerize a multi-tier microservice with Docker and automate deployment using GitHub Actions and AWS or GCP free tier.'
+  },
+  'mobile-app-developer': {
+    salaryRange: '₹5.0 – ₹10.5 LPA (Entry-Level)',
+    hiringDemand: 'High Demand · Continuous mobile-first product launches across consumer tech, fintech, and e-commerce',
+    whyYouFit: 'Your focus on client applications and user touchpoints translates directly into sleek native or cross-platform mobile experiences.',
+    keyBottleneck: 'Mastering reactive state management, offline-first SQLite sync, and native platform device integrations.',
+    actionableTip: 'Publish a clean Flutter or React Native mobile application to the Google Play Store or showcase a live APK on GitHub.'
+  },
+  'backend-engineer': {
+    salaryRange: '₹6.0 – ₹12.5 LPA (Entry-Level)',
+    hiringDemand: 'Very High Demand · Core hiring priority for microservices, high-throughput APIs, and distributed systems',
+    whyYouFit: 'Your server architecture and database design interests make you a natural fit for high-performance backend systems.',
+    keyBottleneck: 'Designing resilient distributed architectures with Redis caching, message queues, and ACID transactions.',
+    actionableTip: 'Build a high-concurrency RESTful API featuring JWT auth, rate limiting, and Redis caching with automated unit test suites.'
+  },
+  'data-scientist': {
+    salaryRange: '₹6.5 – ₹14.0 LPA (Entry-Level)',
+    hiringDemand: 'High Growth · High enterprise investment in advanced predictive analytics, modeling, and deep learning',
+    whyYouFit: 'Your mathematical rigor and quantitative analysis passion align with feature engineering and statistical machine learning.',
+    keyBottleneck: 'Feature engineering on messy real-world datasets and defending statistical assumptions in production models.',
+    actionableTip: 'Complete and publish an end-to-end Kaggle notebook with Exploratory Data Analysis, model benchmarking, and hyperparameter tuning.'
+  },
+  'qa-automation-engineer': {
+    salaryRange: '₹4.5 – ₹9.0 LPA (Entry-Level)',
+    hiringDemand: 'Steady Demand · Essential for modern CI/CD release safety, automated regression, and API testing suites',
+    whyYouFit: 'Your attention to detail and software reliability mindset make you well-suited for automated quality assurance.',
+    keyBottleneck: 'Writing resilient, non-flaky end-to-end Playwright/Cypress test scripts and integrating them into CI/CD pipelines.',
+    actionableTip: 'Create an automated testing framework repo for a mock web app using Playwright or Cypress with automated GitHub Actions run.'
+  },
+  'game-developer': {
+    salaryRange: '₹4.5 – ₹9.5 LPA (Entry-Level)',
+    hiringDemand: 'Rapidly Expanding · Booming Indian gaming ecosystem, 3D interactive web, and simulation development',
+    whyYouFit: 'Your 3D spatial thinking, physics interest, and interactive scripting align with modern real-time engine programming.',
+    keyBottleneck: 'Mastering game loop optimization, shader authoring, and state management in Unity or Godot.',
+    actionableTip: 'Build and deploy a playable WebGL game prototype on itch.io demonstrating polished gameplay mechanics and sound design.'
+  },
+  'blockchain-web3-developer': {
+    salaryRange: '₹7.0 – ₹16.0 LPA (Entry-Level)',
+    hiringDemand: 'Niche High Value · Specialized demand across decentralized finance, smart contract auditing, and Web3',
+    whyYouFit: 'Your cryptography and decentralized ledger interests make you an early mover in secure blockchain development.',
+    keyBottleneck: 'Writing gas-optimized Solidity smart contracts and defending against reentrancy and common Web3 attack vectors.',
+    actionableTip: 'Deploy an audited Solidity smart contract on an Ethereum testnet and build a frontend dApp with ethers.js or viem.'
+  },
+  'cloud-security-engineer': {
+    salaryRange: '₹6.5 – ₹13.5 LPA (Entry-Level)',
+    hiringDemand: 'Top Shortage · Unprecedented corporate hiring to secure multi-cloud environments and prevent breaches',
+    whyYouFit: 'Your passion for cloud architecture and security defense positions you directly at the frontier of DevSecOps.',
+    keyBottleneck: 'Configuring least-privilege IAM policies, cloud security posture management (CSPM), and compliance automation.',
+    actionableTip: 'Set up an automated cloud security compliance audit tool using open-source tools like Prowler or ScoutSuite on AWS/GCP.'
+  },
+  'technical-product-manager': {
+    salaryRange: '₹7.5 – ₹15.0 LPA (Entry-Level)',
+    hiringDemand: 'High Demand · High-impact role bridging engineering sprint execution, product roadmaps, and business metrics',
+    whyYouFit: 'Your ability to synthesize technology, user needs, and cross-functional roadmaps makes you an ideal product leader.',
+    keyBottleneck: 'Drafting precise PRDs (Product Requirement Documents) with clear acceptance criteria and data-backed success metrics.',
+    actionableTip: 'Author a comprehensive product breakdown tear-down and PRD for a modern AI software product and publish it on Medium/Substack.'
   }
 };
 

@@ -55,9 +55,9 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
         });
         tasks.push({
           order: 2,
-          title: `${career.title} Technical Screening & Mock Interview`,
+          title: `${career.title} Technical Screening & Mock Assessment`,
           description: `Review foundational algorithms, domain-specific architecture questions, and refine resume project impact bullets.`,
-          type: 'interview',
+          type: 'assessment',
           skillName: 'communication',
           priority: 'high',
           estimatedHours: 4,
@@ -175,14 +175,17 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
 
     // Assign sequential order within the week
     weekTasks.forEach((task, idx) => {
+      const validTypes = ['learn', 'practice', 'project', 'assessment', 'interview'];
+      const sanitizedType = validTypes.includes(task.type) ? task.type : 'practice';
+
       taskDocuments.push({
         weekNumber: week.weekNumber,
         order: idx + 1,
         title: task.title,
         description: task.description,
-        type: task.type || 'learn',
+        type: sanitizedType,
         skillName: task.skillName || '',
-        priority: task.priority,
+        priority: task.priority || 'medium',
         estimatedHours: task.estimatedHours || 2,
         resource: task.resource || {},
         completed: false,
