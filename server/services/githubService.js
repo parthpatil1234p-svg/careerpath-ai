@@ -60,8 +60,8 @@ const SKILL_TAXONOMY = {
  * Exchange GitHub OAuth temporary code for an access token
  */
 const exchangeOAuthCode = async (code) => {
-  const clientId = process.env.GITHUB_CLIENT_ID;
-  const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+  const clientId = (process.env.GITHUB_CLIENT_ID || '').trim().replace(/^["']|["']$/g, '');
+  const clientSecret = (process.env.GITHUB_CLIENT_SECRET || '').trim().replace(/^["']|["']$/g, '');
 
   if (!clientId || !clientSecret) {
     throw new Error('GitHub Client ID or Client Secret not configured on server.');
