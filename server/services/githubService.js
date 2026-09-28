@@ -109,25 +109,29 @@ const fetchGitHubData = async (username, accessToken = null) => {
     // 1. Fetch Profile
     const profileUrl = accessToken
       ? 'https://api.github.com/user'
-      : `https://api.github.com/users/${encodeURIComponent(username)}`;
+      : (username ? `https://api.github.com/users/${encodeURIComponent(username)}` : null);
 
-    const profileRes = await fetch(profileUrl, { headers });
-    if (profileRes.ok) {
-      profile = await profileRes.json();
-    } else {
-      console.warn(`GitHub profile fetch returned status ${profileRes.status}`);
+    if (profileUrl) {
+      const profileRes = await fetch(profileUrl, { headers });
+      if (profileRes.ok) {
+        profile = await profileRes.json();
+      } else {
+        console.warn(`GitHub profile fetch returned status ${profileRes.status}`);
+      }
     }
 
     // 2. Fetch Repositories (sort by recently pushed / updated)
     const reposUrl = accessToken
       ? 'https://api.github.com/user/repos?sort=updated&per_page=15&type=all'
-      : `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=15`;
+      : (username ? `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=15` : null);
 
-    const reposRes = await fetch(reposUrl, { headers });
-    if (reposRes.ok) {
-      repos = await reposRes.json();
-    } else {
-      console.warn(`GitHub repos fetch returned status ${reposRes.status}`);
+    if (reposUrl) {
+      const reposRes = await fetch(reposUrl, { headers });
+      if (reposRes.ok) {
+        repos = await reposRes.json();
+      } else {
+        console.warn(`GitHub repos fetch returned status ${reposRes.status}`);
+      }
     }
   } catch (err) {
     console.error('Error fetching data from GitHub REST API:', err.message);

@@ -472,11 +472,32 @@ const githubAuth = async (req, res, next) => {
     let ghUsername = directUser ? directUser.trim() : '';
 
     if (code) {
+      if (!process.env.GITHUB_CLIENT_SECRET || !process.env.GITHUB_CLIENT_SECRET.trim() || process.env.GITHUB_CLIENT_SECRET.includes('your_github')) {
+        return res.status(400).json({
+          success: false,
+          isSecretMissing: true,
+          message: 'GitHub Client Secret is not configured in server/.env yet. Please use Fast-Track Sign In below, or generate a Client Secret on GitHub.',
+        });
+      }
+
       try {
         accessToken = await exchangeOAuthCode(code);
       } catch (err) {
         console.warn('GitHub OAuth code exchange notice:', err.message);
+        return res.status(400).json({
+          success: false,
+          isCodeExchangeFailed: true,
+          message: `GitHub code exchange failed (${err.message}). Please use Fast-Track GitHub login.`,
+        });
       }
+    }
+
+    if (!ghUsername && !accessToken) {
+      return res.status(400).json({
+        success: false,
+        isUsernameRequired: true,
+        message: 'Could not resolve GitHub account. Please provide a GitHub username or authenticate via OAuth.',
+      });
     }
 
     // Fetch user profile and public repos from GitHub
@@ -485,7 +506,7 @@ const githubAuth = async (req, res, next) => {
     if (!profile) {
       return res.status(400).json({
         success: false,
-        message: 'Could not resolve GitHub profile. Please check the username or credentials.',
+        message: `Could not resolve GitHub profile${ghUsername ? ` for "${ghUsername}"` : ''}. Please check the username or credentials.`,
       });
     }
 
@@ -695,10 +716,16 @@ const connectGitHub = async (req, res, next) => {
  */
 const getGitHubConfig = (req, res) => {
   const clientId = process.env.GITHUB_CLIENT_ID || '';
+  const hasSecret = Boolean(
+    process.env.GITHUB_CLIENT_SECRET &&
+    process.env.GITHUB_CLIENT_SECRET.trim() &&
+    !process.env.GITHUB_CLIENT_SECRET.includes('your_github')
+  );
   res.status(200).json({
     success: true,
     data: {
       clientId: clientId.includes('your_github_client_id') ? '' : clientId,
+      hasSecret,
     },
   });
 };
