@@ -602,20 +602,46 @@
    12. Google Authentication Button & Divider
    -------------------------------------------------------------------------- */
 .btn-google {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(18, 22, 34, 0.75);
+  border: 1px solid rgba(66, 133, 244, 0.35);
   color: #FFFFFF !important;
   font-weight: 600;
-  transition: all var(--transition-fast);
-  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(14px);
   position: relative;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45),
+              0 0 16px rgba(66, 133, 244, 0.2),
+              0 0 24px rgba(234, 67, 53, 0.12);
+}
+
+.btn-google::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.7), rgba(234, 67, 53, 0.6), rgba(251, 188, 5, 0.6), rgba(52, 168, 83, 0.7));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.45;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.btn-google:hover::before {
+  opacity: 1;
 }
 
 .btn-google:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(66, 133, 244, 0.32);
+  background: rgba(24, 30, 48, 0.92);
+  border-color: rgba(66, 133, 244, 0.65);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55),
+              0 0 28px rgba(66, 133, 244, 0.55),
+              0 0 38px rgba(234, 67, 53, 0.35),
+              0 0 32px rgba(52, 168, 83, 0.35);
   transform: translateY(-2px);
   color: #FFFFFF !important;
 }
@@ -624,62 +650,99 @@
   transform: translateY(0);
 }
 
-/* Animated Google Logo & Micro-interactions */
+/* Radiant Animated Google Logo with Per-Segment Neon Glow */
 .google-icon-animated {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: inline-block;
   vertical-align: middle;
+  overflow: visible !important;
   transform-origin: center center;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
-  animation: googleFloat 3.6s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
+  animation: googleNeonBreathing 2.8s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 6px rgba(66, 133, 244, 0.85))
+          drop-shadow(0 0 8px rgba(234, 67, 53, 0.7))
+          drop-shadow(0 0 8px rgba(251, 188, 5, 0.75))
+          drop-shadow(0 0 6px rgba(52, 168, 83, 0.8));
 }
 
-.google-icon-animated path {
-  transition: transform 0.35s ease, filter 0.35s ease, opacity 0.35s ease;
-  transform-origin: center center;
+/* Individual Color Path Glows (Exact Google Brand Pigments) */
+.google-path-blue {
+  fill: #4285F4;
+  filter: drop-shadow(0 0 5px rgba(66, 133, 244, 0.95)) drop-shadow(0 0 10px rgba(66, 133, 244, 0.65));
+  transition: filter 0.3s ease, transform 0.3s ease;
 }
 
-/* Hover: Multi-chromatic Google Glow + 3D Spin Bounce */
+.google-path-green {
+  fill: #34A853;
+  filter: drop-shadow(0 0 5px rgba(52, 168, 83, 0.95)) drop-shadow(0 0 10px rgba(52, 168, 83, 0.65));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.google-path-yellow {
+  fill: #FBBC05;
+  filter: drop-shadow(0 0 5px rgba(251, 188, 5, 0.95)) drop-shadow(0 0 10px rgba(251, 188, 5, 0.65));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.google-path-red {
+  fill: #EA4335;
+  filter: drop-shadow(0 0 5px rgba(234, 67, 53, 0.95)) drop-shadow(0 0 10px rgba(234, 67, 53, 0.65));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover: Maximum Intensity Laser Bloom */
 .btn-google:hover .google-icon-animated {
+  transform: scale(1.22) rotate(8deg);
   animation: googleSpinBounce 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  filter: drop-shadow(0 0 7px rgba(66, 133, 244, 0.85))
-          drop-shadow(0 0 12px rgba(234, 67, 53, 0.6))
-          drop-shadow(0 0 6px rgba(52, 168, 83, 0.7));
+  filter: drop-shadow(0 0 10px rgba(66, 133, 244, 1))
+          drop-shadow(0 0 18px rgba(234, 67, 53, 0.9))
+          drop-shadow(0 0 14px rgba(251, 188, 5, 0.95))
+          drop-shadow(0 0 12px rgba(52, 168, 83, 0.95));
 }
 
 .btn-google:hover .google-path-blue {
-  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
-  animation-delay: 0s;
+  filter: drop-shadow(0 0 8px #4285F4) drop-shadow(0 0 16px #4285F4);
 }
 
 .btn-google:hover .google-path-red {
-  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
-  animation-delay: 0.18s;
+  filter: drop-shadow(0 0 8px #EA4335) drop-shadow(0 0 16px #EA4335);
 }
 
 .btn-google:hover .google-path-yellow {
-  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
-  animation-delay: 0.36s;
+  filter: drop-shadow(0 0 8px #FBBC05) drop-shadow(0 0 16px #FBBC05);
 }
 
 .btn-google:hover .google-path-green {
-  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
-  animation-delay: 0.54s;
+  filter: drop-shadow(0 0 8px #34A853) drop-shadow(0 0 16px #34A853);
 }
 
 .btn-google:active .google-icon-animated {
-  transform: scale(0.9) rotate(-12deg);
+  transform: scale(0.95) rotate(-6deg);
 }
 
-@keyframes googleFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg) scale(1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+/* Ambient Neon Breathing Keyframes */
+@keyframes googleNeonBreathing {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 5px rgba(66, 133, 244, 0.85))
+            drop-shadow(0 0 8px rgba(234, 67, 53, 0.7))
+            drop-shadow(0 0 8px rgba(251, 188, 5, 0.75))
+            drop-shadow(0 0 6px rgba(52, 168, 83, 0.8));
   }
   50% {
-    transform: translateY(-2px) rotate(4deg) scale(1.06);
-    filter: drop-shadow(0 4px 10px rgba(66, 133, 244, 0.55));
+    transform: scale(1.1) rotate(3deg);
+    filter: drop-shadow(0 0 9px rgba(66, 133, 244, 1))
+            drop-shadow(0 0 15px rgba(234, 67, 53, 0.85))
+            drop-shadow(0 0 14px rgba(251, 188, 5, 0.9))
+            drop-shadow(0 0 12px rgba(52, 168, 83, 0.95));
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 5px rgba(66, 133, 244, 0.85))
+            drop-shadow(0 0 8px rgba(234, 67, 53, 0.7))
+            drop-shadow(0 0 8px rgba(251, 188, 5, 0.75))
+            drop-shadow(0 0 6px rgba(52, 168, 83, 0.8));
   }
 }
 
@@ -688,25 +751,16 @@
     transform: scale(1) rotate(0deg);
   }
   28% {
-    transform: scale(1.32) rotate(-24deg);
+    transform: scale(1.3) rotate(-20deg);
   }
   55% {
-    transform: scale(1.15) rotate(18deg);
+    transform: scale(1.15) rotate(14deg);
   }
   78% {
-    transform: scale(1.22) rotate(-8deg);
+    transform: scale(1.24) rotate(-6deg);
   }
   100% {
     transform: scale(1.2) rotate(0deg);
-  }
-}
-
-@keyframes googleSegmentGlow {
-  0% {
-    filter: brightness(1);
-  }
-  100% {
-    filter: brightness(1.4) drop-shadow(0 0 3px currentColor);
   }
 }
 
