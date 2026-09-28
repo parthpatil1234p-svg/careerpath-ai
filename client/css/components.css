@@ -615,13 +615,99 @@
 .btn-google:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 18px rgba(66, 133, 244, 0.28);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(66, 133, 244, 0.32);
   transform: translateY(-2px);
   color: #FFFFFF !important;
 }
 
 .btn-google:active {
   transform: translateY(0);
+}
+
+/* Animated Google Logo & Micro-interactions */
+.google-icon-animated {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  transform-origin: center center;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+  animation: googleFloat 3.6s ease-in-out infinite;
+}
+
+.google-icon-animated path {
+  transition: transform 0.35s ease, filter 0.35s ease, opacity 0.35s ease;
+  transform-origin: center center;
+}
+
+/* Hover: Multi-chromatic Google Glow + 3D Spin Bounce */
+.btn-google:hover .google-icon-animated {
+  animation: googleSpinBounce 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  filter: drop-shadow(0 0 7px rgba(66, 133, 244, 0.85))
+          drop-shadow(0 0 12px rgba(234, 67, 53, 0.6))
+          drop-shadow(0 0 6px rgba(52, 168, 83, 0.7));
+}
+
+.btn-google:hover .google-path-blue {
+  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
+  animation-delay: 0s;
+}
+
+.btn-google:hover .google-path-red {
+  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
+  animation-delay: 0.18s;
+}
+
+.btn-google:hover .google-path-yellow {
+  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
+  animation-delay: 0.36s;
+}
+
+.btn-google:hover .google-path-green {
+  animation: googleSegmentGlow 1.2s ease-in-out infinite alternate;
+  animation-delay: 0.54s;
+}
+
+.btn-google:active .google-icon-animated {
+  transform: scale(0.9) rotate(-12deg);
+}
+
+@keyframes googleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  }
+  50% {
+    transform: translateY(-2px) rotate(4deg) scale(1.06);
+    filter: drop-shadow(0 4px 10px rgba(66, 133, 244, 0.55));
+  }
+}
+
+@keyframes googleSpinBounce {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  28% {
+    transform: scale(1.32) rotate(-24deg);
+  }
+  55% {
+    transform: scale(1.15) rotate(18deg);
+  }
+  78% {
+    transform: scale(1.22) rotate(-8deg);
+  }
+  100% {
+    transform: scale(1.2) rotate(0deg);
+  }
+}
+
+@keyframes googleSegmentGlow {
+  0% {
+    filter: brightness(1);
+  }
+  100% {
+    filter: brightness(1.4) drop-shadow(0 0 3px currentColor);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -646,8 +732,20 @@
   color: #FFFFFF !important;
 }
 
+.btn-github:hover i {
+  animation: githubWiggle 0.6s ease-in-out;
+  color: #00f2fe !important;
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+}
+
 .btn-github:active {
   transform: translateY(0);
+}
+
+@keyframes githubWiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-15deg) scale(1.18); }
+  75% { transform: rotate(15deg) scale(1.18); }
 }
 
 /* Social Buttons Dual Grid on Auth Pages */

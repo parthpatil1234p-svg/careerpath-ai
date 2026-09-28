@@ -153,20 +153,12 @@ window.GitHubAuth = (function () {
                 <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-preset-btn" data-user="octocat">octocat</button>
               </div>
             </div>
-            <div class="modal-footer border-top border-secondary border-opacity-25 pt-3 d-flex justify-content-between flex-wrap gap-2">
-              <button type="button" id="btnLaunchOfficialGitHubOAuth" class="btn btn-outline-info btn-sm">
-                <i class="bi bi-box-arrow-up-right me-1"></i> Official OAuth Redirect
+            <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
+              <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" id="btnConfirmFastTrackGitHub" class="btn cp-btn-primary btn-sm px-4 d-flex align-items-center gap-2">
+                <i class="bi bi-arrow-repeat"></i>
+                <span>Analyze & Link Repositories</span>
               </button>
-              <div class="d-flex gap-2">
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="btnConfirmFastTrackGitHub" class="btn cp-btn-primary btn-sm px-3 d-flex align-items-center gap-1.5">
-                  <i class="bi bi-lightning-charge-fill text-warning"></i>
-                  <span>${isConnectOnly ? 'Link Repositories (1-Click)' : '1-Click Instant Sign-In'}</span>
-                </button>
-              </div>
-            </div>
-            <div class="px-3 pb-2 text-center text-muted" style="font-size: 0.68rem;">
-              <i class="bi bi-info-circle me-1 text-info"></i> For Official OAuth, ensure <code>http://localhost:5500/login.html</code> is saved under <strong>Redirect URIs</strong> in GitHub.
             </div>
           </div>
         </div>
@@ -187,22 +179,6 @@ window.GitHubAuth = (function () {
           previewUsername.textContent = user;
         });
       });
-
-      // Wire Official OAuth Redirect Button
-      const btnOAuth = modalEl.querySelector('#btnLaunchOfficialGitHubOAuth');
-      if (btnOAuth) {
-        btnOAuth.addEventListener('click', () => {
-          const modalInstance = bootstrap.Modal.getInstance(modalEl);
-          if (modalInstance) modalInstance.hide();
-
-          if (githubClientId && !githubClientId.includes('your_github')) {
-            const redirectUri = encodeURIComponent(`${window.location.origin}${window.location.pathname}`);
-            window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=read:user,repo`;
-          } else {
-            showFastTrackGitHubModal(callbacks, isConnectOnly);
-          }
-        });
-      }
 
       const confirmBtn = modalEl.querySelector('#btnConfirmFastTrackGitHub');
       confirmBtn.addEventListener('click', () => {
@@ -266,10 +242,18 @@ window.GitHubAuth = (function () {
       return;
     }
 
-    // 3. Attach click listener — opens modal offering 1-Click Fast Track or Official OAuth
+    // 3. Attach click listener
     btnGitHub.addEventListener('click', (e) => {
       e.preventDefault();
-      showFastTrackGitHubModal({ showAlert, setLoadingState, onSuccess }, false);
+
+      if (githubClientId && !githubClientId.includes('your_github')) {
+        // Real GitHub OAuth redirect
+        const redirectUri = encodeURIComponent(`${window.location.origin}${window.location.pathname}`);
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=read:user,repo`;
+      } else {
+        // Fast-track Live Public API Modal
+        showFastTrackGitHubModal({ showAlert, setLoadingState, onSuccess }, false);
+      }
     });
   };
 
