@@ -1,0 +1,121 @@
+/* ==========================================================================
+   typing-character-fx.css — Keystroke Character Pop-up Micro-Animation
+   CareerPath AI · Team 404 Brain Not Found
+   
+   High-performance, GPU-accelerated character pop-up animations that trigger
+   dynamically above input carets as users type in form fields and search bars.
+   ========================================================================== */
+
+.cp-char-popup {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 7px;
+  background: rgba(10, 18, 36, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 242, 254, 0.65);
+  color: #00F2FE;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.35);
+  animation: cpCharPopUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  user-select: none;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+}
+
+/* Color Theme Variations */
+.cp-char-popup.color-cyan {
+  border-color: rgba(0, 242, 254, 0.7);
+  color: #00F2FE;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.4);
+}
+
+.cp-char-popup.color-purple {
+  border-color: rgba(168, 85, 247, 0.75);
+  color: #C084FC;
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.cp-char-popup.color-emerald {
+  border-color: rgba(16, 185, 129, 0.75);
+  color: #34D399;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.cp-char-popup.color-amber {
+  border-color: rgba(245, 158, 11, 0.75);
+  color: #FBBF24;
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.cp-char-popup.color-rose {
+  border-color: rgba(244, 63, 94, 0.75);
+  color: #FB7185;
+  text-shadow: 0 0 8px rgba(244, 63, 94, 0.85);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(244, 63, 94, 0.4);
+}
+
+.cp-char-popup.is-password {
+  border-color: rgba(168, 85, 247, 0.8);
+  color: #E879F9;
+  font-size: 11px;
+  min-width: 22px;
+  height: 22px;
+  text-shadow: 0 0 10px rgba(232, 121, 249, 0.9);
+}
+
+.cp-char-popup.is-backspace {
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #F87171;
+  animation: cpCharPopDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Keyframe Pop-Up Animations */
+@keyframes cpCharPopUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.3) rotate(var(--pop-rot, 0deg));
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -16px) scale(1.25) rotate(var(--pop-rot, 0deg));
+  }
+  65% {
+    opacity: 0.95;
+    transform: translate(-50%, -28px) scale(1.02) rotate(var(--pop-rot, 0deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -44px) scale(0.65) rotate(var(--pop-rot, 0deg));
+  }
+}
+
+@keyframes cpCharPopDown {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(1) rotate(var(--pop-rot, 0deg));
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, 0px) scale(1.1) rotate(var(--pop-rot, 0deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 14px) scale(0.5) rotate(var(--pop-rot, 0deg));
+  }
+}
