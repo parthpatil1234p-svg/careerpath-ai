@@ -271,3 +271,12 @@ app.listen(PORT, () => {
   console.log('👥 Team              : 404 Brain Not Found · Hack2Ignite 2026–27');
   console.log('');
 });
+
+// ── Process-Level Safety Handlers ─────────────────────────────
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+});
