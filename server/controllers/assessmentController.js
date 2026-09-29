@@ -33,12 +33,20 @@ const updateAssessment = async (req, res, next) => {
       });
     }
 
-    // Standardize skills casing
+    // Standardize skills casing and preserve verification status
     if (Array.isArray(updates.skills)) {
       updates.skills = updates.skills.map((s) => ({
         name: typeof s.name === 'string' ? s.name.trim().toLowerCase() : '',
         displayName: typeof s.displayName === 'string' && s.displayName.trim() ? s.displayName.trim() : (s.name || '').trim(),
         proficiency: typeof s.proficiency === 'string' ? s.proficiency.trim().toLowerCase() : 'beginner',
+        isCodeVerified: Boolean(s.isCodeVerified),
+        verifiedSource: typeof s.verifiedSource === 'string' ? s.verifiedSource : '',
+        selfRatedProficiency: s.selfRatedProficiency || null,
+        isQuizVerified: Boolean(s.isQuizVerified),
+        verifiedProficiency: s.verifiedProficiency || null,
+        quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
+        quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
+        quizVerifiedAt: s.quizVerifiedAt ? new Date(s.quizVerifiedAt) : (s.isQuizVerified ? new Date() : null),
       }));
     }
 

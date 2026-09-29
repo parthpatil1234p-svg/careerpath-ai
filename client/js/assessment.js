@@ -143,8 +143,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3. State
   let allAvailableSkills = [...FALLBACK_SKILLS];
   const selectedInterests = new Set();
-  const selectedSkillsMap = new Map(); // key: skillName, value: { name, displayName, proficiency }
+  const selectedSkillsMap = new Map(); // key: skillName, value: { name, displayName, proficiency, ... }
   let currentStep = 1;
+
+  // Reality Check Quiz Constants
+  const AVAILABLE_QUIZ_SKILLS = ['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'];
+  const SKILL_ALIASES = {
+    'nodejs': 'node.js',
+    'node': 'node.js',
+    'reactjs': 'react',
+    'react.js': 'react',
+    'html5': 'html',
+    'css3': 'css',
+    'js': 'javascript',
+    'py': 'python'
+  };
+  const normalizeSkillSlug = (raw) => {
+    const s = String(raw || '').trim().toLowerCase();
+    return SKILL_ALIASES[s] || s;
+  };
+  const capitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const INTEREST_SKILL_AFFINITY = {
+    'web development': ['javascript', 'html', 'css', 'react', 'node.js'],
+    'backend engineering': ['node.js', 'python', 'sql'],
+    'data analysis': ['python', 'sql'],
+    'data science': ['python', 'sql'],
+    'artificial intelligence': ['python'],
+    'problem solving': ['javascript', 'python', 'sql'],
+    'app development': ['react', 'javascript'],
+    'cloud computing': ['node.js', 'python'],
+    'cloud security': ['python', 'sql'],
+    'qa testing': ['javascript', 'python'],
+    'design': ['html', 'css']
+  };
 
   // 4. DOM Elements
   const alertContainer = document.getElementById('alertContainer');
@@ -158,6 +193,41 @@ document.addEventListener('DOMContentLoaded', async () => {
   const clearAllSkillsBtn = document.getElementById('clearAllSkillsBtn');
   const form = document.getElementById('assessmentForm');
   const submitBtn = document.getElementById('submitAssessmentBtn');
+
+  // Prove Your Skills Panel Elements
+  const proveSkillsPanel = document.getElementById('proveSkillsPanel');
+  const proveSkillsSubtitle = document.getElementById('proveSkillsSubtitle');
+  const proveSkillsBadge = document.getElementById('proveSkillsBadge');
+  const proveSkillsBadgeText = document.getElementById('proveSkillsBadgeText');
+  const proveSkillsList = document.getElementById('proveSkillsList');
+  const proveSkillsProgressFill = document.getElementById('proveSkillsProgressFill');
+  const step3ContinueBtn = document.getElementById('step3ContinueBtn');
+
+  // Skill Check Modal Elements
+  const skillCheckModalEl = document.getElementById('skillCheckModal');
+  const modalSkillBadge = document.getElementById('modalSkillBadge');
+  const skillCheckModalTitle = document.getElementById('skillCheckModalTitle');
+  const modalDifficultyPill = document.getElementById('modalDifficultyPill');
+  const modalLoadingState = document.getElementById('modalLoadingState');
+  const modalQuestionState = document.getElementById('modalQuestionState');
+  const modalVerdictState = document.getElementById('modalVerdictState');
+  const modalStepText = document.getElementById('modalStepText');
+  const modalStepper = document.getElementById('modalStepper');
+  const modalQuestionPrompt = document.getElementById('modalQuestionPrompt');
+  const modalCodeSnippet = document.getElementById('modalCodeSnippet');
+  const modalOptionsList = document.getElementById('modalOptionsList');
+  const modalFeedbackBox = document.getElementById('modalFeedbackBox');
+  const modalFeedbackIcon = document.getElementById('modalFeedbackIcon');
+  const modalFeedbackHeadline = document.getElementById('modalFeedbackHeadline');
+  const modalFeedbackText = document.getElementById('modalFeedbackText');
+  const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+  const modalNextBtn = document.getElementById('modalNextBtn');
+  const modalVerdictSelfClaimed = document.getElementById('modalVerdictSelfClaimed');
+  const modalVerdictVerifiedLevel = document.getElementById('modalVerdictVerifiedLevel');
+  const modalVerdictExplanation = document.getElementById('modalVerdictExplanation');
+  const modalVerdictGapsWrap = document.getElementById('modalVerdictGapsWrap');
+  const modalVerdictGaps = document.getElementById('modalVerdictGaps');
+  const modalVerdictDoneBtn = document.getElementById('modalVerdictDoneBtn');
 
   // Step Wizard Elements
   const stepPanels = [
@@ -260,6 +330,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (step === 3) {
       if (selectedSkillsMap.size === 0) {
         showAlert('Please select at least 1 skill you possess before proceeding.');
+        return false;
+      }
+      const required = getRequiredVerificationSkills();
+      const verifiedCount = required.filter(s => s.isQuizVerified || s.isCodeVerified).length;
+      if (verifiedCount < required.length) {
+        showAlert(`Please verify the remaining ${required.length - verifiedCount} skill(s) in the "Prove your skills" panel below to continue.`, 'warning');
         return false;
       }
       return true;
@@ -378,10 +454,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isSelected = selectedSkillsMap.has(skill.name);
       const selectedObj = isSelected ? selectedSkillsMap.get(skill.name) : null;
       const currentProficiency = selectedObj ? selectedObj.proficiency : 'beginner';
-      const isVerified = selectedObj?.isCodeVerified;
-      const verifiedBadge = isVerified
-        ? `<span class="badge-code-verified ms-1" title="Verified by real GitHub repo code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i></span>`
-        : '';
+      const isCodeVerified = selectedObj?.isCodeVerified;
+      const isQuizVerified = selectedObj?.isQuizVerified;
+
+      let verifiedBadge = '';
+      if (isQuizVerified) {
+        verifiedBadge = `<span class="badge bg-success-subtle text-success border border-success ms-1" title="Verified by Reality Check Quiz" style="padding: 1px 5px; font-size: 0.62rem;"><i class="bi bi-patch-check-fill me-1"></i>Verified (${capitalize(selectedObj.verifiedProficiency || selectedObj.proficiency)})</span>`;
+      } else if (isCodeVerified) {
+        verifiedBadge = `<span class="badge-code-verified ms-1" title="Verified by real GitHub repo code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i></span>`;
+      }
 
       const col = document.createElement('div');
       col.className = 'col-12 col-lg-6';
@@ -402,7 +483,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <select class="form-select form-select-sm skill-proficiency-select flex-shrink-0"
                     aria-label="${skill.displayName} proficiency level"
-                    ${!isSelected ? 'disabled' : ''}>
+                    ${!isSelected || isQuizVerified ? 'disabled' : ''}
+                    title="${isQuizVerified ? 'Proficiency calibrated by Reality Check quiz (locked)' : ''}">
               <option value="beginner" ${currentProficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
               <option value="intermediate" ${currentProficiency === 'intermediate' ? 'selected' : ''}>Intermediate</option>
               <option value="advanced" ${currentProficiency === 'advanced' ? 'selected' : ''}>Advanced</option>
@@ -461,6 +543,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       selectedSkillsSummary.innerHTML = `
         <span class="text-muted small fst-italic">No skills selected yet. Click any skill above to add it.</span>
       `;
+      renderProveSkillsPanel();
       return;
     }
 
@@ -468,9 +551,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectedSkillsMap.forEach((skill) => {
       const pill = document.createElement('span');
       pill.className = 'badge badge-navy border d-inline-flex align-items-center gap-1 py-1 px-2 small';
-      const verifiedTag = skill.isCodeVerified
-        ? `<span class="badge-code-verified ms-1" title="Verified by GitHub Repo Code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i> Verified</span>`
-        : '';
+      let verifiedTag = '';
+      if (skill.isQuizVerified) {
+        verifiedTag = `<span class="badge bg-success-subtle text-success border border-success ms-1" title="Verified by Reality Check Quiz" style="padding: 1px 5px; font-size: 0.62rem;"><i class="bi bi-patch-check-fill"></i> Verified</span>`;
+      } else if (skill.isCodeVerified) {
+        verifiedTag = `<span class="badge-code-verified ms-1" title="Verified by GitHub Repo Code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i> Verified</span>`;
+      }
       pill.innerHTML = `
         <span class="fw-semibold text-ink">${escapeHtml(skill.displayName)}</span>
         <span class="text-primary fw-bold font-mono" style="font-size: 0.68rem;">(${skill.proficiency.slice(0, 3)})</span>
@@ -486,7 +572,452 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       selectedSkillsSummary.appendChild(pill);
     });
+
+    renderProveSkillsPanel();
   };
+
+  // ── Verification Gate: Prove Your Skills Panel Logic ───────────────
+  const getRequiredVerificationSkills = () => {
+    const candidates = [];
+    selectedSkillsMap.forEach((s) => {
+      const norm = normalizeSkillSlug(s.name);
+      const isBanked = AVAILABLE_QUIZ_SKILLS.includes(norm);
+      const isLevelEligible = ['intermediate', 'advanced'].includes(String(s.proficiency).toLowerCase()) || s.isQuizVerified;
+      if (isBanked && isLevelEligible) {
+        let score = 0;
+        selectedInterests.forEach((interest) => {
+          const affinity = INTEREST_SKILL_AFFINITY[interest] || [];
+          if (affinity.includes(norm)) score += 10;
+        });
+        if (s.proficiency === 'advanced') score += 5;
+        else if (s.proficiency === 'intermediate') score += 2;
+        if (s.isQuizVerified || s.isCodeVerified) score += 1;
+
+        candidates.push({ key: s.name, norm, skill: s, score });
+      }
+    });
+
+    candidates.sort((a, b) => b.score - a.score || a.skill.displayName.localeCompare(b.skill.displayName));
+    return candidates.slice(0, 3).map((c) => c.skill);
+  };
+
+  const renderProveSkillsPanel = () => {
+    if (!proveSkillsPanel || !proveSkillsList) return;
+
+    const requiredSkills = getRequiredVerificationSkills();
+    const totalRequired = requiredSkills.length;
+    const verifiedCount = requiredSkills.filter(s => s.isQuizVerified || s.isCodeVerified).length;
+
+    // When 0 skills need verification (e.g. only beginner or unbanked skills)
+    if (totalRequired === 0) {
+      if (proveSkillsBadge) {
+        proveSkillsBadge.className = 'prove-skills-badge skipped';
+      }
+      if (proveSkillsBadgeText) {
+        proveSkillsBadgeText.textContent = 'No verification required';
+      }
+      if (proveSkillsProgressFill) {
+        proveSkillsProgressFill.style.width = '100%';
+        proveSkillsProgressFill.className = 'prove-skills-progress-fill completed';
+      }
+      if (proveSkillsSubtitle) {
+        proveSkillsSubtitle.textContent = "All your selected skills are beginner level or don't require verification. You're ready to proceed to Goals!";
+      }
+      proveSkillsPanel.classList.remove('all-verified');
+
+      proveSkillsList.innerHTML = `
+        <div class="text-muted small py-2 fst-italic">
+          <i class="bi bi-check-circle-fill text-success me-1"></i> No Intermediate or Advanced technical claims requiring reality-check verification. You can proceed directly to Goals.
+        </div>
+      `;
+
+      if (step3ContinueBtn) {
+        step3ContinueBtn.disabled = false;
+        step3ContinueBtn.title = 'Continue to Goals';
+        step3ContinueBtn.classList.remove('opacity-50');
+      }
+      return;
+    }
+
+    const isAllComplete = verifiedCount >= totalRequired;
+    const pct = Math.round((verifiedCount / totalRequired) * 100);
+
+    if (proveSkillsBadge) {
+      proveSkillsBadge.className = `prove-skills-badge ${isAllComplete ? 'completed' : ''}`;
+    }
+    if (proveSkillsBadgeText) {
+      proveSkillsBadgeText.textContent = isAllComplete
+        ? `Progress: ${verifiedCount} of ${totalRequired} verified ✓`
+        : `Progress: ${verifiedCount} of ${totalRequired} verified`;
+    }
+    if (proveSkillsProgressFill) {
+      proveSkillsProgressFill.style.width = `${pct}%`;
+      proveSkillsProgressFill.className = `prove-skills-progress-fill ${isAllComplete ? 'completed' : ''}`;
+    }
+    if (proveSkillsSubtitle) {
+      proveSkillsSubtitle.textContent = isAllComplete
+        ? 'Great job! All required skill claims are verified with 100% confidence. You can now continue to Goals.'
+        : `Verify ${totalRequired} of your strongest skills to continue to Goals. Each check takes ~90 seconds (5 questions).`;
+    }
+
+    if (isAllComplete) {
+      proveSkillsPanel.classList.add('all-verified');
+      if (step3ContinueBtn) {
+        step3ContinueBtn.disabled = false;
+        step3ContinueBtn.title = 'Continue to Goals';
+        step3ContinueBtn.classList.remove('opacity-50');
+      }
+    } else {
+      proveSkillsPanel.classList.remove('all-verified');
+      if (step3ContinueBtn) {
+        step3ContinueBtn.disabled = true;
+        step3ContinueBtn.title = `Verify ${totalRequired - verifiedCount} more skill(s) to continue to Goals`;
+        step3ContinueBtn.classList.add('opacity-50');
+      }
+    }
+
+    // Render Skill Rows
+    proveSkillsList.innerHTML = '';
+    requiredSkills.forEach((skill) => {
+      const isQuizVer = !!skill.isQuizVerified;
+      const isCodeVer = !!skill.isCodeVerified;
+      const isVerified = isQuizVer || isCodeVer;
+
+      const row = document.createElement('div');
+      row.className = `prove-skill-item ${isVerified ? 'item-verified' : ''}`;
+
+      let actionHtml = '';
+      if (isQuizVer) {
+        actionHtml = `
+          <span class="badge bg-success text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono">
+            <i class="bi bi-patch-check-fill"></i>
+            <span>Verified (${skill.verifiedProficiency || skill.proficiency})</span>
+          </span>
+        `;
+      } else if (isCodeVer) {
+        actionHtml = `
+          <span class="badge bg-secondary text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono" title="Verified from connected GitHub repository code">
+            <i class="bi bi-github"></i>
+            <span>GitHub-Supported ✓</span>
+          </span>
+        `;
+      } else {
+        actionHtml = `
+          <button type="button" class="btn-start-check" data-skill="${escapeHtml(skill.name)}">
+            <i class="bi bi-play-circle-fill"></i>
+            <span>Start check (90s)</span>
+          </button>
+        `;
+      }
+
+      let noteHtml = '';
+      if (isQuizVer && skill.selfRatedProficiency && skill.selfRatedProficiency.toLowerCase() !== (skill.verifiedProficiency || skill.proficiency).toLowerCase()) {
+        const gapText = skill.quizGaps && skill.quizGaps.length > 0 ? ` Focus on: ${escapeHtml(skill.quizGaps.slice(0, 2).join(', '))}.` : '';
+        noteHtml = `
+          <div class="skill-adjusted-note">
+            <i class="bi bi-info-circle text-primary me-1"></i>
+            <span>You claimed <strong>${escapeHtml(capitalize(skill.selfRatedProficiency))}</strong>, quiz calibrated to <strong>${escapeHtml(capitalize(skill.verifiedProficiency || skill.proficiency))}</strong>.${gapText}</span>
+          </div>
+        `;
+      }
+
+      row.innerHTML = `
+        <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+          <div class="prove-skill-info">
+            <div class="prove-skill-dot"></div>
+            <span class="prove-skill-name">${escapeHtml(skill.displayName || skill.name)}</span>
+            <span class="prove-skill-level ${skill.proficiency.toLowerCase()}">${escapeHtml(skill.proficiency)}</span>
+          </div>
+          <div class="prove-skill-action">
+            ${actionHtml}
+          </div>
+        </div>
+        ${noteHtml}
+      `;
+
+      const checkBtn = row.querySelector('.btn-start-check');
+      if (checkBtn) {
+        checkBtn.addEventListener('click', () => {
+          startSkillCheck(skill.name);
+        });
+      }
+
+      proveSkillsList.appendChild(row);
+    });
+  };
+
+  // ── Skill Check In-Page Modal Logic ─────────────────────────────────
+  let activeQuizSession = null;
+  let activeQuestion = null;
+  let activeQuestionStep = 1;
+  let activeSelectedOptionIndex = null;
+  let activeQuizSummary = null;
+
+  const startSkillCheck = async (skillName) => {
+    const skill = selectedSkillsMap.get(skillName);
+    if (!skill) return;
+
+    if (!skillCheckModalEl) return;
+    const modal = bootstrap.Modal.getOrCreateInstance(skillCheckModalEl);
+    modal.show();
+
+    // Reset modal UI state
+    if (modalSkillBadge) modalSkillBadge.textContent = skill.displayName || skill.name;
+    if (skillCheckModalTitle) skillCheckModalTitle.textContent = `${skill.displayName || skill.name} Reality Check`;
+    modalLoadingState?.classList.remove('d-none');
+    modalQuestionState?.classList.add('d-none');
+    modalVerdictState?.classList.add('d-none');
+    modalFeedbackBox?.classList.add('d-none');
+    if (modalSubmitBtn) {
+      modalSubmitBtn.disabled = true;
+      modalSubmitBtn.classList.remove('d-none');
+    }
+    if (modalNextBtn) {
+      modalNextBtn.classList.add('d-none');
+    }
+
+    try {
+      const res = await window.API.post('/quiz/start', {
+        skill: skill.name,
+        selfRated: skill.proficiency || 'intermediate',
+        displayName: skill.displayName || skill.name
+      }, { auth: true });
+
+      if (!res.success || !res.data?.question) {
+        throw new Error(res.message || 'Failed to initialize reality check session.');
+      }
+
+      activeQuizSession = {
+        sessionId: res.data?.sessionId,
+        skillName: skill.name,
+        displayName: skill.displayName || skill.name,
+        selfRated: skill.proficiency || 'intermediate',
+      };
+      activeQuestionStep = 1;
+      activeQuestion = res.data.question;
+
+      renderModalQuestion(activeQuestion, 1);
+    } catch (err) {
+      console.error('Quiz start error:', err);
+      showAlert(`Could not start skill check: ${err.message}`, 'danger');
+      modal.hide();
+    }
+  };
+
+  const renderModalQuestion = (question, stepNumber) => {
+    modalLoadingState?.classList.add('d-none');
+    modalQuestionState?.classList.remove('d-none');
+    modalVerdictState?.classList.add('d-none');
+    modalFeedbackBox?.classList.add('d-none');
+
+    activeQuestion = question;
+    activeQuestionStep = stepNumber;
+    activeSelectedOptionIndex = null;
+
+    // Difficulty pill
+    const diff = (question.difficulty || 'medium').toLowerCase();
+    if (modalDifficultyPill) {
+      modalDifficultyPill.className = `difficulty-pill ${diff}`;
+      modalDifficultyPill.textContent = diff.toUpperCase();
+    }
+
+    // Step text & dots
+    if (modalStepText) modalStepText.textContent = `Question ${stepNumber} of 5`;
+    if (modalStepper) {
+      const dots = modalStepper.querySelectorAll('.quiz-step-dot');
+      dots.forEach((dot, idx) => {
+        dot.className = 'quiz-step-dot';
+        if (idx + 1 === stepNumber) dot.classList.add('active');
+        else if (idx + 1 < stepNumber) dot.classList.add('completed');
+      });
+    }
+
+    // Question title & code snippet
+    if (modalQuestionPrompt) modalQuestionPrompt.textContent = question.text || question.prompt || '';
+    if (modalCodeSnippet) {
+      if (question.codeSnippet) {
+        modalCodeSnippet.classList.remove('d-none');
+        const codeEl = modalCodeSnippet.querySelector('code');
+        if (codeEl) codeEl.textContent = question.codeSnippet;
+      } else {
+        modalCodeSnippet.classList.add('d-none');
+      }
+    }
+
+    // Options
+    if (modalOptionsList) {
+      modalOptionsList.innerHTML = '';
+      (question.options || []).forEach((opt, idx) => {
+        const optCard = document.createElement('div');
+        optCard.className = 'quiz-option-card';
+        optCard.setAttribute('data-index', idx);
+        optCard.innerHTML = `
+          <div class="quiz-option-radio">
+            <div class="quiz-option-radio-dot"></div>
+          </div>
+          <div class="quiz-option-text">${escapeHtml(opt)}</div>
+        `;
+
+        optCard.addEventListener('click', () => {
+          if (optCard.classList.contains('locked')) return;
+          modalOptionsList.querySelectorAll('.quiz-option-card').forEach(c => c.classList.remove('selected'));
+          optCard.classList.add('selected');
+          activeSelectedOptionIndex = idx;
+          if (modalSubmitBtn) modalSubmitBtn.disabled = false;
+        });
+
+        modalOptionsList.appendChild(optCard);
+      });
+    }
+
+    if (modalSubmitBtn) {
+      modalSubmitBtn.disabled = true;
+      modalSubmitBtn.innerHTML = `<span>Submit Answer</span><i class="bi bi-arrow-right ms-1"></i>`;
+      modalSubmitBtn.classList.remove('d-none');
+    }
+    if (modalNextBtn) {
+      modalNextBtn.classList.add('d-none');
+    }
+  };
+
+  modalSubmitBtn?.addEventListener('click', async () => {
+    if (activeSelectedOptionIndex === null) return;
+
+    modalSubmitBtn.disabled = true;
+    modalSubmitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Checking...`;
+
+    try {
+      const res = await window.API.post('/quiz/answer', {
+        skill: activeQuizSession?.skillName,
+        sessionId: activeQuizSession?.sessionId,
+        questionId: activeQuestion?.id,
+        selectedIndex: activeSelectedOptionIndex,
+        selectedOption: activeSelectedOptionIndex
+      }, { auth: true });
+
+      if (!res.success) {
+        throw new Error(res.message || 'Failed to submit answer.');
+      }
+
+      const data = res.data;
+      const correctIdx = Number(data.correctIndex !== undefined ? data.correctIndex : data.correctAnswer);
+      const isCorrect = Boolean(data.isCorrect);
+
+      // Lock options and mark colors
+      if (modalOptionsList) {
+        modalOptionsList.querySelectorAll('.quiz-option-card').forEach((card) => {
+          card.classList.add('locked');
+          const cIdx = Number(card.getAttribute('data-index'));
+          if (cIdx === correctIdx) {
+            card.classList.add('option-correct');
+          } else if (cIdx === activeSelectedOptionIndex && !isCorrect) {
+            card.classList.add('option-wrong');
+          }
+        });
+      }
+
+      // Show feedback box
+      if (modalFeedbackBox) {
+        modalFeedbackBox.className = `quiz-feedback-box ${isCorrect ? 'correct' : 'incorrect'}`;
+        if (modalFeedbackIcon) {
+          modalFeedbackIcon.className = `quiz-feedback-icon bi ${isCorrect ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'}`;
+        }
+        if (modalFeedbackHeadline) {
+          modalFeedbackHeadline.textContent = isCorrect ? 'Correct!' : 'Not quite right';
+        }
+        if (modalFeedbackText) {
+          modalFeedbackText.textContent = data.explanation || (isCorrect ? 'Great grasp of this concept!' : 'Review this concept in your study plan.');
+        }
+        modalFeedbackBox.classList.remove('d-none');
+      }
+
+      // Update buttons
+      modalSubmitBtn.classList.add('d-none');
+      if (modalNextBtn) {
+        modalNextBtn.classList.remove('d-none');
+        if (data.isFinished) {
+          activeQuizSummary = data.summary || data.result;
+          modalNextBtn.innerHTML = `<span>View Results</span><i class="bi bi-trophy-fill ms-1"></i>`;
+        } else {
+          activeQuestion = data.nextQuestion;
+          modalNextBtn.innerHTML = `<span>Next Question</span><i class="bi bi-arrow-right ms-1"></i>`;
+        }
+      }
+    } catch (err) {
+      console.error('Answer submission error:', err);
+      showAlert(`Could not submit answer: ${err.message}`, 'danger');
+      if (modalSubmitBtn) {
+        modalSubmitBtn.disabled = false;
+        modalSubmitBtn.innerHTML = `<span>Submit Answer</span><i class="bi bi-arrow-right ms-1"></i>`;
+      }
+    }
+  });
+
+  modalNextBtn?.addEventListener('click', () => {
+    if (activeQuizSummary) {
+      // Show verdict state
+      modalQuestionState?.classList.add('d-none');
+      modalVerdictState?.classList.remove('d-none');
+
+      const skillName = activeQuizSession?.skillName;
+      const skill = selectedSkillsMap.get(skillName);
+
+      if (modalVerdictSelfClaimed) {
+        modalVerdictSelfClaimed.textContent = activeQuizSummary.selfRated || (skill ? skill.proficiency : 'Intermediate');
+      }
+      if (modalVerdictVerifiedLevel) {
+        modalVerdictVerifiedLevel.textContent = activeQuizSummary.verifiedLevel;
+      }
+      if (modalVerdictExplanation) {
+        modalVerdictExplanation.textContent = activeQuizSummary.summaryMessage || 'Reality check complete.';
+      }
+
+      if (modalVerdictGapsWrap && modalVerdictGaps) {
+        if (activeQuizSummary.gaps && activeQuizSummary.gaps.length > 0) {
+          modalVerdictGapsWrap.classList.remove('d-none');
+          modalVerdictGaps.textContent = activeQuizSummary.gaps.join(', ');
+        } else {
+          modalVerdictGapsWrap.classList.add('d-none');
+        }
+      }
+
+      // Update in selectedSkillsMap
+      if (skill) {
+        skill.selfRatedProficiency = skill.proficiency;
+        skill.proficiency = activeQuizSummary.verifiedLevel;
+        skill.verifiedProficiency = activeQuizSummary.verifiedLevel;
+        skill.isQuizVerified = true;
+        skill.quizScore = activeQuizSummary.score;
+        skill.quizGaps = activeQuizSummary.gaps || [];
+        skill.verifiedSource = 'quiz';
+        skill.quizSummaryMessage = activeQuizSummary.summaryMessage;
+      }
+      return;
+    }
+
+    if (activeQuestion) {
+      renderModalQuestion(activeQuestion, activeQuestionStep + 1);
+    }
+  });
+
+  modalVerdictDoneBtn?.addEventListener('click', () => {
+    if (skillCheckModalEl) {
+      bootstrap.Modal.getInstance(skillCheckModalEl)?.hide();
+    }
+
+    // Reset active quiz variables
+    activeQuizSession = null;
+    activeQuestion = null;
+    activeQuizSummary = null;
+
+    // Refresh UI
+    renderSkillsGrid();
+    updateSelectedSkillsUI();
+    renderProveSkillsPanel();
+
+    showAlert('✓ Skill verified! Your assessment proficiency has been updated.', 'success');
+  });
+
 
   // 9. Filters & Search Handlers
   if (skillCategoryFilter) {
@@ -801,7 +1332,13 @@ document.addEventListener('DOMContentLoaded', async () => {
               category: s.category || 'tool',
               proficiency: s.proficiency || 'beginner',
               isCodeVerified: !!s.isCodeVerified,
-              verifiedSource: s.verifiedSource || 'self'
+              verifiedSource: s.verifiedSource || 'self',
+              isQuizVerified: !!s.isQuizVerified,
+              selfRatedProficiency: s.selfRatedProficiency || null,
+              verifiedProficiency: s.verifiedProficiency || null,
+              quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
+              quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
+              quizVerifiedAt: s.quizVerifiedAt || null,
             });
           });
         }
@@ -897,22 +1434,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.Auth.setCurrentUser(response.data.user);
         }
 
-        const userSkillNames = Array.from(selectedSkillsMap.keys()).map((k) => k.toLowerCase());
-        const eligibleQuizSkill = ['javascript', 'python', 'sql'].find((s) => userSkillNames.includes(s));
-
-        if (eligibleQuizSkill) {
-          showAlert(`Assessment saved! Loading 2-minute reality-check for ${eligibleQuizSkill.toUpperCase()}...`, 'success');
-          resetSubmitBtn();
-          setTimeout(() => {
-            window.location.href = `quiz.html?skill=${eligibleQuizSkill}&from=assessment`;
-          }, 700);
-        } else {
-          showAlert('Assessment saved! Directing you to your recommendations...', 'success');
-          resetSubmitBtn();
-          setTimeout(() => {
-            window.location.href = 'recommendations.html';
-          }, 600);
-        }
+        showAlert('✓ Profile & verified skills saved! Directing you to your career recommendations...', 'success');
+        resetSubmitBtn();
+        setTimeout(() => {
+          window.location.href = 'recommendations.html';
+        }, 600);
       } else {
         showAlert(response.message || 'Failed to submit assessment.');
         resetSubmitBtn();

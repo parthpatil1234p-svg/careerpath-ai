@@ -504,3 +504,227 @@
     transform: translateY(0);
   }
 }
+
+/* ── In-Assessment "Prove Your Skills" Verification Gate ───────── */
+.prove-skills-panel {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05);
+  transition: all 0.25s ease;
+}
+
+.prove-skills-panel.all-verified {
+  border-color: #86EFAC;
+  background: #F0FDF4;
+}
+
+.prove-skills-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.prove-skills-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.prove-skills-sub {
+  font-size: 0.83rem;
+  color: #64748B;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  line-height: 1.45;
+}
+
+.prove-skills-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: #EEF2FF;
+  color: #4F46E5;
+  border: 1px solid #C7D2FE;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.prove-skills-badge.completed {
+  background: #DCFCE7;
+  color: #166534;
+  border-color: #86EFAC;
+}
+
+.prove-skills-badge.skipped {
+  background: #F1F5F9;
+  color: #475569;
+  border-color: #CBD5E1;
+}
+
+.prove-skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.prove-skill-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.15rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.prove-skill-item:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.prove-skill-item.item-verified {
+  background: #FFFFFF;
+  border-color: #BBF7D0;
+}
+
+.prove-skill-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.prove-skill-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #94A3B8;
+  flex-shrink: 0;
+}
+
+.prove-skill-item.item-verified .prove-skill-dot {
+  background: #10B981;
+}
+
+.prove-skill-name {
+  font-weight: 600;
+  color: #0F172A;
+  font-size: 0.92rem;
+}
+
+.prove-skill-level {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-transform: capitalize;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.prove-skill-level.advanced {
+  background: #EDE9FE;
+  color: #6D28D9;
+}
+
+.prove-skill-level.intermediate {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.prove-skill-level.beginner {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.prove-skill-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-start-check {
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 1rem;
+  border-radius: 0.5rem;
+  background: #4F46E5;
+  color: #FFFFFF;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-start-check:hover {
+  background: #4338CA;
+  transform: translateY(-1px);
+  color: #FFFFFF;
+}
+
+.prove-skills-progress-bar {
+  height: 6px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.prove-skills-progress-fill {
+  height: 100%;
+  background: #4F46E5;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.prove-skills-progress-fill.completed {
+  background: #10B981;
+}
+
+.skill-adjusted-note {
+  font-size: 0.78rem;
+  color: #475569;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-top: 0.35rem;
+  width: 100%;
+}
+
+/* Modal styling overrides */
+#skillCheckModal .modal-content {
+  border: none;
+  border-radius: 1.25rem;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+}
+
+#skillCheckModal .modal-header {
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 1.25rem 1.75rem;
+}
+
+#skillCheckModal .modal-body {
+  padding: 1.75rem;
+  background: #FFFFFF;
+}
+

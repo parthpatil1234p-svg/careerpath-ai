@@ -5,48 +5,38 @@
    ========================================================================== */
 
 /* Global Container Constraints — Optimized to fill modern screens while maintaining readability */
+/* Global Container Constraints — 90% width, leaving only 10% total margins (5% left, 5% right) */
 :root {
-  --container-max-width: 1400px;
-}
-
-@media (min-width: 1200px) {
-  :root {
-    --container-max-width: 1520px;
-  }
-}
-
-@media (min-width: 1400px) {
-  :root {
-    --container-max-width: 1680px;
-  }
-}
-
-@media (min-width: 1600px) {
-  :root {
-    --container-max-width: 1820px;
-  }
-}
-
-@media (min-width: 1920px) {
-  :root {
-    --container-max-width: 1920px;
-  }
+  --container-max-width: 90vw;
 }
 
 .container,
 .container-lg,
 .container-xl,
 .container-xxl {
-  max-width: var(--container-max-width) !important;
+  width: 90% !important;
+  max-width: 90vw !important;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  width: 100%;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    width: 94% !important;
+    max-width: 94vw !important;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
 
 .container-narrow {
-  max-width: 1260px;
+  width: 85% !important;
+  max-width: 85vw !important;
   margin-left: auto;
   margin-right: auto;
 }

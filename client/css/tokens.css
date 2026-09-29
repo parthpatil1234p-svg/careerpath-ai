@@ -135,8 +135,8 @@
   --radius-lg: 22px;                  /* Hero containers: 20–24px */
   --radius-pill: 9999px;
 
-  --container-max-width: 1720px;
-  --container-narrow-width: 1260px;
+  --container-max-width: 90vw;
+  --container-narrow-width: 85vw;
 
   --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.28s cubic-bezier(0.16, 1, 0.3, 1);

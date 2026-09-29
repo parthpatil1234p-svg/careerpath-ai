@@ -90,27 +90,27 @@
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
-  line-height: 1.75;
+  font-size: 1.12rem;
+  line-height: 1.65;
   color: var(--color-text-secondary);
-  margin-bottom: 2.25rem;
-  max-width: 760px;
+  margin-bottom: 2rem;
+  max-width: 680px;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.25rem;
-  margin-bottom: 2.75rem;
+  gap: 1rem;
+  margin-bottom: 2.25rem;
 }
 
 .hero-stats {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 3rem;
-  padding-top: 2rem;
+  gap: 2.5rem;
+  padding-top: 1.75rem;
   border-top: 1px solid var(--color-border);
 }
 
@@ -121,14 +121,14 @@
 
 .stat-number {
   font-family: var(--font-mono);
-  font-size: 2.1rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--color-indigo-700);
   line-height: 1.1;
 }
 
 .stat-label {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   color: var(--color-text-muted);
   font-weight: 600;
 }
@@ -474,29 +474,29 @@
 
 .assessment-container {
   display: grid;
-  grid-template-columns: 310px 1fr;
-  gap: 2.25rem;
+  grid-template-columns: 280px 1fr;
+  gap: 1.75rem;
   align-items: start;
 }
 
 @media (min-width: 1200px) {
   .assessment-container {
-    grid-template-columns: 350px 1fr;
-    gap: 3rem;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
   }
 }
 
 @media (min-width: 1440px) {
   .assessment-container {
-    grid-template-columns: 380px 1fr;
-    gap: 3.5rem;
+    grid-template-columns: 320px 1fr;
+    gap: 2.25rem;
   }
 }
 
 @media (max-width: 991px) {
   .assessment-container {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
 }
 
@@ -504,24 +504,24 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 1.75rem;
+  padding: 1.25rem 1.4rem;
   position: sticky;
-  top: 115px;
+  top: 105px;
   box-shadow: var(--shadow-sm);
 }
 
 .step-nav-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.05rem 1.35rem;
+  gap: 0.85rem;
+  padding: 0.85rem 1.15rem;
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
-  font-size: 1.08rem;
+  font-size: 0.96rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.45rem;
 }
 
 .step-nav-item:hover {
@@ -538,10 +538,10 @@
 
 .step-nav-num {
   font-family: var(--font-mono);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 1.5px solid currentColor;
   display: flex;
@@ -562,13 +562,13 @@
 .interest-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.85rem 1.5rem;
+  gap: 0.55rem;
+  padding: 0.65rem 1.25rem;
   border-radius: var(--radius-pill);
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   color: var(--color-text-secondary);
-  font-size: 1.02rem;
+  font-size: 0.94rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -591,8 +591,8 @@
 
 /* Category Filter Buttons */
 .category-filter-btn {
-  padding: 0.5rem 1.15rem;
-  font-size: 0.92rem;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.84rem;
   font-weight: 600;
   border: 1px solid var(--color-border);
   background: #FFFFFF;
@@ -619,10 +619,10 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.95rem 1.25rem;
+  padding: 0.75rem 1rem;
   transition: all var(--transition-fast);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-  min-height: 58px;
+  min-height: 52px;
 }
 
 .skill-picker-card:hover {
@@ -637,10 +637,10 @@
 }
 
 .skill-picker-card .form-check-label {
-  font-size: 1.02rem;
+  font-size: 0.94rem;
   font-weight: 600;
   color: var(--color-text-primary);
-  line-height: 1.35;
+  line-height: 1.3;
   letter-spacing: -0.01em;
 }
 
@@ -651,10 +651,10 @@
 }
 
 .skill-proficiency-select {
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  padding: 0.35rem 0.65rem;
-  min-width: 110px;
+  padding: 0.25rem 0.55rem;
+  min-width: 104px;
   border-color: #CBD5E1;
 }
 
@@ -665,8 +665,8 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 2.5rem;
-  margin-bottom: 2.25rem;
+  padding: 2rem;
+  margin-bottom: 1.75rem;
   position: relative;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
@@ -686,7 +686,7 @@
   background: var(--color-surface-blue);
   border: 1px solid #BFDBFE;
   border-radius: var(--radius-md);
-  padding: 1.25rem 1.6rem;
+  padding: 1rem 1.35rem;
   text-align: center;
 }
 
@@ -694,23 +694,23 @@
   background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 1.5rem;
+  padding: 1.15rem;
 }
 
 .why-recommended-banner {
   background: var(--color-surface-blue);
   border: 1px solid #BAE6FD;
   border-radius: var(--radius-sm);
-  padding: 1rem 1.4rem;
+  padding: 0.85rem 1.25rem;
   color: var(--color-text-secondary);
-  font-size: 1.02rem;
+  font-size: 0.95rem;
 }
 
 .gap-column {
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 1.5rem;
+  padding: 1.25rem;
   height: 100%;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
 }
@@ -723,8 +723,8 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 2.25rem;
-  margin-bottom: 2rem;
+  padding: 1.85rem;
+  margin-bottom: 1.75rem;
   box-shadow: var(--shadow-sm);
 }
 
@@ -732,8 +732,8 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 2rem;
-  margin-bottom: 1.5rem;
+  padding: 1.6rem;
+  margin-bottom: 1.25rem;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
 }
@@ -753,8 +753,8 @@
 }
 
 .week-badge-pill {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
   background: var(--color-indigo-600);
   color: #FFFFFF;
@@ -763,11 +763,11 @@
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .task-item {
-  padding: 1.15rem 1.45rem;
+  padding: 0.95rem 1.25rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: #FFFFFF;
@@ -785,7 +785,7 @@
 }
 
 .task-item .task-title {
-  font-size: 1.08rem;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.35;
 }

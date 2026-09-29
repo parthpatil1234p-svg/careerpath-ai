@@ -304,8 +304,22 @@ function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+function getActiveSessionForUser(userId, skill) {
+  if (skill) {
+    const norm = normalizeSkillKey(skill);
+    return activeSessions.get(`${userId}_${norm}`) || null;
+  }
+  for (const [key, session] of activeSessions.entries()) {
+    if (key.startsWith(`${userId}_`)) {
+      return session;
+    }
+  }
+  return null;
+}
+
 module.exports = {
   startQuizSession,
   submitAnswer,
-  finalizeQuiz
+  finalizeQuiz,
+  getActiveSessionForUser
 };

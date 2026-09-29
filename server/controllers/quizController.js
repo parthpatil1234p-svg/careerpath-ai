@@ -41,14 +41,21 @@ exports.submitAnswer = async (req, res) => {
       targetSkill = sessionId.split('_').slice(1).join('_');
     }
 
-    if (!targetSkill || !questionId || choice === undefined) {
+    const session = quizService.getActiveSessionForUser(req.user.id, targetSkill);
+    if (!targetSkill && session) {
+      targetSkill = session.skill;
+    }
+
+    let targetQuestionId = questionId || session?.currentQuestionId;
+
+    if (!targetSkill || !targetQuestionId || choice === undefined) {
       return res.status(400).json({
         success: false,
         message: 'skill (or sessionId), questionId, and selectedIndex (or selectedOption) are required'
       });
     }
 
-    const result = await quizService.submitAnswer(req.user.id, targetSkill, questionId, choice);
+    const result = await quizService.submitAnswer(req.user.id, targetSkill, targetQuestionId, choice);
     return res.status(200).json({ success: true, data: result });
   } catch (err) {
     console.error('[QuizController.submitAnswer] Error:', err.message);
