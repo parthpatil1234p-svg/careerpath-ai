@@ -107,6 +107,83 @@ const Auth = {
   },
 
   /**
+   * Checks whether the active user has completed skill verification
+   * (either via adaptive check or GitHub code verification)
+   * @returns {boolean}
+   */
+  isSkillVerified() {
+    const user = this.getCurrentUser();
+    if (!user) return false;
+    return Boolean(
+      user.hasCompletedSkillVerification ||
+      (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
+    );
+  },
+
+  /**
+   * Guard for skill-verified pages
+   * @returns {boolean}
+   */
+  requireSkillVerification() {
+    this.requireAuth();
+    return this.isSkillVerified();
+  },
+
+  /**
+   * Renders the high-aesthetic Skill Verification Gate into a target container
+   * @param {HTMLElement} container
+   * @param {string} pageName
+   * @param {string} description
+   */
+  renderVerificationGate(container, pageName, description) {
+    if (!container) return;
+    const loadingEl = document.getElementById('loadingState') || document.getElementById('roadmapLoading');
+    if (loadingEl) loadingEl.classList.add('d-none');
+
+    container.classList.remove('d-none');
+    container.innerHTML = `
+      <div class="row justify-content-center py-5">
+        <div class="col-lg-8 col-xl-7">
+          <div class="card p-4 p-md-5 text-center shadow-lg border border-warning-subtle" 
+               style="background: radial-gradient(circle at top, rgba(234, 179, 8, 0.09), transparent 70%), var(--bg-card); border-radius: 1.25rem;">
+            <div class="mb-3">
+              <span class="badge bg-warning-subtle text-warning fs-6 px-3 py-1.5 rounded-pill border border-warning-subtle font-mono">
+                <i class="bi bi-shield-lock-fill me-1"></i> Skill Verification Gate Active
+              </span>
+            </div>
+            <div class="display-3 text-warning mb-3">
+              <i class="bi bi-lock-fill"></i>
+            </div>
+            <h2 class="h3 fw-bold text-ink mb-2">${escapeHtml(pageName)} is Locked</h2>
+            <p class="text-muted mb-4 lead" style="font-size: 1.05rem;">
+              ${escapeHtml(description)} require verified skill data to generate. Complete <strong>"Prove your skills"</strong> in your assessment to earn your <strong>Account Verified ✓</strong> credential and unlock this page.
+            </p>
+            <div class="p-3 mb-4 rounded-3 stat-box-atlas text-start d-flex align-items-center gap-3 border border-line">
+              <div class="rounded-circle p-2 bg-primary-subtle text-primary fs-4 flex-shrink-0">
+                <i class="bi bi-lightning-charge-fill"></i>
+              </div>
+              <div>
+                <div class="fw-semibold text-ink">90-Second Adaptive Check or GitHub Sync</div>
+                <div class="small text-muted">Answer 5 quick adaptive questions or auto-sync your GitHub repositories to prove your skills and unlock all platform features.</div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+              <a href="assessment.html#proveSkillsPanel" class="btn cp-btn-primary px-4 py-2.5 fw-semibold d-inline-flex align-items-center gap-2">
+                <i class="bi bi-shield-check"></i>
+                <span>Prove Your Skills to Unlock</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+              <a href="index.html" class="btn btn-outline-secondary px-3 py-2.5">
+                Back to Home
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  /**
    * Initializes navbar user state (displays username or login/signup buttons)
    */
   initNav() {
@@ -115,18 +192,32 @@ const Auth = {
     if (!authActions) return;
 
     if (this.isAuthenticated() && user) {
+      const isVerified = this.isSkillVerified();
+
+      const statusBadge = isVerified
+        ? `<span class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill font-mono" style="font-size:0.75rem;" title="Account Verified — All pages unlocked">
+             <i class="bi bi-patch-check-fill text-success"></i>
+             <span>Account Verified ✓</span>
+           </span>`
+        : `<a href="assessment.html#proveSkillsPanel" class="badge bg-warning-subtle text-warning border border-warning-subtle d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill text-decoration-none font-mono" style="font-size:0.75rem;" title="Prove your skills to unlock Dashboard & Roadmaps">
+             <i class="bi bi-lock-fill text-warning"></i>
+             <span>Unverified · Prove Skills</span>
+           </a>`;
+
       authActions.innerHTML = `
         <div class="d-flex align-items-center gap-2">
-          <a href="dashboard.html"
+          ${statusBadge}
+          <a href="${isVerified ? 'dashboard.html' : 'assessment.html#proveSkillsPanel'}"
              class="d-none d-md-flex align-items-center gap-2 text-decoration-none text-nowrap"
              style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:0.35rem 0.9rem;"
              title="Logged in as ${escapeHtml(user.name || 'Student')}">
             <i class="bi bi-person-circle" style="color:#4F46E5;font-size:1rem;"></i>
             <span style="color:#1E1B4B;font-size:0.85rem;font-weight:600;letter-spacing:0.01em;">${escapeHtml(user.name || 'Student')}</span>
           </a>
-          <a href="dashboard.html" class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap">
-            <i class="bi bi-speedometer2"></i>
-            <span>Dashboard</span>
+          <a href="${isVerified ? 'dashboard.html' : 'assessment.html#proveSkillsPanel'}" 
+             class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap ${!isVerified ? 'opacity-90' : ''}">
+            <i class="bi ${isVerified ? 'bi-speedometer2' : 'bi-lock-fill'}"></i>
+            <span>${isVerified ? 'Dashboard' : 'Verify to Unlock'}</span>
           </a>
           <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2 d-inline-flex align-items-center" onclick="Auth.logout()" title="Sign Out">
             <i class="bi bi-box-arrow-right"></i>
@@ -137,12 +228,17 @@ const Auth = {
       const mobileActions = document.getElementById('notchMobileAuthActions');
       if (mobileActions) {
         mobileActions.innerHTML = `
-          <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="dashboard.html">
-            <i class="bi bi-speedometer2 me-1"></i> Dashboard (${escapeHtml(user.name || 'Student')})
-          </a>
-          <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()" title="Sign Out">
-            <i class="bi bi-box-arrow-right"></i>
-          </button>
+          <div class="d-flex flex-column gap-2 w-100">
+            <div class="d-flex justify-content-center">${statusBadge}</div>
+            <div class="d-flex gap-2">
+              <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="${isVerified ? 'dashboard.html' : 'assessment.html#proveSkillsPanel'}">
+                <i class="bi ${isVerified ? 'bi-speedometer2' : 'bi-lock-fill'} me-1"></i> ${isVerified ? 'Dashboard' : 'Verify to Unlock'}
+              </a>
+              <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()" title="Sign Out">
+                <i class="bi bi-box-arrow-right"></i>
+              </button>
+            </div>
+          </div>
         `;
       }
     }
@@ -161,3 +257,12 @@ function escapeHtml(str) {
 }
 
 window.Auth = Auth;
+
+// Auto-initialize navbar on page load across all pages
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.Auth?.initNav();
+  });
+} else {
+  window.Auth?.initNav();
+}

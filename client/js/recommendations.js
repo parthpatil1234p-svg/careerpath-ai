@@ -13,6 +13,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  // 1.1 Verification Gate Check
+  if (!window.Auth?.isSkillVerified()) {
+    const targetContainer = document.getElementById('recommendationsContainer') || document.querySelector('main');
+    window.Auth?.renderVerificationGate(
+      targetContainer,
+      'Recommendations',
+      'Your tailored career matches, deterministic score breakdowns, and skill gap analyses'
+    );
+    return;
+  }
+
   // 2. DOM Elements
   const loadingState = document.getElementById('loadingState');
   const incompleteState = document.getElementById('incompleteProfileState');
@@ -456,6 +467,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (err) {
       loadingState.classList.add('d-none');
+
+      if (err.status === 403 || err.requiresSkillVerification) {
+        const targetContainer = document.getElementById('recommendationsContainer') || document.querySelector('main');
+        window.Auth?.renderVerificationGate(
+          targetContainer,
+          'Recommendations',
+          'Your tailored career matches, deterministic score breakdowns, and skill gap analyses'
+        );
+        return;
+      }
 
       if (
         err.status === 400 || err.status === 404 || err.status === 422 ||

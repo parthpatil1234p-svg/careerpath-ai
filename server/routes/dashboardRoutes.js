@@ -9,9 +9,9 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireSkillVerification } = require('../middleware/authMiddleware');
 const { getDashboard } = require('../controllers/dashboardController');
 
-router.get('/', protect, getDashboard);
+router.get('/', protect, requireSkillVerification, getDashboard);
 
 module.exports = router;

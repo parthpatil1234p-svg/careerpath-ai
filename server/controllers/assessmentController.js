@@ -70,7 +70,7 @@ const updateAssessment = async (req, res, next) => {
     updates.profileCompleted = Boolean(hasEducation && hasInterest && hasSkill);
 
     // Persist one-time skill verification completion for account
-    if (req.body.hasCompletedSkillVerification || (Array.isArray(updates.skills) && updates.skills.some((s) => s.isQuizVerified))) {
+    if (req.body.hasCompletedSkillVerification || (Array.isArray(updates.skills) && updates.skills.some((s) => s.isQuizVerified || s.isCodeVerified))) {
       updates.hasCompletedSkillVerification = true;
     }
 

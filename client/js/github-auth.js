@@ -97,6 +97,9 @@ window.GitHubAuth = (function () {
 
       if (response.success && response.data?.user) {
         window.Auth.setCurrentUser(response.data.user);
+        if (typeof window.Auth?.initNav === 'function') {
+          window.Auth.initNav();
+        }
         if (showAlert) {
           showAlert(response.message || 'GitHub repositories synchronized successfully via auth system!', 'success');
         }
@@ -139,6 +142,9 @@ window.GitHubAuth = (function () {
 
       if (response.success && response.data?.user) {
         window.Auth.setCurrentUser(response.data.user);
+        if (typeof window.Auth?.initNav === 'function') {
+          window.Auth.initNav();
+        }
         if (showAlert) {
           showAlert(response.message || 'GitHub repositories linked to your study profile!', 'success');
         }

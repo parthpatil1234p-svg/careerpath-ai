@@ -633,6 +633,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
+    // If all skills are self-rated beginner, include them as baseline candidates
+    if (candidates.length === 0 && selectedSkillsMap.size > 0) {
+      selectedSkillsMap.forEach((s) => {
+        const norm = normalizeSkillSlug(s.name);
+        const isBanked = AVAILABLE_QUIZ_SKILLS.includes(norm);
+        candidates.push({ key: s.name, norm, skill: s, score: isBanked ? 20 : 0, isVerified: false, isBanked });
+      });
+    }
+
     // Sort by verified first, then score descending, then alphabetical
     candidates.sort((a, b) => {
       if (a.isVerified !== b.isVerified) {
@@ -654,11 +663,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const requiredSkills = getRequiredVerificationSkills();
     const verifiedCount = requiredSkills.filter(s => s.isQuizVerified || s.isCodeVerified).length;
-    const targetThreshold = Math.min(3, Math.max(requiredSkills.length, 1));
-    const isCompleted = hasCompletedSkillVerification || (requiredSkills.length > 0 && verifiedCount >= Math.min(3, requiredSkills.length));
+    const isCompleted = hasCompletedSkillVerification || (requiredSkills.length > 0 && verifiedCount >= 1);
 
-    // Check if this account has already completed one-time skill verification
+    // Check if this account has completed skill verification
     if (isCompleted) {
+      hasCompletedSkillVerification = true;
+      const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                          (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
+      if (currentUser && !currentUser.hasCompletedSkillVerification) {
+        currentUser.hasCompletedSkillVerification = true;
+        if (typeof window.Auth?.setCurrentUser === 'function') {
+          window.Auth.setCurrentUser(currentUser);
+        }
+        if (typeof window.Auth?.initNav === 'function') {
+          window.Auth.initNav();
+        }
+      }
+
       if (proveSkillsBadge) {
         proveSkillsBadge.className = 'prove-skills-badge completed';
       }
@@ -670,7 +691,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         proveSkillsProgressFill.className = 'prove-skills-progress-fill completed';
       }
       if (proveSkillsSubtitle) {
-        proveSkillsSubtitle.textContent = 'Your account has verified technical skills. You can proceed directly to Goals anytime, or test any skill below voluntarily.';
+        proveSkillsSubtitle.textContent = 'Your account has verified technical skills. Dashboard, Recommendations, and Active Roadmap are fully unlocked!';
       }
       proveSkillsPanel.classList.add('all-verified');
 
@@ -1291,6 +1312,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.Auth.setCurrentUser(currentUser);
       }
     }
+    if (typeof window.Auth?.initNav === 'function') {
+      window.Auth.initNav();
+    }
 
     // Refresh UI
     try {
@@ -1301,7 +1325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error refreshing UI on modal done:', err);
     }
 
-    showAlert('✓ Skill verified! Your assessment proficiency has been updated and account verification is complete.', 'success');
+    showAlert('🎉 Account Verified ✓! Your technical skills are verified. Dashboard, Recommendations, and Active Roadmap are now unlocked!', 'success');
   });
 
   // Ensure modal dismissal (via X button, backdrop click, or ESC) always guarantees immediate UI refresh

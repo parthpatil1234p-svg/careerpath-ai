@@ -14,6 +14,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  // 1.1 Verification Gate Check
+  if (!window.Auth?.isSkillVerified()) {
+    const dashboardContent = document.getElementById('dashboardContent') || document.querySelector('main');
+    window.Auth?.renderVerificationGate(
+      dashboardContent,
+      'Dashboard',
+      'Your personal career telemetry, skill readiness scores, and milestone trackers'
+    );
+    return;
+  }
+
   // 2. DOM Elements
   const loadingState = document.getElementById('loadingState');
   const dashboardContent = document.getElementById('dashboardContent');
@@ -65,6 +76,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (err) {
       loadingState.classList.add('d-none');
+      if (err.status === 403 || err.requiresSkillVerification) {
+        window.Auth?.renderVerificationGate(
+          dashboardContent || document.querySelector('main'),
+          'Dashboard',
+          'Your personal career telemetry, skill readiness scores, and milestone trackers'
+        );
+        return;
+      }
       showAlert(err.message || 'Failed to fetch student dashboard telemetry.');
     }
   };

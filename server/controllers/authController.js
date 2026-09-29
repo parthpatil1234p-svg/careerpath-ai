@@ -25,18 +25,22 @@ const generateOtp = () => {
 
 // ── Helper: shape the user object returned in responses ───────
 const formatUser = (user) => ({
-  id:               user._id,
-  name:             user.name,
-  email:            user.email,
-  role:             user.role,
-  authProvider:     user.authProvider || 'local',
-  profileCompleted: user.profileCompleted,
-  isVerified:       user.isVerified || false,
-  avatarUrl:        user.avatarUrl || '',
-  resumeUrl:        user.resumeUrl || '',
-  githubProfile:    user.githubProfile || null,
-  githubRepos:      user.githubRepos || [],
-  skills:           user.skills || [],
+  id:                            user._id,
+  name:                          user.name,
+  email:                         user.email,
+  role:                          user.role,
+  authProvider:                  user.authProvider || 'local',
+  profileCompleted:              user.profileCompleted,
+  isVerified:                    user.isVerified || false,
+  hasCompletedSkillVerification: Boolean(
+    user.hasCompletedSkillVerification ||
+    (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
+  ),
+  avatarUrl:                     user.avatarUrl || '',
+  resumeUrl:                     user.resumeUrl || '',
+  githubProfile:                 user.githubProfile || null,
+  githubRepos:                   user.githubRepos || [],
+  skills:                        user.skills || [],
 });
 
 // ── registerUser ───────────────────────────────────────────────

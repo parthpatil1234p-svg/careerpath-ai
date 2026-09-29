@@ -12,7 +12,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireSkillVerification } = require('../middleware/authMiddleware');
 const {
   validateRoadmapGeneration,
   validateTaskId,
@@ -24,8 +24,8 @@ const {
   archiveRoadmap,
 } = require('../controllers/roadmapController');
 
-router.post('/generate', protect, validateRoadmapGeneration, generateRoadmap);
-router.get('/current', protect, getCurrentRoadmap);
+router.post('/generate', protect, requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
+router.get('/current', protect, requireSkillVerification, getCurrentRoadmap);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
 router.delete('/current', protect, archiveRoadmap);
 

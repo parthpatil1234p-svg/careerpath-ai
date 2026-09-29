@@ -14,6 +14,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  // 1.1 Verification Gate Check
+  if (!window.Auth?.isSkillVerified()) {
+    const targetContent = document.getElementById('roadmapContent') || document.querySelector('main');
+    window.Auth?.renderVerificationGate(
+      targetContent,
+      'Active Roadmap',
+      'Your week-by-week learning milestones, hands-on tasks, and curated resources'
+    );
+    return;
+  }
+
   // 2. Elements
   const loadingState = document.getElementById('roadmapLoading') || document.getElementById('loadingState');
   const emptyState = document.getElementById('emptyRoadmapState');
@@ -62,6 +73,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (err) {
       loadingState.classList.add('d-none');
+      if (err.status === 403 || err.requiresSkillVerification) {
+        window.Auth?.renderVerificationGate(
+          content || document.querySelector('main'),
+          'Active Roadmap',
+          'Your week-by-week learning milestones, hands-on tasks, and curated resources'
+        );
+        return;
+      }
       if (err.status === 404) {
         emptyState.classList.remove('d-none');
       } else {

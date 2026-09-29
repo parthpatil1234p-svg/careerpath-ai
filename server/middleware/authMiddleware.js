@@ -93,4 +93,35 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { protect, authorize };
+// ── requireSkillVerification ────────────────────────────────────
+/**
+ * requireSkillVerification — Ensures user has completed "Prove your skills"
+ * Blocks access to dashboard telemetry, recommendations, and roadmaps until verified.
+ */
+const requireSkillVerification = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Access denied. Authentication required.',
+    });
+  }
+
+  const isVerified = Boolean(
+    req.user.hasCompletedSkillVerification ||
+    (Array.isArray(req.user.skills) && req.user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
+  );
+
+  if (!isVerified) {
+    return res.status(403).json({
+      success: false,
+      requiresSkillVerification: true,
+      message: 'Skill verification required. Please complete "Prove your skills" in your assessment to unlock this section.',
+      redirectUrl: 'assessment.html#proveSkillsPanel',
+    });
+  }
+
+  next();
+};
+
+module.exports = { protect, authorize, requireSkillVerification };
+
