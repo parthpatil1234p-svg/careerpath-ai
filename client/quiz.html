@@ -118,10 +118,10 @@
         <!-- Alert Container -->
         <div id="quizAlertContainer" class="w-100 mb-3"></div>
 
-        <!-- AI Engine & Custom Skill Bar -->
+        <!-- Custom Skill Search Bar (AI Engine runs automatically in background) -->
         <div class="card p-3 mb-3 border border-line bg-surface-muted rounded-3 shadow-xs">
           <div class="row g-2 align-items-center">
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-8 col-md-12">
               <div class="input-group input-group-sm">
                 <span class="input-group-text bg-white border-line"><i class="bi bi-search text-primary"></i></span>
                 <input type="text" class="form-control" id="customSkillInput" placeholder="Quiz ANY skill: e.g. Docker, AWS, Flutter, TypeScript, Go..." />
@@ -130,34 +130,18 @@
                 </button>
               </div>
             </div>
-            <div class="col-lg-6 col-md-12">
-              <div class="d-flex align-items-center justify-content-lg-end gap-2 flex-wrap">
-                <label for="aiProviderSelect" class="small text-muted fw-semibold mb-0 font-mono">
-                  <i class="bi bi-cpu text-primary me-1"></i>AI Engine:
-                </label>
-                <select class="form-select form-select-sm" id="aiProviderSelect" style="max-width: 250px;">
-                  <option value="auto">Auto (Groq / Gemini / Bank)</option>
-                  <option value="groq">⚡ Groq Cloud (Ultra-Fast)</option>
-                  <option value="gemini">✨ Google Gemini Flash</option>
-                  <option value="curated_bank">🏛️ Curated Bank / Offline</option>
-                  <option value="custom_api_key">🔑 Custom User API Key</option>
-                </select>
-              </div>
+            <div class="col-lg-4 col-md-12 text-lg-end">
+              <span class="badge bg-white border border-line text-secondary font-mono small py-1.5 px-3 d-inline-flex align-items-center gap-1 shadow-xs">
+                <i class="bi bi-cpu-fill text-primary"></i>
+                <span>Adaptive AI Engine (Auto)</span>
+              </span>
             </div>
           </div>
-          <!-- Custom User API Key Input Box -->
-          <div id="customApiKeyRow" class="row mt-2 g-2 d-none">
-            <div class="col-12">
-              <div class="input-group input-group-sm">
-                <span class="input-group-text bg-white border-line font-mono"><i class="bi bi-key-fill text-warning me-1"></i>Custom API Key</span>
-                <input type="password" class="form-control font-mono" id="customApiKeyInput" placeholder="Enter your Groq (gsk_...) or Gemini (AIzaSy...) API Key" />
-                <button class="btn btn-outline-secondary" type="button" id="btnSaveCustomKey">Save</button>
-              </div>
-              <div class="text-muted mt-1" style="font-size: 0.75rem;">
-                <i class="bi bi-shield-lock-fill text-success me-1"></i> Your custom key stays securely in your browser's localStorage and is used for on-demand dynamic question synthesis.
-              </div>
-            </div>
-          </div>
+          <!-- Background AI Provider Selection (Runs silently in background) -->
+          <select id="aiProviderSelect" class="d-none">
+            <option value="auto" selected>Auto</option>
+          </select>
+          <div id="customApiKeyRow" class="d-none"></div>
         </div>
 
         <!-- Skill Selector Tabs -->

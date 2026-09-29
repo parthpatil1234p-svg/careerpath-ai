@@ -138,10 +138,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // Merge any user skills not yet in SUPPORTED_SKILLS
+    // Merge any valid user skills not yet in SUPPORTED_SKILLS (excluding emails or malformed keys)
     userSkills.forEach((us) => {
       const slug = (us.name || '').toLowerCase().trim();
-      if (slug && !SUPPORTED_SKILLS.some((s) => s.key === slug)) {
+      if (!slug || slug.includes('@') || slug.includes('.com') || slug.length > 30) return;
+      if (!SUPPORTED_SKILLS.some((s) => s.key === slug)) {
         SUPPORTED_SKILLS.push({
           key: slug,
           label: us.displayName || capitalize(us.name),
@@ -151,10 +152,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    // Determine initial skill from query params
+    // Determine initial skill from query params (ignore invalid strings/emails)
     const urlParams = new URLSearchParams(window.location.search);
     const paramSkill = (urlParams.get('skill') || '').toLowerCase().trim();
-    if (paramSkill) {
+    if (paramSkill && !paramSkill.includes('@') && !paramSkill.includes('.com') && paramSkill.length <= 30) {
       let match = SUPPORTED_SKILLS.find((s) => s.key === paramSkill);
       if (!match) {
         match = {
@@ -169,54 +170,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       // Find first unverified skill user possesses
       const match = SUPPORTED_SKILLS.find((sup) => {
+        if (sup.key.includes('@') || sup.key.includes('.com')) return false;
         const uSkill = userSkills.find((us) => (us.name || '').toLowerCase() === sup.key);
         return uSkill && !uSkill.isQuizVerified;
       });
       activeSkillKey = match ? match.key : 'javascript';
     }
 
-    // Setup Provider Select & Custom Key
+    // Setup Provider Select & Custom Key (Runs silently in background)
     if (aiProviderSelect) {
-      const savedProvider = localStorage.getItem('cp_quiz_preferred_provider') || 'auto';
-      aiProviderSelect.value = savedProvider;
-      if (savedProvider === 'custom_api_key' && customApiKeyRow) {
-        customApiKeyRow.classList.remove('d-none');
-      }
-      aiProviderSelect.addEventListener('change', () => {
-        const val = aiProviderSelect.value;
-        localStorage.setItem('cp_quiz_preferred_provider', val);
-        if (val === 'custom_api_key') {
-          customApiKeyRow?.classList.remove('d-none');
-        } else {
-          customApiKeyRow?.classList.add('d-none');
-        }
-      });
-    }
-
-    if (customApiKeyInput) {
-      const savedKey = localStorage.getItem('cp_custom_quiz_key') || '';
-      if (savedKey) customApiKeyInput.value = savedKey;
-    }
-
-    if (btnSaveCustomKey && customApiKeyInput) {
-      btnSaveCustomKey.addEventListener('click', () => {
-        const keyVal = customApiKeyInput.value.trim();
-        if (!keyVal) {
-          localStorage.removeItem('cp_custom_quiz_key');
-          showAlert('Custom API key removed from browser storage.', 'info');
-        } else {
-          localStorage.setItem('cp_custom_quiz_key', keyVal);
-          showAlert('Custom API key saved securely in browser localStorage!', 'success');
-        }
-      });
+      aiProviderSelect.value = 'auto';
     }
 
     // Setup Custom Skill Search
     const triggerCustomSkill = () => {
       const rawVal = customSkillInput?.value?.trim();
       if (!rawVal) return;
+      if (rawVal.includes('@') || rawVal.includes('.com') || rawVal.includes('http')) {
+        showAlert('Please enter a valid skill or technology name (e.g. Docker, Rust, AWS, Flutter).', 'warning');
+        return;
+      }
       const norm = rawVal.toLowerCase().replace(/[^a-z0-9._-]/g, '');
-      if (!norm) return;
+      if (!norm || norm.length > 30) return;
 
       let existing = SUPPORTED_SKILLS.find((s) => s.key === norm);
       if (!existing) {

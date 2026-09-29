@@ -1432,6 +1432,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           customSkillFeedback.textContent = 'Please enter a skill name (e.g. Rust, Solidity, Blender).';
           customSkillFeedback.classList.remove('d-none');
         }
+      if (rawName.includes('@') || rawName.includes('.com') || rawName.includes('http')) {
+        if (customSkillFeedback) {
+          customSkillFeedback.className = 'small mt-2 text-danger';
+          customSkillFeedback.textContent = 'Please enter a valid skill or technology name (e.g. Docker, Rust, Flutter).';
+          customSkillFeedback.classList.remove('d-none');
+        }
         return;
       }
 
