@@ -147,7 +147,7 @@ const Auth = {
           <div class="card p-4 p-md-5 text-center shadow-lg border border-warning-subtle" 
                style="background: radial-gradient(circle at top, rgba(234, 179, 8, 0.09), transparent 70%), var(--bg-card); border-radius: 1.25rem;">
             <div class="mb-3">
-              <span class="badge bg-warning-subtle text-warning fs-6 px-3 py-1.5 rounded-pill border border-warning-subtle font-mono">
+              <span class="badge badge-gold fs-6 px-3 py-1.5 rounded-pill" style="font-family: var(--font-body);">
                 <i class="bi bi-shield-lock-fill me-1"></i> Skill Verification Gate Active
               </span>
             </div>
@@ -195,31 +195,34 @@ const Auth = {
       const isVerified = this.isSkillVerified();
 
       const statusBadge = isVerified
-        ? `<span class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill font-mono" style="font-size:0.75rem;" title="Account Verified — All pages unlocked">
-             <i class="bi bi-patch-check-fill text-success"></i>
+        ? `<span class="badge badge-leaf d-inline-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill shadow-xs" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;letter-spacing:0.01em;" title="Account Verified — All pages unlocked">
+             <i class="bi bi-patch-check-fill text-success" style="font-size:0.85rem;"></i>
              <span>Account Verified ✓</span>
            </span>`
-        : `<a href="assessment.html#proveSkillsPanel" class="badge bg-warning-subtle text-warning border border-warning-subtle d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill text-decoration-none font-mono" style="font-size:0.75rem;" title="Prove your skills to unlock Dashboard & Roadmaps">
+        : `<a href="assessment.html#proveSkillsPanel" class="badge badge-gold d-inline-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill text-decoration-none shadow-xs" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Prove your skills to unlock Dashboard & Roadmaps">
              <i class="bi bi-lock-fill text-warning"></i>
              <span>Unverified · Prove Skills</span>
            </a>`;
 
+      const unverifiedActionBtn = !isVerified
+        ? `<a href="assessment.html#proveSkillsPanel" class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap">
+             <i class="bi bi-shield-check"></i>
+             <span>Verify to Unlock</span>
+           </a>`
+        : '';
+
       authActions.innerHTML = `
         <div class="d-flex align-items-center gap-2">
           ${statusBadge}
-          <a href="${isVerified ? 'dashboard.html' : 'assessment.html#proveSkillsPanel'}"
+          <a href="dashboard.html"
              class="d-none d-md-flex align-items-center gap-2 text-decoration-none text-nowrap"
-             style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:0.35rem 0.9rem;"
-             title="Logged in as ${escapeHtml(user.name || 'Student')}">
-            <i class="bi bi-person-circle" style="color:#4F46E5;font-size:1rem;"></i>
-            <span style="color:#1E1B4B;font-size:0.85rem;font-weight:600;letter-spacing:0.01em;">${escapeHtml(user.name || 'Student')}</span>
+             style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:0.32rem 0.85rem;transition:all var(--transition-fast);"
+             title="Logged in as ${escapeHtml(user.name || 'Student')} · View Dashboard">
+            <i class="bi bi-person-circle" style="color:#4F46E5;font-size:0.95rem;"></i>
+            <span style="color:#1E1B4B;font-size:0.84rem;font-weight:600;font-family:var(--font-body);letter-spacing:0.01em;">${escapeHtml(user.name || 'Student')}</span>
           </a>
-          <a href="${isVerified ? 'dashboard.html' : 'assessment.html#proveSkillsPanel'}" 
-             class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap ${!isVerified ? 'opacity-90' : ''}">
-            <i class="bi ${isVerified ? 'bi-speedometer2' : 'bi-lock-fill'}"></i>
-            <span>${isVerified ? 'Dashboard' : 'Verify to Unlock'}</span>
-          </a>
-          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2 d-inline-flex align-items-center" onclick="Auth.logout()" title="Sign Out">
+          ${unverifiedActionBtn}
+          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2.5 py-1 d-inline-flex align-items-center" onclick="Auth.logout()" title="Sign Out">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </div>
