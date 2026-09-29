@@ -562,9 +562,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else if (skill.isCodeVerified) {
         verifiedTag = `<span class="badge-code-verified ms-1" title="Verified by GitHub Repo Code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i> Verified</span>`;
       }
+
+      const rawProf = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
+      const shortProf = rawProf.slice(0, 3);
+
       pill.innerHTML = `
-        <span class="fw-semibold text-ink">${escapeHtml(skill.displayName)}</span>
-        <span class="text-primary fw-bold font-mono" style="font-size: 0.68rem;">(${skill.proficiency.slice(0, 3)})</span>
+        <span class="fw-semibold text-ink">${escapeHtml(skill.displayName || skill.name)}</span>
+        <span class="text-primary fw-bold font-mono" style="font-size: 0.68rem;">(${escapeHtml(shortProf)})</span>
         ${verifiedTag}
         <i class="bi bi-x ms-1 cursor-pointer" title="Remove" style="cursor: pointer;"></i>
       `;
@@ -587,43 +591,58 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectedSkillsMap.forEach((s) => {
       const norm = normalizeSkillSlug(s.name);
       const isBanked = AVAILABLE_QUIZ_SKILLS.includes(norm);
+      const profStr = String(s.verifiedProficiency || s.proficiency || '').toLowerCase();
+      const selfProfStr = String(s.selfRatedProficiency || '').toLowerCase();
+      const isVerified = Boolean(s.isQuizVerified || s.isCodeVerified);
       const isLevelEligible =
-        ['intermediate', 'advanced'].includes(String(s.proficiency).toLowerCase()) ||
-        ['intermediate', 'advanced'].includes(String(s.selfRatedProficiency || '').toLowerCase()) ||
-        s.isQuizVerified ||
-        s.isCodeVerified;
+        ['intermediate', 'advanced'].includes(profStr) ||
+        ['intermediate', 'advanced'].includes(selfProfStr) ||
+        isVerified;
 
       if (isBanked && isLevelEligible) {
         let score = 0;
         // Prioritize already-verified skills so they ALWAYS remain visible with their checkmarks!
-        if (s.isQuizVerified || s.isCodeVerified) {
+        if (isVerified) {
           score += 1000;
         }
         selectedInterests.forEach((interest) => {
           const affinity = INTEREST_SKILL_AFFINITY[interest] || [];
           if (affinity.includes(norm)) score += 10;
         });
-        const levelToCheck = s.selfRatedProficiency || s.proficiency;
+        const levelToCheck = String(s.selfRatedProficiency || s.proficiency || '').toLowerCase();
         if (levelToCheck === 'advanced') score += 5;
         else if (levelToCheck === 'intermediate') score += 2;
 
-        candidates.push({ key: s.name, norm, skill: s, score });
+        candidates.push({ key: s.name, norm, skill: s, score, isVerified });
       }
     });
 
-    candidates.sort((a, b) => b.score - a.score || a.skill.displayName.localeCompare(b.skill.displayName));
-    return candidates.slice(0, 3).map((c) => c.skill);
+    // Sort by verified first, then score descending, then alphabetical
+    candidates.sort((a, b) => {
+      if (a.isVerified !== b.isVerified) {
+        return a.isVerified ? -1 : 1;
+      }
+      return b.score - a.score || (a.skill.displayName || a.skill.name).localeCompare(b.skill.displayName || b.skill.name);
+    });
+
+    // Always include ALL verified skills that are selected, plus unverified ones up to at least 3 items total
+    const verifiedList = candidates.filter(c => c.isVerified).map(c => c.skill);
+    const unverifiedList = candidates.filter(c => !c.isVerified).map(c => c.skill);
+
+    const neededUnverified = Math.max(0, 3 - verifiedList.length);
+    return [...verifiedList, ...unverifiedList.slice(0, neededUnverified)];
   };
 
   const renderProveSkillsPanel = () => {
     if (!proveSkillsPanel || !proveSkillsList) return;
 
     const requiredSkills = getRequiredVerificationSkills();
-    const totalRequired = requiredSkills.length;
     const verifiedCount = requiredSkills.filter(s => s.isQuizVerified || s.isCodeVerified).length;
+    const targetThreshold = Math.min(3, Math.max(requiredSkills.length, 1));
+    const isCompleted = hasCompletedSkillVerification || (requiredSkills.length > 0 && verifiedCount >= Math.min(3, requiredSkills.length));
 
     // Check if this account has already completed one-time skill verification
-    if (hasCompletedSkillVerification) {
+    if (isCompleted) {
       if (proveSkillsBadge) {
         proveSkillsBadge.className = 'prove-skills-badge completed';
       }
@@ -635,7 +654,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         proveSkillsProgressFill.className = 'prove-skills-progress-fill completed';
       }
       if (proveSkillsSubtitle) {
-        proveSkillsSubtitle.textContent = 'Your account has already completed technical skill verification. You can proceed directly to Goals anytime, or test any skill below voluntarily.';
+        proveSkillsSubtitle.textContent = 'Your account has verified technical skills. You can proceed directly to Goals anytime, or test any skill below voluntarily.';
       }
       proveSkillsPanel.classList.add('all-verified');
 
@@ -651,6 +670,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isQuizVer = !!skill.isQuizVerified;
         const isCodeVer = !!skill.isCodeVerified;
         const isVerified = isQuizVer || isCodeVer;
+        const profStr = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
+        const profClass = profStr.toLowerCase();
 
         const row = document.createElement('div');
         row.className = `prove-skill-item ${isVerified ? 'item-verified' : ''}`;
@@ -660,7 +681,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           actionHtml = `
             <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
               <i class="bi bi-patch-check-fill"></i>
-              <span>Verified (${capitalize(skill.verifiedProficiency || skill.proficiency)}) ✓</span>
+              <span>Verified (${escapeHtml(capitalize(profStr))}) ✓</span>
             </span>
           `;
         } else if (isCodeVer) {
@@ -680,12 +701,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         let noteHtml = '';
-        if (isQuizVer && skill.selfRatedProficiency && skill.selfRatedProficiency.toLowerCase() !== (skill.verifiedProficiency || skill.proficiency).toLowerCase()) {
+        const selfRatedStr = String(skill.selfRatedProficiency || '').toLowerCase();
+        if (isQuizVer && selfRatedStr && selfRatedStr !== profClass) {
           const gapText = skill.quizGaps && skill.quizGaps.length > 0 ? ` Focus on: ${escapeHtml(skill.quizGaps.slice(0, 2).join(', '))}.` : '';
           noteHtml = `
             <div class="skill-adjusted-note">
               <i class="bi bi-info-circle text-primary me-1"></i>
-              <span>You claimed <strong>${escapeHtml(capitalize(skill.selfRatedProficiency))}</strong>, quiz calibrated to <strong>${escapeHtml(capitalize(skill.verifiedProficiency || skill.proficiency))}</strong>.${gapText}</span>
+              <span>You claimed <strong>${escapeHtml(capitalize(skill.selfRatedProficiency))}</strong>, quiz calibrated to <strong>${escapeHtml(capitalize(profStr))}</strong>.${gapText}</span>
             </div>
           `;
         }
@@ -704,7 +726,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               ${checkmarkIcon}
               <span class="prove-skill-name">${escapeHtml(skill.displayName || skill.name)}</span>
               ${verifiedTag}
-              <span class="prove-skill-level ${skill.proficiency.toLowerCase()}">${escapeHtml(skill.proficiency)}</span>
+              <span class="prove-skill-level ${escapeHtml(profClass)}">${escapeHtml(capitalize(profStr))}</span>
             </div>
             <div class="prove-skill-action">
               ${actionHtml}
@@ -726,7 +748,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // When 0 skills need verification (e.g. only beginner or unbanked skills)
-    if (totalRequired === 0) {
+    if (requiredSkills.length === 0) {
       if (proveSkillsBadge) {
         proveSkillsBadge.className = 'prove-skills-badge skipped';
       }
@@ -756,16 +778,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    const isAllComplete = verifiedCount >= totalRequired;
-    const pct = Math.round((verifiedCount / totalRequired) * 100);
+    const targetTotal = Math.min(3, requiredSkills.length);
+    const isAllComplete = verifiedCount >= targetTotal;
+    const pct = Math.min(100, Math.round((verifiedCount / targetTotal) * 100));
 
     if (proveSkillsBadge) {
       proveSkillsBadge.className = `prove-skills-badge ${isAllComplete ? 'completed' : ''}`;
     }
     if (proveSkillsBadgeText) {
       proveSkillsBadgeText.textContent = isAllComplete
-        ? `Progress: ${verifiedCount} of ${totalRequired} verified ✓`
-        : `Progress: ${verifiedCount} of ${totalRequired} verified`;
+        ? `Progress: ${verifiedCount} of ${targetTotal} verified ✓`
+        : `Progress: ${verifiedCount} of ${targetTotal} verified`;
     }
     if (proveSkillsProgressFill) {
       proveSkillsProgressFill.style.width = `${pct}%`;
@@ -774,7 +797,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (proveSkillsSubtitle) {
       proveSkillsSubtitle.textContent = isAllComplete
         ? 'Great job! All required skill claims are verified with 100% confidence. You can now continue to Goals.'
-        : `Verify ${totalRequired} of your strongest skills to continue to Goals. Each check takes ~90 seconds (5 questions).`;
+        : `Verify ${targetTotal} of your strongest skills to continue to Goals. Each check takes ~90 seconds (5 questions).`;
     }
 
     if (isAllComplete) {
@@ -788,7 +811,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       proveSkillsPanel.classList.remove('all-verified');
       if (step3ContinueBtn) {
         step3ContinueBtn.disabled = true;
-        step3ContinueBtn.title = `Verify ${totalRequired - verifiedCount} more skill(s) to continue to Goals`;
+        step3ContinueBtn.title = `Verify ${targetTotal - verifiedCount} more skill(s) to continue to Goals`;
         step3ContinueBtn.classList.add('opacity-50');
       }
     }
@@ -799,6 +822,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isQuizVer = !!skill.isQuizVerified;
       const isCodeVer = !!skill.isCodeVerified;
       const isVerified = isQuizVer || isCodeVer;
+      const profStr = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
+      const profClass = profStr.toLowerCase();
 
       const row = document.createElement('div');
       row.className = `prove-skill-item ${isVerified ? 'item-verified' : ''}`;
@@ -808,7 +833,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         actionHtml = `
           <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
             <i class="bi bi-patch-check-fill"></i>
-            <span>Verified (${capitalize(skill.verifiedProficiency || skill.proficiency)}) ✓</span>
+            <span>Verified (${escapeHtml(capitalize(profStr))}) ✓</span>
           </span>
         `;
       } else if (isCodeVer) {
@@ -828,12 +853,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       let noteHtml = '';
-      if (isQuizVer && skill.selfRatedProficiency && skill.selfRatedProficiency.toLowerCase() !== (skill.verifiedProficiency || skill.proficiency).toLowerCase()) {
+      const selfRatedStr = String(skill.selfRatedProficiency || '').toLowerCase();
+      if (isQuizVer && selfRatedStr && selfRatedStr !== profClass) {
         const gapText = skill.quizGaps && skill.quizGaps.length > 0 ? ` Focus on: ${escapeHtml(skill.quizGaps.slice(0, 2).join(', '))}.` : '';
         noteHtml = `
           <div class="skill-adjusted-note">
             <i class="bi bi-info-circle text-primary me-1"></i>
-            <span>You claimed <strong>${escapeHtml(capitalize(skill.selfRatedProficiency))}</strong>, quiz calibrated to <strong>${escapeHtml(capitalize(skill.verifiedProficiency || skill.proficiency))}</strong>.${gapText}</span>
+            <span>You claimed <strong>${escapeHtml(capitalize(skill.selfRatedProficiency))}</strong>, quiz calibrated to <strong>${escapeHtml(capitalize(profStr))}</strong>.${gapText}</span>
           </div>
         `;
       }
@@ -852,7 +878,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ${checkmarkIcon}
             <span class="prove-skill-name">${escapeHtml(skill.displayName || skill.name)}</span>
             ${verifiedTag}
-            <span class="prove-skill-level ${skill.proficiency.toLowerCase()}">${escapeHtml(skill.proficiency)}</span>
+            <span class="prove-skill-level ${escapeHtml(profClass)}">${escapeHtml(capitalize(profStr))}</span>
           </div>
           <div class="prove-skill-action">
             ${actionHtml}
@@ -880,7 +906,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let activeQuizSummary = null;
 
   const startSkillCheck = async (skillName) => {
-    const skill = selectedSkillsMap.get(skillName);
+    const skill = selectedSkillsMap.get(skillName) ||
+      Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
     if (!skill) return;
 
     if (!skillCheckModalEl) return;
@@ -905,7 +932,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await window.API.post('/quiz/start', {
         skill: skill.name,
-        selfRated: skill.proficiency || 'intermediate',
+        selfRated: skill.selfRatedProficiency || skill.proficiency || 'intermediate',
         displayName: skill.displayName || skill.name
       }, { auth: true });
 
@@ -917,7 +944,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         sessionId: res.data?.sessionId,
         skillName: skill.name,
         displayName: skill.displayName || skill.name,
-        selfRated: skill.proficiency || 'intermediate',
+        selfRated: skill.selfRatedProficiency || skill.proficiency || 'intermediate',
       };
       activeQuestionStep = 1;
       activeQuestion = res.data.question;
@@ -1067,16 +1094,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           // 1. Immediately calibrate and verify the skill in selectedSkillsMap!
           const skillName = activeQuizSession?.skillName;
-          const skill = selectedSkillsMap.get(skillName);
+          const skill = selectedSkillsMap.get(skillName) ||
+            (skillName ? Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === skillName.toLowerCase()) : null);
+
+          const verifiedLevel = (
+            activeQuizSummary?.verifiedProficiency ||
+            activeQuizSummary?.verifiedLevel ||
+            activeQuizSummary?.quizSays ||
+            (skill ? (skill.verifiedProficiency || skill.proficiency) : 'intermediate') ||
+            'intermediate'
+          ).toLowerCase();
+
           if (skill && activeQuizSummary) {
-            skill.selfRatedProficiency = skill.selfRatedProficiency || skill.proficiency;
-            skill.proficiency = activeQuizSummary.verifiedLevel;
-            skill.verifiedProficiency = activeQuizSummary.verifiedLevel;
+            skill.selfRatedProficiency = skill.selfRatedProficiency || skill.proficiency || 'intermediate';
+            skill.proficiency = verifiedLevel;
+            skill.verifiedProficiency = verifiedLevel;
             skill.isQuizVerified = true;
-            skill.quizScore = activeQuizSummary.score;
-            skill.quizGaps = activeQuizSummary.gaps || [];
+            skill.quizScore = typeof activeQuizSummary.score === 'number' ? activeQuizSummary.score : 0;
+            skill.quizGaps = activeQuizSummary.gaps || activeQuizSummary.identifiedGaps || [];
             skill.verifiedSource = 'quiz';
-            skill.quizSummaryMessage = activeQuizSummary.summaryMessage;
+            skill.quizSummaryMessage = activeQuizSummary.summaryMessage || activeQuizSummary.realityCheckMessage;
           }
 
           // 2. Mark account verification complete immediately
@@ -1085,14 +1122,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                               (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
           if (currentUser) {
             currentUser.hasCompletedSkillVerification = true;
-            if (Array.isArray(currentUser.skills)) {
-              const matched = currentUser.skills.find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
-              if (matched && activeQuizSummary) {
-                matched.proficiency = activeQuizSummary.verifiedLevel;
-                matched.verifiedProficiency = activeQuizSummary.verifiedLevel;
+            if (activeQuizSummary?.user?.skills) {
+              currentUser.skills = activeQuizSummary.user.skills;
+            } else if (Array.isArray(currentUser.skills)) {
+              let matched = currentUser.skills.find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
+              if (!matched && skillName) {
+                matched = { name: skillName, displayName: skill?.displayName || skillName };
+                currentUser.skills.push(matched);
+              }
+              if (matched) {
+                matched.selfRatedProficiency = matched.selfRatedProficiency || matched.proficiency || 'intermediate';
+                matched.proficiency = verifiedLevel;
+                matched.verifiedProficiency = verifiedLevel;
                 matched.isQuizVerified = true;
-                matched.quizScore = activeQuizSummary.score;
-                matched.quizGaps = activeQuizSummary.gaps || [];
+                matched.quizScore = typeof activeQuizSummary.score === 'number' ? activeQuizSummary.score : 0;
+                matched.quizGaps = activeQuizSummary.gaps || activeQuizSummary.identifiedGaps || [];
               }
             }
             if (typeof window.Auth?.setCurrentUser === 'function') {
@@ -1101,9 +1145,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
 
           // 3. Immediately render UI so checkmarks and verified badges appear behind modal!
-          renderSkillsGrid();
-          updateSelectedSkillsUI();
-          renderProveSkillsPanel();
+          try {
+            renderSkillsGrid();
+            updateSelectedSkillsUI();
+            renderProveSkillsPanel();
+          } catch (renderErr) {
+            console.error('Error re-rendering after quiz finished:', renderErr);
+          }
         } else {
           activeQuestion = data.nextQuestion;
           modalNextBtn.innerHTML = `<span>Next Question</span><i class="bi bi-arrow-right ms-1"></i>`;
@@ -1126,22 +1174,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       modalVerdictState?.classList.remove('d-none');
 
       const skillName = activeQuizSession?.skillName;
-      const skill = selectedSkillsMap.get(skillName);
+      const skill = selectedSkillsMap.get(skillName) ||
+        (skillName ? Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === skillName.toLowerCase()) : null);
+
+      const verifiedLevel = (
+        activeQuizSummary.verifiedProficiency ||
+        activeQuizSummary.verifiedLevel ||
+        activeQuizSummary.quizSays ||
+        (skill ? (skill.verifiedProficiency || skill.proficiency) : 'intermediate') ||
+        'intermediate'
+      ).toLowerCase();
 
       if (modalVerdictSelfClaimed) {
-        modalVerdictSelfClaimed.textContent = activeQuizSummary.selfRated || (skill ? skill.selfRatedProficiency || skill.proficiency : 'Intermediate');
+        modalVerdictSelfClaimed.textContent = capitalize(activeQuizSummary.selfRated || (skill ? skill.selfRatedProficiency || skill.proficiency : 'Intermediate'));
       }
       if (modalVerdictVerifiedLevel) {
-        modalVerdictVerifiedLevel.textContent = activeQuizSummary.verifiedLevel;
+        modalVerdictVerifiedLevel.textContent = capitalize(verifiedLevel);
       }
       if (modalVerdictExplanation) {
-        modalVerdictExplanation.textContent = activeQuizSummary.summaryMessage || 'Reality check complete.';
+        modalVerdictExplanation.textContent = activeQuizSummary.summaryMessage || activeQuizSummary.realityCheckMessage || 'Reality check complete.';
       }
 
       if (modalVerdictGapsWrap && modalVerdictGaps) {
-        if (activeQuizSummary.gaps && activeQuizSummary.gaps.length > 0) {
+        const gapsList = activeQuizSummary.gaps || activeQuizSummary.identifiedGaps || [];
+        if (gapsList.length > 0) {
           modalVerdictGapsWrap.classList.remove('d-none');
-          modalVerdictGaps.textContent = activeQuizSummary.gaps.join(', ');
+          modalVerdictGaps.textContent = gapsList.join(', ');
         } else {
           modalVerdictGapsWrap.classList.add('d-none');
         }
@@ -1149,19 +1207,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Update in selectedSkillsMap
       if (skill) {
-        skill.selfRatedProficiency = skill.selfRatedProficiency || skill.proficiency;
-        skill.proficiency = activeQuizSummary.verifiedLevel;
-        skill.verifiedProficiency = activeQuizSummary.verifiedLevel;
+        skill.selfRatedProficiency = skill.selfRatedProficiency || skill.proficiency || 'intermediate';
+        skill.proficiency = verifiedLevel;
+        skill.verifiedProficiency = verifiedLevel;
         skill.isQuizVerified = true;
-        skill.quizScore = activeQuizSummary.score;
-        skill.quizGaps = activeQuizSummary.gaps || [];
+        skill.quizScore = typeof activeQuizSummary.score === 'number' ? activeQuizSummary.score : 0;
+        skill.quizGaps = activeQuizSummary.gaps || activeQuizSummary.identifiedGaps || [];
         skill.verifiedSource = 'quiz';
-        skill.quizSummaryMessage = activeQuizSummary.summaryMessage;
+        skill.quizSummaryMessage = activeQuizSummary.summaryMessage || activeQuizSummary.realityCheckMessage;
       }
 
-      renderSkillsGrid();
-      updateSelectedSkillsUI();
-      renderProveSkillsPanel();
+      try {
+        renderSkillsGrid();
+        updateSelectedSkillsUI();
+        renderProveSkillsPanel();
+      } catch (renderErr) {
+        console.error('Error re-rendering in verdict state:', renderErr);
+      }
       return;
     }
 
@@ -1192,24 +1254,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Refresh UI
-    renderSkillsGrid();
-    updateSelectedSkillsUI();
-    renderProveSkillsPanel();
+    try {
+      renderSkillsGrid();
+      updateSelectedSkillsUI();
+      renderProveSkillsPanel();
+    } catch (err) {
+      console.error('Error refreshing UI on modal done:', err);
+    }
 
     showAlert('✓ Skill verified! Your assessment proficiency has been updated and account verification is complete.', 'success');
   });
 
   // Ensure modal dismissal (via X button, backdrop click, or ESC) always guarantees immediate UI refresh
   skillCheckModalEl?.addEventListener('hidden.bs.modal', () => {
-    if (activeQuizSummary) {
-      hasCompletedSkillVerification = true;
-      activeQuizSession = null;
-      activeQuestion = null;
-      activeQuizSummary = null;
+    activeQuizSession = null;
+    activeQuestion = null;
+    activeQuizSummary = null;
+    try {
+      renderSkillsGrid();
+      updateSelectedSkillsUI();
+      renderProveSkillsPanel();
+    } catch (err) {
+      console.error('Error refreshing UI on modal hidden:', err);
     }
-    renderSkillsGrid();
-    updateSelectedSkillsUI();
-    renderProveSkillsPanel();
   });
 
 
@@ -1344,17 +1411,47 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       renderInterests();
 
-      // 3. Fill Skills
+      // 3. Fill Skills (preserve already verified skill statuses if previously tested)
+      const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                          (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
+      const existingUserSkills = Array.isArray(currentUser?.skills) ? currentUser.skills : [];
+      const prevSelectedMap = new Map(selectedSkillsMap);
+
       selectedSkillsMap.clear();
       const demoSkills = [
-        { name: 'html', displayName: 'HTML', proficiency: 'intermediate' },
-        { name: 'css', displayName: 'CSS', proficiency: 'intermediate' },
-        { name: 'javascript', displayName: 'JavaScript', proficiency: 'advanced' },
-        { name: 'react', displayName: 'React', proficiency: 'intermediate' },
-        { name: 'node.js', displayName: 'Node.js', proficiency: 'intermediate' },
-        { name: 'python', displayName: 'Python', proficiency: 'intermediate' },
+        { name: 'html', displayName: 'HTML', proficiency: 'intermediate', category: 'frontend' },
+        { name: 'css', displayName: 'CSS', proficiency: 'intermediate', category: 'frontend' },
+        { name: 'javascript', displayName: 'JavaScript', proficiency: 'advanced', category: 'frontend' },
+        { name: 'react', displayName: 'React', proficiency: 'intermediate', category: 'frontend' },
+        { name: 'node.js', displayName: 'Node.js', proficiency: 'intermediate', category: 'backend' },
+        { name: 'python', displayName: 'Python', proficiency: 'intermediate', category: 'backend' },
       ];
-      demoSkills.forEach((s) => selectedSkillsMap.set(s.name, s));
+
+      demoSkills.forEach((s) => {
+        const key = s.name.toLowerCase();
+        const fromPrev = prevSelectedMap.get(key) || prevSelectedMap.get(s.name);
+        const fromUser = existingUserSkills.find(us => (us.name || '').toLowerCase() === key);
+
+        const isQuizVerified = Boolean(fromPrev?.isQuizVerified || fromUser?.isQuizVerified);
+        const isCodeVerified = Boolean(fromPrev?.isCodeVerified || fromUser?.isCodeVerified);
+        const verifiedProf = fromPrev?.verifiedProficiency || fromUser?.verifiedProficiency || null;
+        const currentProf = verifiedProf || fromPrev?.proficiency || fromUser?.proficiency || s.proficiency;
+        const selfRatedProf = fromPrev?.selfRatedProficiency || fromUser?.selfRatedProficiency || s.proficiency;
+
+        selectedSkillsMap.set(key, {
+          name: key,
+          displayName: s.displayName,
+          category: s.category,
+          proficiency: currentProf,
+          selfRatedProficiency: selfRatedProf,
+          verifiedProficiency: verifiedProf,
+          isQuizVerified: isQuizVerified,
+          isCodeVerified: isCodeVerified,
+          quizScore: fromPrev?.quizScore || fromUser?.quizScore || 0,
+          quizGaps: fromPrev?.quizGaps || fromUser?.quizGaps || [],
+          verifiedSource: isQuizVerified ? 'quiz' : (isCodeVerified ? 'github_repo' : 'self')
+        });
+      });
       renderSkillsGrid();
       updateSelectedSkillsUI();
 
@@ -1364,7 +1461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         careerGoalsInput.value = 'Full-Stack Web & AI Application Developer';
       }
 
-      showAlert('✓ Demo profile loaded successfully! You can review each step or proceed to submission.', 'success');
+      showAlert('✓ Demo profile loaded successfully! Verified skills preserved.', 'success');
 
       // Scroll smoothly to step 1 form
       const formEl = document.getElementById('assessmentForm');
@@ -1528,7 +1625,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               name: key,
               displayName: s.displayName || s.name,
               category: s.category || 'tool',
-              proficiency: s.proficiency || 'beginner',
+              proficiency: s.verifiedProficiency || s.proficiency || 'beginner',
               isCodeVerified: !!s.isCodeVerified,
               verifiedSource: s.verifiedSource || 'self',
               isQuizVerified: !!s.isQuizVerified,
@@ -1547,6 +1644,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (user.hasCompletedSkillVerification || (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified))) {
           hasCompletedSkillVerification = true;
+        }
+
+        if (typeof window.Auth?.setCurrentUser === 'function') {
+          window.Auth.setCurrentUser(user);
         }
       }
     } catch (err) {
