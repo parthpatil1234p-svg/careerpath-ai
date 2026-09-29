@@ -587,16 +587,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectedSkillsMap.forEach((s) => {
       const norm = normalizeSkillSlug(s.name);
       const isBanked = AVAILABLE_QUIZ_SKILLS.includes(norm);
-      const isLevelEligible = ['intermediate', 'advanced'].includes(String(s.proficiency).toLowerCase()) || s.isQuizVerified;
+      const isLevelEligible =
+        ['intermediate', 'advanced'].includes(String(s.proficiency).toLowerCase()) ||
+        ['intermediate', 'advanced'].includes(String(s.selfRatedProficiency || '').toLowerCase()) ||
+        s.isQuizVerified ||
+        s.isCodeVerified;
+
       if (isBanked && isLevelEligible) {
         let score = 0;
+        // Prioritize already-verified skills so they ALWAYS remain visible with their checkmarks!
+        if (s.isQuizVerified || s.isCodeVerified) {
+          score += 1000;
+        }
         selectedInterests.forEach((interest) => {
           const affinity = INTEREST_SKILL_AFFINITY[interest] || [];
           if (affinity.includes(norm)) score += 10;
         });
-        if (s.proficiency === 'advanced') score += 5;
-        else if (s.proficiency === 'intermediate') score += 2;
-        if (s.isQuizVerified || s.isCodeVerified) score += 1;
+        const levelToCheck = s.selfRatedProficiency || s.proficiency;
+        if (levelToCheck === 'advanced') score += 5;
+        else if (levelToCheck === 'intermediate') score += 2;
 
         candidates.push({ key: s.name, norm, skill: s, score });
       }
@@ -649,14 +658,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         let actionHtml = '';
         if (isQuizVer) {
           actionHtml = `
-            <span class="badge bg-success text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono">
+            <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
               <i class="bi bi-patch-check-fill"></i>
-              <span>Verified (${skill.verifiedProficiency || skill.proficiency})</span>
+              <span>Verified (${capitalize(skill.verifiedProficiency || skill.proficiency)}) ✓</span>
             </span>
           `;
         } else if (isCodeVer) {
           actionHtml = `
-            <span class="badge bg-secondary text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono" title="Verified from connected GitHub repository code">
+            <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
               <i class="bi bi-github"></i>
               <span>GitHub-Supported ✓</span>
             </span>
@@ -681,11 +690,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           `;
         }
 
+        const checkmarkIcon = isVerified
+          ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill ✓"></i>`
+          : `<div class="prove-skill-dot"></div>`;
+
+        const verifiedTag = isVerified
+          ? `<span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-2 ms-1" style="font-size: 0.72rem;"><i class="bi bi-check-lg me-1"></i>Verified</span>`
+          : '';
+
         row.innerHTML = `
           <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
             <div class="prove-skill-info">
-              <div class="prove-skill-dot"></div>
+              ${checkmarkIcon}
               <span class="prove-skill-name">${escapeHtml(skill.displayName || skill.name)}</span>
+              ${verifiedTag}
               <span class="prove-skill-level ${skill.proficiency.toLowerCase()}">${escapeHtml(skill.proficiency)}</span>
             </div>
             <div class="prove-skill-action">
@@ -788,14 +806,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       let actionHtml = '';
       if (isQuizVer) {
         actionHtml = `
-          <span class="badge bg-success text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono">
+          <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
             <i class="bi bi-patch-check-fill"></i>
-            <span>Verified (${skill.verifiedProficiency || skill.proficiency})</span>
+            <span>Verified (${capitalize(skill.verifiedProficiency || skill.proficiency)}) ✓</span>
           </span>
         `;
       } else if (isCodeVer) {
         actionHtml = `
-          <span class="badge bg-secondary text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono" title="Verified from connected GitHub repository code">
+          <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
             <i class="bi bi-github"></i>
             <span>GitHub-Supported ✓</span>
           </span>
@@ -820,11 +838,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
       }
 
+      const checkmarkIcon = isVerified
+        ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill ✓"></i>`
+        : `<div class="prove-skill-dot"></div>`;
+
+      const verifiedTag = isVerified
+        ? `<span class="badge bg-success-subtle text-success border border-success-subtle py-0.5 px-2 ms-1" style="font-size: 0.72rem;"><i class="bi bi-check-lg me-1"></i>Verified</span>`
+        : '';
+
       row.innerHTML = `
         <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
           <div class="prove-skill-info">
-            <div class="prove-skill-dot"></div>
+            ${checkmarkIcon}
             <span class="prove-skill-name">${escapeHtml(skill.displayName || skill.name)}</span>
+            ${verifiedTag}
             <span class="prove-skill-level ${skill.proficiency.toLowerCase()}">${escapeHtml(skill.proficiency)}</span>
           </div>
           <div class="prove-skill-action">
@@ -1037,6 +1064,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data.isFinished) {
           activeQuizSummary = data.summary || data.result;
           modalNextBtn.innerHTML = `<span>View Results</span><i class="bi bi-trophy-fill ms-1"></i>`;
+
+          // 1. Immediately calibrate and verify the skill in selectedSkillsMap!
+          const skillName = activeQuizSession?.skillName;
+          const skill = selectedSkillsMap.get(skillName);
+          if (skill && activeQuizSummary) {
+            skill.selfRatedProficiency = skill.selfRatedProficiency || skill.proficiency;
+            skill.proficiency = activeQuizSummary.verifiedLevel;
+            skill.verifiedProficiency = activeQuizSummary.verifiedLevel;
+            skill.isQuizVerified = true;
+            skill.quizScore = activeQuizSummary.score;
+            skill.quizGaps = activeQuizSummary.gaps || [];
+            skill.verifiedSource = 'quiz';
+            skill.quizSummaryMessage = activeQuizSummary.summaryMessage;
+          }
+
+          // 2. Mark account verification complete immediately
+          hasCompletedSkillVerification = true;
+          const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                              (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
+          if (currentUser) {
+            currentUser.hasCompletedSkillVerification = true;
+            if (Array.isArray(currentUser.skills)) {
+              const matched = currentUser.skills.find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
+              if (matched && activeQuizSummary) {
+                matched.proficiency = activeQuizSummary.verifiedLevel;
+                matched.verifiedProficiency = activeQuizSummary.verifiedLevel;
+                matched.isQuizVerified = true;
+                matched.quizScore = activeQuizSummary.score;
+                matched.quizGaps = activeQuizSummary.gaps || [];
+              }
+            }
+            if (typeof window.Auth?.setCurrentUser === 'function') {
+              window.Auth.setCurrentUser(currentUser);
+            }
+          }
+
+          // 3. Immediately render UI so checkmarks and verified badges appear behind modal!
+          renderSkillsGrid();
+          updateSelectedSkillsUI();
+          renderProveSkillsPanel();
         } else {
           activeQuestion = data.nextQuestion;
           modalNextBtn.innerHTML = `<span>Next Question</span><i class="bi bi-arrow-right ms-1"></i>`;
@@ -1062,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const skill = selectedSkillsMap.get(skillName);
 
       if (modalVerdictSelfClaimed) {
-        modalVerdictSelfClaimed.textContent = activeQuizSummary.selfRated || (skill ? skill.proficiency : 'Intermediate');
+        modalVerdictSelfClaimed.textContent = activeQuizSummary.selfRated || (skill ? skill.selfRatedProficiency || skill.proficiency : 'Intermediate');
       }
       if (modalVerdictVerifiedLevel) {
         modalVerdictVerifiedLevel.textContent = activeQuizSummary.verifiedLevel;
@@ -1082,7 +1149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Update in selectedSkillsMap
       if (skill) {
-        skill.selfRatedProficiency = skill.proficiency;
+        skill.selfRatedProficiency = skill.selfRatedProficiency || skill.proficiency;
         skill.proficiency = activeQuizSummary.verifiedLevel;
         skill.verifiedProficiency = activeQuizSummary.verifiedLevel;
         skill.isQuizVerified = true;
@@ -1091,6 +1158,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         skill.verifiedSource = 'quiz';
         skill.quizSummaryMessage = activeQuizSummary.summaryMessage;
       }
+
+      renderSkillsGrid();
+      updateSelectedSkillsUI();
+      renderProveSkillsPanel();
       return;
     }
 
@@ -1111,10 +1182,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Mark account verification complete (only required once per account)
     hasCompletedSkillVerification = true;
-    const currentUser = window.Auth?.getUser();
+    const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                        (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
     if (currentUser) {
       currentUser.hasCompletedSkillVerification = true;
-      window.Auth.setCurrentUser(currentUser);
+      if (typeof window.Auth?.setCurrentUser === 'function') {
+        window.Auth.setCurrentUser(currentUser);
+      }
     }
 
     // Refresh UI
@@ -1123,6 +1197,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderProveSkillsPanel();
 
     showAlert('✓ Skill verified! Your assessment proficiency has been updated and account verification is complete.', 'success');
+  });
+
+  // Ensure modal dismissal (via X button, backdrop click, or ESC) always guarantees immediate UI refresh
+  skillCheckModalEl?.addEventListener('hidden.bs.modal', () => {
+    if (activeQuizSummary) {
+      hasCompletedSkillVerification = true;
+      activeQuizSession = null;
+      activeQuestion = null;
+      activeQuizSummary = null;
+    }
+    renderSkillsGrid();
+    updateSelectedSkillsUI();
+    renderProveSkillsPanel();
   });
 
 
