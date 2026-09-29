@@ -145,6 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const selectedInterests = new Set();
   const selectedSkillsMap = new Map(); // key: skillName, value: { name, displayName, proficiency, ... }
   let currentStep = 1;
+  let hasCompletedSkillVerification = false; // Ensures quiz gate is only required once per account
 
   // Reality Check Quiz Constants
   const AVAILABLE_QUIZ_SKILLS = ['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'];
@@ -331,6 +332,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (selectedSkillsMap.size === 0) {
         showAlert('Please select at least 1 skill you possess before proceeding.');
         return false;
+      }
+      // If account already completed one-time skill verification, never block again!
+      if (hasCompletedSkillVerification) {
+        return true;
       }
       const required = getRequiredVerificationSkills();
       const verifiedCount = required.filter(s => s.isQuizVerified || s.isCodeVerified).length;
@@ -607,6 +612,100 @@ document.addEventListener('DOMContentLoaded', async () => {
     const requiredSkills = getRequiredVerificationSkills();
     const totalRequired = requiredSkills.length;
     const verifiedCount = requiredSkills.filter(s => s.isQuizVerified || s.isCodeVerified).length;
+
+    // Check if this account has already completed one-time skill verification
+    if (hasCompletedSkillVerification) {
+      if (proveSkillsBadge) {
+        proveSkillsBadge.className = 'prove-skills-badge completed';
+      }
+      if (proveSkillsBadgeText) {
+        proveSkillsBadgeText.textContent = 'Account Verified ✓';
+      }
+      if (proveSkillsProgressFill) {
+        proveSkillsProgressFill.style.width = '100%';
+        proveSkillsProgressFill.className = 'prove-skills-progress-fill completed';
+      }
+      if (proveSkillsSubtitle) {
+        proveSkillsSubtitle.textContent = 'Your account has already completed technical skill verification. You can proceed directly to Goals anytime, or test any skill below voluntarily.';
+      }
+      proveSkillsPanel.classList.add('all-verified');
+
+      if (step3ContinueBtn) {
+        step3ContinueBtn.disabled = false;
+        step3ContinueBtn.title = 'Continue to Goals';
+        step3ContinueBtn.classList.remove('opacity-50');
+      }
+
+      // Render Skill Rows
+      proveSkillsList.innerHTML = '';
+      requiredSkills.forEach((skill) => {
+        const isQuizVer = !!skill.isQuizVerified;
+        const isCodeVer = !!skill.isCodeVerified;
+        const isVerified = isQuizVer || isCodeVer;
+
+        const row = document.createElement('div');
+        row.className = `prove-skill-item ${isVerified ? 'item-verified' : ''}`;
+
+        let actionHtml = '';
+        if (isQuizVer) {
+          actionHtml = `
+            <span class="badge bg-success text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono">
+              <i class="bi bi-patch-check-fill"></i>
+              <span>Verified (${skill.verifiedProficiency || skill.proficiency})</span>
+            </span>
+          `;
+        } else if (isCodeVer) {
+          actionHtml = `
+            <span class="badge bg-secondary text-white py-1 px-2.5 small d-inline-flex align-items-center gap-1 font-mono" title="Verified from connected GitHub repository code">
+              <i class="bi bi-github"></i>
+              <span>GitHub-Supported ✓</span>
+            </span>
+          `;
+        } else {
+          actionHtml = `
+            <button type="button" class="btn-start-check" data-skill="${escapeHtml(skill.name)}" style="background: #475569;" title="Optional practice check - will not block progress">
+              <i class="bi bi-play-circle"></i>
+              <span>Practice check (Optional)</span>
+            </button>
+          `;
+        }
+
+        let noteHtml = '';
+        if (isQuizVer && skill.selfRatedProficiency && skill.selfRatedProficiency.toLowerCase() !== (skill.verifiedProficiency || skill.proficiency).toLowerCase()) {
+          const gapText = skill.quizGaps && skill.quizGaps.length > 0 ? ` Focus on: ${escapeHtml(skill.quizGaps.slice(0, 2).join(', '))}.` : '';
+          noteHtml = `
+            <div class="skill-adjusted-note">
+              <i class="bi bi-info-circle text-primary me-1"></i>
+              <span>You claimed <strong>${escapeHtml(capitalize(skill.selfRatedProficiency))}</strong>, quiz calibrated to <strong>${escapeHtml(capitalize(skill.verifiedProficiency || skill.proficiency))}</strong>.${gapText}</span>
+            </div>
+          `;
+        }
+
+        row.innerHTML = `
+          <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+            <div class="prove-skill-info">
+              <div class="prove-skill-dot"></div>
+              <span class="prove-skill-name">${escapeHtml(skill.displayName || skill.name)}</span>
+              <span class="prove-skill-level ${skill.proficiency.toLowerCase()}">${escapeHtml(skill.proficiency)}</span>
+            </div>
+            <div class="prove-skill-action">
+              ${actionHtml}
+            </div>
+          </div>
+          ${noteHtml}
+        `;
+
+        const checkBtn = row.querySelector('.btn-start-check');
+        if (checkBtn) {
+          checkBtn.addEventListener('click', () => {
+            startSkillCheck(skill.name);
+          });
+        }
+
+        proveSkillsList.appendChild(row);
+      });
+      return;
+    }
 
     // When 0 skills need verification (e.g. only beginner or unbanked skills)
     if (totalRequired === 0) {
@@ -1010,12 +1109,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     activeQuestion = null;
     activeQuizSummary = null;
 
+    // Mark account verification complete (only required once per account)
+    hasCompletedSkillVerification = true;
+    const currentUser = window.Auth?.getUser();
+    if (currentUser) {
+      currentUser.hasCompletedSkillVerification = true;
+      window.Auth.setCurrentUser(currentUser);
+    }
+
     // Refresh UI
     renderSkillsGrid();
     updateSelectedSkillsUI();
     renderProveSkillsPanel();
 
-    showAlert('✓ Skill verified! Your assessment proficiency has been updated.', 'success');
+    showAlert('✓ Skill verified! Your assessment proficiency has been updated and account verification is complete.', 'success');
   });
 
 
@@ -1346,6 +1453,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (Array.isArray(user.careerGoals) && user.careerGoals.length > 0) {
           document.getElementById('careerGoals').value = user.careerGoals[0] || '';
         }
+
+        if (user.hasCompletedSkillVerification || (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified))) {
+          hasCompletedSkillVerification = true;
+        }
       }
     } catch (err) {
       console.warn('Could not preload existing profile:', err.message);
@@ -1412,6 +1523,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       interests: Array.from(selectedInterests),
       skills: Array.from(selectedSkillsMap.values()),
       careerGoals: goalText ? [goalText] : [],
+      hasCompletedSkillVerification: Boolean(hasCompletedSkillVerification),
     };
 
     if (submitBtn) {
