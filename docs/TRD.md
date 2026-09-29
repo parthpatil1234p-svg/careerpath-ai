@@ -3,182 +3,115 @@
 
 ---
 
-## 1. Technical Overview
+## 1. Technical Architecture & System Overview
 
-CareerPath AI uses a **decoupled client-server architecture** with a static HTML/JS frontend communicating with a Node.js/Express REST API backed by MongoDB Atlas.
+CareerPath AI uses a decoupled full-stack architecture with a high-performance vanilla JavaScript client communicating with a Node.js/Express REST API backed by MongoDB Atlas and external intelligence APIs.
 
 ```
-┌──────────────────────────┐     HTTPS/REST     ┌──────────────────────┐
-│     CLIENT (Vercel)      │ ◄────────────────► │   SERVER (Render)    │
-│  HTML · CSS · JS         │                    │   Express.js         │
-│  Three.js · GSAP         │                    │   Mongoose · JWT     │
-│  Bootstrap               │                    │   bcrypt             │
-└──────────────────────────┘                    └──────────┬───────────┘
-                                                           │
-                                                           ▼
-                                                ┌──────────────────────┐
-                                                │  MongoDB Atlas       │
-                                                │  (Free M0 Cluster)  │
-                                                └──────────────────────┘
+┌─────────────────────────────────┐        HTTPS / REST        ┌───────────────────────────────────┐
+│     CLIENT (Vercel Edge)        │ ◄────────────────────────► │     SERVER (Render Cloud)         │
+│  • HTML5 · CSS3 · Vanilla JS    │                            │  • Express.js REST API            │
+│  • 90% Viewport Container       │                            │  • Mongoose ODM · JWT · bcrypt    │
+│  • 2D SVG Percentage Meter      │                            │  • Process Safety Listeners       │
+│  • Micro-Quiz Stepper UI        │                            │  • Rate Limiter · Helmet · CORS   │
+│  • Three.js 3D Career Universe  │                            └───────────────┬───────────────────┘
+└─────────────────────────────────┘                                            │
+                                                                               ▼
+                                                                ┌───────────────────────────────────┐
+                                                                │  MongoDB Atlas (M0 Replica Set)   │
+                                                                │  users, careers, roadmaps, skills │
+                                                                └───────────────┬───────────────────┘
+                                                                                │
+                                           ┌────────────────────────────────────┴───────────────────┐
+                                           │                                                        │
+                                           ▼                                                        ▼
+                        ┌─────────────────────────────────────┐                  ┌───────────────────────────────────┐
+                        │   AI Engines (Quiz & Mentor)        │                  │   Market & Developer Telemetry    │
+                        │   • Groq LPU Llama 3.3 70B (<300ms) │                  │   • GitHub REST API v3 (Auth Sync)│
+                        │   • Google Gemini 2.5 Flash Failover│                  │   • Adzuna API (India Tech Jobs)  │
+                        │   • 860+ Line Curated Domain Bank   │                  │   • AIDevBoard API (Global AI)    │
+                        └─────────────────────────────────────┘                  └───────────────────────────────────┘
 ```
 
 ---
 
-## 2. Frontend Architecture
+## 2. Frontend Architecture & Design System
 
-| Aspect | Choice | Rationale |
-|--------|--------|-----------|
-| Language | Vanilla JS (ES6+) | Simple, no build step required |
-| UI Framework | Bootstrap 5 | Fast responsive layouts |
-| 3D Engine | Three.js | WebGL 3D rendering |
-| Animation | GSAP | GPU-accelerated camera transitions |
-| HTTP Client | Fetch API | Native, no extra dependency |
+| Aspect | Technology | Rationale & Performance |
+| :--- | :--- | :--- |
+| **Language** | Vanilla JavaScript (ES6+) | Instant execution, zero bundle overhead, FCP < 800ms |
+| **Layout System** | CSS Grid & Flexbox (90% Width) | `--container-width: 90%` with balanced 10% margins; eliminates empty space |
+| **Typography** | Space Grotesk + Inter | Scaled typography tokens for presentation legibility |
+| **Progress Meter** | 2D Circular SVG Gauge | Accessible, high-contrast 0–100% progress tracking; eliminates confusing degree angles |
+| **3D Engine** | Three.js r128 | Hardware-accelerated 3D Career Universe on landing page with instant 2D fallback |
+| **HTTP Client** | Native Fetch API | Built-in browser support with async/await error boundaries |
 
-### Page Structure
+### Page Structure & Routes
 | Page | File | Purpose |
-|------|------|---------|
-| Landing | `index.html` | 3D Career Universe, hero section |
-| Auth | `login.html` | Login + Register forms |
-| Dashboard | `dashboard.html` | Profile summary, top-3 careers, progress |
-| Roadmap | `roadmap.html` | Week-by-week task viewer + 3D roadmap path |
+| :--- | :--- | :--- |
+| **Landing** | `client/index.html` | Hero, 3D Career Universe constellation, problem statement |
+| **Authentication** | `client/login.html` & `register.html` | 1-Click Google/GitHub OAuth, demo account auto-fill |
+| **Assessment** | `client/assessment.html` | Academic background, 76+ skills profiler, GitHub auto-detect |
+| **Micro-Quiz** | `client/quiz.html` | 5-Question adaptive reality-check quiz, BYOK modal |
+| **Recommendations** | `client/recommendations.html` | Top 3 matches, 60/25/15 score cards, tri-color skill gaps |
+| **Roadmap** | `client/roadmap.html` | 4, 8, 12-week milestone checklist, PDF print export |
+| **Dashboard** | `client/dashboard.html` | Bento grid, 2D percentage gauge, auth repo sync, verified badges |
 
 ---
 
-## 3. Backend Architecture
+## 3. Backend Architecture & API Layers
 
-| Aspect | Choice |
-|--------|--------|
-| Runtime | Node.js v18+ |
-| Framework | Express.js |
-| ODM | Mongoose 7+ |
-| Auth | jsonwebtoken + bcryptjs |
-| Security | cors, express-rate-limit, helmet |
-| Dev Server | nodemon |
-
-### Server Layers
 ```
-Routes → Controllers → Services/Logic → Models → MongoDB
+server/
+Routes (HTTP mappings) ➔ Controllers (Req/Res validation) ➔ Services (Business Logic) ➔ Models (Mongoose) ➔ MongoDB
 ```
 
-- **Routes** define endpoint paths and HTTP methods.
-- **Controllers** handle request/response and input validation.
-- **Business logic** (matching engine, roadmap generation) lives in controllers or dedicated utility files.
-- **Models** define Mongoose schemas and indexes.
+### Key Services:
+1. **`aiQuizGeneratorService.js`**: Multi-model dynamic quiz generator routing between Groq Llama 3.3 70B, Google Gemini 2.5 Flash, and curated domain questions.
+2. **`githubService.js`**: Analyzes student repositories via GitHub REST API, calculates top languages, and tags skills with `isCodeVerified: true`.
+3. **`recommendationService.js`**: Evaluates student profile against all career requirements using the 60/25/15 formula.
+4. **`roadmapService.js`**: Assembles personalized weekly curriculum milestones with resource links and progress tracking.
+5. **`jobBoardService.js`**: Streams live tech job listings and salary ranges from Adzuna and AIDevBoard.
+
+### Process Safety Handlers:
+```javascript
+// server/server.js
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+});
+```
 
 ---
 
-## 4. Database Architecture
+## 4. Database Collections & Indexes
 
-**Engine:** MongoDB Atlas M0 (Free Tier), single replica set.
+**Engine:** MongoDB Atlas M0 (Free Tier), Replica Set.
 
-### Collections
-
-| Collection | Purpose | Key Fields |
-|------------|---------|------------|
-| `users` | Student accounts | email (unique), password (hashed), education, skills[], interests[] |
-| `careers` | Career entries | title, requiredSkills[], tags[], baseEducationScore |
-| `roadmaps` | Learning plans | userId (ref), targetCareerId (ref), durationWeeks, tasks[] |
-
-### Indexes
-| Collection | Index | Type |
-|------------|-------|------|
-| users | `{ email: 1 }` | Unique |
-| careers | `{ title: "text", tags: "text" }` | Text |
-| roadmaps | `{ userId: 1 }` | Standard |
+| Collection | Model File | Key Indexed Fields | Purpose |
+| :--- | :--- | :--- | :--- |
+| **`users`** | `User.js` | `{ email: 1 }` (unique), `{ githubId: 1 }` | Student identity, verified skills, GitHub repos, quiz scores |
+| **`careers`** | `Career.js` | `{ title: "text", domain: 1 }` | 15+ curated industry career tracks with required skill matrices |
+| **`roadmaps`** | `Roadmap.js` | `{ userId: 1, careerId: 1 }` | Time-boxed weekly curriculums with completion percentages |
+| **`roadmaptasks`**| `RoadmapTask.js` | `{ roadmapId: 1, weekNumber: 1 }` | Atomic checklist items with verified completion states |
+| **`skills`** | `Skill.js` | `{ name: 1, category: 1 }` | Master competency taxonomy (76+ skills) |
 
 ---
 
-## 5. Career Matching Algorithm — Full Breakdown
+## 5. Career Matching Algorithm — Mathematical Specification
 
-### 5.1 Master Formula
+### Master Formula:
+$$\text{Total Score} = (\text{SkillScore} \times 0.60) + (\text{InterestScore} \times 0.25) + (\text{EducationScore} \times 0.15)$$
 
-```
-Total Score = (SkillScore × 0.60) + (InterestScore × 0.25) + (EducationScore × 0.15)
-```
+### 1. Skill Score ($0 - 100$):
+$$\text{SkillScore} = \frac{\sum_{i=1}^{N} \min(1.0, \frac{\text{UserProficiency}_i}{\text{RequiredProficiency}_i}) \times \text{Weight}_i}{\sum_{i=1}^{N} \text{Weight}_i} \times 100$$
+*Verified skills (via code audit or quiz) receive a confidence multiplier ensuring objective merit.*
 
-### 5.2 Skill Score (0–100)
+### 2. Interest Score ($0 - 100$):
+$$\text{InterestScore} = \frac{|\text{UserInterests} \cap \text{CareerTags}|}{|\text{CareerTags}|} \times 100$$
 
-For each career's `requiredSkills` array:
-
-```
-SkillScore = (Σ min(userProficiency / requiredProficiency, 1.0)) / totalRequiredSkills × 100
-```
-
-- If a skill is missing entirely → contributes 0.
-- If `isCritical: true` skill is missing → apply a 20-point penalty.
-- Proficiency is clamped at 1.0 (over-qualification doesn't boost score).
-
-### 5.3 Interest Score (0–100)
-
-```
-InterestScore = (|userInterests ∩ careerTags| / |careerTags|) × 100
-```
-
-### 5.4 Education Score (0–100)
-
-- Compares user's stated education level against the career's `baseEducationScore`.
-- Direct mapping: if user meets or exceeds the minimum, score = 100; otherwise, proportional.
-
----
-
-## 6. Roadmap Generation Algorithm
-
-1. **Input:** Selected career + user's current skills + chosen duration (4/8/12 weeks).
-2. **Compute Skill Gaps:** For each required skill where `userProficiency < requiredProficiency`, calculate `gap = required - current`.
-3. **Sort Gaps:** Foundational skills first, advanced skills later.
-4. **Distribute Across Weeks:** Evenly distribute learning tasks across the chosen number of weeks, ensuring no week is empty and no single week is overloaded (max 5 tasks per week).
-5. **Attach Resources:** Each task gets a `title`, `description`, and `resourceLink` (from the career's skill metadata).
-
----
-
-## 7. Three.js & Graphics Specifications
-
-| Parameter | Value |
-|-----------|-------|
-| Renderer | `WebGLRenderer({ antialias: true, alpha: true })` |
-| Camera | `PerspectiveCamera(75, aspect, 0.1, 1000)` |
-| Ambient Light | `AmbientLight(0xffffff, 0.4)` |
-| Point Lights | Attached to career nodes, color matches career domain |
-| Particle Count | 200–500 particles for background stars |
-
-### Interactions
-- **Raycaster:** Mouse hover on career orb → GSAP scale to 1.2 + brighten attached PointLight.
-- **Click:** Camera flies to selected orb via `gsap.to(camera.position, { duration: 1.5, ease: "power2.inOut" })`.
-- **Mobile Fallback:** If `window.innerWidth < 768` or WebGL unsupported → hide `<canvas>`, show a CSS grid of career cards instead.
-
----
-
-## 8. Security Protocols
-
-| Threat | Mitigation |
-|--------|-----------|
-| NoSQL Injection | Mongoose schemas enforce strict types; no raw query construction |
-| Brute Force | `express-rate-limit`: max 100 requests per 15 minutes per IP |
-| XSS | No `innerHTML` with user data; CSP headers via `helmet` |
-| CORS Abuse | `cors({ origin: 'https://your-vercel-domain.vercel.app' })` |
-| Token Theft | JWT expires in 24h; stored in `localStorage` (acceptable for hackathon scope) |
-
----
-
-## 9. Deployment Architecture
-
-| Component | Platform | Free Tier Limits |
-|-----------|----------|-----------------|
-| Frontend | Vercel | Unlimited static hosting |
-| Backend | Render | 750 hours/month (spins down after inactivity) |
-| Database | MongoDB Atlas M0 | 512 MB storage, shared cluster |
-
-### CI/CD
-- Push to `main` → Vercel auto-deploys frontend.
-- Push to `main` → Render auto-deploys backend service.
-
----
-
-## 10. Testing Strategy (Hackathon Scope)
-
-| Type | Tool | Scope |
-|------|------|-------|
-| API Testing | Postman | All endpoints with valid/invalid payloads |
-| Manual UI | Browser | Chrome, Edge, 1 mobile viewport |
-| 3D Performance | Chrome DevTools (Performance tab) | Verify 60 FPS target |
-| Edge Cases | Manual | Empty skills, no interests, invalid JWT |
+### 3. Education Score ($0 - 100$):
+$$\text{EducationScore} = \text{BaseEducationScore} + \text{AcademicTierModifier}$$

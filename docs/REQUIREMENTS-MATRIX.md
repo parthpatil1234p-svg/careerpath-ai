@@ -1,62 +1,51 @@
 # Requirements Traceability Matrix (RTM)
 
-> **Hack2Ignite 2026–27 | Round 1**  
+> **🏆 Hack2Ignite 2026–27 · Round 1 Qualifier**  
 > **Project:** CareerPath AI  
 > **Team:** 404 Brain Not Found (Parth Patil, Aditi Vispute, Suyog Pawar, Sanika Bodhnawar)  
+> **Problem Statement ID:** ED-02 (AI Career Guidance System)
 
 ---
 
 ## 1. Source Classification Key
 
 | Code | Category | Definition | Authority |
-|---|---|---|---|
+| :--- | :--- | :--- | :--- |
 | `RULE` | Official Hackathon Rule | Compulsory organizer rulebook condition | **Mandatory** |
 | `PS` | Official Problem Statement | Organizer-provided domain challenge requirement | **Mandatory** |
-| `TEAM` | Internal Product Decision | Team-designed feature to solve the problem | **Planned** |
-| `TECH` | Technical Decision | Architecture, framework, and database choices | **Planned** |
-| `SUGGESTION` | Optional Improvement | Enhancements to add only if time permits | **Optional** |
-| `ASSUMPTION` | Unconfirmed Belief | Working hypothesis requiring verification | **Verify First** |
-
-### Rule of Governance
-$$\text{RULE} + \text{PS} = \mathbf{Mandatory} \quad\vert\quad \text{TEAM} + \text{TECH} = \mathbf{Planned\ Implementation} \quad\vert\quad \text{SUGGESTION} = \mathbf{Optional} \quad\vert\quad \text{ASSUMPTION} = \mathbf{Verify\ Before\ Building}$$
+| `TEAM` | Product Feature | Team-engineered feature solving the core problem | **Core Deliverable** |
+| `TECH` | Technical Architecture | Engineering, API, security, and database solutions | **Core Deliverable** |
+| `INNOV`| Competition Innovation | Differentiators (Two-Factor Verification, BYOK, Live CTC) | **Value Add** |
 
 ---
 
-## 2. Full Traceability Matrix
+## 2. Complete Traceability & Verification Matrix
 
-| ID | Requirement | Source | Category | Priority | Planned Implementation | Verification Method | Status |
-|---|---|---|---|---|---|---|---|
-| **RULE-001** | Develop within official 48-hour window (16–18 Sept 2026) | Rulebook Section 2 | `RULE` | **Critical** | Continuous commits during active window | GitHub commit timestamps | Active |
-| **RULE-002** | Maintain clear GitHub commit history | Rulebook Section 3 | `RULE` | **Critical** | Feature-based atomic commits | Git log inspection | Active |
-| **RULE-003** | Disclose AI tool usage in PPT and README | Rulebook Section 4 | `RULE` | **Critical** | Explicit disclosure in `README.md` & PPT slide | Submission document review | Planned |
-| **RULE-004** | Deliver original implementation | Rulebook Section 5 | `RULE` | **Critical** | Custom-built algorithms, schemas, and UI | Originality audit | Active |
-| **RULE-005** | No timestamp or git history manipulation | Rulebook Section 6 | `RULE` | **Critical** | Real-time pushing, no amended dates | Git reflog verification | Active |
-| **RULE-006** | Zero exposed secrets or credentials | Rulebook Section 7 | `RULE` | **Critical** | `.gitignore` `.env`, only `.env.example` in repo | Repo secret scan / grep | Active |
-| **RULE-007** | Use only permitted open-source libraries / tools | Rulebook Section 8 | `RULE` | **Critical** | Express, Mongoose, JWT, Three.js, Bootstrap | `package.json` license check | Active |
-| **RULE-008** | Submit prototype, PPT, and accessible links | Rulebook Section 9 | `RULE` | **Critical** | Vercel (FE), Render (BE), PPT deck | Incognito live link test | Planned |
-| **PS-001** | EduTech Track: Build solution for student learning & career progression | Official Track Announcement | `PS` | **Critical** | CareerPath AI guidance & roadmap platform | EduTech problem domain compliance | Active |
-| **TEAM-001** | Student profile (Education, skills 1–5, interests) | PRD Section 5.2 | `TEAM` | **Critical** | `User.js` model, profile API, onboarding form | Form submission & DB check | Planned |
-| **TEAM-002** | Career matching engine with score breakdown | PRD Section 5.3 | `TEAM` | **Critical** | 60/25/15 weighted algorithm in `/api/match/recommend` | Persona unit testing | Planned |
-| **TEAM-003** | Skill-gap analysis (Have, Weak, Missing status) | PRD Section 5.4 | `TEAM` | **Critical** | Gap calculation logic + color-coded dashboard | Skill comparison test | Planned |
-| **TEAM-004** | Dynamic roadmap generation (4/8/12 weeks) | PRD Section 5.5 | `TEAM` | **Critical** | Topological task sequencer in `/api/roadmap/generate` | Non-empty weeks validation | Planned |
-| **TEAM-005** | Task progress checklist & persistence | PRD Section 5.6 | `TEAM` | **High** | `PUT /api/roadmap/:id/task/:taskId` + reactive bar | Task toggle & progress math | Planned |
-| **TEAM-006** | Seed database with 5 complete industry careers | Implementation Plan | `TEAM` | **Critical** | `data/seed.js` script with complete benchmark skills | MongoDB query verification | **Verified** |
-| **TECH-001** | Express.js REST API with security middleware | TRD Section 3 | `TECH` | **Critical** | Helmet, CORS, rate-limiter, error middleware | `GET /api/health` test | **Verified** |
-| **TECH-002** | MongoDB Atlas with Mongoose ODM | TRD Section 4 | `TECH` | **Critical** | `config/db.js` + `User.js`, `Career.js`, `Roadmap.js` | Schema compile & connect | **Verified** |
-| **TECH-003** | Stateless JWT + bcrypt authentication | BACKEND-SCHEMA | `TECH` | **Critical** | `/api/auth/register`, `/login`, auth middleware | Auth token & protected routes | **Verified** |
-| **TECH-004** | Glassmorphism responsive UI with Bootstrap 5 | UI-UX-DESIGN | `TECH` | **High** | CSS variables, glass panels, Bootstrap grid | Cross-browser visual check | Planned |
-| **TECH-005** | Three.js 3D Career Universe & Starfield | UI-UX-DESIGN | `TECH` | **Medium** | `three-scene.js` WebGL canvas on landing page | FPS & performance audit | Planned |
-| **TECH-006** | Mobile & non-WebGL 2D grid fallback | TRD Section 7 | `TECH` | **High** | Screen width `< 768px` / WebGL test fallback | Mobile viewport testing | Planned |
-| **SUGG-001** | Gemini AI conversational career advisor | PRD Section 10 | `SUGGESTION` | **Low** | Post-MVP conversational assistant endpoint | API response evaluation | Postponed |
-| **SUGG-002** | Resume PDF parsing & skill extraction | PRD Section 10 | `SUGGESTION` | **Low** | PDF OCR extraction service | Parsing accuracy test | Postponed |
-| **SUGG-003** | GitHub profile analysis for coding skills | PRD Section 10 | `SUGGESTION` | **Low** | GitHub REST API integration | Public repo skill mapper | Postponed |
-| **ASSUMP-001** | 60/25/15 weighting formula reflects student fit | TRD Section 5 | `ASSUMPTION` | **Medium** | Modular scoring functions in matching controller | Persona test verification | Planned |
-| **ASSUMP-002** | 3D visual theme delivers higher judge engagement | UI-UX-DESIGN | `ASSUMPTION` | **Medium** | Three.js visualizer with robust 2D fallback | Hardware compatibility test | Planned |
-
----
-
-## 3. Maintenance Policy
-
-1. Every newly planned feature must be assigned an ID (`TEAM-xxx`, `TECH-xxx`, `SUGG-xxx`).
-2. When the official problem statement is provided, extract mandatory requirements as `PS-001`, `PS-002`, etc., and map them directly to implementation tasks.
-3. Status transitions: `Planned` $\to$ `Active` $\to$ `Verified` (or `Postponed`).
+| ID | Requirement Description | Source | Category | Planned Implementation | Verification Method | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :---: |
+| **RULE-001** | Develop within official 48-hour window | Rulebook | `RULE` | Continuous atomic commits during active window | Git log & commit history | **Verified** |
+| **RULE-002** | Maintain clear GitHub commit history | Rulebook | `RULE` | Conventional commits (`feat:`, `fix:`, `chore:`) | Git log audit | **Verified** |
+| **RULE-003** | Disclose AI tool usage in PPT and README | Rulebook | `RULE` | Explicit AI architecture disclosure in docs & deck | Documentation review | **Verified** |
+| **RULE-004** | Deliver original implementation | Rulebook | `RULE` | Custom algorithms, original UI, custom schemas | Codebase originality audit | **Verified** |
+| **RULE-005** | No timestamp or git history manipulation | Rulebook | `RULE` | Real-time pushing, no amended dates | Git reflog inspection | **Verified** |
+| **RULE-006** | Zero exposed secrets or credentials | Rulebook | `RULE` | All API keys in `.env`, `.env.example` committed | Security grep & secret scan | **Verified** |
+| **RULE-007** | Permitted open-source libraries | Rulebook | `RULE` | Express, Mongoose, JWT, Three.js, Bootstrap | `package.json` license check | **Verified** |
+| **RULE-008** | Deployed working prototype & PPT links | Rulebook | `RULE` | Vercel (Client) + Render (API) + Google Drive PPT | Live incognito testing | **Verified** |
+| **PS-001** | EduTech Track: AI Career Guidance Platform | Problem ED-02 | `PS` | 60/25/15 career matching, roadmaps & verification | Problem statement alignment | **Verified** |
+| **TEAM-001** | Student profile & skills evaluation (76+ skills) | PRD Sec 5.2 | `TEAM` | Assessment form (`assessment.html`) + `User.js` | Form submission & DB check | **Verified** |
+| **TEAM-002** | Career matching engine with transparent breakdown | PRD Sec 5.3 | `TEAM` | 60/25/15 weighted formula in `recommendationController.js` | In-memory math test (<50ms) | **Verified** |
+| **TEAM-003** | Skill-gap analysis (Matched, Weak, Missing) | PRD Sec 5.4 | `TEAM` | Gap categorization + color-coded badges | Skill matrix inspection | **Verified** |
+| **TEAM-004** | Dynamic roadmap generation (4, 8, 12 weeks) | PRD Sec 5.5 | `TEAM` | Weekly milestone generator in `roadmapController.js` | Non-empty weeks validation | **Verified** |
+| **TEAM-005** | Task checklist & atomic progress persistence | PRD Sec 5.6 | `TEAM` | `PATCH /api/roadmaps/tasks/:taskId` + progress math | Task toggle test & DB save | **Verified** |
+| **TEAM-006** | Seed database with 15 complete industry careers | Implementation | `TEAM` | `server/seed.js` script with complete benchmark skills | MongoDB Atlas query check | **Verified** |
+| **TEAM-007** | Adaptive Skill Reality-Check Micro-Quiz | PRD Sec 5.7 | `INNOV`| 5-Question interactive quiz (`quiz.html`) with BYOK | Live Groq/Gemini test | **Verified** |
+| **TEAM-008** | Auth-Based GitHub Repository Sync | PRD Sec 5.8 | `INNOV`| `POST /api/auth/github/sync` (Bearer JWT, no username modal) | Live API test & repo sync | **Verified** |
+| **TECH-001** | Express.js REST API with security middleware | TRD Sec 3 | `TECH` | Helmet, CORS, rate-limiter, error middleware | `GET /api/health` test | **Verified** |
+| **TECH-002** | MongoDB Atlas with Mongoose ODM | TRD Sec 4 | `TECH` | `config/db.js` + `User`, `Career`, `Roadmap`, `Skill` | Schema compile & connect | **Verified** |
+| **TECH-003** | Stateless JWT + bcrypt authentication | BACKEND-SCHEMA | `TECH` | `/api/auth/register`, `/login`, auth middleware | Auth token & protected routes | **Verified** |
+| **TECH-004** | Accessible 2D SVG Percentage Progress Meter | TRD Sec 2 | `TECH` | 0% to 100% SVG circular meter on dashboard | Visual & accessibility audit | **Verified** |
+| **TECH-005** | 90% Viewport Container Layout & Scaled Typography| UI-UX-DESIGN | `TECH` | `--container-width: 90%`, 10% margins, fixed navbar | Cross-device viewport check | **Verified** |
+| **TECH-006** | Process safety listeners for crash hardening | TRD Sec 3 | `TECH` | `process.on('unhandledRejection')` in `server.js` | Process exception testing | **Verified** |
+| **TECH-007** | Three.js 3D Career Universe with 2D fallback | TRD Sec 2 | `TECH` | WebGL canvas with instant 2D glassmorphic fallback | Frame rate test (60 FPS) | **Verified** |
+| **INNOV-001** | Dual-Engine AI Career Mentor (Groq + Gemini) | API-ECOSYSTEM | `INNOV`| Sub-300ms LPU mentor drawer with Gemini failover | Live chat speed audit | **Verified** |
+| **INNOV-002** | Live Indian Tech Jobs & CTC Salary Telemetry | API-ECOSYSTEM | `INNOV`| Adzuna Developer API integration with cached failover | Live job query test | **Verified** |

@@ -1,42 +1,75 @@
-# Backend Schema & API Reference
-## CareerPath AI — Hack2Ignite 2026–27
+# Backend Schema & REST API Reference Specification
+
+> **Hack2Ignite 2026–27 · Round 1 Qualifier**  
+> **Team:** 404 Brain Not Found  
+> **Problem Statement ID:** ED-02 (AI-Powered Career Guidance System)  
+> **Backend Stack:** Node.js v18+, Express.js, MongoDB Atlas (Mongoose ODM), JWT, bcryptjs
 
 ---
 
-## 1. Backend Architecture
+## 1. Production Backend Structure
 
 ```
 server/
-├── server.js                 # Express app entry, middleware setup
+├── server.js                      # Express app entry, rate limiting, process safety listeners
+├── seed.js                        # Complete career, skill & quiz database seeding script
+├── seedDemoUser.js                # Dedicated evaluator demo user seeder
 ├── config/
-│   └── db.js                 # MongoDB connection via Mongoose
+│   └── db.js                      # MongoDB Atlas connection singleton
 ├── models/
-│   ├── User.js               # Student account + profile
-│   ├── Career.js             # Career definitions + required skills
-│   └── Roadmap.js            # Generated roadmaps + tasks
+│   ├── User.js                    # Student account, skills, GitHub profile & quiz verification
+│   ├── Career.js                  # 15+ industry career definitions & required skills
+│   ├── Roadmap.js                 # Generated student roadmaps, weeks & milestones
+│   ├── RoadmapTask.js             # Atomic checklist tasks with progress flags
+│   └── Skill.js                   # Master skill intelligence directory
 ├── routes/
-│   ├── auth.routes.js        # POST /register, /login
-│   ├── user.routes.js        # GET/PUT /profile
-│   ├── career.routes.js      # GET /careers
-│   ├── match.routes.js       # POST /recommend
-│   └── roadmap.routes.js     # POST /generate, PUT /task
+│   ├── authRoutes.js              # Register, login, google auth, github auth & POST /github/sync
+│   ├── assessmentRoutes.js        # Student profile evaluation & skills submission
+│   ├── quizRoutes.js              # Reality-check quiz: /start, /answer, /status, /providers
+│   ├── recommendationRoutes.js    # 60/25/15 deterministic matching engine & skill gap analysis
+│   ├── roadmapRoutes.js           # 4, 8, 12-week roadmap generation & task progress toggling
+│   ├── dashboardRoutes.js         # Unified student analytics, verified skills & goals
+│   ├── careerRoutes.js            # Careers directory, slugs & detail lookups
+│   ├── jobRoutes.js               # Adzuna & AIDevBoard live Indian tech vacancies
+│   ├── chatRoutes.js              # AI Career Mentor (Groq Llama 3.3 + Gemini Flash)
+│   ├── skillRoutes.js             # Skill directory & catalog
+│   └── userRoutes.js              # Profile updates, Cloudinary avatar & resume uploads
 ├── controllers/
-│   ├── auth.controller.js
-│   ├── user.controller.js
-│   ├── match.controller.js
-│   └── roadmap.controller.js
+│   ├── authController.js          # Authentication, token generation & GitHub session sync
+│   ├── assessmentController.js    # Assessment validation & student profile updating
+│   ├── quizController.js          # Dynamic quiz generation, answer scoring & skill verification
+│   ├── recommendationController.js# In-memory matrix matching & gap classification
+│   ├── roadmapController.js       # Timeline generation & atomic task completion
+│   ├── dashboardController.js     # Dashboard telemetry & progress aggregation
+│   └── userController.js          # User profile management & document uploads
+├── services/
+│   ├── aiQuizGeneratorService.js  # Multi-model Groq Llama + Gemini Flash quiz engine
+│   ├── quizService.js             # Quiz business logic, scoring & gap extraction
+│   ├── githubService.js           # GitHub REST API repository analysis & language parsing
+│   ├── groqService.js             # Groq Cloud AI mentor integration
+│   ├── geminiService.js           # Google Gemini AI failover integration
+│   ├── jobBoardService.js         # Adzuna & AIDevBoard live job streaming
+│   ├── cloudinaryService.js       # Cloudinary media and document management
+│   ├── emailService.js            # Nodemailer transactional email delivery
+│   ├── recommendationService.js   # 60/25/15 core mathematical scoring
+│   └── roadmapService.js          # Roadmap templating & task generation
 ├── middleware/
-│   ├── auth.middleware.js     # JWT verification
-│   └── error.middleware.js    # Centralized error handler
+│   ├── authMiddleware.js          # JWT Bearer token authentication & user hydration
+│   ├── errorMiddleware.js         # Centralized error formatting & status codes
+│   └── validateRequest.js         # Express-validator input sanitization
 └── data/
-    └── seed.js                # Database seeding script
+    ├── careersData.js             # Predefined career tracks & requirement matrices
+    ├── skillsData.js              # Comprehensive skills taxonomy
+    ├── quizQuestions.js           # 860+ lines curated fallback domain questions
+    └── roadmapTemplates.js        # 4, 8, 12-week weekly milestone blueprints
 ```
 
 ---
 
-## 2. Mongoose Schemas
+## 2. Mongoose Data Models & Schemas
 
-### 2.1 User Schema
+### 2.1 User Model (`server/models/User.js`)
+Stores authentication credentials, academic profile, self-reported and verified skills, GitHub repository analytics, and micro-quiz verification state.
 
 ```javascript
 const userSchema = new mongoose.Schema({
@@ -55,109 +88,70 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     minlength: 6,
-    select: false  // Exclude from queries by default
+    select: false // Excluded from default queries
+  },
+  role: {
+    type: String,
+    enum: ['student', 'admin'],
+    default: 'student'
   },
   education: {
     type: String,
-    default: ''
-    // e.g., "B.Tech CSE 2nd Year", "BCA 1st Year", "12th Science"
+    default: '' // e.g., "B.Tech CSE 2nd Year", "BCA 3rd Year"
   },
-  skills: [{
-    skillName: { type: String, required: true },
-    proficiency: { type: Number, required: true, min: 1, max: 5 }
-  }],
+  branch: {
+    type: String,
+    default: ''
+  },
+  college: {
+    type: String,
+    default: ''
+  },
   interests: [{
     type: String,
     trim: true
-  }]
-}, {
-  timestamps: true
-});
-```
-
-### 2.2 Career Schema
-
-```javascript
-const careerSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  domain: {
-    type: String  // e.g., "Technology", "Design", "Data", "Business"
-  },
-  baseEducationScore: {
-    type: Number,
-    default: 50,
-    min: 0,
-    max: 100
-    // Higher = stricter education requirements
-  },
-  tags: [{
-    type: String
-    // Used for interest matching, e.g., ["coding", "web", "frontend"]
   }],
-  requiredSkills: [{
+  // Multi-tier skill competency structure
+  skills: [{
     skillName: { type: String, required: true },
-    minimumProficiency: { type: Number, required: true, min: 1, max: 5 },
-    isCritical: { type: Boolean, default: false }
-    // Critical skills apply a penalty if completely missing
+    proficiency: { type: Number, required: true, min: 1, max: 5 },
+    isCodeVerified: { type: Boolean, default: false }, // Verified via GitHub code
+    isQuizVerified: { type: Boolean, default: false }, // Verified via Reality-Check Quiz
+    quizScore: { type: Number, default: null },
+    quizVerifiedAt: { type: Date, default: null }
   }],
-  averageSalary: {
-    type: String  // e.g., "₹6-12 LPA" — display only, not used in algorithm
+  // One-time verification policy to prevent re-gating
+  hasCompletedSkillVerification: {
+    type: Boolean,
+    default: false
   },
-  icon: {
-    type: String  // Emoji or icon class for UI
-  }
-}, {
-  timestamps: true
-});
-```
-
-### 2.3 Roadmap Schema (with embedded Tasks)
-
-```javascript
-const roadmapTaskSchema = new mongoose.Schema({
-  weekNumber: { type: Number, required: true },
-  title: { type: String, required: true },
-  description: { type: String },
-  resourceLink: { type: String },
-  isCompleted: { type: Boolean, default: false }
-});
-
-const roadmapSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  targetCareerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Career',
-    required: true
-  },
-  careerTitle: {
-    type: String  // Denormalized for quick display
-  },
-  durationWeeks: {
+  // Quiz evaluation metrics
+  quizScore: {
     type: Number,
-    enum: [4, 8, 12],
-    required: true
+    default: 0
   },
-  progress: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 100
+  quizGaps: [{
+    skill: String,
+    gapDescription: String,
+    recommendedAction: String
+  }],
+  // Connected GitHub telemetry
+  githubId: { type: String, default: null },
+  githubProfile: {
+    username: { type: String, default: null },
+    avatarUrl: { type: String, default: null },
+    profileUrl: { type: String, default: null },
+    publicRepos: { type: Number, default: 0 },
+    followers: { type: Number, default: 0 },
+    bio: { type: String, default: '' }
   },
-  tasks: [roadmapTaskSchema]
+  githubRepos: [mongoose.Schema.Types.Mixed], // Cached study repo analysis
+  // Google OAuth
+  googleId: { type: String, default: null },
+  // Cloudinary media
+  avatarUrl: { type: String, default: '' },
+  resumeUrl: { type: String, default: '' }
 }, {
   timestamps: true
 });
@@ -165,284 +159,118 @@ const roadmapSchema = new mongoose.Schema({
 
 ---
 
-## 3. API Endpoints — Full Reference
+## 3. Complete REST API Endpoints Specification
 
-### 3.1 Authentication
+### 3.1 Authentication & GitHub Session Sync (`/api/auth`)
 
-#### `POST /api/auth/register`
-Register a new student account.
+| Method | Endpoint | Access | Purpose |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Public | Create new student account, hashes password via bcrypt |
+| `POST` | `/api/auth/login` | Public | Authenticate email + password, returns JWT token |
+| `POST` | `/api/auth/google` | Public | Google Identity Services OAuth sign-in / sign-up |
+| `POST` | `/api/auth/github` | Public | Fast-track GitHub OAuth connection |
+| `POST` | `/api/auth/github/sync` | Protected (JWT) | **Auth-based repository sync:** Resolves student GitHub identity from session, fetches public repos, calculates top languages, marks `isCodeVerified: true` with zero manual prompt |
 
-**Request Body:**
-```json
-{
-  "name": "Rohan Sharma",
-  "email": "rohan@example.com",
-  "password": "securePass123"
-}
+#### Sample Request: `POST /api/auth/github/sync`
+```http
+POST /api/auth/github/sync HTTP/1.1
+Host: localhost:5000
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{ "auth": true }
 ```
 
-**Success Response (201):**
+#### Sample Response: `POST /api/auth/github/sync` (200 OK)
 ```json
 {
   "success": true,
-  "token": "eyJhbGciOiJIUzI1NiIs...",
-  "user": {
-    "id": "64a1b2c3d4e5f6a7b8c9d0e1",
-    "name": "Rohan Sharma",
-    "email": "rohan@example.com"
+  "message": "Successfully synchronized @parthpatil1234p-svg's repositories via auth system! Analyzed 7 study repositories.",
+  "data": {
+    "username": "parthpatil1234p-svg",
+    "reposCount": 7,
+    "topLanguages": ["JavaScript", "HTML", "CSS", "TypeScript"],
+    "verifiedSkills": ["JavaScript", "HTML", "CSS", "TypeScript"]
   }
 }
 ```
 
-**Error Response (400):**
-```json
-{ "success": false, "error": "Email already in use" }
-```
-
 ---
 
-#### `POST /api/auth/login`
-Authenticate and receive JWT.
+### 3.2 Adaptive Skill Reality-Check Micro-Quiz (`/api/quiz`)
 
-**Request Body:**
+| Method | Endpoint | Access | Purpose |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/quiz/start` | Optional / Demo | Initializes a 5-question technical quiz for selected skills. Invokes Groq Llama 3.3 70B, Gemini 2.5 Flash, or domain fallback |
+| `POST` | `/api/quiz/answer` | Optional / Demo | Evaluates submitted answer, provides instant explanation, updates running score, and advances question stepper |
+| `GET` | `/api/quiz/status` | Protected (JWT) | Returns verification status, verified skills list, and total verified count for current student |
+| `GET` | `/api/quiz/providers`| Public | Returns available AI quiz generation providers (Groq, Gemini, BYOK, Fallback) |
+
+#### Sample Request: `POST /api/quiz/start`
 ```json
 {
-  "email": "rohan@example.com",
-  "password": "securePass123"
+  "skill": "JavaScript",
+  "difficulty": "intermediate",
+  "provider": "groq",
+  "apiKey": ""
 }
 ```
 
-**Success Response (200):**
+#### Sample Response: `POST /api/quiz/start` (200 OK)
 ```json
 {
   "success": true,
-  "token": "eyJhbGciOiJIUzI1NiIs...",
-  "user": {
-    "id": "64a1b2c3d4e5f6a7b8c9d0e1",
-    "name": "Rohan Sharma",
-    "email": "rohan@example.com"
-  }
-}
-```
-
-**Error Response (401):**
-```json
-{ "success": false, "error": "Invalid credentials" }
-```
-
----
-
-### 3.2 User Profile
-
-#### `GET /api/users/profile` 🔒
-Get the logged-in user's full profile.
-
-**Headers:** `Authorization: Bearer <token>`
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "user": {
-    "id": "64a1b2c3d4e5f6a7b8c9d0e1",
-    "name": "Rohan Sharma",
-    "email": "rohan@example.com",
-    "education": "B.Tech CSE 2nd Year",
-    "skills": [
-      { "skillName": "JavaScript", "proficiency": 3 },
-      { "skillName": "Python", "proficiency": 2 }
+  "data": {
+    "sessionId": "quiz_session_88192a",
+    "skill": "JavaScript",
+    "questionIndex": 1,
+    "totalQuestions": 5,
+    "question": "What is the expected output of `typeof null` in standard JavaScript?",
+    "options": [
+      "\"null\"",
+      "\"undefined\"",
+      "\"object\"",
+      "\"boolean\""
     ],
-    "interests": ["web development", "AI", "design"]
+    "timeLimitSeconds": 45,
+    "engine": "Groq Llama 3.3 70B"
   }
 }
 ```
 
 ---
 
-#### `PUT /api/users/profile` 🔒
-Update education, skills, and/or interests.
+### 3.3 Career Recommendations & Matching Engine (`/api/recommendations`)
 
-**Request Body (partial update supported):**
-```json
-{
-  "education": "B.Tech CSE 2nd Year",
-  "skills": [
-    { "skillName": "JavaScript", "proficiency": 3 },
-    { "skillName": "Python", "proficiency": 2 },
-    { "skillName": "HTML/CSS", "proficiency": 4 }
-  ],
-  "interests": ["web development", "AI", "design"]
-}
-```
-
-**Response (200):**
-```json
-{ "success": true, "user": { /* ...updated user object */ } }
-```
+| Method | Endpoint | Access | Purpose |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/recommendations/generate` | Protected (JWT) | Executes 60/25/15 deterministic scoring algorithm across all 15 career tracks |
+| `GET` | `/api/recommendations/latest` | Protected (JWT) | Retrieves previously computed top recommendations and tri-color skill gaps |
 
 ---
 
-### 3.3 Careers
+### 3.4 Roadmap & Task Execution (`/api/roadmaps`)
 
-#### `GET /api/careers`
-List all available careers.
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "count": 5,
-  "careers": [
-    {
-      "id": "...",
-      "title": "Full-Stack Web Developer",
-      "domain": "Technology",
-      "icon": "🌐",
-      "description": "Build complete web applications...",
-      "tags": ["coding", "web", "frontend", "backend"],
-      "requiredSkills": [ /* ... */ ]
-    }
-  ]
-}
-```
+| Method | Endpoint | Access | Purpose |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/roadmaps/generate` | Protected (JWT) | Generates customized 4, 8, or 12-week roadmap based on student's missing skills |
+| `GET` | `/api/roadmaps/current` | Protected (JWT) | Returns active roadmap, weekly milestones, resource links, and progress |
+| `PATCH`| `/api/roadmaps/tasks/:taskId` | Protected (JWT) | Toggles milestone task completion; triggers atomic percentage progress recalculation |
 
 ---
 
-### 3.4 Career Matching
+### 3.5 Student Dashboard (`/api/dashboard`)
 
-#### `POST /api/match/recommend` 🔒
-Run the recommendation engine for the authenticated user.
-
-**Request Body:** *(empty — uses the logged-in user's profile)*
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "recommendations": [
-    {
-      "career": { "id": "...", "title": "Full-Stack Web Developer", "icon": "🌐" },
-      "totalScore": 78.5,
-      "breakdown": {
-        "skillScore": 72.0,
-        "interestScore": 88.0,
-        "educationScore": 80.0
-      }
-    },
-    { /* 2nd career */ },
-    { /* 3rd career */ }
-  ]
-}
-```
+| Method | Endpoint | Access | Purpose |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/dashboard` | Protected (JWT) | Returns unified profile summary, active career goal, upcoming tasks, verified skills, and 0–100% progress metrics |
 
 ---
 
-### 3.5 Roadmap
+### 3.6 AI Mentor & Live Market Telemetry (`/api/chat` & `/api/jobs`)
 
-#### `POST /api/roadmap/generate` 🔒
-Generate a personalized learning roadmap.
-
-**Request Body:**
-```json
-{
-  "careerId": "64a1b2c3d4e5f6a7b8c9d0e1",
-  "durationWeeks": 8
-}
-```
-
-**Response (201):**
-```json
-{
-  "success": true,
-  "roadmap": {
-    "id": "...",
-    "careerTitle": "Full-Stack Web Developer",
-    "durationWeeks": 8,
-    "progress": 0,
-    "tasks": [
-      {
-        "_id": "...",
-        "weekNumber": 1,
-        "title": "Learn advanced JavaScript (ES6+)",
-        "description": "Cover arrow functions, destructuring, async/await...",
-        "resourceLink": "https://javascript.info/",
-        "isCompleted": false
-      }
-    ]
-  }
-}
-```
-
----
-
-#### `PUT /api/roadmap/:roadmapId/task/:taskId` 🔒
-Mark a task as completed (or uncomplete it).
-
-**Request Body:**
-```json
-{ "isCompleted": true }
-```
-
-**Response (200):**
-```json
-{
-  "success": true,
-  "progress": 12.5,
-  "task": {
-    "_id": "...",
-    "title": "Learn advanced JavaScript (ES6+)",
-    "isCompleted": true
-  }
-}
-```
-
----
-
-## 4. Authentication & Authorization
-
-| Mechanism | Detail |
-|-----------|--------|
-| Library | `jsonwebtoken` |
-| Algorithm | HS256 |
-| Payload | `{ userId: string }` |
-| Expiry | 24 hours |
-| Header Format | `Authorization: Bearer <token>` |
-| Password Hashing | bcryptjs, 10 salt rounds |
-
-### Auth Middleware Logic
-```
-1. Extract token from Authorization header
-2. Verify token with JWT_SECRET
-3. If valid → attach userId to req.user, call next()
-4. If invalid/expired → return 401 { error: "Not authorized" }
-```
-
----
-
-## 5. Error Response Format
-
-All error responses follow a consistent shape:
-
-```json
-{
-  "success": false,
-  "error": "Human-readable error message"
-}
-```
-
-| Status Code | Meaning |
-|-------------|---------|
-| 400 | Bad Request — validation failed |
-| 401 | Unauthorized — missing/invalid token |
-| 404 | Not Found — resource doesn't exist |
-| 500 | Server Error — unexpected failure |
-
----
-
-## 6. Database Indexes
-
-| Collection | Index | Purpose |
-|------------|-------|---------|
-| users | `{ email: 1 }` unique | Fast login lookups, prevent duplicates |
-| careers | `{ title: "text", tags: "text" }` | Text search for career browsing |
-| roadmaps | `{ userId: 1 }` | Fetch user's roadmaps quickly |
+| Method | Endpoint | Access | Purpose |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/chat/message` | Protected / Demo | Sends question to AI Career Mentor (Groq Llama 3.3 70B with Gemini Flash failover) |
+| `GET` | `/api/jobs/adzuna` | Public | Real-time Indian tech job listings & CTC salary data from Adzuna API |
+| `GET` | `/api/jobs/career/:slug` | Public | Localized vacancies filtered by specific career track |

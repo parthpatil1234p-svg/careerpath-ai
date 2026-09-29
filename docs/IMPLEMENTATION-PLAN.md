@@ -1,191 +1,99 @@
-# 48-Hour Implementation Plan
-## CareerPath AI — Hack2Ignite 2026–27
+# 48-Hour Implementation Plan & Execution Log
+
+> **🏆 Hack2Ignite 2026–27 · Team 404 Brain Not Found**  
+> **Problem Statement ID:** ED-02 (AI Career Guidance System)  
+> **Execution Status:** 100% Completed & Verified
 
 ---
 
-## Team Roster
+## Team Roster & Ownership
 
-| Member | Primary Role | Secondary |
-|--------|-------------|-----------|
-| **Parth** | Team Leader & Full Stack WebDev (Backend, Engine, API Routing) | Full-stack deployment & system architecture |
-| **Aditi** | Researcher, Web Explorer & Integration Lead (Research, Resources) | Frontend integration & validation |
-| **Suyog** | UI/UX & 3D WebGL Lead (Three.js, Canvas, GSAP) | Canvas optimization & 2D fallback |
-| **Sanika** | QA, Data & Docs Lead & Presenter / Speaker | QA test suites, dataset & pitch presentation |
-
----
-
-## Pre-Hackathon Checklist ☑️
-
-Complete **before** the 48-hour clock starts:
-
-- [ ] MongoDB Atlas cluster created (M0 free tier), connection string ready
-- [ ] GitHub repository initialized with `main` + `dev` branches
-- [ ] Node.js, npm, VS Code installed on all team members' machines
-- [ ] Google Fonts imported: Space Grotesk + Inter
-- [ ] `.env.example` file committed with placeholder values
-- [ ] Postman workspace shared with team
-- [ ] Design reference images saved locally
-- [ ] All docs (this repo's `docs/` folder) read by every team member
-
----
-
-## Phase 1: Foundation (Hours 0 – 8)
-
-### 🎯 Goal: Server running, DB connected, auth working, basic UI shell
-
-| Task | Owner | Duration | Status |
-|------|-------|----------|--------|
-| Init Express server + middleware (cors, helmet, rate-limit) | Parth | 1h | ⬜ |
-| Configure MongoDB connection (`config/db.js`) | Parth | 0.5h | ⬜ |
-| Create Mongoose schemas (User, Career, Roadmap) | Aditi | 2h | ⬜ |
-| Implement Auth routes (register + login) with JWT | Parth | 2h | ⬜ |
-| Create auth middleware for protected routes | Parth | 1h | ⬜ |
-| Test auth endpoints in Postman | Sanika | 0.5h | ⬜ |
-| Setup HTML/CSS boilerplate (`index.html`, `login.html`) | Aditi | 2h | ⬜ |
-| Create CSS variables file + glassmorphism base class | Suyog | 1h | ⬜ |
-| Build Login/Register UI (glass panel forms) | Aditi | 2h | ⬜ |
-| Initialize Three.js boilerplate (renderer, camera, scene) | Suyog | 2h | ⬜ |
-| Create basic starfield particle system (background) | Suyog | 2h | ⬜ |
-
-### ✅ Phase 1 Milestone
-- `npm run dev` starts the server
-- `POST /api/auth/register` and `/login` return JWTs
-- `login.html` renders with glassmorphism styles
-- Three.js canvas shows animated starfield
-
----
-
-## Phase 2: Core Logic (Hours 8 – 20)
-
-### 🎯 Goal: Matching engine works, seed data loaded, profile form done, 3D career nodes
-
-| Task | Owner | Duration | Status |
-|------|-------|----------|--------|
-| Build career matching algorithm (60/25/15 formula) | Parth | 3h | ⬜ |
-| Create `POST /api/match/recommend` endpoint | Parth | 1h | ⬜ |
-| Create `GET /api/users/profile` + `PUT` endpoints | Parth | 1.5h | ⬜ |
-| Generate seed data: 5 careers with full skill requirements | Aditi | 3h | ⬜ |
-| Create seed script (`data/seed.js`) + run it | Aditi | 1h | ⬜ |
-| Build student onboarding forms (education, skills slider, interest tags) | Aditi | 3h | ⬜ |
-| Connect Login/Register UI to auth APIs | Aditi | 1.5h | ⬜ |
-| Create Career Universe 3D scene (glowing orbs for each career) | Suyog | 4h | ⬜ |
-| Implement Raycaster hover effect on orbs | Suyog | 2h | ⬜ |
-
-### ✅ Phase 2 Milestone
-- Matching engine returns correct top-3 careers for test data
-- Database has 5 careers with 6–10 skills each
-- Profile form submits and saves to DB
-- Landing page shows interactive 3D career orbs
-
----
-
-## Phase 3: Integration & Roadmaps (Hours 20 – 32)
-
-### 🎯 Goal: Frontend ↔ Backend connected, roadmap generation working, 3D roadmap view
-
-| Task | Owner | Duration | Status |
-|------|-------|----------|--------|
-| Build dashboard page: profile summary + career result cards | Aditi | 3h | ⬜ |
-| Connect profile form → `PUT /api/users/profile` → `POST /api/match/recommend` | Aditi | 2h | ⬜ |
-| Display career recommendations with scores on dashboard | Aditi | 2h | ⬜ |
-| Build skill-gap analysis logic (compare user vs career skills) | Aditi | 2h | ⬜ |
-| Build roadmap generation algorithm | Aditi | 3h | ⬜ |
-| Create `POST /api/roadmap/generate` endpoint | Parth | 1.5h | ⬜ |
-| Create `PUT /api/roadmap/:id/task/:taskId` endpoint | Parth | 1h | ⬜ |
-| Create `GET /api/careers` endpoint | Parth | 0.5h | ⬜ |
-| Build GSAP camera fly-to animation on career click | Suyog | 3h | ⬜ |
-| Build 3D Roadmap Path scene (connected nodes per week) | Suyog | 3h | ⬜ |
-
-### ✅ Phase 3 Milestone
-- Full flow works: Register → Profile → Get Recommendations → Select Career → See Skill Gap → Generate Roadmap
-- 3D camera animation on career selection
-- Roadmap page shows week-by-week tasks
-
----
-
-## Phase 4: Polishing & Edge Cases (Hours 32 – 42)
-
-### 🎯 Goal: Progress tracking works, mobile fallback, deployment
-
-| Task | Owner | Duration | Status |
-|------|-------|----------|--------|
-| Build roadmap task completion UI (checkboxes + progress bar) | Aditi | 2h | ⬜ |
-| Connect task completion to `PUT /api/roadmap/:id/task/:taskId` | Aditi | 1h | ⬜ |
-| Add progress percentage animation (3D + 2D) | Suyog | 2h | ⬜ |
-| Implement mobile fallback (hide canvas, show CSS grid) | Suyog | 2h | ⬜ |
-| Add form validation (frontend) + error toasts | Aditi | 1.5h | ⬜ |
-| Add edge case handling: empty skills, no results, expired JWT | Parth | 2h | ⬜ |
-| Add loading states + empty states | Aditi | 1h | ⬜ |
-| Deploy backend to Render | Parth | 1h | ⬜ |
-| Deploy frontend to Vercel | Parth | 1h | ⬜ |
-| Verify CORS between Vercel ↔ Render | Parth + Aditi | 0.5h | ⬜ |
-| Full end-to-end testing on deployed URLs | Sanika | 2h | ⬜ |
-
-### ✅ Phase 4 Milestone
-- Task checkboxes update progress in DB and UI
-- Mobile viewport shows 2D fallback correctly
-- Both apps deployed and communicating
-
----
-
-## Phase 5: Presentation Prep & QA (Hours 42 – 48)
-
-### 🎯 Goal: Demo-ready, bug-free, presentation polished
-
-### ⛔ CODE FREEZE at Hour 44
-
-| Task | Owner | Duration | Status |
-|------|-------|----------|--------|
-| Final CSS polish (spacing, alignment, responsive tweaks) | Suyog | 2h | ⬜ |
-| Final 3D performance optimization (reduce particles on low-end) | Suyog | 1h | ⬜ |
-| Fix any remaining bugs from QA | All | 2h | ⬜ |
-| Record demo video (screen recording with voiceover) | Parth | 1h | ⬜ |
-| Prepare pitch deck (5–7 slides: Problem, Solution, Tech, Demo, Future) | Aditi + Sanika | 2h | ⬜ |
-| Practice demo presentation (3-minute walkthrough) | All | 1h | ⬜ |
-| Create 3 test user personas and rehearse live demo | All | 1h | ⬜ |
-
-### ✅ Phase 5 Milestone
-- 3-minute live demo runs without errors
-- Demo video uploaded
-- All team members can explain any part of the system
-
----
-
-## Critical Path ⚠️
-
-The following tasks are on the critical path — a delay here delays the entire project:
-
-```
-Auth APIs (Phase 1) → Profile Form (Phase 2) → Matching Engine (Phase 2)
-    → Dashboard Integration (Phase 3) → Roadmap Generation (Phase 3)
-        → Progress Tracking (Phase 4) → Deployment (Phase 4)
-```
-
-If the **matching engine** is delayed, nothing downstream works. Prioritize it above all else.
-
----
-
-## Risk Mitigation
-
-| Risk | Impact | Mitigation |
-|------|--------|-----------|
-| Matching algorithm has bugs | High | Parth writes unit-test-grade Postman checks by Hour 12 |
-| Three.js scene crashes on mobile | Medium | Suyog builds 2D fallback early (Phase 2, not Phase 4) |
-| MongoDB Atlas cold start is slow | Low | Use `serverSelectionTimeoutMS: 5000` in connection options |
-| Render free tier spins down | Medium | Build "wake up" ping into frontend on page load |
-| Merge conflicts on `main` | Medium | All work on feature branches; Parth reviews & merges |
-
----
-
-## Phase 6 & Beyond: Post-Hackathon Product Roadmap 🚀
-
-| Feature Module | Technical Scope | Target Quarter |
+| Member | Primary Role | Core Delivery Modules |
 | :--- | :--- | :--- |
-| **AI Mock Interview Module (`/interview`)** | Voice-driven conversational interview with Web Speech API + Groq Llama 3, STAR evaluation, and fluency scorecard | Q1 2027 |
-| **Resume & Portfolio Gap Analyzer (`/resume-audit`)** | PDF ATS score parser, missing high-impact project suggestions (e.g. Redis caching, Docker), and Google XYZ bullet rewriter | Q4 2026 |
-| **College Faculty & Mentor Portal (`/mentor-portal`)** | TPO dashboard with batch-wide skill-gap heatmaps, custom roadmap assignment, and cohort placement readiness indices | Q2 2027 |
-| **Market-Trend Telemetry & Deep-Links (`/market-pulse`)** | Live verified job openings (Adzuna + LinkedIn + RemoteOK) matched to milestone skills with verified free learning labs | Q1 2027 |
-| **Performance-Adaptive Roadmaps (`/adaptive-roadmap`)** | Bayesian Knowledge Tracing with self-healing pacing (accelerated vs remediation pathways based on milestone quiz performance) | Q4 2026 |
-| **In-Browser Code Runner** | Judge0 CE / WebContainers embedded in roadmap tasks for instant hands-on verification | Q4 2026 |
-| **Regional Language Localization (i18n)** | Hindi, Marathi, Telugu, and Tamil translations for Tier-2/3 student accessibility | Q4 2026 |
-| **WhatsApp Streak & Milestone Bot** | Automated daily reminders, streak recovery alerts, and micro-quizzes delivered via WhatsApp Business API | Q1 2027 |
+| **Parth Patil** | Team Leader & Full Stack Lead | Backend architecture, 60/25/15 engine, Groq/Gemini AI quiz service, GitHub auth sync |
+| **Aditi Vispute** | Integration & Curriculum Lead | Skill-gap analysis, 76+ skill taxonomy, roadmap templates, assessment logic |
+| **Suyog Pawar** | UI/UX & Frontend Systems Lead | 90% viewport layout, 2D percentage SVG gauge, Three.js 3D Career Universe |
+| **Sanika Bodhnawar** | QA, Docs & Presentation Lead | API test suites, documentation suite, pitch deck presentation, evaluator flow |
+
+---
+
+## Phase 1: Foundation (Hours 0 – 8) ✅ COMPLETED
+**Goal:** Server running, MongoDB Atlas connected, authentication operational, basic glassmorphic UI.
+
+| Task | Owner | Duration | Status |
+| :--- | :--- | :---: | :---: |
+| Init Express server + security middleware (CORS, helmet, rate-limit) | Parth | 1h | ✅ |
+| Configure MongoDB Atlas cloud connection (`config/db.js`) | Parth | 0.5h | ✅ |
+| Create Mongoose schemas (`User.js`, `Career.js`, `Roadmap.js`) | Aditi | 2h | ✅ |
+| Implement Auth routes (register + login) with bcrypt & JWT | Parth | 2h | ✅ |
+| Create JWT authentication middleware for protected routes | Parth | 1h | ✅ |
+| Build Login/Register glassmorphic UI (`login.html`, `register.html`) | Aditi | 2h | ✅ |
+| Initialize Three.js boilerplate & starfield canvas on landing page | Suyog | 2h | ✅ |
+| Automated Postman auth test validation | Sanika | 0.5h | ✅ |
+
+---
+
+## Phase 2: Core Matching Logic (Hours 8 – 20) ✅ COMPLETED
+**Goal:** 60/25/15 matching engine operational, database seeded, 3D career universe nodes.
+
+| Task | Owner | Duration | Status |
+| :--- | :--- | :---: | :---: |
+| Build deterministic 60/25/15 career matching algorithm | Parth | 3h | ✅ |
+| Create `POST /api/recommendations/generate` endpoint | Parth | 1h | ✅ |
+| Create student profile endpoints (`GET /api/users/me`, `PUT`) | Parth | 1.5h | ✅ |
+| Generate seed dataset: 15 career tracks with 76+ industry skills | Aditi | 3h | ✅ |
+| Implement seeding automation scripts (`server/seed.js`) | Aditi | 1h | ✅ |
+| Build student assessment profiler (`client/assessment.html`) | Aditi | 3h | ✅ |
+| Implement Three.js 3D Career Universe constellation with orbital physics | Suyog | 4h | ✅ |
+| Add Raycaster hover interaction and responsive 2D fallback | Suyog | 2h | ✅ |
+
+---
+
+## Phase 3: Roadmaps & Dashboard Integration (Hours 20 – 32) ✅ COMPLETED
+**Goal:** End-to-end integration, skill-gap analysis, 4/8/12-week roadmap generation, and dashboard.
+
+| Task | Owner | Duration | Status |
+| :--- | :--- | :---: | :---: |
+| Build unified student dashboard (`client/dashboard.html`) | Aditi | 3h | ✅ |
+| Implement skill-gap classification (🟢 Matched, 🟡 Upgrade, 🔴 Missing) | Aditi | 2h | ✅ |
+| Build roadmap generation algorithm for 4, 8, and 12-week timelines | Aditi | 3h | ✅ |
+| Create `POST /api/roadmaps/generate` & task toggle endpoints | Parth | 1.5h | ✅ |
+| Implement atomic progress recalculation on task completion | Parth | 1h | ✅ |
+| Build roadmap checklist interface with 1-click PDF print styling | Suyog | 3h | ✅ |
+| Implement floating 24/7 AI Career Mentor drawer (`client/js/chat.js`) | Parth | 2h | ✅ |
+
+---
+
+## Phase 4: Market Telemetry & GitHub Verification (Hours 32 – 40) ✅ COMPLETED
+**Goal:** Live external APIs, Indian CTC salary data, and GitHub code verification.
+
+| Task | Owner | Duration | Status |
+| :--- | :--- | :---: | :---: |
+| Integrate Adzuna Developer API for live Indian tech jobs & CTC | Parth | 2h | ✅ |
+| Integrate AIDevBoard API for global AI/developer telemetry | Parth | 1h | ✅ |
+| Implement GitHub REST API repository analysis service | Parth | 2h | ✅ |
+| Implement Cloudinary avatar and resume document upload services | Parth | 1.5h | ✅ |
+| Add Google Identity Services 1-click OAuth authentication | Parth | 1.5h | ✅ |
+| Create evaluator 1-click demo account auto-fill mechanism | Aditi | 1h | ✅ |
+| Build automated 21-endpoint Postman test collection | Sanika | 1.5h | ✅ |
+
+---
+
+## Phase 5: Multi-Model Quiz, Auth Sync & Layout Overhaul (Hours 40 – 48) ✅ COMPLETED
+**Goal:** Dynamic AI reality-check micro-quiz, auth-based GitHub sync, 2D percentage gauge, 90% wide layout.
+
+| Task | Owner | Duration | Status |
+| :--- | :--- | :---: | :---: |
+| Build dynamic AI micro-quiz service (`aiQuizGeneratorService.js`) with Groq Llama 3.3 70B | Parth | 2.5h | ✅ |
+| Implement Google Gemini 2.5 Flash pedagogical failover engine | Parth | 1.5h | ✅ |
+| Curate 860+ lines domain question fallback dataset (`quizQuestions.js`) | Aditi | 2h | ✅ |
+| Build dedicated 5-question micro-quiz interface (`client/quiz.html`) | Suyog | 3h | ✅ |
+| Implement BYOK modal & model switcher for live evaluator testing | Parth | 1h | ✅ |
+| Implement one-time verification policy (`hasCompletedSkillVerification`) | Parth | 1h | ✅ |
+| Implement `POST /api/auth/github/sync` (auth-based repo sync without username modal) | Parth | 1.5h | ✅ |
+| Replace 3D angle gauge with accessible 2D circular SVG percentage gauge (0–100%) | Suyog | 2h | ✅ |
+| Calibrate global CSS layout to 90% viewport width with 10% breathing room margins | Suyog | 2h | ✅ |
+| Boost typography scale across all headings, cards, and chips | Suyog | 1h | ✅ |
+| Fix sticky notch-navbar clearance preventing header text overlap | Suyog | 1h | ✅ |
+| Attach process safety handlers (`unhandledRejection`, `uncaughtException`) | Parth | 0.5h | ✅ |
+| Rebuild codebase knowledge graph with `graft build` (357 nodes, 617 edges) | Sanika | 0.5h | ✅ |

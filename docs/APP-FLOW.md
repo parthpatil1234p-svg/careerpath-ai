@@ -1,5 +1,8 @@
-# Application Flow
-## CareerPath AI — Hack2Ignite 2026–27
+# Application Flow & Interactive User Journeys
+
+> **Hack2Ignite 2026–27 · Team 404 Brain Not Found**  
+> **Project:** CareerPath AI (ED-02)  
+> **Architecture:** Decoupled Full-Stack Web Application
 
 ---
 
@@ -7,160 +10,123 @@
 
 ```mermaid
 flowchart LR
-    A[Landing Page<br/>3D Career Universe] --> B[Register / Login]
-    B --> C[Onboarding<br/>Fill Profile]
-    C --> D[Career Matching<br/>Engine Runs]
-    D --> E[View Top 3<br/>Career Results]
-    E --> F[Select Career →<br/>Skill-Gap Analysis]
-    F --> G[Choose Timeline<br/>4 / 8 / 12 weeks]
-    G --> H[Roadmap<br/>Generated]
-    H --> I[Track Progress<br/>Complete Tasks]
+    A[1. Landing Page<br/>3D Career Universe] --> B[2. Auth / 1-Click<br/>Demo Account]
+    B --> C[3. Skills Profiler<br/>GitHub Auto-Detect]
+    C --> D[4. Reality-Check<br/>Micro-Quiz]
+    D --> E[5. 60/25/15 Match<br/>Recommendations]
+    E --> F[6. Gap Analysis<br/>Tri-Color Matrix]
+    F --> G[7. Adaptive Roadmap<br/>4/8/12 Weeks]
+    G --> H[8. Dashboard<br/>2D % Progress Gauge]
 ```
 
 ---
 
-## 2. Authentication Flow
+## 2. Authentication & GitHub Session Sync Flow
 
 ```mermaid
 sequenceDiagram
     actor Student
-    participant FE as Frontend
-    participant BE as Backend (Express)
+    participant FE as Frontend Client
+    participant BE as Express API Server
+    participant GH as GitHub REST API
     participant DB as MongoDB Atlas
 
-    Note over Student,DB: === REGISTRATION ===
-    Student->>FE: Fill name, email, password
-    FE->>FE: Validate inputs (non-empty, email format, password ≥ 6 chars)
-    FE->>BE: POST /api/auth/register { name, email, password }
-    BE->>DB: Check if email already exists
-    alt Email Already Registered
-        BE-->>FE: 400 { error: "Email already in use" }
-        FE-->>Student: Show error toast
-    else New Email
-        BE->>BE: Hash password (bcrypt, 10 rounds)
-        BE->>DB: Insert new User document
-        BE->>BE: Sign JWT with userId
-        BE-->>FE: 201 { token, user: { id, name, email } }
-        FE->>FE: Store token in localStorage
-        FE-->>Student: Redirect to Onboarding
-    end
-
-    Note over Student,DB: === LOGIN ===
-    Student->>FE: Enter email + password
+    Note over Student,DB: === 1-CLICK AUTHENTICATION ===
+    Student->>FE: Click "1-Click Fill Demo Account" / Google OAuth
     FE->>BE: POST /api/auth/login { email, password }
-    BE->>DB: Find User by email
-    alt User Not Found
-        BE-->>FE: 401 { error: "Invalid credentials" }
-    else User Found
-        BE->>BE: bcrypt.compare(password, hash)
-        alt Password Mismatch
-            BE-->>FE: 401 { error: "Invalid credentials" }
-        else Password Matches
-            BE->>BE: Sign JWT
-            BE-->>FE: 200 { token, user }
-            FE->>FE: Store token, redirect to Dashboard
-        end
-    end
+    BE->>DB: Verify credentials / Find user
+    BE-->>FE: 200 OK { token, user: { name, email, skills, githubProfile } }
+    FE->>FE: Persist token to localStorage
+
+    Note over Student,DB: === AUTH-BASED GITHUB SYNC (ZERO USERNAME PROMPT) ===
+    Student->>FE: Click "Sync Repos" on Dashboard or "Auto-Detect" on Assessment
+    FE->>BE: POST /api/auth/github/sync (Header: Bearer JWT)
+    BE->>BE: Resolve GitHub username from req.user session
+    BE->>GH: GET /users/:username/repos
+    GH-->>BE: 200 OK [ Public Repositories List ]
+    BE->>BE: Analyze top languages & mark isCodeVerified = true
+    BE->>DB: Update user.skills and user.githubRepos
+    BE-->>FE: 200 OK { username, reposCount, verifiedSkills }
+    FE->>FE: Update window.Auth and render verified green checkmark badges
+    FE-->>Student: Display success toast notification
 ```
 
 ---
 
-## 3. Onboarding → Career Matching Flow
+## 3. Adaptive Skill Reality-Check Micro-Quiz Flow (`/quiz.html`)
 
 ```mermaid
 flowchart TD
-    A[Dashboard: Profile Incomplete] --> B[Step 1: Select Education Level]
-    B --> C[Step 2: Select Skills + Rate Proficiency 1-5]
-    C --> D[Step 3: Select Interest Tags]
-    D --> E[Submit Profile]
-    E --> F[PUT /api/users/profile]
-    F --> G{Profile Saved?}
-    G -- Yes --> H[POST /api/match/recommend]
-    G -- No --> I[Show Validation Error]
+    Start[Student Starts Quiz / Clicked 'Verify Skill'] --> CheckAuth{Is Authenticated?}
+    CheckAuth -- No --> GuestBridge[Auto Demo Auth Bridge]
+    CheckAuth -- Yes --> SelectSkill[Select Skill e.g. JavaScript, Python, React]
+    GuestBridge --> SelectSkill
     
-    H --> J{Matching Engine}
-    J --> K[Calculate Skill Score ×0.60]
-    J --> L[Calculate Interest Score ×0.25]
-    J --> M[Calculate Education Score ×0.15]
+    SelectSkill --> ProviderCheck{AI Provider Selected}
+    ProviderCheck -- Groq Cloud --> GroqCall[Invoke Groq Llama 3.3 70B <300ms]
+    ProviderCheck -- Gemini --> GeminiCall[Invoke Google Gemini 2.5 Flash]
+    ProviderCheck -- BYOK --> CustomKey[Invoke with Evaluator Custom API Key]
+    ProviderCheck -- Offline/No Key --> Fallback[Load Curated Domain Bank 860+ Lines]
+
+    GroqCall & GeminiCall & CustomKey & Fallback --> InitStepper[Render 5-Question Stepper UI]
+
+    InitStepper --> QuestionLoop[Display Question + Countdown Timer]
+    QuestionLoop --> SubmitAnswer[Student Submits Multiple Choice Option]
+    SubmitAnswer --> EvalAnswer[POST /api/quiz/answer]
+    EvalAnswer --> ShowFeedback[Show Instant Feedback & Pedagogical Explanation]
     
-    K & L & M --> N[Aggregate: Total Score per Career]
-    N --> O[Sort Descending]
-    O --> P[Return Top 3 Careers with Scores]
-    P --> Q[Render Career Cards / 3D Career Universe]
+    ShowFeedback --> CheckEnd{Question 5 Complete?}
+    CheckEnd -- No --> NextQ[Advance Stepper Dot & Next Question]
+    NextQ --> QuestionLoop
+    
+    CheckEnd -- Yes --> CalcScore[Calculate Final Score & Gap Analysis]
+    CalcScore --> SaveDB[Update MongoDB: isQuizVerified=true, hasCompletedSkillVerification=true]
+    SaveDB --> UnlockNav[Show Scorecard + One-Click Return to Assessment/Recommendations]
 ```
 
 ---
 
-## 4. Skill-Gap → Roadmap Generation Flow
+## 4. Career Matching & Recommendations Flow
 
 ```mermaid
 flowchart TD
-    A[User Clicks on a Career Card] --> B[GET /api/careers/:id]
-    B --> C[Display Career Detail Page]
-    C --> D[Show Skill-Gap Analysis]
+    A[Student Submits Assessment] --> B[POST /api/recommendations/generate]
+    B --> C[Fetch 15 Predefined Career Requirement Matrices]
     
-    D --> E{For Each Required Skill}
-    E --> F[User Has Skill?]
-    F -- Yes --> G[Proficiency ≥ Required?]
-    G -- Yes --> H[✅ Green: Skill Met]
-    G -- No --> I[⚠️ Yellow: Needs Improvement]
-    F -- No --> J[🔴 Red: Missing Skill]
+    C --> D[Run 60/25/15 Mathematical Evaluation Engine]
+    D --> E[Skill Match Score: 60% weight with verified confidence boost]
+    D --> F[Interest Match Score: 25% overlap weight]
+    D --> G[Education Match Score: 15% academic alignment]
     
-    H & I & J --> K[Calculate Readiness %]
-    K --> L[User Chooses Timeline: 4 / 8 / 12 Weeks]
-    L --> M[POST /api/roadmap/generate]
+    E & F & G --> H[Calculate Total Weighted Composite Score]
+    H --> I[Sort Careers in Descending Order]
+    I --> J[Return Top 3 Ranked Career Tracks]
     
-    M --> N{Roadmap Engine}
-    N --> O[List All Gap Skills]
-    O --> P[Sort: Foundational → Advanced]
-    P --> Q[Distribute Tasks Across Weeks]
-    Q --> R[Attach Resource Links]
-    R --> S[Save Roadmap to DB]
-    S --> T[Return Roadmap JSON]
-    T --> U[Render Week-by-Week Task List + 3D Roadmap Path]
+    J --> K[Render Recommendations UI at 90% Container Width]
+    K --> L[Display Tri-Color Skill Gap Breakdown]
+    L --> M[🟢 Matched Skills with Verified Badges]
+    L --> N[🟡 Upgrade Needed - Proficiency Gap]
+    L --> O[🔴 Missing Core Skills - Targets for Roadmap]
 ```
 
 ---
 
-## 5. Progress Tracking Flow
+## 5. Milestone Roadmap Execution & Dashboard Progress Flow
 
 ```mermaid
-sequenceDiagram
-    actor Student
-    participant FE as Frontend
-    participant BE as Backend
-    participant DB as MongoDB
-
-    Student->>FE: Check a task checkbox
-    FE->>BE: PUT /api/roadmap/:roadmapId/task/:taskId { isCompleted: true }
-    BE->>DB: Update task's isCompleted flag
-    BE->>BE: Recalculate overall progress %
-    BE-->>FE: 200 { updatedProgress: 45 }
-    FE->>FE: Update progress bar + 3D roadmap visual
-    FE-->>Student: Show "Great job!" animation
+flowchart TD
+    A[Select Recommended Career] --> B[Choose Duration: 4, 8, or 12 Weeks]
+    B --> C[POST /api/roadmaps/generate]
+    C --> D[Assemble Weekly Curriculum Targeting Missing Skills]
+    D --> E[Render Roadmap Stepper View on roadmap.html]
+    
+    E --> F[Student Completes Action Item]
+    F --> G[Toggle Task Checkbox]
+    G --> H[PATCH /api/roadmaps/tasks/:taskId]
+    H --> I[Server Atomically Recalculates Progress Percentage]
+    I --> J[Save Progress State to MongoDB]
+    
+    J --> K[Update Student Dashboard on dashboard.html]
+    K --> L[Render 2D Circular SVG Percentage Progress Gauge 0-100%]
+    K --> M[Update Completed Tasks Counter & GitHub Study Lab]
 ```
-
----
-
-## 6. Logout Flow
-
-```mermaid
-flowchart LR
-    A[User Clicks Logout] --> B[Remove JWT from localStorage]
-    B --> C[Redirect to Landing Page]
-```
-
-> **Note:** Since JWT is stateless, no server-side session invalidation is needed. Token simply expires after 24 hours.
-
----
-
-## 7. Error States Summary
-
-| Scenario | User Sees |
-|----------|-----------|
-| Invalid email/password on login | Red toast: "Invalid credentials" |
-| Registration with existing email | Red toast: "Email already in use" |
-| Expired/missing JWT on protected route | Redirect to login page |
-| Empty profile fields on submit | Inline validation messages |
-| API server unreachable | "Server unavailable, please try later" modal |
-| 3D WebGL not supported | Automatic fallback to 2D CSS grid layout |
