@@ -254,6 +254,9 @@ async function finalizeQuiz(userId, skill, session) {
     });
   }
 
+  // Mark account as having completed skill verification (only required once per account)
+  user.hasCompletedSkillVerification = true;
+
   await user.save();
 
   // Determine comparison status

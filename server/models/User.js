@@ -239,6 +239,12 @@ const UserSchema = new mongoose.Schema(
       default: false,
     },
 
+    // One-Time Account Skill Verification Status (ensures quiz is only required once per account)
+    hasCompletedSkillVerification: {
+      type: Boolean,
+      default: false,
+    },
+
     // One-Time Verification (OTP) Status
     isVerified: {
       type: Boolean,
