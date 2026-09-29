@@ -1,4 +1,4 @@
-# 🎓 CareerPath AI — Discover Your Career. Build Your Skills.
+# 🎓 CareerPath AI — AI Career Guidance and Skill Roadmap Platform
 
 > **🏆 Hack2Ignite 2026–27 · Official Round 1 Qualifier Submission**  
 > **Organizer:** [G.H. Raisoni International Skill Tech University (GHRISTU)](https://ghristu.edu.in/)  
@@ -60,10 +60,12 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
 | 🧪 **API Test Collection** | **[`postman/CareerPath-AI.postman_collection.json`](postman/CareerPath-AI.postman_collection.json)** | Automated Postman v2.1 test suite covering all REST endpoints |
 
+---
+
 ### ⏱️ Recommended 3-Minute Evaluation Walkthrough:
-1. **Landing (`/index.html`):** Experience the **Three.js 3D Career Universe** constellation and click **"Get Started"**.
+1. **Landing (`/index.html`):** Experience the **Three.js 3D Career Universe** constellation (or instant 2D fallback on low-power devices) and click **"Get Started"**.
 2. **Instant Sign-In (`/login.html`):** Click **"⚡ 1-Click Fill Demo Account"** (`demouser@gmail.com` / `demo123`) or Sign In with Google / GitHub.
-3. **Assessment (`/assessment.html`):** Click **"Auto-Detect Skills"** in Step 3 — observe that **NO manual username prompt modal appears**! Repositories synchronize instantly via auth session, awarding glowing `[✓ Code Verified]` badges.
+3. **Assessment (`/assessment.html`):** Click **"Auto-Detect Skills"** in Step 3 — notice that **NO manual username prompt modal appears**! Repositories synchronize instantly via auth session, awarding glowing `[✓ Code Verified]` badges.
 4. **Adaptive Reality-Check Quiz (`/quiz.html`):** Test the 5-question micro-assessment. Test the **BYOK Provider Switcher** (Groq Llama 3.3 70B, Google Gemini 2.5 Flash, or custom key). Notice instant pedagogical feedback. Once completed, verification is permanently saved.
 5. **Explainable Recommendations (`/recommendations.html`):** View the Top 3 matched careers calculated via our transparent **60/25/15 mathematical matching engine** and inspect the tri-color skill gaps (🟢 Matched, 🟡 Upgrade, 🔴 Missing).
 6. **Live Market Telemetry (Modal):** Click **"Live Market Telemetry & CTC"** to see Indian tech salary ranges and live job vacancies via the **Adzuna Developer API**.
@@ -73,6 +75,8 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
    - Inspect the **GitHub Study Lab**: browse connected public study projects, inspect AI-generated *Study Relevance* notes, and view top programming language breakdowns.
    - Click **"Sync Repos"** on dashboard to see inline spinner and live auth sync.
 9. **AI Career Mentor Drawer:** Click the floating **`🤖 AI Mentor`** button in the bottom-right for sub-300ms career coaching powered by **Groq Llama 3.3 70B** with **Gemini 2.5 Flash** failover.
+
+---
 
 ### 📊 Verified Engineering Performance Telemetry:
 
@@ -85,6 +89,30 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | **Container Width Calibration** | **90% Viewport** | Balanced 10% breathing room margins, zero dead whitespace |
 | **First Contentful Paint (FCP)** | **< 800ms** | Zero-bundle vanilla JS on Vercel Edge CDN |
 | **API Test Suite Verification** | **100% Pass** | Automated Postman collection v2.1 test suite |
+
+---
+
+## 📸 Application UI Screenshots & Visual Showcase
+
+| 🌌 1. Landing Page & 3D Career Universe | 📊 2. Student Dashboard & 2D % Progress Gauge |
+| :---: | :---: |
+| <img src="assets/screenshots/02_landing_hero_viewport.png" width="460" alt="Landing Page" /> | <img src="assets/screenshots/05_dashboard_top_viewport.png" width="460" alt="Dashboard" /> |
+| *Three.js 3D Career Universe constellation with orbital physics* | *Accessible 2D SVG Percentage Gauge (0-100%) & quick stats* |
+
+| 🐙 3. GitHub Study Lab & Repositories | 🎯 4. Explainable Career Recommendations |
+| :---: | :---: |
+| <img src="assets/screenshots/05_dashboard_top_viewport.png" width="460" alt="GitHub Study Lab" /> | <img src="assets/screenshots/14_recommendations_top_card.png" width="460" alt="Recommendations" /> |
+| *Code-grounded skill verification & study relevance annotations* | *Deterministic 60/25/15 match score & tri-color skill gaps* |
+
+| 🗺️ 5. Adaptive Milestone Roadmap | 💼 6. Live Market Telemetry & CTC |
+| :---: | :---: |
+| <img src="assets/screenshots/18_roadmap_milestones_viewport.png" width="460" alt="Roadmap" /> | <img src="assets/screenshots/16_live_market_jobs_modal.png" width="460" alt="Live Jobs" /> |
+| *Prioritized missing skills, weekly tasks & atomic progress tracking* | *Verified Indian salary ranges & live jobs via Adzuna API* |
+
+| 🤖 7. Dual-Engine AI Career Mentor | 🔐 8. Social Auth Stack (Google & GitHub) |
+| :---: | :---: |
+| <img src="assets/screenshots/07_dashboard_ai_mentor_modal.png" width="460" alt="AI Mentor" /> | <img src="assets/screenshots/22_register_page.png" width="460" alt="Social Auth" /> |
+| *Low-latency (<300ms) guidance via Groq Llama 3.3 70B & Gemini* | *Animated Google logo + GitHub OAuth + 1-Click Fast Track* |
 
 ---
 
@@ -117,6 +145,30 @@ In emerging tech economies like India, over **1.5 million engineers graduate eve
 6. **High-Contrast 2D Percentage Circular Gauge:** Lightweight, accessible SVG circular meter tracking 0% to 100% completion on the dashboard.
 7. **Dual-Engine AI Mentor:** Round-the-clock guidance powered by **Groq Llama 3.3 70B** (<300ms) with **Google Gemini 2.5 Flash** failover.
 8. **Cloud Media Management:** **Cloudinary Media SDK** for profile avatars and PDF resume attachments.
+
+---
+
+## 💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem
+
+CareerPath AI dynamically evaluates, visualizes, and roadmaps **15 high-demand tech roles** mapped across **76 standardized industry skills**:
+
+| # | Role Title | Category | Slug | Primary Key Skills |
+| :---: | :--- | :---: | :--- | :--- |
+| 1 | 💻 **Front-End Developer** | Development | `front-end-developer` | HTML, CSS, JavaScript, React, Tailwind CSS, Responsive Design, TypeScript |
+| 2 | ⚡ **Full-Stack Developer** | Development | `full-stack-developer` | JavaScript, React, Node.js, Express, MongoDB, REST APIs, Next.js, Docker |
+| 3 | 📊 **Data Analyst** | Data | `data-analyst` | SQL, Python, Excel, Statistics, Power BI, Data Visualization, Data Cleaning |
+| 4 | 🎨 **UI/UX Designer** | Design | `ui-ux-designer` | Figma, Wireframing, Prototyping, Visual Design, User Research, Design Systems |
+| 5 | 🛡️ **Cybersecurity Analyst** | Security | `cybersecurity-analyst` | Networking, Linux, Cybersecurity Fundamentals, OWASP Basics, Ethical Hacking |
+| 6 | 🤖 **AI / Machine Learning Engineer** | AI & Data | `ai-ml-engineer` | Python, PyTorch, TensorFlow, Scikit-Learn, Generative AI, LangChain, Deep Learning |
+| 7 | ☁️ **DevOps & Cloud Engineer** | Cloud | `devops-cloud-engineer` | AWS, Docker, Kubernetes, Linux, Terraform, CI/CD GitHub Actions, Networking |
+| 8 | 📱 **Mobile App Developer** | Mobile | `mobile-app-developer` | Flutter, Dart, React Native, JavaScript, Firebase, REST APIs, UI/UX |
+| 9 | ⚙️ **Backend Engineer** | Development | `backend-engineer` | Java, Spring Boot, Node.js, PostgreSQL, MongoDB, Redis, REST APIs, Kafka |
+| 10 | 🧠 **Data Scientist** | Data | `data-scientist` | Python, SQL, Statistics, Scikit-Learn, Pandas, Deep Learning, Data Visualization |
+| 11 | 🧪 **QA Automation Engineer** | Testing | `qa-automation-engineer` | Cypress, Playwright, Selenium, Postman, JavaScript, CI/CD, Python |
+| 12 | 🎮 **Game Developer** | Gaming | `game-developer` | Unity, C#, Unreal Engine 5, C++, Visual Design, 3D Mathematics |
+| 13 | 🔗 **Blockchain & Web3 Developer** | Web3 | `blockchain-web3-developer` | Solidity, Smart Contracts, Web3.js, JavaScript, Node.js, REST APIs |
+| 14 | 🚨 **Cloud Security & DevSecOps** | Security | `cloud-security-engineer` | Cybersecurity Fundamentals, Linux, Networking, AWS, Docker, OWASP, CI/CD |
+| 15 | 📋 **Technical Product Manager** | Product | `technical-product-manager` | Product Management, Agile & Scrum, User Stories, User Research, Communication |
 
 ---
 
