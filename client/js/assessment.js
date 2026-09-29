@@ -953,7 +953,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Reset modal UI state
     if (modalSkillBadge) modalSkillBadge.textContent = skill.displayName || skill.name;
-    if (skillCheckModalTitle) skillCheckModalTitle.textContent = `${skill.displayName || skill.name} Reality Check`;
+    if (skillCheckModalTitle) skillCheckModalTitle.textContent = 'Reality Check';
     modalLoadingState?.classList.remove('d-none');
     modalQuestionState?.classList.add('d-none');
     modalVerdictState?.classList.add('d-none');

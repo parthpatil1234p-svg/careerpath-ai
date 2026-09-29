@@ -49,16 +49,16 @@
 }
 
 .quiz-step-dot {
-  width: 28px;
+  width: 32px;
   height: 6px;
   border-radius: 999px;
   background: #E2E8F0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s ease;
 }
 
 .quiz-step-dot.active {
   background: var(--color-indigo-600, #4F46E5);
-  width: 44px;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
 }
 
 .quiz-step-dot.completed {
@@ -270,6 +270,11 @@
   color: #FFFFFF;
   font-size: 0.75rem;
   font-weight: 800;
+}
+
+.quiz-option-card.option-correct .quiz-option-radio-dot,
+.quiz-option-card.option-wrong .quiz-option-radio-dot {
+  display: none !important;
 }
 
 .quiz-option-card.option-wrong {
