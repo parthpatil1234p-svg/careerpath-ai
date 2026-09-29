@@ -49,8 +49,8 @@
         <div class="notch-nav-island">
           <!-- Brand / Logo -->
           <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-            <div class="brand-icon">
-              <i class="bi bi-compass-fill"></i>
+            <div class="brand-icon p-1">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
             <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
@@ -244,29 +244,26 @@
             </div>
           </div>
 
-          <!-- 3D Progress Orb Container -->
+          <!-- Journey Marker Progress Gauge Container (Normal 2D SVG) -->
           <div class="col-lg-4">
-            <div class="journey-canvas-card p-4 rounded-3 text-center position-relative overflow-hidden d-flex flex-column align-items-center justify-content-between">
-              <div>
+            <div class="journey-canvas-card p-4 rounded-3 text-center position-relative overflow-hidden d-flex flex-column align-items-center justify-content-between h-100">
+              <div class="w-100">
                 <div class="d-flex align-items-center justify-content-between w-100 mb-2">
                   <span class="badge badge-teal font-monospace small">
-                    <i class="bi bi-compass me-1"></i> Journey Marker
+                    <i class="bi bi-speedometer2 me-1"></i> Journey Marker
                   </span>
-                  <span class="font-monospace text-muted" style="font-size: 0.65rem;">
-                    3D TELEMETRY
+                  <span class="badge badge-navy font-monospace text-uppercase" style="font-size: 0.65rem;">
+                    ROADMAP PROGRESS
                   </span>
                 </div>
               </div>
 
-              <div id="progress-orb" style="width: 240px; height: 220px; position: relative;">
-                <div id="progress-orb-fallback" class="d-none w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 text-center">
-                  <i class="bi bi-compass text-teal display-4 mb-2"></i>
-                  <p class="text-secondary small mb-0">Journey Marker (2D Fallback)</p>
-                </div>
+              <div id="progress-orb" class="w-100 my-auto py-2" style="min-height: 180px;">
+                <!-- Populated dynamically via initProgressOrb (Normal 2D SVG) -->
               </div>
 
               <div class="text-muted small mt-2" style="font-size: 0.75rem;">
-                Calibrated bearing indicator • advances as tasks are completed
+                Milestone track • 0% to 100% roadmap completion
               </div>
             </div>
           </div>

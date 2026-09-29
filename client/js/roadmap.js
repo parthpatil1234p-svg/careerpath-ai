@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <div>
               <div class="d-flex align-items-center gap-2">
-                <h3 class="h5 fw-bold text-white mb-0">Week ${weekNumber}</h3>
+                <h3 class="h5 fw-bold text-ink mb-0">Week ${weekNumber}</h3>
                 ${isActive ? '<span class="badge badge-teal">Current Focus</span>' : ''}
                 ${isCompleted ? '<span class="badge badge-matched">Completed</span>' : ''}
               </div>
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
           </div>
           <div class="text-md-end text-muted small">
-            <span class="fw-bold text-white">${completedCount} of ${tasks.length}</span> tasks finished
+            <span class="fw-bold text-ink">${completedCount} of ${tasks.length}</span> tasks finished
           </div>
         </div>
 
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   </div>
                   <div class="flex-grow-1">
                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-1">
-                      <h4 class="h6 fw-semibold text-white mb-0 task-title">
+                      <h4 class="h6 fw-semibold text-ink mb-0 task-title">
                         ${escapeHtml(task.title)}
                       </h4>
                       <div class="d-flex align-items-center gap-2 flex-wrap">

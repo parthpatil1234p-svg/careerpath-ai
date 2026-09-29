@@ -116,10 +116,10 @@ window.GoogleAuth = (function () {
 
       modalEl.innerHTML = `
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content glass-card border border-info border-opacity-25 bg-dark text-white p-2">
-            <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+          <div class="modal-content bg-white border border-line shadow-lg text-ink p-2">
+            <div class="modal-header border-bottom border-line pb-3">
               <div class="d-flex align-items-center gap-2">
-                <div class="d-flex align-items-center justify-content-center bg-white rounded-circle p-1" style="width: 32px; height: 32px;">
+                <div class="d-flex align-items-center justify-content-center bg-surface-muted border border-line rounded-circle p-1" style="width: 32px; height: 32px;">
                   <svg width="20" height="20" viewBox="0 0 18 18">
                     <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
                     <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
@@ -128,45 +128,45 @@ window.GoogleAuth = (function () {
                   </svg>
                 </div>
                 <div>
-                  <h3 class="modal-title h6 fw-bold mb-0 text-white" id="googleFastTrackModalLabel">Google Account Sign-In</h3>
-                  <span class="font-mono text-muted small" style="font-size: 0.72rem;">OAuth 2.0 · Verified Student Access</span>
+                  <h3 class="modal-title h6 fw-bold mb-0 text-ink" id="googleFastTrackModalLabel">Google Account Sign-In</h3>
+                  <span class="font-mono text-secondary small" style="font-size: 0.72rem;">OAuth 2.0 · Verified Student Access</span>
                 </div>
               </div>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-3">
-              <div class="p-3 mb-3 rounded-2 bg-black bg-opacity-40 border border-secondary border-opacity-25">
+              <div class="p-3 mb-3 rounded-2 bg-surface-muted border border-line">
                 <div class="d-flex align-items-center gap-3">
-                  <div class="rounded-circle bg-info bg-opacity-20 text-info d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 44px; font-size: 1.2rem;">
+                  <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold border border-primary border-opacity-25" style="width: 44px; height: 44px; font-size: 1.2rem;">
                     G
                   </div>
                   <div class="flex-grow-1 overflow-hidden">
-                    <div class="fw-semibold text-white text-truncate" id="gFastNameDisplay">Google Student User</div>
-                    <div class="text-muted small font-mono text-truncate" id="gFastEmailDisplay">student.google@gmail.com</div>
+                    <div class="fw-semibold text-ink text-truncate" id="gFastNameDisplay">Google Student User</div>
+                    <div class="text-secondary small font-mono text-truncate" id="gFastEmailDisplay">student.google@gmail.com</div>
                   </div>
-                  <span class="badge bg-success bg-opacity-25 text-success font-mono small">VERIFIED</span>
+                  <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-mono small">VERIFIED</span>
                 </div>
               </div>
 
               <div class="mb-3">
-                <label for="gFastEmailInput" class="form-label small text-muted">Use a specific Google Email address (optional):</label>
+                <label for="gFastEmailInput" class="form-label small text-secondary fw-semibold">Use a specific Google Email address (optional):</label>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-text bg-dark border-secondary border-opacity-50 text-muted"><i class="bi bi-google"></i></span>
-                  <input type="email" id="gFastEmailInput" class="form-control bg-dark text-white border-secondary border-opacity-50" placeholder="your.name@gmail.com" value="student.google@gmail.com" />
+                  <span class="input-group-text bg-surface-muted border-line text-secondary"><i class="bi bi-google"></i></span>
+                  <input type="email" id="gFastEmailInput" class="form-control bg-white text-ink border-line" placeholder="your.name@gmail.com" value="student.google@gmail.com" />
                 </div>
               </div>
 
               <div class="mb-2">
-                <label for="gFastNameInput" class="form-label small text-muted">Student Name:</label>
+                <label for="gFastNameInput" class="form-label small text-secondary fw-semibold">Student Name:</label>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-text bg-dark border-secondary border-opacity-50 text-muted"><i class="bi bi-person"></i></span>
-                  <input type="text" id="gFastNameInput" class="form-control bg-dark text-white border-secondary border-opacity-50" placeholder="Student Name" value="Alex Google Student" />
+                  <span class="input-group-text bg-surface-muted border-line text-secondary"><i class="bi bi-person"></i></span>
+                  <input type="text" id="gFastNameInput" class="form-control bg-white text-ink border-line" placeholder="Student Name" value="Alex Google Student" />
                 </div>
               </div>
             </div>
-            <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
+            <div class="modal-footer border-top border-line pt-3">
               <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" id="btnConfirmFastTrackGoogle" class="btn cp-btn-primary btn-sm px-4 d-flex align-items-center gap-2">
+              <button type="button" id="btnConfirmFastTrackGoogle" class="btn cp-btn-primary btn-sm px-4 d-flex align-items-center gap-2 fw-semibold">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <span>Continue as Google Student</span>
               </button>

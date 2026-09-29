@@ -229,19 +229,47 @@ const analyzeGitHubRepos = (repos = []) => {
 
     const detectedSkillsList = Array.from(detectedInThisRepo);
 
-    // 3. Study Relevance Mapping
-    let studyRelevance = 'Hands-on practical code repository.';
+    // 3. Language & Context-Aware Study Relevance Mapping
+    let studyRelevance = 'Applied Software Development: Practical code repository contributing to hands-on portfolio verification.';
     const lang = (repo.language || '').toLowerCase();
     const name = (repo.name || '').toLowerCase();
+    const desc = (repo.description || '').toLowerCase();
 
-    if (lang === 'python' || name.includes('ai') || name.includes('ml') || name.includes('data')) {
-      studyRelevance = 'AI & Data Science Study: Demonstrates core Python scripting, data logic, and algorithm design.';
-    } else if (name.includes('api') || name.includes('backend') || name.includes('server')) {
-      studyRelevance = 'Backend Roadmap Milestone: Valuable project demonstrating server architecture and API routing.';
-    } else if (lang === 'javascript' || lang === 'typescript' || name.includes('web') || name.includes('front')) {
-      studyRelevance = 'Full-Stack Portfolio: Directly maps to Frontend/Full-Stack roadmap weekly project building.';
-    } else if (lang === 'c++' || lang === 'c' || lang === 'java') {
-      studyRelevance = 'Systems & Core CS Study: Reinforces foundational data structures, memory management, and OOP.';
+    // Word boundary / token checks to prevent false substring matches (e.g. "daigram" matching "ai")
+    const isAiRelated = /(?:^|[-_.\s])(ai|ml|data|bot|model|gpt|llm|nlp|vision|deeplearning)(?:$|[-_.\s])/i.test(name) ||
+      desc.includes('machine learning') || desc.includes('artificial intelligence') || desc.includes('deep learning');
+    const isBackendRelated = /(?:^|[-_.\s])(api|backend|server|express|nest|django|flask|spring|microservice)(?:$|[-_.\s])/i.test(name) ||
+      desc.includes('backend') || desc.includes('rest api');
+    const isProfileRepo = name === (repo.owner?.login || '').toLowerCase() || name.includes('profile') || name.includes('portfolio') || name.includes('resume');
+
+    if (isProfileRepo) {
+      studyRelevance = 'Developer Profile & Portfolio Hub: Academic showcase, biography, and technical portfolio overview.';
+    } else if (lang === 'python') {
+      if (isAiRelated) {
+        studyRelevance = 'AI & Machine Learning Study: Demonstrates Python scripting, model pipelines, and intelligent data logic.';
+      } else {
+        studyRelevance = 'Python Scripting & Automation: Demonstrates backend scripting, modular design, and logic structure.';
+      }
+    } else if (lang === 'javascript' || lang === 'typescript') {
+      if (isAiRelated) {
+        studyRelevance = 'AI-Integrated Web Application: Combines intelligent logic with modern frontend & full-stack architecture.';
+      } else if (isBackendRelated) {
+        studyRelevance = 'Backend & API Engineering: Server-side architecture, RESTful API design, and asynchronous logic.';
+      } else {
+        studyRelevance = 'Full-Stack & Frontend Development: Demonstrates interactive UI engineering, modern state management, and web components.';
+      }
+    } else if (lang === 'html' || lang === 'css') {
+      studyRelevance = 'Web Interface & UI Fundamentals: Responsive layout engineering, semantic structure, and styling standards.';
+    } else if (lang === 'c++' || lang === 'c' || lang === 'rust') {
+      studyRelevance = 'Systems & High-Performance CS: Memory management, foundational data structures, and optimized algorithms.';
+    } else if (lang === 'java' || lang === 'kotlin') {
+      studyRelevance = 'Enterprise & OOP Architecture: Demonstrates object-oriented design patterns, typed APIs, and scalable modularity.';
+    } else if (lang === 'go' || lang === 'golang') {
+      studyRelevance = 'Cloud-Native & Distributed Systems: Concurrent microservices, robust backend networking, and clean Go idioms.';
+    } else if (lang === 'dart' || lang === 'swift') {
+      studyRelevance = 'Mobile Application Engineering: Cross-platform or native UI design, reactive state handling, and client device APIs.';
+    } else if (isAiRelated) {
+      studyRelevance = 'Intelligent System Prototype: Hands-on exploration of algorithmic logic and smart system integration.';
     }
 
     parsedRepos.push({

@@ -95,10 +95,10 @@ const Auth = {
         <div class="d-flex align-items-center gap-2">
           <a href="dashboard.html"
              class="d-none d-md-flex align-items-center gap-2 text-decoration-none text-nowrap"
-             style="background:rgba(0,242,254,0.08);border:1px solid rgba(0,242,254,0.28);border-radius:20px;padding:0.3rem 0.9rem;"
+             style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:0.35rem 0.9rem;"
              title="Logged in as ${escapeHtml(user.name || 'Student')}">
-            <i class="bi bi-person-circle" style="color:#00F2FE;font-size:1rem;"></i>
-            <span style="color:#E2E8F0;font-size:0.82rem;font-family:monospace;letter-spacing:0.02em;">${escapeHtml(user.name || 'Student')}</span>
+            <i class="bi bi-person-circle" style="color:#4F46E5;font-size:1rem;"></i>
+            <span style="color:#1E1B4B;font-size:0.85rem;font-weight:600;letter-spacing:0.01em;">${escapeHtml(user.name || 'Student')}</span>
           </a>
           <a href="dashboard.html" class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap">
             <i class="bi bi-speedometer2"></i>
@@ -109,6 +109,18 @@ const Auth = {
           </button>
         </div>
       `;
+
+      const mobileActions = document.getElementById('notchMobileAuthActions');
+      if (mobileActions) {
+        mobileActions.innerHTML = `
+          <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="dashboard.html">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard (${escapeHtml(user.name || 'Student')})
+          </a>
+          <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()" title="Sign Out">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+        `;
+      }
     }
   },
 };

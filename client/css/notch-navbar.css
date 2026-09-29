@@ -230,3 +230,36 @@ body.auth-page main,
   color: var(--color-indigo-700);
   font-weight: 600;
 }
+
+/* --------------------------------------------------------------------------
+   6. Authenticated User Pill Contrast & Badge
+   -------------------------------------------------------------------------- */
+#authNavActions a[title*="Logged in"] {
+  background: #EEF2FF !important;
+  border: 1px solid #C7D2FE !important;
+  border-radius: 9999px !important;
+  padding: 0.35rem 0.9rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  text-decoration: none !important;
+  transition: all var(--transition-fast);
+}
+
+#authNavActions a[title*="Logged in"]:hover {
+  background: #E0E7FF !important;
+  border-color: #A5B4FC !important;
+}
+
+#authNavActions a[title*="Logged in"] span {
+  color: #1E1B4B !important;
+  font-family: var(--font-body);
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+}
+
+#authNavActions a[title*="Logged in"] i {
+  color: #4F46E5 !important;
+  font-size: 1rem !important;
+}

@@ -49,8 +49,8 @@
         <div class="notch-nav-island">
           <!-- Brand / Logo -->
           <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-            <div class="brand-icon">
-              <i class="bi bi-compass-fill"></i>
+            <div class="brand-icon p-1">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
             <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
@@ -154,40 +154,41 @@
         </div>
       </div>
 
-      <!-- 3D Skill Map Visualization (Secondary overview above textual breakdowns) -->
+      <!-- Clickable skill map for the top career match -->
       <div class="row mb-5">
         <div class="col-12">
           <div class="card p-4">
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 gap-2">
               <div>
                 <span class="atlas-badge mb-1">
-                  <i class="bi bi-diagram-3 me-1 text-teal"></i> 3D SKILL MAP
+                  <i class="bi bi-grid-3x3-gap me-1 text-teal"></i> INTERACTIVE SKILL MAP
                 </span>
                 <h2 class="h5 fw-bold text-ink mb-0" id="skillOrbitTitle">Top Career Skill Map</h2>
               </div>
-              <!-- Skill Legend -->
               <div class="d-flex align-items-center gap-3 small flex-wrap">
                 <span class="badge badge-matched"><i class="bi bi-check2"></i> Matched</span>
                 <span class="badge badge-weak"><i class="bi bi-arrow-up"></i> Developing</span>
                 <span class="badge badge-missing"><i class="bi bi-plus"></i> Missing</span>
-                <span class="text-muted font-mono" style="font-size: 0.72rem;">Drag to rotate · Hover to inspect</span>
+                <span class="text-muted font-mono" style="font-size: 0.72rem;">Select a skill to open its learning guide</span>
               </div>
             </div>
-            
-            <!-- Three.js Canvas Container -->
-            <div id="skill-orbit" class="three-canvas-wrapper" style="height: 340px;">
-              <div id="skill-orbit-canvas" class="w-100 h-100 position-relative">
-                <!-- 2D Fallback shown if WebGL not supported -->
-                <div id="skill-orbit-fallback" class="d-none w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 text-center">
-                  <i class="bi bi-diagram-3 text-teal display-4 mb-2"></i>
-                  <h3 class="h6 text-ink fw-semibold mb-1">2D Skill Map</h3>
-                  <p class="text-muted small mb-0">WebGL is unavailable in this environment. Review the detailed skill gap breakdown below.</p>
-                </div>
-              </div>
-            </div>
+            <div class="career-skill-map" id="skillTileMap" aria-live="polite" aria-label="Skills for the top career match"></div>
           </div>
         </div>
       </div>
+
+      <dialog class="skill-detail-dialog" id="skillDetailDialog" aria-labelledby="skillDetailTitle">
+        <div class="skill-dialog-header">
+          <div>
+            <span class="skill-showcase-eyebrow">Your skill learning guide</span>
+            <h2 id="skillDetailTitle">Skill</h2>
+          </div>
+          <button class="skill-dialog-close" type="button" data-skill-dialog-close aria-label="Close skill guide">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="skill-dialog-content" id="skillDialogContent"></div>
+      </dialog>
 
       <!-- Alert & Notification Area -->
       <div id="alertContainer" role="alert" aria-live="polite"></div>
@@ -366,6 +367,244 @@
       </div>
     </div>
 
+    <!-- ============================================================
+         FUTURE-PROOF SCORE BREAKDOWN MODAL (Decision-Support Metric)
+         ============================================================ -->
+    <div class="modal fade" id="futureProofModal" tabindex="-1" aria-labelledby="futureProofModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-bottom border-line pb-3">
+            <div class="d-flex align-items-center gap-2">
+              <span class="atlas-badge text-cyan border-cyan"><i class="bi bi-shield-check me-1"></i> RESILIENCE METRIC</span>
+              <h2 class="modal-title h5 text-ink fw-bold mb-0" id="futureProofModalLabel">
+                Future-Proof Score Breakdown
+              </h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body py-4">
+            <!-- Header bar with Target Role & Score Gauge -->
+            <div class="p-3 rounded-3 mb-4 text-center" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+              <span class="atlas-badge mb-1" id="fpModalRoleBadge">TARGET TRACK</span>
+              <h3 class="h4 text-ink fw-bold mb-1" id="fpModalCareerTitle">Front-End Developer</h3>
+              <div class="display-6 fw-bold text-cyan font-mono my-2" id="fpModalScoreDisplay">87/100</div>
+              <div class="badge bg-success font-mono px-3 py-1" id="fpModalRatingBadge">High Resilience</div>
+              <div class="mt-2 text-muted font-mono" style="font-size: 0.72rem;">
+                <i class="bi bi-info-circle me-1 text-warning"></i> Prototype indicator based on curated career data
+              </div>
+            </div>
+
+            <!-- Description / Rationale -->
+            <div class="p-3 rounded-3 glass-card border border-line text-secondary small mb-4">
+              <strong class="text-ink d-block mb-1">What this score measures:</strong>
+              Future-Proof Score estimates how resilient a career path may be by considering transferable skills, learning adaptability, demand signals, and automation exposure. It is a guidance indicator, not a guaranteed prediction.
+            </div>
+
+            <!-- 4 Weighted Pillars Breakdown -->
+            <h4 class="h6 fw-bold text-ink mb-3 d-flex align-items-center justify-content-between">
+              <span>Pillar Weighting Breakdown</span>
+              <span class="text-muted font-mono small" style="font-size: 0.72rem;">100% Deterministic Model</span>
+            </h4>
+
+            <div class="d-flex flex-column gap-3 mb-4" id="fpPillarsContainer">
+              <!-- Pillar 1: Transferable Skills (40%) -->
+              <div class="p-2 rounded border border-line bg-white">
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                  <span><i class="bi bi-diagram-3-fill text-primary me-1"></i> Transferable Skills (40%)</span>
+                  <span class="text-ink fw-bold font-mono" id="fpTransferableVal">86/100</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-primary" id="fpTransferableBar" role="progressbar" style="width: 86%;"></div>
+                </div>
+                <div class="text-muted font-mono mt-1" style="font-size: 0.68rem;">Core problem-solving, system thinking & cross-domain logic</div>
+              </div>
+
+              <!-- Pillar 2: Learning Adaptability (25%) -->
+              <div class="p-2 rounded border border-line bg-white">
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                  <span><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Learning Adaptability (25%)</span>
+                  <span class="text-ink fw-bold font-mono" id="fpAdaptabilityVal">90/100</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-warning" id="fpAdaptabilityBar" role="progressbar" style="width: 90%;"></div>
+                </div>
+                <div class="text-muted font-mono mt-1" style="font-size: 0.68rem;">Velocity of adopting new frameworks, libraries & AI workflows</div>
+              </div>
+
+              <!-- Pillar 3: Demand Signal (20%) -->
+              <div class="p-2 rounded border border-line bg-white">
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                  <span><i class="bi bi-graph-up-arrow text-emerald me-1"></i> Demand Signal (20%)</span>
+                  <span class="text-ink fw-bold font-mono" id="fpDemandVal">88/100</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-success" id="fpDemandBar" role="progressbar" style="width: 88%;"></div>
+                </div>
+                <div class="text-muted font-mono mt-1" style="font-size: 0.68rem;">Industry hiring volume, tech investments & talent shortfall</div>
+              </div>
+
+              <!-- Pillar 4: Automation Resilience (15%) -->
+              <div class="p-2 rounded border border-line bg-white">
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                  <span><i class="bi bi-shield-lock-fill text-teal me-1"></i> Automation Resilience (15%)</span>
+                  <span class="text-ink fw-bold font-mono" id="fpResilienceVal">82/100</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-info" id="fpResilienceBar" role="progressbar" style="width: 82%;"></div>
+                </div>
+                <div class="text-muted font-mono mt-1" style="font-size: 0.68rem;">Resistance to routine code-gen automation; high architecture demand</div>
+              </div>
+            </div>
+
+            <!-- Mathematical Formula Banner -->
+            <div class="p-2 rounded bg-light border border-line font-mono text-center text-muted" style="font-size: 0.72rem;">
+              Score = 0.40×Transferable + 0.25×Adaptability + 0.20×Demand + 0.15×Resilience
+            </div>
+          </div>
+          <div class="modal-footer border-top border-line">
+            <button type="button" class="btn cp-btn-primary btn-sm px-4" data-bs-dismiss="modal">Understood</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         WHAT-IF SIMULATOR MODAL (Interactive Decision-Support Platform)
+         ============================================================ -->
+    <div class="modal fade" id="whatIfSimulatorModal" tabindex="-1" aria-labelledby="whatIfModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header border-bottom border-line pb-3">
+            <div class="d-flex align-items-center gap-2">
+              <span class="atlas-badge text-warning border-warning"><i class="bi bi-lightning-charge-fill me-1"></i> WHAT-IF SIMULATOR</span>
+              <h2 class="modal-title h5 text-ink fw-bold mb-0" id="whatIfModalLabel">
+                Simulate Skill Upgrade
+              </h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body py-4">
+            <!-- Career Banner -->
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center p-3 rounded-3 mb-4" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+              <div>
+                <span class="atlas-badge mb-1">TARGET CAREER PATHWAY</span>
+                <h3 class="h5 text-ink fw-bold mb-0" id="whatIfCareerTitle">Front-End Developer</h3>
+                <span class="text-muted small">Simulate closing skill bottlenecks before committing to a learning roadmap</span>
+              </div>
+              <div class="text-sm-end mt-2 mt-sm-0">
+                <span class="text-muted font-mono small d-block">Current Match</span>
+                <span class="h4 text-primary font-mono fw-bold mb-0" id="whatIfCurrentScore">68%</span>
+              </div>
+            </div>
+
+            <!-- Simulation Controls Form -->
+            <div class="row g-3 mb-4">
+              <!-- Select Skill -->
+              <div class="col-md-7">
+                <label for="whatIfSkillSelect" class="form-label fw-semibold text-ink small mb-1">
+                  1. Choose a Bottleneck / Missing Skill to Upgrade:
+                </label>
+                <select class="form-select font-mono" id="whatIfSkillSelect" aria-label="Select skill to upgrade">
+                  <!-- Dynamically populated from weakSkills & missingSkills -->
+                </select>
+                <div class="form-text small" id="whatIfSkillContext">Select a skill to see projected career score impact</div>
+              </div>
+
+              <!-- Select Target Level -->
+              <div class="col-md-5">
+                <label class="form-label fw-semibold text-ink small mb-1">
+                  2. Simulated Proficiency Target:
+                </label>
+                <div class="btn-group w-100" role="group" aria-label="Target proficiency level">
+                  <input type="radio" class="btn-check" name="whatIfLevel" id="levelIntermediate" value="Intermediate" checked autocomplete="off">
+                  <label class="btn btn-outline-primary btn-sm py-2" for="levelIntermediate">Intermediate</label>
+
+                  <input type="radio" class="btn-check" name="whatIfLevel" id="levelAdvanced" value="Advanced" autocomplete="off">
+                  <label class="btn btn-outline-primary btn-sm py-2" for="levelAdvanced">Advanced</label>
+                </div>
+                <div class="form-text small">Industry junior benchmark is Intermediate</div>
+              </div>
+            </div>
+
+            <!-- LIVE IMPACT DASHBOARD -->
+            <div class="p-3 p-md-4 rounded-3 mb-4" style="background: #F0FDF4; border: 1px solid #BBF7D0;">
+              <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                <span class="badge bg-success font-mono px-3 py-1 text-uppercase" style="letter-spacing: 0.05em;">
+                  <i class="bi bi-graph-up-arrow me-1"></i> Simulated Projection
+                </span>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="text-muted font-mono small">Career Match Boost:</span>
+                  <span class="badge bg-success text-white font-mono fs-6 px-3 py-1" id="whatIfDeltaBadge">+18% Boost</span>
+                </div>
+              </div>
+
+              <!-- Comparison Cards -->
+              <div class="row g-3 text-center mb-3">
+                <!-- Score Comparison -->
+                <div class="col-4">
+                  <div class="p-3 rounded bg-white border border-success-subtle shadow-sm">
+                    <div class="text-muted font-mono small mb-1" style="font-size: 0.72rem;">CAREER MATCH</div>
+                    <div class="d-flex align-items-baseline justify-content-center gap-1">
+                      <span class="text-muted text-decoration-line-through font-mono small" id="whatIfBeforeScore">68%</span>
+                      <i class="bi bi-arrow-right text-success small"></i>
+                      <span class="h4 text-success font-mono fw-bold mb-0" id="whatIfAfterScore">86%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Skill Gaps Comparison -->
+                <div class="col-4">
+                  <div class="p-3 rounded bg-white border border-success-subtle shadow-sm">
+                    <div class="text-muted font-mono small mb-1" style="font-size: 0.72rem;">REMAINING GAPS</div>
+                    <div class="d-flex align-items-baseline justify-content-center gap-1">
+                      <span class="text-muted font-mono small" id="whatIfBeforeGaps">4</span>
+                      <i class="bi bi-arrow-right text-success small"></i>
+                      <span class="h4 text-primary font-mono fw-bold mb-0" id="whatIfAfterGaps">3</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Timeline Comparison -->
+                <div class="col-4">
+                  <div class="p-3 rounded bg-white border border-success-subtle shadow-sm">
+                    <div class="text-muted font-mono small mb-1" style="font-size: 0.72rem;">ROADMAP TIME</div>
+                    <div class="d-flex align-items-baseline justify-content-center gap-1">
+                      <span class="text-muted text-decoration-line-through font-mono small" id="whatIfBeforeDuration">8 Wks</span>
+                      <i class="bi bi-arrow-right text-success small"></i>
+                      <span class="h4 text-success font-mono fw-bold mb-0" id="whatIfAfterDuration">5 Wks</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Explainable Narrative -->
+              <div class="p-3 rounded bg-white border border-line small" id="whatIfNarrative">
+                <i class="bi bi-lightbulb-fill text-warning me-1"></i>
+                <span class="text-secondary" id="whatIfNarrativeText">
+                  Upgrading this skill resolves your primary bottleneck, significantly strengthening the 60% skill match component and fast-tracking your placement readiness by 3 weeks.
+                </span>
+              </div>
+            </div>
+
+            <!-- Mathematical Transparency Note -->
+            <div class="p-2 rounded bg-light border border-line font-mono text-muted small" style="font-size: 0.72rem;">
+              <i class="bi bi-shield-check text-leaf me-1"></i>
+              Calculated using standard formula: <strong>60% Skills + 25% Interests + 15% Education</strong>. Market trend is kept as a separate contextual indicator to prevent hidden score distortions.
+            </div>
+          </div>
+
+          <div class="modal-footer border-top border-line">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn cp-btn-primary btn-sm px-4 fw-semibold" id="whatIfApplyRoadmapBtn">
+              <i class="bi bi-map-fill me-1"></i>
+              <span>Generate Roadmap for This Track</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Footer -->
     <footer class="atlas-footer py-4 mt-5 border-top border-line">
       <div class="container">
@@ -384,14 +623,12 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/three-skill-orbit.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
+    <script src="js/skill-guides.js"></script>
     <script src="js/recommendations.js"></script>
     <script src="js/chat.js"></script>
   </body>

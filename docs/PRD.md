@@ -173,3 +173,18 @@ This leads to wrong specialization choices, wasted semesters, and growing anxiet
 
 8. **WhatsApp Milestone & Streak Nudge Bot:**
    - Automated daily reminders, streak recovery alerts, and micro-quizzes delivered via WhatsApp Business API.
+
+---
+
+## 11. Business Model & Monetization Architecture (How It Makes Money)
+
+### Core Principle: Free for Students, Always
+In adherence to the EduTech / AI for Good ethos, CareerPath AI is 100% free for students to ensure zero-friction adoption and eliminate economic barriers to career navigation.
+
+### B2B2C Talent & Telemetry Flywheel:
+1. **College Placement SaaS (TPO Portal):** Yearly campus licenses (₹1.5L–₹3.5L/year) providing batch-wide skill deficiency heatmaps, placement readiness analytics, and NAAC/NIRF accreditation compliance exports.
+2. **Verified-Skill Recruiter Portal:** B2B corporate access (₹24,999/month) to pre-assessed, proof-of-work engineering candidates, reducing technical recruitment costs by up to 60%.
+3. **Ethical Learning Partnerships:** Non-intrusive, strictly labeled sponsored certification pathways with vetted course partners (15–25% revenue share) without compromising the free core curriculum.
+
+*Detailed financial model, unit economics, and judge pitch defense are documented in [`docs/BUSINESS-MODEL.md`](BUSINESS-MODEL.md).*
+

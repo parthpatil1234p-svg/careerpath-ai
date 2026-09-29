@@ -158,6 +158,12 @@
 .cp-section {
   padding: 5rem 0;
   position: relative;
+  scroll-margin-top: calc(var(--notch-nav-height, 58px) + 2rem);
+}
+
+section[id],
+div[id].cp-section {
+  scroll-margin-top: calc(var(--notch-nav-height, 58px) + 2rem);
 }
 
 .cp-section-hero {

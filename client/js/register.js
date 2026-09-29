@@ -216,9 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="alert alert-warning border border-warning border-opacity-50 p-3 mb-3" role="alert">
             <div class="d-flex align-items-center gap-2 mb-1">
               <i class="bi bi-person-check text-warning fs-5"></i>
-              <strong class="text-white">Account Already Registered</strong>
+              <strong class="text-ink">Account Already Registered</strong>
             </div>
-            <p class="small text-white-50 mb-2">
+            <p class="small text-secondary mb-2">
               An account with <strong>${escapeHtml(email)}</strong> already exists. You can log in directly:
             </p>
             <a href="login.html" class="btn cp-btn-primary btn-sm w-100 py-1">

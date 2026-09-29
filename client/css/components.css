@@ -716,16 +716,32 @@
 .badge-code-verified {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.35rem;
   background: var(--color-surface-indigo);
   color: var(--color-indigo-700);
   border: 1px solid #C7D2FE;
   border-radius: 999px;
-  padding: 0.2rem 0.65rem;
+  padding: 0.22rem 0.75rem;
   font-size: 0.72rem;
   font-family: var(--font-mono);
   font-weight: 600;
   letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+
+.badge-code-verified.status-connected {
+  background: #ECFDF5 !important;
+  color: #065F46 !important;
+  border: 1px solid #10B981 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.15) !important;
+}
+
+.badge-code-verified.status-disconnected {
+  background: #F1F5F9 !important;
+  color: #475569 !important;
+  border: 1px solid #CBD5E1 !important;
+  font-weight: 600 !important;
 }
 
 /* Language Distribution Bar */

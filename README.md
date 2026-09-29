@@ -272,6 +272,35 @@ The backend provides a clean, resource-oriented RESTful API with stateless Beare
 
 ---
 
+## 💰 Business Model & Financial Sustainability (How It Makes Money)
+
+> *"Judges always ask: How do you make money if you don't charge students?"*
+
+CareerPath AI is built on a **sustainable B2B2C Talent & Telemetry Flywheel** that keeps career guidance **100% free for students, always**, while monetizing institutional and corporate demand:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        CAREERPATH AI B2B2C MONETIZATION                                │
+├──────────────────────────┬─────────────────────────────┬───────────────────────────────┤
+│ 🎓 STUDENTS              │ 🏛️ COLLEGES / UNIVERSITIES   │ 💼 HIRING COMPANIES           │
+│ 100% FREE ALWAYS         │ PLACEMENT SAAS (TPO PORTAL) │ VERIFIED TALENT ACCESS        │
+├──────────────────────────┼─────────────────────────────┼───────────────────────────────┤
+│ • Zero paywalls          │ • Per-batch / yearly SaaS   │ • Pre-screened candidates     │
+│ • Free 60/25/15 match    │ • Batch skill gap heatmaps  │ • Proof-of-work hiring        │
+│ • Adaptive roadmaps      │ • NAAC / NIRF data export   │ • Cuts recruiting CAC by 60%  │
+│ • Frictionless adoption  │ • Tier: ₹49k - ₹1.99L/yr    │ • Tier: ₹24,999 - ₹59,999/mo  │
+└──────────────────────────┴─────────────────────────────┴───────────────────────────────┘
+```
+
+1. **Free for Students, Always:** Eliminates user friction, maximizes campus virality, and democratizes career advancement without economic barriers.
+2. **College Placement SaaS (TPO Portal):** Placement Officers pay an annual campus license (₹1.5L–₹3.5L/year) for batch-wide skill deficiency heatmaps, placement probability metrics, and automated NAAC/NIRF accreditation exports.
+3. **Verified-Skill Recruiter Portal:** Corporate employers pay monthly subscriptions (₹24,999/mo) or pay-as-you-go unlocks to access pre-assessed, proof-of-work candidate pipelines filtered by verified tech stacks.
+4. **Ethical Learning Partnerships:** Non-intrusive, strictly labeled sponsored certification referrals (15–25% revenue share) for students wanting recognized industry credentials, with zero bias on the free core curriculum.
+
+> 📄 **Deep-Dive Documentation:** Read the full business plan, 3-year unit economics, and judge pitch defense scripts in **[`docs/BUSINESS-MODEL.md`](docs/BUSINESS-MODEL.md)** and the pitch slide outline in **[`presentation/BUSINESS-MODEL-SLIDE.md`](../presentation/BUSINESS-MODEL-SLIDE.md)**.
+
+---
+
 ## 👥 The Team — 404 Brain Not Found
 
 Built with passion, late-night grit, and engineering dedication for **Hack2Ignite 2026–27**:

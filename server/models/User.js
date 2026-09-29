@@ -82,6 +82,8 @@ const GithubRepoSchema = new mongoose.Schema(
 const GithubProfileSchema = new mongoose.Schema(
   {
     username: { type: String, trim: true, default: '' },
+    name: { type: String, trim: true, default: '' },
+    avatarUrl: { type: String, trim: true, default: '' },
     profileUrl: { type: String, trim: true, default: '' },
     publicReposCount: { type: Number, default: 0 },
     followers: { type: Number, default: 0 },

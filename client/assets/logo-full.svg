@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 90" width="100%" height="100%">
+  <defs>
+    <!-- Brand Primary Gradient -->
+    <linearGradient id="fullUiGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="60%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+
+    <!-- Accent Sky Gradient -->
+    <linearGradient id="fullSkyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+
+    <!-- Subtle Drop Shadow -->
+    <filter id="fullUiShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#4F46E5" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- Left: Stylized Logo Mark inside Soft Surface Tile (70x70) -->
+  <g transform="translate(10, 10)">
+    <!-- Soft Light Indigo Container Tile matching .brand-icon -->
+    <rect x="0" y="0" width="70" height="70" rx="18" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
+
+    <!-- Orbital Dial Track -->
+    <circle cx="35" cy="35" r="26" fill="none" stroke="#C7D2FE" stroke-width="1" stroke-dasharray="2 2.5" />
+
+    <!-- 45-degree Pointer -->
+    <g transform="rotate(45, 35, 35)" filter="url(#fullUiShadow)">
+      <polygon points="35,10 42,35 35,31 35,10" fill="url(#fullUiGrad)" />
+      <polygon points="35,10 28,35 35,31 35,10" fill="#38BDF8" />
+      <polygon points="35,60 29,35 35,38 35,60" fill="#94A3B8" />
+      <polygon points="35,60 41,35 35,38 35,60" fill="#64748B" />
+    </g>
+
+    <!-- Pivot Point -->
+    <circle cx="35" cy="35" r="6" fill="#FFFFFF" stroke="#4F46E5" stroke-width="1.8" />
+    <circle cx="35" cy="35" r="2.5" fill="#4F46E5" />
+
+    <!-- Apex Sparkle Tip -->
+    <circle cx="51.5" cy="18.5" r="2" fill="#06B6D4" />
+  </g>
+
+  <!-- Right: Wordmark Typography Matching UI Fonts & Colors -->
+  <g transform="translate(98, 0)">
+    <!-- "CareerPath" Text: Deep Navy Slate (#0F172A) with Indigo "AI" -->
+    <text x="0" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif" font-size="38" font-weight="800" fill="#0F172A" letter-spacing="-0.8">
+      CareerPath
+    </text>
+
+    <!-- "AI" Indigo Pill Badge matching .brand-accent & UI badges -->
+    <rect x="220" y="24" width="56" height="32" rx="8" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5" />
+    <text x="248" y="47" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif" font-size="18" font-weight="800" fill="#4F46E5" text-anchor="middle" letter-spacing="0.5">
+      AI
+    </text>
+
+    <!-- Subtitle / Tagline -->
+    <text x="2" y="72" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif" font-size="11.5" font-weight="600" fill="#64748B" letter-spacing="2">
+      INTELLIGENT CAREER GUIDANCE
+    </text>
+  </g>
+</svg>

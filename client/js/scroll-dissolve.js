@@ -99,6 +99,14 @@
 
       vec4 texColor = texture2D(uTexture, uv);
 
+      if (uDissolve >= 0.995) {
+        discard;
+      }
+      if (uDissolve <= 0.005) {
+        gl_FragColor = texColor;
+        return;
+      }
+
       vec2 centeredUv = vUv - uCenter;
       float aspect = uResolution.x / uResolution.y;
       centeredUv.x *= aspect;
@@ -114,14 +122,17 @@
 
       float maxDist = length(vec2(aspect * 0.5, 0.5));
       float normalizedDist = noisyDist / maxDist;
-      float dissolveThreshold = uDissolve * 1.5;
+      float dissolveThreshold = uDissolve * 2.2;
 
       vec2 texelSize = 1.0 / uResolution;
       float edge = sobel(uTexture, uv, texelSize);
       edge = pow(edge, 0.7) * 2.0;
       edge = clamp(edge, 0.0, 1.0);
 
-      float dissolveMask = smoothstep(dissolveThreshold - 0.03, dissolveThreshold, normalizedDist);
+      float dissolveMask = smoothstep(dissolveThreshold - 0.04, dissolveThreshold, normalizedDist);
+      if (dissolveMask <= 0.002) {
+        discard;
+      }
 
       // CareerPath AI EduTech Indigo-to-Cyan Edge Glow (#4F46E5 to #06B6D4)
       vec3 edgeColor = mix(vec3(0.31, 0.27, 0.90), vec3(0.02, 0.71, 0.83), vUv.x);

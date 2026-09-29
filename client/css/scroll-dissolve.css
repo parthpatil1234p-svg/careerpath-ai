@@ -10,12 +10,13 @@
   border-top: 1px solid #E2E8F0;
   border-bottom: 1px solid #E2E8F0;
   overflow: hidden;
+  scroll-margin-top: calc(var(--notch-nav-height, 58px) + 2.5rem);
 }
 
 .transformation-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1120px;
+  max-width: 1040px;
   margin: 0 auto;
 }
 
@@ -24,7 +25,6 @@
   position: relative;
   width: 100%;
   aspect-ratio: 12 / 8;
-  max-height: 640px;
   border-radius: 20px;
   background: #FFFFFF;
   border: 1.5px solid #CBD5E1;
@@ -47,7 +47,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
@@ -82,17 +82,9 @@
 .w-dot.w-yellow { background: #F59E0B; opacity: 0.85; }
 .w-dot.w-green { background: #10B981; opacity: 0.85; }
 
-/* Floating Status Pills */
+/* Floating Status Pills (Hidden: native SVG vector headers provide seamless dissolve badges) */
 .transformation-overlay-bar {
-  position: absolute;
-  top: 14px;
-  left: 70px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-  pointer-events: none;
+  display: none !important;
 }
 
 .transformation-status-pill {
@@ -252,8 +244,7 @@
 
 @media (max-width: 768px) {
   .transformation-viewport {
-    aspect-ratio: 4 / 3;
-    max-height: 480px;
+    aspect-ratio: 12 / 8;
   }
   .transformation-window-dots {
     display: none;

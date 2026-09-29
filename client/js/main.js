@@ -131,11 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCareerCards();
   initMobileNavClose();
 
-  // Initialize 3D Career Atlas Compass
-  if (typeof window.initCareerUniverse === 'function') {
-    window.initCareerUniverse('careerUniverse');
-  }
-
   console.log(
     '%cCareerPath AI · Career Atlas',
     'color: #167D8D; font-size: 16px; font-weight: bold;'

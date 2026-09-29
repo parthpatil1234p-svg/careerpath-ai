@@ -56,7 +56,7 @@
     <link rel="stylesheet" href="css/scroll-dissolve.css?v=2.5" />
   </head>
 
-  <body>
+  <body class="landing-page">
     <!-- ============================================================
          VENGEANCE UI NOTCH NAVBAR
          ============================================================ -->
@@ -65,8 +65,8 @@
         <div class="notch-nav-island">
           <!-- Brand / Logo -->
           <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-            <div class="brand-icon">
-              <i class="bi bi-compass-fill"></i>
+            <div class="brand-icon p-1">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
           </a>
@@ -75,7 +75,7 @@
           <ul class="notch-nav-links d-none d-lg-flex">
             <li><a class="notch-nav-link" href="#how-it-works">How It Works</a></li>
             <li><a class="notch-nav-link" href="#careers">Career Paths</a></li>
-            <li><a class="notch-nav-link" href="#future-roadmap">Roadmap</a></li>
+            <li><a class="notch-nav-link" href="#deliverables">What You Get</a></li>
           </ul>
 
           <!-- Actions & Mobile Toggle -->
@@ -104,8 +104,8 @@
             <ul class="notch-mobile-links">
               <li><a href="#how-it-works"><i class="bi bi-gear-wide-connected text-teal"></i> How It Works</a></li>
               <li><a href="#careers"><i class="bi bi-signpost-split text-teal"></i> Career Paths</a></li>
-              <li><a href="#future-roadmap"><i class="bi bi-map text-gold"></i> Roadmap</a></li>
-              <li class="pt-2 border-top border-secondary border-opacity-25 d-flex gap-2">
+              <li><a href="#deliverables"><i class="bi bi-box-seam text-gold"></i> What You Get</a></li>
+              <li class="pt-2 border-top border-line d-flex gap-2" id="notchMobileAuthActions">
                 <a class="btn cp-btn-outline btn-sm flex-grow-1 text-center" href="login.html">Log In</a>
                 <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="assessment.html">Start Assessment</a>
               </li>
@@ -183,56 +183,64 @@
             </div>
           </div>
 
-          <!-- Right Column: 3D Career Atlas Compass Canvas -->
+          <!-- Right Column: Skill logo showcase -->
           <div class="hero-canvas-col">
-            <div class="canvas-placeholder" id="careerUniverse">
-              <div id="canvas-container" class="w-100 h-100 position-relative">
-                <!-- 2D Fallback shown if WebGL is unavailable -->
-                <div class="canvas-placeholder-inner d-none p-4" id="careerUniverse-fallback">
-                  <div id="webgl-fallback" class="fallback-2d-container">
-                  <div class="atlas-badge mb-2">2D ROUTE CATALOG</div>
-                  <h3 class="fallback-2d-title">15 Career Atlas Waypoints</h3>
-                  <p class="fallback-2d-desc">
-                    Explore 15 high-demand technology career routes evaluated by our skill-matching algorithm.
-                  </p>
-                  <div class="fallback-career-grid">
-                    <div class="fallback-career-item">
-                      <strong>Front-End Developer</strong>
-                      <span>HTML, CSS, JS, React, Responsive</span>
-                    </div>
-                    <div class="fallback-career-item">
-                      <strong>Full-Stack Developer</strong>
-                      <span>Node.js, Express, MongoDB, REST APIs</span>
-                    </div>
-                    <div class="fallback-career-item">
-                      <strong>AI & ML Engineer</strong>
-                      <span>Python, PyTorch, Generative AI, LangChain</span>
-                    </div>
-                    <div class="fallback-career-item">
-                      <strong>DevOps & Cloud Engineer</strong>
-                      <span>AWS, Docker, Kubernetes, CI/CD</span>
-                    </div>
-                    <div class="fallback-career-item">
-                      <strong>Data Analyst & Scientist</strong>
-                      <span>SQL, Python, Pandas, Statistics</span>
-                    </div>
-                    <div class="fallback-career-item">
-                      <strong>Mobile App Developer</strong>
-                      <span>Flutter, Dart, React Native, Firebase</span>
-                    </div>
-                  </div>
-                  <div class="mt-3">
-                    <a href="assessment.html" class="btn cp-btn-primary btn-sm px-4">Begin Assessment</a>
-                  </div>
+            <div class="skill-showcase" aria-label="Popular skills across technology careers">
+              <div class="skill-showcase-header">
+                <div>
+                  <span class="skill-showcase-eyebrow">Skills that move careers forward</span>
+                  <h2>Build with skills employers use</h2>
                 </div>
+                <span class="skill-count"><strong>76+</strong><span>mapped skills</span></span>
               </div>
-            </div>
+
+              <div class="skill-logo-grid">
+                <button class="skill-logo-card" type="button" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React">
+                  <span class="skill-logo-mark react-mark" aria-hidden="true">⚛</span><span class="skill-logo-name">React</span><span class="skill-logo-type">Frontend</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript">
+                  <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span><span class="skill-logo-name">JavaScript</span><span class="skill-logo-type">Language</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python">
+                  <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span><span class="skill-logo-name">Python</span><span class="skill-logo-type">Language</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js">
+                  <span class="skill-logo-mark node-mark" aria-hidden="true">N</span><span class="skill-logo-name">Node.js</span><span class="skill-logo-type">Backend</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma">
+                  <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span><span class="skill-logo-name">Figma</span><span class="skill-logo-type">Design</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL">
+                  <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span><span class="skill-logo-name">SQL</span><span class="skill-logo-type">Data</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS">
+                  <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span><span class="skill-logo-name">AWS</span><span class="skill-logo-type">Cloud</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git">
+                  <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span><span class="skill-logo-name">Git</span><span class="skill-logo-type">Workflow</span>
+                </button>
+              </div>
+
+              <div class="skill-showcase-footer"><span class="skill-footer-dot"></span> Practical skills, matched to your career goals</div>
             </div>
           </div>
 
         </div>
       </div>
     </section>
+
+    <dialog class="skill-detail-dialog" id="skillDetailDialog" aria-labelledby="skillDetailTitle">
+      <div class="skill-dialog-header">
+        <div>
+          <span class="skill-showcase-eyebrow">Your skill learning guide</span>
+          <h2 id="skillDetailTitle">Skill</h2>
+        </div>
+        <button class="skill-dialog-close" type="button" data-skill-dialog-close aria-label="Close skill guide">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="skill-dialog-content" id="skillDialogContent"></div>
+    </dialog>
 
     <!-- ============================================================
          HOW IT WORKS SECTION (3-Step Guided Methodology)
@@ -801,136 +809,6 @@
     </section>
 
     <!-- ============================================================
-         FUTURE ROADMAP & UPCOMING UPDATES (Post-Hackathon Scope)
-         ============================================================ -->
-    <section class="cp-section" id="future-roadmap">
-      <div class="container">
-        <div class="section-header text-center mb-5">
-          <span class="section-tag"><i class="bi bi-rocket-takeoff me-1"></i> Next Horizons</span>
-          <h2 class="section-title">Future Roadmap & Upcoming Updates</h2>
-          <p class="section-subtitle">
-            Post-Hackathon engineering roadmap designed to scale CareerPath AI into an enterprise-grade career navigation and placement ecosystem.
-          </p>
-        </div>
-
-        <!-- Master Phased Timeline Banner -->
-        <div class="cp-card p-4 mb-5 border-cyan-subtle">
-          <div class="row text-center gy-3 align-items-center">
-            <div class="col-md-3 border-end border-secondary border-opacity-25">
-              <span class="badge badge-success mb-2">Phase 1: Completed ✅</span>
-              <h6 class="text-white fw-bold mb-1">Core MVP Engine</h6>
-              <p class="text-muted small mb-0">60/25/15 Math, 3D Cosmos, Tri-Color Gaps, Groq AI</p>
-            </div>
-            <div class="col-md-3 border-end border-secondary border-opacity-25">
-              <span class="badge badge-navy mb-2">Phase 2: Q4 2026</span>
-              <h6 class="text-white fw-bold mb-1">Adaptive & Audit</h6>
-              <p class="text-muted small mb-0">Adaptive Difficulty, Resume Audit, Code Sandbox</p>
-            </div>
-            <div class="col-md-3 border-end border-secondary border-opacity-25">
-              <span class="badge badge-warning mb-2">Phase 3: Q1 2027</span>
-              <h6 class="text-white fw-bold mb-1">Market & AI Prep</h6>
-              <p class="text-muted small mb-0">AI Mock Interview, Job Links, WhatsApp Bot</p>
-            </div>
-            <div class="col-md-3">
-              <span class="badge badge-navy mb-2">Phase 4: Q2 2027</span>
-              <h6 class="text-white fw-bold mb-1">Institutional B2B</h6>
-              <p class="text-muted small mb-0">College TPO Portal, Corporate Hiring Pipeline</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5 High-Impact Features Grid -->
-        <div class="row g-4">
-          <!-- 1. AI Mock Interview -->
-          <div class="col-md-6 col-lg-4">
-            <div class="cp-card h-100 p-4 d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="fs-2 text-primary"><i class="bi bi-mic-fill"></i></div>
-                <span class="badge badge-warning">Phase 3 · Q1 2027</span>
-              </div>
-              <h4 class="h5 fw-bold mb-2 text-ink">AI Mock Interview & Speech Coach</h4>
-              <p class="text-muted small flex-grow-1">
-                Real-time conversational voice interview using Web Speech API + Groq Llama 3 with STAR-format scoring, speech pace tracking, and filler-word analysis tailored to the recommended career.
-              </p>
-              <div class="mt-3 pt-3 border-top border-secondary border-opacity-25">
-                <span class="badge badge-navy font-monospace small">Route: /interview</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 2. Resume & Portfolio Gap Analyzer -->
-          <div class="col-md-6 col-lg-4">
-            <div class="cp-card h-100 p-4 d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="fs-2 text-info"><i class="bi bi-file-earmark-diff-fill"></i></div>
-                <span class="badge badge-navy">Phase 2 · Q4 2026</span>
-              </div>
-              <h4 class="h5 fw-bold mb-2 text-ink">Resume & Portfolio Gap Analyzer</h4>
-              <p class="text-muted small flex-grow-1">
-                Upload PDF resumes or GitHub URLs to receive an instant ATS score against target industry profiles, missing project recommendations, and Google XYZ bullet-point rewrites.
-              </p>
-              <div class="mt-3 pt-3 border-top border-secondary border-opacity-25">
-                <span class="badge badge-navy font-monospace small">Route: /resume-audit</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. College Faculty & Mentor Dashboard -->
-          <div class="col-md-6 col-lg-4">
-            <div class="cp-card h-100 p-4 d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="fs-2 text-warning"><i class="bi bi-mortarboard-fill"></i></div>
-                <span class="badge badge-navy">Phase 4 · Q2 2027</span>
-              </div>
-              <h4 class="h5 fw-bold mb-2 text-ink">College Placement Mentor Portal</h4>
-              <p class="text-muted small flex-grow-1">
-                Institutional B2B portal for university TPOs and professors featuring batch-wide skill deficiency heatmaps, custom roadmap assignments, and cohort Placement Readiness Index (PRI) exports.
-              </p>
-              <div class="mt-3 pt-3 border-top border-secondary border-opacity-25">
-                <span class="badge badge-navy font-monospace small">Route: /mentor-portal</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 4. Verified Job & Resource Links -->
-          <div class="col-md-6 col-lg-6">
-            <div class="cp-card h-100 p-4 d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="fs-2 text-success"><i class="bi bi-briefcase-fill"></i></div>
-                <span class="badge badge-warning">Phase 3 · Q1 2027</span>
-              </div>
-              <h4 class="h5 fw-bold mb-2 text-ink">Verified Job & Resource Links with Market Trends</h4>
-              <p class="text-muted small flex-grow-1">
-                Live job connectors (Adzuna + LinkedIn + RemoteOK) matched directly to completed student roadmap skills, combined with verified free learning labs (Exercism, freeCodeCamp) and a 12-hour Redis cache.
-              </p>
-              <div class="mt-3 pt-3 border-top border-secondary border-opacity-25">
-                <span class="badge badge-navy font-monospace small">Route: /market-pulse</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 5. Dynamic Adaptive Roadmap Engine -->
-          <div class="col-md-12 col-lg-6">
-            <div class="cp-card h-100 p-4 d-flex flex-column">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="fs-2 text-primary"><i class="bi bi-cpu-fill"></i></div>
-                <span class="badge badge-navy">Phase 2 · Q4 2026</span>
-              </div>
-              <h4 class="h5 fw-bold mb-2 text-ink">Dynamic Adaptive Roadmap Engine</h4>
-              <p class="text-muted small flex-grow-1">
-                Bayesian Knowledge Tracing dynamically adjusts learning velocity. High-performing students fast-track directly into advanced architecture (Microservices, Kafka), while struggling learners receive scaffolded refreshers.
-              </p>
-              <div class="mt-3 pt-3 border-top border-secondary border-opacity-25">
-                <span class="badge badge-navy font-monospace small">Route: /adaptive-roadmap</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ============================================================
          FOOTER
          ============================================================ -->
     <footer class="cp-footer">
@@ -940,8 +818,8 @@
           <!-- Brand & Project Info -->
           <div class="col-lg-5">
             <div class="d-flex align-items-center gap-2 mb-2">
-              <div class="brand-icon brand-icon-sm">
-                <i class="bi bi-compass-fill"></i>
+              <div class="brand-icon brand-icon-sm p-1">
+                <img src="assets/logo.svg" alt="CareerPath AI Logo" width="18" height="18" style="border-radius: 4px; display: block;" />
               </div>
               <span class="brand-name fs-5">
                 CareerPath <span class="brand-accent">AI</span>
@@ -1007,12 +885,12 @@
 
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/three-career-universe.js?v=3.0"></script>
     <script src="js/scroll-dissolve.js?v=3.0"></script>
     <script src="js/stats-counter.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/skill-guides.js"></script>
     <script src="js/chat.js"></script>
   </body>
 </html>

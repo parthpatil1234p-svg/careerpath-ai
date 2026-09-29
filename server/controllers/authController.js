@@ -516,7 +516,7 @@ const githubAuth = async (req, res, next) => {
     const username = profile.login || ghUsername;
     const email = (profile.email || directEmail || `${username.toLowerCase()}@users.noreply.github.com`).trim().toLowerCase();
     const name = profile.name || directName || username;
-    const avatarUrl = profile.avatar_url || directAvatar || `https://avatars.githubusercontent.com/${encodeURIComponent(username)}`;
+    const avatarUrl = profile.avatar_url || directAvatar || `https://github.com/${encodeURIComponent(username)}.png`;
 
     // Analyze public repositories for languages, frameworks, and study relevance
     const analysis = analyzeGitHubRepos(repos);
@@ -543,9 +543,11 @@ const githubAuth = async (req, res, next) => {
       // Update GitHub profile and repositories
       user.githubProfile = {
         username,
+        name,
+        avatarUrl,
         profileUrl: profile.html_url || `https://github.com/${username}`,
-        publicReposCount: profile.public_repos || repos.length,
-        followers: profile.followers || 0,
+        publicReposCount: profile.public_repos != null ? profile.public_repos : repos.length,
+        followers: profile.followers != null ? profile.followers : 0,
         topLanguages: analysis.topLanguages,
         connectedAt: new Date(),
       };
@@ -581,9 +583,11 @@ const githubAuth = async (req, res, next) => {
         profileCompleted: false,
         githubProfile: {
           username,
+          name,
+          avatarUrl,
           profileUrl: profile.html_url || `https://github.com/${username}`,
-          publicReposCount: profile.public_repos || repos.length,
-          followers: profile.followers || 0,
+          publicReposCount: profile.public_repos != null ? profile.public_repos : repos.length,
+          followers: profile.followers != null ? profile.followers : 0,
           topLanguages: analysis.topLanguages,
           connectedAt: new Date(),
         },
@@ -667,14 +671,20 @@ const connectGitHub = async (req, res, next) => {
     const analysis = analyzeGitHubRepos(repos);
 
     user.githubId = String(profile.id || user.githubId || `github_${username}`);
+    const finalAvatarUrl = profile.avatar_url || `https://github.com/${username}.png`;
     user.githubProfile = {
       username,
+      name: profile.name || username,
+      avatarUrl: finalAvatarUrl,
       profileUrl: profile.html_url || `https://github.com/${username}`,
-      publicReposCount: profile.public_repos || repos.length,
-      followers: profile.followers || 0,
+      publicReposCount: profile.public_repos != null ? profile.public_repos : repos.length,
+      followers: profile.followers != null ? profile.followers : 0,
       topLanguages: analysis.topLanguages,
       connectedAt: new Date(),
     };
+    if (!user.avatarUrl && finalAvatarUrl) {
+      user.avatarUrl = finalAvatarUrl;
+    }
     user.githubRepos = analysis.parsedRepos;
 
     // Merge code-verified skills into student's profile

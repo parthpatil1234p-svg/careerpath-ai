@@ -753,3 +753,59 @@
   text-decoration: line-through;
   color: var(--color-text-muted);
 }
+
+/* --------------------------------------------------------------------------
+   6. Future-Proof Resilience & What-If Simulator Enhancements
+   -------------------------------------------------------------------------- */
+.future-proof-pill {
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  transition: all var(--transition-fast);
+}
+
+.future-proof-pill:hover {
+  background: #E0F2FE;
+  border-color: #7DD3FC;
+}
+
+.future-proof-info-btn {
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.future-proof-info-btn:hover {
+  opacity: 0.8;
+}
+
+.what-if-btn {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #B45309;
+  transition: all var(--transition-fast);
+}
+
+.what-if-btn:hover {
+  background: #FEF3C7;
+  border-color: #F59E0B;
+  color: #92400E;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+/* Modal Stacking & Contrast Guarantees */
+.modal {
+  z-index: 1060 !important;
+}
+
+.modal-backdrop {
+  z-index: 1050 !important;
+  background-color: #0F172A !important;
+  opacity: 0.45 !important;
+}
+
+.modal.show .modal-dialog {
+  transform: none !important;
+  z-index: 1065 !important;
+}
+
+

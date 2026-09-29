@@ -143,6 +143,18 @@
   color: var(--color-indigo-700);
 }
 
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .dashboard-page .stat-box-atlas {
+    padding: 0.85rem 0.7rem;
+  }
+
+  .dashboard-page .stat-box-atlas .stat-value {
+    font-size: 1.05rem;
+    white-space: nowrap;
+    letter-spacing: -0.04em;
+  }
+}
+
 /* 3D Journey Marker Canvas Card */
 .journey-canvas-card {
   background: #FFFFFF;
@@ -165,16 +177,14 @@
 }
 
 #progress-orb {
-  cursor: grab;
+  cursor: default;
   margin: 0 auto;
   width: 100% !important;
   max-width: 100%;
-  min-height: 280px;
-  display: block;
-}
-
-#progress-orb:active {
-  cursor: grabbing;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Recommended Action Box */

@@ -472,8 +472,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? `<span class="badge-code-verified ms-1" title="Verified by GitHub Repo Code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github"></i> Verified</span>`
         : '';
       pill.innerHTML = `
-        <span class="text-white">${escapeHtml(skill.displayName)}</span>
-        <span class="text-teal fw-bold font-mono" style="font-size: 0.68rem;">(${skill.proficiency.slice(0, 3)})</span>
+        <span class="fw-semibold text-ink">${escapeHtml(skill.displayName)}</span>
+        <span class="text-primary fw-bold font-mono" style="font-size: 0.68rem;">(${skill.proficiency.slice(0, 3)})</span>
         ${verifiedTag}
         <i class="bi bi-x ms-1 cursor-pointer" title="Remove" style="cursor: pointer;"></i>
       `;

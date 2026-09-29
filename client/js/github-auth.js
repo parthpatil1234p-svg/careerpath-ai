@@ -139,21 +139,21 @@ window.GitHubAuth = (function () {
 
     modalEl.innerHTML = `
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content glass-card border border-info border-opacity-25 bg-dark text-white p-2">
+        <div class="modal-content bg-white border border-line shadow-lg text-ink p-2">
           <!-- Modal Header -->
-          <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+          <div class="modal-header border-bottom border-line pb-3">
             <div class="d-flex align-items-center gap-2">
-              <div class="d-flex align-items-center justify-content-center bg-white rounded-circle p-1" style="width: 34px; height: 34px;">
-                <i class="bi bi-github text-dark fs-5"></i>
+              <div class="d-flex align-items-center justify-content-center bg-surface-muted border border-line rounded-circle p-1" style="width: 34px; height: 34px;">
+                <i class="bi bi-github text-ink fs-5"></i>
               </div>
               <div>
-                <h3 class="modal-title h6 fw-bold mb-0 text-white" id="universalGitHubModalLabel">
+                <h3 class="modal-title h6 fw-bold mb-0 text-ink" id="universalGitHubModalLabel">
                   ${isConnectOnly ? 'Connect Your GitHub Repositories' : 'Sign In with Your GitHub Account'}
                 </h3>
-                <span class="font-mono text-muted small" style="font-size: 0.72rem;">Live Public GitHub API · Verified Repositories & Skills</span>
+                <span class="font-mono text-secondary small" style="font-size: 0.72rem;">Live Public GitHub API · Verified Repositories & Skills</span>
               </div>
             </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <!-- Modal Body -->
@@ -161,7 +161,7 @@ window.GitHubAuth = (function () {
             ${
               customNotice
                 ? `
-              <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-3 bg-info bg-opacity-10 border-info border-opacity-25 text-info">
+              <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-3 bg-primary bg-opacity-10 border-primary border-opacity-25 text-primary">
                 <i class="bi bi-info-circle-fill fs-5"></i>
                 <div style="font-size: 0.82rem;">${customNotice}</div>
               </div>
@@ -171,39 +171,39 @@ window.GitHubAuth = (function () {
 
             <!-- Username Input Field -->
             <div class="mb-3">
-              <label for="ghUsernameInput" class="form-label small text-muted fw-semibold">
+              <label for="ghUsernameInput" class="form-label small text-secondary fw-semibold">
                 Enter your GitHub Username:
               </label>
               <div class="input-group">
-                <span class="input-group-text bg-dark border-secondary border-opacity-50 text-teal">
+                <span class="input-group-text bg-surface-muted border-line text-secondary">
                   <i class="bi bi-github"></i>
                 </span>
                 <input
                   type="text"
                   id="ghUsernameInput"
-                  class="form-control bg-dark text-white border-secondary border-opacity-50 font-mono"
+                  class="form-control bg-white text-ink border-line font-mono"
                   placeholder="e.g. rahul-dev, parthpatil1234p-svg, octocat"
                   autocomplete="off"
                   autofocus
                 />
               </div>
-              <div class="form-text text-muted small" style="font-size: 0.74rem;">
+              <div class="form-text text-secondary small" style="font-size: 0.74rem;">
                 Any student can enter their personal GitHub handle to scan repositories and detect skills.
               </div>
             </div>
 
             <!-- Dynamic Live Profile Card (Auto-renders on typing) -->
-            <div id="ghLiveProfileCard" class="p-3 mb-3 rounded-2 bg-black bg-opacity-50 border border-info border-opacity-25 d-none">
+            <div id="ghLiveProfileCard" class="p-3 mb-3 rounded-2 bg-surface-muted border border-line d-none">
               <div class="d-flex align-items-center gap-3">
-                <img id="ghLiveAvatar" src="" alt="Avatar" class="rounded-circle border border-teal" style="width: 48px; height: 48px; object-fit: cover;" />
+                <img id="ghLiveAvatar" src="" alt="Avatar" class="rounded-circle border border-line" style="width: 48px; height: 48px; object-fit: cover;" />
                 <div class="flex-grow-1 overflow-hidden">
-                  <div class="fw-bold text-white text-truncate" id="ghLiveName">User Name</div>
-                  <div class="text-teal small font-mono text-truncate" id="ghLiveHandle">@handle</div>
-                  <div class="text-muted small font-mono" style="font-size: 0.72rem;" id="ghLiveStats">
+                  <div class="fw-bold text-ink text-truncate" id="ghLiveName">User Name</div>
+                  <div class="text-primary small font-mono text-truncate" id="ghLiveHandle">@handle</div>
+                  <div class="text-secondary small font-mono" style="font-size: 0.72rem;" id="ghLiveStats">
                     <span id="ghLiveReposCount">0</span> Public Repositories
                   </div>
                 </div>
-                <span class="badge bg-success bg-opacity-25 text-success font-mono small d-flex align-items-center gap-1">
+                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-mono small d-flex align-items-center gap-1">
                   <i class="bi bi-check-circle-fill"></i> FOUND
                 </span>
               </div>
@@ -216,14 +216,14 @@ window.GitHubAuth = (function () {
 
             <!-- Quick Example Chips -->
             <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-              <span class="text-muted small font-mono" style="font-size: 0.70rem;">Quick Examples:</span>
+              <span class="text-secondary small font-mono" style="font-size: 0.70rem;">Quick Examples:</span>
               <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="parthpatil1234p-svg">@parthpatil1234p-svg</button>
               <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="octocat">@octocat</button>
             </div>
           </div>
 
           <!-- Modal Footer -->
-          <div class="modal-footer border-top border-secondary border-opacity-25 pt-3">
+          <div class="modal-footer border-top border-line pt-3">
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
             <button type="button" id="btnConfirmUniversalGitHub" class="btn cp-btn-primary btn-sm px-4 d-flex align-items-center gap-2 fw-semibold">
               <i class="bi bi-box-arrow-in-right"></i>
@@ -328,6 +328,20 @@ window.GitHubAuth = (function () {
         executeAuth();
       }
     });
+
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      // Ensure backdrop and body lock are completely freed
+      document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+      modalEl.remove();
+    });
+
+    avatarImg.onerror = function () {
+      this.onerror = null;
+      this.src = 'assets/images/default-avatar.svg';
+    };
 
     const modalInstance = new bootstrap.Modal(modalEl);
     modalInstance.show();

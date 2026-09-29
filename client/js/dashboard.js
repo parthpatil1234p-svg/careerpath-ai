@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     container.innerHTML = skills.map((s) => {
       const prof = (s.proficiency || 'beginner').toLowerCase();
-      let badgeClass = 'bg-secondary text-white';
+      let badgeClass = 'badge-navy';
       let icon = 'bi-circle';
       if (prof === 'advanced') {
         badgeClass = 'badge-leaf';
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return `
         <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2 stat-box-atlas border border-line">
           <i class="bi ${icon} small"></i>
-          <span class="fw-semibold text-white small">${escapeHtml(s.displayName || s.name)}</span>
+          <span class="fw-semibold text-ink small">${escapeHtml(s.displayName || s.name)}</span>
           <span class="badge ${badgeClass} text-uppercase font-monospace" style="font-size: 0.68rem; letter-spacing: 0.5px;">
             ${escapeHtml(prof)}
           </span>
@@ -321,6 +321,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       `;
     }).join('');
+  };
+
+  const DEFAULT_GITHUB_AVATAR = 'assets/images/default-avatar.svg';
+
+  const getAccurateStudyRelevance = (repo, profile) => {
+    const existing = repo.studyRelevance || '';
+    const lang = (repo.language || '').toLowerCase();
+    const name = (repo.name || '').toLowerCase();
+    const desc = (repo.description || '').toLowerCase();
+
+    // If existing text has the wrong "Demonstrates core Python scripting" on a non-python repo, fix it
+    if (existing && !existing.includes('core Python scripting')) {
+      return existing;
+    }
+    if (existing && lang === 'python') {
+      return existing;
+    }
+
+    const isAiRelated = /(?:^|[-_.\s])(ai|ml|data|bot|model|gpt|llm|nlp|vision|deeplearning)(?:$|[-_.\s])/i.test(name) ||
+      desc.includes('machine learning') || desc.includes('artificial intelligence');
+    const isBackendRelated = /(?:^|[-_.\s])(api|backend|server|express|nest|django|flask|spring)(?:$|[-_.\s])/i.test(name) ||
+      desc.includes('backend') || desc.includes('rest api');
+    const isProfileRepo = name === (profile?.username || '').toLowerCase() || name.includes('profile') || name.includes('portfolio') || name.includes('resume');
+
+    if (isProfileRepo) {
+      return 'Developer Profile & Portfolio Hub: Academic showcase and technical portfolio overview.';
+    }
+    if (lang === 'python') {
+      return isAiRelated
+        ? 'AI & Machine Learning Study: Demonstrates Python scripting, model pipelines, and intelligent data logic.'
+        : 'Python Scripting & Automation: Demonstrates backend scripting, modular design, and logic structure.';
+    }
+    if (lang === 'javascript' || lang === 'typescript') {
+      if (isAiRelated) {
+        return 'AI-Integrated Web App: Combines intelligent logic with modern frontend & full-stack architecture.';
+      }
+      if (isBackendRelated) {
+        return 'Backend & API Engineering: Server-side architecture, RESTful API design, and asynchronous logic.';
+      }
+      return 'Full-Stack & Frontend Development: Demonstrates interactive UI engineering, modern state management, and web components.';
+    }
+    if (lang === 'html' || lang === 'css') {
+      return 'Web Interface & UI Fundamentals: Responsive layout engineering, semantic structure, and styling standards.';
+    }
+    if (lang === 'c++' || lang === 'c' || lang === 'rust') {
+      return 'Systems & High-Performance CS: Memory management, foundational data structures, and optimized algorithms.';
+    }
+    if (lang === 'java' || lang === 'kotlin') {
+      return 'Enterprise & OOP Architecture: Demonstrates object-oriented design patterns, typed APIs, and scalable modularity.';
+    }
+    return isAiRelated
+      ? 'Intelligent System Prototype: Hands-on exploration of algorithmic logic and smart system integration.'
+      : 'Applied Software Development: Practical code repository contributing to hands-on portfolio verification.';
   };
 
   // ── 4.55 Render GitHub Study Lab & Repositories ─────────────────
@@ -365,7 +418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (isConnected) {
       if (githubStatusBadge) {
-        githubStatusBadge.className = 'badge-code-verified bg-success bg-opacity-20 text-success border border-success border-opacity-40';
+        githubStatusBadge.className = 'badge-code-verified status-connected';
         githubStatusBadge.innerHTML = '<i class="bi bi-patch-check-fill text-success me-1"></i> Connected & Verified';
       }
       if (btnConnectGitHubText) {
@@ -376,7 +429,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (ghUserAvatar) {
-        ghUserAvatar.src = profile.avatarUrl || 'assets/images/default-avatar.png';
+        const candidateSrc = profile.avatarUrl || profile.avatar_url || (profile.username ? `https://github.com/${profile.username}.png` : '') || DEFAULT_GITHUB_AVATAR;
+        ghUserAvatar.src = candidateSrc;
+        ghUserAvatar.onerror = function () {
+          this.onerror = null;
+          this.src = DEFAULT_GITHUB_AVATAR;
+        };
       }
       if (ghUserName) {
         ghUserName.textContent = profile.name || profile.username || 'GitHub Developer';
@@ -407,8 +465,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (langs.length > 0) {
           ghTopLanguagesContainer.innerHTML = langs.map(lang => `
-            <span class="badge bg-secondary bg-opacity-30 border border-secondary border-opacity-50 text-white font-monospace" style="font-size: 0.72rem;">
-              <span class="rounded-circle d-inline-block me-1" style="width: 7px; height: 7px; background-color: var(--teal, #00d2d3);"></span>
+            <span class="badge badge-navy font-monospace" style="font-size: 0.72rem;">
+              <span class="rounded-circle d-inline-block me-1" style="width: 7px; height: 7px; background-color: var(--color-indigo-600, #4F46E5);"></span>
               ${escapeHtml(lang)}
             </span>
           `).join('');
@@ -422,9 +480,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (repos.length === 0) {
           githubReposContainer.innerHTML = `
             <div class="col-12 text-center py-4 text-muted small">
-              <div class="p-3 border border-secondary border-opacity-25 rounded-2 bg-dark bg-opacity-25">
-                <i class="bi bi-folder-check display-6 text-teal opacity-75 mb-2 d-block"></i>
-                <div class="fw-semibold text-white mb-1">0 Public Repositories Found</div>
+              <div class="p-3 border border-line rounded-2 bg-surface-muted">
+                <i class="bi bi-folder-check display-6 text-primary opacity-75 mb-2 d-block"></i>
+                <div class="fw-semibold text-ink mb-1">0 Public Repositories Found</div>
                 <div class="text-secondary small mb-3">Push public coding projects to your GitHub account to showcase your work here.</div>
                 <button type="button" class="btn btn-navy btn-sm px-4 py-2" id="btnSyncEmptyRepos">
                   <i class="bi bi-arrow-repeat me-1"></i> Re-scan Repos
@@ -442,16 +500,16 @@ document.addEventListener('DOMContentLoaded', async () => {
               : '';
 
             const lang = repo.language || 'Code';
-            const relevance = repo.studyRelevance || 'Skill Practice & Code Exploration';
+            const relevance = getAccurateStudyRelevance(repo, profile);
 
             return `
               <div class="col-md-6 col-lg-4">
-                <div class="repo-card-study h-100 p-3 rounded-2 border border-secondary border-opacity-25 bg-dark bg-opacity-40 d-flex flex-column justify-content-between">
+                <div class="repo-card-study h-100 p-3 rounded-2 border border-line bg-white shadow-sm d-flex flex-column justify-content-between">
                   <div>
                     <div class="d-flex align-items-center justify-content-between mb-2">
                       <div class="d-flex align-items-center gap-1.5 overflow-hidden me-2">
-                        <i class="bi bi-journal-code text-teal flex-shrink-0"></i>
-                        <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="fw-bold text-white text-truncate text-decoration-none small" title="${escapeHtml(repo.name)}">
+                        <i class="bi bi-journal-code text-primary flex-shrink-0"></i>
+                        <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="fw-bold text-ink text-truncate text-decoration-none small" title="${escapeHtml(repo.name)}">
                           ${escapeHtml(repo.name)}
                         </a>
                       </div>
@@ -462,15 +520,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </p>
                   </div>
                   <div>
-                    <div class="mb-2 p-1.5 rounded-1 bg-teal-subtle bg-opacity-10 border border-info border-opacity-20 text-info font-monospace" style="font-size: 0.68rem; line-height: 1.3;">
+                    <div class="mb-2 p-1.5 rounded-1 bg-surface-indigo border border-indigo-subtle text-primary font-monospace" style="font-size: 0.68rem; line-height: 1.3;">
                       <i class="bi bi-lightbulb-fill text-warning me-1"></i><strong>Study Relevance:</strong> ${escapeHtml(relevance)}
                     </div>
-                    <div class="d-flex align-items-center justify-content-between pt-2 border-top border-secondary border-opacity-25 text-muted font-monospace" style="font-size: 0.72rem;">
-                      <span class="d-flex align-items-center gap-1.5 text-white">
-                        <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: var(--teal, #00d2d3);"></span>
+                    <div class="d-flex align-items-center justify-content-between pt-2 border-top border-line text-muted font-monospace" style="font-size: 0.72rem;">
+                      <span class="d-flex align-items-center gap-1.5 text-secondary">
+                        <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: var(--color-indigo-600, #4F46E5);"></span>
                         ${escapeHtml(lang)}
                       </span>
-                      <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="text-teal text-decoration-none hover-underline">
+                      <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="text-primary fw-semibold text-decoration-none hover-underline">
                         Open Repo <i class="bi bi-box-arrow-up-right ms-0.5" style="font-size: 0.65rem;"></i>
                       </a>
                     </div>
@@ -484,8 +542,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       // Not connected
       if (githubStatusBadge) {
-        githubStatusBadge.className = 'badge-code-verified text-secondary border border-secondary border-opacity-30';
-        githubStatusBadge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Not Connected';
+        githubStatusBadge.className = 'badge-code-verified status-disconnected';
+        githubStatusBadge.innerHTML = '<i class="bi bi-circle-fill text-secondary me-1" style="font-size: 0.5rem;"></i> Not Connected';
       }
       if (btnConnectGitHubText) {
         btnConnectGitHubText.textContent = 'Connect GitHub Account';
@@ -496,9 +554,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (githubReposContainer) {
         githubReposContainer.innerHTML = `
           <div class="col-12 text-center py-4 text-muted small">
-            <div class="p-3 border border-secondary border-opacity-25 rounded-2 bg-dark bg-opacity-25">
-              <i class="bi bi-code-square display-6 text-teal opacity-75 mb-2 d-block"></i>
-              <div class="fw-semibold text-white mb-1">No GitHub Repositories Linked Yet</div>
+            <div class="p-3 border border-line rounded-2 bg-surface-muted">
+              <i class="bi bi-code-square display-6 text-primary opacity-75 mb-2 d-block"></i>
+              <div class="fw-semibold text-ink mb-1">No GitHub Repositories Linked Yet</div>
               <div class="text-secondary small mb-3">Connect your GitHub profile to auto-detect verified skills, audit your study projects, and map them to your active roadmap.</div>
               <button type="button" class="btn btn-navy btn-sm px-4 py-2" id="btnConnectGitHubBanner">
                 <i class="bi bi-github me-1"></i> Connect GitHub Account (1-Click)
@@ -583,7 +641,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="d-flex align-items-center justify-content-between p-2 rounded-2 stat-box-atlas border border-line gap-2 flex-wrap">
           <div class="d-flex align-items-center gap-2">
             <span class="badge badge-navy small font-monospace">${escapeHtml(s.category || 'tech')}</span>
-            <span class="fw-semibold text-white small">${escapeHtml(s.displayName || s.name)}</span>
+            <span class="fw-semibold text-ink small">${escapeHtml(s.displayName || s.name)}</span>
           </div>
           <div class="d-flex align-items-center gap-2 ms-auto">
             <div class="btn-group btn-group-sm" role="group" aria-label="Proficiency selector">

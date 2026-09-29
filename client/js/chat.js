@@ -77,24 +77,9 @@
     trigger.className = 'cp-chat-trigger cp-creepy-mentor-btn';
     trigger.setAttribute('aria-label', 'Open AI Career Mentor Chat');
     trigger.innerHTML = `
-      <span class="cp-creepy-eyes-container" aria-hidden="true">
-        <span class="cp-creepy-eye cp-creepy-eye-left">
-          <span class="cp-creepy-pupil"></span>
-        </span>
-        <span class="cp-creepy-eye cp-creepy-eye-right">
-          <span class="cp-creepy-pupil"></span>
-        </span>
-      </span>
-      <span class="cp-creepy-cover">
-        <span class="trigger-icon"><i class="bi bi-robot"></i></span>
-        <span class="trigger-label">AI Mentor</span>
-        <span class="trigger-badge"><span class="badge-dot"></span>ONLINE</span>
-      </span>
-      <span class="cp-creepy-placeholder" aria-hidden="true">
-        <span class="trigger-icon"><i class="bi bi-robot"></i></span>
-        <span class="trigger-label">AI Mentor</span>
-        <span class="trigger-badge"><span class="badge-dot"></span>ONLINE</span>
-      </span>
+      <span class="trigger-icon"><i class="bi bi-robot"></i></span>
+      <span class="trigger-label">AI Mentor</span>
+      <span class="trigger-badge"><span class="badge-dot"></span>ONLINE</span>
     `;
     document.body.appendChild(trigger);
 

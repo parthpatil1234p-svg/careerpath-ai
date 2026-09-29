@@ -3,7 +3,7 @@
  *
  * Calls POST /api/recommendations/generate, displays the top ranked careers,
  * renders skill gap indicators (matched/developing/missing), score breakdown bars,
- * mounts 3D Skill Map, and wires duration selection modal for roadmap generation.
+ * and wires duration selection modal for roadmap generation.
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -39,6 +39,240 @@ document.addEventListener('DOMContentLoaded', async () => {
   let liveJobsModal = null;
   if (liveJobsModalEl && typeof bootstrap !== 'undefined') {
     liveJobsModal = new bootstrap.Modal(liveJobsModalEl);
+  }
+
+  // Future-Proof & What-If Modal DOM Elements
+  const futureProofModalEl = document.getElementById('futureProofModal');
+  const whatIfModalEl = document.getElementById('whatIfSimulatorModal');
+
+  let futureProofModal = null;
+  if (futureProofModalEl && typeof bootstrap !== 'undefined') {
+    futureProofModal = new bootstrap.Modal(futureProofModalEl);
+  }
+
+  let whatIfModal = null;
+  if (whatIfModalEl && typeof bootstrap !== 'undefined') {
+    whatIfModal = new bootstrap.Modal(whatIfModalEl);
+  }
+
+  const fpModalCareerTitle = document.getElementById('fpModalCareerTitle');
+  const fpModalScoreDisplay = document.getElementById('fpModalScoreDisplay');
+  const fpModalRatingBadge = document.getElementById('fpModalRatingBadge');
+  const fpTransferableVal = document.getElementById('fpTransferableVal');
+  const fpTransferableBar = document.getElementById('fpTransferableBar');
+  const fpAdaptabilityVal = document.getElementById('fpAdaptabilityVal');
+  const fpAdaptabilityBar = document.getElementById('fpAdaptabilityBar');
+  const fpDemandVal = document.getElementById('fpDemandVal');
+  const fpDemandBar = document.getElementById('fpDemandBar');
+  const fpResilienceVal = document.getElementById('fpResilienceVal');
+  const fpResilienceBar = document.getElementById('fpResilienceBar');
+
+  const whatIfCareerTitle = document.getElementById('whatIfCareerTitle');
+  const whatIfCurrentScore = document.getElementById('whatIfCurrentScore');
+  const whatIfSkillSelect = document.getElementById('whatIfSkillSelect');
+  const whatIfSkillContext = document.getElementById('whatIfSkillContext');
+  const whatIfDeltaBadge = document.getElementById('whatIfDeltaBadge');
+  const whatIfBeforeScore = document.getElementById('whatIfBeforeScore');
+  const whatIfAfterScore = document.getElementById('whatIfAfterScore');
+  const whatIfBeforeGaps = document.getElementById('whatIfBeforeGaps');
+  const whatIfAfterGaps = document.getElementById('whatIfAfterGaps');
+  const whatIfBeforeDuration = document.getElementById('whatIfBeforeDuration');
+  const whatIfAfterDuration = document.getElementById('whatIfAfterDuration');
+  const whatIfNarrativeText = document.getElementById('whatIfNarrativeText');
+  const whatIfApplyRoadmapBtn = document.getElementById('whatIfApplyRoadmapBtn');
+
+  let activeWhatIfItem = null;
+
+  // Curated Prototype Future-Proof Data Dictionary (Guidance Indicator)
+  // Formula: Future-Proof Score = 40% Transferable Skills + 25% Learning Adaptability + 20% Demand Signal + 15% Automation Resilience
+  const FUTURE_PROOF_DATA = {
+    'frontend-developer': { transferable: 86, adaptability: 90, demand: 88, automationResilience: 82, rating: 'High Resilience' },
+    'full-stack-developer': { transferable: 92, adaptability: 92, demand: 94, automationResilience: 88, rating: 'Very High Resilience' },
+    'data-analyst': { transferable: 84, adaptability: 85, demand: 86, automationResilience: 78, rating: 'Moderate-High Resilience' },
+    'ui-ux-designer': { transferable: 88, adaptability: 86, demand: 85, automationResilience: 84, rating: 'High Resilience' },
+    'cybersecurity-analyst': { transferable: 90, adaptability: 94, demand: 96, automationResilience: 92, rating: 'Exceptional Resilience' },
+    'ai-ml-engineer': { transferable: 94, adaptability: 96, demand: 98, automationResilience: 94, rating: 'Exceptional Resilience' },
+    'devops-cloud-engineer': { transferable: 90, adaptability: 92, demand: 95, automationResilience: 90, rating: 'Exceptional Resilience' },
+    'mobile-app-developer': { transferable: 85, adaptability: 88, demand: 86, automationResilience: 80, rating: 'High Resilience' },
+    'backend-engineer': { transferable: 92, adaptability: 90, demand: 93, automationResilience: 89, rating: 'Very High Resilience' },
+    'data-scientist': { transferable: 91, adaptability: 92, demand: 92, automationResilience: 88, rating: 'Very High Resilience' },
+    'qa-automation-engineer': { transferable: 82, adaptability: 86, demand: 84, automationResilience: 76, rating: 'Moderate Resilience' },
+    'blockchain-developer': { transferable: 86, adaptability: 88, demand: 82, automationResilience: 84, rating: 'High Resilience' },
+    'product-manager': { transferable: 95, adaptability: 90, demand: 89, automationResilience: 92, rating: 'Exceptional Resilience' },
+    'cloud-architect': { transferable: 93, adaptability: 94, demand: 96, automationResilience: 93, rating: 'Exceptional Resilience' },
+    'default': { transferable: 85, adaptability: 88, demand: 87, automationResilience: 83, rating: 'High Resilience' }
+  };
+
+  const getFutureProofMetrics = (slug, category) => {
+    const key = (slug || '').toLowerCase().trim();
+    const data = FUTURE_PROOF_DATA[key] || FUTURE_PROOF_DATA['default'];
+    const score = Math.round(
+      data.transferable * 0.40 +
+      data.adaptability * 0.25 +
+      data.demand * 0.20 +
+      data.automationResilience * 0.15
+    );
+    return { ...data, score };
+  };
+
+  const openFutureProofModal = (careerTitle, slug, category) => {
+    const metrics = getFutureProofMetrics(slug, category);
+    if (fpModalCareerTitle) fpModalCareerTitle.textContent = careerTitle;
+    if (fpModalScoreDisplay) fpModalScoreDisplay.textContent = `${metrics.score}/100`;
+    if (fpModalRatingBadge) {
+      fpModalRatingBadge.textContent = metrics.rating;
+      fpModalRatingBadge.className = `badge font-mono px-3 py-1 ${metrics.score >= 88 ? 'bg-success' : 'bg-primary'}`;
+    }
+    if (fpTransferableVal) fpTransferableVal.textContent = `${metrics.transferable}/100`;
+    if (fpTransferableBar) fpTransferableBar.style.width = `${metrics.transferable}%`;
+
+    if (fpAdaptabilityVal) fpAdaptabilityVal.textContent = `${metrics.adaptability}/100`;
+    if (fpAdaptabilityBar) fpAdaptabilityBar.style.width = `${metrics.adaptability}%`;
+
+    if (fpDemandVal) fpDemandVal.textContent = `${metrics.demand}/100`;
+    if (fpDemandBar) fpDemandBar.style.width = `${metrics.demand}%`;
+
+    if (fpResilienceVal) fpResilienceVal.textContent = `${metrics.automationResilience}/100`;
+    if (fpResilienceBar) fpResilienceBar.style.width = `${metrics.automationResilience}%`;
+
+    if (futureProofModal) {
+      futureProofModal.show();
+    }
+  };
+
+  const openWhatIfSimulator = (item) => {
+    activeWhatIfItem = item;
+    const { career, finalScore, scoreBreakdown = {}, weakSkills = [], missingSkills = [], matchedSkills = [] } = item;
+
+    if (whatIfCareerTitle) whatIfCareerTitle.textContent = career.title;
+    if (whatIfCurrentScore) whatIfCurrentScore.textContent = `${finalScore}%`;
+    if (whatIfBeforeScore) whatIfBeforeScore.textContent = `${finalScore}%`;
+
+    const candidateSkills = [
+      ...weakSkills.map(s => ({ ...s, type: 'Developing', currentProf: s.userProficiency || 'Beginner' })),
+      ...missingSkills.map(s => ({ ...s, type: 'Missing', currentProf: 'None' }))
+    ];
+
+    if (!whatIfSkillSelect) return;
+
+    if (candidateSkills.length === 0) {
+      whatIfSkillSelect.innerHTML = '<option value="">All primary skills already mastered!</option>';
+      if (whatIfDeltaBadge) whatIfDeltaBadge.textContent = '+0% Max Fit';
+      if (whatIfAfterScore) whatIfAfterScore.textContent = `${finalScore}%`;
+      if (whatIfBeforeGaps) whatIfBeforeGaps.textContent = '0';
+      if (whatIfAfterGaps) whatIfAfterGaps.textContent = '0';
+      if (whatIfBeforeDuration) whatIfBeforeDuration.textContent = '4 Wks';
+      if (whatIfAfterDuration) whatIfAfterDuration.textContent = '4 Wks';
+      if (whatIfNarrativeText) whatIfNarrativeText.textContent = 'Your profile already matches all core technical competencies for this path!';
+    } else {
+      whatIfSkillSelect.innerHTML = candidateSkills.map((s, idx) => `
+        <option value="${idx}">
+          ${escapeHtml(s.displayName || s.name)} (${s.type}: currently ${escapeHtml(s.currentProf)})
+        </option>
+      `).join('');
+
+      runWhatIfCalculation(candidateSkills[0], candidateSkills);
+    }
+
+    if (whatIfModal) {
+      whatIfModal.show();
+    }
+  };
+
+  const runWhatIfCalculation = (selectedSkill, allCandidates) => {
+    if (!activeWhatIfItem || !selectedSkill) return;
+    const { finalScore, scoreBreakdown = {}, weakSkills = [], missingSkills = [], matchedSkills = [], career } = activeWhatIfItem;
+
+    const levelRadio = document.querySelector('input[name="whatIfLevel"]:checked');
+    const targetLevel = levelRadio ? levelRadio.value : 'Intermediate';
+
+    const totalSkills = Math.max(1, (matchedSkills.length + weakSkills.length + missingSkills.length));
+
+    // Transparent calculation strictly conforming to 60% skills + 25% interests + 15% education
+    let factor = 0.35;
+    if (selectedSkill.type === 'Developing') {
+      factor = targetLevel === 'Advanced' ? 0.50 : 0.30;
+    } else {
+      factor = targetLevel === 'Advanced' ? 0.90 : 0.70;
+    }
+
+    const skillBoost = Math.round((factor / totalSkills) * 100);
+    const currentSkillMatch = scoreBreakdown.skillMatch || 50;
+    const newSkillMatch = Math.min(100, currentSkillMatch + skillBoost);
+
+    const newFinalScore = Math.min(99, Math.round(
+      newSkillMatch * 0.60 +
+      (scoreBreakdown.interestMatch || 0) * 0.25 +
+      (scoreBreakdown.educationMatch || 0) * 0.15
+    ));
+
+    const delta = Math.max(1, newFinalScore - finalScore);
+    const oldGaps = weakSkills.length + missingSkills.length;
+    const newGaps = Math.max(0, oldGaps - 1);
+    const oldDuration = oldGaps >= 4 ? 8 : 4;
+    const newDuration = Math.max(4, oldDuration - (delta >= 12 ? 3 : delta >= 6 ? 2 : 1));
+    const savedWeeks = Math.max(1, oldDuration - newDuration);
+
+    if (whatIfDeltaBadge) whatIfDeltaBadge.textContent = `+${delta}% Boost`;
+    if (whatIfBeforeScore) whatIfBeforeScore.textContent = `${finalScore}%`;
+    if (whatIfAfterScore) whatIfAfterScore.textContent = `${newFinalScore}%`;
+    if (whatIfBeforeGaps) whatIfBeforeGaps.textContent = `${oldGaps}`;
+    if (whatIfAfterGaps) whatIfAfterGaps.textContent = `${newGaps}`;
+    if (whatIfBeforeDuration) whatIfBeforeDuration.textContent = `${oldDuration} Wks`;
+    if (whatIfAfterDuration) whatIfAfterDuration.textContent = `${newDuration} Wks`;
+
+    if (whatIfSkillContext) {
+      whatIfSkillContext.innerHTML = `<span class="text-teal fw-semibold">${escapeHtml(selectedSkill.displayName || selectedSkill.name)}</span> is a core skill (${selectedSkill.type}). Target: <strong class="text-ink">${targetLevel}</strong>.`;
+    }
+
+    if (whatIfNarrativeText) {
+      whatIfNarrativeText.innerHTML = `
+        Upgrading <strong class="text-ink">${escapeHtml(selectedSkill.displayName || selectedSkill.name)}</strong> from <em>${escapeHtml(selectedSkill.currentProf)}</em> to <strong>${targetLevel}</strong> resolves a high-impact bottleneck for ${escapeHtml(career.title)}.
+        By strengthening the 60% skill match component from ${currentSkillMatch}% to ${newSkillMatch}%, your career match jumps from <span class="text-muted text-decoration-line-through">${finalScore}%</span> to <strong class="text-success">${newFinalScore}%</strong> (+${delta}%), shortening your placement-readiness timeline by <strong>${savedWeeks} ${savedWeeks === 1 ? 'week' : 'weeks'}</strong>.
+      `;
+    }
+  };
+
+  // Wire What-If Simulator interactive controls
+  if (whatIfSkillSelect) {
+    whatIfSkillSelect.addEventListener('change', () => {
+      if (!activeWhatIfItem) return;
+      const candidateSkills = [
+        ...activeWhatIfItem.weakSkills.map(s => ({ ...s, type: 'Developing', currentProf: s.userProficiency || 'Beginner' })),
+        ...activeWhatIfItem.missingSkills.map(s => ({ ...s, type: 'Missing', currentProf: 'None' }))
+      ];
+      const idx = parseInt(whatIfSkillSelect.value, 10);
+      if (!isNaN(idx) && candidateSkills[idx]) {
+        runWhatIfCalculation(candidateSkills[idx], candidateSkills);
+      }
+    });
+  }
+
+  document.querySelectorAll('input[name="whatIfLevel"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (!activeWhatIfItem) return;
+      const candidateSkills = [
+        ...activeWhatIfItem.weakSkills.map(s => ({ ...s, type: 'Developing', currentProf: s.userProficiency || 'Beginner' })),
+        ...activeWhatIfItem.missingSkills.map(s => ({ ...s, type: 'Missing', currentProf: 'None' }))
+      ];
+      const idx = parseInt(whatIfSkillSelect.value, 10);
+      if (!isNaN(idx) && candidateSkills[idx]) {
+        runWhatIfCalculation(candidateSkills[idx], candidateSkills);
+      }
+    });
+  });
+
+  if (whatIfApplyRoadmapBtn) {
+    whatIfApplyRoadmapBtn.addEventListener('click', () => {
+      if (!activeWhatIfItem) return;
+      if (whatIfModal) whatIfModal.hide();
+      selectedCareerTitle = activeWhatIfItem.career.title;
+      selectedCareerSlug = activeWhatIfItem.career.slug;
+      if (modalCareerTitle) modalCareerTitle.textContent = selectedCareerTitle;
+      setTimeout(() => {
+        if (roadmapModal) roadmapModal.show();
+      }, 300);
+    });
   }
 
   let selectedCareerSlug = null;
@@ -83,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="job-item-card">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 mb-2">
               <div>
-                <h4 class="h6 fw-bold text-white mb-1 d-flex align-items-center gap-2 flex-wrap">
+                <h4 class="h6 fw-bold text-ink mb-1 d-flex align-items-center gap-2 flex-wrap">
                   <span>${escapeHtml(job.title)}</span>
                   ${job.globalRemote ? '<span class="atlas-badge text-teal border-teal"><i class="bi bi-globe me-1"></i>Worldwide Remote</span>' : ''}
                 </h4>
@@ -163,6 +397,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // 3. Fetch Recommendations
+  const renderSkillMap = (recommendation) => {
+    const map = document.getElementById('skillTileMap');
+    if (!map || !recommendation) return;
+
+    if (skillOrbitTitle) {
+      skillOrbitTitle.textContent = `${recommendation.career.title} — Skill Map`;
+    }
+
+    const groups = [
+      { label: 'Matched', className: 'matched', skills: recommendation.matchedSkills || [] },
+      { label: 'Developing', className: 'weak', skills: recommendation.weakSkills || [] },
+      { label: 'Missing', className: 'missing', skills: recommendation.missingSkills || [] },
+    ];
+    const skills = groups.flatMap((group) => group.skills.map((skill) => ({ ...skill, status: group.label, statusClass: group.className })));
+
+    if (!skills.length) {
+      map.innerHTML = '<p class="text-muted small mb-0">No skill details are available for this career yet.</p>';
+      return;
+    }
+
+    map.innerHTML = skills.map((skill) => {
+      const name = skill.displayName || skill.name || 'Skill';
+      const skillId = String(skill.name || name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const mark = name.trim().split(/[\s/.-]+/).filter(Boolean).slice(0, 2).map((word) => word[0]).join('').toUpperCase();
+      return `
+        <button class="career-skill-tile skill-status-${skill.statusClass}" type="button"
+          data-skill-id="${escapeHtml(skillId)}" data-skill-name="${escapeHtml(name)}"
+          data-skill-status="${escapeHtml(skill.status)}" data-skill-category="${escapeHtml(skill.category || 'Technology')}"
+          aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn ${escapeHtml(name)} (${skill.status})">
+          <span class="career-skill-mark" aria-hidden="true">${escapeHtml(mark || 'S')}</span>
+          <span class="career-skill-copy"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(skill.status)}</span></span>
+          <i class="bi bi-arrow-up-right skill-tile-arrow" aria-hidden="true"></i>
+        </button>
+      `;
+    }).join('');
+  };
+
   const loadRecommendations = async () => {
     try {
       const response = await window.API.post('/recommendations/generate', {}, { auth: true });
@@ -179,19 +450,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         renderRecommendations(recommendations, response.data.profileSummary);
 
-        // Mount 3D Skill Map for top match
-        const topRec = recommendations[0];
-        if (topRec && window.initSkillOrbit) {
-          if (skillOrbitTitle) {
-            skillOrbitTitle.textContent = `${topRec.career.title} — Skill Map`;
-          }
-          window.initSkillOrbit('skill-orbit', {
-            careerTitle: topRec.career.title,
-            matchedSkills: topRec.matchedSkills,
-            weakSkills: topRec.weakSkills,
-            missingSkills: topRec.missingSkills,
-          });
-        }
+        renderSkillMap(recommendations[0]);
       } else {
         showAlert(response.message || 'Unable to generate recommendations.');
       }
@@ -219,8 +478,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = '';
 
     recommendations.forEach((item, index) => {
-      const { rank, career, finalScore, scoreBreakdown, whyRecommended, matchedSkills, weakSkills, missingSkills, aiBrief } = item;
+      const { rank, career, finalScore, scoreBreakdown, whyRecommended, matchedSkills = [], weakSkills = [], missingSkills = [], aiBrief } = item;
       const isTopRank = rank === 1;
+      const fpMetrics = getFutureProofMetrics(career.slug || career.id, career.category);
 
       const card = document.createElement('div');
       card.className = `recommendation-card card p-4 p-md-5 mb-4 ${isTopRank ? 'top-match-card' : 'secondary-match-card'}`;
@@ -237,19 +497,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${escapeHtml(career.category)}
               </span>
             </div>
-            <h2 class="h3 fw-bold text-white mb-2 d-flex align-items-center gap-2">
+            <h2 class="h3 fw-bold text-ink mb-2 d-flex align-items-center gap-2">
               <i class="bi ${career.icon || 'bi-signpost-2-fill'} text-teal"></i>
               <span>${escapeHtml(career.title)}</span>
             </h2>
             <p class="text-muted small mb-0" style="max-width: 650px;">
               ${escapeHtml(career.shortDescription)}
             </p>
+            <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+              <div class="future-proof-pill d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill">
+                <i class="bi bi-shield-check text-cyan"></i>
+                <span class="small fw-semibold text-ink" style="font-size: 0.78rem;">Future-Proof:</span>
+                <span class="badge font-mono ${fpMetrics.score >= 88 ? 'bg-success' : 'bg-primary'}" style="font-size: 0.72rem;">${fpMetrics.score}/100</span>
+                <span class="text-muted font-mono" style="font-size: 0.72rem;">· ${fpMetrics.rating}</span>
+                <button type="button" class="btn btn-link p-0 text-cyan ms-1 future-proof-info-btn" data-career-title="${escapeHtml(career.title)}" data-career-slug="${escapeHtml(career.slug || '')}" data-career-category="${escapeHtml(career.category || '')}" title="View Future-Proof Score formula & breakdown">
+                  <i class="bi bi-info-circle"></i>
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- Career Fit Score Gauge -->
           <div class="col-md-4 text-md-end">
             <div class="match-score-badge d-inline-block text-center p-3">
-              <div class="display-6 fw-bold text-white font-mono">
+              <div class="display-6 fw-bold text-primary font-mono">
                 ${finalScore}%
               </div>
               <div class="text-muted small font-mono text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.05em;">
@@ -267,7 +538,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="col-sm-4">
               <div class="d-flex justify-content-between text-muted small mb-1">
                 <span><i class="bi bi-tools text-teal me-1"></i> Skills (60%)</span>
-                <span class="text-white fw-bold font-mono">${scoreBreakdown.skillMatch}%</span>
+                <span class="text-ink fw-bold font-mono">${scoreBreakdown.skillMatch}%</span>
               </div>
               <div class="progress" style="height: 6px;">
                 <div class="progress-bar bg-info" role="progressbar" style="width: ${scoreBreakdown.skillMatch}%;" aria-valuenow="${scoreBreakdown.skillMatch}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -278,7 +549,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="col-sm-4">
               <div class="d-flex justify-content-between text-muted small mb-1">
                 <span><i class="bi bi-heart text-teal me-1"></i> Interests (25%)</span>
-                <span class="text-white fw-bold font-mono">${scoreBreakdown.interestMatch}%</span>
+                <span class="text-ink fw-bold font-mono">${scoreBreakdown.interestMatch}%</span>
               </div>
               <div class="progress" style="height: 6px;">
                 <div class="progress-bar bg-primary" role="progressbar" style="width: ${scoreBreakdown.interestMatch}%;" aria-valuenow="${scoreBreakdown.interestMatch}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -289,7 +560,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="col-sm-4">
               <div class="d-flex justify-content-between text-muted small mb-1">
                 <span><i class="bi bi-mortarboard text-gold me-1"></i> Education (15%)</span>
-                <span class="text-white fw-bold font-mono">${scoreBreakdown.educationMatch}%</span>
+                <span class="text-ink fw-bold font-mono">${scoreBreakdown.educationMatch}%</span>
               </div>
               <div class="progress" style="height: 6px;">
                 <div class="progress-bar bg-warning" role="progressbar" style="width: ${scoreBreakdown.educationMatch}%;" aria-valuenow="${scoreBreakdown.educationMatch}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -315,11 +586,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="col-md-7">
               <div class="ai-brief-text small mb-2">
                 <i class="bi bi-stars text-cyan me-1"></i>
-                <strong class="text-white">Why You Fit:</strong> ${escapeHtml(aiBrief.whyYouFit)}
+                <strong class="text-ink">Why You Fit:</strong> ${escapeHtml(aiBrief.whyYouFit)}
               </div>
               ${aiBrief.actionableTip ? `
               <div class="ai-brief-tip small text-muted mt-2">
-                <strong class="text-white"><i class="bi bi-lightbulb-fill text-gold me-1"></i>Actionable Pro-Tip:</strong> ${escapeHtml(aiBrief.actionableTip)}
+                <strong class="text-ink"><i class="bi bi-lightbulb-fill text-gold me-1"></i>Actionable Pro-Tip:</strong> ${escapeHtml(aiBrief.actionableTip)}
               </div>` : ''}
             </div>
 
@@ -442,6 +713,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <button
               type="button"
+              class="btn what-if-btn btn-sm px-3 py-2 fw-semibold"
+              data-career-title="${escapeHtml(career.title)}"
+              data-career-slug="${escapeHtml(career.slug)}"
+            >
+              <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
+              <span>What-If Simulator</span>
+            </button>
+            <button
+              type="button"
               class="btn cp-btn-outline btn-sm px-3 py-2 fw-semibold view-jobs-btn"
               data-career-title="${escapeHtml(career.title)}"
               data-career-slug="${escapeHtml(career.slug)}"
@@ -461,6 +741,26 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         </div>
       `;
+
+      // Bind Future-Proof Info button click
+      const fpBtn = card.querySelector('.future-proof-info-btn');
+      if (fpBtn) {
+        fpBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const title = fpBtn.getAttribute('data-career-title');
+          const slug = fpBtn.getAttribute('data-career-slug');
+          const cat = fpBtn.getAttribute('data-career-category');
+          openFutureProofModal(title, slug, cat);
+        });
+      }
+
+      // Bind What-If Simulator button click
+      const whatIfBtn = card.querySelector('.what-if-btn');
+      if (whatIfBtn) {
+        whatIfBtn.addEventListener('click', () => {
+          openWhatIfSimulator(item);
+        });
+      }
 
       // Bind View Live Jobs button click
       const viewJobsBtn = card.querySelector('.view-jobs-btn');

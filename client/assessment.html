@@ -48,8 +48,8 @@
         <div class="notch-nav-island">
           <!-- Brand / Logo -->
           <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-            <div class="brand-icon">
-              <i class="bi bi-compass-fill"></i>
+            <div class="brand-icon p-1">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
             <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
@@ -232,18 +232,18 @@
               </div>
 
               <!-- Hackathon Judge 1-Click Profile Autofill -->
-              <div class="mb-4 p-3 rounded-2 glass-card border border-info border-opacity-25 bg-dark bg-opacity-50 d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+              <div class="mb-4 p-3 rounded-2 border border-line d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3" style="background: #F8FAFC;">
                 <div>
                   <div class="d-flex align-items-center gap-2 mb-1">
                     <span class="badge badge-teal font-monospace small"><i class="bi bi-award-fill me-1"></i> HACKATHON EVALUATION</span>
-                    <strong class="text-white small">Judge Quick-Fill Mode</strong>
+                    <strong class="text-ink small">Judge Quick-Fill Mode</strong>
                   </div>
                   <p class="text-muted small mb-0">Pre-populates an engineering student profile with academics, 4 verified interests, and 6 core tech skills.</p>
                 </div>
                 <button
                   type="button"
                   id="btnJudgeDemoFill"
-                  class="btn btn-outline-info btn-sm px-3 py-2 text-nowrap d-flex align-items-center gap-2 fw-semibold shadow-sm"
+                  class="btn cp-btn-outline btn-sm px-3 py-2 text-nowrap d-flex align-items-center gap-2 fw-semibold shadow-sm"
                 >
                   <i class="bi bi-lightning-charge-fill text-warning"></i>
                   <span>1-Click Fill Demo Profile</span>
@@ -345,7 +345,7 @@
                 <span class="small text-muted">
                   <i class="bi bi-info-circle me-1 text-teal"></i> Select topics that spark your passion.
                 </span>
-                <span class="small fw-bold text-white">
+                <span class="small fw-bold text-ink">
                   Selected: <span id="interestCount" class="text-teal">0</span> / 10
                 </span>
               </div>
@@ -426,7 +426,7 @@
               <!-- Custom Skill Addition Bar -->
               <div class="custom-skill-card p-3 rounded-2 stat-box-atlas mb-4 border border-line">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="small fw-semibold text-white">
+                  <span class="small fw-semibold text-ink">
                     <i class="bi bi-plus-circle-dotted text-teal me-1"></i> Don't see your skill? Add Custom Skill
                   </span>
                   <span class="badge badge-navy small">Universal Skill Input</span>
@@ -476,7 +476,7 @@
               <!-- Selected Skills Summary Box -->
               <div class="selected-skills-box mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="small fw-bold text-white">
+                  <span class="small fw-bold text-ink">
                     <i class="bi bi-check2-circle text-success me-1"></i> Your Selected Skills (<span id="selectedSkillsCount">0</span>/20):
                   </span>
                   <button type="button" id="clearAllSkillsBtn" class="btn btn-link text-danger btn-sm p-0 text-decoration-none small">
@@ -527,7 +527,7 @@
               <div class="p-3 rounded-2 stat-box-atlas mb-4">
                 <div class="d-flex align-items-center gap-2 mb-1">
                   <i class="bi bi-shield-check text-teal fs-5"></i>
-                  <strong class="text-white small">Ready to generate your Career Atlas</strong>
+                  <strong class="text-ink small">Ready to generate your Career Atlas</strong>
                 </div>
                 <p class="small text-muted mb-0">
                   Clicking "Find my career matches" submits your profile to our weighted matching algorithm. You will immediately see ranked career matches, detailed skill gap breakdowns, and customizable weekly roadmaps.
@@ -567,7 +567,7 @@
       <div class="container">
         <div class="row align-items-center g-3">
           <div class="col-md-6 text-center text-md-start">
-            <div class="footer-title fw-bold text-white">CareerPath AI — Career Atlas</div>
+            <div class="footer-title fw-bold text-ink">CareerPath AI — Career Atlas</div>
             <div class="text-muted small">ED-02 · AI Career Guidance & Skill Roadmap Platform</div>
           </div>
           <div class="col-md-6 text-center text-md-end">
