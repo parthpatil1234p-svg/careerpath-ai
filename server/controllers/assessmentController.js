@@ -10,7 +10,7 @@
 
 const User = require('../models/User');
 
-const ALLOWED_ASSESSMENT_FIELDS = ['education', 'interests', 'skills', 'careerGoals'];
+const ALLOWED_ASSESSMENT_FIELDS = ['education', 'interests', 'skills', 'careerGoals', 'hasCompletedSkillVerification'];
 
 // ── updateAssessment ───────────────────────────────────────────
 /**
@@ -68,6 +68,11 @@ const updateAssessment = async (req, res, next) => {
     const hasSkill = Array.isArray(updates.skills) && updates.skills.length > 0;
 
     updates.profileCompleted = Boolean(hasEducation && hasInterest && hasSkill);
+
+    // Persist one-time skill verification completion for account
+    if (req.body.hasCompletedSkillVerification || (Array.isArray(updates.skills) && updates.skills.some((s) => s.isQuizVerified))) {
+      updates.hasCompletedSkillVerification = true;
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
