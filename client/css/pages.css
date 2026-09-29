@@ -90,27 +90,27 @@
 }
 
 .hero-subtitle {
-  font-size: 1.125rem;
-  line-height: 1.7;
+  font-size: 1.25rem;
+  line-height: 1.75;
   color: var(--color-text-secondary);
-  margin-bottom: 2rem;
-  max-width: 580px;
+  margin-bottom: 2.25rem;
+  max-width: 760px;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  gap: 1.25rem;
+  margin-bottom: 2.75rem;
 }
 
 .hero-stats {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2rem;
-  padding-top: 1.75rem;
+  gap: 3rem;
+  padding-top: 2rem;
   border-top: 1px solid var(--color-border);
 }
 
@@ -121,16 +121,16 @@
 
 .stat-number {
   font-family: var(--font-mono);
-  font-size: 1.75rem;
+  font-size: 2.1rem;
   font-weight: 800;
   color: var(--color-indigo-700);
   line-height: 1.1;
 }
 
 .stat-label {
-  font-size: 0.825rem;
+  font-size: 0.95rem;
   color: var(--color-text-muted);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .stat-divider {
@@ -469,20 +469,27 @@
    3. Assessment Page (assessment.html) — Progressive Wizard
    -------------------------------------------------------------------------- */
 .assessment-layout {
-  padding: 2.5rem 0 4rem;
+  padding: 1.5rem 0 4rem;
 }
 
 .assessment-container {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2rem;
+  grid-template-columns: 310px 1fr;
+  gap: 2.25rem;
   align-items: start;
 }
 
 @media (min-width: 1200px) {
   .assessment-container {
-    grid-template-columns: 320px 1fr;
-    gap: 2.5rem;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .assessment-container {
+    grid-template-columns: 380px 1fr;
+    gap: 3.5rem;
   }
 }
 
@@ -497,24 +504,24 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
+  padding: 1.75rem;
   position: sticky;
-  top: 90px;
+  top: 115px;
   box-shadow: var(--shadow-sm);
 }
 
 .step-nav-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  gap: 1rem;
+  padding: 1.05rem 1.35rem;
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
-  font-size: 0.9rem;
+  font-size: 1.08rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
 }
 
 .step-nav-item:hover {
@@ -531,14 +538,16 @@
 
 .step-nav-num {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  width: 24px;
-  height: 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1.5px solid currentColor;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .assessment-step-panel {
@@ -553,14 +562,14 @@
 .interest-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
+  gap: 0.65rem;
+  padding: 0.85rem 1.5rem;
   border-radius: var(--radius-pill);
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   color: var(--color-text-secondary);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 1.02rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
@@ -576,14 +585,14 @@
   background: var(--color-surface-indigo);
   border-color: var(--color-indigo-500);
   color: var(--color-indigo-700);
-  font-weight: 600;
-  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.12);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.15);
 }
 
 /* Category Filter Buttons */
 .category-filter-btn {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.8rem;
+  padding: 0.5rem 1.15rem;
+  font-size: 0.92rem;
   font-weight: 600;
   border: 1px solid var(--color-border);
   background: #FFFFFF;
@@ -602,7 +611,7 @@
   background: var(--color-indigo-600);
   border-color: var(--color-indigo-600);
   color: #FFFFFF;
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
 }
 
 /* Skill Picker Card */
@@ -610,18 +619,43 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
+  padding: 0.95rem 1.25rem;
   transition: all var(--transition-fast);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  min-height: 58px;
 }
 
 .skill-picker-card:hover {
   border-color: #CBD5E1;
+  box-shadow: var(--shadow-sm);
 }
 
 .skill-picker-card.active-skill {
   border-color: var(--color-indigo-500);
   background: var(--color-surface-indigo);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12);
+}
+
+.skill-picker-card .form-check-label {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.skill-name-text {
+  display: inline;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.skill-proficiency-select {
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  min-width: 110px;
+  border-color: #CBD5E1;
 }
 
 /* --------------------------------------------------------------------------
@@ -631,8 +665,8 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 2.25rem;
-  margin-bottom: 2rem;
+  padding: 2.5rem;
+  margin-bottom: 2.25rem;
   position: relative;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
@@ -652,7 +686,7 @@
   background: var(--color-surface-blue);
   border: 1px solid #BFDBFE;
   border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.6rem;
   text-align: center;
 }
 
@@ -660,22 +694,23 @@
   background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 1.25rem;
+  padding: 1.5rem;
 }
 
 .why-recommended-banner {
   background: var(--color-surface-blue);
   border: 1px solid #BAE6FD;
   border-radius: var(--radius-sm);
-  padding: 0.85rem 1.25rem;
+  padding: 1rem 1.4rem;
   color: var(--color-text-secondary);
+  font-size: 1.02rem;
 }
 
 .gap-column {
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 1.25rem;
+  padding: 1.5rem;
   height: 100%;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
 }
@@ -688,7 +723,7 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 2rem;
+  padding: 2.25rem;
   margin-bottom: 2rem;
   box-shadow: var(--shadow-sm);
 }
@@ -697,8 +732,8 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 1.75rem;
-  margin-bottom: 1.25rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
 }
@@ -718,8 +753,8 @@
 }
 
 .week-badge-pill {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-sm);
   background: var(--color-indigo-600);
   color: #FFFFFF;
@@ -728,11 +763,11 @@
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .task-item {
-  padding: 0.85rem 1.15rem;
+  padding: 1.15rem 1.45rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: #FFFFFF;
@@ -747,6 +782,12 @@
 .task-item.is-completed {
   background: var(--color-success-bg);
   border-color: #BBF7D0;
+}
+
+.task-item .task-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .task-item.is-completed .task-title {

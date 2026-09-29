@@ -501,15 +501,15 @@ document.addEventListener('DOMContentLoaded', async () => {
               <i class="bi ${career.icon || 'bi-signpost-2-fill'} text-teal"></i>
               <span>${escapeHtml(career.title)}</span>
             </h2>
-            <p class="text-muted small mb-0" style="max-width: 650px;">
+            <p class="text-muted text-md mb-0">
               ${escapeHtml(career.shortDescription)}
             </p>
-            <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
-              <div class="future-proof-pill d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill">
+            <div class="mt-3 d-flex align-items-center gap-2 flex-wrap">
+              <div class="future-proof-pill d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill">
                 <i class="bi bi-shield-check text-cyan"></i>
-                <span class="small fw-semibold text-ink" style="font-size: 0.78rem;">Future-Proof:</span>
-                <span class="badge font-mono ${fpMetrics.score >= 88 ? 'bg-success' : 'bg-primary'}" style="font-size: 0.72rem;">${fpMetrics.score}/100</span>
-                <span class="text-muted font-mono" style="font-size: 0.72rem;">· ${fpMetrics.rating}</span>
+                <span class="fw-semibold text-ink" style="font-size: 0.88rem;">Future-Proof:</span>
+                <span class="badge font-mono ${fpMetrics.score >= 88 ? 'bg-success' : 'bg-primary'}" style="font-size: 0.82rem;">${fpMetrics.score}/100</span>
+                <span class="text-muted font-mono" style="font-size: 0.82rem;">· ${fpMetrics.rating}</span>
                 <button type="button" class="btn btn-link p-0 text-cyan ms-1 future-proof-info-btn" data-career-title="${escapeHtml(career.title)}" data-career-slug="${escapeHtml(career.slug || '')}" data-career-category="${escapeHtml(career.category || '')}" title="View Future-Proof Score formula & breakdown">
                   <i class="bi bi-info-circle"></i>
                 </button>
@@ -523,10 +523,10 @@ document.addEventListener('DOMContentLoaded', async () => {
               <div class="display-6 fw-bold text-primary font-mono">
                 ${finalScore}%
               </div>
-              <div class="text-muted small font-mono text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.05em;">
+              <div class="text-muted font-mono text-uppercase" style="font-size: 0.82rem; letter-spacing: 0.05em; font-weight: 600;">
                 Career Fit
               </div>
-              <div class="text-muted" style="font-size: 0.65rem;">Based on skills, interests, education</div>
+              <div class="text-muted" style="font-size: 0.78rem;">Based on skills, interests, education</div>
             </div>
           </div>
         </div>
@@ -637,13 +637,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                   ${
                     matchedSkills.length > 0
                       ? matchedSkills
-                          .map(
-                            (s) => `
-                        <span class="badge skill-pill matched-pill" title="Proficiency: ${s.userProficiency}">
-                          <i class="bi bi-check2"></i> ${escapeHtml(s.displayName)}
-                        </span>
-                      `
-                          )
+                          .map((s) => {
+                            const isVer = Boolean(s.isQuizVerified || s.isCodeVerified);
+                            const verIcon = s.isQuizVerified ? 'bi-patch-check-fill text-primary' : s.isCodeVerified ? 'bi-github text-primary' : 'bi-check2 text-leaf';
+                            const badgeTag = isVer
+                              ? `<span class="badge-verified-tiny">${s.isQuizVerified ? 'Quiz Verified' : 'Code Verified'}</span>`
+                              : `<span class="badge-self-tiny">70% Conf</span>`;
+                            return `
+                              <span class="badge skill-pill matched-pill ${isVer ? 'border-primary' : ''}" title="${isVer ? 'Verified Competency (100% confidence weight)' : 'Self-rated (70% confidence weight)'} · Level: ${s.userProficiency}">
+                                <i class="bi ${verIcon}"></i> ${escapeHtml(s.displayName)} ${badgeTag}
+                              </span>
+                            `;
+                          })
                           .join('')
                       : '<span class="text-muted small fst-italic">None matched yet</span>'
                   }
@@ -663,13 +668,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                   ${
                     weakSkills.length > 0
                       ? weakSkills
-                          .map(
-                            (s) => `
-                        <span class="badge skill-pill weak-pill" title="Current: ${s.userProficiency}, Required: ${s.requiredProficiency}">
-                          <i class="bi bi-arrow-up"></i> ${escapeHtml(s.displayName)}
-                        </span>
-                      `
-                          )
+                          .map((s) => {
+                            const hasGaps = Array.isArray(s.quizGaps) && s.quizGaps.length > 0;
+                            const gapTooltip = hasGaps ? ` · Reality-check focus areas: ${s.quizGaps.join(', ')}` : '';
+                            return `
+                              <span class="badge skill-pill weak-pill" title="Current: ${s.userProficiency}, Required: ${s.requiredProficiency}${gapTooltip}">
+                                <i class="bi bi-arrow-up"></i> ${escapeHtml(s.displayName)}
+                                ${hasGaps ? '<span class="badge bg-danger-subtle text-danger ms-1 font-mono" style="font-size: 0.6rem;">Focus: ' + escapeHtml(s.quizGaps[0]) + '</span>' : ''}
+                              </span>
+                            `;
+                          })
                           .join('')
                       : '<span class="text-muted small fst-italic">No skills needing upgrades</span>'
                   }

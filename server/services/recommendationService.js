@@ -86,9 +86,13 @@ const calculateSkillScore = (userSkillsMap, careerRequiredSkills) => {
       const userProficiency = normalizeText(userSkill.proficiency) || 'beginner';
       const userProficiencyValue = PROFICIENCY_VALUES[userProficiency] || 1;
 
+      // Verified skills (via quiz or code) count at 100% weight; self-rated skills count at 70% confidence
+      const isVerified = Boolean(userSkill.isQuizVerified || userSkill.isCodeVerified);
+      const confidenceWeight = isVerified ? 1.0 : 0.70;
+
       // Ratio capped at 1.0 (over-qualification does not artificially inflate score)
       const proficiencyRatio = Math.min(userProficiencyValue / requiredProficiencyValue, 1);
-      const weightedEarned = importanceWeight * proficiencyRatio;
+      const weightedEarned = importanceWeight * proficiencyRatio * confidenceWeight;
       totalWeightedEarnedPoints += weightedEarned;
 
       const skillDetail = {
@@ -98,6 +102,11 @@ const calculateSkillScore = (userSkillsMap, careerRequiredSkills) => {
         importance,
         requiredProficiency,
         userProficiency,
+        isQuizVerified: Boolean(userSkill.isQuizVerified),
+        isCodeVerified: Boolean(userSkill.isCodeVerified),
+        selfRatedProficiency: userSkill.selfRatedProficiency || null,
+        quizGaps: Array.isArray(userSkill.quizGaps) ? userSkill.quizGaps : [],
+        confidenceScore: isVerified ? 100 : 70,
       };
 
       if (userProficiencyValue >= requiredProficiencyValue) {
@@ -226,6 +235,12 @@ const generateRecommendations = (user, careers, limit = 3) => {
           name,
           displayName: s.displayName || s.name,
           proficiency: normalizeText(s.proficiency) || 'beginner',
+          selfRatedProficiency: s.selfRatedProficiency || null,
+          isQuizVerified: Boolean(s.isQuizVerified),
+          isCodeVerified: Boolean(s.isCodeVerified),
+          verifiedProficiency: s.verifiedProficiency || null,
+          quizScore: s.quizScore != null ? s.quizScore : null,
+          quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
         });
       }
     });

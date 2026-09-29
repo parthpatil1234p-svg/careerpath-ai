@@ -306,9 +306,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         icon = 'bi-arrow-up-circle-fill text-warning';
       }
 
-      const verifiedBadge = s.isCodeVerified
-        ? `<span class="badge-code-verified ms-1" title="Verified from real GitHub repository code"><i class="bi bi-github"></i> Verified</span>`
-        : '';
+      const sKey = (s.name || '').toLowerCase();
+      const verifiedBadge = s.isQuizVerified
+        ? `<span class="badge-quiz-verified ms-1" title="Reality-Check Quiz Verified · 100% Recommendation Weight"><i class="bi bi-patch-check-fill text-indigo"></i> Quiz Verified</span>`
+        : s.isCodeVerified
+        ? `<span class="badge-code-verified ms-1" title="Verified from real GitHub repository code"><i class="bi bi-github"></i> Code Verified</span>`
+        : ['javascript', 'python', 'sql'].includes(sKey)
+        ? `<a href="quiz.html?skill=${sKey}" class="badge-verify-cta ms-1 text-decoration-none" title="Verify this skill in 2 mins to unlock 100% match weight"><i class="bi bi-speedometer2"></i> Verify (70%)</a>`
+        : `<span class="badge-self-rated ms-1" title="Self-rated (70% weight)"><i class="bi bi-person"></i> Self-Rated</span>`;
 
       return `
         <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2 stat-box-atlas border border-line">

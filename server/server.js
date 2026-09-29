@@ -61,6 +61,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const skillRoutes = require('./routes/skillRoutes');
+const quizRoutes = require('./routes/quizRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect to MongoDB Atlas ───────────────────────────────
@@ -234,6 +235,9 @@ app.use('/api/jobs', jobRoutes);
 
 // Skills Directory & Custom Skill Catalog (Step 5 - Competency Intelligence)
 app.use('/api/skills', skillRoutes);
+
+// Adaptive Skill Reality-Check Micro-Quiz
+app.use('/api/quiz', quizRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

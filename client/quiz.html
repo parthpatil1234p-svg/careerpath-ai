@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Adaptive Skill Reality-Check Micro-Quiz — CareerPath AI · Verify your skills with dynamic questions"
+    />
+    <meta name="theme-color" content="#FFFFFF" />
+    <title>Skill Reality-Check Quiz — CareerPath AI</title>
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="assessment-page">
+    <!-- ============================================================
+         NOTCH NAVBAR
+         ============================================================ -->
+    <nav class="cp-navbar-notch" id="mainNav">
+      <div class="container">
+        <div class="notch-nav-island">
+          <!-- Brand / Logo -->
+          <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+            <div class="brand-icon p-1">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
+            </div>
+            <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
+          </a>
+
+          <!-- Desktop Center Links -->
+          <ul class="notch-nav-links d-none d-lg-flex">
+            <li>
+              <a href="careers.html" class="notch-link">
+                <i class="bi bi-compass"></i>
+                <span>Explore</span>
+              </a>
+            </li>
+            <li>
+              <a href="assessment.html" class="notch-link">
+                <i class="bi bi-ui-checks-grid"></i>
+                <span>Assessment</span>
+              </a>
+            </li>
+            <li>
+              <a href="recommendations.html" class="notch-link">
+                <i class="bi bi-stars"></i>
+                <span>Matches</span>
+              </a>
+            </li>
+            <li>
+              <a href="roadmap.html" class="notch-link">
+                <i class="bi bi-bezier2"></i>
+                <span>Roadmap</span>
+              </a>
+            </li>
+            <li>
+              <a href="dashboard.html" class="notch-link">
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+          </ul>
+
+          <!-- User / Auth Profile -->
+          <div class="notch-auth-cluster">
+            <div id="authNavActions" class="d-flex align-items-center gap-2">
+              <a href="login.html" class="btn btn-sm btn-outline-secondary">Log In</a>
+              <a href="register.html" class="btn btn-sm cp-btn-primary">Sign Up</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="quiz-page-container">
+      <div class="container">
+        <!-- Title Banner -->
+        <div class="text-center mb-4" style="max-width: 680px; margin: 0 auto;">
+          <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-surface-indigo border border-indigo-subtle text-primary font-monospace small mb-2">
+            <i class="bi bi-patch-check-fill text-indigo"></i>
+            <span>Skill Reality-Check · You Said vs. Quiz Says</span>
+          </div>
+          <h1 class="h3 fw-bold text-ink mb-2">Adaptive Skill Verification</h1>
+          <p class="text-muted small mb-0">
+            6 quick adaptive questions to test what you know, not what you think. Verified skills count with <strong>100% confidence weight</strong> in your career recommendations.
+          </p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="quizAlertContainer" class="mx-auto" style="max-width: 820px;"></div>
+
+        <!-- Skill Selector Tabs -->
+        <div class="mx-auto mb-3" style="max-width: 820px;">
+          <div class="skill-selector-tabs" id="skillSelectorTabs">
+            <!-- Dynamically populated or default skills -->
+          </div>
+        </div>
+
+        <!-- Master Quiz Card -->
+        <div class="quiz-card" id="quizCard">
+
+          <!-- ── SCREEN 1: INTRO / PREVIEW ────────────────────────── -->
+          <div id="screenIntro" class="quiz-body">
+            <div class="row align-items-center g-4 mb-4">
+              <div class="col-md-7">
+                <span class="badge badge-navy text-uppercase font-mono mb-2" id="introSkillCategory">Core Technical Competency</span>
+                <h2 class="h4 fw-bold text-ink mb-2" id="introSkillTitle">JavaScript Reality-Check</h2>
+                <p class="text-secondary small mb-3" id="introSkillDesc">
+                  You self-rated this skill as <strong class="text-primary" id="introSelfRatedProficiency">Intermediate</strong>. Take this 2-minute reality-check to confirm your knowledge level and earn your verified badge.
+                </p>
+
+                <div class="p-3 rounded-2 bg-surface-muted border border-line mb-3">
+                  <div class="fw-semibold text-ink small mb-2">
+                    <i class="bi bi-shield-check text-indigo me-1"></i> How the Reality-Check Works:
+                  </div>
+                  <ul class="text-muted small ps-3 mb-0" style="font-size: 0.82rem; line-height: 1.6;">
+                    <li><strong>Adaptive Difficulty:</strong> Answer right, the next question gets harder. Answer wrong, it gets easier.</li>
+                    <li><strong>Instant Feedback:</strong> See right away whether you're correct plus a 1-line educational takeaway.</li>
+                    <li><strong>Reality-Check Verdict:</strong> Compare what you claimed vs what the quiz proved.</li>
+                    <li><strong>100% Match Weight:</strong> Boosts this skill from 70% self-rated confidence to 100% verified confidence.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-md-5 text-center">
+                <div class="p-4 rounded-3 border border-indigo-subtle bg-surface-indigo">
+                  <div class="display-5 text-primary mb-2">
+                    <i class="bi bi-speedometer2"></i>
+                  </div>
+                  <div class="h6 fw-bold text-ink mb-1">6 Adaptive Questions</div>
+                  <div class="text-muted small mb-3">Estimated time: ~2 minutes</div>
+                  <div class="d-flex justify-content-center gap-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle">Easy</span>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Medium</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Hard</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pt-3 border-top border-line">
+              <a href="recommendations.html" class="btn btn-link text-muted small text-decoration-none">
+                <i class="bi bi-arrow-left me-1"></i> Skip to Recommendations
+              </a>
+              <button type="button" class="btn cp-btn-primary px-4 py-2" id="btnStartQuiz">
+                <span>Start 2-Min Reality-Check</span>
+                <i class="bi bi-lightning-charge-fill ms-1"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── SCREEN 2: ACTIVE ADAPTIVE QUESTION ───────────────── -->
+          <div id="screenQuiz" class="d-none">
+            <!-- Header Meta Bar -->
+            <div class="quiz-header-bar">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-navy font-mono" id="activeSkillBadge">JAVASCRIPT</span>
+                <span class="text-secondary small font-mono">
+                  Question <strong class="text-ink" id="qCurrent">1</strong> of <strong class="text-ink" id="qTotal">6</strong>
+                </span>
+              </div>
+
+              <!-- Difficulty Pill -->
+              <div class="d-flex align-items-center gap-2">
+                <span class="difficulty-pill medium" id="difficultyPill">
+                  <i class="bi bi-speedometer2"></i>
+                  <span id="difficultyLabel">Medium</span>
+                </span>
+              </div>
+
+              <!-- Stepper Dots -->
+              <div class="quiz-stepper" id="quizStepper">
+                <div class="quiz-step-dot active"></div>
+                <div class="quiz-step-dot"></div>
+                <div class="quiz-step-dot"></div>
+                <div class="quiz-step-dot"></div>
+                <div class="quiz-step-dot"></div>
+                <div class="quiz-step-dot"></div>
+              </div>
+            </div>
+
+            <!-- Question Body -->
+            <div class="quiz-body">
+              <h2 class="quiz-question-title" id="questionPrompt">Loading question...</h2>
+
+              <!-- Code Snippet -->
+              <pre class="quiz-code-block d-none" id="questionCode"><code></code></pre>
+
+              <!-- Option Cards -->
+              <div class="quiz-options-list" id="optionsContainer">
+                <!-- Dynamically generated options -->
+              </div>
+
+              <!-- Instant Feedback Banner -->
+              <div class="quiz-feedback-box d-none" id="feedbackBox">
+                <div class="quiz-feedback-icon" id="feedbackIcon">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="quiz-feedback-content">
+                  <strong id="feedbackTitle">Correct!</strong>
+                  <p id="feedbackText">Explanation will appear here.</p>
+                </div>
+              </div>
+
+              <!-- Bottom Actions -->
+              <div class="d-flex justify-content-between align-items-center pt-3 border-top border-line">
+                <div class="text-muted small font-mono" id="topicTag">
+                  Topic: <span id="topicName" class="text-secondary">Core Foundations</span>
+                </div>
+
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn cp-btn-primary px-4 py-2" id="btnSubmitAnswer" disabled>
+                    <span>Submit Answer</span>
+                    <i class="bi bi-check2 ms-1"></i>
+                  </button>
+                  <button type="button" class="btn btn-navy px-4 py-2 d-none" id="btnNextQuestion">
+                    <span>Next Question</span>
+                    <i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SCREEN 3: REALITY-CHECK VERDICT ─────────────────── -->
+          <div id="screenVerdict" class="quiz-body d-none">
+            <!-- Trophy Banner -->
+            <div class="verified-trophy-banner">
+              <div class="trophy-icon-wrapper">
+                <i class="bi bi-patch-check-fill"></i>
+              </div>
+              <div>
+                <h3 class="h5 fw-bold text-ink mb-1">Reality-Check Complete!</h3>
+                <p class="text-secondary small mb-0">
+                  You've completed the adaptive micro-quiz. Here is how your self-rating compares with your proven quiz score.
+                </p>
+              </div>
+            </div>
+
+            <!-- Side-by-side Comparison Grid -->
+            <div class="verdict-comparison-grid">
+              <div class="verdict-box">
+                <div class="verdict-label">You Said (Self-Rated)</div>
+                <div class="verdict-val" id="verdictClaimed">Advanced</div>
+                <span class="badge badge-gold mt-2 font-mono">Self-Claimed</span>
+              </div>
+
+              <div class="verdict-vs-badge">VS</div>
+
+              <div class="verdict-box verified">
+                <div class="verdict-label">Quiz Says (Proven)</div>
+                <div class="verdict-val text-highlight" id="verdictActual">Intermediate</div>
+                <span class="badge badge-leaf mt-2 font-mono"><i class="bi bi-check2 me-1"></i>Verified</span>
+              </div>
+            </div>
+
+            <!-- Reality-Check Summary Rationale -->
+            <div class="p-3 rounded-2 bg-surface-muted border border-line mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-semibold text-ink small">
+                  <i class="bi bi-bar-chart-fill text-primary me-1"></i> Performance Breakdown
+                </span>
+                <span class="font-mono small text-muted" id="verdictScore">Score: 4 / 6 Correct</span>
+              </div>
+              <p class="text-secondary small mb-2" id="verdictMessage">
+                Your knowledge was validated by the adaptive engine.
+              </p>
+
+              <!-- Identified Gaps Chips -->
+              <div id="verdictGapsSection" class="pt-2 border-top border-line">
+                <span class="text-muted small fw-semibold d-block mb-1">
+                  <i class="bi bi-lightbulb-fill text-warning me-1"></i> Priority Focus Areas to Practice:
+                </span>
+                <div class="gaps-container" id="verdictGapsList">
+                  <!-- e.g. <span class="gap-pill">closures</span> -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommendation Boost Notice -->
+            <div class="p-3 rounded-2 bg-surface-indigo border border-indigo-subtle mb-4">
+              <div class="d-flex align-items-start gap-2">
+                <i class="bi bi-stars text-primary fs-5 mt-0.5"></i>
+                <div>
+                  <div class="fw-semibold text-ink small">100% Recommendation Weight Unlocked</div>
+                  <div class="text-muted small" style="font-size: 0.82rem;">
+                    This skill will now be weighted at <strong>100% confidence</strong> in the 60/25/15 career match algorithm instead of standard 70% self-rated confidence.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pt-3 border-top border-line">
+              <button type="button" class="btn btn-outline-secondary px-3 py-2" id="btnQuizAnotherSkill">
+                <i class="bi bi-arrow-repeat me-1"></i> Verify Another Skill
+              </button>
+              <a href="recommendations.html" class="btn cp-btn-primary px-4 py-2">
+                <span>View Updated Career Recommendations</span>
+                <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="atlas-footer py-4 mt-5 border-top border-line">
+      <div class="container">
+        <div class="row align-items-center g-3">
+          <div class="col-md-6 text-center text-md-start">
+            <div class="footer-title fw-bold text-ink">CareerPath AI — Career Atlas</div>
+            <div class="text-muted small">ED-02 · AI Career Guidance & Skill Roadmap Platform</div>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <span class="badge badge-teal font-monospace me-2">Hack2Ignite 2026–27</span>
+            <span class="badge badge-navy font-monospace px-3 py-1">Team: 404 Brain Not Found</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/animated-icons.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/chat.js"></script>
+  </body>
+</html>

@@ -384,23 +384,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         : '';
 
       const col = document.createElement('div');
-      col.className = 'col-sm-6 col-md-4';
+      col.className = 'col-12 col-lg-6';
       col.innerHTML = `
         <div class="skill-picker-card ${isSelected ? 'active-skill' : ''}">
-          <div class="d-flex align-items-center justify-content-between gap-2">
-            <div class="form-check m-0 flex-grow-1 text-truncate">
+          <div class="d-flex align-items-center justify-content-between gap-3 w-100">
+            <div class="form-check m-0 flex-grow-1 d-flex align-items-center gap-2" style="min-width: 0;">
               <input
-                class="form-check-input skill-checkbox"
+                class="form-check-input skill-checkbox flex-shrink-0"
                 type="checkbox"
                 id="skill_${skill.name}"
                 ${isSelected ? 'checked' : ''}
               />
-              <label class="form-check-label text-truncate fw-medium d-inline-flex align-items-center gap-1" for="skill_${skill.name}" title="${skill.displayName}">
-                <span class="text-truncate">${skill.displayName}</span>
+              <label class="form-check-label fw-semibold text-ink m-0 d-inline-flex align-items-center gap-1.5" for="skill_${skill.name}" title="${skill.displayName}" style="min-width: 0; cursor: pointer;">
+                <span class="skill-name-text">${skill.displayName}</span>
                 ${verifiedBadge}
               </label>
             </div>
-            <select class="form-select form-select-sm skill-proficiency-select"
+            <select class="form-select form-select-sm skill-proficiency-select flex-shrink-0"
                     aria-label="${skill.displayName} proficiency level"
                     ${!isSelected ? 'disabled' : ''}>
               <option value="beginner" ${currentProficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
@@ -897,12 +897,22 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.Auth.setCurrentUser(response.data.user);
         }
 
-        showAlert('Assessment saved! Directing you to your recommendations...', 'success');
-        resetSubmitBtn();
+        const userSkillNames = Array.from(selectedSkillsMap.keys()).map((k) => k.toLowerCase());
+        const eligibleQuizSkill = ['javascript', 'python', 'sql'].find((s) => userSkillNames.includes(s));
 
-        setTimeout(() => {
-          window.location.href = 'recommendations.html';
-        }, 600);
+        if (eligibleQuizSkill) {
+          showAlert(`Assessment saved! Loading 2-minute reality-check for ${eligibleQuizSkill.toUpperCase()}...`, 'success');
+          resetSubmitBtn();
+          setTimeout(() => {
+            window.location.href = `quiz.html?skill=${eligibleQuizSkill}&from=assessment`;
+          }, 700);
+        } else {
+          showAlert('Assessment saved! Directing you to your recommendations...', 'success');
+          resetSubmitBtn();
+          setTimeout(() => {
+            window.location.href = 'recommendations.html';
+          }, 600);
+        }
       } else {
         showAlert(response.message || 'Failed to submit assessment.');
         resetSubmitBtn();

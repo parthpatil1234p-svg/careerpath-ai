@@ -14,7 +14,13 @@
  */
 
 const User = require('../models/User');
-const { QUIZ_QUESTIONS, getQuestion, getQuestionById } = require('../data/quizQuestions');
+const {
+  QUIZ_QUESTIONS,
+  AVAILABLE_QUIZ_SKILLS,
+  normalizeSkillKey,
+  getQuestion,
+  getQuestionById,
+} = require('../data/quizQuestions');
 
 // In-memory active session store (keyed by `${userId}_${skill}`)
 const activeSessions = new Map();
@@ -23,9 +29,9 @@ const activeSessions = new Map();
  * Start an adaptive quiz session for a user and skill
  */
 async function startQuizSession(userId, skill) {
-  const normalizedSkill = (skill || '').toLowerCase().trim();
+  const normalizedSkill = normalizeSkillKey(skill);
   if (!QUIZ_QUESTIONS[normalizedSkill]) {
-    throw new Error(`Quiz is currently available for JavaScript, Python, and SQL. Selected: "${skill}"`);
+    throw new Error(`Quiz is available for: ${AVAILABLE_QUIZ_SKILLS.join(', ')}. Selected: "${skill}"`);
   }
 
   const user = await User.findById(userId);
@@ -50,7 +56,7 @@ async function startQuizSession(userId, skill) {
     displayName: existingSkill?.displayName || normalizedSkill.toUpperCase(),
     selfRated,
     currentStep: 1,
-    totalSteps: 6,
+    totalSteps: 5,
     currentDifficulty: 'medium',
     currentQuestionId: firstQuestion.id,
     answeredQuestions: [], // history of { id, difficulty, selectedIndex, isCorrect, topic }
@@ -64,16 +70,23 @@ async function startQuizSession(userId, skill) {
 
   // Return first question payload (sanitized without correctIndex)
   return {
+    sessionId: sessionKey,
     skill: normalizedSkill,
     displayName: sessionData.displayName,
+    selfRatedProficiency: selfRated,
     selfRated,
+    questionIndex: 1,
     currentStep: 1,
-    totalSteps: 6,
+    totalQuestions: 5,
+    totalSteps: 5,
+    currentDifficulty: 'medium',
     difficulty: 'medium',
     question: {
       id: firstQuestion.id,
       topic: firstQuestion.topic,
       text: firstQuestion.question,
+      prompt: firstQuestion.question,
+      codeSnippet: firstQuestion.codeSnippet || null,
       options: firstQuestion.options
     }
   };
@@ -83,7 +96,7 @@ async function startQuizSession(userId, skill) {
  * Submit an answer, receive immediate validation + explanation, and fetch next adaptive question
  */
 async function submitAnswer(userId, skill, questionId, selectedIndex) {
-  const normalizedSkill = (skill || '').toLowerCase().trim();
+  const normalizedSkill = normalizeSkillKey(skill);
   const sessionKey = `${userId}_${normalizedSkill}`;
   const session = activeSessions.get(sessionKey);
 
@@ -132,9 +145,13 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
     return {
       isCorrect,
       correctIndex: question.correctIndex,
+      correctAnswer: question.correctIndex,
       explanation: question.explanation,
       isFinished: true,
-      summary
+      isCompleted: true,
+      currentScore: session.score,
+      summary,
+      result: summary
     };
   }
 
@@ -160,8 +177,11 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
   return {
     isCorrect,
     correctIndex: question.correctIndex,
+    correctAnswer: question.correctIndex,
     explanation: question.explanation,
     isFinished: false,
+    isCompleted: false,
+    currentScore: session.score,
     nextStep: session.currentStep,
     totalSteps: session.totalSteps,
     nextDifficulty: nextDiff,
@@ -169,6 +189,9 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
       id: nextQ.id,
       topic: nextQ.topic,
       text: nextQ.question,
+      prompt: nextQ.question,
+      codeSnippet: nextQ.codeSnippet || null,
+      difficulty: nextDiff,
       options: nextQ.options
     }
   };
@@ -186,14 +209,14 @@ async function finalizeQuiz(userId, skill, session) {
   const hardCorrect = session.hardCorrectCount;
   const gapsArray = Array.from(session.identifiedGaps);
 
-  // Rubric:
-  // Advanced: At least 3 Hard questions answered correctly (proves mastery, prevents lucky guesses)
-  // Intermediate: Score >= 3 (at least 3 Medium or Hard correct)
-  // Beginner: Otherwise
+  // Rubric for 5-question adaptive micro-checks:
+  // Advanced: At least 2 Hard questions correct AND score >= 3 (or overall score >= 4)
+  // Intermediate: Score >= 2 (or at least 1 Hard correct)
+  // Beginner: Otherwise (score <= 1)
   let verifiedLevel = 'beginner';
-  if (hardCorrect >= 3) {
+  if ((hardCorrect >= 2 && score >= 3) || score >= 4) {
     verifiedLevel = 'advanced';
-  } else if (score >= 3) {
+  } else if (score >= 2 || hardCorrect >= 1) {
     verifiedLevel = 'intermediate';
   } else {
     verifiedLevel = 'beginner';
@@ -259,14 +282,20 @@ async function finalizeQuiz(userId, skill, session) {
     displayName: session.displayName || capitalize(skill),
     score,
     total: totalAnswered,
+    totalQuestions: totalAnswered,
     hardCorrect,
     selfRated: selfRated.toLowerCase(),
+    selfRatedProficiency: selfRated.toLowerCase(),
     quizSays: verifiedLevel,
+    verifiedProficiency: verifiedLevel,
     comparisonStatus,
     identifiedGaps: gapsArray,
+    gaps: gapsArray,
     summaryMessage,
+    realityCheckMessage: summaryMessage,
     isQuizVerified: true,
-    verifiedAt: new Date()
+    verifiedAt: new Date(),
+    user
   };
 }
 

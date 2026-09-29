@@ -4,28 +4,32 @@
    CareerPath AI · Team: 404 Brain Not Found
    ========================================================================== */
 
-/* Global Container Constraints */
+/* Global Container Constraints — Optimized to fill modern screens while maintaining readability */
 :root {
-  --container-max-width: 1240px;
+  --container-max-width: 1400px;
 }
 
 @media (min-width: 1200px) {
   :root {
-    --container-max-width: 1260px;
+    --container-max-width: 1520px;
   }
 }
 
 @media (min-width: 1400px) {
   :root {
-    --container-max-width: 1280px;
+    --container-max-width: 1680px;
   }
-  .container,
-  .container-lg,
-  .container-xl,
-  .container-xxl {
-    max-width: var(--container-max-width) !important;
-    padding-left: 2rem;
-    padding-right: 2rem;
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --container-max-width: 1820px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --container-max-width: 1920px;
   }
 }
 
@@ -33,15 +37,16 @@
 .container-lg,
 .container-xl,
 .container-xxl {
-  max-width: var(--container-max-width);
+  max-width: var(--container-max-width) !important;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  width: 100%;
 }
 
 .container-narrow {
-  max-width: 960px;
+  max-width: 1260px;
   margin-left: auto;
   margin-right: auto;
 }

@@ -178,11 +178,18 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
       const validTypes = ['learn', 'practice', 'project', 'assessment', 'interview'];
       const sanitizedType = validTypes.includes(task.type) ? task.type : 'practice';
 
+      const taskSkillKey = (task.skillName || '').toLowerCase().trim();
+      const userSkillData = userSkillsMap.get(taskSkillKey);
+      let taskDescription = task.description;
+      if (userSkillData && Array.isArray(userSkillData.quizGaps) && userSkillData.quizGaps.length > 0) {
+        taskDescription += ` • Targeted Focus Areas from Reality-Check Quiz: ${userSkillData.quizGaps.join(', ')}.`;
+      }
+
       taskDocuments.push({
         weekNumber: week.weekNumber,
         order: idx + 1,
         title: task.title,
-        description: task.description,
+        description: taskDescription,
         type: sanitizedType,
         skillName: task.skillName || '',
         priority: task.priority || 'medium',

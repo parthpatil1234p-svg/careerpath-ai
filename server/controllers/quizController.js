@@ -6,6 +6,7 @@
 
 const quizService = require('../services/quizService');
 const User = require('../models/User');
+const { AVAILABLE_QUIZ_SKILLS } = require('../data/quizQuestions');
 
 /**
  * POST /api/quiz/start
@@ -32,15 +33,22 @@ exports.startQuiz = async (req, res) => {
  */
 exports.submitAnswer = async (req, res) => {
   try {
-    const { skill, questionId, selectedIndex } = req.body;
-    if (!skill || !questionId || selectedIndex === undefined) {
+    const { skill, questionId, selectedIndex, selectedOption, sessionId } = req.body;
+    const choice = selectedIndex !== undefined ? selectedIndex : selectedOption;
+
+    let targetSkill = skill;
+    if (!targetSkill && sessionId && sessionId.includes('_')) {
+      targetSkill = sessionId.split('_').slice(1).join('_');
+    }
+
+    if (!targetSkill || !questionId || choice === undefined) {
       return res.status(400).json({
         success: false,
-        message: 'skill, questionId, and selectedIndex are required'
+        message: 'skill (or sessionId), questionId, and selectedIndex (or selectedOption) are required'
       });
     }
 
-    const result = await quizService.submitAnswer(req.user.id, skill, questionId, selectedIndex);
+    const result = await quizService.submitAnswer(req.user.id, targetSkill, questionId, choice);
     return res.status(200).json({ success: true, data: result });
   } catch (err) {
     console.error('[QuizController.submitAnswer] Error:', err.message);
@@ -59,14 +67,14 @@ exports.getQuizStatus = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    const eligibleSkills = ['javascript', 'python', 'sql'];
+    const eligibleSkills = AVAILABLE_QUIZ_SKILLS || ['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'];
     const userSkills = user.skills || [];
 
     const statusList = eligibleSkills.map((name) => {
       const match = userSkills.find((s) => (s.name || '').toLowerCase() === name);
       return {
         skill: name,
-        displayName: match?.displayName || (name === 'sql' ? 'SQL' : name.charAt(0).toUpperCase() + name.slice(1)),
+        displayName: match?.displayName || (name === 'sql' ? 'SQL' : name === 'html' ? 'HTML' : name === 'css' ? 'CSS' : name === 'node.js' ? 'Node.js' : name.charAt(0).toUpperCase() + name.slice(1)),
         isClaimed: !!match,
         selfRated: match?.selfRatedProficiency || match?.proficiency || null,
         isQuizVerified: !!match?.isQuizVerified,
@@ -81,6 +89,7 @@ exports.getQuizStatus = async (req, res) => {
       success: true,
       data: {
         skills: statusList,
+        availableQuizSkills: eligibleSkills,
         totalVerified: statusList.filter((s) => s.isQuizVerified).length
       }
     });
