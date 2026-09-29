@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const verdictGapsSection = document.getElementById('verdictGapsSection');
   const verdictGapsList = document.getElementById('verdictGapsList');
   const btnQuizAnotherSkill = document.getElementById('btnQuizAnotherSkill');
+  const btnRetestCurrentSkill = document.getElementById('btnRetestCurrentSkill');
 
   // 3. State
   const SUPPORTED_SKILLS = [
@@ -662,7 +663,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  // 13. Verify Another Skill
+  // 13. Retest Current Skill
+  if (btnRetestCurrentSkill) {
+    btnRetestCurrentSkill.addEventListener('click', () => {
+      if (activeSkillKey) {
+        screenVerdict.classList.add('d-none');
+        screenIntro.classList.remove('d-none');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+        loadIntroForSkill(activeSkillKey);
+        // Automatically start fresh quiz session
+        if (btnStartQuiz) {
+          btnStartQuiz.click();
+        }
+      }
+    });
+  }
+
+  // 14. Verify Another Skill
   if (btnQuizAnotherSkill) {
     btnQuizAnotherSkill.addEventListener('click', () => {
       // Find next unverified skill

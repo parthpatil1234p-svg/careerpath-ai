@@ -707,6 +707,29 @@
   color: #FFFFFF;
 }
 
+.btn-retest-check {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #C7D2FE;
+  background: #EEF2FF;
+  color: #4F46E5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-retest-check:hover {
+  background: #4F46E5;
+  color: #FFFFFF;
+  border-color: #4F46E5;
+  transform: translateY(-1px);
+}
+
 .prove-skills-progress-bar {
   height: 6px;
   background: #E2E8F0;
