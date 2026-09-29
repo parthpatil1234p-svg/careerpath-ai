@@ -44,6 +44,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const topicName = document.getElementById('topicName');
   const btnSubmitAnswer = document.getElementById('btnSubmitAnswer');
   const btnNextQuestion = document.getElementById('btnNextQuestion');
+  const activeProviderBadge = document.getElementById('activeProviderBadge');
+
+  // AI Model & Custom Key Controls
+  const customSkillInput = document.getElementById('customSkillInput');
+  const btnCustomSkillGo = document.getElementById('btnCustomSkillGo');
+  const aiProviderSelect = document.getElementById('aiProviderSelect');
+  const customApiKeyRow = document.getElementById('customApiKeyRow');
+  const customApiKeyInput = document.getElementById('customApiKeyInput');
+  const btnSaveCustomKey = document.getElementById('btnSaveCustomKey');
 
   // Verdict Screen Elements
   const verdictClaimed = document.getElementById('verdictClaimed');
@@ -59,6 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     { key: 'javascript', label: 'JavaScript', icon: 'bi-filetype-js', category: 'Frontend & Full-Stack' },
     { key: 'python', label: 'Python', icon: 'bi-filetype-py', category: 'AI & Data Engineering' },
     { key: 'sql', label: 'SQL', icon: 'bi-database-fill', category: 'Databases & Backend' },
+    { key: 'react', label: 'React', icon: 'bi-code-slash', category: 'Modern Frontend' },
+    { key: 'node.js', label: 'Node.js', icon: 'bi-hdd-network', category: 'Backend Runtimes' },
+    { key: 'html', label: 'HTML', icon: 'bi-filetype-html', category: 'Web Essentials' },
+    { key: 'css', label: 'CSS', icon: 'bi-filetype-css', category: 'Styling & Layout' },
   ];
 
   let currentUser = window.Auth?.getCurrentUser ? window.Auth.getCurrentUser() : null;
@@ -124,10 +137,33 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
+    // Merge any user skills not yet in SUPPORTED_SKILLS
+    userSkills.forEach((us) => {
+      const slug = (us.name || '').toLowerCase().trim();
+      if (slug && !SUPPORTED_SKILLS.some((s) => s.key === slug)) {
+        SUPPORTED_SKILLS.push({
+          key: slug,
+          label: us.displayName || capitalize(us.name),
+          icon: 'bi-cpu',
+          category: 'Profile Claimed Skill'
+        });
+      }
+    });
+
     // Determine initial skill from query params
     const urlParams = new URLSearchParams(window.location.search);
     const paramSkill = (urlParams.get('skill') || '').toLowerCase().trim();
-    if (paramSkill && SUPPORTED_SKILLS.some((s) => s.key === paramSkill)) {
+    if (paramSkill) {
+      let match = SUPPORTED_SKILLS.find((s) => s.key === paramSkill);
+      if (!match) {
+        match = {
+          key: paramSkill,
+          label: capitalize(paramSkill),
+          icon: 'bi-lightning-charge-fill',
+          category: 'Dynamic AI Reality Check'
+        };
+        SUPPORTED_SKILLS.unshift(match);
+      }
       activeSkillKey = paramSkill;
     } else {
       // Find first unverified skill user possesses
@@ -137,6 +173,74 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       activeSkillKey = match ? match.key : 'javascript';
     }
+
+    // Setup Provider Select & Custom Key
+    if (aiProviderSelect) {
+      const savedProvider = localStorage.getItem('cp_quiz_preferred_provider') || 'auto';
+      aiProviderSelect.value = savedProvider;
+      if (savedProvider === 'custom_api_key' && customApiKeyRow) {
+        customApiKeyRow.classList.remove('d-none');
+      }
+      aiProviderSelect.addEventListener('change', () => {
+        const val = aiProviderSelect.value;
+        localStorage.setItem('cp_quiz_preferred_provider', val);
+        if (val === 'custom_api_key') {
+          customApiKeyRow?.classList.remove('d-none');
+        } else {
+          customApiKeyRow?.classList.add('d-none');
+        }
+      });
+    }
+
+    if (customApiKeyInput) {
+      const savedKey = localStorage.getItem('cp_custom_quiz_key') || '';
+      if (savedKey) customApiKeyInput.value = savedKey;
+    }
+
+    if (btnSaveCustomKey && customApiKeyInput) {
+      btnSaveCustomKey.addEventListener('click', () => {
+        const keyVal = customApiKeyInput.value.trim();
+        if (!keyVal) {
+          localStorage.removeItem('cp_custom_quiz_key');
+          showAlert('Custom API key removed from browser storage.', 'info');
+        } else {
+          localStorage.setItem('cp_custom_quiz_key', keyVal);
+          showAlert('Custom API key saved securely in browser localStorage!', 'success');
+        }
+      });
+    }
+
+    // Setup Custom Skill Search
+    const triggerCustomSkill = () => {
+      const rawVal = customSkillInput?.value?.trim();
+      if (!rawVal) return;
+      const norm = rawVal.toLowerCase().replace(/[^a-z0-9._-]/g, '');
+      if (!norm) return;
+
+      let existing = SUPPORTED_SKILLS.find((s) => s.key === norm);
+      if (!existing) {
+        existing = {
+          key: norm,
+          label: capitalize(rawVal),
+          icon: 'bi-lightning-charge-fill',
+          category: 'AI Adaptive Reality Check'
+        };
+        SUPPORTED_SKILLS.unshift(existing);
+      }
+      activeSkillKey = norm;
+      renderSkillTabs();
+      loadIntroForSkill(activeSkillKey);
+      customSkillInput.value = '';
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    };
+
+    btnCustomSkillGo?.addEventListener('click', triggerCustomSkill);
+    customSkillInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        triggerCustomSkill();
+      }
+    });
 
     renderSkillTabs();
     loadIntroForSkill(activeSkillKey);
@@ -181,7 +285,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 7. Load Intro for Target Skill
   const loadIntroForSkill = (skillKey) => {
-    activeSkillInfo = SUPPORTED_SKILLS.find((s) => s.key === skillKey) || SUPPORTED_SKILLS[0];
+    activeSkillInfo = SUPPORTED_SKILLS.find((s) => s.key === skillKey) || {
+      key: skillKey,
+      label: capitalize(skillKey),
+      icon: 'bi-cpu',
+      category: 'Dynamic Technical Reality-Check'
+    };
     const userSkillObj = userSkills.find((s) => (s.name || '').toLowerCase() === skillKey);
 
     const selfRated = userSkillObj?.selfRatedProficiency || userSkillObj?.proficiency || 'intermediate';
@@ -250,7 +359,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       try {
-        const response = await window.API.post('/quiz/start', { skill: activeSkillKey }, { auth: true });
+        const savedProvider = localStorage.getItem('cp_quiz_preferred_provider') || aiProviderSelect?.value || 'auto';
+        const customKey = localStorage.getItem('cp_custom_quiz_key') || customApiKeyInput?.value?.trim() || null;
+
+        const response = await window.API.post('/quiz/start', {
+          skill: activeSkillKey,
+          displayName: activeSkillInfo?.label || activeSkillKey,
+          provider: savedProvider !== 'auto' ? savedProvider : undefined,
+          userApiKey: customKey || undefined
+        }, { auth: true });
 
         if (response.success && response.data) {
           const data = response.data;
@@ -265,6 +382,22 @@ document.addEventListener('DOMContentLoaded', async () => {
           screenIntro.classList.add('d-none');
           screenVerdict.classList.add('d-none');
           screenQuiz.classList.remove('d-none');
+
+          // Active provider badge
+          if (activeProviderBadge) {
+            activeProviderBadge.classList.remove('d-none');
+            if (data.isAIGenerated) {
+              const prov = data.provider || 'AI';
+              const pName = prov === 'groq' ? 'Groq AI (Llama)' :
+                            prov === 'gemini' ? 'Google Gemini' :
+                            prov === 'custom_api_key' ? 'Custom AI Model' : 'Dynamic AI';
+              activeProviderBadge.className = 'badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-0.5 small';
+              activeProviderBadge.innerHTML = `<i class="bi bi-cpu me-1"></i>${escapeHtml(pName)}`;
+            } else {
+              activeProviderBadge.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-0.5 small';
+              activeProviderBadge.innerHTML = `<i class="bi bi-shield-check me-1"></i>Curated Bank`;
+            }
+          }
 
           renderActiveQuestion(data.question, data.currentDifficulty, currentQuestionIdx, data.totalQuestions || 5);
         } else {

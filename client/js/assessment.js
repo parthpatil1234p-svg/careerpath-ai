@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Skill Check Modal Elements
   const skillCheckModalEl = document.getElementById('skillCheckModal');
   const modalSkillBadge = document.getElementById('modalSkillBadge');
+  const modalProviderBadge = document.getElementById('modalProviderBadge');
   const skillCheckModalTitle = document.getElementById('skillCheckModalTitle');
   const modalDifficultyPill = document.getElementById('modalDifficultyPill');
   const modalLoadingState = document.getElementById('modalLoadingState');
@@ -508,15 +509,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             showAlert('You can select a maximum of 20 skills for assessment.', 'warning');
             return;
           }
+          const existingUserSkill = (currentUser?.skills || []).find(
+            (s) => (s.name || '').toLowerCase() === skill.name.toLowerCase()
+          );
+          const isQuizVer = Boolean(existingUserSkill?.isQuizVerified);
+          const profVal = existingUserSkill?.verifiedProficiency || existingUserSkill?.proficiency || select.value || 'beginner';
+
           selectedSkillsMap.set(skill.name, {
             name: skill.name,
             displayName: skill.displayName,
             category: skill.category || 'tool',
-            proficiency: select.value || 'beginner',
-            isCodeVerified: false,
-            verifiedSource: 'self'
+            proficiency: profVal,
+            selfRatedProficiency: existingUserSkill?.selfRatedProficiency || select.value || 'beginner',
+            verifiedProficiency: existingUserSkill?.verifiedProficiency || null,
+            isQuizVerified: isQuizVer,
+            quizScore: existingUserSkill?.quizScore || 0,
+            quizGaps: existingUserSkill?.quizGaps || [],
+            isCodeVerified: Boolean(existingUserSkill?.isCodeVerified),
+            verifiedSource: existingUserSkill?.verifiedSource || 'self'
           });
-          select.disabled = false;
+          select.disabled = isQuizVer;
         } else {
           selectedSkillsMap.delete(skill.name);
           select.disabled = true;
@@ -599,11 +611,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         ['intermediate', 'advanced'].includes(selfProfStr) ||
         isVerified;
 
-      if (isBanked && isLevelEligible) {
+      if (isLevelEligible) {
         let score = 0;
         // Prioritize already-verified skills so they ALWAYS remain visible with their checkmarks!
         if (isVerified) {
           score += 1000;
+        }
+        // Banked skills get a slight affinity boost for 0ms loading
+        if (isBanked) {
+          score += 20;
         }
         selectedInterests.forEach((interest) => {
           const affinity = INTEREST_SKILL_AFFINITY[interest] || [];
@@ -613,7 +629,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (levelToCheck === 'advanced') score += 5;
         else if (levelToCheck === 'intermediate') score += 2;
 
-        candidates.push({ key: s.name, norm, skill: s, score, isVerified });
+        candidates.push({ key: s.name, norm, skill: s, score, isVerified, isBanked });
       }
     });
 
@@ -930,10 +946,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
+      const savedProvider = localStorage.getItem('cp_quiz_preferred_provider') || 'auto';
+      const customKey = localStorage.getItem('cp_custom_quiz_key') || null;
+
       const res = await window.API.post('/quiz/start', {
         skill: skill.name,
         selfRated: skill.selfRatedProficiency || skill.proficiency || 'intermediate',
-        displayName: skill.displayName || skill.name
+        displayName: skill.displayName || skill.name,
+        provider: savedProvider !== 'auto' ? savedProvider : undefined,
+        userApiKey: customKey || undefined
       }, { auth: true });
 
       if (!res.success || !res.data?.question) {
@@ -945,9 +966,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         skillName: skill.name,
         displayName: skill.displayName || skill.name,
         selfRated: skill.selfRatedProficiency || skill.proficiency || 'intermediate',
+        provider: res.data?.provider,
+        isAIGenerated: Boolean(res.data?.isAIGenerated)
       };
       activeQuestionStep = 1;
       activeQuestion = res.data.question;
+
+      // Update provider badge in modal header
+      if (modalProviderBadge) {
+        modalProviderBadge.classList.remove('d-none');
+        if (res.data.isAIGenerated) {
+          const prov = res.data.provider || 'AI';
+          const pName = prov === 'groq' ? 'Groq AI (Llama)' :
+                        prov === 'gemini' ? 'Google Gemini' :
+                        prov === 'custom_api_key' ? 'Custom AI Model' : 'Dynamic AI';
+          modalProviderBadge.className = 'badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-0.5 small';
+          modalProviderBadge.innerHTML = `<i class="bi bi-cpu me-1"></i>${escapeHtml(pName)}`;
+        } else {
+          modalProviderBadge.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-0.5 small';
+          modalProviderBadge.innerHTML = `<i class="bi bi-shield-check me-1"></i>Curated Bank`;
+        }
+      }
 
       renderModalQuestion(activeQuestion, 1);
     } catch (err) {
@@ -1352,6 +1391,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         name: cleanSlug,
         displayName: rawName,
         proficiency: proficiency,
+        selfRatedProficiency: proficiency,
+        isCustom: true
       });
 
       // Register with backend catalog in background

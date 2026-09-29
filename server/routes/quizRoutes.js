@@ -13,6 +13,7 @@ const { protect } = require('../middleware/authMiddleware');
 router.use(protect);
 
 router.get('/status', quizController.getQuizStatus);
+router.get('/providers', quizController.getQuizProviders);
 router.post('/start', quizController.startQuiz);
 router.post('/answer', quizController.submitAnswer);
 

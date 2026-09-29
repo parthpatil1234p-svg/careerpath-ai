@@ -14,6 +14,7 @@
  */
 
 const User = require('../models/User');
+const aiQuizGeneratorService = require('./aiQuizGeneratorService');
 const {
   QUIZ_QUESTIONS,
   AVAILABLE_QUIZ_SKILLS,
@@ -25,15 +26,17 @@ const {
 // In-memory active session store (keyed by `${userId}_${skill}`)
 const activeSessions = new Map();
 
+const capitalize = (str) => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 /**
  * Start an adaptive quiz session for a user and skill
+ * Supports both curated banked questions and dynamic multi-model AI generation (Groq, Gemini, OpenAI)
  */
-async function startQuizSession(userId, skill) {
+async function startQuizSession(userId, skill, options = {}) {
   const normalizedSkill = normalizeSkillKey(skill);
-  if (!QUIZ_QUESTIONS[normalizedSkill]) {
-    throw new Error(`Quiz is available for: ${AVAILABLE_QUIZ_SKILLS.join(', ')}. Selected: "${skill}"`);
-  }
-
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
 
@@ -42,22 +45,55 @@ async function startQuizSession(userId, skill) {
   );
 
   const selfRated = existingSkill?.selfRatedProficiency || existingSkill?.proficiency || 'intermediate';
+  const displayName = existingSkill?.displayName || options.displayName || capitalize(skill);
 
-  // Question 1 starts at Medium
-  const firstQuestion = getQuestion(normalizedSkill, 'medium', []);
-  if (!firstQuestion) {
-    throw new Error('No questions available for this skill');
+  const isBanked = Boolean(QUIZ_QUESTIONS[normalizedSkill]);
+  const forceAI = options.forceAI || options.provider === 'groq' || options.provider === 'gemini' || Boolean(options.userApiKey);
+
+  let questions = null;
+  let providerUsed = 'curated_bank';
+
+  // If skill is not in static bank or user explicitly requested AI generation
+  if (!isBanked || forceAI) {
+    try {
+      const aiResult = await aiQuizGeneratorService.generateAdaptiveSkillQuiz(displayName || skill, {
+        userApiKey: options.userApiKey || null,
+        provider: options.provider || 'auto'
+      });
+      questions = aiResult.questions;
+      providerUsed = aiResult.provider;
+    } catch (err) {
+      console.warn(`[QuizService] Dynamic AI generation failed for "${skill}":`, err.message);
+    }
+  }
+
+  // Fallback to static bank if available and AI was not used
+  let firstQuestion = null;
+  if (!questions && isBanked) {
+    firstQuestion = getQuestion(normalizedSkill, 'medium', []);
+    providerUsed = 'curated_bank';
+  } else if (questions && questions.length > 0) {
+    firstQuestion = questions[0];
+  } else {
+    // Guaranteed offline fallback
+    const offlineResult = await aiQuizGeneratorService.generateAdaptiveSkillQuiz(displayName || skill, { provider: 'offline' });
+    questions = offlineResult.questions;
+    firstQuestion = questions[0];
+    providerUsed = 'offline_engine';
   }
 
   const sessionKey = `${userId}_${normalizedSkill}`;
   const sessionData = {
     userId,
     skill: normalizedSkill,
-    displayName: existingSkill?.displayName || normalizedSkill.toUpperCase(),
+    displayName,
     selfRated,
+    provider: providerUsed,
+    isAIGenerated: Boolean(questions),
+    questionPool: questions || null,
     currentStep: 1,
     totalSteps: 5,
-    currentDifficulty: 'medium',
+    currentDifficulty: firstQuestion.difficulty || 'medium',
     currentQuestionId: firstQuestion.id,
     answeredQuestions: [], // history of { id, difficulty, selectedIndex, isCorrect, topic }
     score: 0,
@@ -75,12 +111,14 @@ async function startQuizSession(userId, skill) {
     displayName: sessionData.displayName,
     selfRatedProficiency: selfRated,
     selfRated,
+    provider: providerUsed,
+    isAIGenerated: Boolean(questions),
     questionIndex: 1,
     currentStep: 1,
     totalQuestions: 5,
     totalSteps: 5,
-    currentDifficulty: 'medium',
-    difficulty: 'medium',
+    currentDifficulty: firstQuestion.difficulty || 'medium',
+    difficulty: firstQuestion.difficulty || 'medium',
     question: {
       id: firstQuestion.id,
       topic: firstQuestion.topic,
@@ -104,13 +142,24 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
     throw new Error('No active quiz session found. Please start the quiz again.');
   }
 
-  const question = getQuestionById(normalizedSkill, questionId);
+  // Locate question in dynamic questionPool or static bank
+  let question = null;
+  if (session.questionPool) {
+    question = session.questionPool.find((q) => q.id === questionId);
+  }
   if (!question) {
-    throw new Error('Question not found in question bank');
+    question = getQuestionById(normalizedSkill, questionId);
+  }
+  if (!question && session.questionPool && session.questionPool.length > 0) {
+    question = session.questionPool[session.currentStep - 1] || session.questionPool[0];
+  }
+
+  if (!question) {
+    throw new Error('Question not found in quiz session');
   }
 
   const isCorrect = Number(selectedIndex) === question.correctIndex;
-  const currentDiff = question.difficulty;
+  const currentDiff = question.difficulty || 'medium';
 
   // Track state
   if (isCorrect) {
@@ -150,6 +199,18 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
       isFinished: true,
       isCompleted: true,
       currentScore: session.score,
+      score: summary.score,
+      selfRated: summary.selfRated,
+      selfRatedProficiency: summary.selfRatedProficiency,
+      quizSays: summary.quizSays,
+      verifiedLevel: summary.verifiedLevel,
+      verifiedProficiency: summary.verifiedProficiency,
+      realityCheckMessage: summary.realityCheckMessage,
+      summaryMessage: summary.summaryMessage,
+      gaps: summary.gaps,
+      identifiedGaps: summary.identifiedGaps,
+      provider: summary.provider,
+      isAIGenerated: summary.isAIGenerated,
       summary,
       result: summary
     };
@@ -171,7 +232,18 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
   session.currentDifficulty = nextDiff;
 
   const usedIds = session.answeredQuestions.map((q) => q.id);
-  const nextQ = getQuestion(normalizedSkill, nextDiff, usedIds);
+  let nextQ = null;
+
+  if (session.questionPool) {
+    // Select next question from dynamic AI pool matching nextDiff, or next unused
+    nextQ = session.questionPool.find((q) => !usedIds.includes(q.id) && q.difficulty === nextDiff) ||
+            session.questionPool.find((q) => !usedIds.includes(q.id)) ||
+            session.questionPool[session.currentStep - 1] ||
+            session.questionPool[0];
+  } else {
+    nextQ = getQuestion(normalizedSkill, nextDiff, usedIds);
+  }
+
   session.currentQuestionId = nextQ.id;
 
   return {
@@ -299,13 +371,10 @@ async function finalizeQuiz(userId, skill, session) {
     realityCheckMessage: summaryMessage,
     isQuizVerified: true,
     verifiedAt: new Date(),
+    provider: session.provider || 'curated_bank',
+    isAIGenerated: Boolean(session.isAIGenerated),
     user
   };
-}
-
-function capitalize(s) {
-  if (!s) return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function getActiveSessionForUser(userId, skill) {

@@ -5,21 +5,27 @@
  */
 
 const quizService = require('../services/quizService');
+const aiQuizGeneratorService = require('../services/aiQuizGeneratorService');
 const User = require('../models/User');
 const { AVAILABLE_QUIZ_SKILLS } = require('../data/quizQuestions');
 
 /**
  * POST /api/quiz/start
- * Initializes an adaptive 6-question quiz session
+ * Initializes an adaptive quiz session with optional multi-model AI provider or custom API key
  */
 exports.startQuiz = async (req, res) => {
   try {
-    const { skill } = req.body;
+    const { skill, provider, userApiKey, displayName, forceAI } = req.body;
     if (!skill) {
       return res.status(400).json({ success: false, message: 'Skill parameter is required' });
     }
 
-    const session = await quizService.startQuizSession(req.user.id, skill);
+    const session = await quizService.startQuizSession(req.user.id, skill, {
+      provider,
+      userApiKey: userApiKey || req.headers['x-user-api-key'] || null,
+      displayName,
+      forceAI: Boolean(forceAI)
+    });
     return res.status(200).json({ success: true, data: session });
   } catch (err) {
     console.error('[QuizController.startQuiz] Error:', err.message);
@@ -74,10 +80,14 @@ exports.getQuizStatus = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    const eligibleSkills = AVAILABLE_QUIZ_SKILLS || ['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'];
+    const baseSkills = AVAILABLE_QUIZ_SKILLS || ['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'];
     const userSkills = user.skills || [];
 
-    const statusList = eligibleSkills.map((name) => {
+    // Combine banked skills with any custom skills claimed by the user
+    const claimedSkillNames = userSkills.map((s) => (s.name || '').toLowerCase()).filter(Boolean);
+    const allSkillNames = Array.from(new Set([...baseSkills, ...claimedSkillNames]));
+
+    const statusList = allSkillNames.map((name) => {
       const match = userSkills.find((s) => (s.name || '').toLowerCase() === name);
       return {
         skill: name,
@@ -96,12 +106,26 @@ exports.getQuizStatus = async (req, res) => {
       success: true,
       data: {
         skills: statusList,
-        availableQuizSkills: eligibleSkills,
+        availableQuizSkills: allSkillNames,
         totalVerified: statusList.filter((s) => s.isQuizVerified).length
       }
     });
   } catch (err) {
     console.error('[QuizController.getQuizStatus] Error:', err.message);
     return res.status(500).json({ success: false, message: 'Server error retrieving quiz status' });
+  }
+};
+
+/**
+ * GET /api/quiz/providers
+ * Returns supported AI quiz generation engines & availability
+ */
+exports.getQuizProviders = async (req, res) => {
+  try {
+    const providers = aiQuizGeneratorService.getAvailableProviders();
+    return res.status(200).json({ success: true, data: providers });
+  } catch (err) {
+    console.error('[QuizController.getQuizProviders] Error:', err.message);
+    return res.status(500).json({ success: false, message: 'Server error retrieving quiz providers' });
   }
 };
