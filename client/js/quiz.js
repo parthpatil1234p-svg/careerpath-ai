@@ -381,8 +381,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await window.API.post(
           '/quiz/answer',
           {
+            skill: activeSkillKey,
             sessionId: currentSessionId,
             questionId: currentQuestion.id,
+            selectedIndex: selectedOptionIdx,
             selectedOption: selectedOptionIdx,
           },
           { auth: true }
@@ -390,7 +392,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response.success && response.data) {
           const resData = response.data;
-          const { isCorrect, correctAnswer, explanation, isCompleted, nextQuestion, nextDifficulty, result } = resData;
+          const isCorrect = Boolean(resData.isCorrect);
+          const correctAnswer = Number(resData.correctAnswer !== undefined ? resData.correctAnswer : resData.correctIndex);
+          const explanation = resData.explanation || '';
+          const isCompleted = Boolean(resData.isCompleted || resData.isFinished);
+          const nextQuestion = resData.nextQuestion;
+          const nextDifficulty = resData.nextDifficulty;
+          const result = resData.result || resData.summary;
 
           // Lock option cards styling
           optionsContainer.querySelectorAll('.quiz-option-card').forEach((card) => {
@@ -471,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           currentQuestion,
           nextQuestionData.difficulty || 'medium',
           currentQuestionIdx,
-          6
+          5
         );
       }
     });
@@ -483,23 +491,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     screenVerdict.classList.remove('d-none');
     window.scrollTo({ top: 120, behavior: 'smooth' });
 
-    const claimed = result.selfRatedProficiency || 'Intermediate';
-    const actual = result.verifiedProficiency || 'Intermediate';
+    const claimed = result.selfRatedProficiency || result.selfRated || 'Intermediate';
+    const actual = result.verifiedProficiency || result.quizSays || result.verifiedLevel || 'Intermediate';
 
     if (verdictClaimed) verdictClaimed.textContent = capitalize(claimed);
     if (verdictActual) verdictActual.textContent = capitalize(actual);
 
     if (verdictScore) {
-      verdictScore.textContent = `Score: ${result.score || 0} / ${result.totalQuestions || 6} Correct`;
+      verdictScore.textContent = `Score: ${result.score || 0} / ${result.totalQuestions || result.total || 5} Correct`;
     }
 
     if (verdictMessage) {
-      verdictMessage.textContent = result.realityCheckMessage || 'Reality-check validation complete.';
+      verdictMessage.textContent = result.realityCheckMessage || result.summaryMessage || 'Reality-check validation complete.';
     }
 
     // Render Gaps
     if (verdictGapsList && verdictGapsSection) {
-      const gaps = Array.isArray(result.gaps) ? result.gaps : [];
+      const gaps = Array.isArray(result.gaps) ? result.gaps : Array.isArray(result.identifiedGaps) ? result.identifiedGaps : [];
       if (gaps.length > 0) {
         verdictGapsSection.classList.remove('d-none');
         verdictGapsList.innerHTML = gaps
@@ -511,10 +519,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Refresh user's updated skill list in memory
-    if (result.user?.skills) {
-      currentUser.skills = result.user.skills;
-      window.Auth.setCurrentUser(currentUser);
-      userSkills = currentUser.skills;
+    const userToSave = result.user || currentUser;
+    if (userToSave) {
+      userToSave.hasCompletedSkillVerification = true;
+      if (result.user?.skills) userToSave.skills = result.user.skills;
+      window.Auth.setCurrentUser(userToSave);
+      userSkills = userToSave.skills || [];
       renderSkillTabs();
     }
   };
