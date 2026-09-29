@@ -45,6 +45,22 @@ const Auth = {
   },
 
   /**
+   * Retrieves stored user summary object (alias for getCurrentUser)
+   * @returns {Object|null}
+   */
+  getUser() {
+    return this.getCurrentUser();
+  },
+
+  /**
+   * Getter property for user summary
+   * @returns {Object|null}
+   */
+  get user() {
+    return this.getCurrentUser();
+  },
+
+  /**
    * Stores user summary
    * @param {Object} user
    */

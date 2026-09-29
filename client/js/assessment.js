@@ -656,7 +656,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnAutoDetectGitHubSkills.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Scanning Repos...`;
 
       try {
-        const user = window.Auth?.getUser();
+        const user = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) || 
+                     (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null) || 
+                     null;
 
         // 1. If user already has connected GitHub repos and verified skills in their profile
         if (user?.githubProfile?.username && Array.isArray(user.skills) && user.skills.some(s => s.isCodeVerified)) {

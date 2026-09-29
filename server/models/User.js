@@ -46,6 +46,32 @@ const SkillSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    selfRatedProficiency: {
+      type: String,
+      enum: ['beginner', 'intermediate', 'advanced'],
+      default: null,
+    },
+    isQuizVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verifiedProficiency: {
+      type: String,
+      enum: ['beginner', 'intermediate', 'advanced'],
+      default: null,
+    },
+    quizScore: {
+      type: Number,
+      default: 0,
+    },
+    quizGaps: {
+      type: [String],
+      default: [],
+    },
+    quizVerifiedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { _id: false } // No separate _id for sub-documents
 );

@@ -693,7 +693,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (manageSkillsModalEl) {
     manageSkillsModalEl.addEventListener('show.bs.modal', () => {
       // Sync fresh working copy
-      const user = dashboardData?.user || window.Auth?.getUser() || {};
+      const user = dashboardData?.user || window.Auth?.getUser?.() || window.Auth?.getCurrentUser?.() || {};
       editableSkills = JSON.parse(JSON.stringify(user.skills || []));
       renderModalSkillsList();
       loadSkillsCatalog();
@@ -851,7 +851,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      const userId = dashboardData?.user?.id || window.Auth?.getUser()?.id;
+      const userId = dashboardData?.user?.id || window.Auth?.getUser?.()?.id || window.Auth?.getCurrentUser?.()?.id;
       const originalAvatarContent = userAvatar.innerHTML;
       userAvatar.innerHTML = `<span class="spinner-border spinner-border-sm text-teal" role="status"></span>`;
 
@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const file = e.target.files?.[0];
       if (!file) return;
 
-      const userId = dashboardData?.user?.id || window.Auth?.getUser()?.id;
+      const userId = dashboardData?.user?.id || window.Auth?.getUser?.()?.id || window.Auth?.getCurrentUser?.()?.id;
       const originalBtnHtml = btnUploadResumeTrigger.innerHTML;
       btnUploadResumeTrigger.disabled = true;
       btnUploadResumeTrigger.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Uploading...`;
