@@ -717,17 +717,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         let actionHtml = '';
         if (isQuizVer) {
           actionHtml = `
-            <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
-              <i class="bi bi-patch-check-fill"></i>
-              <span>Verified (${escapeHtml(capitalize(profStr))}) ✓</span>
-            </span>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
+                <i class="bi bi-patch-check-fill"></i>
+                <span>Verified (${escapeHtml(capitalize(profStr))}) ✓</span>
+              </span>
+              <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level">
+                <i class="bi bi-arrow-repeat"></i>
+                <span>Retest</span>
+              </button>
+            </div>
           `;
         } else if (isCodeVer) {
           actionHtml = `
-            <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
-              <i class="bi bi-github"></i>
-              <span>GitHub-Supported ✓</span>
-            </span>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
+                <i class="bi bi-github"></i>
+                <span>GitHub-Supported ✓</span>
+              </span>
+              <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Take reality check quiz to verify with full confidence">
+                <i class="bi bi-patch-question"></i>
+                <span>Take Quiz</span>
+              </button>
+            </div>
           `;
         } else {
           actionHtml = `
@@ -776,6 +788,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const checkBtn = row.querySelector('.btn-start-check');
         if (checkBtn) {
           checkBtn.addEventListener('click', () => {
+            startSkillCheck(skill.name);
+          });
+        }
+
+        const retestBtn = row.querySelector('.btn-retest-check');
+        if (retestBtn) {
+          retestBtn.addEventListener('click', () => {
             startSkillCheck(skill.name);
           });
         }
