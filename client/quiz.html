@@ -131,7 +131,7 @@
               </div>
             </div>
             <div class="col-lg-4 col-md-12 text-lg-end">
-              <span class="badge bg-white border border-line text-secondary font-mono small py-1.5 px-3 d-inline-flex align-items-center gap-1 shadow-xs">
+              <span class="badge bg-white border border-line text-dark fw-semibold small py-1.5 px-3 d-inline-flex align-items-center gap-1.5 shadow-xs" style="font-family: var(--font-body); letter-spacing: 0.2px;">
                 <i class="bi bi-cpu-fill text-primary"></i>
                 <span>Adaptive AI Engine (Auto)</span>
               </span>
@@ -297,7 +297,7 @@
               <div class="verdict-box">
                 <div class="verdict-label">You Said (Self-Rated)</div>
                 <div class="verdict-val" id="verdictClaimed">Advanced</div>
-                <span class="badge badge-gold mt-2 font-mono">Self-Claimed</span>
+                <span class="badge badge-gold mt-2"><i class="bi bi-person-fill me-1"></i>Self-Claimed</span>
               </div>
 
               <div class="verdict-vs-badge">VS</div>
@@ -305,17 +305,22 @@
               <div class="verdict-box verified">
                 <div class="verdict-label">Quiz Says (Proven)</div>
                 <div class="verdict-val text-highlight" id="verdictActual">Intermediate</div>
-                <span class="badge badge-leaf mt-2 font-mono"><i class="bi bi-check2 me-1"></i>Verified</span>
+                <span class="badge badge-leaf mt-2"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>
               </div>
             </div>
 
             <!-- Reality-Check Summary Rationale -->
             <div class="p-3 rounded-2 bg-surface-muted border border-line mb-3">
-              <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                 <span class="fw-semibold text-ink small">
                   <i class="bi bi-bar-chart-fill text-primary me-1"></i> Performance Breakdown
                 </span>
-                <span class="font-mono small text-muted" id="verdictScore">Score: 4 / 6 Correct</span>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="font-mono small text-muted" id="verdictScore">Score: 4 / 6 Correct</span>
+                  <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 rounded-pill" style="font-size: 0.75rem;" id="btnRetestQuick" title="Retest this skill to improve your score">
+                    <i class="bi bi-arrow-repeat me-1"></i> Retest
+                  </button>
+                </div>
               </div>
               <p class="text-secondary small mb-2" id="verdictMessage">
                 Your knowledge was validated by the adaptive engine.

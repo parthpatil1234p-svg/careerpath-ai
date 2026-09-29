@@ -63,8 +63,89 @@ document.addEventListener('DOMContentLoaded', async () => {
   const verdictGapsList = document.getElementById('verdictGapsList');
   const btnQuizAnotherSkill = document.getElementById('btnQuizAnotherSkill');
   const btnRetestCurrentSkill = document.getElementById('btnRetestCurrentSkill');
+  const btnRetestQuick = document.getElementById('btnRetestQuick');
 
-  // 3. State
+  // 3. State & Skill Aliases Normalization
+  const SKILL_ALIASES = {
+    'nodejs': 'node.js',
+    'node': 'node.js',
+    'node.js': 'node.js',
+    'reactjs': 'react',
+    'react.js': 'react',
+    'react': 'react',
+    'html5': 'html',
+    'html': 'html',
+    'css3': 'css',
+    'css': 'css',
+    'js': 'javascript',
+    'javascript': 'javascript',
+    'py': 'python',
+    'python': 'python',
+    'express': 'express.js',
+    'expressjs': 'express.js',
+    'express.js': 'express.js',
+    'golang': 'go',
+    'go': 'go',
+    'ts': 'typescript',
+    'typescript': 'typescript',
+    'postgres': 'postgresql',
+    'postgresql': 'postgresql',
+    'mongo': 'mongodb',
+    'mongodb': 'mongodb'
+  };
+
+  const CANONICAL_LABELS = {
+    'javascript': 'JavaScript',
+    'python': 'Python',
+    'sql': 'SQL',
+    'react': 'React',
+    'node.js': 'Node.js',
+    'html': 'HTML',
+    'css': 'CSS',
+    'express.js': 'Express.js',
+    'typescript': 'TypeScript',
+    'mongodb': 'MongoDB',
+    'postgresql': 'PostgreSQL',
+    'docker': 'Docker',
+    'git': 'Git',
+    'aws': 'AWS',
+    'flutter': 'Flutter',
+    'go': 'Go'
+  };
+
+  const normalizeSkillSlug = (raw) => {
+    const s = String(raw || '').trim().toLowerCase();
+    return SKILL_ALIASES[s] || s;
+  };
+
+  const deduplicateUserSkills = (rawList) => {
+    if (!Array.isArray(rawList)) return [];
+    const map = new Map();
+    for (const us of rawList) {
+      if (!us || !us.name) continue;
+      const rawName = String(us.name || '').trim().toLowerCase();
+      if (!rawName || rawName.includes('@') || rawName.includes('.com') || rawName.length > 30) continue;
+      const canonicalKey = normalizeSkillSlug(rawName);
+
+      const existing = map.get(canonicalKey);
+      if (!existing) {
+        map.set(canonicalKey, {
+          ...us,
+          name: canonicalKey,
+          displayName: CANONICAL_LABELS[canonicalKey] || us.displayName || capitalize(canonicalKey)
+        });
+      } else {
+        if (us.isQuizVerified) existing.isQuizVerified = true;
+        if (us.isCodeVerified) existing.isCodeVerified = true;
+        if (us.verifiedProficiency) existing.verifiedProficiency = us.verifiedProficiency;
+        if (us.proficiency === 'advanced' || (!existing.proficiency && us.proficiency)) {
+          existing.proficiency = us.proficiency;
+        }
+      }
+    }
+    return Array.from(map.values());
+  };
+
   const SUPPORTED_SKILLS = [
     { key: 'javascript', label: 'JavaScript', icon: 'bi-filetype-js', category: 'Frontend & Full-Stack' },
     { key: 'python', label: 'Python', icon: 'bi-filetype-py', category: 'AI & Data Engineering' },
@@ -125,27 +206,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.success && res.data?.user) {
           currentUser = res.data.user;
           window.Auth.setCurrentUser(currentUser);
-          userSkills = currentUser.skills || [];
+          userSkills = deduplicateUserSkills(currentUser.skills || []);
         } else if (currentUser) {
-          userSkills = currentUser.skills || [];
+          userSkills = deduplicateUserSkills(currentUser.skills || []);
         }
       } else if (currentUser) {
-        userSkills = currentUser.skills || [];
+        userSkills = deduplicateUserSkills(currentUser.skills || []);
       }
     } catch (err) {
       if (currentUser) {
-        userSkills = currentUser.skills || [];
+        userSkills = deduplicateUserSkills(currentUser.skills || []);
       }
     }
 
-    // Merge any valid user skills not yet in SUPPORTED_SKILLS (excluding emails or malformed keys)
+    // Merge any valid user skills not yet in SUPPORTED_SKILLS (deduplicated by canonical alias)
     userSkills.forEach((us) => {
-      const slug = (us.name || '').toLowerCase().trim();
+      const slug = normalizeSkillSlug(us.name);
       if (!slug || slug.includes('@') || slug.includes('.com') || slug.length > 30) return;
-      if (!SUPPORTED_SKILLS.some((s) => s.key === slug)) {
+      if (!SUPPORTED_SKILLS.some((s) => normalizeSkillSlug(s.key) === slug)) {
         SUPPORTED_SKILLS.push({
           key: slug,
-          label: us.displayName || capitalize(us.name),
+          label: CANONICAL_LABELS[slug] || us.displayName || capitalize(slug),
           icon: 'bi-cpu',
           category: 'Profile Claimed Skill'
         });
@@ -154,24 +235,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Determine initial skill from query params (ignore invalid strings/emails)
     const urlParams = new URLSearchParams(window.location.search);
-    const paramSkill = (urlParams.get('skill') || '').toLowerCase().trim();
+    const rawParamSkill = (urlParams.get('skill') || '').toLowerCase().trim();
+    const paramSkill = normalizeSkillSlug(rawParamSkill);
     if (paramSkill && !paramSkill.includes('@') && !paramSkill.includes('.com') && paramSkill.length <= 30) {
-      let match = SUPPORTED_SKILLS.find((s) => s.key === paramSkill);
+      let match = SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) === paramSkill);
       if (!match) {
         match = {
           key: paramSkill,
-          label: capitalize(paramSkill),
+          label: CANONICAL_LABELS[paramSkill] || capitalize(paramSkill),
           icon: 'bi-lightning-charge-fill',
           category: 'Dynamic AI Reality Check'
         };
         SUPPORTED_SKILLS.unshift(match);
       }
-      activeSkillKey = paramSkill;
+      activeSkillKey = match.key;
     } else {
       // Find first unverified skill user possesses
       const match = SUPPORTED_SKILLS.find((sup) => {
         if (sup.key.includes('@') || sup.key.includes('.com')) return false;
-        const uSkill = userSkills.find((us) => (us.name || '').toLowerCase() === sup.key);
+        const uSkill = userSkills.find((us) => normalizeSkillSlug(us.name) === normalizeSkillSlug(sup.key));
         return uSkill && !uSkill.isQuizVerified;
       });
       activeSkillKey = match ? match.key : 'javascript';
@@ -190,20 +272,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         showAlert('Please enter a valid skill or technology name (e.g. Docker, Rust, AWS, Flutter).', 'warning');
         return;
       }
-      const norm = rawVal.toLowerCase().replace(/[^a-z0-9._-]/g, '');
+      const norm = normalizeSkillSlug(rawVal.toLowerCase().replace(/[^a-z0-9._-]/g, ''));
       if (!norm || norm.length > 30) return;
 
-      let existing = SUPPORTED_SKILLS.find((s) => s.key === norm);
+      let existing = SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) === norm);
       if (!existing) {
         existing = {
           key: norm,
-          label: capitalize(rawVal),
+          label: CANONICAL_LABELS[norm] || capitalize(rawVal),
           icon: 'bi-lightning-charge-fill',
           category: 'AI Adaptive Reality Check'
         };
         SUPPORTED_SKILLS.unshift(existing);
       }
-      activeSkillKey = norm;
+      activeSkillKey = existing.key;
       renderSkillTabs();
       loadIntroForSkill(activeSkillKey);
       customSkillInput.value = '';
@@ -227,9 +309,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!skillSelectorTabs) return;
 
     skillSelectorTabs.innerHTML = SUPPORTED_SKILLS.map((item) => {
-      const uSkill = userSkills.find((s) => (s.name || '').toLowerCase() === item.key);
+      const uSkill = userSkills.find((s) => normalizeSkillSlug(s.name) === normalizeSkillSlug(item.key));
       const isVerified = Boolean(uSkill?.isQuizVerified);
-      const isActive = item.key === activeSkillKey;
+      const isActive = normalizeSkillSlug(item.key) === normalizeSkillSlug(activeSkillKey);
 
       const badgeHtml = isVerified
         ? `<span class="badge-pill-verified"><i class="bi bi-check2"></i> Verified</span>`
@@ -261,13 +343,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 7. Load Intro for Target Skill
   const loadIntroForSkill = (skillKey) => {
-    activeSkillInfo = SUPPORTED_SKILLS.find((s) => s.key === skillKey) || {
-      key: skillKey,
-      label: capitalize(skillKey),
+    const canonical = normalizeSkillSlug(skillKey);
+    activeSkillInfo = SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) === canonical) || {
+      key: canonical,
+      label: CANONICAL_LABELS[canonical] || capitalize(canonical),
       icon: 'bi-cpu',
       category: 'Dynamic Technical Reality-Check'
     };
-    const userSkillObj = userSkills.find((s) => (s.name || '').toLowerCase() === skillKey);
+    const userSkillObj = userSkills.find((s) => normalizeSkillSlug(s.name) === canonical);
 
     const selfRated = userSkillObj?.selfRatedProficiency || userSkillObj?.proficiency || 'intermediate';
     const isVerified = Boolean(userSkillObj?.isQuizVerified);
@@ -620,7 +703,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (gaps.length > 0) {
         verdictGapsSection.classList.remove('d-none');
         verdictGapsList.innerHTML = gaps
-          .map((g) => `<span class="gap-pill"><i class="bi bi-bookmark-check me-1"></i>${escapeHtml(g)}</span>`)
+          .map((g) => `<span class="gap-pill"><i class="bi bi-lightbulb-fill me-1 text-warning"></i>${escapeHtml(g)}</span>`)
           .join('');
       } else {
         verdictGapsSection.classList.add('d-none');
@@ -633,36 +716,41 @@ document.addEventListener('DOMContentLoaded', async () => {
       userToSave.hasCompletedSkillVerification = true;
       if (result.user?.skills) userToSave.skills = result.user.skills;
       window.Auth.setCurrentUser(userToSave);
-      userSkills = userToSave.skills || [];
+      userSkills = deduplicateUserSkills(userToSave.skills || []);
       renderSkillTabs();
     }
   };
 
   // 13. Retest Current Skill
-  if (btnRetestCurrentSkill) {
-    btnRetestCurrentSkill.addEventListener('click', () => {
-      if (activeSkillKey) {
-        screenVerdict.classList.add('d-none');
-        screenIntro.classList.remove('d-none');
-        window.scrollTo({ top: 120, behavior: 'smooth' });
-        loadIntroForSkill(activeSkillKey);
-        // Automatically start fresh quiz session
-        if (btnStartQuiz) {
-          btnStartQuiz.click();
-        }
+  const handleRetestSkill = () => {
+    if (activeSkillKey) {
+      screenVerdict.classList.add('d-none');
+      screenIntro.classList.remove('d-none');
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+      loadIntroForSkill(activeSkillKey);
+      // Automatically start fresh quiz session
+      if (btnStartQuiz) {
+        btnStartQuiz.click();
       }
-    });
+    }
+  };
+
+  if (btnRetestCurrentSkill) {
+    btnRetestCurrentSkill.addEventListener('click', handleRetestSkill);
+  }
+  if (btnRetestQuick) {
+    btnRetestQuick.addEventListener('click', handleRetestSkill);
   }
 
   // 14. Verify Another Skill
   if (btnQuizAnotherSkill) {
     btnQuizAnotherSkill.addEventListener('click', () => {
-      // Find next unverified skill
+      // Find next unverified skill with alias normalization
       const nextSkill = SUPPORTED_SKILLS.find((sup) => {
-        if (sup.key === activeSkillKey) return false;
-        const u = userSkills.find((us) => (us.name || '').toLowerCase() === sup.key);
+        if (normalizeSkillSlug(sup.key) === normalizeSkillSlug(activeSkillKey)) return false;
+        const u = userSkills.find((us) => normalizeSkillSlug(us.name) === normalizeSkillSlug(sup.key));
         return u && !u.isQuizVerified;
-      }) || SUPPORTED_SKILLS.find((s) => s.key !== activeSkillKey) || SUPPORTED_SKILLS[0];
+      }) || SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) !== normalizeSkillSlug(activeSkillKey)) || SUPPORTED_SKILLS[0];
 
       activeSkillKey = nextSkill.key;
       renderSkillTabs();

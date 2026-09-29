@@ -9,6 +9,7 @@
  */
 
 const User = require('../models/User');
+const { normalizeSkillKey } = require('../data/quizQuestions');
 
 const ALLOWED_ASSESSMENT_FIELDS = ['education', 'interests', 'skills', 'careerGoals', 'hasCompletedSkillVerification'];
 
@@ -33,21 +34,42 @@ const updateAssessment = async (req, res, next) => {
       });
     }
 
-    // Standardize skills casing and preserve verification status
+    // Standardize skills casing and preserve verification status with canonical deduplication
     if (Array.isArray(updates.skills)) {
-      updates.skills = updates.skills.map((s) => ({
-        name: typeof s.name === 'string' ? s.name.trim().toLowerCase() : '',
-        displayName: typeof s.displayName === 'string' && s.displayName.trim() ? s.displayName.trim() : (s.name || '').trim(),
-        proficiency: typeof s.proficiency === 'string' ? s.proficiency.trim().toLowerCase() : 'beginner',
-        isCodeVerified: Boolean(s.isCodeVerified),
-        verifiedSource: typeof s.verifiedSource === 'string' ? s.verifiedSource : '',
-        selfRatedProficiency: s.selfRatedProficiency || null,
-        isQuizVerified: Boolean(s.isQuizVerified),
-        verifiedProficiency: s.verifiedProficiency || null,
-        quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
-        quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
-        quizVerifiedAt: s.quizVerifiedAt ? new Date(s.quizVerifiedAt) : (s.isQuizVerified ? new Date() : null),
-      }));
+      const skillsMap = new Map();
+      updates.skills.forEach((s) => {
+        const rawName = typeof s.name === 'string' ? s.name.trim().toLowerCase() : '';
+        if (!rawName || rawName.includes('@') || rawName.includes('.com') || rawName.length > 30) return;
+        const canonicalKey = normalizeSkillKey(rawName);
+
+        const formatted = {
+          name: canonicalKey,
+          displayName: typeof s.displayName === 'string' && s.displayName.trim() ? s.displayName.trim() : (s.name || '').trim(),
+          proficiency: typeof s.proficiency === 'string' ? s.proficiency.trim().toLowerCase() : 'beginner',
+          isCodeVerified: Boolean(s.isCodeVerified),
+          verifiedSource: typeof s.verifiedSource === 'string' ? s.verifiedSource : '',
+          selfRatedProficiency: s.selfRatedProficiency || null,
+          isQuizVerified: Boolean(s.isQuizVerified),
+          verifiedProficiency: s.verifiedProficiency || null,
+          quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
+          quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
+          quizVerifiedAt: s.quizVerifiedAt ? new Date(s.quizVerifiedAt) : (s.isQuizVerified ? new Date() : null),
+        };
+
+        if (!skillsMap.has(canonicalKey)) {
+          skillsMap.set(canonicalKey, formatted);
+        } else {
+          // Merge: keep verified status if any is verified
+          const existing = skillsMap.get(canonicalKey);
+          if (formatted.isQuizVerified) existing.isQuizVerified = true;
+          if (formatted.isCodeVerified) existing.isCodeVerified = true;
+          if (formatted.verifiedProficiency) existing.verifiedProficiency = formatted.verifiedProficiency;
+          if (formatted.proficiency === 'advanced' || (!existing.proficiency && formatted.proficiency)) {
+            existing.proficiency = formatted.proficiency;
+          }
+        }
+      });
+      updates.skills = Array.from(skillsMap.values());
     }
 
     // Standardize interests casing

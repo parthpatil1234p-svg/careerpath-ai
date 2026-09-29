@@ -294,15 +294,17 @@ async function finalizeQuiz(userId, skill, session) {
     verifiedLevel = 'beginner';
   }
 
-  // Locate skill in user document
+  // Locate skill in user document with alias normalization
+  const normalizedSkill = normalizeSkillKey(skill);
   const skillIndex = (user.skills || []).findIndex(
-    (s) => (s.name || '').toLowerCase() === skill
+    (s) => normalizeSkillKey(s.name) === normalizedSkill
   );
 
   const selfRated = session.selfRated || 'intermediate';
 
   if (skillIndex !== -1) {
     const existing = user.skills[skillIndex];
+    existing.name = normalizedSkill;
     existing.selfRatedProficiency = existing.selfRatedProficiency || existing.proficiency || selfRated;
     // Replace proficiency with verified level for downstream algorithms & roadmaps
     existing.proficiency = verifiedLevel;
@@ -314,8 +316,8 @@ async function finalizeQuiz(userId, skill, session) {
   } else {
     // If skill wasn't in list, append it
     user.skills.push({
-      name: skill,
-      displayName: session.displayName || skill.toUpperCase(),
+      name: normalizedSkill,
+      displayName: session.displayName || capitalize(normalizedSkill),
       proficiency: verifiedLevel,
       selfRatedProficiency: selfRated,
       verifiedProficiency: verifiedLevel,
@@ -324,6 +326,25 @@ async function finalizeQuiz(userId, skill, session) {
       quizGaps: gapsArray,
       quizVerifiedAt: new Date()
     });
+  }
+
+  // Prune any duplicate skill aliases from user.skills so only one canonical skill entry remains
+  if (Array.isArray(user.skills) && user.skills.length > 1) {
+    const seenMap = new Map();
+    const cleaned = [];
+    for (const sk of user.skills) {
+      const cKey = normalizeSkillKey(sk.name);
+      if (!seenMap.has(cKey)) {
+        seenMap.set(cKey, sk);
+        cleaned.push(sk);
+      } else {
+        const existing = seenMap.get(cKey);
+        if (sk.isQuizVerified) existing.isQuizVerified = true;
+        if (sk.isCodeVerified) existing.isCodeVerified = true;
+        if (sk.verifiedProficiency) existing.verifiedProficiency = sk.verifiedProficiency;
+      }
+    }
+    user.skills = cleaned;
   }
 
   // Mark account as having completed skill verification (only required once per account)

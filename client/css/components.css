@@ -253,6 +253,34 @@
   border: 1px solid var(--color-border) !important;
 }
 
+/* Gold / Amber Badge (Self-Rated, In-Progress, Pending Verification) */
+.badge-gold {
+  background: #FEF3C7 !important;
+  color: #92400E !important;
+  border: 1px solid #FCD34D !important;
+  font-weight: 600 !important;
+  font-size: 0.72rem !important;
+  padding: 0.28rem 0.65rem !important;
+  border-radius: var(--radius-pill) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+}
+
+/* Leaf / Emerald Badge (Verified, High Proficiency, Unlocked) */
+.badge-leaf {
+  background: #DCFCE7 !important;
+  color: #166534 !important;
+  border: 1px solid #86EFAC !important;
+  font-weight: 700 !important;
+  font-size: 0.72rem !important;
+  padding: 0.28rem 0.65rem !important;
+  border-radius: var(--radius-pill) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+}
+
 /* --------------------------------------------------------------------------
    4. Form Controls & Inputs (Clean White Background + Accessible Contrast)
    -------------------------------------------------------------------------- */

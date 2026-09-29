@@ -1474,11 +1474,16 @@ const QUIZ_QUESTIONS = {
 function normalizeSkillKey(skill) {
   const s = (skill || '').toLowerCase().trim();
   if (s === 'nodejs' || s === 'node') return 'node.js';
-  if (s === 'reactjs') return 'react';
+  if (s === 'reactjs' || s === 'react.js') return 'react';
+  if (s === 'express' || s === 'expressjs') return 'express.js';
   if (s === 'html5') return 'html';
   if (s === 'css3') return 'css';
   if (s === 'js') return 'javascript';
   if (s === 'py') return 'python';
+  if (s === 'golang') return 'go';
+  if (s === 'ts') return 'typescript';
+  if (s === 'postgres') return 'postgresql';
+  if (s === 'mongo') return 'mongodb';
   return s;
 }
 
