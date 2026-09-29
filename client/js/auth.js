@@ -80,6 +80,14 @@ const Auth = {
   },
 
   /**
+   * Alias for isAuthenticated()
+   * @returns {boolean}
+   */
+  isLoggedIn() {
+    return this.isAuthenticated();
+  },
+
+  /**
    * Guard for protected pages: redirects unauthenticated users to login.html
    */
   requireAuth() {
