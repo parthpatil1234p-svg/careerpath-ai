@@ -67,35 +67,75 @@ window.GitHubAuth = (function () {
   };
 
   /**
-   * Connects GitHub profile & study repositories for an already authenticated user.
+   * Synchronizes repositories directly through the Auth System (NO USERNAME PROMPT)
    */
-  const connectGitHubAccount = async (arg1, arg2 = {}) => {
-    // Overload 1: connectGitHubAccount(callbackFunction)
-    if (typeof arg1 === 'function') {
-      const callback = arg1;
-      showUniversalGitHubModal(
-        {
-          showAlert: (msg, type) => {
-            if (type === 'danger' || type === 'error') callback(new Error(msg));
-          },
-          onSuccess: (data) => {
-            callback(null, data);
-          },
-        },
-        true
-      );
+  const syncRepos = async (arg1 = {}, arg2 = {}) => {
+    let callbacks = typeof arg1 === 'function' ? { onSuccess: arg1 } : (arg1 || {});
+    if (typeof arg2 === 'object') {
+      callbacks = { ...callbacks, ...arg2 };
+    }
+    const {
+      showAlert = () => {},
+      setLoadingState = () => {},
+      onSuccess = null,
+      onError = null,
+    } = callbacks;
+
+    if (!window.Auth?.isAuthenticated?.() && !window.Auth?.isLoggedIn?.()) {
+      const err = new Error('Please log in first to sync your repositories.');
+      if (showAlert) showAlert(err.message, 'danger');
+      if (onError) onError(err);
+      if (typeof arg1 === 'function') arg1(err);
       return;
     }
 
-    // Overload 2: connectGitHubAccount(username, callbacks)
-    const username = arg1;
-    const callbacks = arg2;
+    if (setLoadingState) setLoadingState(true);
+
+    try {
+      // Synchronize repositories via the Auth System (no username prompt)
+      const response = await window.API.post('/auth/github/sync', {}, { auth: true });
+
+      if (response.success && response.data?.user) {
+        window.Auth.setCurrentUser(response.data.user);
+        if (showAlert) {
+          showAlert(response.message || 'GitHub repositories synchronized successfully via auth system!', 'success');
+        }
+        if (onSuccess) onSuccess(response.data);
+        if (typeof arg1 === 'function') arg1(null, response.data);
+      } else {
+        const err = new Error(response.message || 'Could not synchronize repositories via auth system.');
+        if (showAlert) showAlert(err.message, 'danger');
+        if (onError) onError(err);
+        if (typeof arg1 === 'function') arg1(err);
+      }
+    } catch (err) {
+      if (showAlert) showAlert(err.message || 'Failed to sync repositories.', 'danger');
+      if (onError) onError(err);
+      if (typeof arg1 === 'function') arg1(err);
+    } finally {
+      if (setLoadingState) setLoadingState(false);
+    }
+  };
+
+  /**
+   * Connects or syncs GitHub profile & study repositories for an authenticated user.
+   * If no explicit username string is passed, it uses the Auth System sync (NO USERNAME PROMPT).
+   */
+  const connectGitHubAccount = async (arg1, arg2 = {}) => {
+    // If called with a callback function or without username: Use Auth System Sync!
+    if (typeof arg1 === 'function' || !arg1 || typeof arg1 === 'object') {
+      return syncRepos(arg1, arg2);
+    }
+
+    // If username is explicitly provided as string:
+    const username = String(arg1).trim();
+    const callbacks = arg2 || {};
     const { showAlert = () => {}, setLoadingState = () => {}, onSuccess = null } = callbacks;
 
     if (setLoadingState) setLoadingState(true);
 
     try {
-      const response = await window.API.post('/auth/github/connect', { username });
+      const response = await window.API.post('/auth/github/connect', { username }, { auth: true });
 
       if (response.success && response.data?.user) {
         window.Auth.setCurrentUser(response.data.user);
@@ -107,12 +147,12 @@ window.GitHubAuth = (function () {
         }
       } else {
         if (showAlert) {
-          showAlert(response.message || 'Could not connect GitHub account.');
+          showAlert(response.message || 'Could not connect GitHub account.', 'danger');
         }
       }
     } catch (err) {
       if (showAlert) {
-        showAlert(err.message || 'Failed to connect GitHub account.');
+        showAlert(err.message || 'Failed to connect GitHub account.', 'danger');
       }
     } finally {
       if (setLoadingState) setLoadingState(false);
@@ -416,6 +456,7 @@ window.GitHubAuth = (function () {
     init,
     sendGitHubAuthPayload,
     connectGitHubAccount,
+    syncRepos,
     showFastTrackGitHubModal: showUniversalGitHubModal,
     showUniversalGitHubModal,
   };

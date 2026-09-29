@@ -52,6 +52,9 @@ router.post('/github', githubAuth);
 // POST /api/auth/github/connect — Connect & analyze GitHub study repos for logged-in user
 router.post('/github/connect', protect, connectGitHub);
 
+// POST /api/auth/github/sync — Synchronize GitHub study repos via auth system
+router.post('/github/sync', protect, connectGitHub);
+
 // GET /api/auth/github/config — Public GitHub Client ID
 router.get('/github/config', getGitHubConfig);
 

@@ -290,6 +290,7 @@ async function finalizeQuiz(userId, skill, session) {
     selfRated: selfRated.toLowerCase(),
     selfRatedProficiency: selfRated.toLowerCase(),
     quizSays: verifiedLevel,
+    verifiedLevel: verifiedLevel,
     verifiedProficiency: verifiedLevel,
     comparisonStatus,
     identifiedGaps: gapsArray,

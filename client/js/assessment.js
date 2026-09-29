@@ -1418,9 +1418,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        // 2. Otherwise trigger 1-Click Fast-Track GitHub modal
-        if (window.GitHubAuth?.connectGitHubAccount) {
-          window.GitHubAuth.connectGitHubAccount((err, data) => {
+        // 2. Synchronize via Auth System (Zero username prompt)
+        const syncHandler = window.GitHubAuth?.syncRepos || window.GitHubAuth?.connectGitHubAccount;
+        if (syncHandler) {
+          syncHandler((err, data) => {
             btnAutoDetectGitHubSkills.disabled = false;
             btnAutoDetectGitHubSkills.innerHTML = originalText;
 
@@ -1429,11 +1430,12 @@ document.addEventListener('DOMContentLoaded', async () => {
               return;
             }
 
-            const verifiedSkills = data?.verifiedSkills || [];
+            const verifiedSkills = data?.detectedSkills || data?.verifiedSkills || (data?.user?.skills || []).filter(s => s.isCodeVerified) || [];
             let countAdded = 0;
 
             verifiedSkills.forEach(s => {
-              const key = s.name.toLowerCase();
+              const key = (s.name || '').toLowerCase();
+              if (!key) return;
               if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
                 allAvailableSkills.unshift({
                   name: key,
@@ -1447,14 +1449,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 category: s.category || 'backend',
                 proficiency: s.proficiency || 'intermediate',
                 isCodeVerified: true,
-                verifiedSource: 'github_repo'
+                verifiedSource: s.verifiedSource || 'github_repo'
               });
               countAdded++;
             });
 
             renderSkillsGrid();
             updateSelectedSkillsUI();
-            showAlert(`✓ Scanned @${data.profile?.username} (${data.repos?.length || 0} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
+            const ghUser = data?.profile?.username || data?.user?.githubProfile?.username || 'user';
+            const repoCount = data?.repositories?.length || data?.repos?.length || data?.user?.githubRepos?.length || 0;
+            showAlert(`✓ Scanned @${ghUser} (${repoCount} study repos via auth system) and auto-detected ${countAdded} verified skills!`, 'success');
             btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>${countAdded} Skills Verified</span>`;
           });
         } else {
