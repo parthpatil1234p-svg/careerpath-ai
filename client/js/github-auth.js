@@ -228,7 +228,7 @@ window.GitHubAuth = (function () {
                   type="text"
                   id="ghUsernameInput"
                   class="form-control bg-white text-ink border-line font-mono"
-                  placeholder="e.g. rahul-dev, parthpatil1234p-svg, octocat"
+                  placeholder="e.g. your-github-username, octocat"
                   autocomplete="off"
                   autofocus
                 />
@@ -263,8 +263,8 @@ window.GitHubAuth = (function () {
             <!-- Quick Example Chips -->
             <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
               <span class="text-secondary small font-mono" style="font-size: 0.70rem;">Quick Examples:</span>
-              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="parthpatil1234p-svg">@parthpatil1234p-svg</button>
               <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="octocat">@octocat</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 font-mono small gh-chip-btn" data-user="torvalds">@torvalds</button>
             </div>
           </div>
 

@@ -1582,103 +1582,128 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Auto-Detect Skills from GitHub Repos Handler
   const btnAutoDetectGitHubSkills = document.getElementById('btnAutoDetectGitHubSkills');
+  const btnAutoDetectGitHubText = document.getElementById('btnAutoDetectGitHubText');
+  const btnChangeGitHubAccount = document.getElementById('btnChangeGitHubAccount');
+
+  const updateGitHubButtonState = () => {
+    const user = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) || 
+                 (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null) || 
+                 null;
+    const connectedGhUser = user?.githubProfile?.username;
+
+    if (connectedGhUser) {
+      if (btnAutoDetectGitHubText) {
+        btnAutoDetectGitHubText.textContent = `Auto-Detect from @${connectedGhUser}`;
+      }
+      if (btnChangeGitHubAccount) {
+        btnChangeGitHubAccount.classList.remove('d-none');
+        btnChangeGitHubAccount.classList.add('d-inline-flex');
+      }
+    } else {
+      if (btnAutoDetectGitHubText) {
+        btnAutoDetectGitHubText.textContent = 'Auto-Detect from GitHub Repos';
+      }
+      if (btnChangeGitHubAccount) {
+        btnChangeGitHubAccount.classList.add('d-none');
+        btnChangeGitHubAccount.classList.remove('d-inline-flex');
+      }
+    }
+  };
+
+  const applyDetectedSkills = (data) => {
+    const verifiedSkills = data?.detectedSkills || data?.verifiedSkills || (data?.user?.skills || []).filter(s => s.isCodeVerified) || [];
+    let countAdded = 0;
+
+    verifiedSkills.forEach(s => {
+      const key = (s.name || '').toLowerCase();
+      if (!key) return;
+      if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
+        allAvailableSkills.unshift({
+          name: key,
+          displayName: s.displayName || s.name,
+          category: s.category || 'backend'
+        });
+      }
+      selectedSkillsMap.set(key, {
+        name: key,
+        displayName: s.displayName || s.name,
+        category: s.category || 'backend',
+        proficiency: s.proficiency || 'intermediate',
+        isCodeVerified: true,
+        verifiedSource: s.verifiedSource || 'github_repo'
+      });
+      countAdded++;
+    });
+
+    renderSkillsGrid();
+    updateSelectedSkillsUI();
+    updateGitHubButtonState();
+
+    const ghUser = data?.profile?.username || data?.user?.githubProfile?.username || data?.profile?.login || 'user';
+    const repoCount = data?.repositories?.length || data?.repos?.length || data?.user?.githubRepos?.length || 0;
+    showAlert(`✓ Scanned @${ghUser} (${repoCount} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
+    if (btnAutoDetectGitHubSkills) {
+      btnAutoDetectGitHubSkills.disabled = false;
+      btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>@${ghUser} (${countAdded} Verified)</span>`;
+    }
+  };
+
+  updateGitHubButtonState();
+
   if (btnAutoDetectGitHubSkills) {
     btnAutoDetectGitHubSkills.addEventListener('click', async () => {
-      const originalText = btnAutoDetectGitHubSkills.innerHTML;
-      btnAutoDetectGitHubSkills.disabled = true;
-      btnAutoDetectGitHubSkills.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Scanning Repos...`;
+      const originalHtml = btnAutoDetectGitHubSkills.innerHTML;
 
       try {
         const user = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) || 
                      (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null) || 
                      null;
+        const connectedGhUser = user?.githubProfile?.username;
 
-        // 1. If user already has connected GitHub repos and verified skills in their profile
-        if (user?.githubProfile?.username && Array.isArray(user.skills) && user.skills.some(s => s.isCodeVerified)) {
-          let countAdded = 0;
-          user.skills.forEach(s => {
-            if (s.isCodeVerified) {
-              const key = s.name.toLowerCase();
-              if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
-                allAvailableSkills.unshift({
-                  name: key,
-                  displayName: s.displayName || s.name,
-                  category: s.category || 'backend'
-                });
-              }
-              selectedSkillsMap.set(key, {
-                name: key,
-                displayName: s.displayName || s.name,
-                category: s.category || 'backend',
-                proficiency: s.proficiency || 'intermediate',
-                isCodeVerified: true,
-                verifiedSource: 'github_repo'
-              });
-              countAdded++;
+        if (connectedGhUser) {
+          btnAutoDetectGitHubSkills.disabled = true;
+          btnAutoDetectGitHubSkills.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Scanning @${connectedGhUser}...`;
+
+          window.GitHubAuth?.connectGitHubAccount(connectedGhUser, {
+            onSuccess: (data) => {
+              applyDetectedSkills(data);
+            },
+            onError: (err) => {
+              btnAutoDetectGitHubSkills.disabled = false;
+              btnAutoDetectGitHubSkills.innerHTML = originalHtml;
+              showAlert(err.message || 'Failed to scan repositories. Please try reconnecting.', 'danger');
             }
-          });
-
-          renderSkillsGrid();
-          updateSelectedSkillsUI();
-          showAlert(`✓ Auto-detected ${countAdded} verified skills directly from your connected GitHub (@${user.githubProfile.username}) repositories!`, 'success');
-          btnAutoDetectGitHubSkills.disabled = false;
-          btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>${countAdded} Skills Verified</span>`;
-          return;
-        }
-
-        // 2. Synchronize via Auth System (Zero username prompt)
-        const syncHandler = window.GitHubAuth?.syncRepos || window.GitHubAuth?.connectGitHubAccount;
-        if (syncHandler) {
-          syncHandler((err, data) => {
-            btnAutoDetectGitHubSkills.disabled = false;
-            btnAutoDetectGitHubSkills.innerHTML = originalText;
-
-            if (err) {
-              showAlert(err.message || 'GitHub scan canceled or failed.', 'danger');
-              return;
-            }
-
-            const verifiedSkills = data?.detectedSkills || data?.verifiedSkills || (data?.user?.skills || []).filter(s => s.isCodeVerified) || [];
-            let countAdded = 0;
-
-            verifiedSkills.forEach(s => {
-              const key = (s.name || '').toLowerCase();
-              if (!key) return;
-              if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
-                allAvailableSkills.unshift({
-                  name: key,
-                  displayName: s.displayName || s.name,
-                  category: s.category || 'backend'
-                });
-              }
-              selectedSkillsMap.set(key, {
-                name: key,
-                displayName: s.displayName || s.name,
-                category: s.category || 'backend',
-                proficiency: s.proficiency || 'intermediate',
-                isCodeVerified: true,
-                verifiedSource: s.verifiedSource || 'github_repo'
-              });
-              countAdded++;
-            });
-
-            renderSkillsGrid();
-            updateSelectedSkillsUI();
-            const ghUser = data?.profile?.username || data?.user?.githubProfile?.username || 'user';
-            const repoCount = data?.repositories?.length || data?.repos?.length || data?.user?.githubRepos?.length || 0;
-            showAlert(`✓ Scanned @${ghUser} (${repoCount} study repos via auth system) and auto-detected ${countAdded} verified skills!`, 'success');
-            btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>${countAdded} Skills Verified</span>`;
           });
         } else {
-          showAlert('GitHub integration script not loaded. Please refresh.', 'warning');
-          btnAutoDetectGitHubSkills.disabled = false;
-          btnAutoDetectGitHubSkills.innerHTML = originalText;
+          // No GitHub account linked yet: prompt user to connect THEIR OWN GitHub account!
+          if (window.GitHubAuth?.showUniversalGitHubModal) {
+            window.GitHubAuth.showUniversalGitHubModal({
+              onSuccess: (data) => {
+                applyDetectedSkills(data);
+              }
+            }, true, 'Enter your personal GitHub username to scan your study repositories and auto-verify skills.');
+          } else {
+            showAlert('GitHub integration script loading. Please refresh.', 'warning');
+          }
         }
       } catch (err) {
         console.error('GitHub auto-detect error:', err);
         showAlert(err.message || 'Failed to auto-detect skills from GitHub.', 'danger');
         btnAutoDetectGitHubSkills.disabled = false;
-        btnAutoDetectGitHubSkills.innerHTML = originalText;
+        btnAutoDetectGitHubSkills.innerHTML = originalHtml;
+      }
+    });
+  }
+
+  // Switch / Change GitHub Account Button
+  if (btnChangeGitHubAccount) {
+    btnChangeGitHubAccount.addEventListener('click', () => {
+      if (window.GitHubAuth?.showUniversalGitHubModal) {
+        window.GitHubAuth.showUniversalGitHubModal({
+          onSuccess: (data) => {
+            applyDetectedSkills(data);
+          }
+        }, true, 'Enter any student GitHub username to scan repositories and auto-verify skills.');
       }
     });
   }

@@ -376,15 +376,26 @@
                     <p class="text-muted small mb-0">Select skills you know and mark your self-assessed proficiency level</p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  id="btnAutoDetectGitHubSkills"
-                  class="btn btn-github btn-sm px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
-                  title="Scan repositories from your GitHub account and automatically select skills with verified code badges"
-                >
-                  <i class="bi bi-github"></i>
-                  <span>Auto-Detect from GitHub Repos</span>
-                </button>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    id="btnAutoDetectGitHubSkills"
+                    class="btn btn-github btn-sm px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
+                    title="Scan repositories from your GitHub account and automatically select skills with verified code badges"
+                  >
+                    <i class="bi bi-github"></i>
+                    <span id="btnAutoDetectGitHubText">Auto-Detect from GitHub Repos</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="btnChangeGitHubAccount"
+                    class="btn btn-outline-secondary btn-sm px-2.5 py-2 d-none align-items-center gap-1 font-mono"
+                    title="Change or link a different GitHub account"
+                  >
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span>Switch GitHub</span>
+                  </button>
+                </div>
               </div>
 
               <!-- Filter & Search Toolbar -->
