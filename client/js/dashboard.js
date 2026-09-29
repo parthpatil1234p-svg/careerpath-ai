@@ -173,14 +173,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       upcomingTasksList.innerHTML = upcomingTasks
         .map((task) => {
           const resourceBadge = task.resource?.url
-            ? `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary py-0 px-2 ms-2" style="font-size: 0.72rem; border-radius: var(--radius-sm);">
+            ? `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary py-0 px-2 ms-2" style="font-size: 0.75rem; border-radius: var(--radius-sm);">
                 <i class="bi bi-box-arrow-up-right me-1"></i>${escapeHtml(task.resource.type || 'Resource')}
                </a>`
             : '';
 
           return `
-            <div class="dashboard-task-item d-flex align-items-center justify-content-between gap-3 ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
-              <div class="d-flex align-items-center gap-3">
+            <div class="dashboard-task-item d-flex align-items-center justify-content-between gap-3 flex-wrap ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
+              <div class="d-flex align-items-center gap-3 flex-grow-1" style="min-width: 0;">
                 <input
                   type="checkbox"
                   class="task-checkbox-input"
@@ -192,14 +192,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <div class="fw-semibold small task-title mb-0" style="color: var(--ink);">
                     Week ${task.weekNumber}: ${escapeHtml(task.title)}
                   </div>
-                  <div class="d-flex align-items-center gap-2 mt-1">
-                    <span class="badge badge-type-${task.type} text-uppercase font-monospace" style="font-size: 0.62rem;">
+                  <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
+                    <span class="badge badge-type-${task.type} text-uppercase font-monospace" style="font-size: 0.75rem;">
                       ${escapeHtml(task.type)}
                     </span>
-                    <span class="badge badge-priority-${task.priority}" style="font-size: 0.62rem;">
+                    <span class="badge badge-priority-${task.priority}" style="font-size: 0.75rem;">
                       ${escapeHtml(task.priority)}
                     </span>
-                    <span class="text-secondary" style="font-size: 0.72rem; font-family: var(--font-mono);">
+                    <span class="text-secondary" style="font-size: 0.75rem; font-family: var(--font-mono);">
                       <i class="bi bi-clock me-1"></i>${task.estimatedHours || 2}h
                     </span>
                   </div>

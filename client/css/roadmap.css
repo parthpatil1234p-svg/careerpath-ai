@@ -1,16 +1,15 @@
 /* ==========================================================================
    CareerPath AI — Learning Roadmap Stylesheet (roadmap.css)
-   Ultra-Sleek Modern Tech Aesthetics · Glowing Accents
+   Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
    CareerPath AI · Team: 404 Brain Not Found
    ========================================================================== */
 
 /* Top Roadmap Summary Header */
 .roadmap-header-card {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
 }
@@ -27,11 +26,10 @@
 
 /* 3D Roadmap Milestone Path Canvas Container */
 .roadmap-path-card {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
   position: relative;
 }
@@ -67,17 +65,16 @@
   bottom: 16px;
   left: 41px;
   width: 2px;
-  background: linear-gradient(180deg, var(--cyan) 0%, rgba(99, 102, 241, 0.3) 100%);
+  background: #CBD5E1;
   z-index: 1;
 }
 
 /* Week Cards */
 .week-card {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
   position: relative;
   z-index: 2;
@@ -85,18 +82,18 @@
 }
 
 .week-card:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.15);
+  border-color: #CBD5E1;
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
 .week-card.active-week {
-  border-color: var(--cyan);
-  box-shadow: 0 0 30px rgba(0, 242, 254, 0.25);
+  border-color: var(--color-indigo-600);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12);
 }
 
 .week-card.completed-week {
-  border-color: rgba(16, 185, 129, 0.4);
+  border-color: #BBF7D0;
 }
 
 .week-card.highlight-week {
@@ -104,16 +101,16 @@
 }
 
 @keyframes pulseHighlight {
-  0% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.6); }
-  50% { box-shadow: 0 0 0 8px rgba(0, 242, 254, 0.2); transform: scale(1.01); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.15); transform: scale(1.01); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
 }
 
 .week-badge-pill {
   width: 38px;
   height: 38px;
   border-radius: var(--radius-sm);
-  background: var(--gradient-primary);
+  background: var(--color-indigo-600);
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -121,75 +118,79 @@
   font-family: var(--font-mono);
   font-weight: 800;
   font-size: 0.95rem;
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
   flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.25);
 }
 
 .week-card.completed-week .week-badge-pill {
-  background: linear-gradient(135deg, #10B981, #059669);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+  background: var(--color-success);
 }
 
 /* Task Checklist Items */
-.task-checklist-item {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.task-checklist-item,
+.task-item {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 0.95rem 1.25rem;
   transition: all var(--transition-fast);
 }
 
-.task-checklist-item:hover {
-  background: rgba(15, 23, 42, 0.9);
-  border-color: rgba(56, 189, 248, 0.35);
+.task-checklist-item:hover,
+.task-item:hover {
+  background: var(--color-surface-muted);
+  border-color: #CBD5E1;
 }
 
-.task-checklist-item.is-completed {
-  opacity: 0.65;
-  background: rgba(16, 185, 129, 0.06);
-  border-color: rgba(16, 185, 129, 0.25);
+.task-checklist-item.is-completed,
+.task-item.is-completed {
+  opacity: 0.75;
+  background: var(--color-success-bg);
+  border-color: #BBF7D0;
 }
 
-.task-checklist-item.is-completed .task-title {
+.task-checklist-item.is-completed .task-title,
+.task-item.is-completed .task-title {
   text-decoration: line-through;
-  color: var(--text-muted) !important;
+  color: var(--color-text-muted) !important;
 }
 
-.task-checkbox {
+.task-checkbox,
+.task-checkbox-input {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: var(--cyan);
+  accent-color: var(--color-indigo-600);
   flex-shrink: 0;
 }
 
 /* Resource Link Button */
 .resource-link-btn {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   padding: 0.25rem 0.65rem;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--cyan);
+  border: 1px solid #C7D2FE;
+  background: var(--color-surface-indigo);
+  color: var(--color-indigo-700);
   text-decoration: none;
   transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  font-weight: 500;
 }
 
 .resource-link-btn:hover {
-  background: rgba(0, 242, 254, 0.12);
-  border-color: rgba(0, 242, 254, 0.35);
+  background: var(--color-indigo-600);
+  border-color: var(--color-indigo-600);
   color: #FFFFFF;
   text-decoration: none;
-  box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.25);
 }
 
 /* ==========================================================================
    Print / PDF Stylesheet (@media print)
-   Optimized for clean paper printouts and PDF exports
    ========================================================================== */
 @media print {
   @page {
@@ -207,6 +208,7 @@
   }
 
   .cp-navbar,
+  .cp-navbar-notch,
   footer,
   .roadmap-path-card,
   #roadmap-path,
@@ -223,7 +225,7 @@
 
   .print-brand-header {
     display: block !important;
-    border-bottom: 2px solid #0284c7 !important;
+    border-bottom: 2px solid var(--color-indigo-600) !important;
     margin-bottom: 1.5rem !important;
   }
 
@@ -245,11 +247,10 @@
     box-shadow: none !important;
     padding: 1rem 1.25rem !important;
     margin-bottom: 1.5rem !important;
-    backdrop-filter: none !important;
   }
 
   .roadmap-header-card::before {
-    background: #0284c7 !important;
+    background: var(--color-indigo-600) !important;
     height: 3px !important;
   }
 
@@ -278,11 +279,11 @@
   }
 
   #roadmapPercentage {
-    color: #0284c7 !important;
+    color: var(--color-indigo-600) !important;
   }
 
   .progress-bar {
-    background: #0284c7 !important;
+    background: var(--color-indigo-600) !important;
   }
 
   .roadmap-timeline {
@@ -298,17 +299,16 @@
     padding: 1rem !important;
     break-inside: avoid !important;
     page-break-inside: avoid !important;
-    backdrop-filter: none !important;
   }
 
   .week-card.active-week,
   .week-card.completed-week {
-    border-color: #0284c7 !important;
+    border-color: var(--color-indigo-600) !important;
     box-shadow: none !important;
   }
 
   .week-badge-pill {
-    background: #0284c7 !important;
+    background: var(--color-indigo-600) !important;
     color: #ffffff !important;
     box-shadow: none !important;
   }
@@ -323,7 +323,8 @@
     color: #475569 !important;
   }
 
-  .task-checklist-item {
+  .task-checklist-item,
+  .task-item {
     background: #f8fafc !important;
     border: 1px solid #e2e8f0 !important;
     color: #0f172a !important;
@@ -331,24 +332,22 @@
     margin-bottom: 0.4rem !important;
   }
 
-  .task-checklist-item.is-completed {
-    opacity: 1 !important;
+  .task-checklist-item.is-completed,
+  .task-item.is-completed {
     background: #f0fdf4 !important;
     border-color: #86efac !important;
   }
 
-  .task-checklist-item .task-title {
+  .task-checklist-item .task-title,
+  .task-item .task-title {
     color: #0f172a !important;
     font-size: 10pt !important;
   }
 
-  .task-checklist-item .text-muted {
+  .task-checklist-item .text-muted,
+  .task-item .text-muted {
     color: #64748b !important;
     font-size: 9pt !important;
-  }
-
-  .task-checkbox {
-    border: 1px solid #475569 !important;
   }
 }
 
@@ -362,39 +361,33 @@
   .week-card {
     padding: 1.75rem 2rem;
   }
-  .task-checklist-item {
+  .task-checklist-item,
+  .task-item {
     padding: 1.15rem 1.5rem;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease;
   }
-  .task-checklist-item:hover {
+  .task-checklist-item:hover,
+  .task-item:hover {
     transform: translateX(4px);
-    border-color: rgba(56, 189, 248, 0.45);
-    background: rgba(15, 23, 42, 0.95);
+    border-color: #CBD5E1;
+    background: var(--color-surface-muted);
   }
   .resource-link-btn {
     padding: 0.35rem 0.85rem;
     font-size: 0.78rem;
   }
   .resource-link-btn:hover {
-    background: rgba(0, 242, 254, 0.15);
-    border-color: rgba(0, 242, 254, 0.45);
     transform: translateY(-1px);
   }
 
-  /* Route canvas — taller on desktop so 3D path is clearly visible */
   #roadmap-path {
     min-height: 350px;
   }
 }
 
-/* ==========================================================================
-   Roadmap Page — Container Cap (prevents 1911px stretch at 1920px)
-   The roadmap page <main> uses .container which must obey the same
-   1520px global cap as all other pages.
-   ========================================================================== */
 .roadmap-page main.container,
 .roadmap-page > main {
-  max-width: var(--container-max-width, 1520px) !important;
+  max-width: var(--container-max-width, 1280px) !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }

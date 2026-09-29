@@ -17,17 +17,17 @@
   height: 26px;
   padding: 0 6px;
   border-radius: 7px;
-  background: rgba(10, 18, 36, 0.94);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 242, 254, 0.65);
-  color: #00F2FE;
+  border: 1.5px solid #C7D2FE;
+  color: #4F46E5;
   font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
-  text-shadow: 0 0 8px rgba(0, 242, 254, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.35);
+  text-shadow: none;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(79, 70, 229, 0.15);
   animation: cpCharPopUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   user-select: none;
   transform-origin: center bottom;
@@ -36,52 +36,48 @@
 
 /* Color Theme Variations */
 .cp-char-popup.color-cyan {
-  border-color: rgba(0, 242, 254, 0.7);
-  color: #00F2FE;
-  text-shadow: 0 0 8px rgba(0, 242, 254, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.4);
+  border-color: #A5F3FC;
+  color: #0891B2;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(6, 182, 212, 0.2);
 }
 
 .cp-char-popup.color-purple {
-  border-color: rgba(168, 85, 247, 0.75);
-  color: #C084FC;
-  text-shadow: 0 0 8px rgba(168, 85, 247, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(168, 85, 247, 0.4);
+  border-color: #DDD6FE;
+  color: #7C3AED;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(124, 58, 237, 0.2);
 }
 
 .cp-char-popup.color-emerald {
-  border-color: rgba(16, 185, 129, 0.75);
-  color: #34D399;
-  text-shadow: 0 0 8px rgba(16, 185, 129, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(16, 185, 129, 0.4);
+  border-color: #A7F3D0;
+  color: #059669;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(16, 185, 129, 0.2);
 }
 
 .cp-char-popup.color-amber {
-  border-color: rgba(245, 158, 11, 0.75);
-  color: #FBBF24;
-  text-shadow: 0 0 8px rgba(245, 158, 11, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(245, 158, 11, 0.4);
+  border-color: #FDE68A;
+  color: #D97706;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(217, 119, 6, 0.2);
 }
 
 .cp-char-popup.color-rose {
-  border-color: rgba(244, 63, 94, 0.75);
-  color: #FB7185;
-  text-shadow: 0 0 8px rgba(244, 63, 94, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(244, 63, 94, 0.4);
+  border-color: #FECDD3;
+  color: #E11D48;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(225, 29, 72, 0.2);
 }
 
 .cp-char-popup.is-password {
-  border-color: rgba(168, 85, 247, 0.8);
-  color: #E879F9;
+  border-color: #DDD6FE;
+  color: #7C3AED;
   font-size: 11px;
   min-width: 22px;
   height: 22px;
-  text-shadow: 0 0 10px rgba(232, 121, 249, 0.9);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
 }
 
 .cp-char-popup.is-backspace {
-  border-color: rgba(239, 68, 68, 0.6);
-  color: #F87171;
+  border-color: #FECDD3;
+  color: #DC2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
   animation: cpCharPopDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

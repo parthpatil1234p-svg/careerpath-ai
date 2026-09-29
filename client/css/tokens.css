@@ -1,115 +1,161 @@
 /* ==========================================================================
-   CareerPath AI — Modern High-Tech Design Tokens (tokens.css)
-   Ultra-Sleek Dark Mode · Glowing Neon Accents · Glassmorphism
+   CareerPath AI — EduTech Modern Design Tokens (tokens.css)
+   Clean Modern Light Theme · Indigo, Blue & Cyan Accents
    CareerPath AI · Team: 404 Brain Not Found
    ========================================================================== */
 
 :root {
   /* ------------------------------------------------------------------------
-     1. High-Tech Dark Palette & Surfaces
+     1. Primary Surfaces & Backgrounds (Clean, Trustworthy, Light)
      ------------------------------------------------------------------------ */
-  --bg-darkest: #06090F;          /* Deepest cosmic void background */
-  --bg-page: #0A0E17;             /* Main page canvas */
-  --bg-surface: #111726;          /* Card and panel background */
-  --bg-surface-elevated: #161F33; /* Hovered / elevated card background */
-  --bg-surface-subtle: #1C263E;   /* Input fields, nested modules */
+  --color-background: #F8FAFC;        /* Main page canvas */
+  --color-surface: #FFFFFF;           /* Card and panel background */
+  --color-surface-muted: #F1F5F9;     /* Subtle section fills, table headers */
+  --color-surface-blue: #EFF6FF;      /* Soft blue badge / card tint */
+  --color-surface-indigo: #EEF2FF;    /* Soft indigo highlight tint */
+  --color-surface-cyan: #ECFEFF;      /* Soft cyan accent tint */
+
+  /* Legacy & Internal Surface Aliases */
+  --bg-darkest: #F1F5F9;
+  --bg-page: var(--color-background);
+  --bg-surface: var(--color-surface);
+  --bg-surface-elevated: #FFFFFF;
+  --bg-surface-subtle: var(--color-surface-muted);
+
+  /* Clean Translucent Glass Overlays (Light mode subtle blur) */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-bg-card: rgba(255, 255, 255, 0.95);
+  --glass-bg-hover: #FFFFFF;
+  --glass-blur: blur(12px);
+  --glass-border: #E2E8F0;
+  --glass-border-hover: #CBD5E1;
+
+  /* ------------------------------------------------------------------------
+     2. Primary Blue & Indigo Brand Palette
+     ------------------------------------------------------------------------ */
+  --color-primary-900: #172554;
+  --color-primary-800: #1E3A8A;
+  --color-primary-700: #1D4ED8;
+  --color-primary-600: #2563EB;
+  --color-primary-500: #3B82F6;
+
+  --color-indigo-900: #312E81;
+  --color-indigo-800: #3730A3;
+  --color-indigo-700: #4338CA;
+  --color-indigo-600: #4F46E5;
+  --color-indigo-500: #6366F1;
+
+  /* Cyan Accents (Used sparingly for path, spark, node highlights) */
+  --color-cyan-700: #0E7490;
+  --color-cyan-600: #0891B2;
+  --color-cyan-500: #06B6D4;
+  --color-cyan-400: #22D3EE;
+  --color-cyan-300: #67E8F9;
+
+  /* Semantic Status Colors */
+  --color-success: #16A34A;
+  --color-success-bg: #F0FDF4;
+  --color-warning: #D97706;
+  --color-warning-bg: #FFFBEB;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEF2F2;
+  --color-info: #0284C7;
+  --color-info-bg: #F0F9FF;
+
+  /* Legacy Palette Aliases */
+  --cyan: var(--color-cyan-500);
+  --cyan-glow: rgba(6, 182, 212, 0.2);
+  --teal: var(--color-cyan-600);
+  --teal-glow: rgba(8, 145, 178, 0.18);
+  --blue: var(--color-primary-600);
+  --indigo: var(--color-indigo-600);
+  --violet: var(--color-indigo-500);
+  --violet-glow: rgba(99, 102, 241, 0.2);
+  --emerald: var(--color-success);
+  --emerald-glow: rgba(22, 163, 74, 0.18);
+  --amber: var(--color-warning);
+  --amber-glow: rgba(217, 119, 6, 0.18);
+  --rose: var(--color-danger);
+  --rose-glow: rgba(220, 38, 38, 0.18);
+
+  /* ------------------------------------------------------------------------
+     3. High-Contrast Accessible Typography Colors
+     ------------------------------------------------------------------------ */
+  --color-text-primary: #0F172A;      /* Dark navy for headings */
+  --color-text-secondary: #334155;    /* Crisp slate gray for body */
+  --color-text-muted: #64748B;        /* Muted slate for metadata */
+  --color-text-disabled: #94A3B8;     /* Disabled / subtle captions */
+  --color-border: #E2E8F0;            /* Light slate border */
+
+  /* Legacy Typography Aliases */
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --text-dim: var(--color-text-disabled);
+  --text-accent: var(--color-indigo-600);
+
+  /* ------------------------------------------------------------------------
+     4. Professional Subtle Gradients
+     ------------------------------------------------------------------------ */
+  --gradient-primary: linear-gradient(135deg, #4F46E5 0%, #2563EB 100%);
+  --gradient-secondary: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+  --gradient-accent: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
+  --gradient-hero-title: linear-gradient(135deg, #0F172A 20%, #312E81 60%, #2563EB 100%);
+  --gradient-card-border: linear-gradient(135deg, #E2E8F0, #EEF2FF);
+  --gradient-glow-cyan: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+  --gradient-glow-violet: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+
+  /* ------------------------------------------------------------------------
+     5. Crisp Borders & Subtle Professional Shadows
+     ------------------------------------------------------------------------ */
+  --line: var(--color-border);
+  --line-strong: #CBD5E1;
+  --line-highlight: #C7D2FE;
   
-  /* Glassmorphism Overlays */
-  --glass-bg: rgba(17, 23, 38, 0.72);
-  --glass-bg-card: rgba(22, 31, 51, 0.65);
-  --glass-bg-hover: rgba(28, 38, 62, 0.85);
-  --glass-blur: blur(16px);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(56, 189, 248, 0.4);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 30px rgba(30, 64, 175, 0.08);
+  --shadow-glow-cyan: 0 4px 20px rgba(6, 182, 212, 0.15);
+  --shadow-glow-violet: 0 4px 20px rgba(99, 102, 241, 0.15);
 
   /* ------------------------------------------------------------------------
-     2. Radiant Neon Brand Accents (Curated High-Contrast Palette)
+     6. Modern Sleek Typography Stacks (Inter Primary)
      ------------------------------------------------------------------------ */
-  --cyan: #00F2FE;                /* Electric Cyan — Primary AI accent */
-  --cyan-glow: rgba(0, 242, 254, 0.35);
-  --teal: #06B6D4;                /* Vibrant Teal — Primary links & routes */
-  --teal-glow: rgba(6, 182, 212, 0.3);
-  --blue: #3B82F6;                /* Electric Blue */
-  --indigo: #6366F1;              /* Tech Indigo */
-  --violet: #8B5CF6;              /* Radiant Purple */
-  --violet-glow: rgba(139, 92, 246, 0.3);
-  --emerald: #10B981;             /* Leaf/Success/Matched Skills */
-  --emerald-glow: rgba(16, 185, 129, 0.3);
-  --amber: #F59E0B;               /* Gold/Milestones/Developing Skills */
-  --amber-glow: rgba(245, 158, 11, 0.3);
-  --rose: #F43F5E;                /* Coral/Missing Skills/Alerts */
-  --rose-glow: rgba(244, 63, 94, 0.3);
-
-  /* ------------------------------------------------------------------------
-     3. High-Contrast Typography Colors
-     ------------------------------------------------------------------------ */
-  --text-primary: #FFFFFF;        /* Pure white for prominent headings */
-  --text-secondary: #E2E8F0;      /* Crisp light gray for primary body */
-  --text-muted: #94A3B8;          /* Slate gray for supporting metadata */
-  --text-dim: #94A3B8;            /* High-contrast subtle captions (WCAG AA Compliant) */
-  --text-accent: #38BDF8;         /* Cyan highlighted text */
-
-  /* ------------------------------------------------------------------------
-     4. Dynamic Glowing Gradients
-     ------------------------------------------------------------------------ */
-  --gradient-primary: linear-gradient(135deg, #00F2FE 0%, #3B82F6 50%, #8B5CF6 100%);
-  --gradient-secondary: linear-gradient(135deg, #06B6D4 0%, #10B981 100%);
-  --gradient-accent: linear-gradient(135deg, #F43F5E 0%, #F59E0B 100%);
-  --gradient-hero-title: linear-gradient(135deg, #FFFFFF 20%, #E2E8F0 50%, #38BDF8 100%);
-  --gradient-card-border: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(139, 92, 246, 0.1), transparent);
-  --gradient-glow-cyan: radial-gradient(circle, rgba(0, 242, 254, 0.18) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 70%);
-  --gradient-glow-violet: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 70%);
-
-  /* ------------------------------------------------------------------------
-     5. Crisp Borders & Glowing Shadows
-     ------------------------------------------------------------------------ */
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.15);
-  --line-highlight: rgba(56, 189, 248, 0.4);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-glow-cyan: 0 0 30px -5px rgba(0, 242, 254, 0.25);
-  --shadow-glow-violet: 0 0 30px -5px rgba(139, 92, 246, 0.25);
-
-  /* ------------------------------------------------------------------------
-     6. Modern Sleek Typography Stacks
-     ------------------------------------------------------------------------ */
-  --font-heading: 'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: 'JetBrains Mono', 'IBM Plex Mono', 'Courier New', monospace;
   --font-serif: var(--font-heading);
 
   /* ------------------------------------------------------------------------
      7. Spacing & Geometric Radii
      ------------------------------------------------------------------------ */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;                   /* Small controls: 8px */
+  --radius-md: 16px;                  /* Cards: 14–18px */
+  --radius-lg: 22px;                  /* Hero containers: 20–24px */
   --radius-pill: 9999px;
 
-  --container-max-width: 1220px;
+  --container-max-width: 1240px;
   --container-narrow-width: 960px;
 
-  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ------------------------------------------------------------------------
-     8. Backward-Compatibility Aliases (Map to Career Atlas Names)
+     8. Backward-Compatibility Aliases
      ------------------------------------------------------------------------ */
-  --ink: #FFFFFF;
-  --paper: var(--bg-page);
-  --surface: var(--bg-surface);
-  --navy: #06B6D4;
-  --navy-dark: #00F2FE;
-  --leaf: var(--emerald);
-  --leaf-subtle: rgba(16, 185, 129, 0.12);
-  --gold: var(--amber);
-  --gold-subtle: rgba(245, 158, 11, 0.12);
-  --coral: var(--rose);
-  --coral-subtle: rgba(244, 63, 94, 0.12);
-  --navy-subtle: rgba(6, 182, 212, 0.12);
-  --teal-subtle: rgba(0, 242, 254, 0.12);
+  --ink: var(--color-text-primary);
+  --paper: var(--color-background);
+  --surface: var(--color-surface);
+  --navy: var(--color-indigo-600);
+  --navy-dark: var(--color-indigo-800);
+  --leaf: var(--color-success);
+  --leaf-subtle: var(--color-success-bg);
+  --gold: var(--color-warning);
+  --gold-subtle: var(--color-warning-bg);
+  --coral: var(--color-danger);
+  --coral-subtle: var(--color-danger-bg);
+  --navy-subtle: var(--color-surface-indigo);
+  --teal-subtle: var(--color-surface-cyan);
 }

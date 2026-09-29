@@ -98,9 +98,6 @@
       );
 
       vec4 texColor = texture2D(uTexture, uv);
-      float gray = getLuminance(texColor.rgb);
-      vec3 grayscaleColor = vec3(gray);
-      texColor.rgb = mix(texColor.rgb, grayscaleColor, uGrayscale);
 
       vec2 centeredUv = vUv - uCenter;
       float aspect = uResolution.x / uResolution.y;
@@ -126,21 +123,20 @@
 
       float dissolveMask = smoothstep(dissolveThreshold - 0.03, dissolveThreshold, normalizedDist);
 
-      // CareerPath AI Radiant Neon Edge Glow (Electric Cyan to Violet)
-      vec3 edgeColor = mix(vec3(0.0, 0.95, 1.0), vec3(0.55, 0.35, 1.0), vUv.x);
-      vec3 baseColor = mix(texColor.rgb, vec3(0.0), uGrayscale);
-      vec3 finalColor = baseColor;
+      // CareerPath AI EduTech Indigo-to-Cyan Edge Glow (#4F46E5 to #06B6D4)
+      vec3 edgeColor = mix(vec3(0.31, 0.27, 0.90), vec3(0.02, 0.71, 0.83), vUv.x);
+      vec3 finalColor = texColor.rgb;
 
-      float edgeGlowIntensity = uEdgeIntensity * 2.0;
-      float edgeGlow = edge * edgeGlowIntensity * (1.0 + uGrayscale * 3.0);
+      float edgeGlowIntensity = uEdgeIntensity * 1.5;
+      float edgeGlow = edge * edgeGlowIntensity;
       finalColor += edgeColor * edgeGlow * uEdgeBrightness;
 
-      float edgeZoneWidth = 0.15 * (1.0 - uDissolve) + 0.02;
+      float edgeZoneWidth = 0.14 * (1.0 - uDissolve) + 0.02;
       float edgeZone = smoothstep(dissolveThreshold - edgeZoneWidth, dissolveThreshold - edgeZoneWidth + 0.04, normalizedDist) *
                        smoothstep(dissolveThreshold + 0.02, dissolveThreshold - 0.02, normalizedDist);
       float sparkle = hash(floor(vUv * uResolution / 4.0)) * edgeZone;
-      float edgeBrightness = (1.0 - uDissolve) * uEdgeBrightness * (1.0 + uGrayscale * 2.0);
-      finalColor += vec3(sparkle * 3.0 * edgeBrightness);
+      float edgeBrightness = (1.0 - uDissolve) * uEdgeBrightness;
+      finalColor += edgeColor * (sparkle * 1.8 * edgeBrightness);
 
       float alpha = dissolveMask * texColor.a;
       gl_FragColor = vec4(finalColor, alpha);
@@ -152,40 +148,7 @@
     uniform sampler2D uTexture;
     uniform vec2 uResolution;
     uniform vec2 uImageResolution;
-    uniform float uDarkness;
-    uniform float uGrayscale;
-    uniform float uEdgeIntensity;
     varying vec2 vUv;
-
-    mat3 sobelX = mat3(
-      -1.0, 0.0, 1.0,
-      -2.0, 0.0, 2.0,
-      -1.0, 0.0, 1.0
-    );
-
-    mat3 sobelY = mat3(
-      -1.0, -2.0, -1.0,
-       0.0,  0.0,  0.0,
-       1.0,  2.0,  1.0
-    );
-
-    float getLuminance(vec3 color) {
-      return dot(color, vec3(0.299, 0.587, 0.114));
-    }
-
-    float sobel(sampler2D tex, vec2 uv, vec2 texelSize) {
-      float gx = 0.0;
-      float gy = 0.0;
-      for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-          vec2 offset = vec2(float(i), float(j)) * texelSize;
-          float lum = getLuminance(texture2D(tex, uv + offset).rgb);
-          gx += lum * sobelX[i + 1][j + 1];
-          gy += lum * sobelY[i + 1][j + 1];
-        }
-      }
-      return sqrt(gx * gx + gy * gy);
-    }
 
     void main() {
       vec2 ratio = vec2(
@@ -199,25 +162,7 @@
       );
 
       vec4 texColor = texture2D(uTexture, uv);
-      float gray = getLuminance(texColor.rgb);
-      vec3 grayscaleColor = vec3(gray);
-      texColor.rgb = mix(texColor.rgb, grayscaleColor, uGrayscale);
-
-      vec2 texelSize = 1.0 / uResolution;
-      float edge = sobel(uTexture, uv, texelSize);
-      edge = pow(edge, 0.7) * 2.0;
-      edge = clamp(edge, 0.0, 1.0);
-
-      // Radiant Neon Accent
-      vec3 edgeColor = mix(vec3(0.0, 0.95, 1.0), vec3(0.55, 0.35, 1.0), vUv.x);
-      vec3 darkBase = vec3(0.0);
-      vec3 baseColor = mix(texColor.rgb, darkBase, uDarkness);
-
-      float edgeGlow = edge * uEdgeIntensity * 2.0;
-      baseColor += edgeColor * edgeGlow;
-
-      vec3 finalColor = clamp(baseColor, 0.0, 1.0);
-      gl_FragColor = vec4(finalColor, texColor.a);
+      gl_FragColor = texColor;
     }
   `;
 
@@ -295,9 +240,6 @@
       uTexture: { value: texture2 },
       uResolution: { value: new THREE.Vector2(width, height) },
       uImageResolution: { value: new THREE.Vector2(1200, 800) },
-      uDarkness: { value: 1.0 },
-      uGrayscale: { value: 1.0 },
-      uEdgeIntensity: { value: 0.6 },
     };
 
     material1 = new THREE.ShaderMaterial({
@@ -350,13 +292,6 @@
       material1.uniforms.uEdgeBrightness.value = 1.0 - currentProgress;
     }
 
-    if (material2) {
-      const acceleratedProgress = Math.min(1.0, currentProgress * 1.15);
-      material2.uniforms.uEdgeIntensity.value = 0.6 * (1.0 - acceleratedProgress);
-      material2.uniforms.uDarkness.value = 1.0 - acceleratedProgress;
-      material2.uniforms.uGrayscale.value = 1.0 - acceleratedProgress;
-    }
-
     if (renderer && scene && camera) {
       renderer.render(scene, camera);
     }
@@ -403,6 +338,12 @@
       } else {
         btnAfter.classList.add('active');
         btnBefore.classList.remove('active');
+      }
+
+      // Sync CSS fallback crossfade if active
+      const fallbackFront = document.querySelector('.dissolve-fallback-layer.front');
+      if (fallbackFront && fallbackFront.style.display !== 'none') {
+        fallbackFront.style.opacity = (1 - targetProgress).toString();
       }
     }
 

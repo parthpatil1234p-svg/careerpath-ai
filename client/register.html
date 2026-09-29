@@ -7,7 +7,7 @@
       name="description"
       content="Create a free CareerPath AI account to build your profile, assess skills, and get personalized roadmaps."
     />
-    <meta name="theme-color" content="#060913" />
+    <meta name="theme-color" content="#FFFFFF" />
     <title>Create Account — CareerPath AI · Career Atlas</title>
 
     <!-- Favicon & PWA Manifest -->
@@ -58,30 +58,31 @@
         text-align: center !important;
         font-family: 'JetBrains Mono', monospace !important;
         font-size: 1.55rem !important;
-        font-weight: 800 !important;
-        background: rgba(15, 23, 42, 0.92) !important;
-        border: 2px solid rgba(0, 242, 254, 0.35) !important;
+        font-weight: 700 !important;
+        background: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
         border-radius: 10px !important;
-        color: #00F2FE !important;
-        caret-color: #00F2FE !important;
+        color: #0F172A !important;
+        caret-color: #4F46E5 !important;
         transition: all 0.2s ease !important;
         padding: 0 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
       }
 
       .otp-digit-field:focus {
         outline: none !important;
-        border-color: #00F2FE !important;
-        background: rgba(15, 23, 42, 1) !important;
-        box-shadow: 0 0 20px rgba(0, 242, 254, 0.6) !important;
+        border-color: #4F46E5 !important;
+        background: #FFFFFF !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;
         transform: translateY(-2px) !important;
       }
 
       .email-notice-card {
-        background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%) !important;
-        border: 1px solid rgba(0, 242, 254, 0.3) !important;
+        background: #EEF2FF !important;
+        border: 1px solid #C7D2FE !important;
         border-radius: 10px !important;
         padding: 12px 16px !important;
+        color: #1E293B !important;
       }
     </style>
   </head>
@@ -340,7 +341,7 @@
                 <div class="badge-ai-pulse mb-2">
                   <span class="pulse-dot"></span> EMAIL VERIFICATION
                 </div>
-                <h3 class="h4 text-white fw-bold mb-1">Verify Your Account</h3>
+                <h3 class="h4 text-ink fw-bold mb-1">Verify Your Account</h3>
                 <p class="text-muted small mb-0">
                   Enter the 6-digit code sent to <br>
                   <strong class="text-cyan font-mono" id="displayTargetEmail">student@example.com</strong>
@@ -348,12 +349,12 @@
               </div>
 
               <!-- Real Email Verification Notice Banner -->
-              <div class="email-notice-card mb-3 p-3 rounded border border-info border-opacity-25" style="background: rgba(0, 242, 254, 0.06);">
+              <div class="email-notice-card mb-3 p-3 rounded border border-info border-opacity-25" style="background: #EEF2FF;">
                 <div class="d-flex align-items-center gap-2 mb-1">
                   <i class="bi bi-envelope-check-fill text-cyan fs-5"></i>
-                  <strong class="text-white small">OTP Code Sent to Gmail</strong>
+                  <strong class="text-ink small">OTP Code Sent to Gmail</strong>
                 </div>
-                <p class="text-white-50 small mb-0" style="font-size: 0.82rem;">
+                <p class="text-secondary small mb-0" style="font-size: 0.82rem;">
                   Please check your Gmail inbox (and Spam/Updates folder) for your 6-digit activation code.
                 </p>
               </div>

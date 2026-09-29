@@ -1,10 +1,11 @@
 /* ==========================================================================
    CareerPath AI — AI Career Mentor Floating Chatbot (chat.css)
-   Team 404 Brain Not Found · CareerPath AI
+   Clean Modern EduTech Chat Aesthetics · Indigo, Blue & Cyan Accents
+   CareerPath AI · Team 404 Brain Not Found
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Floating Trigger Button (VengeanceUI Creepy Button with Cyber Eyes)
+   1. Floating Trigger Button (Clean Indigo Primary CTA)
    -------------------------------------------------------------------------- */
 .cp-chat-trigger {
   position: fixed;
@@ -14,264 +15,54 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 200px;
+  min-width: 190px;
   width: auto;
   height: 48px;
-  padding: 0;
-  background: #060913;
-  border: 1.5px solid rgba(0, 242, 254, 0.5);
+  padding: 0 1.25rem;
+  background: var(--color-indigo-600);
+  border: 1px solid var(--color-indigo-600);
   border-radius: 9999px;
-  box-shadow:
-    0 10px 30px rgba(0, 242, 254, 0.35),
-    0 0 25px rgba(124, 58, 237, 0.3),
-    inset 0 0 14px rgba(0, 242, 254, 0.25);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
   cursor: pointer;
   user-select: none;
   outline: none;
   overflow: visible;
   white-space: nowrap !important;
-  transform-origin: bottom right;
-  animation: cp-trigger-spring-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both,
-             cp-float-breathe 3.5s ease-in-out 0.6s infinite alternate;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* --------------------------------------------------------------------------
-   1. 🚀 Spring Pop-Up Entrance Animation: scale(0.3) → scale(1.12) → scale(1)
-   -------------------------------------------------------------------------- */
-@keyframes cp-trigger-spring-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) translateY(40px);
-    filter: blur(6px);
-  }
-  65% {
-    opacity: 1;
-    transform: scale(1.12) translateY(-6px);
-    filter: blur(0);
-  }
-  85% {
-    transform: scale(0.96) translateY(2px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   5. 🎈 Ambient Floating Breathe: subtle idle float and hover spring reactions
-   -------------------------------------------------------------------------- */
-@keyframes cp-float-breathe {
-  0% {
-    transform: translateY(0);
-    box-shadow: 0 10px 30px rgba(0, 242, 254, 0.35), 0 0 25px rgba(124, 58, 237, 0.3);
-  }
-  100% {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 36px rgba(0, 242, 254, 0.5), 0 0 32px rgba(124, 58, 237, 0.45);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   2. 🌊 Radar Sonar Wave Pulse: glowing cyan ambient pulse ring continuously emanates
-   -------------------------------------------------------------------------- */
-.cp-chat-trigger::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 9999px;
-  border: 2px solid #00F2FE;
-  opacity: 0;
-  pointer-events: none;
-  animation: cp-sonar-ping 3.4s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes cp-sonar-ping {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.85;
-    border-width: 3px;
-  }
-  60%, 100% {
-    transform: scale(1.38);
-    opacity: 0;
-    border-width: 1px;
-  }
+  color: #FFFFFF;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .cp-chat-trigger:hover {
-  transform: translateY(-4px) scale(1.06);
-  border-color: rgba(0, 242, 254, 0.95);
-  box-shadow:
-    0 18px 44px rgba(0, 242, 254, 0.65),
-    0 0 40px rgba(124, 58, 237, 0.55),
-    inset 0 0 20px rgba(0, 242, 254, 0.4);
-}
-
-.cp-chat-trigger:hover .trigger-icon i {
-  transform: scale(1.25) rotate(-6deg);
+  background: var(--color-indigo-700);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
 }
 
 .cp-chat-trigger:active {
-  transform: scale(0.96) translateY(0);
+  transform: translateY(0);
 }
 
-/* Eyes Container (Stationed inside the dark cyber capsule) */
-.cp-creepy-eyes-container {
-  position: absolute;
-  right: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Glowing Cyber Sclera with Blink Animation */
-.cp-creepy-eye {
-  position: relative;
-  width: 15px;
-  height: 15px;
-  background: #e0f2fe;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 0 8px rgba(0, 242, 254, 0.9), inset 0 0 4px rgba(255, 255, 255, 0.8);
-  animation: cp-eye-blink 3.4s ease-in-out infinite;
-  transform-origin: center;
-}
-
-@keyframes cp-eye-blink {
-  0%, 92%, 100% {
-    transform: scaleY(1);
-  }
-  95% {
-    transform: scaleY(0.08);
-  }
-}
-
-/* Eye Pupil that dynamically tracks cursor */
-.cp-creepy-pupil {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 7px;
-  height: 7px;
-  background: #020617;
-  border-radius: 50%;
-  border: 1px solid #00F2FE;
-  box-shadow: 0 0 5px #00F2FE;
-  transform: translate(-50%, -50%);
-  transition: transform 0.06s ease-out;
-}
-
-/* Button Cover (The tilting lid with radiant gradient) */
-.cp-creepy-cover {
-  position: absolute;
-  inset: -1px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #00F2FE 0%, #2563EB 50%, #7C3AED 100%);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+.trigger-label {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
   color: #FFFFFF;
-  font-family: var(--font-heading, "Outfit", sans-serif);
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-  white-space: nowrap !important;
-  box-shadow:
-    0 8px 24px rgba(0, 242, 254, 0.4),
-    0 0 20px rgba(124, 58, 237, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.75);
-  transform-origin: 20px 50%;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-  z-index: 2;
-  padding: 0 1.25rem;
+  margin-left: 0.5rem;
 }
 
-/* Hover State: Spring-tilt cover open to reveal the AI's watchful eyes! */
-.cp-chat-trigger:hover .cp-creepy-cover,
-.cp-chat-trigger:focus-visible .cp-creepy-cover {
-  transform: rotate(-13deg) translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.85);
-  box-shadow:
-    0 14px 38px rgba(0, 242, 254, 0.65),
-    0 0 32px rgba(124, 58, 237, 0.55),
-    inset 0 1px 2px rgba(255, 255, 255, 0.95);
-}
-
-/* Invisible placeholder for semantic accessibility and natural bounding box */
-.cp-creepy-placeholder {
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0 1.25rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  white-space: nowrap !important;
-}
-
-.cp-chat-trigger .trigger-icon {
-  font-size: 1.15rem;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.cp-chat-trigger .trigger-label {
-  display: inline-block;
-  font-weight: 700;
-  white-space: nowrap !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  flex-shrink: 0;
-}
-
-.cp-chat-trigger .trigger-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(6, 9, 15, 0.88);
-  color: #00F2FE;
+.trigger-badge {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(0, 242, 254, 0.55);
-  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
-  white-space: nowrap !important;
-  flex-shrink: 0;
-}
-
-.cp-chat-trigger .trigger-badge .badge-dot {
-  width: 5px;
-  height: 5px;
-  background: #10B981;
-  border-radius: 50%;
-  box-shadow: 0 0 6px #10B981;
-  animation: cp-pulse-dot 1.8s infinite;
-}
-
-@keyframes cp-pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.4; transform: scale(0.7); }
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin-left: 0.5rem;
 }
 
 /* --------------------------------------------------------------------------
-   3. 💬 Interactive Pop-Up Nudge Tooltip / Question Card
+   2. Floating Prompt Popup
    -------------------------------------------------------------------------- */
 .cp-chat-question-popup {
   position: fixed;
@@ -279,46 +70,20 @@
   right: 24px;
   z-index: 9998;
   width: 320px;
-  max-width: calc(100vw - 32px);
-  background: rgba(6, 11, 25, 0.96);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(0, 242, 254, 0.5);
-  border-radius: 18px;
-  padding: 0.95rem 1.1rem;
-  color: #FFFFFF;
-  font-family: var(--font-body, "Inter", sans-serif);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.95),
-    0 0 35px rgba(0, 242, 254, 0.35);
-  pointer-events: auto;
-  transform-origin: bottom right;
-  animation: cp-question-small-to-big 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes cp-question-small-to-big {
-  0% {
-    opacity: 0;
-    transform: scale(0.2) translate(30px, 30px);
-    filter: blur(6px);
-  }
-  75% {
-    transform: scale(1.06) translate(0, -4px);
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translate(0, 0);
-  }
+  gap: 0.75rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .cp-chat-question-popup.dismissed {
   opacity: 0;
-  transform: scale(0) translateY(15px);
+  transform: scale(0.9) translateY(10px);
   pointer-events: none;
 }
 
@@ -326,7 +91,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.45rem;
 }
 
@@ -336,16 +101,15 @@
   gap: 0.4rem;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #00F2FE;
+  color: var(--color-indigo-600);
   font-family: var(--font-heading);
 }
 
 .cp-chat-question-title {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #E2E8F0;
+  color: var(--color-text-primary);
   margin: 0;
-  line-height: 1.3;
 }
 
 .cp-chat-question-list {
@@ -361,127 +125,79 @@
   gap: 0.5rem;
   width: 100%;
   text-align: left;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  border-radius: 10px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
   padding: 0.55rem 0.75rem;
-  color: #CBD5E1;
-  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.18s ease;
 }
 
 .cp-question-item-btn:hover {
-  background: rgba(0, 242, 254, 0.14);
-  border-color: rgba(0, 242, 254, 0.65);
-  color: #00F2FE;
-  transform: translateX(4px) scale(1.02);
-  box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
+  background: var(--color-surface-indigo);
+  border-color: #C7D2FE;
+  color: var(--color-indigo-700);
+  transform: translateX(2px);
 }
 
 .cp-question-item-btn .q-arrow {
-  color: #00F2FE;
+  color: var(--color-indigo-600);
   font-size: 0.85rem;
-  transition: transform 0.2s ease;
   flex-shrink: 0;
-}
-
-.cp-question-item-btn:hover .q-arrow {
-  transform: translateX(3px);
-}
-
-.cp-chat-question-tail {
-  position: absolute;
-  bottom: -6px;
-  right: 48px;
-  width: 12px;
-  height: 12px;
-  background: rgba(6, 11, 25, 0.96);
-  border-right: 1px solid rgba(0, 242, 254, 0.5);
-  border-bottom: 1px solid rgba(0, 242, 254, 0.5);
-  transform: rotate(45deg);
 }
 
 .cp-question-close {
   background: transparent;
   border: none;
-  color: #94A3B8;
-  font-size: 0.85rem;
-  padding: 0 0 0 4px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
   cursor: pointer;
   line-height: 1;
-  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .cp-question-close:hover {
-  color: #EF4444;
-  transform: scale(1.2);
+  color: var(--color-danger);
 }
 
 /* --------------------------------------------------------------------------
-   4. ✨ Chat Drawer Pop-Up Animation: (scale(0.82) translateY(35px) → scale(1.02) → scale(1))
+   3. Chat Drawer Container
    -------------------------------------------------------------------------- */
 .cp-chat-drawer {
   position: fixed;
-  bottom: 88px;
+  bottom: 84px;
   right: 24px;
   z-index: 1050;
   width: 400px;
   max-width: calc(100vw - 32px);
   height: 560px;
   max-height: calc(100vh - 110px);
-  background: rgba(10, 14, 23, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 242, 254, 0.2);
+  box-shadow: 0 16px 45px rgba(15, 23, 42, 0.15);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  transform-origin: bottom right;
-  transform: translateY(35px) scale(0.82);
-  transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.3s ease;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .cp-chat-drawer.open {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0) scale(1);
-  animation: cp-drawer-pop-spring 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  box-shadow: 0 30px 75px -10px rgba(0, 0, 0, 0.95), 0 0 55px rgba(0, 242, 254, 0.32);
 }
 
-@keyframes cp-drawer-pop-spring {
-  0% {
-    opacity: 0;
-    transform: translateY(35px) scale(0.82);
-    filter: blur(8px);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-4px) scale(1.02);
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-
-/* --------------------------------------------------------------------------
-   3. Chat Header
-   -------------------------------------------------------------------------- */
+/* Header */
 .cp-chat-header {
   padding: 1rem 1.15rem;
-  background: rgba(17, 23, 38, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -494,31 +210,30 @@
 }
 
 .cp-chat-avatar {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(139, 92, 246, 0.2));
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  color: var(--cyan);
+  background: var(--color-surface-indigo);
+  border: 1px solid #C7D2FE;
+  color: var(--color-indigo-600);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+  font-size: 1.15rem;
 }
 
 .cp-chat-title {
   font-family: var(--font-heading);
   font-size: 0.95rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--color-text-primary);
   margin: 0;
   line-height: 1.2;
 }
 
 .cp-chat-subtitle {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -533,8 +248,8 @@
 
 .cp-chat-btn-icon {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-muted);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
   width: 32px;
   height: 32px;
   border-radius: var(--radius-xs);
@@ -546,9 +261,8 @@
 }
 
 .cp-chat-btn-icon:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--color-surface-muted);
+  color: var(--color-text-primary);
 }
 
 /* --------------------------------------------------------------------------
@@ -561,7 +275,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  scroll-behavior: smooth;
+  background: var(--color-background);
 }
 
 .cp-chat-messages::-webkit-scrollbar {
@@ -569,11 +283,11 @@
 }
 
 .cp-chat-messages::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: #CBD5E1;
   border-radius: 4px;
 }
 
-/* Message Bubble Rows */
+/* Message Rows */
 .cp-chat-row {
   display: flex;
   flex-direction: column;
@@ -590,47 +304,38 @@
 
 .cp-chat-bubble {
   padding: 0.75rem 1rem;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   line-height: 1.5;
   border-radius: var(--radius-md);
   word-break: break-word;
 }
 
 .cp-chat-row.user .cp-chat-bubble {
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  color: #FFFFFF;
+  background: var(--color-surface-indigo);
+  border: 1px solid #C7D2FE;
+  color: var(--color-indigo-900);
   border-bottom-right-radius: 2px;
 }
 
 .cp-chat-row.ai .cp-chat-bubble {
-  background: rgba(22, 31, 51, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-secondary);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
   border-bottom-left-radius: 2px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
 .cp-chat-row.ai .cp-chat-bubble p:last-child {
   margin-bottom: 0;
 }
 
-.cp-chat-row.ai .cp-chat-bubble ul,
-.cp-chat-row.ai .cp-chat-bubble ol {
-  padding-left: 1.25rem;
-  margin: 0.4rem 0;
-}
-
-.cp-chat-row.ai .cp-chat-bubble li {
-  margin-bottom: 0.25rem;
-}
-
 .cp-chat-row.ai .cp-chat-bubble strong {
-  color: #FFFFFF;
+  color: var(--color-text-primary);
 }
 
 .cp-chat-row.ai .cp-chat-bubble code {
-  background: rgba(6, 9, 15, 0.7);
-  color: var(--cyan);
+  background: var(--color-surface-muted);
+  color: var(--color-indigo-700);
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
   font-family: var(--font-mono);
@@ -639,7 +344,7 @@
 
 .cp-chat-time {
   font-size: 0.7rem;
-  color: #94A3B8 !important;
+  color: var(--color-text-disabled) !important;
   margin-top: 0.25rem;
   padding: 0 0.25rem;
 }
@@ -661,29 +366,28 @@
 .cp-chat-suggestions-title {
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding-left: 0.25rem;
 }
 
 .cp-chat-chip {
-  background: rgba(17, 23, 38, 0.6);
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  color: var(--text-secondary);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
   padding: 0.45rem 0.75rem;
   border-radius: var(--radius-sm);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   text-align: left;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .cp-chat-chip:hover {
-  background: rgba(0, 242, 254, 0.12);
-  border-color: rgba(0, 242, 254, 0.45);
-  color: #FFFFFF;
-  transform: translateX(3px);
+  background: var(--color-surface-indigo);
+  border-color: #C7D2FE;
+  color: var(--color-indigo-700);
 }
 
 /* --------------------------------------------------------------------------
@@ -694,8 +398,8 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.65rem 1rem;
-  background: rgba(22, 31, 51, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   border-bottom-left-radius: 2px;
   width: fit-content;
@@ -704,7 +408,7 @@
 .cp-chat-typing-dot {
   width: 6px;
   height: 6px;
-  background: var(--cyan);
+  background: var(--color-indigo-600);
   border-radius: 50%;
   animation: cpTypingBounce 1.4s infinite ease-in-out both;
 }
@@ -722,8 +426,8 @@
    -------------------------------------------------------------------------- */
 .cp-chat-footer {
   padding: 0.85rem 1rem;
-  background: rgba(17, 23, 38, 0.9);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border-top: 1px solid var(--color-border);
 }
 
 .cp-chat-form {
@@ -734,28 +438,28 @@
 
 .cp-chat-input {
   flex: 1;
-  background: rgba(6, 9, 15, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
   border-radius: var(--radius-sm);
-  color: #FFFFFF;
+  color: var(--color-text-primary);
   padding: 0.6rem 0.85rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   outline: none;
   transition: all var(--transition-fast);
 }
 
 .cp-chat-input:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+  border-color: var(--color-indigo-600);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
 .cp-chat-input::placeholder {
-  color: var(--text-dim);
+  color: var(--color-text-disabled);
 }
 
 .cp-chat-send-btn {
-  background: linear-gradient(135deg, #00F2FE 0%, #3B82F6 100%);
-  color: #06090F;
+  background: var(--color-indigo-600);
+  color: #FFFFFF;
   border: none;
   border-radius: var(--radius-sm);
   width: 38px;
@@ -769,13 +473,13 @@
 }
 
 .cp-chat-send-btn:hover {
-  transform: scale(1.06);
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+  background: var(--color-indigo-700);
+  transform: translateY(-1px);
 }
 
 .cp-chat-disclaimer {
   font-size: 0.72rem;
-  color: #94A3B8 !important;
+  color: var(--color-text-disabled) !important;
   line-height: 1.35;
   text-align: center;
   margin-top: 0.45rem;
@@ -783,8 +487,13 @@
   font-family: var(--font-mono);
 }
 
-/* Mobile Responsiveness (< 768px) */
+/* Mobile (< 768px) */
 @media (max-width: 767.98px) {
+  /* Keep the proactive prompt from covering the primary content on phones. */
+  .cp-chat-question-popup {
+    display: none;
+  }
+
   .cp-chat-drawer {
     bottom: 0;
     right: 0;
@@ -793,19 +502,6 @@
     max-width: 100vw;
     height: 82vh;
     border-radius: 20px 20px 0 0;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
-  }
-
-  .cp-chat-question-popup {
-    bottom: 74px !important;
-    right: 16px !important;
-    left: 16px !important;
-    width: auto !important;
-    max-width: calc(100vw - 32px) !important;
-  }
-
-  .cp-chat-question-tail {
-    right: 20px !important;
   }
 
   .cp-chat-trigger {
@@ -816,59 +512,10 @@
     height: 48px !important;
     padding: 0 !important;
     border-radius: 50% !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(0, 242, 254, 0.4) !important;
   }
 
   .cp-chat-trigger .trigger-label,
-  .cp-chat-trigger .trigger-badge,
-  .cp-chat-trigger .cp-creepy-eyes-container,
-  .cp-chat-trigger .cp-creepy-cover {
+  .cp-chat-trigger .trigger-badge {
     display: none !important;
   }
-
-  .cp-chat-trigger .trigger-icon {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 1.35rem !important;
-    color: #00F2FE !important;
-    margin: 0 !important;
-  }
-
-  .cp-chat-btn-icon {
-    min-width: 44px !important;
-    min-height: 44px !important;
-  }
 }
-
-/* ==========================================================================
-   Desktop UX Enhancements for AI Mentor Chat (min-width: 992px)
-   ========================================================================== */
-@media (min-width: 992px) {
-  .cp-chat-drawer {
-    width: 430px;
-    height: 600px;
-    max-height: calc(100vh - 110px);
-    bottom: 88px;
-    right: 28px;
-    border-radius: var(--radius-lg);
-  }
-
-  .cp-chat-body {
-    padding: 1.25rem 1.4rem;
-  }
-
-  .cp-msg-bubble {
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
-}
-
-@media (min-width: 1400px) {
-  .cp-chat-drawer {
-    width: 460px;
-    height: 640px;
-    right: 36px;
-  }
-}
-

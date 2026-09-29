@@ -1,23 +1,23 @@
 /* ==========================================================================
    CareerPath AI — Layout & Grid (layout.css)
-   Ultra-Sleek Modern Tech Aesthetics · Glassmorphic Navigation
+   Clean Modern EduTech Layout · Max Width Constraints · Responsive
    CareerPath AI · Team: 404 Brain Not Found
    ========================================================================== */
 
-/* Global Container Constraints & Desktop Responsive Scaling */
+/* Global Container Constraints */
 :root {
-  --container-max-width: 1220px;
+  --container-max-width: 1240px;
 }
 
 @media (min-width: 1200px) {
   :root {
-    --container-max-width: 1280px;
+    --container-max-width: 1260px;
   }
 }
 
 @media (min-width: 1400px) {
   :root {
-    --container-max-width: 1380px;
+    --container-max-width: 1280px;
   }
   .container,
   .container-lg,
@@ -26,20 +26,6 @@
     max-width: var(--container-max-width) !important;
     padding-left: 2rem;
     padding-right: 2rem;
-  }
-}
-
-@media (min-width: 1600px) {
-  :root {
-    --container-max-width: 1520px;
-  }
-  .container,
-  .container-lg,
-  .container-xl,
-  .container-xxl {
-    max-width: var(--container-max-width) !important;
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
   }
 }
 
@@ -55,20 +41,20 @@
 }
 
 .container-narrow {
-  max-width: 980px;
+  max-width: 960px;
   margin-left: auto;
   margin-right: auto;
 }
 
 /* ==========================================================================
-   NAVIGATION BAR (Frosted Glassmorphism Header)
+   NAVIGATION BAR (Standard Fallback Header)
    ========================================================================== */
 .cp-navbar,
 .atlas-navbar {
-  background: rgba(10, 14, 23, 0.82) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid var(--color-border) !important;
   padding: 0.85rem 0;
   transition: all var(--transition-normal);
   z-index: 1040;
@@ -76,16 +62,16 @@
 
 .cp-navbar.scrolled,
 .atlas-navbar.scrolled {
-  background: rgba(7, 10, 17, 0.94) !important;
-  border-bottom-color: rgba(56, 189, 248, 0.2) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-bottom-color: #CBD5E1 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
 }
 
 .navbar-brand {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 800;
-  color: #FFFFFF !important;
+  color: var(--color-text-primary) !important;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -96,15 +82,15 @@
 .brand-compass {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(139, 92, 246, 0.2));
-  border: 1px solid rgba(0, 242, 254, 0.4);
-  color: var(--cyan);
+  background: var(--color-surface-indigo);
+  border: 1px solid #C7D2FE;
+  color: var(--color-indigo-600);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.12);
   transition: all var(--transition-fast);
 }
 
@@ -116,30 +102,29 @@
 
 .navbar-brand:hover .brand-icon,
 .navbar-brand:hover .brand-compass {
-  transform: scale(1.05) rotate(5deg);
-  border-color: var(--cyan);
-  box-shadow: 0 0 22px rgba(0, 242, 254, 0.4);
+  transform: scale(1.05);
+  border-color: var(--color-indigo-600);
+  background: var(--color-indigo-600);
+  color: #FFFFFF;
 }
 
 .brand-name,
 .brand-title {
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #FFFFFF;
+  color: var(--color-text-primary);
 }
 
 .brand-accent {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 900;
+  color: var(--color-indigo-600);
+  font-weight: 800;
 }
 
 .brand-tagline,
 .brand-tagline-sub {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--text-muted);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 500;
@@ -150,21 +135,20 @@
   font-family: var(--font-body);
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-muted) !important;
+  color: var(--color-text-secondary) !important;
   padding: 0.45rem 0.9rem !important;
-  border-radius: var(--radius-pill);
+  border-radius: 8px;
   transition: all var(--transition-fast);
 }
 
 .navbar-nav .nav-link:hover {
-  color: #FFFFFF !important;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-indigo-700) !important;
+  background: var(--color-surface-muted);
 }
 
 .navbar-nav .nav-link.active {
-  color: var(--cyan) !important;
-  background: rgba(0, 242, 254, 0.08);
-  border: 1px solid rgba(0, 242, 254, 0.25);
+  color: var(--color-indigo-700) !important;
+  background: var(--color-surface-indigo);
   font-weight: 600;
 }
 
@@ -172,36 +156,36 @@
    SECTIONS & BANDS
    ========================================================================== */
 .cp-section {
-  padding: 5.5rem 0;
+  padding: 5rem 0;
   position: relative;
 }
 
 .cp-section-hero {
-  padding-top: 7.5rem;
+  padding-top: 7rem;
   padding-bottom: 5rem;
 }
 
 .cp-section-band {
-  background: rgba(14, 20, 34, 0.4);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-surface-muted);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   position: relative;
 }
 
 .section-header {
-  margin-bottom: 3.5rem;
+  margin-bottom: 3rem;
 }
 
 .section-tag,
 .atlas-kicker {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
-  background: rgba(0, 242, 254, 0.08);
-  border: 1px solid rgba(0, 242, 254, 0.25);
+  letter-spacing: 0.08em;
+  color: var(--color-indigo-700);
+  background: var(--color-surface-indigo);
+  border: 1px solid #C7D2FE;
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-pill);
   display: inline-flex;
@@ -214,28 +198,28 @@
   font-family: var(--font-heading);
   font-size: clamp(2rem, 3.2vw, 2.75rem);
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-text-primary);
   letter-spacing: -0.02em;
   margin-bottom: 0.75rem;
 }
 
 .section-subtitle {
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   font-size: 1.05rem;
-  max-width: 620px;
+  max-width: 640px;
   margin-left: auto;
   margin-right: auto;
 }
 
 /* ==========================================================================
-   FOOTER (High-Tech Dark Footer)
+   FOOTER (Clean Modern Light Footer)
    ========================================================================== */
 .cp-footer,
 .atlas-footer {
-  background-color: var(--bg-darkest);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #FFFFFF;
+  border-top: 1px solid var(--color-border);
   padding: 4rem 0 3rem 0;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
 }
 
 .footer-brand {
@@ -250,55 +234,36 @@
   font-family: var(--font-heading);
   font-size: 0.95rem;
   font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 1rem;
-  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .footer-links {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.footer-links li {
-  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
 .footer-links a {
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   text-decoration: none;
-  font-size: 0.875rem;
-  transition: color var(--transition-fast);
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
 }
 
 .footer-links a:hover {
-  color: var(--cyan);
-}
-
-.footer-badge {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--cyan);
-  background: rgba(0, 242, 254, 0.08);
-  border: 1px solid rgba(0, 242, 254, 0.2);
-  padding: 0.35rem 0.85rem;
-  border-radius: var(--radius-pill);
-  display: inline-block;
+  color: var(--color-indigo-600);
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 2rem;
   margin-top: 3rem;
-  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-border);
   font-size: 0.85rem;
-  color: var(--text-muted);
-  padding-right: 230px; /* Safe clearance for floating AI Mentor button */
-}
-
-@media (max-width: 991.98px) {
-  .footer-bottom {
-    padding-right: 0;
-    padding-bottom: 4.5rem; /* Safe clearance for mobile floating button */
-  }
+  color: var(--color-text-disabled);
 }

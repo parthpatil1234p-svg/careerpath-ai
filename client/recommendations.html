@@ -7,7 +7,7 @@
       name="description"
       content="Career Recommendations & Skill-Gap Analysis — CareerPath AI · Career Atlas"
     />
-    <meta name="theme-color" content="#060913" />
+    <meta name="theme-color" content="#FFFFFF" />
     <title>Career Recommendations — CareerPath AI · Career Atlas</title>
 
     <!-- Favicon & PWA Manifest -->
@@ -133,9 +133,12 @@
       <!-- Header Banner (Results-First Layout) -->
       <div class="row align-items-center mb-4">
         <div class="col-lg-8">
-          <div class="d-flex align-items-center gap-2 mb-2">
+          <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
             <span class="atlas-badge">
               <i class="bi bi-compass text-teal"></i> CAREER FIT RESULTS
+            </span>
+            <span class="badge badge-warning font-mono" style="font-size: 0.72rem;">
+              <i class="bi bi-info-circle me-1"></i> Prototype market-trend indicator — not live market data
             </span>
             <span class="text-muted font-mono small">REC-EVAL-01</span>
           </div>
@@ -160,7 +163,7 @@
                 <span class="atlas-badge mb-1">
                   <i class="bi bi-diagram-3 me-1 text-teal"></i> 3D SKILL MAP
                 </span>
-                <h2 class="h5 fw-bold text-white mb-0" id="skillOrbitTitle">Top Career Skill Map</h2>
+                <h2 class="h5 fw-bold text-ink mb-0" id="skillOrbitTitle">Top Career Skill Map</h2>
               </div>
               <!-- Skill Legend -->
               <div class="d-flex align-items-center gap-3 small flex-wrap">
@@ -177,7 +180,7 @@
                 <!-- 2D Fallback shown if WebGL not supported -->
                 <div id="skill-orbit-fallback" class="d-none w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3 text-center">
                   <i class="bi bi-diagram-3 text-teal display-4 mb-2"></i>
-                  <h3 class="h6 text-white fw-semibold mb-1">2D Skill Map</h3>
+                  <h3 class="h6 text-ink fw-semibold mb-1">2D Skill Map</h3>
                   <p class="text-muted small mb-0">WebGL is unavailable in this environment. Review the detailed skill gap breakdown below.</p>
                 </div>
               </div>
@@ -194,7 +197,7 @@
         <div class="spinner-border text-cyan mb-3" style="width: 3rem; height: 3rem;" role="status">
           <span class="visually-hidden">Loading recommendations...</span>
         </div>
-        <h2 class="h5 text-white fw-semibold">Evaluating Your Profile Across 15 Career Paths...</h2>
+        <h2 class="h5 text-ink fw-semibold">Evaluating Your Profile Across 15 Career Paths...</h2>
         <p class="text-muted small mb-0">Cross-referencing your verified skills with required industry competencies</p>
       </div>
 
@@ -203,7 +206,7 @@
         <div class="mb-3 text-gold">
           <i class="bi bi-exclamation-octagon display-3"></i>
         </div>
-        <h2 class="h4 text-white fw-bold mb-2">Assessment Profile Incomplete</h2>
+        <h2 class="h4 text-ink fw-bold mb-2">Assessment Profile Incomplete</h2>
         <p class="text-muted mb-4 mx-auto" style="max-width: 520px;">
           To compute your career fit accurately, our model requires your degree, at least 1 domain of interest, and at least 1 technical skill with proficiency.
         </p>
@@ -234,7 +237,7 @@
           <div class="modal-body py-4">
             <div class="text-center mb-4">
               <span class="atlas-badge mb-2">TARGET CAREER</span>
-              <h3 class="h4 text-white fw-bold mb-1" id="modalCareerTitle">Front-End Developer</h3>
+              <h3 class="h4 text-ink fw-bold mb-1" id="modalCareerTitle">Front-End Developer</h3>
               <p class="text-muted small mb-0">Choose a weekly learning intensity that fits your college schedule.</p>
             </div>
 
@@ -244,7 +247,7 @@
                 <div class="d-flex align-items-center gap-3">
                   <input type="radio" name="durationWeeks" value="4" class="form-check-input mt-0" />
                   <div>
-                    <div class="fw-bold text-white">Build a 4-week route</div>
+                    <div class="fw-bold text-ink">Build a 4-week route</div>
                     <div class="text-muted small">Intensive fast-track (~12–14 hrs/week)</div>
                   </div>
                 </div>
@@ -256,7 +259,7 @@
                 <div class="d-flex align-items-center gap-3">
                   <input type="radio" name="durationWeeks" value="8" checked class="form-check-input mt-0" />
                   <div>
-                    <div class="fw-bold text-white">Build an 8-week route</div>
+                    <div class="fw-bold text-ink">Build an 8-week route</div>
                     <div class="text-muted small">Balanced steady pace (~6–8 hrs/week) with projects</div>
                   </div>
                 </div>
@@ -268,7 +271,7 @@
                 <div class="d-flex align-items-center gap-3">
                   <input type="radio" name="durationWeeks" value="12" class="form-check-input mt-0" />
                   <div>
-                    <div class="fw-bold text-white">Build a 12-week route</div>
+                    <div class="fw-bold text-ink">Build a 12-week route</div>
                     <div class="text-muted small">Comprehensive deep dive (~4–6 hrs/week)</div>
                   </div>
                 </div>
@@ -308,7 +311,7 @@
           <div class="modal-header border-bottom border-line pb-3">
             <div class="d-flex align-items-center gap-2">
               <span class="badge-ai-pulse"><span class="pulse-dot"></span> LIVE TELEMETRY</span>
-              <h2 class="modal-title h5 text-white fw-bold mb-0" id="liveJobsModalLabel">
+              <h2 class="modal-title h5 text-ink fw-bold mb-0" id="liveJobsModalLabel">
                 <i class="bi bi-briefcase-fill text-cyan me-1"></i> Live Market Opportunities
               </h2>
             </div>
@@ -316,10 +319,10 @@
           </div>
           <div class="modal-body py-4">
             <!-- Header bar with Target Role & Filter toggle -->
-            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 p-3 rounded-3 mb-4" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 p-3 rounded-3 mb-4" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
               <div>
                 <span class="atlas-badge mb-1" id="jobsModalRoleBadge">TARGET ROLE</span>
-                <h3 class="h5 text-white fw-bold mb-0" id="jobsModalCareerTitle">Front-End Developer</h3>
+                <h3 class="h5 text-ink fw-bold mb-0" id="jobsModalCareerTitle">Front-End Developer</h3>
                 <p class="text-muted small mb-0" style="font-size: 0.78rem;">
                   Powered by <strong class="text-cyan">AI Dev Jobs API</strong> · Real-time hiring evidence
                 </p>
@@ -337,7 +340,7 @@
             <!-- Loading Spinner for Jobs -->
             <div id="jobsLoadingState" class="text-center py-5">
               <div class="spinner-border text-cyan mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
-              <p class="text-white fw-semibold mb-1">Scanning Live AI & Tech Job Boards...</p>
+              <p class="text-ink fw-semibold mb-1">Scanning Live AI & Tech Job Boards...</p>
               <p class="text-muted small mb-0">Fetching real-time openings matching your selected career pathway</p>
             </div>
 
@@ -349,7 +352,7 @@
             <!-- Empty / Error state -->
             <div id="jobsEmptyState" class="text-center py-5 d-none">
               <i class="bi bi-search text-muted display-4 mb-2"></i>
-              <h4 class="h6 text-white">No matching listings found at this moment</h4>
+              <h4 class="h6 text-ink">No matching listings found at this moment</h4>
               <p class="text-muted small">Try turning off the Global Remote filter to view all active openings.</p>
             </div>
           </div>
@@ -368,7 +371,7 @@
       <div class="container">
         <div class="row align-items-center g-3">
           <div class="col-md-6 text-center text-md-start">
-            <div class="footer-title fw-bold text-white">CareerPath AI — Career Atlas</div>
+            <div class="footer-title fw-bold text-ink">CareerPath AI — Career Atlas</div>
             <div class="text-muted small">ED-02 · AI Career Guidance & Skill Roadmap Platform</div>
           </div>
           <div class="col-md-6 text-center text-md-end">

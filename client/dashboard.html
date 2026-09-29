@@ -7,7 +7,7 @@
       name="description"
       content="Student Learning Dashboard & Real-Time Progress — CareerPath AI"
     />
-    <meta name="theme-color" content="#060913" />
+    <meta name="theme-color" content="#FFFFFF" />
     <title>Student Dashboard — CareerPath AI</title>
 
     <!-- Favicon & PWA Manifest -->
@@ -201,7 +201,7 @@
                     8 Weeks
                   </span>
                 </div>
-                <h2 class="h3 fw-bold text-white mb-2" id="activeCareerTitle">
+                <h2 class="h3 fw-bold text-ink mb-2" id="activeCareerTitle">
                   No Active Career Chosen Yet
                 </h2>
                 <p class="text-secondary small mb-4" id="activeCareerDesc" style="max-width: 540px;">
@@ -298,7 +298,7 @@
             <div>
               <div class="d-flex align-items-center gap-2">
                 <span class="badge badge-teal font-monospace text-uppercase" style="letter-spacing: 0.5px;">Skill Matrix</span>
-                <h3 class="h5 fw-bold text-white mb-0">My Verified Skills & Competencies</h3>
+                <h3 class="h5 fw-bold text-ink mb-0">My Verified Skills & Competencies</h3>
               </div>
               <p class="text-muted small mb-0 mt-1">Real-time skill levels feeding your career match algorithm</p>
             </div>
@@ -320,14 +320,14 @@
           <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
             <div>
               <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-dark border border-secondary border-opacity-50 text-white font-monospace text-uppercase" style="letter-spacing: 0.5px;">
-                  <i class="bi bi-github text-white me-1"></i> CODE-GROUNDED LEARNING
+                <span class="badge badge-navy font-monospace text-uppercase" style="letter-spacing: 0.5px;">
+                  <i class="bi bi-github me-1"></i> CODE-GROUNDED LEARNING
                 </span>
                 <span class="badge-code-verified" id="githubStatusBadge">
                   <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Not Connected
                 </span>
               </div>
-              <h3 class="h5 fw-bold text-white mb-0 mt-1">GitHub Study Lab & Repositories</h3>
+              <h3 class="h5 fw-bold text-ink mb-0 mt-1">GitHub Study Lab & Repositories</h3>
               <p class="text-muted small mb-0 mt-1">Connect your code repositories to verify hands-on skills, track academic projects, and fuel your career roadmap.</p>
             </div>
             <div class="d-flex gap-2">
@@ -338,14 +338,14 @@
           </div>
 
           <!-- Connected GitHub Profile Bar (Visible when connected) -->
-          <div id="githubConnectedDetails" class="d-none mb-3 p-3 rounded-2 bg-black bg-opacity-30 border border-secondary border-opacity-25">
+          <div id="githubConnectedDetails" class="d-none mb-3 p-3 rounded-2 stat-box-atlas border border-line">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
               <div class="d-flex align-items-center gap-3">
-                <img id="ghUserAvatar" src="" class="rounded-circle border border-info border-opacity-50" style="width: 44px; height: 44px;" alt="GitHub Avatar" />
+                <img id="ghUserAvatar" src="" class="rounded-circle border border-primary border-opacity-50" style="width: 44px; height: 44px;" alt="GitHub Avatar" />
                 <div>
                   <div class="d-flex align-items-center gap-2">
-                    <span class="fw-bold text-white" id="ghUserName">Student Dev</span>
-                    <a id="ghUserLink" href="#" target="_blank" rel="noopener noreferrer" class="badge bg-secondary bg-opacity-25 text-info font-mono text-decoration-none">
+                    <span class="fw-bold text-ink" id="ghUserName">Student Dev</span>
+                    <a id="ghUserLink" href="#" target="_blank" rel="noopener noreferrer" class="badge bg-secondary bg-opacity-25 text-primary font-mono text-decoration-none">
                       @<span id="ghUserHandle">username</span> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.65rem;"></i>
                     </a>
                   </div>
@@ -366,9 +366,9 @@
           <div id="githubReposContainer" class="row g-3">
             <!-- Populated by JS -->
             <div class="col-12 text-center py-4 text-muted small">
-              <div class="p-3 border border-secondary border-opacity-25 rounded-2 bg-dark bg-opacity-25">
+              <div class="p-3 border border-line rounded-2 stat-box-atlas">
                 <i class="bi bi-code-square display-6 text-teal opacity-75 mb-2 d-block"></i>
-                <div class="fw-semibold text-white mb-1">No GitHub Repositories Linked Yet</div>
+                <div class="fw-semibold text-ink mb-1">No GitHub Repositories Linked Yet</div>
                 <div class="text-secondary small mb-3">Connect your GitHub profile to auto-detect verified skills, audit your study projects, and map them to your active roadmap.</div>
                 <button type="button" class="btn btn-navy btn-sm px-4 py-2" id="btnConnectGitHubBanner">
                   <i class="bi bi-github me-1"></i> Connect GitHub Account (1-Click)
@@ -384,7 +384,7 @@
             <div class="card p-4 rounded-3 border-line shadow-sm">
               <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
                 <div>
-                  <h3 class="h5 fw-bold text-white mb-0">
+                  <h3 class="h5 fw-bold text-ink mb-0">
                     <i class="bi bi-check2-square text-teal me-2"></i>
                     Next Priority Tasks
                   </h3>
@@ -455,16 +455,16 @@
     <!-- Manage Skills Modal (One-Click Edit) -->
     <div class="modal fade" id="manageSkillsModal" tabindex="-1" aria-labelledby="manageSkillsModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content border-line" style="background: var(--bg-card, #131d31); color: var(--text-main, #e2e8f0);">
+        <div class="modal-content border-line">
           <div class="modal-header border-bottom border-line">
             <div>
               <div class="d-flex align-items-center gap-2">
                 <span class="badge badge-teal font-monospace text-uppercase" style="letter-spacing: 0.5px;">COMPETENCY MANAGER</span>
-                <h2 class="modal-title h5 fw-bold text-white mb-0" id="manageSkillsModalLabel">Manage Skills & Proficiency</h2>
+                <h2 class="modal-title h5 fw-bold text-ink mb-0" id="manageSkillsModalLabel">Manage Skills & Proficiency</h2>
               </div>
               <p class="text-muted small mb-0 mt-1">Add, update proficiency, or remove skills in real-time. Career matches update immediately.</p>
             </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body p-4">
@@ -474,7 +474,7 @@
             <!-- Current Skills List -->
             <div class="mb-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <label class="form-label small fw-bold text-white text-uppercase font-monospace mb-0">
+                <label class="form-label small fw-bold text-ink text-uppercase font-monospace mb-0">
                   <i class="bi bi-cpu text-teal me-1"></i> Current Logged Skills (<span id="modalCurrentSkillsCount">0</span>)
                 </label>
                 <span class="text-muted small" style="font-size: 0.75rem;">Click proficiency level to adjust</span>
@@ -486,7 +486,7 @@
 
             <!-- Add Skill from Catalog -->
             <div class="p-3 rounded-2 stat-box-atlas mb-3 border border-line">
-              <label class="form-label small fw-bold text-white text-uppercase font-monospace mb-2">
+              <label class="form-label small fw-bold text-ink text-uppercase font-monospace mb-2">
                 <i class="bi bi-plus-circle text-teal me-1"></i> Add Skill from Industry Catalog
               </label>
               <div class="row g-2">
@@ -513,7 +513,7 @@
             <!-- Add Custom Skill Input -->
             <div class="p-3 rounded-2 stat-box-atlas border border-line">
               <div class="d-flex justify-content-between align-items-center mb-2">
-                <label class="form-label small fw-bold text-white text-uppercase font-monospace mb-0">
+                <label class="form-label small fw-bold text-ink text-uppercase font-monospace mb-0">
                   <i class="bi bi-pencil-square text-teal me-1"></i> Add Custom / Unlisted Skill
                 </label>
                 <span class="badge badge-navy small">Universal Write-In</span>
