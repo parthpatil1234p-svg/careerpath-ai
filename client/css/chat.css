@@ -82,8 +82,10 @@
 }
 
 .landing-page .cp-chat-question-popup,
-.recommendations-page .cp-chat-question-popup {
-  display: none;
+.recommendations-page .cp-chat-question-popup,
+.assessment-page .cp-chat-question-popup,
+body:has(.quiz-page-container) .cp-chat-question-popup {
+  display: none !important;
 }
 
 .cp-chat-question-popup.dismissed {

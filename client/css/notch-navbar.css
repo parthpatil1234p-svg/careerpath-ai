@@ -23,6 +23,8 @@ body.roadmap-page main,
 body.auth-page main,
 .assessment-layout,
 .dashboard-page main,
+.quiz-page-container,
+body.assessment-page main,
 main.container {
   padding-top: var(--notch-nav-clearance) !important;
 }

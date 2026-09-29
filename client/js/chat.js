@@ -153,6 +153,7 @@
       if (popupDismissed) return;
       if (drawer.classList.contains('open')) return;
       if (document.getElementById('cpChatNudge')) return;
+      if (document.body.classList.contains('assessment-page') || document.querySelector('.quiz-page-container')) return;
 
       const nudge = document.createElement('div');
       nudge.id = 'cpChatNudge';

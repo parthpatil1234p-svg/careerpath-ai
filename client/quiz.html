@@ -104,7 +104,7 @@
     <main class="quiz-page-container">
       <div class="container">
         <!-- Title Banner -->
-        <div class="text-center mb-4" style="max-width: 680px; margin: 0 auto;">
+        <div class="text-center mb-4" style="max-width: 920px; margin: 0 auto;">
           <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-surface-indigo border border-indigo-subtle text-primary font-monospace small mb-2">
             <i class="bi bi-patch-check-fill text-indigo"></i>
             <span>Skill Reality-Check · You Said vs. Quiz Says</span>
@@ -116,10 +116,10 @@
         </div>
 
         <!-- Alert Container -->
-        <div id="quizAlertContainer" class="mx-auto" style="max-width: 820px;"></div>
+        <div id="quizAlertContainer" class="w-100 mb-3"></div>
 
         <!-- Skill Selector Tabs -->
-        <div class="mx-auto mb-3" style="max-width: 820px;">
+        <div class="w-100 mb-3">
           <div class="skill-selector-tabs" id="skillSelectorTabs">
             <!-- Dynamically populated or default skills -->
           </div>
@@ -130,38 +130,38 @@
 
           <!-- ── SCREEN 1: INTRO / PREVIEW ────────────────────────── -->
           <div id="screenIntro" class="quiz-body">
-            <div class="row align-items-center g-4 mb-4">
-              <div class="col-md-7">
+            <div class="row align-items-stretch g-4 mb-4">
+              <div class="col-lg-7 col-md-12">
                 <span class="badge badge-navy text-uppercase font-mono mb-2" id="introSkillCategory">Core Technical Competency</span>
-                <h2 class="h4 fw-bold text-ink mb-2" id="introSkillTitle">JavaScript Reality-Check</h2>
-                <p class="text-secondary small mb-3" id="introSkillDesc">
+                <h2 class="h3 fw-bold text-ink mb-2" id="introSkillTitle">JavaScript Reality-Check</h2>
+                <p class="text-secondary mb-3" id="introSkillDesc" style="font-size: 1.02rem; line-height: 1.6;">
                   You self-rated this skill as <strong class="text-primary" id="introSelfRatedProficiency">Intermediate</strong>. Take this 2-minute reality-check to confirm your knowledge level and earn your verified badge.
                 </p>
 
-                <div class="p-3 rounded-2 bg-surface-muted border border-line mb-3">
-                  <div class="fw-semibold text-ink small mb-2">
+                <div class="p-3 p-md-4 rounded-3 bg-surface-muted border border-line mb-3">
+                  <div class="fw-semibold text-ink mb-2" style="font-size: 0.98rem;">
                     <i class="bi bi-shield-check text-indigo me-1"></i> How the Reality-Check Works:
                   </div>
-                  <ul class="text-muted small ps-3 mb-0" style="font-size: 0.82rem; line-height: 1.6;">
-                    <li><strong>Adaptive Difficulty:</strong> Answer right, the next question gets harder. Answer wrong, it gets easier.</li>
-                    <li><strong>Instant Feedback:</strong> See right away whether you're correct plus a 1-line educational takeaway.</li>
-                    <li><strong>Reality-Check Verdict:</strong> Compare what you claimed vs what the quiz proved.</li>
+                  <ul class="text-muted ps-3 mb-0" style="font-size: 0.9rem; line-height: 1.75;">
+                    <li class="mb-1"><strong>Adaptive Difficulty:</strong> Answer right, the next question gets harder. Answer wrong, it gets easier.</li>
+                    <li class="mb-1"><strong>Instant Feedback:</strong> See right away whether you're correct plus a 1-line educational takeaway.</li>
+                    <li class="mb-1"><strong>Reality-Check Verdict:</strong> Compare what you claimed vs what the quiz proved.</li>
                     <li><strong>100% Match Weight:</strong> Boosts this skill from 70% self-rated confidence to 100% verified confidence.</li>
                   </ul>
                 </div>
               </div>
 
-              <div class="col-md-5 text-center">
-                <div class="p-4 rounded-3 border border-indigo-subtle bg-surface-indigo">
-                  <div class="display-5 text-primary mb-2">
+              <div class="col-lg-5 col-md-12 text-center">
+                <div class="p-4 p-xl-5 rounded-3 border border-indigo-subtle bg-surface-indigo h-100 d-flex flex-column justify-content-center">
+                  <div class="display-4 text-primary mb-3">
                     <i class="bi bi-speedometer2"></i>
                   </div>
-                  <div class="h6 fw-bold text-ink mb-1">6 Adaptive Questions</div>
+                  <div class="h5 fw-bold text-ink mb-1">6 Adaptive Questions</div>
                   <div class="text-muted small mb-3">Estimated time: ~2 minutes</div>
                   <div class="d-flex justify-content-center gap-2">
-                    <span class="badge bg-success-subtle text-success border border-success-subtle">Easy</span>
-                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Medium</span>
-                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Hard</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">Easy</span>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-1">Medium</span>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1">Hard</span>
                   </div>
                 </div>
               </div>
@@ -171,7 +171,7 @@
               <a href="recommendations.html" class="btn btn-link text-muted small text-decoration-none">
                 <i class="bi bi-arrow-left me-1"></i> Skip to Recommendations
               </a>
-              <button type="button" class="btn cp-btn-primary px-4 py-2" id="btnStartQuiz">
+              <button type="button" class="btn cp-btn-primary px-4 py-2 fw-semibold" id="btnStartQuiz">
                 <span>Start 2-Min Reality-Check</span>
                 <i class="bi bi-lightning-charge-fill ms-1"></i>
               </button>
