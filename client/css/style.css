@@ -155,7 +155,77 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Mobile & Tablet Touch Target & Accessibility Polish (WCAG 2.5.5)
+   5. Consistent Reading Alignment Across Project Pages
+   -------------------------------------------------------------------------- */
+main {
+  text-align: start;
+}
+
+main p:not(.text-center) {
+  line-height: 1.6;
+}
+
+.recommendations-page main .text-center p {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.recommendations-page .recommendation-card .row > * {
+  min-width: 0;
+}
+
+.recommendations-page .recommendation-card h2 {
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .recommendation-card h2 > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .recommendation-card :where(.ai-brief-text, .ai-brief-tip, .ai-bottleneck-box, .why-recommended-banner) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  max-width: 100%;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .skill-pill.matched-pill {
+  color: #065F46 !important;
+  background-color: #ECFDF5 !important;
+  border-color: #A7F3D0;
+}
+
+.recommendations-page .skill-pill.weak-pill {
+  color: #92400E !important;
+  background-color: #FFFBEB !important;
+  border-color: #FDE68A;
+}
+
+.recommendations-page .skill-pill.missing-pill {
+  color: #991B1B !important;
+  background-color: #FEF2F2 !important;
+  border-color: #FECACA;
+}
+
+/* --------------------------------------------------------------------------
+   6. Mobile & Tablet Touch Target & Accessibility Polish (WCAG 2.5.5)
    -------------------------------------------------------------------------- */
 @media (max-width: 767.98px) {
   /* Expand interactive touch targets to min 44px */
@@ -185,12 +255,12 @@
     padding-bottom: 64px;
   }
 
-  /* Center user card details on small screens */
+  /* Keep profile details aligned with other page content on small screens */
   .dashboard-profile-card {
-    text-align: center;
+    text-align: start;
   }
 
   .dashboard-profile-card .dashboard-avatar-container {
-    margin: 0 auto 0.75rem auto;
+    margin: 0;
   }
 }
