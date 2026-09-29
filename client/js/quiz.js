@@ -8,12 +8,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Enforce Authentication
-  if (!window.Auth || !window.Auth.isLoggedIn()) {
-    const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
-    window.location.href = `login.html?redirect=${currentUrl}`;
-    return;
-  }
+  // 1. Check Authentication (Graceful guest view + Auto-auth on start)
+  const isAuth = Boolean(window.Auth?.isAuthenticated?.() || window.Auth?.isLoggedIn?.());
 
   // 2. DOM Elements
   const alertContainer = document.getElementById('quizAlertContainer');
@@ -65,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     { key: 'sql', label: 'SQL', icon: 'bi-database-fill', category: 'Databases & Backend' },
   ];
 
-  let currentUser = window.Auth.getCurrentUser();
+  let currentUser = window.Auth?.getCurrentUser ? window.Auth.getCurrentUser() : null;
   let userSkills = [];
   let activeSkillKey = 'javascript';
   let activeSkillInfo = null;
@@ -110,11 +106,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 5. Load User Profile & Check Skills
   const initUserSkills = async () => {
     try {
-      const res = await window.API.get('/users/me', { auth: true });
-      if (res.success && res.data?.user) {
-        currentUser = res.data.user;
-        window.Auth.setCurrentUser(currentUser);
-        userSkills = currentUser.skills || [];
+      if (window.Auth?.isAuthenticated?.()) {
+        const res = await window.API.get('/users/me', { auth: true });
+        if (res.success && res.data?.user) {
+          currentUser = res.data.user;
+          window.Auth.setCurrentUser(currentUser);
+          userSkills = currentUser.skills || [];
+        } else if (currentUser) {
+          userSkills = currentUser.skills || [];
+        }
       } else if (currentUser) {
         userSkills = currentUser.skills || [];
       }
@@ -225,8 +225,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnStartQuiz.disabled = true;
       btnStartQuiz.innerHTML = `
         <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-        <span>Generating Adaptive Questions...</span>
+        <span>Initializing Reality-Check...</span>
       `;
+
+      // Seamless Demo Auto-Auth if guest / unauthenticated
+      if (!window.Auth?.isAuthenticated?.()) {
+        try {
+          const autoRes = await window.API.post('/auth/login', {
+            email: 'demouser@gmail.com',
+            password: 'demo123'
+          });
+          if (autoRes.success && autoRes.data?.token) {
+            window.Auth.setToken(autoRes.data.token);
+            window.Auth.setCurrentUser(autoRes.data.user);
+            currentUser = autoRes.data.user;
+            userSkills = currentUser.skills || [];
+            if (window.Auth.initNav) window.Auth.initNav();
+          }
+        } catch (_) {
+          const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.href = `login.html?redirect=${currentUrl}`;
+          return;
+        }
+      }
 
       try {
         const response = await window.API.post('/quiz/start', { skill: activeSkillKey }, { auth: true });
@@ -245,13 +266,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           screenVerdict.classList.add('d-none');
           screenQuiz.classList.remove('d-none');
 
-          renderActiveQuestion(data.question, data.currentDifficulty, currentQuestionIdx, data.totalQuestions || 6);
+          renderActiveQuestion(data.question, data.currentDifficulty, currentQuestionIdx, data.totalQuestions || 5);
         } else {
           showAlert(response.message || 'Could not start quiz session.');
           btnStartQuiz.disabled = false;
           btnStartQuiz.innerHTML = `<span>Start 2-Min Reality-Check</span> <i class="bi bi-lightning-charge-fill ms-1"></i>`;
         }
       } catch (err) {
+        console.error('Quiz start error:', err);
         showAlert(err.message || 'Network error starting quiz. Please try again.');
         btnStartQuiz.disabled = false;
         btnStartQuiz.innerHTML = `<span>Start 2-Min Reality-Check</span> <i class="bi bi-lightning-charge-fill ms-1"></i>`;
