@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "seed": "node seed.js",
     "test": "node --check server.js && node --check seed.js",
+    "test:security": "node test_security_suite.js",
     "lint": "node --check server.js && node --check seed.js"
   },
   "keywords": [

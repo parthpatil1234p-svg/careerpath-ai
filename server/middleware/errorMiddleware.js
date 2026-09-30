@@ -22,6 +22,11 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || err.status || 500;
   let message    = err.message    || 'Internal Server Error';
 
+  // ── CORS Policy Violation ─────────────────────────────────────
+  if (err.message && err.message.includes('CORS policy violation')) {
+    statusCode = 403;
+  }
+
   // ── Mongoose Duplicate Key (e.g. duplicate email) ────────────
   if (err.code === 11000) {
     statusCode = 409;

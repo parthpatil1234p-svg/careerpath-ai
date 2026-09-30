@@ -5,7 +5,6 @@
  * Team 404 Brain Not Found · Hack2Ignite 2026–27
  */
 
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const { getGroqMentorReply } = require('../services/groqService');
@@ -41,28 +40,19 @@ const handleChatMessage = async (req, res, next) => {
       });
     }
 
-    // Optional user contextual enrichment if JWT token is supplied
+    // User contextual enrichment from authenticated req.user (populated by protect middleware)
     let userContext = null;
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
+    if (req.user) {
       try {
-        const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded && decoded.id) {
-          const user = await User.findById(decoded.id).select('name education skills interests');
-          if (user) {
-            const activeRoadmap = await Roadmap.findOne({ user: user._id, status: 'active' });
-            userContext = {
-              name: user.name,
-              degree: user.education?.course || '',
-              skills: Array.isArray(user.skills) ? user.skills.map(s => s.name || s) : [],
-              targetCareer: activeRoadmap?.careerSnapshot?.title || '',
-            };
-          }
-        }
-      } catch (err) {
-        // Token verification failed or expired; continue without personalized context
-        userContext = null;
+        const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' });
+        userContext = {
+          name: req.user.name,
+          degree: req.user.education?.course || '',
+          skills: Array.isArray(req.user.skills) ? req.user.skills.map(s => s.name || s) : [],
+          targetCareer: activeRoadmap?.careerSnapshot?.title || '',
+        };
+      } catch (ctxErr) {
+        console.warn('[chatController] Context enrichment note:', ctxErr.message);
       }
     }
 

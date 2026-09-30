@@ -202,7 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnContent;
 
-      if (response.success && response.data?.token) {
+      if (response.success && (response.requiresOtp || !response.data?.token)) {
+        showOtpStep(response.email || email);
+        showAlert(response.message || 'A 6-digit verification code has been sent to your email.', 'info');
+      } else if (response.success && response.data?.token) {
         window.Auth.setToken(response.data.token);
         window.Auth.setCurrentUser(response.data.user);
         showAlert('Account created successfully! Taking you to assessment...', 'success');
@@ -315,9 +318,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Step 2 Direct Access Check (e.g. from login redirect) ─────
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('verify') === 'true' && urlParams.get('email')) {
-    const targetEmail = urlParams.get('email');
+  const targetEmail = urlParams.get('email') || urlParams.get('verifyEmail');
+  if ((urlParams.get('verify') === 'true' || urlParams.get('verifyEmail')) && targetEmail) {
     showOtpStep(targetEmail);
-    showAlert('Please enter the 6-digit verification code sent to your Gmail to activate your account.', 'info');
+    showAlert('Please enter the 6-digit verification code sent to your email to activate your account.', 'info');
   }
 });

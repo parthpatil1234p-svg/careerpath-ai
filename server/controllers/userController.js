@@ -127,18 +127,62 @@ const {
 } = require('../services/cloudinaryService');
 
 /**
+ * Strict MIME Type and Size Validator for Base64 Data URIs
+ * @param {string} dataUri - e.g. "data:image/png;base64,..."
+ * @param {string[]} allowedMimes - e.g. ['image/jpeg', 'image/png']
+ * @param {number} maxBytes - max allowed file size in bytes
+ * @param {string} fieldName - e.g. "Avatar" or "Resume"
+ */
+function validateBase64Upload(dataUri, allowedMimes, maxBytes, fieldName) {
+  if (!dataUri || typeof dataUri !== 'string') {
+    const err = new Error(`${fieldName} data is required.`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  // 1. Extract MIME from data URI: data:<mime>;base64,<data>
+  const match = dataUri.match(/^data:([a-zA-Z0-9\/+.-]+);base64,(.+)$/s);
+  if (!match) {
+    const err = new Error(`Invalid ${fieldName} format. Must be a valid base64 Data URI (data:<mime>;base64,...).`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const mime = match[1].toLowerCase();
+  const base64Data = match[2].trim();
+
+  if (!allowedMimes.includes(mime)) {
+    const err = new Error(`Unsupported ${fieldName} file format (${mime}). Allowed formats: ${allowedMimes.join(', ')}`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  // 2. Calculate approximate byte size: (base64 length * 3) / 4
+  const sizeBytes = Math.ceil((base64Data.length * 3) / 4);
+  if (sizeBytes > maxBytes) {
+    const maxMb = (maxBytes / (1024 * 1024)).toFixed(1);
+    const actualMb = (sizeBytes / (1024 * 1024)).toFixed(2);
+    const err = new Error(`${fieldName} file size (${actualMb}MB) exceeds the maximum allowed limit of ${maxMb}MB.`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  return { mime, sizeBytes, base64Data };
+}
+
+/**
  * POST /api/users/avatar
  * Body: { fileData: "data:image/...;base64,..." }
  */
 const uploadAvatar = async (req, res, next) => {
   try {
     const { fileData } = req.body;
-    if (!fileData) {
-      return res.status(400).json({
-        success: false,
-        message: 'No image data provided',
-      });
-    }
+    validateBase64Upload(
+      fileData,
+      ['image/jpeg', 'image/png', 'image/webp'],
+      2 * 1024 * 1024,
+      'Avatar'
+    );
 
     const uploadRes = await uploadAvatarToCloudinary(fileData, req.user._id);
     const avatarUrl = uploadRes.secure_url;
@@ -160,7 +204,7 @@ const uploadAvatar = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Avatar upload error:', error);
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to upload avatar',
     });
@@ -174,12 +218,16 @@ const uploadAvatar = async (req, res, next) => {
 const uploadResume = async (req, res, next) => {
   try {
     const { fileData } = req.body;
-    if (!fileData) {
-      return res.status(400).json({
-        success: false,
-        message: 'No resume document provided',
-      });
-    }
+    validateBase64Upload(
+      fileData,
+      [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ],
+      5 * 1024 * 1024,
+      'Resume'
+    );
 
     const uploadRes = await uploadResumeToCloudinary(fileData, req.user._id);
     const resumeUrl = uploadRes.secure_url;
@@ -246,7 +294,7 @@ Target Role: ${targetCareer}`
     });
   } catch (error) {
     console.error('Resume upload error:', error);
-    res.status(500).json({
+    res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to upload resume',
     });

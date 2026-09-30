@@ -68,32 +68,63 @@ const registerUser = async (req, res, next) => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
     if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        message: 'An account with this email already exists. Please log in directly.',
-      });
+      if (existingUser.isVerified) {
+        return res.status(409).json({
+          success: false,
+          message: 'An account with this email already exists. Please log in directly.',
+        });
+      } else {
+        // Account exists but is unverified: update details, assign fresh OTP and resend
+        existingUser.name = name.trim();
+        existingUser.password = password; // Pre-save hook will hash it
+        existingUser.verificationOtp = {
+          code: otpCode,
+          expiresAt,
+        };
+        await existingUser.save();
+
+        console.log(`\n🔑 [REGISTRATION UNVERIFIED OTP] Code for ${normalizedEmail}: ${otpCode}\n`);
+        try {
+          await sendOtpEmail(normalizedEmail, existingUser.name, otpCode);
+        } catch (mailErr) {
+          console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
+        }
+
+        return res.status(200).json({
+          success: true,
+          requiresOtp: true,
+          email: normalizedEmail,
+          message: 'Account pending verification. A fresh 6-digit verification code has been sent to your email.',
+        });
+      }
     }
 
-    // Create new instantly-verified user
+    // Create new unverified user
     const user = new User({
       name: name.trim(),
       email: normalizedEmail,
       password, // hashed by pre-save hook
-      isVerified: true,
+      isVerified: false,
+      verificationOtp: {
+        code: otpCode,
+        expiresAt,
+      },
     });
 
     await user.save();
 
-    // Generate JWT token directly for instant login
-    const token = generateToken(user);
+    console.log(`\n🔑 [NEW REGISTRATION OTP] 6-digit code for ${normalizedEmail}: ${otpCode}\n`);
+    try {
+      await sendOtpEmail(normalizedEmail, user.name, otpCode);
+    } catch (mailErr) {
+      console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
+    }
 
     res.status(201).json({
       success: true,
-      message: 'Student account created successfully! Welcome to CareerPath AI.',
-      data: {
-        user: formatUser(user),
-        token,
-      },
+      requiresOtp: true,
+      email: normalizedEmail,
+      message: 'Account created! A 6-digit verification code has been sent to your email.',
     });
   } catch (error) {
     next(error);
@@ -265,10 +296,28 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    // 3. Auto-verify user if needed and generate token
-    if (user.isVerified === false) {
-      user.isVerified = true;
+    // 3. Enforce email verification
+    if (!user.isVerified) {
+      const newCode = generateOtp();
+      user.verificationOtp = {
+        code: newCode,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      };
       await user.save();
+
+      console.log(`\n🔑 [LOGIN UNVERIFIED OTP] Fresh code for ${normalizedEmail}: ${newCode}\n`);
+      try {
+        await sendOtpEmail(normalizedEmail, user.name, newCode);
+      } catch (mailErr) {
+        console.error('[authController.loginUser] Failed to send OTP email:', mailErr.message);
+      }
+
+      return res.status(403).json({
+        success: false,
+        requiresVerification: true,
+        email: normalizedEmail,
+        message: 'Your email address is not verified. A fresh 6-digit OTP code has been sent to your email. Please verify to continue.',
+      });
     }
 
     // 4. Generate token and respond

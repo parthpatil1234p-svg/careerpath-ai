@@ -7,13 +7,22 @@
 
 const cloudinary = require('cloudinary').v2;
 
-// Configure Cloudinary with environment variables
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'npuijcvt',
-  api_key: process.env.CLOUDINARY_API_KEY || '959864665934574',
-  api_secret: process.env.CLOUDINARY_API_SECRET || '0qEx5HzCZLLVLBjklRHu-HrKRLc',
-  secure: true,
-});
+const isConfigured = Boolean(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET
+);
+
+if (isConfigured) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true,
+  });
+} else {
+  console.warn('⚠️  [WARN] Cloudinary credentials missing from environment. Media upload features are disabled.');
+}
 
 /**
  * Upload an image (avatar) to Cloudinary with automatic face-focus square cropping.
@@ -22,6 +31,9 @@ cloudinary.config({
  * @returns {Promise<Object>} Cloudinary upload result
  */
 const uploadAvatar = async (fileData, userId) => {
+  if (!isConfigured) {
+    throw new Error('Cloudinary media service is not configured on this server.');
+  }
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       fileData,
@@ -82,6 +94,9 @@ const getResumePreviewUrl = (publicIdOrUrl, page = 1) => {
  * @returns {Promise<{ filename: string, data: Buffer, size: number }>}
  */
 const downloadResumeBuffer = async (publicIdOrUrl) => {
+  if (!isConfigured) {
+    throw new Error('Cloudinary media service is not configured on this server.');
+  }
   const publicId = getPublicIdFromUrl(publicIdOrUrl) || publicIdOrUrl;
   if (!publicId) throw new Error('Invalid resume identifier or URL');
 
@@ -118,6 +133,9 @@ const downloadResumeBuffer = async (publicIdOrUrl) => {
  * @returns {Promise<Object>} Cloudinary upload result
  */
 const uploadResume = async (fileData, userId) => {
+  if (!isConfigured) {
+    throw new Error('Cloudinary media service is not configured on this server.');
+  }
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       fileData,

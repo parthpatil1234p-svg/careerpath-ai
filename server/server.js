@@ -79,29 +79,30 @@ app.set('trust proxy', 1);
 // ── Security: Helmet sets sensible HTTP headers ───────────────
 app.use(helmet());
 
-// ── CORS: Allow requests from the frontend origin ─────────────
-// In development: CLIENT_URL is http://localhost:5500 (Live Server)
-// In production:  CLIENT_URL is your Vercel URL
+// ── CORS: Strict Domain Whitelist ─────────────────────────────
+const rawOrigins = [
+  process.env.CLIENT_URL,
+  process.env.PROD_CLIENT_URL,
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+];
+const allowedOrigins = rawOrigins
+  .filter(Boolean)
+  .map(url => url.trim().replace(/\/+$/, ''));
+
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow non-browser requests (Postman, curl, server-to-server)
     if (!origin) return callback(null, true);
 
-    const configuredClient = process.env.CLIENT_URL;
-    const allowedLocal = ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://localhost:3000'];
-
-    if (
-      process.env.NODE_ENV === 'development' ||
-      !configuredClient ||
-      configuredClient === '*' ||
-      origin === configuredClient ||
-      allowedLocal.includes(origin) ||
-      origin.endsWith('.vercel.app')
-    ) {
+    const normalizedOrigin = origin.trim().replace(/\/+$/, '');
+    if (allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
 
-    return callback(new Error(`CORS origin ${origin} not permitted`));
+    return callback(new Error(`CORS policy violation: Origin ${origin} not permitted.`));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

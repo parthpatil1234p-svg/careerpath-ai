@@ -52,6 +52,8 @@
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
     // Inline code: `code`
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // Markdown links: [text](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary fw-semibold text-decoration-underline">$1</a>');
 
     // Split by double newline for paragraphs
     const paragraphs = html.split(/\n\n+/);
@@ -429,12 +431,23 @@
     // 2. Show typing indicator
     showTypingIndicator();
 
+    const token = getAuthToken();
+    if (!token) {
+      removeTypingIndicator();
+      appendBubbleToDOM(
+        'ai',
+        '🔒 **Authentication Required:** Please [log in](login.html) or [create a student account](register.html) to chat with your personal AI Career Mentor.',
+        formatTime()
+      );
+      isSending = false;
+      return;
+    }
+
     try {
-      const token = getAuthToken();
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
 
       // Format previous history for AI Mentor API (excluding current query to prevent duplication)
       const previousHistory = chatHistory.slice(0, -1);
@@ -452,8 +465,27 @@
         })
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       removeTypingIndicator();
+
+      if (res.status === 401) {
+        appendBubbleToDOM(
+          'ai',
+          '🔒 **Session Expired:** Your login session has expired. Please [log in again](login.html) to chat with AI Career Mentor.',
+          formatTime()
+        );
+        return;
+      }
+
+      if (res.status === 429) {
+        const cooldownMsg = data.message || 'AI Career Mentor is currently cooling down. You have reached your 20-message limit for this 15-minute window. Please wait a few minutes before continuing.';
+        appendBubbleToDOM(
+          'ai',
+          `⏳ **Rate Limit Notice:** ${cooldownMsg}`,
+          formatTime()
+        );
+        return;
+      }
 
       if (data.success && data.reply) {
         const aiTime = formatTime();
