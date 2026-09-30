@@ -96,7 +96,6 @@ const registerUser = async (req, res, next) => {
           success: true,
           requiresOtp: true,
           email: normalizedEmail,
-          debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? otpCode : undefined,
           message: 'Account pending verification. A fresh 6-digit verification code has been sent to your email.',
         });
       }
@@ -129,7 +128,6 @@ const registerUser = async (req, res, next) => {
       success: true,
       requiresOtp: true,
       email: normalizedEmail,
-      debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? otpCode : undefined,
       message: 'Account created! A 6-digit verification code has been sent to your email.',
     });
   } catch (error) {
@@ -272,7 +270,6 @@ const resendOtp = async (req, res, next) => {
       message: 'A fresh 6-digit verification code has been sent to your Gmail inbox.',
       data: {
         email: normalizedEmail,
-        debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? newCode : undefined,
       },
     });
   } catch (error) {
@@ -331,7 +328,6 @@ const loginUser = async (req, res, next) => {
         success: false,
         requiresVerification: true,
         email: normalizedEmail,
-        debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? newCode : undefined,
         message: 'Your email address is not verified. A fresh 6-digit OTP code has been sent to your email. Please verify to continue.',
       });
     }
