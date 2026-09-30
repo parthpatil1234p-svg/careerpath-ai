@@ -1794,8 +1794,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  // Wizard state preservation for seamless OAuth
+  const saveAssessmentDraft = () => {
+    try {
+      const draft = {
+        step: currentStep,
+        fullName: document.getElementById('fullName')?.value || '',
+        course: document.getElementById('course')?.value || '',
+        branch: document.getElementById('branch')?.value || '',
+        year: document.getElementById('year')?.value || '',
+        college: document.getElementById('college')?.value || '',
+        careerGoals: document.getElementById('careerGoals')?.value || '',
+        selectedInterests: Array.from(selectedInterests),
+        selectedSkills: Array.from(selectedSkillsMap.values()),
+        hasCompletedSkillVerification: Boolean(hasCompletedSkillVerification),
+        timestamp: Date.now(),
+      };
+      sessionStorage.setItem('cp_assessment_draft', JSON.stringify(draft));
+    } catch (e) {}
+  };
+  window.saveAssessmentDraft = saveAssessmentDraft;
+
   const applyDetectedSkills = (data) => {
-    window.applyDetectedSkills = applyDetectedSkills;
     const verifiedSkills = data?.detectedSkills || data?.verifiedSkills || (data?.user?.skills || []).filter(s => s.isCodeVerified) || [];
     let countAdded = 0;
 
@@ -1820,6 +1840,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       countAdded++;
     });
 
+    if (countAdded > 0) {
+      hasCompletedSkillVerification = true;
+    }
+
     renderSkillsGrid();
     updateSelectedSkillsUI();
     updateGitHubButtonState();
@@ -1832,6 +1856,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>@${ghUser} (${countAdded} Verified)</span>`;
     }
   };
+  window.applyDetectedSkills = applyDetectedSkills;
 
   updateGitHubButtonState();
 
@@ -1960,10 +1985,41 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.warn('Could not preload existing profile:', err.message);
     }
 
+    // Restore draft state if returning from OAuth redirect or page reload
+    let targetStep = 1;
+    try {
+      const draftRaw = sessionStorage.getItem('cp_assessment_draft');
+      if (draftRaw) {
+        const draft = JSON.parse(draftRaw);
+        if (draft.step && draft.step >= 1 && draft.step <= 4) {
+          targetStep = draft.step;
+        }
+        if (draft.fullName && !document.getElementById('fullName').value) document.getElementById('fullName').value = draft.fullName;
+        if (draft.course && !document.getElementById('course').value) document.getElementById('course').value = draft.course;
+        if (draft.branch && !document.getElementById('branch').value) document.getElementById('branch').value = draft.branch;
+        if (draft.year && !document.getElementById('year').value) document.getElementById('year').value = draft.year;
+        if (draft.college && !document.getElementById('college').value) document.getElementById('college').value = draft.college;
+        if (draft.careerGoals && !document.getElementById('careerGoals').value) document.getElementById('careerGoals').value = draft.careerGoals;
+        if (Array.isArray(draft.selectedInterests)) {
+          draft.selectedInterests.forEach((i) => selectedInterests.add(String(i).toLowerCase()));
+        }
+        if (Array.isArray(draft.selectedSkills)) {
+          draft.selectedSkills.forEach((s) => {
+            const key = (s.name || '').toLowerCase();
+            if (key) selectedSkillsMap.set(key, s);
+          });
+        }
+        if (draft.hasCompletedSkillVerification) {
+          hasCompletedSkillVerification = true;
+        }
+        sessionStorage.removeItem('cp_assessment_draft');
+      }
+    } catch (err) {}
+
     renderInterests();
     renderSkillsGrid();
     updateSelectedSkillsUI();
-    updateStepUI(1);
+    updateStepUI(targetStep);
   };
 
   // 11. Form Submission

@@ -15,6 +15,29 @@ window.GitHubAuth = (function () {
   let liveLookupTimer = null;
 
   /**
+   * Closes and cleans up any open GitHub modal and backdrop elements
+   */
+  const closeAndCleanupModals = () => {
+    const modalEl = document.getElementById('universalGitHubModal');
+    if (modalEl) {
+      try {
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) {
+          modalInstance.hide();
+          modalInstance.dispose();
+        }
+      } catch (e) {}
+      modalEl.remove();
+    }
+    document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
+    if (document.body) {
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+    }
+  };
+
+  /**
    * Sends GitHub authentication payload to backend API
    */
   const sendGitHubAuthPayload = async (payload, callbacks = {}) => {
@@ -391,12 +414,23 @@ window.GitHubAuth = (function () {
     };
 
     const realtimeOAuthBtn = modalEl.querySelector('#btnRealtimeGitHubOAuth');
+    const realtimeOAuthText = modalEl.querySelector('#btnRealtimeOAuthText');
     if (realtimeOAuthBtn) {
-      realtimeOAuthBtn.addEventListener('click', () => {
+      realtimeOAuthBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // 1. Save in-progress draft if on assessment page
+        if (typeof window.saveAssessmentDraft === 'function') {
+          window.saveAssessmentDraft();
+        }
+
         const clientId = githubClientId || window.CONFIG?.GITHUB_CLIENT_ID || 'Ov23liphgi9YF1lbYiUa';
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const callbackPath = isLocal ? '/assessment.html' : '/assessment';
-        const redirectUri = window.location.origin + callbackPath;
+        const callbackPath = isLocal ? (window.location.pathname.endsWith('.html') ? '/assessment.html' : '/assessment') : '';
+        // If on localhost, pass explicit redirect_uri to remain on local server.
+        // If on production (Vercel), omit redirect_uri so GitHub automatically redirects to the registered
+        // callback URL without displaying the "redirect_uri is not associated with this application" warning!
+        const redirectUri = isLocal ? (window.location.origin + callbackPath) : '';
 
         try {
           localStorage.setItem('cp_gh_oauth_intent', JSON.stringify({
@@ -404,13 +438,158 @@ window.GitHubAuth = (function () {
             returnUrl: window.location.href,
             timestamp: Date.now()
           }));
-        } catch (e) {}
+        } catch (err) {}
 
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if (modalInstance) modalInstance.hide();
+        const authUrl = redirectUri
+          ? `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo&redirect_uri=${encodeURIComponent(redirectUri)}`
+          : `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo`;
 
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo&redirect_uri=${encodeURIComponent(redirectUri)}`;
-        window.location.href = authUrl;
+        // 2. Open centered popup window
+        const width = 600;
+        const height = 750;
+        const left = window.screenX + Math.max(0, (window.outerWidth - width) / 2);
+        const top = window.screenY + Math.max(0, (window.outerHeight - height) / 2);
+
+        let popup = null;
+        try {
+          popup = window.open(
+            authUrl,
+            'careerpath_github_oauth',
+            `width=${width},height=${height},left=${left},top=${top},status=no,toolbar=no,menubar=no,scrollbars=yes`
+          );
+        } catch (popupErr) {
+          console.warn('Popup window error or blocked:', popupErr);
+        }
+
+        // If popup was blocked or failed, fallback gracefully to direct redirect
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+          const modalInstance = bootstrap.Modal.getInstance(modalEl);
+          if (modalInstance) modalInstance.hide();
+          window.location.href = authUrl;
+          return;
+        }
+
+        // Popup is active! Update button UI inside modal while keeping user on their page
+        realtimeOAuthBtn.disabled = true;
+        if (realtimeOAuthText) {
+          realtimeOAuthText.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Waiting for GitHub Authorization...`;
+        }
+
+        let cleanupListeners = null;
+        let isHandled = false;
+
+        const handleOAuthCodeReceived = async (code) => {
+          if (isHandled) return;
+          isHandled = true;
+          if (cleanupListeners) cleanupListeners();
+
+          try {
+            if (popup && !popup.closed) popup.close();
+          } catch (e) {}
+
+          if (realtimeOAuthText) {
+            realtimeOAuthText.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Scanning Repositories & Verifying...`;
+          }
+
+          const isAuthenticated = (typeof window.Auth?.isAuthenticated === 'function' && window.Auth.isAuthenticated()) ||
+                                  (typeof window.Auth?.isLoggedIn === 'function' && window.Auth.isLoggedIn()) ||
+                                  Boolean(localStorage.getItem('careerpath_token'));
+
+          const notify = callbacks.showAlert || ((msg, type = 'info') => {
+            if (typeof window.showAlert === 'function') window.showAlert(msg, type);
+          });
+
+          if (isAuthenticated || isConnectOnly) {
+            try {
+              const response = await window.API.post('/auth/github/connect', { code }, { auth: true });
+              closeAndCleanupModals();
+
+              if (response.success && response.data?.user) {
+                window.Auth.setCurrentUser(response.data.user);
+                if (typeof window.Auth?.initNav === 'function') window.Auth.initNav();
+                if (typeof window.applyDetectedSkills === 'function') {
+                  window.applyDetectedSkills(response.data);
+                }
+                const ghUser = response.data.user.githubProfile?.username || 'user';
+                notify(`✓ Real-time GitHub authentication successful! Connected @${ghUser} with verified skills.`, 'success');
+                if (callbacks.onSuccess) callbacks.onSuccess(response.data);
+              } else {
+                notify(response.message || 'Could not verify GitHub account.', 'danger');
+              }
+            } catch (err) {
+              closeAndCleanupModals();
+              notify(err.message || 'GitHub connection error.', 'danger');
+            }
+          } else {
+            // Sign in / Sign up
+            sendGitHubAuthPayload({ code }, {
+              ...callbacks,
+              showAlert: notify,
+              onSuccess: (data) => {
+                closeAndCleanupModals();
+                if (callbacks.onSuccess) callbacks.onSuccess(data);
+              }
+            });
+          }
+        };
+
+        // Channel A: postMessage
+        const onMessage = (event) => {
+          if (event.data && event.data.type === 'CAREERPATH_GITHUB_OAUTH_CODE' && event.data.code) {
+            handleOAuthCodeReceived(event.data.code);
+          }
+        };
+        window.addEventListener('message', onMessage);
+
+        // Channel B: storage event
+        const onStorage = (event) => {
+          if (event.key === 'careerpath_gh_oauth_code' && event.newValue) {
+            try {
+              const parsed = JSON.parse(event.newValue);
+              if (parsed?.code) {
+                localStorage.removeItem('careerpath_gh_oauth_code');
+                handleOAuthCodeReceived(parsed.code);
+              }
+            } catch (e) {}
+          }
+        };
+        window.addEventListener('storage', onStorage);
+
+        // Channel C: Polling interval (500ms)
+        const pollTimer = setInterval(() => {
+          if (isHandled) {
+            clearInterval(pollTimer);
+            return;
+          }
+          try {
+            const raw = localStorage.getItem('careerpath_gh_oauth_code');
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (parsed?.code) {
+                localStorage.removeItem('careerpath_gh_oauth_code');
+                handleOAuthCodeReceived(parsed.code);
+                return;
+              }
+            }
+          } catch (e) {}
+
+          if (popup.closed) {
+            clearInterval(pollTimer);
+            if (!isHandled) {
+              // User closed popup without authorizing
+              realtimeOAuthBtn.disabled = false;
+              if (realtimeOAuthText) {
+                realtimeOAuthText.textContent = isConnectOnly ? 'Authorize with GitHub (Real-Time OAuth)' : 'Sign In with GitHub (Real-Time OAuth)';
+              }
+            }
+          }
+        }, 500);
+
+        cleanupListeners = () => {
+          window.removeEventListener('message', onMessage);
+          window.removeEventListener('storage', onStorage);
+          clearInterval(pollTimer);
+        };
       });
     }
 
@@ -449,9 +628,58 @@ window.GitHubAuth = (function () {
     const oauthCode = urlParams.get('code');
     if (!oauthCode) return;
 
+    // Detect if this page is inside a popup or was opened by window.open
+    const isPopup = Boolean(
+      (window.opener && window.opener !== window) ||
+      window.name === 'careerpath_github_oauth' ||
+      window.location.hash.includes('is_popup')
+    );
+
+    if (isPopup) {
+      // 1. Post message to opener
+      try {
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({
+            type: 'CAREERPATH_GITHUB_OAUTH_CODE',
+            code: oauthCode
+          }, '*');
+        }
+      } catch (e) {}
+
+      // 2. Set localStorage for cross-window storage event
+      try {
+        localStorage.setItem('careerpath_gh_oauth_code', JSON.stringify({
+          code: oauthCode,
+          timestamp: Date.now()
+        }));
+      } catch (e) {}
+
+      // 3. Briefly display confirmation in popup and close it
+      try {
+        document.body.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;background:#0d1117;color:#fff;text-align:center;">
+            <div>
+              <div style="font-size:1.4rem;font-weight:600;margin-bottom:8px;color:#2ea043;">✓ GitHub Authorized</div>
+              <div style="font-size:0.9rem;color:#8b949e;">Connecting to CareerPath AI & scanning repositories...</div>
+            </div>
+          </div>
+        `;
+      } catch (e) {}
+
+      setTimeout(() => {
+        try {
+          window.close();
+        } catch (e) {}
+      }, 100);
+      return;
+    }
+
+    // ── FALLBACK: Direct Full-Page Redirect Flow ───────────────
     // Clean up ?code= from address bar immediately to avoid duplicate processing on refresh
     const cleanUrl = window.location.pathname + window.location.hash;
     window.history.replaceState({}, document.title, cleanUrl);
+
+    closeAndCleanupModals();
 
     let intent = {};
     try {
@@ -477,6 +705,7 @@ window.GitHubAuth = (function () {
 
       try {
         const response = await window.API.post('/auth/github/connect', { code: oauthCode }, { auth: true });
+        closeAndCleanupModals();
 
         if (response.success && response.data?.user) {
           window.Auth.setCurrentUser(response.data.user);
@@ -484,7 +713,8 @@ window.GitHubAuth = (function () {
           if (typeof window.applyDetectedSkills === 'function') {
             window.applyDetectedSkills(response.data);
           }
-          notify(`✓ Real-time GitHub authentication successful! Connected @${response.data.user.githubProfile?.username || 'user'} with verified skills.`, 'success');
+          const ghUser = response.data.user.githubProfile?.username || 'user';
+          notify(`✓ Real-time GitHub authentication successful! Connected @${ghUser} with verified skills.`, 'success');
 
           // If initiated from another page (e.g. dashboard.html), redirect back to it
           if (intent.returnUrl && !window.location.href.includes(intent.returnUrl) && !intent.returnUrl.endsWith(window.location.pathname)) {
@@ -493,18 +723,11 @@ window.GitHubAuth = (function () {
             }, 1200);
           }
         } else {
-          showUniversalGitHubModal(
-            { showAlert: notify },
-            true,
-            response.message || 'GitHub OAuth code received! Enter your GitHub username to complete real-time verification:'
-          );
+          notify(response.message || 'GitHub OAuth code received, but could not link repositories.', 'warning');
         }
       } catch (err) {
-        showUniversalGitHubModal(
-          { showAlert: notify },
-          true,
-          'GitHub OAuth code received! Enter your GitHub username to complete real-time verification:'
-        );
+        closeAndCleanupModals();
+        notify(err.message || 'GitHub OAuth verification failed. Please try username verification.', 'danger');
       }
     } else {
       // User is not logged in: Log in via OAuth code
@@ -513,11 +736,7 @@ window.GitHubAuth = (function () {
         {
           showAlert: notify,
           onError: (errRes) => {
-            showUniversalGitHubModal(
-              { showAlert: notify },
-              false,
-              errRes?.message || 'GitHub authorization detected! Enter your GitHub username below to complete instant sign-in:'
-            );
+            notify(errRes?.message || 'GitHub authorization detected, but sign in failed. Please try logging in with email or username.', 'danger');
           },
         }
       );
