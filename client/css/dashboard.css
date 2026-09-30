@@ -746,3 +746,48 @@
   border: 1px solid rgba(20, 184, 166, 0.25);
 }
 
+/* 7. AI Mock Interview Chamber Dark Styling */
+#mockInterviewModal .modal-content {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 12px !important;
+}
+
+#mockInterviewModal .modal-header {
+  background: #1e293b !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+#mockInterviewModal .modal-footer {
+  background: #1e293b !important;
+  border-top: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+#mockInterviewModal .modal-title {
+  color: #ffffff !important;
+}
+
+#mockInterviewModal #interviewTargetRole {
+  color: #38bdf8 !important;
+  font-weight: 700;
+}
+
+#mockInterviewModal #interviewAnswerInput {
+  background-color: #020617 !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+}
+
+#mockInterviewModal #interviewAnswerInput:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+}
+
+#mockInterviewModal #currentQuestionText {
+  color: #ffffff !important;
+  line-height: 1.6;
+}
+
+

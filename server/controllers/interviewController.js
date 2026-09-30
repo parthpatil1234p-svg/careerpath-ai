@@ -24,14 +24,22 @@ exports.startInterview = async (req, res, next) => {
     }
 
     const questions = await generateInterviewQuestions(role, user?.skills || []);
+    const normalizedQuestions = (questions || []).map(q => ({
+      question: q.question || q.questionText || '',
+      questionText: q.question || q.questionText || '',
+      questionType: q.questionType || q.category || 'technical',
+      category: q.questionType || q.category || 'technical',
+      rubric: q.rubric || ''
+    }));
 
     return res.status(200).json({
       success: true,
       message: `Interview session generated for ${role}.`,
       data: {
+        sessionId: `session_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         targetRole: role,
-        totalQuestions: questions.length,
-        questions
+        totalQuestions: normalizedQuestions.length,
+        questions: normalizedQuestions
       }
     });
   } catch (error) {
@@ -45,12 +53,15 @@ exports.startInterview = async (req, res, next) => {
  */
 exports.evaluateAnswer = async (req, res, next) => {
   try {
-    const { question, answer, questionType, targetRole } = req.body;
+    const question = req.body.question || req.body.questionText || 'Technical scenario question';
+    const answer = req.body.answer || req.body.answerText;
+    const questionType = req.body.questionType || req.body.category || 'technical';
+    const targetRole = req.body.targetRole || 'Full-Stack Developer';
 
-    if (!question || !answer) {
+    if (!answer || String(answer).trim().length < 5) {
       return res.status(400).json({
         success: false,
-        message: 'Question and answer are required.'
+        message: 'A valid answer of at least 5 characters is required.'
       });
     }
 
@@ -58,7 +69,16 @@ exports.evaluateAnswer = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      data: evaluation
+      data: {
+        ...evaluation,
+        modelAnswerSnippet: evaluation.modelAnswer || evaluation.modelAnswerSnippet || '',
+        rubric: {
+          compositeScore: evaluation.overallScore,
+          technicalDepth: evaluation.technicalScore,
+          communication: evaluation.communicationScore,
+          practicalApplication: evaluation.practicalScore
+        }
+      }
     });
   } catch (error) {
     next(error);
@@ -77,7 +97,14 @@ exports.finalizeInterview = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    const overallScore = Math.round(Number(scores?.overallScore || 75));
+    let overallScore = 75;
+    if (scores && typeof scores.overallScore === 'number') {
+      overallScore = Math.round(Number(scores.overallScore));
+    } else if (Array.isArray(history) && history.length > 0) {
+      const sum = history.reduce((acc, h) => acc + (Number(h.score) || 75), 0);
+      overallScore = Math.round(sum / history.length);
+    }
+
     const technicalScore = Math.round(Number(scores?.technicalScore || overallScore));
     const communicationScore = Math.round(Number(scores?.communicationScore || overallScore));
     const practicalScore = Math.round(Number(scores?.practicalScore || overallScore));
@@ -97,7 +124,16 @@ exports.finalizeInterview = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'Mock interview successfully recorded! Score added to Job Readiness Index.',
-      data: user.mockInterview
+      data: {
+        overallScore: user.mockInterview.overallScore,
+        averageScore: user.mockInterview.overallScore,
+        technicalScore: user.mockInterview.technicalScore,
+        communicationScore: user.mockInterview.communicationScore,
+        practicalScore: user.mockInterview.practicalScore,
+        targetRole: user.mockInterview.targetRole,
+        completedAt: user.mockInterview.completedAt,
+        history: user.mockInterview.history
+      }
     });
   } catch (error) {
     next(error);

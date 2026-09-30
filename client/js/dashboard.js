@@ -1486,6 +1486,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4. Interactive AI Mock Interview Chamber
   let interviewSession = null;
   let currentQuestionIdx = 0;
+  let sessionHistory = [];
   let recognitionInstance = null;
   let isSpeechRecording = false;
 
@@ -1499,14 +1500,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnSubmit = document.getElementById('btnSubmitAnswer');
     const btnNext = document.getElementById('btnNextQuestion');
     const btnFinalize = document.getElementById('btnFinalizeInterview');
+    const questionLoadingEl = document.getElementById('interviewQuestionLoading');
+    const questionContainerEl = document.getElementById('interviewQuestionContainer');
+    const interviewTargetRole = document.getElementById('interviewTargetRole');
+    const interviewProgressText = document.getElementById('interviewProgressText');
+    const questionCategoryBadge = document.getElementById('questionCategoryBadge');
+    const currentQuestionText = document.getElementById('currentQuestionText');
+    const feedbackCard = document.getElementById('evaluationFeedbackCard');
 
     if (!btnLaunch || !modalEl) return;
 
+    // Launch button handler
     btnLaunch.onclick = async () => {
-      const targetRole = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
-      btnLaunch.disabled = true;
-      const originalText = btnLaunch.innerHTML;
-      btnLaunch.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Initializing Chamber...';
+      const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+      modalInstance.show();
+
+      const user = dashboardData?.user || window.Auth?.getUser() || {};
+      const targetRole = dashboardData?.activeRoadmap?.career?.title || 
+                         dashboardData?.readinessData?.targetRole || 
+                         (user.interests && user.interests[0]) || 
+                         'Full-Stack Developer';
+
+      if (interviewTargetRole) interviewTargetRole.textContent = targetRole;
+      if (interviewProgressText) interviewProgressText.textContent = 'Question 1 of 3';
+
+      // Show question loading state
+      if (questionLoadingEl) questionLoadingEl.classList.remove('d-none');
+      if (questionContainerEl) questionContainerEl.classList.add('d-none');
+      if (feedbackCard) feedbackCard.classList.add('d-none');
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Preparing Questions...';
+      }
+      if (btnNext) btnNext.classList.add('d-none');
+      if (btnFinalize) btnFinalize.classList.add('d-none');
 
       try {
         const res = await window.API.post('/interview/start', {
@@ -1514,20 +1541,23 @@ document.addEventListener('DOMContentLoaded', async () => {
           questionCount: 3
         }, { auth: true });
 
-        if (res.success && res.data) {
+        if (res.success && res.data && Array.isArray(res.data.questions) && res.data.questions.length > 0) {
           interviewSession = res.data;
           currentQuestionIdx = 0;
+          sessionHistory = [];
           renderInterviewQuestion();
-          const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-          modalInstance.show();
         } else {
           showAlert(res.message || 'Failed to start interview chamber.', 'danger');
+          if (currentQuestionText) currentQuestionText.textContent = 'Failed to load interview question. Please try again.';
+          if (questionLoadingEl) questionLoadingEl.classList.add('d-none');
+          if (questionContainerEl) questionContainerEl.classList.remove('d-none');
         }
       } catch (err) {
+        console.error('Error launching mock interview chamber:', err);
         showAlert(err.message || 'Error launching mock interview chamber.', 'danger');
-      } finally {
-        btnLaunch.disabled = false;
-        btnLaunch.innerHTML = originalText;
+        if (currentQuestionText) currentQuestionText.textContent = 'Error connecting to AI interviewer. Please check your connection.';
+        if (questionLoadingEl) questionLoadingEl.classList.add('d-none');
+        if (questionContainerEl) questionContainerEl.classList.remove('d-none');
       }
     };
 
@@ -1535,19 +1565,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const renderInterviewQuestion = () => {
       if (!interviewSession || !interviewSession.questions || !interviewSession.questions.length) return;
       const q = interviewSession.questions[currentQuestionIdx];
+      if (!q) return;
 
-      const interviewTargetRole = document.getElementById('interviewTargetRole');
-      const interviewProgressText = document.getElementById('interviewProgressText');
-      const questionCategoryBadge = document.getElementById('questionCategoryBadge');
-      const currentQuestionText = document.getElementById('currentQuestionText');
-      const feedbackCard = document.getElementById('evaluationFeedbackCard');
+      if (questionLoadingEl) questionLoadingEl.classList.add('d-none');
+      if (questionContainerEl) questionContainerEl.classList.remove('d-none');
 
-      if (interviewTargetRole) interviewTargetRole.textContent = interviewSession.targetRole || 'Software Engineer';
+      const qText = q.question || q.questionText || 'Walk through your technical approach and architectural decision-making process.';
+      const rawCategory = q.questionType || q.category || 'TECHNICAL';
+      const qCategory = String(rawCategory).replace(/_/g, ' ').toUpperCase();
+
+      if (interviewTargetRole) interviewTargetRole.textContent = interviewSession.targetRole || 'Full-Stack Developer';
       if (interviewProgressText) interviewProgressText.textContent = `Question ${currentQuestionIdx + 1} of ${interviewSession.questions.length}`;
-      if (questionCategoryBadge) questionCategoryBadge.textContent = `${q.category || 'TECHNICAL'} SCENARIO`;
-      if (currentQuestionText) currentQuestionText.textContent = q.questionText;
+      if (questionCategoryBadge) questionCategoryBadge.textContent = `${qCategory} SCENARIO`;
+      if (currentQuestionText) currentQuestionText.textContent = qText;
 
-      if (answerInput) answerInput.value = '';
+      if (answerInput) {
+        answerInput.value = '';
+        answerInput.disabled = false;
+        answerInput.focus();
+      }
       if (feedbackCard) feedbackCard.classList.add('d-none');
 
       if (btnSubmit) {
@@ -1559,19 +1595,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (btnFinalize) btnFinalize.classList.add('d-none');
     };
 
-    // Web Speech API TTS
+    // Text-to-Speech (TTS)
     if (btnSpeak) {
       btnSpeak.onclick = () => {
-        if (!interviewSession || !('speechSynthesis' in window)) {
-          showAlert('Speech synthesis audio is not supported in this browser.', 'warning');
+        if (!interviewSession || !interviewSession.questions) return;
+        if (!('speechSynthesis' in window)) {
+          showAlert('Text-to-speech audio is not supported in this browser.', 'info');
           return;
         }
+
         const q = interviewSession.questions[currentQuestionIdx];
         if (!q) return;
+        const qText = q.question || q.questionText;
+        if (!qText) return;
 
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(q.questionText);
-        utterance.rate = 1.0;
+        const utterance = new SpeechSynthesisUtterance(qText);
+        utterance.rate = 0.95;
         utterance.pitch = 1.0;
         const btnSpeakText = document.getElementById('btnSpeakText');
         if (btnSpeakText) btnSpeakText.textContent = 'Speaking...';
@@ -1602,13 +1642,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (isSpeechRecording) {
-          // Stop recording
           if (recognitionInstance) recognitionInstance.stop();
           isSpeechRecording = false;
           btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
           if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
         } else {
-          // Start recording
           recognitionInstance = new SpeechRecognition();
           recognitionInstance.continuous = true;
           recognitionInstance.interimResults = true;
@@ -1661,21 +1699,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Stop mic if recording
         if (isSpeechRecording && recognitionInstance) {
           recognitionInstance.stop();
+          isSpeechRecording = false;
+          if (btnToggleMic) btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
+          if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
         }
 
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> AI Evaluating...';
 
         try {
+          const currentQ = interviewSession.questions[currentQuestionIdx];
+          const qText = currentQ.question || currentQ.questionText || '';
+          const qType = currentQ.questionType || currentQ.category || 'technical';
+          const targetRole = interviewSession.targetRole || 'Full-Stack Developer';
+
           const evalRes = await window.API.post('/interview/evaluate', {
+            question: qText,
+            answer: text,
+            questionType: qType,
+            targetRole: targetRole,
             sessionId: interviewSession.sessionId,
-            questionIndex: currentQuestionIdx,
-            answer: text
+            questionIndex: currentQuestionIdx
           }, { auth: true });
 
           if (evalRes.success && evalRes.data) {
             const evalData = evalRes.data;
-            const feedbackCard = document.getElementById('evaluationFeedbackCard');
+            const compositeScore = evalData.overallScore ?? evalData.rubric?.compositeScore ?? 75;
+            const techScore = evalData.technicalScore ?? evalData.rubric?.technicalDepth ?? compositeScore;
+            const commScore = evalData.communicationScore ?? evalData.rubric?.communication ?? compositeScore;
+            const pracScore = evalData.practicalScore ?? evalData.rubric?.practicalApplication ?? compositeScore;
+            const feedback = evalData.feedback || 'Good structured response.';
+            const modelAnswer = evalData.modelAnswer || evalData.modelAnswerSnippet || 'Comprehensive technical design answer.';
+
+            // Record into session history
+            sessionHistory.push({
+              question: qText,
+              questionType: qType,
+              answer: text,
+              score: compositeScore,
+              technicalScore: techScore,
+              communicationScore: commScore,
+              practicalScore: pracScore,
+              feedback: feedback,
+              modelAnswer: modelAnswer
+            });
+
+            // Populate feedback card
             const evalScoreBadge = document.getElementById('evalScoreBadge');
             const evalFeedbackText = document.getElementById('evalFeedbackText');
             const evalTechScore = document.getElementById('evalTechScore');
@@ -1683,15 +1752,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             const evalPracScore = document.getElementById('evalPracScore');
             const evalModelAnswer = document.getElementById('evalModelAnswer');
 
-            if (evalScoreBadge) evalScoreBadge.textContent = `Score: ${evalData.rubric?.compositeScore || 80}/100`;
-            if (evalFeedbackText) evalFeedbackText.textContent = evalData.feedback || 'Good structured response.';
-            if (evalTechScore) evalTechScore.textContent = `${evalData.rubric?.technicalDepth || 80}%`;
-            if (evalCommScore) evalCommScore.textContent = `${evalData.rubric?.communication || 85}%`;
-            if (evalPracScore) evalPracScore.textContent = `${evalData.rubric?.practicalApplication || 75}%`;
-            if (evalModelAnswer) evalModelAnswer.textContent = evalData.modelAnswerSnippet || 'Comprehensive technical design answer.';
+            if (evalScoreBadge) evalScoreBadge.textContent = `Score: ${compositeScore}/100`;
+            if (evalFeedbackText) evalFeedbackText.textContent = feedback;
+            if (evalTechScore) evalTechScore.textContent = `${techScore}%`;
+            if (evalCommScore) evalCommScore.textContent = `${commScore}%`;
+            if (evalPracScore) evalPracScore.textContent = `${pracScore}%`;
+            if (evalModelAnswer) evalModelAnswer.textContent = modelAnswer;
 
             if (feedbackCard) feedbackCard.classList.remove('d-none');
             btnSubmit.classList.add('d-none');
+            if (answerInput) answerInput.disabled = true;
 
             // Determine if more questions or finalize
             if (currentQuestionIdx < interviewSession.questions.length - 1) {
@@ -1705,6 +1775,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
           }
         } catch (evalErr) {
+          console.error('Error evaluating interview answer:', evalErr);
           showAlert(evalErr.message || 'Error evaluating interview answer.', 'danger');
           btnSubmit.disabled = false;
           btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
@@ -1727,15 +1798,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnFinalize.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Finalizing Score...';
 
         try {
+          const avgOverall = Math.round(sessionHistory.reduce((sum, h) => sum + (h.score || 0), 0) / (sessionHistory.length || 1));
+          const avgTech = Math.round(sessionHistory.reduce((sum, h) => sum + (h.technicalScore || avgOverall), 0) / (sessionHistory.length || 1));
+          const avgComm = Math.round(sessionHistory.reduce((sum, h) => sum + (h.communicationScore || avgOverall), 0) / (sessionHistory.length || 1));
+          const avgPrac = Math.round(sessionHistory.reduce((sum, h) => sum + (h.practicalScore || avgOverall), 0) / (sessionHistory.length || 1));
+
           const finalRes = await window.API.post('/interview/finalize', {
-            sessionId: interviewSession.sessionId
+            targetRole: interviewSession.targetRole || 'Full-Stack Developer',
+            scores: {
+              overallScore: avgOverall,
+              technicalScore: avgTech,
+              communicationScore: avgComm,
+              practicalScore: avgPrac
+            },
+            history: sessionHistory
           }, { auth: true });
 
           if (finalRes.success && finalRes.data) {
             const modalInstance = bootstrap.Modal.getInstance(modalEl);
             if (modalInstance) modalInstance.hide();
 
-            showAlert(`🎉 Mock interview complete! Overall Interview Score: ${finalRes.data.averageScore}/100. Your Career Readiness Index has been updated!`, 'success');
+            const finalScore = finalRes.data.averageScore || finalRes.data.overallScore || avgOverall;
+            showAlert(`🎉 Mock interview complete! Overall Interview Score: ${finalScore}/100. Your Career Readiness Index has been updated!`, 'success');
             await loadJobReadiness();
           } else {
             showAlert(finalRes.message || 'Failed to finalize interview.', 'danger');
@@ -1743,12 +1827,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             btnFinalize.innerHTML = '<i class="bi bi-trophy-fill me-1"></i> Complete & Save Score';
           }
         } catch (finErr) {
+          console.error('Error finalizing interview session:', finErr);
           showAlert(finErr.message || 'Error finalizing interview session.', 'danger');
           btnFinalize.disabled = false;
           btnFinalize.innerHTML = '<i class="bi bi-trophy-fill me-1"></i> Complete & Save Score';
         }
       };
     }
+
+    // Modal hide cleanup
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (isSpeechRecording && recognitionInstance) {
+        recognitionInstance.stop();
+        isSpeechRecording = false;
+      }
+    });
   };
 
   // 5. Official Certificate Sharing
