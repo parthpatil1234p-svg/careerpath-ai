@@ -141,10 +141,10 @@
       </div>
 
       <!-- Feedback Alert Area -->
-      <div id="alertContainer" role="alert" aria-live="polite"></div>
+      <div id="alertContainer" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
       <!-- Loading Spinner for Assessment Profile sync -->
-      <div id="loadingSpinner" class="d-none text-center py-4">
+      <div id="loadingSpinner" class="d-none assessment-loading text-center py-4" role="status" aria-live="polite">
         <div class="spinner-border text-cyan" role="status">
           <span class="visually-hidden">Loading profile...</span>
         </div>
@@ -219,7 +219,7 @@
 
         <!-- Right Column: Form Step Wizard -->
         <div class="assessment-form-area">
-          <form id="assessmentForm" novalidate>
+          <form id="assessmentForm" novalidate aria-describedby="assessmentFormHint">
 
             <!-- ========================================================
                  STEP 1: Academic Background
@@ -409,30 +409,31 @@
                       type="text"
                       id="skillSearchInput"
                       class="form-control"
-                      placeholder="Search skills (e.g. HTML, Python, Figma, SQL)..."
+                       placeholder="Search skills (e.g. HTML, Python, Figma, SQL)..."
+                       aria-label="Search available skills"
                     />
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="skills-category-filter" id="skillCategoryFilter">
-                    <button type="button" class="category-filter-btn active" data-cat="all">All</button>
-                    <button type="button" class="category-filter-btn" data-cat="frontend">Frontend</button>
-                    <button type="button" class="category-filter-btn" data-cat="backend">Backend</button>
-                    <button type="button" class="category-filter-btn" data-cat="data">Data & AI</button>
-                    <button type="button" class="category-filter-btn" data-cat="cloud">Cloud / DevOps</button>
-                    <button type="button" class="category-filter-btn" data-cat="security">Security</button>
-                    <button type="button" class="category-filter-btn" data-cat="mobile">Mobile</button>
-                    <button type="button" class="category-filter-btn" data-cat="testing">Testing</button>
-                    <button type="button" class="category-filter-btn" data-cat="gaming">Gaming</button>
-                    <button type="button" class="category-filter-btn" data-cat="web3">Web3</button>
-                    <button type="button" class="category-filter-btn" data-cat="product">Product</button>
+                    <button type="button" class="category-filter-btn active" data-cat="all" aria-pressed="true">All</button>
+                    <button type="button" class="category-filter-btn" data-cat="frontend" aria-pressed="false">Frontend</button>
+                    <button type="button" class="category-filter-btn" data-cat="backend" aria-pressed="false">Backend</button>
+                    <button type="button" class="category-filter-btn" data-cat="data" aria-pressed="false">Data & AI</button>
+                    <button type="button" class="category-filter-btn" data-cat="cloud" aria-pressed="false">Cloud / DevOps</button>
+                    <button type="button" class="category-filter-btn" data-cat="security" aria-pressed="false">Security</button>
+                    <button type="button" class="category-filter-btn" data-cat="mobile" aria-pressed="false">Mobile</button>
+                    <button type="button" class="category-filter-btn" data-cat="testing" aria-pressed="false">Testing</button>
+                    <button type="button" class="category-filter-btn" data-cat="gaming" aria-pressed="false">Gaming</button>
+                    <button type="button" class="category-filter-btn" data-cat="web3" aria-pressed="false">Web3</button>
+                    <button type="button" class="category-filter-btn" data-cat="product" aria-pressed="false">Product</button>
                   </div>
                 </div>
               </div>
 
               <!-- Skills Grid Container -->
-              <div class="skills-grid-container row g-3 mb-4" id="skillsGrid" style="min-height: 520px; max-height: calc(85vh - 200px); overflow-y: auto;">
+              <div class="skills-grid-container row g-3 mb-4" id="skillsGrid" role="group" aria-label="Available skills" aria-live="polite" style="min-height: 520px; max-height: calc(85vh - 200px); overflow-y: auto;">
                 <!-- Dynamically populated via assessment.js -->
               </div>
 
@@ -446,6 +447,7 @@
                 </div>
                 <div class="row g-2 align-items-center">
                   <div class="col-md-5">
+                    <label class="visually-hidden" for="customSkillName">Custom skill name</label>
                     <input
                       type="text"
                       id="customSkillName"
@@ -455,6 +457,7 @@
                     />
                   </div>
                   <div class="col-md-3">
+                    <label class="visually-hidden" for="customSkillCategory">Custom skill category</label>
                     <select id="customSkillCategory" class="form-select form-select-sm">
                       <option value="frontend">Frontend</option>
                       <option value="backend">Backend</option>
@@ -471,6 +474,7 @@
                     </select>
                   </div>
                   <div class="col-md-2">
+                    <label class="visually-hidden" for="customSkillProficiency">Custom skill proficiency</label>
                     <select id="customSkillProficiency" class="form-select form-select-sm">
                       <option value="beginner">Beginner</option>
                       <option value="intermediate" selected>Intermediate</option>
@@ -483,7 +487,7 @@
                     </button>
                   </div>
                 </div>
-                <div id="customSkillFeedback" class="small mt-2 d-none"></div>
+                 <div id="customSkillFeedback" class="small mt-2 d-none" role="status" aria-live="polite"></div>
               </div>
 
               <!-- Selected Skills Summary Box -->

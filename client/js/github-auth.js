@@ -394,7 +394,9 @@ window.GitHubAuth = (function () {
     if (realtimeOAuthBtn) {
       realtimeOAuthBtn.addEventListener('click', () => {
         const clientId = githubClientId || window.CONFIG?.GITHUB_CLIENT_ID || 'Ov23liphgi9YF1lbYiUa';
-        const redirectUri = window.location.origin + window.location.pathname;
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const callbackPath = isLocal ? '/assessment.html' : '/assessment';
+        const redirectUri = window.location.origin + callbackPath;
 
         try {
           localStorage.setItem('cp_gh_oauth_intent', JSON.stringify({
@@ -483,6 +485,13 @@ window.GitHubAuth = (function () {
             window.applyDetectedSkills(response.data);
           }
           notify(`✓ Real-time GitHub authentication successful! Connected @${response.data.user.githubProfile?.username || 'user'} with verified skills.`, 'success');
+
+          // If initiated from another page (e.g. dashboard.html), redirect back to it
+          if (intent.returnUrl && !window.location.href.includes(intent.returnUrl) && !intent.returnUrl.endsWith(window.location.pathname)) {
+            setTimeout(() => {
+              window.location.href = intent.returnUrl;
+            }, 1200);
+          }
         } else {
           showUniversalGitHubModal(
             { showAlert: notify },
