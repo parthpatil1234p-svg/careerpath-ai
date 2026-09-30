@@ -719,3 +719,30 @@
   color: #78350F;
   font-size: 1.8rem;
 }
+
+/* 6. Resume Viewer Modal */
+.resume-viewport-container {
+  background: #0b1120;
+  min-height: 520px;
+  position: relative;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.resume-preview-wrapper {
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.resume-preview-wrapper img {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.resume-icon-circle {
+  background: rgba(20, 184, 166, 0.12);
+  color: #14b8a6;
+  border: 1px solid rgba(20, 184, 166, 0.25);
+}
+

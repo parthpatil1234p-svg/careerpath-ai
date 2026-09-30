@@ -128,8 +128,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const noResumeText = document.getElementById('noResumeText');
     if (user?.resumeUrl) {
       if (viewResumeLink) {
-        viewResumeLink.href = user.resumeUrl;
+        viewResumeLink.href = 'javascript:void(0)';
+        viewResumeLink.removeAttribute('target');
         viewResumeLink.classList.remove('d-none');
+        viewResumeLink.onclick = (e) => {
+          e.preventDefault();
+          openResumeViewerModal();
+        };
       }
       if (noResumeText) noResumeText.classList.add('d-none');
     } else {
@@ -980,8 +985,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           const viewResumeLink = document.getElementById('viewResumeLink');
           const noResumeText = document.getElementById('noResumeText');
           if (viewResumeLink) {
-            viewResumeLink.href = downloadUrl;
+            viewResumeLink.href = 'javascript:void(0)';
+            viewResumeLink.removeAttribute('target');
             viewResumeLink.classList.remove('d-none');
+            viewResumeLink.onclick = (e) => {
+              e.preventDefault();
+              openResumeViewerModal();
+            };
           }
           if (noResumeText) noResumeText.classList.add('d-none');
 
@@ -996,6 +1006,143 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnUploadResumeTrigger.innerHTML = originalBtnHtml;
         resumeFileInput.value = '';
       }
+    });
+  }
+
+  // ==========================================================================
+  // RESUME DOCUMENT & ATS VIEWER MODAL CONTROLLER
+  // ==========================================================================
+  let currentResumeMode = 'preview'; // 'preview' | 'pdf'
+
+  async function openResumeViewerModal() {
+    const modalEl = document.getElementById('resumeViewerModal');
+    if (!modalEl) return;
+
+    const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    bsModal.show();
+
+    const user = dashboardData?.user || window.Auth?.getUser() || {};
+    const token = window.Auth?.getToken() || localStorage.getItem('token') || '';
+    const apiBase = window.API_BASE_URL || (window.CONFIG?.API_BASE_URL) || 'http://localhost:5000/api';
+
+    // Populate student and file details
+    const studentNameEl = document.getElementById('resumeModalStudentName');
+    if (studentNameEl) studentNameEl.textContent = `${user.name || 'Student'}'s Resume`;
+
+    const filenameEl = document.getElementById('resumeModalFilename');
+    if (filenameEl) {
+      filenameEl.innerHTML = `<i class="bi bi-file-earmark-pdf me-1 text-teal"></i> resume_${(user.name || 'document').toLowerCase().replace(/\\s+/g, '_')}.pdf`;
+    }
+
+    // Populate ATS score
+    const atsScoreEl = document.getElementById('resumeModalAtsScore');
+    const atsScore = user.resumeAnalysis?.atsScore || user.readinessData?.resumeScore || user.resumeScore || currentReadinessData?.resumeScore;
+    if (atsScoreEl) {
+      if (typeof atsScore === 'number' && atsScore > 0) {
+        atsScoreEl.textContent = `${atsScore}% ATS Match`;
+      } else {
+        atsScoreEl.textContent = 'Verified PDF';
+      }
+    }
+
+    // Direct proxy URLs (authenticated with JWT query token for zero-ACL browser delivery)
+    const viewUrl = `${apiBase}/users/resume/view?token=${encodeURIComponent(token)}`;
+    const downloadUrl = `${apiBase}/users/resume/download?token=${encodeURIComponent(token)}`;
+
+    // Configure action buttons
+    const btnOpenNewTab = document.getElementById('btnOpenResumeNewTab');
+    if (btnOpenNewTab) {
+      btnOpenNewTab.href = viewUrl;
+    }
+
+    const btnDownload = document.getElementById('btnDownloadResume');
+    if (btnDownload) {
+      btnDownload.href = downloadUrl;
+    }
+
+    const btnReplace = document.getElementById('btnReplaceResumeInModal');
+    const resumeFileInput = document.getElementById('resumeFileInput');
+    if (btnReplace && resumeFileInput) {
+      btnReplace.onclick = () => {
+        resumeFileInput.click();
+      };
+    }
+
+    // View mode elements
+    const btnToggleMode = document.getElementById('btnToggleResumeViewMode');
+    const toggleText = document.getElementById('toggleResumeModeText');
+    const previewContainer = document.getElementById('resumeImagePreviewContainer');
+    const previewImg = document.getElementById('resumePreviewImage');
+    const iframeEl = document.getElementById('resumeViewerIframe');
+    const loadingEl = document.getElementById('resumeViewerLoading');
+    const errorEl = document.getElementById('resumeViewerError');
+
+    function updateModeDisplay(mode) {
+      currentResumeMode = mode;
+      if (mode === 'preview') {
+        if (toggleText) toggleText.textContent = 'Interactive PDF';
+        if (btnToggleMode) btnToggleMode.innerHTML = `<i class="bi bi-file-pdf me-1"></i> <span id="toggleResumeModeText">Interactive PDF</span>`;
+        if (iframeEl) iframeEl.classList.add('d-none');
+        if (previewContainer) previewContainer.classList.remove('d-none');
+      } else {
+        if (toggleText) toggleText.textContent = 'Preview Image';
+        if (btnToggleMode) btnToggleMode.innerHTML = `<i class="bi bi-image me-1"></i> <span id="toggleResumeModeText">Preview Image</span>`;
+        if (previewContainer) previewContainer.classList.add('d-none');
+        if (iframeEl) {
+          if (!iframeEl.src || iframeEl.src.indexOf('/users/resume/view') === -1) {
+            iframeEl.src = viewUrl;
+          }
+          iframeEl.classList.remove('d-none');
+        }
+      }
+    }
+
+    if (btnToggleMode) {
+      btnToggleMode.onclick = () => {
+        updateModeDisplay(currentResumeMode === 'preview' ? 'pdf' : 'preview');
+      };
+    }
+
+    // Reset initial UI states
+    if (loadingEl) loadingEl.classList.remove('d-none');
+    if (previewContainer) previewContainer.classList.add('d-none');
+    if (iframeEl) iframeEl.classList.add('d-none');
+    if (errorEl) errorEl.classList.add('d-none');
+
+    try {
+      const res = await window.API.get('/users/resume/preview', { auth: true });
+      if (res.success && res.data?.previewUrl) {
+        if (previewImg) {
+          previewImg.onload = () => {
+            if (loadingEl) loadingEl.classList.add('d-none');
+            updateModeDisplay('preview');
+          };
+          previewImg.onerror = () => {
+            if (loadingEl) loadingEl.classList.add('d-none');
+            updateModeDisplay('pdf');
+          };
+          previewImg.src = res.data.previewUrl;
+        }
+      } else {
+        if (loadingEl) loadingEl.classList.add('d-none');
+        updateModeDisplay('pdf');
+      }
+    } catch (err) {
+      console.warn('Preview generation note, falling back to PDF view:', err);
+      if (loadingEl) loadingEl.classList.add('d-none');
+      updateModeDisplay('pdf');
+    }
+  }
+
+  // Expose on window for convenience
+  window.openResumeViewerModal = openResumeViewerModal;
+
+  // Cleanup on modal close to release memory
+  const resumeModalElement = document.getElementById('resumeViewerModal');
+  if (resumeModalElement) {
+    resumeModalElement.addEventListener('hidden.bs.modal', () => {
+      const iframeEl = document.getElementById('resumeViewerIframe');
+      if (iframeEl) iframeEl.src = 'about:blank';
     });
   }
 

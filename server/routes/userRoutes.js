@@ -17,6 +17,9 @@ const {
   updateMyProfile,
   uploadAvatar,
   uploadResume,
+  viewResume,
+  downloadResume,
+  getResumePreview,
 } = require('../controllers/userController');
 const { protect }                        = require('../middleware/authMiddleware');
 const { validateProfileUpdate }          = require('../middleware/validateRequest');
@@ -37,5 +40,14 @@ router.post('/avatar', uploadAvatar);
 
 // POST /api/users/resume (Cloudinary Media Upload)
 router.post('/resume', uploadResume);
+
+// GET /api/users/resume/view (Streams inline PDF for browser viewing)
+router.get('/resume/view', viewResume);
+
+// GET /api/users/resume/download (Triggers direct file download)
+router.get('/resume/download', downloadResume);
+
+// GET /api/users/resume/preview (Returns preview image URL & metadata)
+router.get('/resume/preview', getResumePreview);
 
 module.exports = router;

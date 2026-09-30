@@ -99,13 +99,39 @@
     throw new Error(response.message || 'Failed to upload resume document.');
   }
 
+  /**
+   * Generates a high-resolution PNG preview image URL for a resume PDF
+   * @param {string} resumeUrl
+   * @param {number} page
+   * @returns {string}
+   */
+  function getResumePreviewUrl(resumeUrl, page = 1) {
+    if (!resumeUrl || typeof resumeUrl !== 'string') return '';
+    return resumeUrl
+      .replace(/\/image\/upload\/(?:v\d+\/)?/, (match) => `${match}dn_150,pg_${page},q_auto/v1/`)
+      .replace(/\.pdf$/i, '.png');
+  }
+
+  /**
+   * Generates authenticated proxy view URL for the student's resume
+   * @returns {string}
+   */
+  function getResumeViewUrl() {
+    const token = window.Auth?.getToken?.() || localStorage.getItem('token') || '';
+    const apiBase = window.API_BASE_URL || window.CONFIG?.API_BASE_URL || 'http://localhost:5000/api';
+    return `${apiBase}/users/resume/view?token=${encodeURIComponent(token)}`;
+  }
+
   const cloudinaryService = {
     uploadAvatar,
     uploadResume,
     readFileAsDataURL,
+    getResumePreviewUrl,
+    getResumeViewUrl,
   };
 
   // Expose clean namespace on window
   window.CloudinaryService = cloudinaryService;
   window.MediaService = cloudinaryService;
 })();
+

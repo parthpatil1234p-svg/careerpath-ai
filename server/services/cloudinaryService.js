@@ -43,6 +43,74 @@ const uploadAvatar = async (fileData, userId) => {
   });
 };
 
+const AdmZip = require('adm-zip');
+
+/**
+ * Extracts Cloudinary public_id from a full Cloudinary URL
+ * @param {string} url - Full Cloudinary asset URL
+ * @returns {string|null} public_id
+ */
+const getPublicIdFromUrl = (url) => {
+  if (!url || typeof url !== 'string') return null;
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.[a-zA-Z0-9]+)?$/);
+  return match ? match[1] : null;
+};
+
+/**
+ * Generates a high-resolution PNG preview URL for a PDF resume (page 1)
+ * Cloudinary can always deliver rendered image representations of PDFs (200 OK)
+ * @param {string} publicIdOrUrl - Cloudinary publicId or URL
+ * @param {number} [page=1] - Page number to render
+ * @returns {string} High-res preview image URL
+ */
+const getResumePreviewUrl = (publicIdOrUrl, page = 1) => {
+  const publicId = getPublicIdFromUrl(publicIdOrUrl) || publicIdOrUrl;
+  if (!publicId) return null;
+  return cloudinary.url(`${publicId}.png`, {
+    page,
+    secure: true,
+    resource_type: 'image',
+    quality: 'auto',
+    density: 150,
+  });
+};
+
+/**
+ * Downloads and extracts the original uncompressed PDF buffer from Cloudinary archive.
+ * Bypasses Cloudinary's default account-level PDF delivery ACL restrictions.
+ * @param {string} publicIdOrUrl - Cloudinary publicId or URL
+ * @returns {Promise<{ filename: string, data: Buffer, size: number }>}
+ */
+const downloadResumeBuffer = async (publicIdOrUrl) => {
+  const publicId = getPublicIdFromUrl(publicIdOrUrl) || publicIdOrUrl;
+  if (!publicId) throw new Error('Invalid resume identifier or URL');
+
+  const zipUrl = cloudinary.utils.download_zip_url({
+    public_ids: [publicId],
+    resource_type: 'image',
+    target_format: 'zip',
+  });
+
+  const res = await fetch(zipUrl);
+  if (!res.ok) {
+    throw new Error(`Cloudinary archive fetch failed with status ${res.status}`);
+  }
+
+  const buf = Buffer.from(await res.arrayBuffer());
+  const zip = new AdmZip(buf);
+  const entries = zip.getEntries();
+  if (!entries || entries.length === 0) {
+    throw new Error('No document files found in Cloudinary resume archive');
+  }
+
+  const fileEntry = entries[0];
+  return {
+    filename: fileEntry.name.split('/').pop() || 'Student_Resume.pdf',
+    data: fileEntry.getData(),
+    size: fileEntry.header.size,
+  };
+};
+
 /**
  * Upload a document (resume PDF/DOC) to Cloudinary.
  * @param {string} fileData - Base64 Data URI (data:application/...)
@@ -61,7 +129,11 @@ const uploadResume = async (fileData, userId) => {
       },
       (error, result) => {
         if (error) return reject(error);
-        resolve(result);
+        const previewUrl = getResumePreviewUrl(result.public_id, 1);
+        resolve({
+          ...result,
+          previewUrl,
+        });
       }
     );
   });
@@ -71,4 +143,7 @@ module.exports = {
   cloudinary,
   uploadAvatar,
   uploadResume,
+  getPublicIdFromUrl,
+  getResumePreviewUrl,
+  downloadResumeBuffer,
 };

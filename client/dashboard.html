@@ -178,7 +178,7 @@
                   <span id="userSkillsCount"><i class="bi bi-tools text-teal me-1"></i> 0 Skills Logged</span>
                   <span id="userResumeStatus">
                     <i class="bi bi-file-earmark-pdf text-teal me-1"></i>
-                    <a href="#" id="viewResumeLink" target="_blank" class="text-teal text-decoration-underline d-none">View Resume</a>
+                    <a href="javascript:void(0)" id="viewResumeLink" class="text-teal text-decoration-underline d-none" role="button" data-bs-toggle="modal" data-bs-target="#resumeViewerModal" title="View resume preview and document">View Resume</a>
                     <span id="noResumeText" class="text-muted">No Resume</span>
                   </span>
                 </div>
@@ -939,6 +939,100 @@
               <button type="button" class="btn btn-navy btn-sm px-4" id="btnShareCertificate">
                 <i class="bi bi-linkedin me-1"></i> Share Credential
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Resume Document & ATS Viewer Modal -->
+    <div class="modal fade" id="resumeViewerModal" tabindex="-1" aria-labelledby="resumeViewerModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-line shadow-lg">
+          <div class="modal-header border-bottom border-line py-3 px-4 bg-light">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge badge-teal font-monospace text-uppercase">
+                <i class="bi bi-shield-check me-1"></i> VERIFIED RESUME
+              </span>
+              <h2 class="modal-title h5 fw-bold text-ink mb-0" id="resumeViewerModalLabel">Student Resume & ATS Profile</h2>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn btn-outline-secondary btn-sm" id="btnToggleResumeViewMode" title="Toggle between High-Res Image and Interactive PDF">
+                <i class="bi bi-file-pdf me-1"></i> <span id="toggleResumeModeText">Interactive PDF</span>
+              </button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          </div>
+
+          <div class="modal-body p-3 p-md-4">
+            <!-- Metadata Strip -->
+            <div class="p-3 mb-3 rounded-3 bg-light border border-line d-flex flex-wrap align-items-center justify-content-between gap-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="resume-icon-circle rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                  <i class="bi bi-file-earmark-pdf-fill fs-4"></i>
+                </div>
+                <div>
+                  <div class="fw-bold text-ink" id="resumeModalStudentName">Student Resume</div>
+                  <div class="text-muted small d-flex align-items-center gap-2 flex-wrap">
+                    <span id="resumeModalFilename"><i class="bi bi-file-text me-1"></i> resume.pdf</span>
+                    <span>·</span>
+                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-monospace">
+                      <i class="bi bi-cloud-check-fill me-1"></i> Cloudinary Synced
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ATS Readiness pill -->
+              <div class="d-flex align-items-center gap-2" id="resumeModalAtsContainer">
+                <div class="text-end">
+                  <div class="text-muted small" style="font-size: 0.72rem;">ATS ALIGNMENT SCORE</div>
+                  <div class="fw-bold text-teal font-mono fs-5" id="resumeModalAtsScore">--</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resume Viewer Canvas / Container -->
+            <div class="resume-viewport-container border border-line rounded-3 position-relative overflow-hidden d-flex align-items-center justify-content-center">
+              <!-- Loading Spinner -->
+              <div id="resumeViewerLoading" class="text-center py-5 text-white">
+                <div class="spinner-border text-teal mb-3" role="status">
+                  <span class="visually-hidden">Loading resume...</span>
+                </div>
+                <div class="text-light text-opacity-75 small">Loading document preview from Cloudinary...</div>
+              </div>
+
+              <!-- High-Res Page 1 Image Preview -->
+              <div id="resumeImagePreviewContainer" class="w-100 text-center p-3 d-none resume-preview-wrapper">
+                <img id="resumePreviewImage" src="" alt="Resume Preview" class="img-fluid rounded shadow-sm bg-white" style="max-width: 820px; width: 100%; height: auto;" />
+              </div>
+
+              <!-- Interactive PDF Iframe -->
+              <iframe id="resumeViewerIframe" class="w-100 h-100 d-none" style="min-height: 600px; border: none;" title="Resume PDF Document"></iframe>
+
+              <!-- Fallback Error Alert -->
+              <div id="resumeViewerError" class="d-none text-center p-4 text-white">
+                <i class="bi bi-exclamation-triangle text-warning fs-1 mb-2"></i>
+                <h5 class="fw-bold text-white">Preview Not Available</h5>
+                <p class="text-light text-opacity-75 small">You can still download or open the uncompressed original PDF below.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer border-top border-line d-flex flex-wrap justify-content-between gap-2 bg-light">
+            <div class="d-flex gap-2">
+              <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm px-3" id="btnReplaceResumeInModal">
+                <i class="bi bi-arrow-repeat me-1"></i> Replace Resume
+              </button>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="#" target="_blank" class="btn btn-outline-primary btn-sm px-3" id="btnOpenResumeNewTab">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Open Full PDF
+              </a>
+              <a href="#" class="btn btn-navy btn-sm px-4" id="btnDownloadResume">
+                <i class="bi bi-download me-1"></i> Download PDF
+              </a>
             </div>
           </div>
         </div>

@@ -119,7 +119,12 @@ const updateMyProfile = async (req, res, next) => {
   }
 };
 
-const { uploadAvatar: uploadAvatarToCloudinary, uploadResume: uploadResumeToCloudinary } = require('../services/cloudinaryService');
+const {
+  uploadAvatar: uploadAvatarToCloudinary,
+  uploadResume: uploadResumeToCloudinary,
+  getResumePreviewUrl,
+  downloadResumeBuffer,
+} = require('../services/cloudinaryService');
 
 /**
  * POST /api/users/avatar
@@ -203,10 +208,99 @@ const uploadResume = async (req, res, next) => {
   }
 };
 
+/**
+ * GET /api/users/resume/view
+ * Streams the user's uploaded resume as an inline PDF.
+ * Opens natively in the browser's PDF reader without 401 ACL errors!
+ */
+const viewResume = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user || !user.resumeUrl) {
+      return res.status(404).send('<!DOCTYPE html><html><head><title>Resume Not Found</title></head><body style="font-family:sans-serif;text-align:center;padding:50px;"><h2>No resume found</h2><p>Please upload a resume on your student dashboard.</p></body></html>');
+    }
+
+    const { data, filename } = await downloadResumeBuffer(user.resumeUrl);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${filename || 'Student_Resume.pdf'}"`);
+    res.setHeader('Content-Length', data.length);
+    res.setHeader('Cache-Control', 'private, max-age=3600');
+    return res.send(data);
+  } catch (error) {
+    console.error('Error streaming resume inline:', error);
+    try {
+      const user = await User.findById(req.user._id);
+      const previewUrl = getResumePreviewUrl(user?.resumeUrl);
+      if (previewUrl) return res.redirect(previewUrl);
+    } catch (e) {}
+    return res.status(500).send('Error retrieving resume document.');
+  }
+};
+
+/**
+ * GET /api/users/resume/download
+ * Triggers direct browser download of the uncompressed PDF document
+ */
+const downloadResume = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user || !user.resumeUrl) {
+      return res.status(404).json({ success: false, message: 'No resume found for this user.' });
+    }
+
+    const { data, filename } = await downloadResumeBuffer(user.resumeUrl);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename || 'Student_Resume.pdf'}"`);
+    res.setHeader('Content-Length', data.length);
+    return res.send(data);
+  } catch (error) {
+    console.error('Error downloading resume:', error);
+    return res.status(500).json({ success: false, message: error.message || 'Error downloading resume' });
+  }
+};
+
+/**
+ * GET /api/users/resume/preview
+ * Returns the high-res page 1 image preview URL and metadata
+ */
+const getResumePreview = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user || !user.resumeUrl) {
+      return res.status(200).json({
+        success: true,
+        data: {
+          hasResume: false,
+          previewUrl: null,
+          resumeUrl: null,
+        },
+      });
+    }
+
+    const previewUrl = getResumePreviewUrl(user.resumeUrl, 1);
+    return res.status(200).json({
+      success: true,
+      data: {
+        hasResume: true,
+        previewUrl,
+        resumeUrl: user.resumeUrl,
+        downloadUrl: `/api/users/resume/download`,
+        viewUrl: `/api/users/resume/view`,
+      },
+    });
+  } catch (error) {
+    console.error('Error generating resume preview:', error);
+    return res.status(500).json({ success: false, message: 'Failed to generate preview' });
+  }
+};
+
 module.exports = {
   getMyProfile,
   updateMyProfile,
   uploadAvatar,
   uploadResume,
+  viewResume,
+  downloadResume,
+  getResumePreview,
 };
 

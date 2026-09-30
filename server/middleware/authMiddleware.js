@@ -23,18 +23,22 @@ const User = require('../models/User');
 // ── protect ────────────────────────────────────────────────────
 const protect = async (req, res, next) => {
   try {
-    // 1. Read the Authorization header
+    // 1. Read token from Authorization header or query parameter (for direct file downloads)
+    let token = null;
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    } else if (req.query && req.query.token) {
+      token = req.query.token;
+    }
+
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: 'Access denied. No token provided.',
       });
     }
-
-    // 2. Extract the raw token string (strip "Bearer ")
-    const token = authHeader.split(' ')[1];
 
     // 3. Verify the token — this throws if invalid or expired
     let decoded;
