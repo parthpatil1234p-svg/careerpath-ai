@@ -924,7 +924,6 @@
   text-decoration: underline;
 }
 
-/* Language Pill in Profile Header */
 .gh-lang-pill {
   display: inline-flex;
   align-items: center;
@@ -938,6 +937,25 @@
   color: #334155;
   font-family: var(--font-body, system-ui);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gh-lang-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Authentic Tech Brand Logo */
+.tech-brand-logo {
+  display: inline-block;
+  object-fit: contain;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.gh-lang-pill:hover .tech-brand-logo {
+  transform: scale(1.15);
 }
 
 /* Multi-Color Language Distribution Bar */

@@ -507,13 +507,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       let domainBadgeHtml = '';
       const domainKey = career.domain || (['finance', 'business'].includes(career.category) ? 'business' : ['marketing'].includes(career.category) ? 'marketing' : ['design'].includes(career.category) ? 'creative' : 'engineering');
       if (domainKey === 'business') {
-        domainBadgeHtml = `<span class="badge badge-gold font-mono"><i class="bi bi-briefcase me-1"></i> Business & Finance</span>`;
+        domainBadgeHtml = `<span class="badge badge-gold"><i class="bi bi-briefcase me-1"></i> Business & Finance</span>`;
       } else if (domainKey === 'marketing') {
-        domainBadgeHtml = `<span class="badge badge-emerald font-mono"><i class="bi bi-graph-up-arrow me-1"></i> Digital Marketing</span>`;
+        domainBadgeHtml = `<span class="badge badge-emerald"><i class="bi bi-graph-up-arrow me-1"></i> Digital Marketing</span>`;
       } else if (domainKey === 'creative') {
-        domainBadgeHtml = `<span class="badge badge-purple font-mono"><i class="bi bi-palette me-1"></i> Design & Creative</span>`;
+        domainBadgeHtml = `<span class="badge badge-purple"><i class="bi bi-palette me-1"></i> Design & Creative</span>`;
       } else {
-        domainBadgeHtml = `<span class="badge badge-cyan font-mono"><i class="bi bi-laptop me-1"></i> Tech & Engineering</span>`;
+        domainBadgeHtml = `<span class="badge badge-cyan"><i class="bi bi-laptop me-1"></i> Tech & Engineering</span>`;
       }
 
       const card = document.createElement('div');
@@ -524,11 +524,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="row align-items-center mb-4 g-3">
           <div class="col-md-8">
             <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-              <span class="badge ${isTopRank ? 'badge-navy' : 'cp-tag'} px-3 py-1 font-mono">
+              <span class="badge ${isTopRank ? 'badge-navy' : 'cp-tag'} px-3 py-1 fw-bold">
                 ${isTopRank ? '★ BEST ROUTE FOR NOW' : `ROUTE #${rank}`}
               </span>
               ${domainBadgeHtml}
-              <span class="atlas-badge">
+              <span class="atlas-badge text-capitalize">
                 ${escapeHtml(career.category)}
               </span>
             </div>
@@ -610,9 +610,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
             <div class="d-flex align-items-center gap-2">
               <span class="badge-ai-pulse"><span class="pulse-dot"></span> AI CAREER BRIEF</span>
-              <span class="font-mono text-muted" style="font-size: 0.7rem;">2026–27 INDUSTRY TELEMETRY</span>
+              <span class="text-muted fw-semibold" style="font-size: 0.72rem; letter-spacing: 0.04em;">2026–27 INDUSTRY TELEMETRY</span>
             </div>
-            <div class="d-flex align-items-center gap-2 font-mono text-cyan" style="font-size: 0.85rem;">
+            <div class="d-flex align-items-center gap-2 text-cyan fw-bold" style="font-size: 0.88rem;">
               <i class="bi bi-cash-stack"></i> <strong>${escapeHtml(aiBrief.salaryRange)}</strong>
             </div>
           </div>
@@ -631,12 +631,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             <div class="col-md-5">
               <div class="ai-bottleneck-box p-3">
-                <div class="font-mono text-rose fw-bold mb-1" style="font-size: 0.72rem; letter-spacing: 0.05em;">
+                <div class="text-rose fw-bold mb-1" style="font-size: 0.74rem; letter-spacing: 0.04em;">
                   <i class="bi bi-exclamation-octagon-fill me-1"></i> KEY BOTTLENECK
                 </div>
                 <div class="small text-secondary">${escapeHtml(aiBrief.keyBottleneck)}</div>
               </div>
-              <div class="mt-2 text-muted font-mono" style="font-size: 0.72rem;">
+              <div class="mt-2 text-muted fw-medium" style="font-size: 0.74rem;">
                 <i class="bi bi-graph-up-arrow text-emerald me-1"></i> ${escapeHtml(aiBrief.hiringDemand)}
               </div>
             </div>
@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         <!-- Skill Gap Analysis Grid -->
         <div class="skill-gap-analysis mb-4">
-          <div class="text-xs font-mono text-muted text-uppercase fw-bold mb-2">
+          <div class="text-xs text-muted text-uppercase fw-bold mb-2" style="letter-spacing: 0.04em;">
             Skill Breakdown
           </div>
 
@@ -700,9 +700,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                               tierBadge = `<span class="passport-tier-badge badge-passport-t0 ms-1" style="font-size:0.6rem; padding: 1px 5px;"><i class="bi bi-person"></i> T0: 70%</span>`;
                             }
 
+                            const sName = s.displayName || s.name;
+                            const logoHtml = window.TechLogos?.getLogoImg(sName, { size: 14, className: 'me-1' }) || '';
                             return `
                               <span class="badge skill-pill matched-pill ${borderClass}" title="Proficiency: ${s.userProficiency} · Passport Tier: ${tier}">
-                                <i class="bi ${verIcon}"></i> ${escapeHtml(s.displayName)} ${tierBadge}
+                                ${logoHtml || `<i class="bi ${verIcon}"></i>`} <span>${escapeHtml(sName)}</span> ${tierBadge}
                               </span>
                             `;
                           })
@@ -726,14 +728,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     weakSkills.length > 0
                       ? weakSkills
                           .map((s) => {
+                            const sName = s.displayName || s.name;
                             const hasGaps = Array.isArray(s.quizGaps) && s.quizGaps.length > 0;
                             const gapTooltip = hasGaps ? ` · Reality-check focus areas: ${s.quizGaps.join(', ')}` : '';
                             const isQuizVer = Boolean(s.isQuizVerified);
                             const tierBadge = isQuizVer ? `<span class="passport-tier-badge badge-passport-t1 ms-1" style="font-size:0.58rem; padding: 1px 4px;"><i class="bi bi-shield-check"></i> Quiz</span>` : '';
+                            const logoHtml = window.TechLogos?.getLogoImg(sName, { size: 14, className: 'me-1' }) || '';
                             return `
                               <span class="badge skill-pill weak-pill" title="Current: ${s.userProficiency}, Required: ${s.requiredProficiency}${gapTooltip}">
-                                <i class="bi bi-arrow-up"></i> ${escapeHtml(s.displayName)} ${tierBadge}
-                                ${hasGaps ? '<span class="badge bg-danger-subtle text-danger ms-1 font-mono" style="font-size: 0.6rem;">Focus: ' + escapeHtml(s.quizGaps[0]) + '</span>' : ''}
+                                ${logoHtml || `<i class="bi bi-arrow-up"></i>`} <span>${escapeHtml(sName)}</span> ${tierBadge}
+                                ${hasGaps ? '<span class="badge bg-danger-subtle text-danger ms-1" style="font-size: 0.6rem; font-weight: 600;">Focus: ' + escapeHtml(s.quizGaps[0]) + '</span>' : ''}
                               </span>
                             `;
                           })
@@ -757,11 +761,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     missingSkills.length > 0
                       ? missingSkills
                           .map(
-                            (s) => `
-                        <span class="badge skill-pill missing-pill" title="Required: ${s.requiredProficiency} (${s.importance} importance)">
-                          <i class="bi bi-plus"></i> ${escapeHtml(s.displayName)}
-                        </span>
-                      `
+                            (s) => {
+                              const sName = s.displayName || s.name;
+                              const logoHtml = window.TechLogos?.getLogoImg(sName, { size: 14, className: 'me-1' }) || '';
+                              return `
+                                <span class="badge skill-pill missing-pill" title="Required: ${s.requiredProficiency} (${s.importance} importance)">
+                                  ${logoHtml || `<i class="bi bi-plus"></i>`} <span>${escapeHtml(sName)}</span>
+                                </span>
+                              `;
+                            }
                           )
                           .join('')
                       : '<span class="text-muted small fst-italic">No missing core skills</span>'

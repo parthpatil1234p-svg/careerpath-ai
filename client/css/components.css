@@ -200,13 +200,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.76rem;
   font-weight: 600;
   padding: 0.28rem 0.65rem;
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
@@ -505,7 +505,7 @@
    -------------------------------------------------------------------------- */
 .cp-tag,
 .career-tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.25rem 0.65rem;
@@ -544,10 +544,10 @@
   background: #FFFFFF;
   color: var(--color-indigo-700);
   border: 1px solid #C7D2FE;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   padding: 0.25rem 0.65rem;
   border-radius: var(--radius-pill);
   display: inline-flex;
@@ -760,7 +760,7 @@
   border-radius: 999px;
   padding: 0.22rem 0.75rem;
   font-size: 0.72rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-weight: 600;
   letter-spacing: 0.02em;
   transition: all 0.2s ease;
@@ -814,7 +814,7 @@
 .auth-divider span {
   padding: 0 0.85rem;
   font-size: 0.75rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-text-muted);

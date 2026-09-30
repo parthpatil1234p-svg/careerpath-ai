@@ -303,8 +303,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h3 class="h5 fw-bold text-ink mb-0">Week ${weekNumber}</h3>
                 ${statusBadgeHtml}
               </div>
-              <p class="text-muted small mb-0">
-                ${tasks[0]?.skill ? `Mastering skill: <strong class="text-teal">${escapeHtml(tasks[0].skill.displayName || tasks[0].skill.name)}</strong>` : 'Core Career Competencies'}
+              <p class="text-muted small mb-0 d-inline-flex align-items-center gap-1">
+                ${tasks[0]?.skill ? `Mastering skill: ${window.TechLogos?.getLogoImg(tasks[0].skill.name || tasks[0].skill.displayName, { size: 15, className: 'me-1' }) || ''}<strong class="text-teal">${escapeHtml(tasks[0].skill.displayName || tasks[0].skill.name)}</strong>` : 'Core Career Competencies'}
               </p>
             </div>
           </div>

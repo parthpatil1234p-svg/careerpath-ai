@@ -936,6 +936,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const currentProficiency = selectedObj ? selectedObj.proficiency : 'beginner';
       const isCodeVerified = selectedObj?.isCodeVerified;
       const isQuizVerified = selectedObj?.isQuizVerified;
+      const skillLogo = window.TechLogos?.getLogoImg(skill.name, { size: 16, className: 'me-1' }) || '';
 
       let verifiedBadge = '';
       let retestBtnHtml = '';
@@ -960,6 +961,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${isSelected ? 'checked' : ''}
               />
               <label class="form-check-label fw-semibold text-ink m-0 d-inline-flex align-items-center gap-1.5" for="skill_${skill.name}" title="${skill.displayName}" style="min-width: 0; cursor: pointer;">
+                ${skillLogo}
                 <span class="skill-name-text">${skill.displayName}</span>
                 ${verifiedBadge}
               </label>
@@ -1072,9 +1074,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const rawProf = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
       const shortProf = rawProf.slice(0, 3);
 
+      const skillLogo = window.TechLogos?.getLogoImg(skill.name, { size: 14, className: 'me-1' }) || '';
       pill.innerHTML = `
+        ${skillLogo}
         <span class="fw-semibold text-ink">${escapeHtml(skill.displayName || skill.name)}</span>
-        <span class="text-primary fw-bold font-mono" style="font-size: 0.68rem;">(${escapeHtml(shortProf)})</span>
+        <span class="text-primary fw-bold" style="font-size: 0.7rem;">(${escapeHtml(shortProf)})</span>
         ${verifiedTag}
         <i class="bi bi-x ms-1 cursor-pointer" title="Remove" style="cursor: pointer;"></i>
       `;

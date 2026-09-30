@@ -411,11 +411,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? `<a href="quiz.html?skill=${encodeURIComponent((e.name || '').toLowerCase())}" class="btn btn-outline-secondary btn-sm py-0 px-2" style="font-size: 0.72rem;">Retake</a>`
                 : `<a href="quiz.html?skill=${encodeURIComponent((e.name || '').toLowerCase())}" class="btn btn-outline-primary btn-sm py-0 px-2" style="font-size: 0.72rem;">Verify Now</a>`;
 
+              const skillLogo = window.TechLogos?.getLogoImg(e.name || e.displayName, { size: 16 }) || '';
               return `
                 <tr>
                   <td class="ps-3 fw-semibold text-ink">
-                    <i class="bi ${e.hasEvidence ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted'} me-1.5"></i>
-                    ${escapeHtml(e.displayName || e.name)}
+                    <div class="d-inline-flex align-items-center gap-2">
+                      ${skillLogo}
+                      <i class="bi ${e.hasEvidence ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted'}"></i>
+                      <span>${escapeHtml(e.displayName || e.name)}</span>
+                    </div>
                   </td>
                   <td><span class="badge bg-light text-secondary border font-mono">${escapeHtml(e.claimedLevel)}</span></td>
                   <td>${e.verifiedLevel ? `<span class="badge bg-teal-subtle text-teal font-mono">${escapeHtml(e.verifiedLevel)}</span>` : '<span class="text-muted fst-italic">Unverified</span>'}</td>
@@ -770,9 +774,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       legendHtml = sortedLangs.slice(0, 5).map(lang => {
         const pct = Math.round((langCounts[lang] / totalWithLang) * 100);
         const color = getLanguageColor(lang);
+        const logoImg = window.TechLogos?.getLogoImg(lang, { size: 14 }) || `<span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: ${color};"></span>`;
         return `
           <div class="d-flex align-items-center gap-1.5">
-            <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: ${color};"></span>
+            ${logoImg}
             <span class="fw-semibold text-ink">${escapeHtml(lang)}</span>
             <span class="text-muted">${pct}%</span>
           </div>
@@ -962,10 +967,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (langs.length > 0) {
           ghTopLanguagesContainer.innerHTML = langs.map(lang => {
             const color = getLanguageColor(lang);
+            const logoImg = window.TechLogos?.getLogoImg(lang, { size: 15 }) || `<span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: ${color};"></span>`;
             return `
               <span class="gh-lang-pill">
-                <span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: ${color};"></span>
-                ${escapeHtml(lang)}
+                ${logoImg}
+                <span>${escapeHtml(lang)}</span>
               </span>
             `;
           }).join('');
@@ -1003,6 +1009,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const lang = repo.language || 'Code';
             const langColor = getLanguageColor(lang);
+            const langLogo = window.TechLogos?.getLogoImg(lang, { size: 14 }) || `<span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: ${langColor};"></span>`;
             const relevance = getAccurateStudyRelevance(repo, profile);
             const cleanRelevance = relevance.replace(/^(?:study\s*relevance:\s*)+/i, '').trim();
 
@@ -1038,8 +1045,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div class="d-flex align-items-center justify-content-between pt-2.5 border-top border-line">
                       <span class="d-flex align-items-center gap-1.5" style="font-size: 0.76rem; font-weight: 500; color: #475569;">
-                        <span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: ${langColor};"></span>
-                        ${escapeHtml(lang)}
+                        ${langLogo}
+                        <span>${escapeHtml(lang)}</span>
                       </span>
                       <a href="${escapeHtml(repo.htmlUrl)}" target="_blank" rel="noopener noreferrer" class="gh-repo-link">
                         Open Repo <i class="bi bi-box-arrow-up-right ms-0.5" style="font-size: 0.65rem;"></i>
