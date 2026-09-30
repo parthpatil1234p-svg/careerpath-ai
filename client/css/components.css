@@ -731,21 +731,22 @@
 
 /* Individual Repo Card */
 .repo-card-study {
-  background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
-  transition: all var(--transition-fast);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md, 8px);
+  padding: 1.15rem;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
 }
 
 .repo-card-study:hover {
   background: #FFFFFF;
-  border-color: #CBD5E1;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  border-color: #3B82F6;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.12), 0 8px 10px -6px rgba(37, 99, 235, 0.06);
 }
 
 /* Code Verified Skill Badge */

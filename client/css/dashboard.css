@@ -809,5 +809,193 @@
   transform: scale(0.99);
 }
 
+/* ==========================================================================
+   9. GitHub Study Lab & Developer Telemetry Graphics
+   ========================================================================== */
 
+/* Enhanced GitHub Repository Cards */
+.repo-card-study {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 8px !important;
+  padding: 1.15rem !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+}
 
+.repo-card-study:hover {
+  background: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.12), 0 8px 10px -6px rgba(37, 99, 235, 0.06) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* GitHub Octicon Vector SVG */
+.octicon-repo {
+  fill: #0969DA;
+  flex-shrink: 0;
+  vertical-align: text-bottom;
+}
+
+/* GitHub Public Pill Badge */
+.gh-repo-visibility-badge {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #57606A;
+  background-color: #F6F8FA;
+  border: 1px solid #D0D7DE;
+  border-radius: 2em;
+  padding: 1px 7px;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Repo Title Link */
+.gh-repo-title {
+  color: #0969DA;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.gh-repo-title:hover {
+  color: #0550AE;
+  text-decoration: underline;
+}
+
+/* AI Study Relevance Box */
+.gh-study-relevance-box {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-left: 3px solid #3B82F6;
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+  transition: background 0.2s ease, border-color 0.2s ease, border-left-color 0.2s ease;
+}
+
+.repo-card-study:hover .gh-study-relevance-box {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  border-left-color: #2563EB;
+}
+
+.gh-study-relevance-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1D4ED8;
+  margin-bottom: 0.25rem;
+  font-family: var(--font-body, system-ui);
+}
+
+.gh-study-relevance-body {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #334155;
+  font-family: var(--font-body, system-ui);
+  font-weight: 450;
+}
+
+/* Repo Open Link */
+.gh-repo-link {
+  color: #0969DA;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transition: color 0.15s ease;
+}
+
+.gh-repo-link:hover {
+  color: #0550AE;
+  text-decoration: underline;
+}
+
+/* Language Pill in Profile Header */
+.gh-lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #334155;
+  font-family: var(--font-body, system-ui);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Multi-Color Language Distribution Bar */
+.gh-lang-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #E2E8F0;
+  width: 100%;
+  gap: 2px;
+}
+
+.gh-lang-segment {
+  height: 100%;
+  transition: width 0.4s ease;
+  border-radius: 1px;
+}
+
+/* Contribution Activity Heatmap */
+.gh-heatmap-wrapper {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+
+.gh-activity-heatmap {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scrollbar-width: thin;
+}
+
+.gh-activity-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.gh-activity-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background-color: #EBEDF0;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  cursor: pointer;
+}
+
+.gh-activity-cell:hover {
+  transform: scale(1.3);
+  z-index: 2;
+  filter: brightness(1.1);
+}
+
+.gh-activity-cell.lvl-0 { background-color: #EBEDF0; }
+.gh-activity-cell.lvl-1 { background-color: #9BE9A8; }
+.gh-activity-cell.lvl-2 { background-color: #40C463; }
+.gh-activity-cell.lvl-3 { background-color: #30A14E; }
+.gh-activity-cell.lvl-4 { background-color: #216E39; }
