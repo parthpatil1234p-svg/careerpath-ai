@@ -22,11 +22,13 @@ const {
   getCurrentRoadmap,
   toggleTask,
   archiveRoadmap,
+  linkProjectRepo,
 } = require('../controllers/roadmapController');
 
 router.post('/generate', protect, requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
 router.get('/current', protect, requireSkillVerification, getCurrentRoadmap);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
+router.post('/tasks/:taskId/link-repo', protect, validateTaskId, linkProjectRepo);
 router.delete('/current', protect, archiveRoadmap);
 
 module.exports = router;

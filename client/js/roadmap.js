@@ -216,6 +216,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                    </a>`
                 : '';
 
+              let projectLinkHtml = '';
+              if (task.type === 'project' || task.title.toLowerCase().includes('project') || task.title.toLowerCase().includes('capstone')) {
+                if (task.isProjectVerified && task.linkedRepoUrl) {
+                  projectLinkHtml = `
+                    <span class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 font-mono" style="font-size: 0.7rem;">
+                      <i class="bi bi-github"></i> Project Verified ✓
+                    </span>
+                    <a href="${escapeHtml(task.linkedRepoUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.72rem; height: 24px; line-height: 22px;">
+                      <i class="bi bi-box-arrow-up-right me-1"></i>Repo
+                    </a>
+                  `;
+                } else {
+                  projectLinkHtml = `
+                    <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-link-repo d-inline-flex align-items-center gap-1" data-task-id="${task._id}" data-task-title="${escapeHtml(task.title)}" style="font-size: 0.72rem; height: 26px; line-height: 24px;">
+                      <i class="bi bi-github"></i> Link Project Repo
+                    </button>
+                  `;
+                }
+              }
+
               return `
                 <div class="task-item d-flex align-items-start gap-3 ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
                   <div class="task-checkbox-wrap pt-1">
@@ -242,6 +262,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                           <i class="bi bi-clock me-1"></i>${task.estimatedHours || 2}h
                         </span>
                         ${resourceBadge}
+                        ${projectLinkHtml}
                       </div>
                     </div>
                     <p class="text-muted small mb-0">
@@ -308,6 +329,37 @@ document.addEventListener('DOMContentLoaded', async () => {
           e.target.checked = !isChecked;
           if (taskItem) taskItem.classList.toggle('is-completed', !isChecked);
           showAlert(err.message || 'Error updating task.');
+        }
+      });
+    });
+
+    // Attach Link Project Repo event listeners
+    document.querySelectorAll('.btn-link-repo').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const taskId = btn.getAttribute('data-task-id');
+        const taskTitle = btn.getAttribute('data-task-title');
+        const repoUrl = prompt(`Enter GitHub Repository URL to verify "${taskTitle}":\n(e.g., https://github.com/username/project)`);
+        if (!repoUrl) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Verifying...`;
+
+        try {
+          const res = await window.API.post(`/roadmaps/tasks/${taskId}/link-repo`, { repoUrl }, { auth: true });
+          if (res.success) {
+            showAlert(res.message || 'Project verified successfully!', 'success');
+            loadRoadmap();
+          } else {
+            showAlert(res.message || 'Could not verify project repository.', 'danger');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="bi bi-github"></i> Link Project Repo`;
+          }
+        } catch (err) {
+          showAlert(err.message || 'Failed to verify project.', 'danger');
+          btn.disabled = false;
+          btn.innerHTML = `<i class="bi bi-github"></i> Link Project Repo`;
         }
       });
     });

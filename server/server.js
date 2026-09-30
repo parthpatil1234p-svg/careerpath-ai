@@ -62,6 +62,9 @@ const chatRoutes = require('./routes/chatRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const quizRoutes = require('./routes/quizRoutes');
+const resumeRoutes = require('./routes/resumeRoutes');
+const interviewRoutes = require('./routes/interviewRoutes');
+const readinessRoutes = require('./routes/readinessRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect to MongoDB Atlas ───────────────────────────────
@@ -238,6 +241,15 @@ app.use('/api/skills', skillRoutes);
 
 // Adaptive Skill Reality-Check Micro-Quiz
 app.use('/api/quiz', quizRoutes);
+
+// AI Resume ATS Analysis & Keyword Scorer (Career GPS Step 8)
+app.use('/api/resume', resumeRoutes);
+
+// AI Interactive Technical & Behavioral Mock Interview Chamber (Career GPS Step 9)
+app.use('/api/interview', interviewRoutes);
+
+// Holistic 0-100% Job Readiness Index & Digital Certificate (Career GPS Step 11)
+app.use('/api/readiness', readinessRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

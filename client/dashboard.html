@@ -126,18 +126,27 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container pt-5 mt-5 pb-5">
+    <main class="container dashboard-shell pt-5 mt-5 pb-5">
 
       <!-- Alert & Notification Area -->
       <div id="alertContainer" role="alert" aria-live="polite"></div>
 
       <!-- Loading State -->
-      <div id="loadingState" class="text-center py-5">
+      <div id="loadingState" class="dashboard-state dashboard-loading-state text-center py-5" role="status" aria-live="polite">
         <div class="spinner-border text-teal mb-3" style="width: 3.5rem; height: 3.5rem; border-width: 3px;" role="status">
           <span class="visually-hidden">Loading dashboard...</span>
         </div>
         <h2 class="h5 fw-medium text-ink">Assembling Your Student Profile & Analytics...</h2>
         <p class="text-muted small">Synchronizing active curriculum, task progress, and 3D journey marker telemetry</p>
+      </div>
+
+      <div id="dashboardErrorState" class="dashboard-state dashboard-error-state d-none text-center py-5" role="alert">
+        <div class="dashboard-state-icon bg-danger-subtle text-danger" aria-hidden="true"><i class="bi bi-cloud-slash"></i></div>
+        <h2 class="h5 fw-bold text-ink mb-2">We couldn't load your dashboard</h2>
+        <p class="text-muted small mb-3" id="dashboardErrorMessage">Check your connection and try again.</p>
+        <button type="button" class="btn btn-navy btn-sm px-4" id="btnRetryDashboard">
+          <i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i> Try again
+        </button>
       </div>
 
       <!-- Dashboard Content -->
@@ -151,8 +160,8 @@
                 <div class="dashboard-avatar" id="userAvatar">
                   U
                 </div>
-                <label for="avatarFileInput" class="avatar-upload-trigger" title="Change Avatar Photo (Cloudinary Media)">
-                  <i class="bi bi-camera-fill"></i>
+                <label for="avatarFileInput" class="avatar-upload-trigger" title="Change Avatar Photo (Cloudinary Media)" aria-label="Change profile photo">
+                  <i class="bi bi-camera-fill" aria-hidden="true"></i>
                 </label>
                 <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp,image/gif" class="d-none" />
               </div>
@@ -187,6 +196,81 @@
               <a href="assessment.html" class="btn btn-outline-navy btn-sm px-3">
                 <i class="bi bi-pencil-square me-1"></i> Full Assessment
               </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1.5 CAREER GPS: 0-100% JOB READINESS HERO CARD -->
+        <div class="readiness-hero-card p-4 p-md-4 rounded-3 mb-4" id="readinessHeroCard">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-primary bg-opacity-25 text-info font-monospace text-uppercase" style="letter-spacing: 0.5px;">
+                  <i class="bi bi-crosshair me-1"></i> CAREER GPS READINESS INDEX
+                </span>
+                <span class="badge badge-tier-developing font-monospace text-uppercase" id="readinessTierBadge">
+                  Calculating...
+                </span>
+              </div>
+              <h2 class="h3 fw-bold text-white mb-2">
+                Job Readiness Index: <span id="readinessScoreText" class="text-cyan font-mono">0%</span>
+              </h2>
+              <p class="text-light text-opacity-75 small mb-3" id="readinessTargetRoleText">
+                Target Role: <strong class="text-white">Software Engineer</strong> · Weighted composite score derived from verified skills, roadmap progress, resume ATS compliance, and AI mock interview simulations.
+              </p>
+
+              <!-- Progress bar & metrics breakdown -->
+              <div class="row g-2 mb-3" id="readinessMetricsRow">
+                <div class="col-6 col-sm-3">
+                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-patch-check-fill text-success me-1"></i> Verified (35%)</div>
+                    <div class="fw-bold text-white font-mono" id="metricScoreVerified">--</div>
+                  </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-map-fill text-info me-1"></i> Roadmap (30%)</div>
+                    <div class="fw-bold text-white font-mono" id="metricScoreRoadmap">--</div>
+                  </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-file-earmark-person-fill text-warning me-1"></i> ATS (15%)</div>
+                    <div class="fw-bold text-white font-mono" id="metricScoreResume">--</div>
+                  </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-mic-fill text-danger me-1"></i> Interview (20%)</div>
+                    <div class="fw-bold text-white font-mono" id="metricScoreInterview">--</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <button type="button" class="btn btn-primary btn-sm px-3 py-1.5 fw-semibold" id="btnLaunchMockInterview" data-bs-toggle="modal" data-bs-target="#mockInterviewModal">
+                  <i class="bi bi-mic-fill me-1"></i> Practice AI Mock Interview
+                </button>
+                <button type="button" class="btn btn-outline-light btn-sm px-3 py-1.5 fw-semibold" id="btnViewCertificate" data-bs-toggle="modal" data-bs-target="#certificateModal">
+                  <i class="bi bi-award-fill text-warning me-1"></i> View Career Certificate
+                </button>
+              </div>
+            </div>
+
+            <div class="col-lg-5 d-flex justify-content-center justify-content-lg-end">
+              <div class="d-flex align-items-center gap-4">
+                <div class="readiness-gauge-circle" id="readinessGaugeCircle" style="--readiness-pct: 65;">
+                  <div class="readiness-gauge-inner">
+                    <span class="fs-4 fw-bold font-mono text-cyan" id="readinessGaugeVal">0%</span>
+                    <span class="text-muted" style="font-size: 0.6rem; text-transform: uppercase;">Ready</span>
+                  </div>
+                </div>
+                <div class="small text-light text-opacity-75">
+                  <div class="fw-bold text-white mb-1"><i class="bi bi-shield-check text-success me-1"></i> Anti-Cheat Grounded</div>
+                  <div style="font-size: 0.75rem;">Requires 85%+ readiness to unlock the official verifiable digital career certificate.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -378,6 +462,118 @@
           </div>
         </div>
 
+        <!-- 3.8 AI RESUME LAB & ATS ANALYZER CARD -->
+        <div class="card resume-lab-card p-4 rounded-3 border-line shadow-sm mb-4" id="resumeLabCard">
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-teal font-monospace text-uppercase" style="letter-spacing: 0.5px;">
+                  <i class="bi bi-file-earmark-diff me-1"></i> RESUME INTELLIGENCE
+                </span>
+                <span class="badge bg-secondary bg-opacity-25 text-primary font-mono small" id="resumeTargetCareerBadge">
+                  Target: Software Engineer
+                </span>
+              </div>
+              <h3 class="h5 fw-bold text-ink mb-0 mt-1">AI Resume Lab & ATS Keyword Scorer</h3>
+              <p class="text-muted small mb-0 mt-1">Multi-model ATS parser analyzing keyword saturation, quantifiable metrics, and impact bullet rewrites.</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn cp-btn-primary btn-sm px-3" id="btnAnalyzeResume">
+                <i class="bi bi-cpu-fill me-1"></i> Scan Resume
+              </button>
+            </div>
+          </div>
+
+          <div class="row g-4 align-items-start">
+            <!-- Left: ATS Score & Status -->
+            <div class="col-lg-4 text-center border-end border-line pe-lg-4">
+              <div class="p-3 rounded-2 stat-box-atlas">
+                <div class="text-muted small fw-bold text-uppercase mb-1">ATS Match Score</div>
+                <div class="ats-score-display my-2">
+                  <span class="ats-score-val text-teal" id="atsScoreValue">--</span>
+                  <span class="text-muted fs-6">/100</span>
+                </div>
+                <div class="progress readiness-meter-bar mb-2" style="height: 6px;">
+                  <div class="progress-bar bg-teal readiness-meter-fill" id="atsProgressBar" style="width: 0%;"></div>
+                </div>
+                <div class="small text-secondary" id="atsScoreSummary">
+                  Click 'Scan Resume' to analyze your profile resume against recruiter benchmarks.
+                </div>
+              </div>
+
+              <!-- Paste / edit resume text toggle -->
+              <div class="mt-3 text-start">
+                <label class="form-label small fw-bold text-ink">Resume Content / Paste</label>
+                <textarea id="resumeTextInput" class="form-control form-control-sm font-monospace" rows="4" placeholder="Paste your resume markdown or plain text here to evaluate..."></textarea>
+              </div>
+            </div>
+
+            <!-- Right: Keyword Chips & Metric-driven Rewrites -->
+            <div class="col-lg-8">
+              <!-- Matched & Missing Keywords -->
+              <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <span class="small fw-bold text-ink"><i class="bi bi-check2-all text-success me-1"></i> Detected Recruiter Keywords</span>
+                  <span class="text-muted small" id="matchedKeywordsCount">0 detected</span>
+                </div>
+                <div class="d-flex flex-wrap gap-1 mb-2" id="matchedKeywordsContainer">
+                  <span class="text-muted small fst-italic">No analysis yet. Click 'Scan Resume' above.</span>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-1 mt-3">
+                  <span class="small fw-bold text-ink"><i class="bi bi-exclamation-octagon text-danger me-1"></i> Missing High-Impact Keywords</span>
+                  <span class="text-muted small" id="missingKeywordsCount">0 missing</span>
+                </div>
+                <div class="d-flex flex-wrap gap-1" id="missingKeywordsContainer">
+                  <span class="text-muted small fst-italic">No missing keywords recorded.</span>
+                </div>
+              </div>
+
+              <!-- High-Impact Bullet Rewrites -->
+              <div>
+                <div class="small fw-bold text-ink mb-2">
+                  <i class="bi bi-magic text-warning me-1"></i> AI Metric-Driven Bullet Rewrites (X-Y-Z Formula)
+                </div>
+                <div class="d-flex flex-column gap-2" id="bulletSuggestionsContainer">
+                  <div class="bullet-rewrite-card">
+                    <span class="badge bg-primary bg-opacity-10 text-primary small me-1">Pro Tip</span>
+                    Use the Google X-Y-Z formula: "Accomplished [X], as measured by [Y], by doing [Z]" to boost ATS shortlisting rates.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.9 LIVE MARKET OPPORTUNITIES & BRIDGE THE GAP -->
+        <div class="card p-4 rounded-3 border-line shadow-sm mb-4" id="matchedJobsCard">
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-navy font-monospace text-uppercase" style="letter-spacing: 0.5px;">
+                  <i class="bi bi-briefcase-fill me-1"></i> LIVE MARKET PLACEMENT
+                </span>
+                <span class="badge badge-teal small font-mono" id="matchedJobsCountBadge">
+                  8 Openings Analyzed
+                </span>
+              </div>
+              <h3 class="h5 fw-bold text-ink mb-0 mt-1">Real-Time Job Matches & "Bridge the Gap"</h3>
+              <p class="text-muted small mb-0 mt-1">Jobs tailored to your chosen career. Click red missing skills to instantly add targeted 1-week learning micro-tasks to your active roadmap!</p>
+            </div>
+            <a href="recommendations.html" class="btn btn-outline-navy btn-sm px-3">
+              <i class="bi bi-compass me-1"></i> View All Matches
+            </a>
+          </div>
+
+          <!-- Matched Jobs Grid -->
+          <div class="row g-3" id="matchedJobsListContainer">
+            <div class="col-12 text-center py-4 text-muted small">
+              <div class="spinner-border spinner-border-sm text-teal me-2" role="status"></div>
+              Loading live market jobs matched to your verified skills...
+            </div>
+          </div>
+        </div>
+
         <!-- 4. Next Upcoming Incomplete Tasks Section -->
         <div class="row mb-4">
           <div class="col-12">
@@ -559,6 +755,191 @@
             <button type="button" id="btnSaveQuickSkills" class="btn cp-btn-primary btn-sm px-4">
               <i class="bi bi-check2-circle me-1"></i> Save Changes & Recalculate
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Interactive Mock Interview Chamber Modal -->
+    <div class="modal fade" id="mockInterviewModal" tabindex="-1" aria-labelledby="mockInterviewModalLabel" aria-hidden="true" data-bs-backdrop="static">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-line bg-dark text-white">
+          <div class="modal-header border-bottom border-secondary border-opacity-25">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-danger bg-opacity-25 text-danger font-monospace">
+                <i class="bi bi-record-circle-fill me-1"></i> AI INTERVIEW CHAMBER
+              </span>
+              <h2 class="modal-title h5 fw-bold text-white mb-0" id="mockInterviewModalLabel">Live Technical & Behavioral Interview</h2>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="btnCloseMockInterview"></button>
+          </div>
+
+          <div class="modal-body p-4">
+            <!-- Chamber Header / Status -->
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-secondary border-opacity-25 flex-wrap gap-2">
+              <div>
+                <div class="text-muted small">Target Role: <strong class="text-white" id="interviewTargetRole">Software Engineer</strong></div>
+                <div class="text-info small" id="interviewProgressText">Question 1 of 3</div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-info btn-sm px-3" id="btnSpeakQuestion" title="Play AI Interviewer voice">
+                  <i class="bi bi-volume-up-fill me-1"></i> <span id="btnSpeakText">Read Question</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Question Prompt Box -->
+            <div class="p-3 rounded-2 bg-black bg-opacity-50 border border-secondary border-opacity-25 mb-4">
+              <div class="d-flex align-items-start gap-3">
+                <div class="p-2 rounded-circle bg-primary bg-opacity-25 text-info fs-4 flex-shrink-0">
+                  <i class="bi bi-robot"></i>
+                </div>
+                <div>
+                  <div class="text-secondary small fw-bold font-monospace text-uppercase" id="questionCategoryBadge">TECHNICAL QUESTION</div>
+                  <h3 class="h6 fw-semibold text-white mt-1 mb-0" id="currentQuestionText">
+                    Loading your interview question...
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Answer Section -->
+            <div class="mb-3">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <label class="form-label small fw-bold text-light mb-0">Your Spoken or Written Response</label>
+                <button type="button" class="btn btn-outline-danger btn-sm px-2 py-0.5" id="btnToggleMic">
+                  <i class="bi bi-mic-fill me-1"></i> <span id="micStatusText">Start Voice Answer</span>
+                </button>
+              </div>
+              <textarea id="interviewAnswerInput" class="form-control bg-black text-white border-secondary border-opacity-50" rows="5" placeholder="Speak into your microphone or type your technical response here..."></textarea>
+              <div class="text-muted small mt-1" style="font-size: 0.75rem;">
+                Tip: Speak clearly or provide concrete project examples using the STAR method (Situation, Task, Action, Result).
+              </div>
+            </div>
+
+            <!-- Evaluation Feedback Card (Visible after submission) -->
+            <div id="evaluationFeedbackCard" class="d-none p-3 rounded-2 bg-primary bg-opacity-10 border border-info border-opacity-25 mb-3">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="fw-bold text-info"><i class="bi bi-check-circle-fill me-1"></i> AI Evaluation Breakdown</div>
+                <div class="badge bg-primary text-white font-mono" id="evalScoreBadge">Score: 85/100</div>
+              </div>
+              <div class="small text-light mb-2" id="evalFeedbackText">Great explanation of the architecture.</div>
+              <div class="row g-2 mb-2">
+                <div class="col-4 text-center p-1 bg-dark bg-opacity-50 rounded">
+                  <div class="text-muted" style="font-size: 0.65rem;">TECHNICAL</div>
+                  <div class="fw-bold text-white small" id="evalTechScore">85%</div>
+                </div>
+                <div class="col-4 text-center p-1 bg-dark bg-opacity-50 rounded">
+                  <div class="text-muted" style="font-size: 0.65rem;">CLARITY</div>
+                  <div class="fw-bold text-white small" id="evalCommScore">90%</div>
+                </div>
+                <div class="col-4 text-center p-1 bg-dark bg-opacity-50 rounded">
+                  <div class="text-muted" style="font-size: 0.65rem;">PRACTICAL</div>
+                  <div class="fw-bold text-white small" id="evalPracScore">80%</div>
+                </div>
+              </div>
+              <div class="p-2 bg-dark bg-opacity-50 rounded text-muted small" style="font-size: 0.75rem;">
+                <strong class="text-light">Model Answer Insight:</strong> <span id="evalModelAnswer">--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Exit Interview</button>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-success btn-sm px-4 fw-semibold" id="btnSubmitAnswer">
+                <i class="bi bi-send-fill me-1"></i> Evaluate Response
+              </button>
+              <button type="button" class="btn btn-primary btn-sm px-4 fw-semibold d-none" id="btnNextQuestion">
+                Next Question <i class="bi bi-arrow-right ms-1"></i>
+              </button>
+              <button type="button" class="btn btn-warning btn-sm px-4 fw-semibold d-none" id="btnFinalizeInterview">
+                <i class="bi bi-trophy-fill me-1"></i> Complete & Save Score
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Verifiable Job Ready Certificate Modal -->
+    <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-line">
+          <div class="modal-header border-bottom border-line">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge badge-teal font-monospace text-uppercase">DIGITAL CREDENTIAL</span>
+              <h2 class="modal-title h5 fw-bold text-ink mb-0" id="certificateModalLabel">CareerPath AI — Verified Job Ready Certificate</h2>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body p-4 bg-light">
+            <!-- Official Certificate Paper Canvas -->
+            <div class="official-certificate-container text-center my-2" id="printableCertificate">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="text-start">
+                  <div class="fw-bold text-ink" style="font-size: 0.85rem; letter-spacing: 1px;">CAREERPATH AI</div>
+                  <div class="text-muted" style="font-size: 0.65rem;">VERIFIED TALENT REGISTRY · HACK2IGNITE 2026–27</div>
+                </div>
+                <div class="certificate-seal">
+                  <i class="bi bi-patch-check-fill"></i>
+                </div>
+              </div>
+
+              <div class="my-4">
+                <div class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 2px;">
+                  Official Credential of Competency & Job Readiness
+                </div>
+                <h1 class="h3 fw-bold text-ink mt-2 mb-1" id="certStudentName">Student Name</h1>
+                <p class="text-secondary small fst-italic">has successfully demonstrated code-grounded proficiency and achieved the Job Ready milestone for:</p>
+                <div class="h4 fw-bold text-primary my-2" id="certCareerTitle">Full-Stack Developer</div>
+              </div>
+
+              <!-- Metrics & Skills Badges on Certificate -->
+              <div class="p-3 bg-white rounded border border-line my-3 text-start">
+                <div class="row g-2 align-items-center">
+                  <div class="col-md-6 border-end border-line">
+                    <div class="text-muted small" style="font-size: 0.7rem;">COMPOSITE READINESS INDEX</div>
+                    <div class="h4 fw-bold text-teal font-mono mb-0" id="certReadinessScore">88% (Certified)</div>
+                  </div>
+                  <div class="col-md-6 ps-md-3">
+                    <div class="text-muted small" style="font-size: 0.7rem;">VERIFICATION CREDENTIAL ID</div>
+                    <div class="font-mono text-dark fw-bold small" id="certVerificationId">CP-2026-XXXXXX</div>
+                  </div>
+                </div>
+                <div class="mt-2 pt-2 border-top border-line">
+                  <div class="text-muted small mb-1" style="font-size: 0.7rem;">VERIFIED SKILLS DEMONSTRATED</div>
+                  <div class="d-flex flex-wrap gap-1" id="certSkillsContainer">
+                    <span class="badge bg-light text-dark border">JavaScript</span>
+                    <span class="badge bg-light text-dark border">React</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-end mt-4 pt-2 text-muted" style="font-size: 0.7rem;">
+                <div class="text-start">
+                  <div>Date Issued: <strong class="text-dark" id="certIssueDate">September 30, 2026</strong></div>
+                  <div>Issuing Authority: <strong>CareerPath AI Academic Protocol</strong></div>
+                </div>
+                <div class="text-end">
+                  <div class="fw-bold font-monospace text-dark">TEAM 404 BRAIN NOT FOUND</div>
+                  <div>Cryptographically Grounded</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer border-top border-line d-flex justify-content-between">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Close</button>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-outline-primary btn-sm px-3" onclick="window.print()">
+                <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
+              </button>
+              <button type="button" class="btn btn-navy btn-sm px-4" id="btnShareCertificate">
+                <i class="bi bi-linkedin me-1"></i> Share Credential
+              </button>
+            </div>
           </div>
         </div>
       </div>

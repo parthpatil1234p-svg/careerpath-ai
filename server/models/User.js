@@ -155,6 +155,67 @@ const GithubProfileSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// ── Sub-schema: Resume ATS Analysis ───────────────────────────
+const ResumeAnalysisSchema = new mongoose.Schema(
+  {
+    atsScore: { type: Number, default: 0, min: 0, max: 100 },
+    targetCareer: { type: String, trim: true, default: '' },
+    extractedSkills: { type: [String], default: [] },
+    matchedKeywords: { type: [String], default: [] },
+    missingKeywords: { type: [String], default: [] },
+    bulletSuggestions: { type: [String], default: [] },
+    summary: { type: String, default: '' },
+    analyzedAt: { type: Date, default: null },
+  },
+  { _id: false }
+);
+
+// ── Sub-schema: AI Mock Interview Session ─────────────────────
+const MockInterviewSchema = new mongoose.Schema(
+  {
+    overallScore: { type: Number, default: 0, min: 0, max: 100 },
+    technicalScore: { type: Number, default: 0, min: 0, max: 100 },
+    communicationScore: { type: Number, default: 0, min: 0, max: 100 },
+    practicalScore: { type: Number, default: 0, min: 0, max: 100 },
+    targetRole: { type: String, default: '' },
+    completedAt: { type: Date, default: null },
+    history: [
+      {
+        question: { type: String, required: true },
+        questionType: { type: String, default: 'technical' },
+        answer: { type: String, default: '' },
+        score: { type: Number, default: 0 },
+        feedback: { type: String, default: '' },
+        modelAnswer: { type: String, default: '' },
+      },
+    ],
+  },
+  { _id: false }
+);
+
+// ── Sub-schema: Job Readiness Index & Digital Certificate ─────
+const JobReadinessSchema = new mongoose.Schema(
+  {
+    readinessScore: { type: Number, default: 0, min: 0, max: 100 },
+    tier: {
+      type: String,
+      enum: ['foundational', 'developing', 'interview_ready', 'job_ready'],
+      default: 'foundational',
+    },
+    tierLabel: { type: String, default: 'Foundational Learner' },
+    certificateId: { type: String, default: '' },
+    certifiedAt: { type: Date, default: null },
+    calculatedAt: { type: Date, default: null },
+    breakdown: {
+      verifiedSkills: { type: Number, default: 0 },
+      roadmapProgress: { type: Number, default: 0 },
+      resumeScore: { type: Number, default: 0 },
+      interviewScore: { type: Number, default: 0 },
+    },
+  },
+  { _id: false }
+);
+
 // ── Main User Schema ──────────────────────────────────────────
 const UserSchema = new mongoose.Schema(
   {
@@ -279,6 +340,24 @@ const UserSchema = new mongoose.Schema(
     hasCompletedSkillVerification: {
       type: Boolean,
       default: false,
+    },
+
+    // AI Resume ATS Analysis (Career GPS Step 8)
+    resumeAnalysis: {
+      type: ResumeAnalysisSchema,
+      default: () => ({}),
+    },
+
+    // AI Mock Interview Performance (Career GPS Step 9)
+    mockInterview: {
+      type: MockInterviewSchema,
+      default: () => ({}),
+    },
+
+    // Overall Job Readiness Index & Digital Certificate (Career GPS Step 11)
+    jobReadiness: {
+      type: JobReadinessSchema,
+      default: () => ({}),
     },
 
     // One-Time Verification (OTP) Status

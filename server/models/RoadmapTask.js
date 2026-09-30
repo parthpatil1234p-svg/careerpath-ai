@@ -79,6 +79,26 @@ const RoadmapTaskSchema = new mongoose.Schema(
     completedAt: {
       type: Date,
     },
+    linkedRepoUrl: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    isProjectVerified: {
+      type: Boolean,
+      default: false,
+    },
+    projectVerifiedAt: {
+      type: Date,
+      default: null,
+    },
+    projectMetadata: {
+      repoName: { type: String, default: '' },
+      language: { type: String, default: '' },
+      stars: { type: Number, default: 0 },
+      commitCount: { type: Number, default: 0 },
+      detectedSkills: { type: [String], default: [] },
+    },
   },
   {
     timestamps: true,

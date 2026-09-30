@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. DOM Elements
   const loadingState = document.getElementById('loadingState');
+  const dashboardErrorState = document.getElementById('dashboardErrorState');
+  const dashboardErrorMessage = document.getElementById('dashboardErrorMessage');
+  const btnRetryDashboard = document.getElementById('btnRetryDashboard');
   const dashboardContent = document.getElementById('dashboardContent');
   const alertContainer = document.getElementById('alertContainer');
 
@@ -50,6 +53,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let dashboardData = null;
 
+  const setDashboardState = (state, message = '') => {
+    loadingState?.classList.toggle('d-none', state !== 'loading');
+    dashboardErrorState?.classList.toggle('d-none', state !== 'error');
+    dashboardContent?.classList.toggle('d-none', state !== 'ready');
+    if (dashboardErrorMessage && message) dashboardErrorMessage.textContent = message;
+  };
+
   const showAlert = (message, type = 'danger') => {
     if (!alertContainer) return;
     alertContainer.innerHTML = `
@@ -63,20 +73,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3. Load Dashboard Data
   const loadDashboard = async () => {
+    setDashboardState('loading');
     try {
       const res = await window.API.get('/dashboard', { auth: true });
 
-      loadingState.classList.add('d-none');
-
       if (res.success && res.data) {
         dashboardData = res.data;
+        setDashboardState('ready');
         renderDashboard();
       } else {
-        showAlert(res.message || 'Unable to load dashboard data.');
+        setDashboardState('error', res.message || 'Unable to load dashboard data.');
       }
     } catch (err) {
-      loadingState.classList.add('d-none');
       if (err.status === 403 || err.requiresSkillVerification) {
+        setDashboardState('ready');
         window.Auth?.renderVerificationGate(
           dashboardContent || document.querySelector('main'),
           'Dashboard',
@@ -84,9 +94,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
         return;
       }
-      showAlert(err.message || 'Failed to fetch student dashboard telemetry.');
+      setDashboardState('error', err.message || 'Failed to fetch student dashboard telemetry.');
     }
   };
+
+  btnRetryDashboard?.addEventListener('click', loadDashboard);
 
   // 4. Render Dashboard Views
   const renderDashboard = () => {
@@ -289,6 +301,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       `;
     }
+
+    // 4.6 Render Career GPS Telemetry & Modules
+    loadJobReadiness();
+    loadResumeLab();
+    loadMatchedJobs();
   };
 
   // ── 4.5 Render Skills Matrix in Dashboard ───────────────────────
@@ -982,6 +999,633 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ==========================================================================
+  // CAREER GPS MODULES: READINESS INDEX, RESUME ATS, MOCK INTERVIEW & CERTIFICATE
+  // ==========================================================================
+
+  // 1. Holistic 0-100% Job Readiness Index & Digital Certificate
+  let currentReadinessData = null;
+
+  const loadJobReadiness = async () => {
+    try {
+      const res = await window.API.get('/readiness/status', { auth: true });
+      if (!res.success || !res.data) return;
+
+      const data = res.data;
+      currentReadinessData = data;
+      const score = Math.round(data.readinessScore || 0);
+
+      // Score text & gauge
+      const readinessScoreText = document.getElementById('readinessScoreText');
+      const readinessGaugeVal = document.getElementById('readinessGaugeVal');
+      const readinessGaugeCircle = document.getElementById('readinessGaugeCircle');
+      const readinessTierBadge = document.getElementById('readinessTierBadge');
+      const readinessTargetRoleText = document.getElementById('readinessTargetRoleText');
+
+      if (readinessScoreText) readinessScoreText.textContent = `${score}%`;
+      if (readinessGaugeVal) readinessGaugeVal.textContent = `${score}%`;
+      if (readinessGaugeCircle) readinessGaugeCircle.style.setProperty('--readiness-pct', score);
+
+      if (readinessTierBadge) {
+        readinessTierBadge.className = `badge font-monospace text-uppercase badge-tier-${data.tier || 'foundational'}`;
+        readinessTierBadge.textContent = data.tierLabel || 'Foundational Learner';
+      }
+
+      if (readinessTargetRoleText) {
+        readinessTargetRoleText.innerHTML = `Target Role: <strong class="text-white">${escapeHtml(data.targetRole || 'Software Engineer')}</strong> · Weighted composite score derived from verified skills, roadmap progress, resume ATS compliance, and AI mock interview simulations.`;
+      }
+
+      // Breakdown metrics
+      const metricVerified = document.getElementById('metricScoreVerified');
+      const metricRoadmap = document.getElementById('metricScoreRoadmap');
+      const metricResume = document.getElementById('metricScoreResume');
+      const metricInterview = document.getElementById('metricScoreInterview');
+
+      if (metricVerified) metricVerified.textContent = `${data.breakdown?.verifiedSkills ?? '--'}%`;
+      if (metricRoadmap) metricRoadmap.textContent = `${data.breakdown?.roadmapProgress ?? '--'}%`;
+      if (metricResume) metricResume.textContent = `${data.breakdown?.resumeScore ?? '--'}%`;
+      if (metricInterview) metricInterview.textContent = `${data.breakdown?.interviewScore ?? '--'}%`;
+
+      // Certificate button state
+      const btnViewCertificate = document.getElementById('btnViewCertificate');
+      if (btnViewCertificate) {
+        if (score >= 85) {
+          btnViewCertificate.className = 'btn btn-warning btn-sm px-3 py-1.5 fw-semibold shadow-sm';
+          btnViewCertificate.innerHTML = '<i class="bi bi-award-fill me-1"></i> View Career Certificate (Unlocked ✓)';
+        } else {
+          btnViewCertificate.className = 'btn btn-outline-light btn-sm px-3 py-1.5 fw-semibold';
+          btnViewCertificate.innerHTML = '<i class="bi bi-award me-1"></i> Career Certificate (Unlocks at 85%)';
+        }
+      }
+
+      // Pre-fill Certificate modal
+      const certStudentName = document.getElementById('certStudentName');
+      const certCareerTitle = document.getElementById('certCareerTitle');
+      const certReadinessScore = document.getElementById('certReadinessScore');
+      const certVerificationId = document.getElementById('certVerificationId');
+      const certIssueDate = document.getElementById('certIssueDate');
+      const certSkillsContainer = document.getElementById('certSkillsContainer');
+
+      const user = dashboardData?.user || window.Auth?.getUser();
+      if (certStudentName) certStudentName.textContent = user?.name || 'Verified Student';
+      if (certCareerTitle) certCareerTitle.textContent = data.targetRole || 'Full-Stack Developer';
+      if (certReadinessScore) certReadinessScore.textContent = `${score}% (${data.tierLabel || 'Developing Practitioner'})`;
+      if (certVerificationId) certVerificationId.textContent = data.certificateId || ('CP-2026-' + (user?._id || 'PROTOTYPE').slice(-6).toUpperCase());
+      if (certIssueDate) {
+        const d = data.certifiedAt ? new Date(data.certifiedAt) : new Date();
+        certIssueDate.textContent = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
+
+      if (certSkillsContainer) {
+        const verifiedSkills = (user?.skills || []).filter(s => s.isVerified || s.verificationTier === 'project_verified' || s.verificationTier === 'quiz_verified');
+        if (verifiedSkills.length > 0) {
+          certSkillsContainer.innerHTML = verifiedSkills.map(s => `
+            <span class="badge bg-light text-dark border px-2 py-1">
+              <i class="bi bi-check-circle-fill text-success me-1"></i>${escapeHtml(s.name)}
+            </span>
+          `).join('');
+        } else if ((user?.skills || []).length > 0) {
+          certSkillsContainer.innerHTML = (user.skills).slice(0, 5).map(s => `
+            <span class="badge bg-light text-dark border px-2 py-1">
+              <i class="bi bi-patch-check-fill text-primary me-1"></i>${escapeHtml(s.name)}
+            </span>
+          `).join('');
+        } else {
+          certSkillsContainer.innerHTML = '<span class="text-muted small">No verified skills yet.</span>';
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to load readiness index:', err);
+    }
+  };
+
+  // 2. AI Resume Lab & ATS Analyzer
+  const loadResumeLab = async () => {
+    try {
+      const res = await window.API.get('/resume/analysis', { auth: true });
+      if (res.success && res.data?.analysis) {
+        renderResumeAnalysis(res.data.analysis);
+      }
+    } catch (err) {
+      console.warn('No prior resume analysis loaded:', err);
+    }
+
+    // Set target role badge
+    const resumeTargetCareerBadge = document.getElementById('resumeTargetCareerBadge');
+    const activeCareer = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
+    if (resumeTargetCareerBadge) {
+      resumeTargetCareerBadge.textContent = `Target: ${activeCareer}`;
+    }
+
+    // Bind scan button
+    const btnAnalyzeResume = document.getElementById('btnAnalyzeResume');
+    const resumeTextInput = document.getElementById('resumeTextInput');
+
+    if (btnAnalyzeResume) {
+      btnAnalyzeResume.onclick = async () => {
+        const text = resumeTextInput ? resumeTextInput.value.trim() : '';
+        const targetCareer = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
+
+        if (!text || text.length < 50) {
+          showAlert('Please paste at least 50 characters of your resume content into the text box below to run the ATS analyzer.', 'warning');
+          if (resumeTextInput) resumeTextInput.focus();
+          return;
+        }
+
+        btnAnalyzeResume.disabled = true;
+        const originalHtml = btnAnalyzeResume.innerHTML;
+        btnAnalyzeResume.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Scanning ATS Keywords...';
+
+        try {
+          const scanRes = await window.API.post('/resume/analyze', {
+            resumeText: text,
+            targetCareer: targetCareer
+          }, { auth: true });
+
+          if (scanRes.success && scanRes.data) {
+            renderResumeAnalysis(scanRes.data);
+            showAlert(`Resume analyzed! ATS Match Score: ${scanRes.data.atsScore}/100. Check detected keywords & bullet rewrites below.`, 'success');
+            // Refresh composite readiness score
+            await loadJobReadiness();
+          } else {
+            showAlert(scanRes.message || 'Failed to analyze resume.', 'danger');
+          }
+        } catch (scanErr) {
+          showAlert(scanErr.message || 'Error analyzing resume.', 'danger');
+        } finally {
+          btnAnalyzeResume.disabled = false;
+          btnAnalyzeResume.innerHTML = originalHtml;
+        }
+      };
+    }
+  };
+
+  const renderResumeAnalysis = (analysis) => {
+    if (!analysis) return;
+    const atsScoreValue = document.getElementById('atsScoreValue');
+    const atsProgressBar = document.getElementById('atsProgressBar');
+    const atsScoreSummary = document.getElementById('atsScoreSummary');
+    const matchedContainer = document.getElementById('matchedKeywordsContainer');
+    const missingContainer = document.getElementById('missingKeywordsContainer');
+    const matchedCount = document.getElementById('matchedKeywordsCount');
+    const missingCount = document.getElementById('missingKeywordsCount');
+    const bulletsContainer = document.getElementById('bulletSuggestionsContainer');
+
+    const score = Math.round(analysis.atsScore || 0);
+    if (atsScoreValue) atsScoreValue.textContent = score;
+    if (atsProgressBar) {
+      atsProgressBar.style.width = `${score}%`;
+      atsProgressBar.className = `progress-bar readiness-meter-fill ${score >= 75 ? 'bg-success' : score >= 50 ? 'bg-teal' : 'bg-warning'}`;
+    }
+    if (atsScoreSummary) atsScoreSummary.textContent = analysis.summary || 'Resume analyzed against recruiter keyword benchmarks.';
+
+    // Matched chips
+    const matched = analysis.matchedKeywords || [];
+    if (matchedCount) matchedCount.textContent = `${matched.length} detected`;
+    if (matchedContainer) {
+      matchedContainer.innerHTML = matched.length
+        ? matched.map(k => `<span class="ats-chip-matched"><i class="bi bi-check-circle-fill"></i> ${escapeHtml(k)}</span>`).join('')
+        : '<span class="text-muted small">No exact keyword matches found yet.</span>';
+    }
+
+    // Missing chips
+    const missing = analysis.missingKeywords || [];
+    if (missingCount) missingCount.textContent = `${missing.length} missing`;
+    if (missingContainer) {
+      missingContainer.innerHTML = missing.length
+        ? missing.map(k => `<span class="ats-chip-missing"><i class="bi bi-x-circle-fill"></i> ${escapeHtml(k)}</span>`).join('')
+        : '<span class="text-success small"><i class="bi bi-patch-check-fill me-1"></i> Outstanding coverage! No critical missing keywords detected.</span>';
+    }
+
+    // Bullet rewrites
+    const bullets = analysis.bulletSuggestions || [];
+    if (bulletsContainer) {
+      if (bullets.length) {
+        bulletsContainer.innerHTML = bullets.map((b, idx) => `
+          <div class="bullet-rewrite-card">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-primary bg-opacity-10 text-primary small font-mono">Formula X-Y-Z Rewrite #${idx + 1}</span>
+            </div>
+            <div>${escapeHtml(b.replace(/^Rewrite:\s*/i, ''))}</div>
+          </div>
+        `).join('');
+      }
+    }
+  };
+
+  // 3. Real-Time Job Matching & "Bridge the Gap"
+  const loadMatchedJobs = async () => {
+    const container = document.getElementById('matchedJobsListContainer');
+    const badge = document.getElementById('matchedJobsCountBadge');
+    if (!container) return;
+
+    try {
+      const res = await window.API.get('/jobs/matched-for-user', { auth: true });
+      if (!res.success || !res.data?.jobs) {
+        container.innerHTML = '<div class="col-12 text-center py-4 text-muted small">Unable to fetch matched job postings.</div>';
+        return;
+      }
+
+      const jobs = res.data.jobs;
+      if (badge) badge.textContent = `${jobs.length} Positions Analyzed`;
+
+      if (jobs.length === 0) {
+        container.innerHTML = '<div class="col-12 text-center py-4 text-muted small">No live positions currently match your career profile.</div>';
+        return;
+      }
+
+      container.innerHTML = jobs.map(job => {
+        const isHighMatch = (job.matchPercentage || 0) >= 75;
+        const verifiedTags = (job.verifiedSkills || []).map(s => `
+          <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 small">
+            <i class="bi bi-check-circle-fill me-1"></i>${escapeHtml(s)}
+          </span>
+        `).join('');
+
+        const missingTags = (job.missingSkills || []).map(s => `
+          <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 font-mono btn-bridge-gap" data-skill="${escapeHtml(s)}" data-job="${escapeHtml(job.title)}" title="1-Click: Add 1-week learning micro-task to your roadmap" style="font-size: 0.72rem;">
+            <i class="bi bi-plus-circle me-1"></i>${escapeHtml(s)} <span class="badge bg-danger text-white ms-1" style="font-size: 0.6rem;">Bridge</span>
+          </button>
+        `).join('');
+
+        return `
+          <div class="col-md-6">
+            <div class="matched-job-card h-100 d-flex flex-column justify-content-between">
+              <div>
+                <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                  <div>
+                    <h4 class="h6 fw-bold text-ink mb-1">${escapeHtml(job.title)}</h4>
+                    <div class="text-secondary small fw-medium">
+                      <i class="bi bi-building me-1 text-teal"></i> ${escapeHtml(job.company)} · <i class="bi bi-geo-alt me-1 text-muted"></i> ${escapeHtml(job.location)}
+                    </div>
+                  </div>
+                  <span class="job-match-badge ${isHighMatch ? 'job-match-high' : ''}">
+                    ${job.matchPercentage}% Match
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 text-muted small mb-3 flex-wrap" style="font-size: 0.78rem;">
+                  <span><i class="bi bi-currency-dollar text-warning"></i> ${escapeHtml(job.salary || 'Competitive')}</span>
+                  <span><i class="bi bi-briefcase text-teal"></i> ${escapeHtml(job.experience || 'Entry-Level')}</span>
+                  <span><i class="bi bi-laptop"></i> ${escapeHtml(job.type || 'Full-Time')}</span>
+                </div>
+
+                <!-- Verified vs Missing Skills Breakdown -->
+                <div class="mb-3">
+                  <div class="text-muted small mb-1" style="font-size: 0.72rem; text-transform: uppercase; font-family: var(--font-mono);">
+                    Your Skills: ${verifiedTags || '<span class="text-muted fst-italic">None verified yet</span>'}
+                  </div>
+                  ${(job.missingSkills || []).length ? `
+                    <div class="text-muted small mb-1 mt-2" style="font-size: 0.72rem; text-transform: uppercase; font-family: var(--font-mono);">
+                      Missing Skills (Click to Bridge):
+                    </div>
+                    <div class="d-flex flex-wrap gap-1">
+                      ${missingTags}
+                    </div>
+                  ` : '<div class="text-success small mt-2"><i class="bi bi-shield-check me-1"></i> Full skill alignment! 100% qualified.</div>'}
+                </div>
+              </div>
+
+              <div class="pt-3 border-top border-line d-flex align-items-center justify-content-between">
+                <span class="text-muted small" style="font-size: 0.75rem;">Source: ${escapeHtml(job.source || 'Tech Board')}</span>
+                <a href="${escapeHtml(job.url || '#')}" target="_blank" rel="noopener noreferrer" class="btn btn-navy btn-sm px-3 py-1">
+                  Quick Apply <i class="bi bi-box-arrow-up-right ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Wire Bridge the Gap buttons
+      container.querySelectorAll('.btn-bridge-gap').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const skill = btn.getAttribute('data-skill');
+          const jobTitle = btn.getAttribute('data-job');
+          btn.disabled = true;
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+          try {
+            const bridgeRes = await window.API.post('/jobs/bridge-gap', {
+              missingSkill: skill,
+              jobTitle: jobTitle
+            }, { auth: true });
+
+            if (bridgeRes.success) {
+              showAlert(`Success! 1-week micro-task for "${skill}" has been added to your active roadmap.`, 'success');
+              btn.className = 'btn btn-outline-success btn-sm py-0 px-2 font-mono';
+              btn.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i> Bridged!`;
+              // Reload roadmap summary
+              await loadDashboard();
+            } else {
+              showAlert(bridgeRes.message || 'Could not bridge skill gap.', 'warning');
+              btn.disabled = false;
+              btn.innerHTML = originalText;
+            }
+          } catch (bridgeErr) {
+            showAlert(bridgeErr.message || 'Error injecting gap task to roadmap.', 'danger');
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+          }
+        });
+      });
+    } catch (err) {
+      console.warn('Failed to load matched jobs:', err);
+      container.innerHTML = '<div class="col-12 text-center py-4 text-muted small">Live job feed unavailable.</div>';
+    }
+  };
+
+  // 4. Interactive AI Mock Interview Chamber
+  let interviewSession = null;
+  let currentQuestionIdx = 0;
+  let recognitionInstance = null;
+  let isSpeechRecording = false;
+
+  const setupMockInterview = () => {
+    const btnLaunch = document.getElementById('btnLaunchMockInterview');
+    const modalEl = document.getElementById('mockInterviewModal');
+    const btnSpeak = document.getElementById('btnSpeakQuestion');
+    const btnToggleMic = document.getElementById('btnToggleMic');
+    const micStatusText = document.getElementById('micStatusText');
+    const answerInput = document.getElementById('interviewAnswerInput');
+    const btnSubmit = document.getElementById('btnSubmitAnswer');
+    const btnNext = document.getElementById('btnNextQuestion');
+    const btnFinalize = document.getElementById('btnFinalizeInterview');
+
+    if (!btnLaunch || !modalEl) return;
+
+    btnLaunch.onclick = async () => {
+      const targetRole = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
+      btnLaunch.disabled = true;
+      const originalText = btnLaunch.innerHTML;
+      btnLaunch.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Initializing Chamber...';
+
+      try {
+        const res = await window.API.post('/interview/start', {
+          targetRole: targetRole,
+          questionCount: 3
+        }, { auth: true });
+
+        if (res.success && res.data) {
+          interviewSession = res.data;
+          currentQuestionIdx = 0;
+          renderInterviewQuestion();
+          const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+          modalInstance.show();
+        } else {
+          showAlert(res.message || 'Failed to start interview chamber.', 'danger');
+        }
+      } catch (err) {
+        showAlert(err.message || 'Error launching mock interview chamber.', 'danger');
+      } finally {
+        btnLaunch.disabled = false;
+        btnLaunch.innerHTML = originalText;
+      }
+    };
+
+    // Render Question
+    const renderInterviewQuestion = () => {
+      if (!interviewSession || !interviewSession.questions || !interviewSession.questions.length) return;
+      const q = interviewSession.questions[currentQuestionIdx];
+
+      const interviewTargetRole = document.getElementById('interviewTargetRole');
+      const interviewProgressText = document.getElementById('interviewProgressText');
+      const questionCategoryBadge = document.getElementById('questionCategoryBadge');
+      const currentQuestionText = document.getElementById('currentQuestionText');
+      const feedbackCard = document.getElementById('evaluationFeedbackCard');
+
+      if (interviewTargetRole) interviewTargetRole.textContent = interviewSession.targetRole || 'Software Engineer';
+      if (interviewProgressText) interviewProgressText.textContent = `Question ${currentQuestionIdx + 1} of ${interviewSession.questions.length}`;
+      if (questionCategoryBadge) questionCategoryBadge.textContent = `${q.category || 'TECHNICAL'} SCENARIO`;
+      if (currentQuestionText) currentQuestionText.textContent = q.questionText;
+
+      if (answerInput) answerInput.value = '';
+      if (feedbackCard) feedbackCard.classList.add('d-none');
+
+      if (btnSubmit) {
+        btnSubmit.classList.remove('d-none');
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
+      }
+      if (btnNext) btnNext.classList.add('d-none');
+      if (btnFinalize) btnFinalize.classList.add('d-none');
+    };
+
+    // Web Speech API TTS
+    if (btnSpeak) {
+      btnSpeak.onclick = () => {
+        if (!interviewSession || !('speechSynthesis' in window)) {
+          showAlert('Speech synthesis audio is not supported in this browser.', 'warning');
+          return;
+        }
+        const q = interviewSession.questions[currentQuestionIdx];
+        if (!q) return;
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(q.questionText);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        const btnSpeakText = document.getElementById('btnSpeakText');
+        if (btnSpeakText) btnSpeakText.textContent = 'Speaking...';
+
+        utterance.onend = () => {
+          if (btnSpeakText) btnSpeakText.textContent = 'Read Question';
+        };
+        utterance.onerror = () => {
+          if (btnSpeakText) btnSpeakText.textContent = 'Read Question';
+        };
+
+        window.speechSynthesis.speak(utterance);
+      };
+    }
+
+    // Web Speech API STT
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (btnToggleMic) {
+      if (!SpeechRecognition) {
+        btnToggleMic.title = 'Speech recognition not supported in this browser. Please type your answer.';
+      }
+
+      btnToggleMic.onclick = () => {
+        if (!SpeechRecognition) {
+          showAlert('Microphone voice recognition is not supported in this browser. You can type your response in the box below!', 'info');
+          if (answerInput) answerInput.focus();
+          return;
+        }
+
+        if (isSpeechRecording) {
+          // Stop recording
+          if (recognitionInstance) recognitionInstance.stop();
+          isSpeechRecording = false;
+          btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
+          if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+        } else {
+          // Start recording
+          recognitionInstance = new SpeechRecognition();
+          recognitionInstance.continuous = true;
+          recognitionInstance.interimResults = true;
+          recognitionInstance.lang = 'en-US';
+
+          recognitionInstance.onstart = () => {
+            isSpeechRecording = true;
+            btnToggleMic.className = 'btn btn-danger btn-sm px-2 py-0.5 mic-recording-pulse';
+            if (micStatusText) micStatusText.textContent = 'Listening (Speak now)...';
+          };
+
+          recognitionInstance.onresult = (event) => {
+            let transcript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+              transcript += event.results[i][0].transcript;
+            }
+            if (answerInput && transcript.trim()) {
+              answerInput.value = (answerInput.value ? answerInput.value + ' ' : '') + transcript.trim();
+            }
+          };
+
+          recognitionInstance.onerror = (err) => {
+            console.warn('Speech recognition error:', err);
+            isSpeechRecording = false;
+            btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
+            if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+          };
+
+          recognitionInstance.onend = () => {
+            isSpeechRecording = false;
+            btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
+            if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+          };
+
+          recognitionInstance.start();
+        }
+      };
+    }
+
+    // Submit Answer & Evaluate
+    if (btnSubmit) {
+      btnSubmit.onclick = async () => {
+        const text = answerInput ? answerInput.value.trim() : '';
+        if (!text || text.length < 10) {
+          showAlert('Please provide an answer of at least 10 characters (either spoken or typed).', 'warning');
+          if (answerInput) answerInput.focus();
+          return;
+        }
+
+        // Stop mic if recording
+        if (isSpeechRecording && recognitionInstance) {
+          recognitionInstance.stop();
+        }
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> AI Evaluating...';
+
+        try {
+          const evalRes = await window.API.post('/interview/evaluate', {
+            sessionId: interviewSession.sessionId,
+            questionIndex: currentQuestionIdx,
+            answer: text
+          }, { auth: true });
+
+          if (evalRes.success && evalRes.data) {
+            const evalData = evalRes.data;
+            const feedbackCard = document.getElementById('evaluationFeedbackCard');
+            const evalScoreBadge = document.getElementById('evalScoreBadge');
+            const evalFeedbackText = document.getElementById('evalFeedbackText');
+            const evalTechScore = document.getElementById('evalTechScore');
+            const evalCommScore = document.getElementById('evalCommScore');
+            const evalPracScore = document.getElementById('evalPracScore');
+            const evalModelAnswer = document.getElementById('evalModelAnswer');
+
+            if (evalScoreBadge) evalScoreBadge.textContent = `Score: ${evalData.rubric?.compositeScore || 80}/100`;
+            if (evalFeedbackText) evalFeedbackText.textContent = evalData.feedback || 'Good structured response.';
+            if (evalTechScore) evalTechScore.textContent = `${evalData.rubric?.technicalDepth || 80}%`;
+            if (evalCommScore) evalCommScore.textContent = `${evalData.rubric?.communication || 85}%`;
+            if (evalPracScore) evalPracScore.textContent = `${evalData.rubric?.practicalApplication || 75}%`;
+            if (evalModelAnswer) evalModelAnswer.textContent = evalData.modelAnswerSnippet || 'Comprehensive technical design answer.';
+
+            if (feedbackCard) feedbackCard.classList.remove('d-none');
+            btnSubmit.classList.add('d-none');
+
+            // Determine if more questions or finalize
+            if (currentQuestionIdx < interviewSession.questions.length - 1) {
+              if (btnNext) btnNext.classList.remove('d-none');
+            } else {
+              if (btnFinalize) btnFinalize.classList.remove('d-none');
+            }
+          } else {
+            showAlert(evalRes.message || 'Failed to evaluate answer.', 'danger');
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
+          }
+        } catch (evalErr) {
+          showAlert(evalErr.message || 'Error evaluating interview answer.', 'danger');
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
+        }
+      };
+    }
+
+    // Next Question
+    if (btnNext) {
+      btnNext.onclick = () => {
+        currentQuestionIdx++;
+        renderInterviewQuestion();
+      };
+    }
+
+    // Finalize Interview
+    if (btnFinalize) {
+      btnFinalize.onclick = async () => {
+        btnFinalize.disabled = true;
+        btnFinalize.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Finalizing Score...';
+
+        try {
+          const finalRes = await window.API.post('/interview/finalize', {
+            sessionId: interviewSession.sessionId
+          }, { auth: true });
+
+          if (finalRes.success && finalRes.data) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+
+            showAlert(`🎉 Mock interview complete! Overall Interview Score: ${finalRes.data.averageScore}/100. Your Career Readiness Index has been updated!`, 'success');
+            await loadJobReadiness();
+          } else {
+            showAlert(finalRes.message || 'Failed to finalize interview.', 'danger');
+            btnFinalize.disabled = false;
+            btnFinalize.innerHTML = '<i class="bi bi-trophy-fill me-1"></i> Complete & Save Score';
+          }
+        } catch (finErr) {
+          showAlert(finErr.message || 'Error finalizing interview session.', 'danger');
+          btnFinalize.disabled = false;
+          btnFinalize.innerHTML = '<i class="bi bi-trophy-fill me-1"></i> Complete & Save Score';
+        }
+      };
+    }
+  };
+
+  // 5. Official Certificate Sharing
+  const setupCertificateModal = () => {
+    const btnShare = document.getElementById('btnShareCertificate');
+    if (!btnShare) return;
+
+    btnShare.onclick = () => {
+      const certId = document.getElementById('certVerificationId')?.textContent || 'CP-2026';
+      const role = document.getElementById('certCareerTitle')?.textContent || 'Full-Stack Developer';
+
+      const shareText = `🎓 I just verified my technical competencies and achieved the Job Ready milestone for ${role} on CareerPath AI! Credential ID: ${certId}. Built by Team 404 Brain Not Found for Hack2Ignite.`;
+      const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin)}&title=${encodeURIComponent(shareText)}`;
+
+      // Copy credential ID to clipboard
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(`CareerPath AI Verified Credential: ${certId} (${role})`);
+        showAlert(`Verification ID [${certId}] copied to clipboard! Opening LinkedIn share...`, 'success');
+      }
+
+      window.open(linkedInUrl, '_blank', 'width=600,height=600');
+    };
+  };
+
   // Safe string escaper
   function escapeHtml(str) {
     if (!str) return '';
@@ -993,6 +1637,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/'/g, '&#039;');
   }
 
-  // Load dashboard
+  // Initialize and load dashboard
+  setupMockInterview();
+  setupCertificateModal();
   loadDashboard();
 });

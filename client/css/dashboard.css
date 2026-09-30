@@ -11,6 +11,43 @@
   min-height: 100vh;
 }
 
+/* Shared state and layout polish */
+.dashboard-shell {
+  max-width: 1320px;
+}
+
+.dashboard-state {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 1rem;
+}
+
+.dashboard-state-icon {
+  width: 3.25rem;
+  height: 3.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  font-size: 1.45rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-loading-state .spinner-border {
+  margin-bottom: 1rem !important;
+}
+
+.dashboard-shell > #dashboardContent > .card,
+.dashboard-shell > #dashboardContent > .row,
+.dashboard-shell > #dashboardContent > .dashboard-profile-card,
+.dashboard-shell > #dashboardContent > .readiness-hero-card,
+.dashboard-shell > #dashboardContent > .recommended-action-box {
+  scroll-margin-top: 6rem;
+}
+
 /* Profile Header Card */
 .dashboard-profile-card {
   background: #FFFFFF;
@@ -92,6 +129,14 @@
 .avatar-upload-trigger:hover {
   background: var(--color-indigo-700);
   transform: scale(1.1);
+}
+
+.avatar-upload-trigger:focus-visible,
+.shortcut-card:focus-visible,
+.dashboard-task-item:focus-within,
+.dashboard-page :where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(14, 165, 233, 0.45);
+  outline-offset: 2px;
 }
 
 /* Active Roadmap / Route Card */
@@ -345,4 +390,332 @@
     box-shadow: var(--shadow-md);
     border-color: #CBD5E1;
   }
+}
+
+@media (max-width: 991.98px) {
+  .dashboard-shell {
+    padding-top: 1.5rem !important;
+    margin-top: 4.5rem !important;
+  }
+
+  .readiness-hero-card,
+  .dashboard-profile-card,
+  .active-route-card,
+  .journey-canvas-card,
+  .dashboard-shell .card {
+    padding: 1.25rem !important;
+  }
+
+  .readiness-hero-card .col-lg-5 {
+    justify-content: flex-start !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .dashboard-shell {
+    padding-inline: 0.85rem;
+  }
+
+  .dashboard-profile-card .row > *,
+  .recommended-action-box {
+    min-width: 0;
+  }
+
+  .dashboard-profile-card .col-md-4 {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .dashboard-profile-card .col-md-4 .btn,
+  .recommended-action-box .btn {
+    width: 100%;
+  }
+
+  .readiness-hero-card h2 {
+    font-size: 1.35rem;
+  }
+
+  .readiness-hero-card .d-flex.align-items-center.gap-4 {
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .readiness-gauge-circle {
+    width: 82px;
+    height: 82px;
+    flex: 0 0 82px;
+  }
+
+  .readiness-gauge-inner {
+    width: 68px;
+    height: 68px;
+  }
+
+  .dashboard-task-item {
+    align-items: flex-start !important;
+    padding: 0.9rem;
+  }
+
+  .dashboard-task-item > :last-child {
+    width: 100%;
+    padding-left: 2rem;
+  }
+
+  .dashboard-task-item > :last-child .btn {
+    margin-left: 0 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page *,
+  .dashboard-page *::before,
+  .dashboard-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Career GPS — Job Readiness Index, Resume ATS, Mock Interview & Certificate
+   ========================================================================== */
+
+/* 1. Job Readiness Hero Card */
+.readiness-hero-card {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: #F8FAFC;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+}
+
+.readiness-hero-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.readiness-gauge-circle {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: conic-gradient(#0EA5E9 calc(var(--readiness-pct, 0) * 1%), rgba(255, 255, 255, 0.1) 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+}
+
+.readiness-gauge-inner {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: #0F172A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.readiness-meter-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  position: relative;
+}
+
+.readiness-meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.badge-tier-foundational {
+  background: rgba(148, 163, 184, 0.2);
+  color: #CBD5E1;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.badge-tier-developing {
+  background: rgba(245, 158, 11, 0.2);
+  color: #FCD34D;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.badge-tier-interview {
+  background: rgba(14, 165, 233, 0.2);
+  color: #7DD3FC;
+  border: 1px solid rgba(14, 165, 233, 0.4);
+}
+
+.badge-tier-certified {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(14, 165, 233, 0.25));
+  color: #6EE7B7;
+  border: 1px solid #10B981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+/* 2. Resume AI Lab Card */
+.resume-lab-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ats-score-display {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.ats-score-val {
+  font-family: var(--font-mono);
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ats-chip-matched {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ats-chip-missing {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bullet-rewrite-card {
+  background: #F8FAFC;
+  border-left: 3px solid #0EA5E9;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+/* 3. Matched Jobs & Bridge Gap */
+.matched-job-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1.15rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.matched-job-card:hover {
+  transform: translateY(-2px);
+  border-color: #0EA5E9;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.08);
+}
+
+.job-match-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+
+.job-match-high {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: #A7F3D0;
+}
+
+/* 4. Mock Interview Modal & Voice FX */
+.interview-audio-wave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 24px;
+}
+
+.interview-audio-wave span {
+  width: 4px;
+  height: 8px;
+  background: #0EA5E9;
+  border-radius: 2px;
+  animation: waveBar 1.2s infinite ease-in-out;
+}
+
+.interview-audio-wave span:nth-child(2) { animation-delay: 0.2s; }
+.interview-audio-wave span:nth-child(3) { animation-delay: 0.4s; }
+.interview-audio-wave span:nth-child(4) { animation-delay: 0.1s; }
+.interview-audio-wave span:nth-child(5) { animation-delay: 0.3s; }
+
+@keyframes waveBar {
+  0%, 100% { height: 6px; }
+  50% { height: 22px; }
+}
+
+.mic-recording-pulse {
+  animation: micPulse 1.5s infinite;
+}
+
+@keyframes micPulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* 5. Official Certificate Modal */
+.official-certificate-container {
+  background: #FFFDF9;
+  border: 8px double #C79848;
+  border-radius: 8px;
+  padding: 2.5rem 2rem;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  color: #1E293B;
+  font-family: 'Inter', serif;
+}
+
+.official-certificate-container::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(199, 152, 72, 0.4);
+  pointer-events: none;
+}
+
+.certificate-seal {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FDE68A 0%, #D97706 100%);
+  border: 3px solid #FFFDF9;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #78350F;
+  font-size: 1.8rem;
 }
