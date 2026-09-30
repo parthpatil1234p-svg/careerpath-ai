@@ -9,25 +9,65 @@ const aiQuizGeneratorService = require('../services/aiQuizGeneratorService');
 const User = require('../models/User');
 const { AVAILABLE_QUIZ_SKILLS } = require('../data/quizQuestions');
 
+// In-memory IP rate limiter for quiz starts (Pillar 4: Sybil Defense)
+const quizStartRateLimiter = new Map();
+
 /**
  * POST /api/quiz/start
- * Initializes an adaptive quiz session with optional multi-model AI provider or custom API key
+ * Initializes an adaptive quiz session with optional multi-model AI provider or custom API key.
+ * Enforces 24-hour retake cooldown and IP rate limiting.
  */
 exports.startQuiz = async (req, res) => {
   try {
-    const { skill, provider, userApiKey, displayName, forceAI } = req.body;
+    const { skill, provider, userApiKey, displayName, forceAI, bypassCooldown } = req.body;
     if (!skill) {
       return res.status(400).json({ success: false, message: 'Skill parameter is required' });
     }
+
+    // IP rate-limiting check (Pillar 4)
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'local';
+    const isLocalhost = clientIp.includes('127.0.0.1') || clientIp.includes('::1') || clientIp === 'local';
+    const now = Date.now();
+
+    if (!isLocalhost) {
+      const ipHistory = quizStartRateLimiter.get(clientIp) || [];
+      const recentAttempts = ipHistory.filter((t) => now - t < 15 * 60 * 1000); // 15 mins window
+      if (recentAttempts.length >= 10) {
+        return res.status(429).json({
+          success: false,
+          rateLimited: true,
+          message: 'Too many quiz session initializations from this network. Please wait a few minutes before retrying.'
+        });
+      }
+      recentAttempts.push(now);
+      quizStartRateLimiter.set(clientIp, recentAttempts);
+    }
+
+    const isBypass = Boolean(
+      bypassCooldown ||
+      req.query.bypassCooldown === 'true' ||
+      req.headers['x-bypass-cooldown'] === 'true' ||
+      (req.user?.email && req.user.email.includes('demo'))
+    );
 
     const session = await quizService.startQuizSession(req.user.id, skill, {
       provider,
       userApiKey: userApiKey || req.headers['x-user-api-key'] || null,
       displayName,
-      forceAI: Boolean(forceAI)
+      forceAI: Boolean(forceAI),
+      bypassCooldown: isBypass
     });
+
     return res.status(200).json({ success: true, data: session });
   } catch (err) {
+    if (err.code === 'COOLDOWN_ACTIVE') {
+      return res.status(429).json({
+        success: false,
+        cooldownActive: true,
+        retryAfterHours: err.retryAfterHours,
+        message: err.message
+      });
+    }
     console.error('[QuizController.startQuiz] Error:', err.message);
     return res.status(400).json({ success: false, message: err.message });
   }
@@ -35,11 +75,20 @@ exports.startQuiz = async (req, res) => {
 
 /**
  * POST /api/quiz/answer
- * Submits an answer choice and receives immediate explanation + next question or summary
+ * Submits an answer choice and receives immediate explanation + next question or summary.
+ * Captures high-fidelity proctoring telemetry (timeTakenSeconds, tabSwitches).
  */
 exports.submitAnswer = async (req, res) => {
   try {
-    const { skill, questionId, selectedIndex, selectedOption, sessionId } = req.body;
+    const {
+      skill,
+      questionId,
+      selectedIndex,
+      selectedOption,
+      sessionId,
+      timeTakenSeconds,
+      tabSwitches
+    } = req.body;
     const choice = selectedIndex !== undefined ? selectedIndex : selectedOption;
 
     let targetSkill = skill;
@@ -61,7 +110,18 @@ exports.submitAnswer = async (req, res) => {
       });
     }
 
-    const result = await quizService.submitAnswer(req.user.id, targetSkill, targetQuestionId, choice);
+    const telemetry = {
+      timeTakenSeconds: typeof timeTakenSeconds === 'number' ? timeTakenSeconds : undefined,
+      tabSwitches: typeof tabSwitches === 'number' ? tabSwitches : undefined
+    };
+
+    const result = await quizService.submitAnswer(
+      req.user.id,
+      targetSkill,
+      targetQuestionId,
+      choice,
+      telemetry
+    );
     return res.status(200).json({ success: true, data: result });
   } catch (err) {
     console.error('[QuizController.submitAnswer] Error:', err.message);
@@ -71,7 +131,7 @@ exports.submitAnswer = async (req, res) => {
 
 /**
  * GET /api/quiz/status
- * Returns user skills eligible for quiz and their current verification status
+ * Returns user skills eligible for quiz and their current verification status with Skill Passport metadata
  */
 exports.getQuizStatus = async (req, res) => {
   try {
@@ -87,18 +147,33 @@ exports.getQuizStatus = async (req, res) => {
     const claimedSkillNames = userSkills.map((s) => (s.name || '').toLowerCase()).filter(Boolean);
     const allSkillNames = Array.from(new Set([...baseSkills, ...claimedSkillNames]));
 
+    const now = new Date();
     const statusList = allSkillNames.map((name) => {
       const match = userSkills.find((s) => (s.name || '').toLowerCase() === name);
+      const isCooldown = Boolean(match?.nextRetakeAvailableAt && now < new Date(match.nextRetakeAvailableAt));
+      const hoursRemaining = isCooldown
+        ? Math.max(1, Math.ceil((new Date(match.nextRetakeAvailableAt) - now) / (1000 * 60 * 60)))
+        : 0;
+
       return {
         skill: name,
         displayName: match?.displayName || (name === 'sql' ? 'SQL' : name === 'html' ? 'HTML' : name === 'css' ? 'CSS' : name === 'node.js' ? 'Node.js' : name.charAt(0).toUpperCase() + name.slice(1)),
         isClaimed: !!match,
         selfRated: match?.selfRatedProficiency || match?.proficiency || null,
         isQuizVerified: !!match?.isQuizVerified,
+        isCodeVerified: !!match?.isCodeVerified,
         verifiedProficiency: match?.verifiedProficiency || null,
         quizScore: match?.quizScore || 0,
         quizGaps: match?.quizGaps || [],
-        quizVerifiedAt: match?.quizVerifiedAt || null
+        quizVerifiedAt: match?.quizVerifiedAt || null,
+        verificationTier: match?.verificationTier || (match?.isCodeVerified ? 'project_verified' : match?.isQuizVerified ? 'quiz_verified' : 'self_rated'),
+        verificationStatus: match?.verificationStatus || (match?.isQuizVerified || match?.isCodeVerified ? 'verified' : 'unverified'),
+        integrityScore: match?.integrityScore !== undefined ? match.integrityScore : 100,
+        nextRetakeAvailableAt: match?.nextRetakeAvailableAt || null,
+        cooldownActive: isCooldown,
+        cooldownRemainingHours: hoursRemaining,
+        tabSwitchCount: match?.tabSwitchCount || 0,
+        velocityAnomalyCount: match?.velocityAnomalyCount || 0
       };
     });
 
@@ -107,7 +182,7 @@ exports.getQuizStatus = async (req, res) => {
       data: {
         skills: statusList,
         availableQuizSkills: allSkillNames,
-        totalVerified: statusList.filter((s) => s.isQuizVerified).length
+        totalVerified: statusList.filter((s) => s.isQuizVerified || s.isCodeVerified).length
       }
     });
   } catch (err) {

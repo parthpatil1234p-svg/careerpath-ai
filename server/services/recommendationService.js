@@ -86,9 +86,24 @@ const calculateSkillScore = (userSkillsMap, careerRequiredSkills) => {
       const userProficiency = normalizeText(userSkill.proficiency) || 'beginner';
       const userProficiencyValue = PROFICIENCY_VALUES[userProficiency] || 1;
 
-      // Verified skills (via quiz or code) count at 100% weight; self-rated skills count at 70% confidence
-      const isVerified = Boolean(userSkill.isQuizVerified || userSkill.isCodeVerified);
-      const confidenceWeight = isVerified ? 1.0 : 0.70;
+      // 4-Tier Skill Passport confidence weight (Pillar 7)
+      // Tier 0: Self-rated (0.70)
+      // Tier 1: Quiz-verified (0.85; 0.75 if unconfirmed telemetry)
+      // Tier 2: GitHub Code-verified AST scan (1.00)
+      // Tier 3: Spoken Interview-verified (1.05)
+      let confidenceWeight = 0.70;
+      let passportTier = userSkill.verificationTier || 'self_rated';
+      const status = userSkill.verificationStatus || 'verified';
+
+      if (userSkill.isCodeVerified || passportTier === 'project_verified') {
+        passportTier = 'project_verified';
+        confidenceWeight = 1.00;
+      } else if (passportTier === 'interview_verified') {
+        confidenceWeight = 1.05;
+      } else if (userSkill.isQuizVerified || passportTier === 'quiz_verified') {
+        passportTier = 'quiz_verified';
+        confidenceWeight = status === 'unconfirmed' ? 0.75 : 0.85;
+      }
 
       // Ratio capped at 1.0 (over-qualification does not artificially inflate score)
       const proficiencyRatio = Math.min(userProficiencyValue / requiredProficiencyValue, 1);
@@ -104,9 +119,11 @@ const calculateSkillScore = (userSkillsMap, careerRequiredSkills) => {
         userProficiency,
         isQuizVerified: Boolean(userSkill.isQuizVerified),
         isCodeVerified: Boolean(userSkill.isCodeVerified),
+        verificationTier: passportTier,
+        verificationStatus: status,
         selfRatedProficiency: userSkill.selfRatedProficiency || null,
         quizGaps: Array.isArray(userSkill.quizGaps) ? userSkill.quizGaps : [],
-        confidenceScore: isVerified ? 100 : 70,
+        confidenceScore: Math.round(confidenceWeight * 100),
       };
 
       if (userProficiencyValue >= requiredProficiencyValue) {

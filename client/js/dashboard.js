@@ -326,13 +326,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const sKey = (s.name || '').toLowerCase();
-      const verifiedBadge = s.isQuizVerified
-        ? `<span class="badge-quiz-verified ms-1" title="Reality-Check Quiz Verified · 100% Recommendation Weight"><i class="bi bi-patch-check-fill text-indigo"></i> Quiz Verified</span>`
-        : s.isCodeVerified
-        ? `<span class="badge-code-verified ms-1" title="Verified from real GitHub repository code"><i class="bi bi-github"></i> Code Verified</span>`
-        : ['javascript', 'python', 'sql'].includes(sKey)
-        ? `<a href="quiz.html?skill=${sKey}" class="badge-verify-cta ms-1 text-decoration-none" title="Verify this skill in 2 mins to unlock 100% match weight"><i class="bi bi-speedometer2"></i> Verify (70%)</a>`
-        : `<span class="badge-self-rated ms-1" title="Self-rated (70% weight)"><i class="bi bi-person"></i> Self-Rated</span>`;
+      const tier = s.verificationTier || (s.isCodeVerified ? 'project_verified' : (s.isQuizVerified ? 'quiz_verified' : 'self_rated'));
+      const isUnconfirmed = s.verificationStatus === 'unconfirmed';
+
+      let verifiedBadge = '';
+      if (tier === 'interview_verified') {
+        verifiedBadge = `<span class="passport-tier-badge badge-passport-t3 ms-1" title="Interview Verified · 100%+ Match Weight"><i class="bi bi-mic-fill"></i> Tier 3: Interview</span>`;
+      } else if (tier === 'project_verified' || s.isCodeVerified) {
+        verifiedBadge = `<span class="passport-tier-badge badge-passport-t2 ms-1" title="Verified from real GitHub repository code · 100% Match Weight"><i class="bi bi-github"></i> Tier 2: Code Verified</span>`;
+      } else if (tier === 'quiz_verified' || s.isQuizVerified) {
+        if (isUnconfirmed) {
+          verifiedBadge = `
+            <span class="passport-tier-badge badge-passport-t1 ms-1" title="Quiz Completed"><i class="bi bi-shield-check"></i> Tier 1: Quiz</span>
+            <span class="badge-status-unconfirmed ms-1" title="Proctor Telemetry Anomaly Detected: Tab changes or velocity anomalies require Tier 2 GitHub confirmation"><i class="bi bi-exclamation-triangle-fill"></i> Unconfirmed</span>
+          `;
+        } else {
+          verifiedBadge = `<span class="passport-tier-badge badge-passport-t1 ms-1" title="Reality-Check Quiz Verified · 85% Match Weight"><i class="bi bi-shield-check"></i> Tier 1: Quiz Verified</span>`;
+        }
+      } else if (['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'].includes(sKey)) {
+        verifiedBadge = `<a href="quiz.html?skill=${sKey}" class="badge-verify-cta ms-1 text-decoration-none" title="Verify this skill in 2 mins to upgrade to Tier 1"><i class="bi bi-speedometer2"></i> Verify (70%)</a>`;
+      } else {
+        verifiedBadge = `<span class="passport-tier-badge badge-passport-t0 ms-1" title="Self-Rated · 70% Match Weight"><i class="bi bi-person"></i> Tier 0: Self-Rated (70%)</span>`;
+      }
 
       return `
         <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2 stat-box-atlas border border-line">

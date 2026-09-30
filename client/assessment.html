@@ -637,9 +637,16 @@
 
             <!-- Question state -->
             <div id="modalQuestionState" class="d-none">
-              <!-- Stepper dots -->
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="small text-muted fw-semibold" id="modalStepText">Question 1 of 5</span>
+              <!-- Stepper dots & 45s Countdown Timer (Pillars 2 & 6) -->
+              <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="small text-muted fw-semibold" id="modalStepText">Question 1 of 5</span>
+                  <div class="quiz-timer-badge" id="modalQuizTimerBadge" title="Anti-cheating 45-second timer per question">
+                    <i class="bi bi-clock-history"></i>
+                    <span id="modalQuizTimerSeconds">45</span>s
+                    <div class="quiz-timer-progress-bar" id="modalQuizTimerProgressBar" style="width: 100%;"></div>
+                  </div>
+                </div>
                 <div class="quiz-stepper" id="modalStepper">
                   <div class="quiz-step-dot active"></div>
                   <div class="quiz-step-dot"></div>
@@ -647,6 +654,12 @@
                   <div class="quiz-step-dot"></div>
                   <div class="quiz-step-dot"></div>
                 </div>
+              </div>
+
+              <!-- Proctor Warning Alert Toast (Pillar 6) -->
+              <div class="quiz-proctor-alert d-none" id="modalProctorAlert">
+                <i class="bi bi-shield-exclamation text-warning me-1"></i>
+                <span id="modalProctorAlertText">Proctor Notice: Tab change detected. Quiz session is actively monitored.</span>
               </div>
 
               <!-- Question title -->
@@ -700,13 +713,21 @@
                 <div class="row align-items-center text-center g-2">
                   <div class="col-5">
                     <div class="small text-muted mb-1">You Claimed</div>
-                    <span class="badge bg-secondary text-white px-3 py-1 font-mono text-uppercase" id="modalVerdictSelfClaimed">Advanced</span>
+                    <span class="passport-tier-badge badge-passport-t0" id="modalVerdictSelfClaimed"><i class="bi bi-person-fill"></i> Advanced</span>
                   </div>
                   <div class="col-2 text-muted fs-4">→</div>
                   <div class="col-5">
                     <div class="small text-muted mb-1">Quiz Verified</div>
-                    <span class="badge bg-success text-white px-3 py-1 font-mono text-uppercase" id="modalVerdictVerifiedLevel">Intermediate</span>
+                    <div class="d-flex flex-column align-items-center gap-1">
+                      <span class="passport-tier-badge badge-passport-t1" id="modalVerdictVerifiedLevel"><i class="bi bi-shield-check"></i> Intermediate</span>
+                      <span class="badge bg-secondary font-mono" id="modalVerdictIntegrityBadge" style="font-size: 0.65rem;">Integrity: 100/100</span>
+                    </div>
                   </div>
+                </div>
+                <!-- Unconfirmed Telemetry Alert Notice (Pillar 6) -->
+                <div class="badge-status-unconfirmed w-100 p-2 mt-3 d-none rounded-2" id="modalVerdictUnconfirmedNotice">
+                  <i class="bi bi-exclamation-triangle-fill fs-6 me-1 flex-shrink-0"></i>
+                  <span class="small" id="modalVerdictUnconfirmedNoticeText">Proctor Notice: Telemetry recorded tab switches or velocity anomalies. Status marked as 'Unconfirmed' pending Tier 2 GitHub repository validation.</span>
                 </div>
                 <div class="mt-3 pt-2 border-top small text-ink" id="modalVerdictExplanation"></div>
                 <div class="mt-2 small text-primary d-none" id="modalVerdictGapsWrap">

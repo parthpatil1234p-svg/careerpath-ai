@@ -567,8 +567,14 @@ const githubAuth = async (req, res, next) => {
             const existing = existingSkillMap.get(vSkill.name.toLowerCase());
             existing.isCodeVerified = true;
             existing.verifiedSource = vSkill.verifiedSource;
+            existing.verificationTier = 'project_verified';
+            existing.verificationStatus = 'verified';
           } else {
-            user.skills.push(vSkill);
+            user.skills.push({
+              ...vSkill,
+              verificationTier: 'project_verified',
+              verificationStatus: 'verified'
+            });
           }
         });
       }
@@ -722,9 +728,15 @@ const connectGitHub = async (req, res, next) => {
           const existing = existingSkillMap.get(vSkill.name.toLowerCase());
           existing.isCodeVerified = true;
           existing.verifiedSource = vSkill.verifiedSource;
+          existing.verificationTier = 'project_verified';
+          existing.verificationStatus = 'verified';
           if (vSkill.proficiency === 'advanced') existing.proficiency = 'advanced';
         } else {
-          user.skills.push(vSkill);
+          user.skills.push({
+            ...vSkill,
+            verificationTier: 'project_verified',
+            verificationStatus: 'verified'
+          });
         }
       });
     }

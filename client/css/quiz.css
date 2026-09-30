@@ -832,3 +832,173 @@
   background: #FFFFFF;
 }
 
+/* ── 45-Second Countdown Timer & Telemetry HUD (Pillar 6) ───── */
+.quiz-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.quiz-timer-badge i {
+  font-size: 0.9rem;
+  color: var(--color-indigo-600, #4F46E5);
+}
+
+.quiz-timer-badge.warning {
+  background: #FEF3C7;
+  color: #B45309;
+  border-color: #FCD34D;
+}
+
+.quiz-timer-badge.warning i {
+  color: #B45309;
+}
+
+.quiz-timer-badge.danger {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border-color: #FCA5A5;
+  animation: timerPulse 1s infinite alternate;
+}
+
+.quiz-timer-badge.danger i {
+  color: #DC2626;
+}
+
+@keyframes timerPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+  100% { transform: scale(1.04); box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15); }
+}
+
+.quiz-timer-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2.5px;
+  background: var(--color-indigo-600, #4F46E5);
+  transition: width 1s linear, background-color 0.3s ease;
+}
+
+.quiz-timer-badge.warning .quiz-timer-progress-bar {
+  background: #D97706;
+}
+
+.quiz-timer-badge.danger .quiz-timer-progress-bar {
+  background: #DC2626;
+}
+
+/* Proctor HUD Alert Toast */
+.quiz-proctor-alert {
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  color: #92400E;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.1);
+  animation: slideDownAlert 0.3s ease-out;
+}
+
+@keyframes slideDownAlert {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 4-Tier Skill Passport Badges (Pillar 7) ───────────────── */
+.passport-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--font-body, system-ui);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* Tier 0: Self-Rated (70% weight) */
+.badge-passport-t0 {
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+}
+
+/* Tier 1: Quiz-Verified (85% weight) */
+.badge-passport-t1 {
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  color: #4338CA;
+}
+
+.badge-passport-t1 i {
+  color: #4F46E5;
+}
+
+/* Tier 2: GitHub Code-Verified (100% weight) */
+.badge-passport-t2 {
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  color: #065F46;
+}
+
+.badge-passport-t2 i {
+  color: #059669;
+}
+
+/* Tier 3: AI Interview-Verified (100%+ weight) */
+.badge-passport-t3 {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+}
+
+.badge-passport-t3 i {
+  color: #D97706;
+}
+
+/* Telemetry Status: Unconfirmed Anomaly Flag */
+.badge-status-unconfirmed {
+  background: #FEF3C7;
+  border: 1px solid #F59E0B;
+  color: #B45309;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Cooldown Alert Banner */
+.quiz-cooldown-banner {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+

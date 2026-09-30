@@ -46,6 +46,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnNextQuestion = document.getElementById('btnNextQuestion');
   const activeProviderBadge = document.getElementById('activeProviderBadge');
 
+  // Anti-Cheating Timer & Telemetry HUD Elements (Pillar 6)
+  const quizTimerBadge = document.getElementById('quizTimerBadge');
+  const quizTimerSeconds = document.getElementById('quizTimerSeconds');
+  const quizTimerProgressBar = document.getElementById('quizTimerProgressBar');
+  const quizProctorAlert = document.getElementById('quizProctorAlert');
+  const quizProctorAlertText = document.getElementById('quizProctorAlertText');
+
   // AI Model & Custom Key Controls
   const customSkillInput = document.getElementById('customSkillInput');
   const btnCustomSkillGo = document.getElementById('btnCustomSkillGo');
@@ -61,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const verdictMessage = document.getElementById('verdictMessage');
   const verdictGapsSection = document.getElementById('verdictGapsSection');
   const verdictGapsList = document.getElementById('verdictGapsList');
+  const verdictPassportBadge = document.getElementById('verdictPassportBadge');
+  const verdictIntegrityBadge = document.getElementById('verdictIntegrityBadge');
+  const verdictUnconfirmedNotice = document.getElementById('verdictUnconfirmedNotice');
   const btnQuizAnotherSkill = document.getElementById('btnQuizAnotherSkill');
   const btnRetestCurrentSkill = document.getElementById('btnRetestCurrentSkill');
   const btnRetestQuick = document.getElementById('btnRetestQuick');
@@ -169,6 +179,91 @@ document.addEventListener('DOMContentLoaded', async () => {
   let nextQuestionData = null;
   let sessionCompleted = false;
   let sessionResultData = null;
+
+  // Anti-Cheating & Proctoring Telemetry State (Pillars 2, 5, 6)
+  const QUESTION_TIME_LIMIT = 45;
+  let timerInterval = null;
+  let remainingSeconds = QUESTION_TIME_LIMIT;
+  let questionStartTime = Date.now();
+  let tabSwitchesCount = 0;
+  let proctorToastTimeout = null;
+
+  const showProctorToast = (msg) => {
+    if (!quizProctorAlert || !quizProctorAlertText) return;
+    quizProctorAlertText.textContent = msg;
+    quizProctorAlert.classList.remove('d-none');
+    if (proctorToastTimeout) clearTimeout(proctorToastTimeout);
+    proctorToastTimeout = setTimeout(() => {
+      quizProctorAlert.classList.add('d-none');
+    }, 4500);
+  };
+
+  const stopQuestionTimer = () => {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  };
+
+  const startQuestionTimer = () => {
+    stopQuestionTimer();
+    remainingSeconds = QUESTION_TIME_LIMIT;
+    questionStartTime = Date.now();
+
+    if (quizTimerSeconds) quizTimerSeconds.textContent = remainingSeconds;
+    if (quizTimerProgressBar) quizTimerProgressBar.style.width = '100%';
+    if (quizTimerBadge) quizTimerBadge.className = 'quiz-timer-badge';
+
+    timerInterval = setInterval(() => {
+      remainingSeconds--;
+      if (quizTimerSeconds) quizTimerSeconds.textContent = Math.max(0, remainingSeconds);
+      if (quizTimerProgressBar) {
+        const pct = Math.max(0, (remainingSeconds / QUESTION_TIME_LIMIT) * 100);
+        quizTimerProgressBar.style.width = `${pct}%`;
+      }
+
+      if (quizTimerBadge) {
+        if (remainingSeconds <= 10) {
+          quizTimerBadge.className = 'quiz-timer-badge danger';
+        } else if (remainingSeconds <= 15) {
+          quizTimerBadge.className = 'quiz-timer-badge warning';
+        } else {
+          quizTimerBadge.className = 'quiz-timer-badge';
+        }
+      }
+
+      if (remainingSeconds <= 0) {
+        stopQuestionTimer();
+        // Automatic submission on timer expiry
+        if (!isAnswerLocked && btnSubmitAnswer) {
+          if (selectedOptionIdx === null) {
+            selectedOptionIdx = 0;
+            const firstCard = optionsContainer?.querySelector('.quiz-option-card');
+            if (firstCard) firstCard.classList.add('selected');
+          }
+          btnSubmitAnswer.disabled = false;
+          btnSubmitAnswer.click();
+        }
+      }
+    }, 1000);
+  };
+
+  // Proctoring listeners: Tab switch & blur events (Pillar 6)
+  document.addEventListener('visibilitychange', () => {
+    if (screenQuiz && !screenQuiz.classList.contains('d-none') && !isAnswerLocked) {
+      if (document.hidden) {
+        tabSwitchesCount++;
+        showProctorToast('⚠️ Proctor Notice: Tab change detected. Quiz session is actively monitored.');
+      }
+    }
+  });
+
+  window.addEventListener('blur', () => {
+    if (screenQuiz && !screenQuiz.classList.contains('d-none') && !isAnswerLocked) {
+      tabSwitchesCount++;
+      showProctorToast('⚠️ Proctor Notice: Window blur detected. Please stay focused on the quiz.');
+    }
+  });
 
   // 4. Utility Functions
   const showAlert = (message, type = 'danger') => {
@@ -418,6 +513,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       try {
+        tabSwitchesCount = 0;
         const savedProvider = localStorage.getItem('cp_quiz_preferred_provider') || aiProviderSelect?.value || 'auto';
         const customKey = localStorage.getItem('cp_custom_quiz_key') || customApiKeyInput?.value?.trim() || null;
 
@@ -459,6 +555,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
 
           renderActiveQuestion(data.question, data.currentDifficulty, currentQuestionIdx, data.totalQuestions || 5);
+        } else if (response.cooldownActive || response.status === 429) {
+          const hours = response.retryAfterHours || 24;
+          showAlert(`⏱️ 24-Hour Review Cooldown: Skill checks can only be retaken after a 24-hour review period to protect credential integrity. Retake available in ${hours} hour${hours > 1 ? 's' : ''}.`, 'warning');
+          btnStartQuiz.disabled = false;
+          btnStartQuiz.innerHTML = `<span>Start 2-Min Reality-Check</span> <i class="bi bi-lightning-charge-fill ms-1"></i>`;
         } else {
           showAlert(response.message || 'Could not start quiz session.');
           btnStartQuiz.disabled = false;
@@ -466,7 +567,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       } catch (err) {
         console.error('Quiz start error:', err);
-        showAlert(err.message || 'Network error starting quiz. Please try again.');
+        const isCooldown = err.cooldownActive || (err.message && err.message.includes('24-hour'));
+        if (isCooldown) {
+          showAlert(err.message, 'warning');
+        } else {
+          showAlert(err.message || 'Network error starting quiz. Please try again.');
+        }
         btnStartQuiz.disabled = false;
         btnStartQuiz.innerHTML = `<span>Start 2-Min Reality-Check</span> <i class="bi bi-lightning-charge-fill ms-1"></i>`;
       }
@@ -477,6 +583,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderActiveQuestion = (q, difficulty, qIndex, qTotalCount) => {
     isAnswerLocked = false;
     selectedOptionIdx = null;
+
+    // Start 45-second anti-cheating countdown timer (Pillar 6)
+    startQuestionTimer();
 
     // Meta Bar
     if (activeSkillBadge) activeSkillBadge.textContent = activeSkillInfo.label.toUpperCase();
@@ -563,6 +672,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (selectedOptionIdx === null || isAnswerLocked) return;
 
       isAnswerLocked = true;
+      stopQuestionTimer();
+
       btnSubmitAnswer.disabled = true;
       btnSubmitAnswer.innerHTML = `
         <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
@@ -570,6 +681,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
 
       try {
+        const timeTakenSeconds = Math.max(1, Math.round((Date.now() - questionStartTime) / 1000));
+
         const response = await window.API.post(
           '/quiz/answer',
           {
@@ -578,6 +691,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             questionId: currentQuestion.id,
             selectedIndex: selectedOptionIdx,
             selectedOption: selectedOptionIdx,
+            timeTakenSeconds,
+            tabSwitches: tabSwitchesCount
           },
           { auth: true }
         );
@@ -679,6 +794,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 12. Render Reality-Check Verdict
   const renderVerdict = (result) => {
+    stopQuestionTimer();
     screenQuiz.classList.add('d-none');
     screenVerdict.classList.remove('d-none');
     window.scrollTo({ top: 120, behavior: 'smooth' });
@@ -688,6 +804,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (verdictClaimed) verdictClaimed.textContent = capitalize(claimed);
     if (verdictActual) verdictActual.textContent = capitalize(actual);
+
+    // Skill Passport Tier Badge (Pillar 7)
+    if (verdictPassportBadge) {
+      const tier = result.verificationTier || 'quiz_verified';
+      if (tier === 'project_verified') {
+        verdictPassportBadge.className = 'passport-tier-badge badge-passport-t2';
+        verdictPassportBadge.innerHTML = '<i class="bi bi-github"></i> Tier 2: Code Verified (100% Weight)';
+      } else if (tier === 'interview_verified') {
+        verdictPassportBadge.className = 'passport-tier-badge badge-passport-t3';
+        verdictPassportBadge.innerHTML = '<i class="bi bi-mic-fill"></i> Tier 3: Interview Verified';
+      } else {
+        verdictPassportBadge.className = 'passport-tier-badge badge-passport-t1';
+        verdictPassportBadge.innerHTML = '<i class="bi bi-shield-check"></i> Tier 1: Quiz Verified (85% Weight)';
+      }
+    }
+
+    // Telemetry Integrity Badge (Pillar 6)
+    if (verdictIntegrityBadge) {
+      const score = typeof result.integrityScore === 'number' ? result.integrityScore : 100;
+      verdictIntegrityBadge.textContent = `Integrity: ${score}/100`;
+      verdictIntegrityBadge.className = score < 75 ? 'badge bg-warning text-dark font-mono' : 'badge bg-secondary font-mono';
+    }
+
+    // Unconfirmed Status Warning
+    if (verdictUnconfirmedNotice) {
+      if (result.verificationStatus === 'unconfirmed') {
+        verdictUnconfirmedNotice.classList.remove('d-none');
+      } else {
+        verdictUnconfirmedNotice.classList.add('d-none');
+      }
+    }
 
     if (verdictScore) {
       verdictScore.textContent = `Score: ${result.score || 0} / ${result.totalQuestions || result.total || 5} Correct`;

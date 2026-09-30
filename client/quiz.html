@@ -210,8 +210,13 @@
                 </span>
               </div>
 
-              <!-- Difficulty Pill -->
+              <!-- Anti-Cheating 45s Countdown Timer & Difficulty Pill (Pillars 2 & 6) -->
               <div class="d-flex align-items-center gap-2">
+                <div class="quiz-timer-badge" id="quizTimerBadge" title="Anti-cheating 45-second timer per question">
+                  <i class="bi bi-clock-history"></i>
+                  <span id="quizTimerSeconds">45</span>s
+                  <div class="quiz-timer-progress-bar" id="quizTimerProgressBar" style="width: 100%;"></div>
+                </div>
                 <span class="difficulty-pill medium" id="difficultyPill">
                   <i class="bi bi-speedometer2"></i>
                   <span id="difficultyLabel">Medium</span>
@@ -230,6 +235,12 @@
 
             <!-- Question Body -->
             <div class="quiz-body">
+              <!-- Proctor Alert (Pillar 6) -->
+              <div class="quiz-proctor-alert d-none" id="quizProctorAlert">
+                <i class="bi bi-shield-exclamation text-warning me-1"></i>
+                <span id="quizProctorAlertText">Proctor Notice: Tab change detected. Quiz session is actively monitored.</span>
+              </div>
+
               <h2 class="quiz-question-title" id="questionPrompt">Loading question...</h2>
 
               <!-- Code Snippet -->
@@ -291,7 +302,7 @@
               <div class="verdict-box">
                 <div class="verdict-label">You Said (Self-Rated)</div>
                 <div class="verdict-val" id="verdictClaimed">Advanced</div>
-                <span class="badge badge-gold mt-2"><i class="bi bi-person-fill me-1"></i>Self-Claimed</span>
+                <span class="passport-tier-badge badge-passport-t0 mt-2"><i class="bi bi-person-fill"></i> Tier 0: Self-Claimed</span>
               </div>
 
               <div class="verdict-vs-badge">VS</div>
@@ -299,8 +310,17 @@
               <div class="verdict-box verified">
                 <div class="verdict-label">Quiz Says (Proven)</div>
                 <div class="verdict-val text-highlight" id="verdictActual">Intermediate</div>
-                <span class="badge badge-leaf mt-2"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>
+                <div class="d-flex align-items-center justify-content-center gap-1.5 flex-wrap mt-2">
+                  <span class="passport-tier-badge badge-passport-t1" id="verdictPassportBadge"><i class="bi bi-shield-check"></i> Tier 1: Quiz Verified</span>
+                  <span class="badge bg-secondary font-mono" id="verdictIntegrityBadge" style="font-size: 0.68rem;">Integrity: 100/100</span>
+                </div>
               </div>
+            </div>
+
+            <!-- Unconfirmed Telemetry Alert Notice (Pillar 6) -->
+            <div class="badge-status-unconfirmed w-100 p-2.5 mb-3 d-none rounded-2" id="verdictUnconfirmedNotice">
+              <i class="bi bi-exclamation-triangle-fill fs-6 me-1 flex-shrink-0"></i>
+              <span class="small" id="verdictUnconfirmedNoticeText">Proctor Notice: Telemetry recorded tab switches or velocity anomalies. Status marked as 'Unconfirmed' pending Tier 2 GitHub repository validation.</span>
             </div>
 
             <!-- Reality-Check Summary Rationale -->

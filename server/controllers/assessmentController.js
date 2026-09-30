@@ -54,6 +54,14 @@ const updateAssessment = async (req, res, next) => {
           quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
           quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
           quizVerifiedAt: s.quizVerifiedAt ? new Date(s.quizVerifiedAt) : (s.isQuizVerified ? new Date() : null),
+          verificationTier: s.verificationTier || (s.isCodeVerified ? 'project_verified' : s.isQuizVerified ? 'quiz_verified' : 'self_rated'),
+          verificationStatus: s.verificationStatus || (s.isQuizVerified || s.isCodeVerified ? 'verified' : 'unverified'),
+          integrityScore: typeof s.integrityScore === 'number' ? s.integrityScore : 100,
+          nextRetakeAvailableAt: s.nextRetakeAvailableAt ? new Date(s.nextRetakeAvailableAt) : null,
+          quizAttemptsCount: typeof s.quizAttemptsCount === 'number' ? s.quizAttemptsCount : 0,
+          lastQuizAttemptAt: s.lastQuizAttemptAt ? new Date(s.lastQuizAttemptAt) : null,
+          tabSwitchCount: typeof s.tabSwitchCount === 'number' ? s.tabSwitchCount : 0,
+          velocityAnomalyCount: typeof s.velocityAnomalyCount === 'number' ? s.velocityAnomalyCount : 0,
         };
 
         if (!skillsMap.has(canonicalKey)) {
@@ -64,6 +72,10 @@ const updateAssessment = async (req, res, next) => {
           if (formatted.isQuizVerified) existing.isQuizVerified = true;
           if (formatted.isCodeVerified) existing.isCodeVerified = true;
           if (formatted.verifiedProficiency) existing.verifiedProficiency = formatted.verifiedProficiency;
+          if (formatted.verificationTier) existing.verificationTier = formatted.verificationTier;
+          if (formatted.verificationStatus) existing.verificationStatus = formatted.verificationStatus;
+          if (formatted.integrityScore) existing.integrityScore = formatted.integrityScore;
+          if (formatted.nextRetakeAvailableAt) existing.nextRetakeAvailableAt = formatted.nextRetakeAvailableAt;
           if (formatted.proficiency === 'advanced' || (!existing.proficiency && formatted.proficiency)) {
             existing.proficiency = formatted.proficiency;
           }

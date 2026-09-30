@@ -72,6 +72,42 @@ const SkillSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    verificationTier: {
+      type: String,
+      enum: ['self_rated', 'quiz_verified', 'project_verified', 'interview_verified'],
+      default: 'self_rated',
+    },
+    verificationStatus: {
+      type: String,
+      enum: ['unverified', 'verified', 'unconfirmed', 'flagged'],
+      default: 'unverified',
+    },
+    integrityScore: {
+      type: Number,
+      default: 100, // 0 - 100 based on velocity and tab switches
+      min: 0,
+      max: 100,
+    },
+    quizAttemptsCount: {
+      type: Number,
+      default: 0,
+    },
+    lastQuizAttemptAt: {
+      type: Date,
+      default: null,
+    },
+    nextRetakeAvailableAt: {
+      type: Date,
+      default: null,
+    },
+    tabSwitchCount: {
+      type: Number,
+      default: 0,
+    },
+    velocityAnomalyCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { _id: false } // No separate _id for sub-documents
 );

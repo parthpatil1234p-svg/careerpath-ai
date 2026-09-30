@@ -1005,6 +1005,98 @@ document.addEventListener('DOMContentLoaded', async () => {
   let activeSelectedOptionIndex = null;
   let activeQuizSummary = null;
 
+  // Anti-Cheating & Proctoring Telemetry State (Pillars 2, 5, 6)
+  const modalQuizTimerBadge = document.getElementById('modalQuizTimerBadge');
+  const modalQuizTimerSeconds = document.getElementById('modalQuizTimerSeconds');
+  const modalQuizTimerProgressBar = document.getElementById('modalQuizTimerProgressBar');
+  const modalProctorAlert = document.getElementById('modalProctorAlert');
+  const modalProctorAlertText = document.getElementById('modalProctorAlertText');
+  const modalVerdictIntegrityBadge = document.getElementById('modalVerdictIntegrityBadge');
+  const modalVerdictUnconfirmedNotice = document.getElementById('modalVerdictUnconfirmedNotice');
+
+  const MODAL_QUESTION_TIME_LIMIT = 45;
+  let modalTimerInterval = null;
+  let modalRemainingSeconds = MODAL_QUESTION_TIME_LIMIT;
+  let modalQuestionStartTime = Date.now();
+  let modalTabSwitchesCount = 0;
+  let modalProctorToastTimeout = null;
+
+  const showModalProctorToast = (msg) => {
+    if (!modalProctorAlert || !modalProctorAlertText) return;
+    modalProctorAlertText.textContent = msg;
+    modalProctorAlert.classList.remove('d-none');
+    if (modalProctorToastTimeout) clearTimeout(modalProctorToastTimeout);
+    modalProctorToastTimeout = setTimeout(() => {
+      modalProctorAlert.classList.add('d-none');
+    }, 4500);
+  };
+
+  const stopModalQuestionTimer = () => {
+    if (modalTimerInterval) {
+      clearInterval(modalTimerInterval);
+      modalTimerInterval = null;
+    }
+  };
+
+  const startModalQuestionTimer = () => {
+    stopModalQuestionTimer();
+    modalRemainingSeconds = MODAL_QUESTION_TIME_LIMIT;
+    modalQuestionStartTime = Date.now();
+
+    if (modalQuizTimerSeconds) modalQuizTimerSeconds.textContent = modalRemainingSeconds;
+    if (modalQuizTimerProgressBar) modalQuizTimerProgressBar.style.width = '100%';
+    if (modalQuizTimerBadge) modalQuizTimerBadge.className = 'quiz-timer-badge';
+
+    modalTimerInterval = setInterval(() => {
+      modalRemainingSeconds--;
+      if (modalQuizTimerSeconds) modalQuizTimerSeconds.textContent = Math.max(0, modalRemainingSeconds);
+      if (modalQuizTimerProgressBar) {
+        const pct = Math.max(0, (modalRemainingSeconds / MODAL_QUESTION_TIME_LIMIT) * 100);
+        modalQuizTimerProgressBar.style.width = `${pct}%`;
+      }
+
+      if (modalQuizTimerBadge) {
+        if (modalRemainingSeconds <= 10) {
+          modalQuizTimerBadge.className = 'quiz-timer-badge danger';
+        } else if (modalRemainingSeconds <= 15) {
+          modalQuizTimerBadge.className = 'quiz-timer-badge warning';
+        } else {
+          modalQuizTimerBadge.className = 'quiz-timer-badge';
+        }
+      }
+
+      if (modalRemainingSeconds <= 0) {
+        stopModalQuestionTimer();
+        if (modalSubmitBtn && !modalSubmitBtn.classList.contains('d-none')) {
+          if (activeSelectedOptionIndex === null) {
+            activeSelectedOptionIndex = 0;
+            const firstCard = modalOptionsList?.querySelector('.quiz-option-card');
+            if (firstCard) firstCard.classList.add('selected');
+          }
+          modalSubmitBtn.disabled = false;
+          modalSubmitBtn.click();
+        }
+      }
+    }, 1000);
+  };
+
+  // Proctor listeners for modal (Pillar 6)
+  document.addEventListener('visibilitychange', () => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
+      if (document.hidden) {
+        modalTabSwitchesCount++;
+        showModalProctorToast('⚠️ Proctor Notice: Tab change detected. Quiz session is actively monitored.');
+      }
+    }
+  });
+
+  window.addEventListener('blur', () => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
+      modalTabSwitchesCount++;
+      showModalProctorToast('⚠️ Proctor Notice: Window blur detected. Please stay focused on the quiz.');
+    }
+  });
+
   const startSkillCheck = async (skillName) => {
     const skill = selectedSkillsMap.get(skillName) ||
       Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
@@ -1015,6 +1107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     modal.show();
 
     // Reset modal UI state
+    modalTabSwitchesCount = 0;
     if (modalSkillBadge) modalSkillBadge.textContent = skill.displayName || skill.name;
     if (skillCheckModalTitle) skillCheckModalTitle.textContent = 'Reality Check';
     modalLoadingState?.classList.remove('d-none');
@@ -1075,7 +1168,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderModalQuestion(activeQuestion, 1);
     } catch (err) {
       console.error('Quiz start error:', err);
-      showAlert(`Could not start skill check: ${err.message}`, 'danger');
+      const isCooldown = err.cooldownActive || (err.message && err.message.includes('24-hour'));
+      if (isCooldown) {
+        const hours = err.retryAfterHours || 24;
+        showAlert(`⏱️ 24-Hour Review Cooldown: Skill checks can only be retaken after a 24-hour review period to protect credential integrity. Retake available in ${hours} hour${hours > 1 ? 's' : ''}.`, 'warning');
+      } else {
+        showAlert(`Could not start skill check: ${err.message}`, 'danger');
+      }
       modal.hide();
     }
   };
@@ -1089,6 +1188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     activeQuestion = question;
     activeQuestionStep = stepNumber;
     activeSelectedOptionIndex = null;
+    startModalQuestionTimer();
 
     // Difficulty pill
     const diff = (question.difficulty || 'medium').toLowerCase();
@@ -1159,6 +1259,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   modalSubmitBtn?.addEventListener('click', async () => {
     if (activeSelectedOptionIndex === null) return;
 
+    stopModalQuestionTimer();
+    const timeTakenSeconds = Math.max(1, Math.round((Date.now() - modalQuestionStartTime) / 1000));
+
     modalSubmitBtn.disabled = true;
     modalSubmitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Checking...`;
 
@@ -1168,7 +1271,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         sessionId: activeQuizSession?.sessionId,
         questionId: activeQuestion?.id,
         selectedIndex: activeSelectedOptionIndex,
-        selectedOption: activeSelectedOptionIndex
+        selectedOption: activeSelectedOptionIndex,
+        timeTakenSeconds,
+        tabSwitches: modalTabSwitchesCount
       }, { auth: true });
 
       if (!res.success) {
@@ -1212,6 +1317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (modalNextBtn) {
         modalNextBtn.classList.remove('d-none');
         if (data.isFinished) {
+          stopModalQuestionTimer();
           activeQuizSummary = data.summary || data.result;
           modalNextBtn.innerHTML = `<span>View Results</span><i class="bi bi-trophy-fill ms-1"></i>`;
 
@@ -1237,6 +1343,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             skill.quizGaps = activeQuizSummary.gaps || activeQuizSummary.identifiedGaps || [];
             skill.verifiedSource = 'quiz';
             skill.quizSummaryMessage = activeQuizSummary.summaryMessage || activeQuizSummary.realityCheckMessage;
+            skill.verificationTier = activeQuizSummary.verificationTier || 'quiz_verified';
+            skill.verificationStatus = activeQuizSummary.verificationStatus || 'verified';
+            skill.integrityScore = activeQuizSummary.integrityScore ?? 100;
           }
 
           // 2. Mark account verification complete immediately
@@ -1260,6 +1369,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 matched.isQuizVerified = true;
                 matched.quizScore = typeof activeQuizSummary.score === 'number' ? activeQuizSummary.score : 0;
                 matched.quizGaps = activeQuizSummary.gaps || activeQuizSummary.identifiedGaps || [];
+                matched.verificationTier = activeQuizSummary.verificationTier || 'quiz_verified';
+                matched.verificationStatus = activeQuizSummary.verificationStatus || 'verified';
+                matched.integrityScore = activeQuizSummary.integrityScore ?? 100;
               }
             }
             if (typeof window.Auth?.setCurrentUser === 'function') {
@@ -1292,6 +1404,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   modalNextBtn?.addEventListener('click', () => {
     if (activeQuizSummary) {
+      stopModalQuestionTimer();
       // Show verdict state
       modalQuestionState?.classList.add('d-none');
       modalVerdictState?.classList.remove('d-none');
@@ -1316,6 +1429,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (modalVerdictExplanation) {
         modalVerdictExplanation.textContent = activeQuizSummary.summaryMessage || activeQuizSummary.realityCheckMessage || 'Reality check complete.';
+      }
+
+      // Proctor telemetry badge & notice (Pillars 6 & 7)
+      const integrity = activeQuizSummary.integrityScore !== undefined ? activeQuizSummary.integrityScore : 100;
+      if (modalVerdictIntegrityBadge) {
+        modalVerdictIntegrityBadge.textContent = `Integrity: ${integrity}/100`;
+        if (integrity < 75) {
+          modalVerdictIntegrityBadge.className = 'badge bg-warning text-dark font-mono';
+        } else {
+          modalVerdictIntegrityBadge.className = 'badge bg-secondary font-mono';
+        }
+      }
+
+      if (modalVerdictUnconfirmedNotice) {
+        if (activeQuizSummary.verificationStatus === 'unconfirmed') {
+          modalVerdictUnconfirmedNotice.classList.remove('d-none');
+        } else {
+          modalVerdictUnconfirmedNotice.classList.add('d-none');
+        }
       }
 
       if (modalVerdictGapsWrap && modalVerdictGaps) {
@@ -1369,7 +1501,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  document.getElementById('modalCancelBtn')?.addEventListener('click', () => {
+    stopModalQuestionTimer();
+  });
+
   modalVerdictDoneBtn?.addEventListener('click', () => {
+    stopModalQuestionTimer();
     if (skillCheckModalEl) {
       bootstrap.Modal.getInstance(skillCheckModalEl)?.hide();
     }
@@ -1407,6 +1544,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Ensure modal dismissal (via X button, backdrop click, or ESC) always guarantees immediate UI refresh
   skillCheckModalEl?.addEventListener('hidden.bs.modal', () => {
+    stopModalQuestionTimer();
     activeQuizSession = null;
     activeQuestion = null;
     activeQuizSummary = null;

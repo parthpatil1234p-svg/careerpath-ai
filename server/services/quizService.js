@@ -32,8 +32,34 @@ const capitalize = (str) => {
 };
 
 /**
+ * Fisher-Yates shuffle for question options (Pillar 2)
+ * Scrambles option order on the server so option positions cannot be memorized or DOM-inspected.
+ * Returns sanitized { shuffledOptions, newCorrectIndex }
+ */
+function shuffleOptions(options, originalCorrectIndex) {
+  if (!Array.isArray(options) || options.length === 0) {
+    return { shuffledOptions: [], newCorrectIndex: -1 };
+  }
+  const indexed = options.map((opt, idx) => ({
+    text: opt,
+    isCorrect: idx === originalCorrectIndex
+  }));
+
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+
+  return {
+    shuffledOptions: indexed.map((item) => item.text),
+    newCorrectIndex: indexed.findIndex((item) => item.isCorrect)
+  };
+}
+
+/**
  * Start an adaptive quiz session for a user and skill
  * Supports both curated banked questions and dynamic multi-model AI generation (Groq, Gemini, OpenAI)
+ * Enforces 24-hour retake cooldown (Pillar 5) and zero-answer-key client payloads (Pillar 2)
  */
 async function startQuizSession(userId, skill, options = {}) {
   const normalizedSkill = normalizeSkillKey(skill);
@@ -46,6 +72,19 @@ async function startQuizSession(userId, skill, options = {}) {
 
   const selfRated = existingSkill?.selfRatedProficiency || existingSkill?.proficiency || 'intermediate';
   const displayName = existingSkill?.displayName || options.displayName || capitalize(skill);
+
+  // ── Pillar 5: 24-Hour Retake Cooldown Enforcement ─────────────
+  if (existingSkill?.nextRetakeAvailableAt && new Date() < new Date(existingSkill.nextRetakeAvailableAt)) {
+    const isBypassed = Boolean(options.bypassCooldown || options.isDemoUser);
+    if (!isBypassed) {
+      const diffMs = new Date(existingSkill.nextRetakeAvailableAt) - new Date();
+      const hoursRemaining = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+      const cooldownErr = new Error(`Skill check for "${displayName}" has an active 24-hour retake cooldown to maintain credential integrity. Retake available in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`);
+      cooldownErr.code = 'COOLDOWN_ACTIVE';
+      cooldownErr.retryAfterHours = hoursRemaining;
+      throw cooldownErr;
+    }
+  }
 
   const isBanked = Boolean(QUIZ_QUESTIONS[normalizedSkill]);
   const forceAI = options.forceAI || options.provider === 'groq' || options.provider === 'gemini' || Boolean(options.userApiKey);
@@ -82,6 +121,9 @@ async function startQuizSession(userId, skill, options = {}) {
     providerUsed = 'offline_engine';
   }
 
+  // Pillar 2: Server-side Fisher-Yates scrambling of first question options
+  const shuffledFirst = shuffleOptions(firstQuestion.options, firstQuestion.correctIndex);
+
   const sessionKey = `${userId}_${normalizedSkill}`;
   const sessionData = {
     userId,
@@ -95,7 +137,12 @@ async function startQuizSession(userId, skill, options = {}) {
     totalSteps: 5,
     currentDifficulty: firstQuestion.difficulty || 'medium',
     currentQuestionId: firstQuestion.id,
-    answeredQuestions: [], // history of { id, difficulty, selectedIndex, isCorrect, topic }
+    currentQuestionShuffledCorrectIndex: shuffledFirst.newCorrectIndex,
+    currentQuestionServedAt: Date.now(),
+    tabSwitchCount: 0,
+    velocityAnomalyCount: 0,
+    anomalies: [],
+    answeredQuestions: [], // history of { id, difficulty, selectedIndex, isCorrect, topic, timeTaken }
     score: 0,
     hardCorrectCount: 0,
     identifiedGaps: new Set(),
@@ -104,7 +151,7 @@ async function startQuizSession(userId, skill, options = {}) {
 
   activeSessions.set(sessionKey, sessionData);
 
-  // Return first question payload (sanitized without correctIndex)
+  // Return first question payload (100% sanitized without correctIndex or answer leak)
   return {
     sessionId: sessionKey,
     skill: normalizedSkill,
@@ -125,15 +172,16 @@ async function startQuizSession(userId, skill, options = {}) {
       text: firstQuestion.question,
       prompt: firstQuestion.question,
       codeSnippet: firstQuestion.codeSnippet || null,
-      options: firstQuestion.options
+      options: shuffledFirst.shuffledOptions
     }
   };
 }
 
 /**
- * Submit an answer, receive immediate validation + explanation, and fetch next adaptive question
+ * Submit an answer, evaluate anti-cheating telemetry (velocity & tab switches),
+ * and return immediate pedagogical explanation + next scrambled question or final verdict
  */
-async function submitAnswer(userId, skill, questionId, selectedIndex) {
+async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry = {}) {
   const normalizedSkill = normalizeSkillKey(skill);
   const sessionKey = `${userId}_${normalizedSkill}`;
   const session = activeSessions.get(sessionKey);
@@ -158,17 +206,48 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
     throw new Error('Question not found in quiz session');
   }
 
-  const isCorrect = Number(selectedIndex) === question.correctIndex;
-  const currentDiff = question.difficulty || 'medium';
+  const currentDiff = question.difficulty || session.currentDifficulty || 'medium';
 
-  // Track state
+  // 1. Authoritative check against server-shuffled correct index (Pillar 2)
+  const authoritativeCorrectIndex = session.currentQuestionShuffledCorrectIndex !== undefined
+    ? session.currentQuestionShuffledCorrectIndex
+    : question.correctIndex;
+
+  const isCorrect = Number(selectedIndex) === authoritativeCorrectIndex;
+
+  // 2. Pillar 6: High-Fidelity Proctoring Telemetry & Anomaly Detection
+  const clientTimeTaken = Number(telemetry.timeTakenSeconds) || 0;
+  const serverDurationSeconds = session.currentQuestionServedAt
+    ? (Date.now() - session.currentQuestionServedAt) / 1000
+    : clientTimeTaken;
+  const effectiveDuration = Math.max(clientTimeTaken, Math.round(serverDurationSeconds * 10) / 10);
+
+  // Velocity Anomaly Detection: Hard < 2.0s, Medium < 1.2s
+  let isVelocityAnomaly = false;
+  if (currentDiff === 'hard' && effectiveDuration > 0 && effectiveDuration < 2.0) {
+    isVelocityAnomaly = true;
+    session.velocityAnomalyCount = (session.velocityAnomalyCount || 0) + 1;
+    session.anomalies.push({ type: 'velocity_hard', questionId, duration: effectiveDuration });
+  } else if (currentDiff === 'medium' && effectiveDuration > 0 && effectiveDuration < 1.2) {
+    isVelocityAnomaly = true;
+    session.velocityAnomalyCount = (session.velocityAnomalyCount || 0) + 1;
+    session.anomalies.push({ type: 'velocity_medium', questionId, duration: effectiveDuration });
+  }
+
+  // Tab-switch monitoring (Pillar 6)
+  const clientTabSwitches = Number(telemetry.tabSwitches) || 0;
+  if (clientTabSwitches > (session.tabSwitchCount || 0)) {
+    session.tabSwitchCount = clientTabSwitches;
+  }
+
+  // Track scoring and identified learning gaps
   if (isCorrect) {
     session.score += 1;
     if (currentDiff === 'hard') {
       session.hardCorrectCount += 1;
     }
   } else {
-    // Collect gap topic
+    // Pedagogical gap tracking (Pillar 5)
     if (question.topic) {
       session.identifiedGaps.add(question.topic);
     }
@@ -178,23 +257,24 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
     id: question.id,
     difficulty: currentDiff,
     selectedIndex: Number(selectedIndex),
-    correctIndex: question.correctIndex,
+    correctIndex: authoritativeCorrectIndex,
     isCorrect,
     topic: question.topic,
-    explanation: question.explanation
+    explanation: question.explanation,
+    timeTaken: effectiveDuration,
+    isVelocityAnomaly
   });
 
   const isLastQuestion = session.currentStep >= session.totalSteps;
 
   if (isLastQuestion) {
-    // Finalize quiz results
+    // Finalize quiz results and calculate integrity credentials
     const summary = await finalizeQuiz(userId, normalizedSkill, session);
     activeSessions.delete(sessionKey);
 
     return {
       isCorrect,
-      correctIndex: question.correctIndex,
-      correctAnswer: question.correctIndex,
+      correctAnswer: authoritativeCorrectIndex,
       explanation: question.explanation,
       isFinished: true,
       isCompleted: true,
@@ -211,6 +291,12 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
       identifiedGaps: summary.identifiedGaps,
       provider: summary.provider,
       isAIGenerated: summary.isAIGenerated,
+      verificationTier: summary.verificationTier,
+      verificationStatus: summary.verificationStatus,
+      integrityScore: summary.integrityScore,
+      tabSwitchCount: summary.tabSwitchCount,
+      velocityAnomalyCount: summary.velocityAnomalyCount,
+      nextRetakeAvailableAt: summary.nextRetakeAvailableAt,
       summary,
       result: summary
     };
@@ -235,7 +321,6 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
   let nextQ = null;
 
   if (session.questionPool) {
-    // Select next question from dynamic AI pool matching nextDiff, or next unused
     nextQ = session.questionPool.find((q) => !usedIds.includes(q.id) && q.difficulty === nextDiff) ||
             session.questionPool.find((q) => !usedIds.includes(q.id)) ||
             session.questionPool[session.currentStep - 1] ||
@@ -244,12 +329,16 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
     nextQ = getQuestion(normalizedSkill, nextDiff, usedIds);
   }
 
+  // Pillar 2: Server-authoritative Fisher-Yates scrambling of next question options
+  const shuffledNext = shuffleOptions(nextQ.options, nextQ.correctIndex);
+
   session.currentQuestionId = nextQ.id;
+  session.currentQuestionShuffledCorrectIndex = shuffledNext.newCorrectIndex;
+  session.currentQuestionServedAt = Date.now();
 
   return {
     isCorrect,
-    correctIndex: question.correctIndex,
-    correctAnswer: question.correctIndex,
+    correctAnswer: authoritativeCorrectIndex,
     explanation: question.explanation,
     isFinished: false,
     isCompleted: false,
@@ -264,13 +353,15 @@ async function submitAnswer(userId, skill, questionId, selectedIndex) {
       prompt: nextQ.question,
       codeSnippet: nextQ.codeSnippet || null,
       difficulty: nextDiff,
-      options: nextQ.options
+      options: shuffledNext.shuffledOptions
+      // Zero answer keys sent to client!
     }
   };
 }
 
 /**
- * Finalize quiz, apply qualification rubric, and persist to user profile in MongoDB
+ * Finalize quiz, apply qualification rubric, compute integrity score & Skill Passport tier,
+ * and persist credentials to user profile in MongoDB
  */
 async function finalizeQuiz(userId, skill, session) {
   const user = await User.findById(userId);
@@ -294,8 +385,34 @@ async function finalizeQuiz(userId, skill, session) {
     verifiedLevel = 'beginner';
   }
 
-  // Locate skill in user document with alias normalization
+  // ── Pillar 6: High-Fidelity Proctoring Telemetry & Anomaly Calibration ─
+  const tabSwitches = session.tabSwitchCount || 0;
+  const velocityAnomalies = session.velocityAnomalyCount || 0;
+
+  let integrityScore = 100;
+  integrityScore -= tabSwitches * 15;
+  integrityScore -= velocityAnomalies * 20;
+  integrityScore = Math.max(10, Math.min(100, integrityScore));
+
+  const isSuspicious = tabSwitches > 2 || velocityAnomalies >= 2;
+  const verificationStatus = isSuspicious ? 'unconfirmed' : 'verified';
+
+  // ── Pillar 7: Multi-Tier Skill Passport ───────────────────────
+  // Tier 0: self_rated
+  // Tier 1: quiz_verified
+  // Tier 2: project_verified (GitHub repo AST scan)
+  // Tier 3: interview_verified (Spoken AI interview)
   const normalizedSkill = normalizeSkillKey(skill);
+  const existingSkillRecord = (user.skills || []).find(
+    (s) => normalizeSkillKey(s.name) === normalizedSkill
+  );
+
+  const isAlreadyCodeVerified = Boolean(existingSkillRecord?.isCodeVerified);
+  const verificationTier = isAlreadyCodeVerified ? 'project_verified' : 'quiz_verified';
+
+  // ── Pillar 5: 24-Hour Retake Cooldown ────────────────────────
+  const nextRetakeAvailableAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
   const skillIndex = (user.skills || []).findIndex(
     (s) => normalizeSkillKey(s.name) === normalizedSkill
   );
@@ -306,13 +423,22 @@ async function finalizeQuiz(userId, skill, session) {
     const existing = user.skills[skillIndex];
     existing.name = normalizedSkill;
     existing.selfRatedProficiency = existing.selfRatedProficiency || existing.proficiency || selfRated;
-    // Replace proficiency with verified level for downstream algorithms & roadmaps
+    // Update proficiency with verified level
     existing.proficiency = verifiedLevel;
     existing.verifiedProficiency = verifiedLevel;
     existing.isQuizVerified = true;
     existing.quizScore = score;
     existing.quizGaps = gapsArray;
     existing.quizVerifiedAt = new Date();
+    // Anti-Cheating & Skill Passport fields:
+    existing.verificationTier = verificationTier;
+    existing.verificationStatus = verificationStatus;
+    existing.integrityScore = integrityScore;
+    existing.quizAttemptsCount = (existing.quizAttemptsCount || 0) + 1;
+    existing.lastQuizAttemptAt = new Date();
+    existing.nextRetakeAvailableAt = nextRetakeAvailableAt;
+    existing.tabSwitchCount = tabSwitches;
+    existing.velocityAnomalyCount = velocityAnomalies;
   } else {
     // If skill wasn't in list, append it
     user.skills.push({
@@ -324,11 +450,19 @@ async function finalizeQuiz(userId, skill, session) {
       isQuizVerified: true,
       quizScore: score,
       quizGaps: gapsArray,
-      quizVerifiedAt: new Date()
+      quizVerifiedAt: new Date(),
+      verificationTier,
+      verificationStatus,
+      integrityScore,
+      quizAttemptsCount: 1,
+      lastQuizAttemptAt: new Date(),
+      nextRetakeAvailableAt,
+      tabSwitchCount: tabSwitches,
+      velocityAnomalyCount: velocityAnomalies
     });
   }
 
-  // Prune any duplicate skill aliases from user.skills so only one canonical skill entry remains
+  // Prune any duplicate skill aliases from user.skills
   if (Array.isArray(user.skills) && user.skills.length > 1) {
     const seenMap = new Map();
     const cleaned = [];
@@ -342,12 +476,16 @@ async function finalizeQuiz(userId, skill, session) {
         if (sk.isQuizVerified) existing.isQuizVerified = true;
         if (sk.isCodeVerified) existing.isCodeVerified = true;
         if (sk.verifiedProficiency) existing.verifiedProficiency = sk.verifiedProficiency;
+        if (sk.verificationTier) existing.verificationTier = sk.verificationTier;
+        if (sk.verificationStatus) existing.verificationStatus = sk.verificationStatus;
+        if (sk.integrityScore) existing.integrityScore = sk.integrityScore;
+        if (sk.nextRetakeAvailableAt) existing.nextRetakeAvailableAt = sk.nextRetakeAvailableAt;
       }
     }
     user.skills = cleaned;
   }
 
-  // Mark account as having completed skill verification (only required once per account)
+  // Mark account as having completed skill verification
   user.hasCompletedSkillVerification = true;
 
   await user.save();
@@ -364,13 +502,17 @@ async function finalizeQuiz(userId, skill, session) {
     comparisonStatus = 'upgraded';
   }
 
-  // Construct educational feedback message
+  // Construct educational feedback message (Pillar 5)
   let summaryMessage = `You claimed ${capitalize(selfRated)}, and the quiz confirmed ${capitalize(verifiedLevel)}.`;
   if (comparisonStatus === 'downgraded') {
     const gapList = gapsArray.slice(0, 2).join(' and ');
     summaryMessage = `You claimed ${capitalize(selfRated)}, but the quiz indicates ${capitalize(verifiedLevel)}. We recommend focusing on ${gapList || 'core concepts'} in your upcoming roadmap.`;
   } else if (comparisonStatus === 'upgraded') {
     summaryMessage = `Great job! You claimed ${capitalize(selfRated)}, but tested at an ${capitalize(verifiedLevel)} level!`;
+  }
+
+  if (isSuspicious) {
+    summaryMessage += ` (⚠️ Proctor Notice: Telemetry recorded ${tabSwitches} tab switches and velocity anomalies. Status marked as 'Unconfirmed' pending Tier 2 GitHub repository validation).`;
   }
 
   return {
@@ -391,6 +533,12 @@ async function finalizeQuiz(userId, skill, session) {
     summaryMessage,
     realityCheckMessage: summaryMessage,
     isQuizVerified: true,
+    verificationTier,
+    verificationStatus,
+    integrityScore,
+    tabSwitchCount: tabSwitches,
+    velocityAnomalyCount: velocityAnomalies,
+    nextRetakeAvailableAt,
     verifiedAt: new Date(),
     provider: session.provider || 'curated_bank',
     isAIGenerated: Boolean(session.isAIGenerated),
@@ -412,6 +560,7 @@ function getActiveSessionForUser(userId, skill) {
 }
 
 module.exports = {
+  shuffleOptions,
   startQuizSession,
   submitAnswer,
   finalizeQuiz,

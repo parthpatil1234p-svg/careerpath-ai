@@ -659,14 +659,36 @@ document.addEventListener('DOMContentLoaded', async () => {
                     matchedSkills.length > 0
                       ? matchedSkills
                           .map((s) => {
-                            const isVer = Boolean(s.isQuizVerified || s.isCodeVerified);
-                            const verIcon = s.isQuizVerified ? 'bi-patch-check-fill text-primary' : s.isCodeVerified ? 'bi-github text-primary' : 'bi-check2 text-leaf';
-                            const badgeTag = isVer
-                              ? `<span class="badge-verified-tiny">${s.isQuizVerified ? 'Quiz Verified' : 'Code Verified'}</span>`
-                              : `<span class="badge-self-tiny">70% Conf</span>`;
+                            const tier = s.verificationTier || (s.isCodeVerified ? 'project_verified' : (s.isQuizVerified ? 'quiz_verified' : 'self_rated'));
+                            const isUnconfirmed = s.verificationStatus === 'unconfirmed';
+
+                            let tierBadge = '';
+                            let verIcon = 'bi-check2 text-leaf';
+                            let borderClass = '';
+
+                            if (tier === 'interview_verified') {
+                              verIcon = 'bi-mic-fill text-warning';
+                              borderClass = 'border-warning';
+                              tierBadge = `<span class="passport-tier-badge badge-passport-t3 ms-1" style="font-size:0.6rem; padding: 1px 5px;"><i class="bi bi-mic-fill"></i> T3: Interview</span>`;
+                            } else if (tier === 'project_verified' || s.isCodeVerified) {
+                              verIcon = 'bi-github text-success';
+                              borderClass = 'border-success';
+                              tierBadge = `<span class="passport-tier-badge badge-passport-t2 ms-1" style="font-size:0.6rem; padding: 1px 5px;"><i class="bi bi-github"></i> T2: Code</span>`;
+                            } else if (tier === 'quiz_verified' || s.isQuizVerified) {
+                              verIcon = 'bi-patch-check-fill text-primary';
+                              borderClass = 'border-primary';
+                              if (isUnconfirmed) {
+                                tierBadge = `<span class="badge-status-unconfirmed ms-1" style="font-size:0.58rem; padding: 1px 4px;" title="Telemetry Anomaly: Tab changes or velocity anomalies"><i class="bi bi-exclamation-triangle-fill"></i> Unconfirmed</span>`;
+                              } else {
+                                tierBadge = `<span class="passport-tier-badge badge-passport-t1 ms-1" style="font-size:0.6rem; padding: 1px 5px;"><i class="bi bi-shield-check"></i> T1: Quiz</span>`;
+                              }
+                            } else {
+                              tierBadge = `<span class="passport-tier-badge badge-passport-t0 ms-1" style="font-size:0.6rem; padding: 1px 5px;"><i class="bi bi-person"></i> T0: 70%</span>`;
+                            }
+
                             return `
-                              <span class="badge skill-pill matched-pill ${isVer ? 'border-primary' : ''}" title="${isVer ? 'Verified Competency (100% confidence weight)' : 'Self-rated (70% confidence weight)'} · Level: ${s.userProficiency}">
-                                <i class="bi ${verIcon}"></i> ${escapeHtml(s.displayName)} ${badgeTag}
+                              <span class="badge skill-pill matched-pill ${borderClass}" title="Proficiency: ${s.userProficiency} · Passport Tier: ${tier}">
+                                <i class="bi ${verIcon}"></i> ${escapeHtml(s.displayName)} ${tierBadge}
                               </span>
                             `;
                           })
@@ -692,9 +714,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                           .map((s) => {
                             const hasGaps = Array.isArray(s.quizGaps) && s.quizGaps.length > 0;
                             const gapTooltip = hasGaps ? ` · Reality-check focus areas: ${s.quizGaps.join(', ')}` : '';
+                            const isQuizVer = Boolean(s.isQuizVerified);
+                            const tierBadge = isQuizVer ? `<span class="passport-tier-badge badge-passport-t1 ms-1" style="font-size:0.58rem; padding: 1px 4px;"><i class="bi bi-shield-check"></i> Quiz</span>` : '';
                             return `
                               <span class="badge skill-pill weak-pill" title="Current: ${s.userProficiency}, Required: ${s.requiredProficiency}${gapTooltip}">
-                                <i class="bi bi-arrow-up"></i> ${escapeHtml(s.displayName)}
+                                <i class="bi bi-arrow-up"></i> ${escapeHtml(s.displayName)} ${tierBadge}
                                 ${hasGaps ? '<span class="badge bg-danger-subtle text-danger ms-1 font-mono" style="font-size: 0.6rem;">Focus: ' + escapeHtml(s.quizGaps[0]) + '</span>' : ''}
                               </span>
                             `;
