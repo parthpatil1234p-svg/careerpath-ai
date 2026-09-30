@@ -113,6 +113,124 @@ const DEFAULT_MARKET_INSIGHTS = {
     whyYouFit: 'Your ability to synthesize technology, user needs, and cross-functional roadmaps makes you an ideal product leader.',
     keyBottleneck: 'Drafting precise PRDs (Product Requirement Documents) with clear acceptance criteria and data-backed success metrics.',
     actionableTip: 'Author a comprehensive product breakdown tear-down and PRD for a modern AI software product and publish it on Medium/Substack.'
+  },
+
+  // ── Business & Finance Track ─────────────────────────────────
+  'financial-analyst': {
+    salaryRange: '₹5.5 – ₹11.0 LPA (Entry-Level)',
+    hiringDemand: 'High Demand · 25,000+ open roles across investment banking, fintech, corporate finance & advisory',
+    whyYouFit: 'Your quantitative reasoning, analytical accuracy, and interest in financial dynamics provide an ideal foundation for financial modeling.',
+    keyBottleneck: 'Mastering 3-statement integrated financial models, DCF valuation, and Excel financial modeling formulas.',
+    actionableTip: 'Build an end-to-end DCF valuation model in Excel for a publicly listed Indian firm and present it on LinkedIn.'
+  },
+  'financial-analyst-modeler': {
+    salaryRange: '₹5.5 – ₹11.0 LPA (Entry-Level)',
+    hiringDemand: 'High Demand · 25,000+ open roles across investment banking, fintech, corporate finance & advisory',
+    whyYouFit: 'Your quantitative reasoning, analytical accuracy, and interest in financial dynamics provide an ideal foundation for financial modeling.',
+    keyBottleneck: 'Mastering 3-statement integrated financial models, DCF valuation, and Excel financial modeling formulas.',
+    actionableTip: 'Build an end-to-end DCF valuation model in Excel for a publicly listed Indian firm and present it on LinkedIn.'
+  },
+  'business-operations-manager': {
+    salaryRange: '₹5.0 – ₹10.5 LPA (Entry-Level)',
+    hiringDemand: 'Strong Hiring · High demand across high-growth startups, logistics tech, and D2C enterprises',
+    whyYouFit: 'Your structured problem-solving, operational clarity, and cross-functional coordination align directly with business operations leadership.',
+    keyBottleneck: 'Translating business bottlenecks into streamlined SOPs, metric dashboards, and automated workflows.',
+    actionableTip: 'Create an operational process map and KPI dashboard for a mock business using Notion, ClickUp, or Excel.'
+  },
+  'management-consultant': {
+    salaryRange: '₹7.0 – ₹14.5 LPA (Entry-Level)',
+    hiringDemand: 'Competitive & High Value · Significant recruitment across Big 4, boutique advisory, and strategy firms',
+    whyYouFit: 'Your ability to break down complex business problems and synthesize high-level strategic recommendations fits consulting rigor.',
+    keyBottleneck: 'Mastering hypothesis-driven problem solving, MECE structuring, and executive-ready presentations.',
+    actionableTip: 'Solve and document 3 comprehensive business case studies focusing on market entry and cost optimization.'
+  },
+
+  // ── Digital Marketing & Growth Track ──────────────────────────
+  'performance-marketer': {
+    salaryRange: '₹4.5 – ₹9.5 LPA (Entry-Level)',
+    hiringDemand: 'Rapid Growth · High demand across D2C brands, e-commerce, and high-velocity SaaS growth teams',
+    whyYouFit: 'Your blend of analytical data interpretation and creative audience targeting makes you a natural performance media buyer.',
+    keyBottleneck: 'Hands-on CAC/ROAS optimization, conversion attribution modeling, and Meta/Google Ads bidding strategies.',
+    actionableTip: 'Run a live low-budget Meta or Google Ads test campaign to document real conversion metrics and creative split testing.'
+  },
+  'performance-marketer-media-buyer': {
+    salaryRange: '₹4.5 – ₹9.5 LPA (Entry-Level)',
+    hiringDemand: 'Rapid Growth · High demand across D2C brands, e-commerce, and high-velocity SaaS growth teams',
+    whyYouFit: 'Your blend of analytical data interpretation and creative audience targeting makes you a natural performance media buyer.',
+    keyBottleneck: 'Hands-on CAC/ROAS optimization, conversion attribution modeling, and Meta/Google Ads bidding strategies.',
+    actionableTip: 'Run a live low-budget Meta or Google Ads test campaign to document real conversion metrics and creative split testing.'
+  },
+  'seo-growth-strategist': {
+    salaryRange: '₹4.0 – ₹8.5 LPA (Entry-Level)',
+    hiringDemand: 'High Demand · Core organic acquisition channel for fintech, SaaS, and content-driven global enterprises',
+    whyYouFit: 'Your analytical mindset, technical curiosity, and content structuring skills match search engine ranking mechanics.',
+    keyBottleneck: 'Hands-on technical SEO audits, site speed optimization, schema markup, and programmatic content architectures.',
+    actionableTip: 'Perform a comprehensive technical SEO audit of a live website using Google Search Console and Screaming Frog, publishing an audit report.'
+  },
+  'seo-organic-growth-strategist': {
+    salaryRange: '₹4.0 – ₹8.5 LPA (Entry-Level)',
+    hiringDemand: 'High Demand · Core organic acquisition channel for fintech, SaaS, and content-driven global enterprises',
+    whyYouFit: 'Your analytical mindset, technical curiosity, and content structuring skills match search engine ranking mechanics.',
+    keyBottleneck: 'Hands-on technical SEO audits, site speed optimization, schema markup, and programmatic content architectures.',
+    actionableTip: 'Perform a comprehensive technical SEO audit of a live website using Google Search Console and Screaming Frog, publishing an audit report.'
+  },
+  'social-media-growth-manager': {
+    salaryRange: '₹3.8 – ₹7.5 LPA (Entry-Level)',
+    hiringDemand: 'High Velocity · Growing demand across digital brands, creator agencies, and startup community hubs',
+    whyYouFit: 'Your understanding of viral storytelling, trend analysis, and digital brand voice fits modern audience growth.',
+    keyBottleneck: 'Data-driven content distribution, community retention metrics, and short-form video scripting frameworks.',
+    actionableTip: 'Launch a niche social media page or newsletter, documenting organic growth experiments and engagement metrics.'
+  },
+  'social-media-content-growth-manager': {
+    salaryRange: '₹3.8 – ₹7.5 LPA (Entry-Level)',
+    hiringDemand: 'High Velocity · Growing demand across digital brands, creator agencies, and startup community hubs',
+    whyYouFit: 'Your understanding of viral storytelling, trend analysis, and digital brand voice fits modern audience growth.',
+    keyBottleneck: 'Data-driven content distribution, community retention metrics, and short-form video scripting frameworks.',
+    actionableTip: 'Launch a niche social media page or newsletter, documenting organic growth experiments and engagement metrics.'
+  },
+
+  // ── Design & Creative Track ───────────────────────────────────
+  'brand-identity-designer': {
+    salaryRange: '₹4.2 – ₹8.5 LPA (Entry-Level)',
+    hiringDemand: 'Steady Demand · Highly prized by creative agencies, design studios, and early-stage brand incubators',
+    whyYouFit: 'Your visual eye, typography appreciation, and conceptual thinking make you a natural brand identity creator.',
+    keyBottleneck: 'Developing comprehensive design systems, logo guidelines, vector typography, and multi-touchpoint brand collateral.',
+    actionableTip: 'Publish a complete brand identity case study on Behance or Dribbble showcasing typography, color systems, and physical mockups.'
+  },
+  'brand-visual-identity-designer': {
+    salaryRange: '₹4.2 – ₹8.5 LPA (Entry-Level)',
+    hiringDemand: 'Steady Demand · Highly prized by creative agencies, design studios, and early-stage brand incubators',
+    whyYouFit: 'Your visual eye, typography appreciation, and conceptual thinking make you a natural brand identity creator.',
+    keyBottleneck: 'Developing comprehensive design systems, logo guidelines, vector typography, and multi-touchpoint brand collateral.',
+    actionableTip: 'Publish a complete brand identity case study on Behance or Dribbble showcasing typography, color systems, and physical mockups.'
+  },
+  'motion-3d-designer': {
+    salaryRange: '₹5.0 – ₹10.5 LPA (Entry-Level)',
+    hiringDemand: 'Fast Expanding · Growing demand in UI motion, product showcases, gaming, and 3D web experiences',
+    whyYouFit: 'Your spatial awareness, timing sensibility, and aesthetic vision align with cutting-edge motion design and 3D rendering.',
+    keyBottleneck: 'Mastering Blender/Cinema 4D rendering pipelines, lighting, and After Effects micro-interaction choreography.',
+    actionableTip: 'Publish a 15-second 3D product animation or UI motion reel demonstrating lighting and physics choreography on YouTube or Instagram.'
+  },
+  'motion-graphics-3d-designer': {
+    salaryRange: '₹5.0 – ₹10.5 LPA (Entry-Level)',
+    hiringDemand: 'Fast Expanding · Growing demand in UI motion, product showcases, gaming, and 3D web experiences',
+    whyYouFit: 'Your spatial awareness, timing sensibility, and aesthetic vision align with cutting-edge motion design and 3D rendering.',
+    keyBottleneck: 'Mastering Blender/Cinema 4D rendering pipelines, lighting, and After Effects micro-interaction choreography.',
+    actionableTip: 'Publish a 15-second 3D product animation or UI motion reel demonstrating lighting and physics choreography on YouTube or Instagram.'
+  },
+  'copywriter-content-strategist': {
+    salaryRange: '₹4.0 – ₹8.0 LPA (Entry-Level)',
+    hiringDemand: 'High Value · Crucial for B2B SaaS, product marketing, pitch decks, and brand storytelling',
+    whyYouFit: 'Your strong verbal clarity, persuasive rhetoric, and storytelling instincts enable high-converting copy creation.',
+    keyBottleneck: 'Mastering conversion copywriting formulas (PAS, AIDA), customer interview synthesis, and value proposition testing.',
+    actionableTip: 'Write and publish 3 high-converting landing page teardowns and rewritten copy assets on Substack or Medium.'
+  },
+  'b2b-technical-creative-copywriter': {
+    salaryRange: '₹4.0 – ₹8.0 LPA (Entry-Level)',
+    hiringDemand: 'High Value · Crucial for B2B SaaS, product marketing, pitch decks, and brand storytelling',
+    whyYouFit: 'Your strong verbal clarity, persuasive rhetoric, and storytelling instincts enable high-converting copy creation.',
+    keyBottleneck: 'Mastering conversion copywriting formulas (PAS, AIDA), customer interview synthesis, and value proposition testing.',
+    actionableTip: 'Write and publish 3 high-converting landing page teardowns and rewritten copy assets on Substack or Medium.'
   }
 };
 
@@ -127,26 +245,35 @@ let geminiCircuitOpenUntil = 0;
  * @returns {Promise<Object>} Enriched aiBrief
  */
 async function generateCareerBrief(recommendation, user) {
-  const career = recommendation.career;
+  const career = recommendation.career || {};
   const slug = career.slug || '';
-  const fallback = DEFAULT_MARKET_INSIGHTS[slug] || DEFAULT_MARKET_INSIGHTS['front-end-developer'];
+  const domain = career.domain || 'engineering';
+  const defaultFallbackForDomain = domain === 'business'
+    ? DEFAULT_MARKET_INSIGHTS['financial-analyst']
+    : domain === 'marketing'
+    ? DEFAULT_MARKET_INSIGHTS['performance-marketer']
+    : domain === 'creative'
+    ? DEFAULT_MARKET_INSIGHTS['brand-identity-designer']
+    : DEFAULT_MARKET_INSIGHTS['front-end-developer'];
 
-  const matchedNames = (recommendation.matchedSkills || []).map(s => s.displayName || s.name).join(', ') || 'Foundational tech basics';
-  const missingNames = (recommendation.missingSkills || []).map(s => s.displayName || s.name).join(', ') || 'Advanced frameworks';
+  const fallback = DEFAULT_MARKET_INSIGHTS[slug] || defaultFallbackForDomain;
+
+  const matchedNames = (recommendation.matchedSkills || []).map(s => s.displayName || s.name).join(', ') || 'Foundational domain skills';
+  const missingNames = (recommendation.missingSkills || []).map(s => s.displayName || s.name).join(', ') || 'Advanced specialization';
   const educationText = user.education?.course ? `${user.education.course} ${user.education.branch || ''}`.trim() : 'College Student';
 
   const promptMessages = [
     {
       role: 'system',
-      content: `You are an expert Indian Tech Industry Talent Analyst for the Hack2Ignite 2026-27 hackathon.
+      content: `You are an expert Career & Industry Talent Analyst for the Hack2Ignite 2026-27 hackathon.
 Generate an executive Career Fit & Market Brief for this college student.
 Return strictly a raw, valid JSON object (no markdown code fences, no extra text) with these 5 keys:
 {
   "salaryRange": "e.g. ₹5.0 – ₹9.5 LPA (Entry-Level in India)",
-  "hiringDemand": "e.g. Very High · 40,000+ openings across tech startups",
+  "hiringDemand": "e.g. Very High · 40,000+ openings across companies",
   "whyYouFit": "2 clear sentences explaining why their specific skills and degree make them a solid candidate for this role.",
   "keyBottleneck": "1 concise sentence stating the exact primary missing skill or concept they must master first to become hireable.",
-  "actionableTip": "1 practical, actionable tip for building a standout portfolio project for this role."
+  "actionableTip": "1 practical, actionable tip for building a standout portfolio project or proof of work for this role."
 }`
     },
     {

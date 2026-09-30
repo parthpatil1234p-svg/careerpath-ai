@@ -37,10 +37,14 @@ const RoadmapSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['active', 'completed', 'archived'],
-        message: 'Status must be active, completed, or archived',
+        values: ['active', 'completed', 'abandoned', 'archived'],
+        message: 'Status must be active, completed, abandoned, or archived',
       },
       default: 'active',
+    },
+    abandonedAt: {
+      type: Date,
+      default: null,
     },
     generatedFrom: {
       missingSkills: { type: [String], default: [] },
@@ -93,7 +97,16 @@ const RoadmapSchema = new mongoose.Schema(
   }
 );
 
-// Compound index for querying user's active roadmap efficiently
+// Database-level guarantee: at most ONE active roadmap per user
+RoadmapSchema.index(
+  { user: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { status: 'active' },
+  }
+);
+
+// Compound index for querying user's roadmaps by status efficiently
 RoadmapSchema.index({ user: 1, status: 1 });
 
 module.exports = mongoose.model('Roadmap', RoadmapSchema);

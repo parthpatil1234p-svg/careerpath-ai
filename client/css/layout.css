@@ -64,65 +64,103 @@
 
 .navbar-brand {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: var(--color-text-primary) !important;
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .brand-icon,
 .brand-compass {
-  width: 36px;
-  height: 36px;
-  background: var(--color-surface-indigo);
-  border: 1px solid #C7D2FE;
-  color: var(--color-indigo-600);
-  border-radius: var(--radius-sm);
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  min-height: 46px;
+  background: #080B16;
+  border: 1.5px solid rgba(0, 242, 254, 0.45);
+  color: #00F2FE;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.12);
+  font-size: 1.25rem;
+  box-shadow: 0 4px 14px rgba(0, 242, 254, 0.2), 0 2px 6px rgba(79, 70, 229, 0.15);
   transition: all var(--transition-fast);
+  overflow: hidden;
+  padding: 3px;
+}
+
+.brand-icon img,
+.brand-compass img,
+.brand-logo-img {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px;
+  min-height: 38px;
+  display: block;
+  border-radius: 9px;
+  object-fit: contain;
+  transition: transform var(--transition-fast);
 }
 
 .brand-icon.brand-icon-sm {
-  width: 30px;
-  height: 30px;
-  font-size: 0.95rem;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 1rem;
+}
+
+.brand-icon.brand-icon-sm img {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px;
+  min-height: 28px;
 }
 
 .navbar-brand:hover .brand-icon,
 .navbar-brand:hover .brand-compass {
+  transform: translateY(-1px) scale(1.06);
+  border-color: rgba(0, 242, 254, 0.85);
+  box-shadow: 0 8px 24px rgba(0, 242, 254, 0.35), 0 0 14px rgba(99, 102, 241, 0.3);
+}
+
+.navbar-brand:hover .brand-icon img {
   transform: scale(1.05);
-  border-color: var(--color-indigo-600);
-  background: var(--color-indigo-600);
-  color: #FFFFFF;
 }
 
 .brand-name,
 .brand-title {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--color-text-primary);
+  line-height: 1.15;
 }
 
 .brand-accent {
-  color: var(--color-indigo-600);
-  font-weight: 800;
+  background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  letter-spacing: -0.01em;
 }
 
 .brand-tagline,
 .brand-tagline-sub {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--color-indigo-700);
+  background: var(--color-surface-indigo);
+  border: 1px solid #C7D2FE;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
 }
 
 /* Nav Links */

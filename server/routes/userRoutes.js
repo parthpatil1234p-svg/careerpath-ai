@@ -16,7 +16,9 @@ const {
   getMyProfile,
   updateMyProfile,
   uploadAvatar,
+  getMyResume,
   uploadResume,
+  deleteMyResume,
   viewResume,
   downloadResume,
   getResumePreview,
@@ -42,8 +44,14 @@ router.put('/profile-status', updateProfileStatus);
 // POST /api/users/avatar (Cloudinary Media Upload)
 router.post('/avatar', uploadAvatar);
 
-// POST /api/users/resume (Cloudinary Media Upload)
+// GET /api/users/resume (Single-resume status, metadata & skill lock gate)
+router.get('/resume', getMyResume);
+
+// POST /api/users/resume (Strict single-resume upload/replace pipeline)
 router.post('/resume', uploadResume);
+
+// DELETE /api/users/resume (Delete stored resume & reset user pointers)
+router.delete('/resume', deleteMyResume);
 
 // GET /api/users/resume/view (Streams inline PDF for browser viewing)
 router.get('/resume/view', viewResume);

@@ -106,11 +106,28 @@ const generateRoadmap = async (req, res, next) => {
       });
     }
 
-    // 6. Archive user's current active roadmap(s)
-    await Roadmap.updateMany(
-      { user: user._id, status: 'active' },
-      { $set: { status: 'archived' } }
-    );
+    // 6. Strict Single Active Route Invariant: Check if user already has an active, incomplete roadmap
+    const activeRoadmap = await Roadmap.findOne({
+      user: user._id,
+      status: 'active',
+    }).populate('career');
+
+    if (activeRoadmap) {
+      return res.status(409).json({
+        success: false,
+        code: 'ACTIVE_ROUTE_IN_PROGRESS',
+        message: `You are currently pursuing the "${activeRoadmap.careerSnapshot?.title || 'active'}" route (${Math.round(activeRoadmap.progressPercentage || 0)}% completed). You must complete your current route before starting another career route.`,
+        data: {
+          activeRoadmap: {
+            id: activeRoadmap._id,
+            careerTitle: activeRoadmap.careerSnapshot?.title,
+            slug: activeRoadmap.careerSnapshot?.slug,
+            progressPercentage: activeRoadmap.progressPercentage,
+            durationWeeks: activeRoadmap.durationWeeks,
+          },
+        },
+      });
+    }
 
     // 7. Generate personalized tasks based on real skill gaps
     const { generatedFrom, taskDocuments } = generateRoadmapTasks(
@@ -133,23 +150,46 @@ const generateRoadmap = async (req, res, next) => {
       });
     }
 
-    const newRoadmap = await Roadmap.create({
-      user: user._id,
-      career: selectedCareer._id,
-      careerSnapshot: {
-        title: selectedCareer.title,
-        slug: selectedCareer.slug,
-        shortDescription: selectedCareer.shortDescription,
-      },
-      durationWeeks: weeksCount,
-      status: 'active',
-      generatedFrom,
-      totalTasks: taskDocuments.length,
-      completedTasks: 0,
-      progressPercentage: 0,
-      startedAt: new Date(),
-      weekProgress: initialWeekProgress,
-    });
+    let newRoadmap;
+    try {
+      newRoadmap = await Roadmap.create({
+        user: user._id,
+        career: selectedCareer._id,
+        careerSnapshot: {
+          title: selectedCareer.title,
+          slug: selectedCareer.slug,
+          shortDescription: selectedCareer.shortDescription,
+        },
+        durationWeeks: weeksCount,
+        status: 'active',
+        generatedFrom,
+        totalTasks: taskDocuments.length,
+        completedTasks: 0,
+        progressPercentage: 0,
+        startedAt: new Date(),
+        weekProgress: initialWeekProgress,
+      });
+    } catch (createErr) {
+      if (createErr.code === 11000) {
+        // Race condition caught by MongoDB partial unique index
+        const currentActive = await Roadmap.findOne({ user: user._id, status: 'active' });
+        return res.status(409).json({
+          success: false,
+          code: 'ACTIVE_ROUTE_IN_PROGRESS',
+          message: `You already have an active career route in progress (${currentActive?.careerSnapshot?.title || 'Current Route'}). You must complete or abandon your current route before starting another.`,
+          data: {
+            activeRoadmap: {
+              id: currentActive?._id,
+              careerTitle: currentActive?.careerSnapshot?.title,
+              slug: currentActive?.careerSnapshot?.slug,
+              progressPercentage: currentActive?.progressPercentage,
+              durationWeeks: currentActive?.durationWeeks,
+            },
+          },
+        });
+      }
+      throw createErr;
+    }
 
     // 9. Bulk-create RoadmapTask documents linked to new roadmap
     const tasksWithRoadmapId = taskDocuments.map((task) => ({
@@ -198,15 +238,31 @@ const generateRoadmap = async (req, res, next) => {
  */
 const getCurrentRoadmap = async (req, res, next) => {
   try {
-    const roadmap = await Roadmap.findOne({
+    let roadmap = await Roadmap.findOne({
       user: req.user._id,
       status: 'active',
     });
 
+    let isCompleted = false;
+
+    // If no active roadmap, check for the most recently completed roadmap
+    if (!roadmap) {
+      roadmap = await Roadmap.findOne({
+        user: req.user._id,
+        status: 'completed',
+      }).sort({ completedAt: -1, updatedAt: -1 });
+
+      if (roadmap) {
+        isCompleted = true;
+      }
+    }
+
     if (!roadmap) {
       return res.status(404).json({
         success: false,
-        message: 'No active roadmap found. Generate a roadmap first.',
+        hasRoadmap: false,
+        canStartNewRoute: true,
+        message: 'No active or completed roadmap found. Generate a roadmap first.',
       });
     }
 
@@ -233,16 +289,38 @@ const getCurrentRoadmap = async (req, res, next) => {
 
     const weeks = groupTasksByWeek(tasks, roadmap.durationWeeks);
 
+    // Compute active week number & descriptive string (e.g. "Week 2 of 4")
+    let currentWeekNumber = 1;
+    const activeWp = (roadmap.weekProgress || []).find(wp => wp.status === 'in_progress' || wp.status === 'awaiting_test');
+    if (activeWp) {
+      currentWeekNumber = activeWp.weekNumber;
+    } else {
+      const lastPassed = [...(roadmap.weekProgress || [])].reverse().find(wp => wp.status === 'passed');
+      if (lastPassed && lastPassed.weekNumber < roadmap.durationWeeks) {
+        currentWeekNumber = lastPassed.weekNumber + 1;
+      } else if (lastPassed) {
+        currentWeekNumber = roadmap.durationWeeks;
+      }
+    }
+    const currentWeekString = `Week ${currentWeekNumber} of ${roadmap.durationWeeks}`;
+    const canEnroll = isCompleted || roadmap.status !== 'active';
+
     res.status(200).json({
       success: true,
       data: {
+        hasRoadmap: true,
+        isCompleted,
+        canStartNewRoute: canEnroll,
+        canEnrollNewRoute: canEnroll,
+        currentWeekNumber,
+        currentWeekString,
         roadmap: {
           id: roadmap._id,
           _id: roadmap._id,
           career: {
-            title: roadmap.careerSnapshot.title,
-            slug: roadmap.careerSnapshot.slug,
-            shortDescription: roadmap.careerSnapshot.shortDescription,
+            title: roadmap.careerSnapshot?.title || 'Active Track',
+            slug: roadmap.careerSnapshot?.slug || '',
+            shortDescription: roadmap.careerSnapshot?.shortDescription || '',
           },
           durationWeeks: roadmap.durationWeeks,
           status: roadmap.status,
@@ -252,7 +330,11 @@ const getCurrentRoadmap = async (req, res, next) => {
           completedTasksCount: roadmap.completedTasks,
           progressPercentage: roadmap.progressPercentage,
           startedAt: roadmap.startedAt,
+          completedAt: roadmap.completedAt,
+          abandonedAt: roadmap.abandonedAt || null,
           weekProgress: roadmap.weekProgress,
+          currentWeekNumber,
+          currentWeekString,
         },
         tasks,
         weeks,
@@ -342,36 +424,119 @@ const toggleTask = async (req, res, next) => {
   }
 };
 
-// ── archiveRoadmap ─────────────────────────────────────────────
+// ── abandonRoadmap ─────────────────────────────────────────────
 /**
- * DELETE /api/roadmaps/current
- * Safely archives the current active roadmap without permanent deletion
+ * POST /api/roadmaps/current/abandon
+ * Non-destructive route abandonment with 7-day rate-limiting cooldown.
+ * All quiz history, attempts, and verified skills remain completely intact.
  */
-const archiveRoadmap = async (req, res, next) => {
+const abandonRoadmap = async (req, res, next) => {
   try {
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (user.lastAbandonedRouteAt) {
+      const elapsed = Date.now() - new Date(user.lastAbandonedRouteAt).getTime();
+      if (elapsed < SEVEN_DAYS_MS) {
+        const nextAllowed = new Date(new Date(user.lastAbandonedRouteAt).getTime() + SEVEN_DAYS_MS);
+        return res.status(429).json({
+          success: false,
+          code: 'ABANDON_COOLDOWN_ACTIVE',
+          message: `You can only abandon a career route once every 7 days. Your next route reset is available on ${nextAllowed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`,
+          data: {
+            nextAllowedAt: nextAllowed,
+          },
+        });
+      }
+    }
+
     const roadmap = await Roadmap.findOneAndUpdate(
       { user: req.user._id, status: 'active' },
-      { $set: { status: 'archived' } },
+      { $set: { status: 'abandoned', abandonedAt: new Date() } },
       { new: true }
     );
 
     if (!roadmap) {
       return res.status(404).json({
         success: false,
-        message: 'No active roadmap to archive',
+        message: 'No active roadmap found to abandon.',
       });
     }
 
+    user.lastAbandonedRouteAt = new Date();
+    await user.save({ validateBeforeSave: false });
+
     res.status(200).json({
       success: true,
-      message: 'Active roadmap archived successfully',
+      message: 'Active career route abandoned. All your earned skills and milestone quiz scores have been safely preserved.',
       data: {
-        archivedRoadmapId: roadmap._id,
+        abandonedRoadmapId: roadmap._id,
+        careerTitle: roadmap.careerSnapshot?.title,
+        abandonedAt: roadmap.abandonedAt,
       },
     });
   } catch (error) {
     next(error);
   }
+};
+
+// ── resumeRoadmap ──────────────────────────────────────────────
+/**
+ * POST /api/roadmaps/:id/resume
+ * Resumes a previously abandoned career roadmap if no other route is active.
+ */
+const resumeRoadmap = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Verify user has no other currently active roadmap
+    const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' });
+    if (activeRoadmap) {
+      return res.status(409).json({
+        success: false,
+        code: 'ACTIVE_ROUTE_IN_PROGRESS',
+        message: `Cannot resume. You already have an active route in progress (${activeRoadmap.careerSnapshot?.title || 'Current Route'}).`,
+      });
+    }
+
+    const roadmap = await Roadmap.findOne({
+      _id: id,
+      user: req.user._id,
+      status: 'abandoned',
+    });
+
+    if (!roadmap) {
+      return res.status(404).json({
+        success: false,
+        message: 'Abandoned roadmap not found or not eligible for resumption.',
+      });
+    }
+
+    roadmap.status = 'active';
+    roadmap.abandonedAt = null;
+    await roadmap.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Resumed "${roadmap.careerSnapshot?.title}" route successfully.`,
+      data: {
+        roadmap,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── archiveRoadmap ─────────────────────────────────────────────
+/**
+ * DELETE /api/roadmaps/current (Deprecated alias for abandonRoadmap)
+ */
+const archiveRoadmap = async (req, res, next) => {
+  return abandonRoadmap(req, res, next);
 };
 
 // ── linkProjectRepo ──────────────────────────────────────────
@@ -672,6 +837,8 @@ module.exports = {
   generateRoadmap,
   getCurrentRoadmap,
   toggleTask,
+  abandonRoadmap,
+  resumeRoadmap,
   archiveRoadmap,
   linkProjectRepo,
   startWeeklyTestController,

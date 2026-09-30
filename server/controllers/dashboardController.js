@@ -10,6 +10,7 @@
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
+const { evaluateJobReadyCertification } = require('../services/readinessService');
 
 /**
  * GET /api/dashboard
@@ -50,11 +51,29 @@ const getDashboard = async (req, res, next) => {
       const completedRoadmap = await Roadmap.findOne({
         user: user._id,
         status: 'completed',
-      }).lean();
+      }).sort({ completedAt: -1, updatedAt: -1 }).lean();
 
       if (completedRoadmap) {
+        roadmapData = {
+          id: completedRoadmap._id,
+          career: {
+            title: completedRoadmap.careerSnapshot?.title || 'Graduated Track',
+            slug: completedRoadmap.careerSnapshot?.slug || '',
+            shortDescription: completedRoadmap.careerSnapshot?.shortDescription || '',
+          },
+          durationWeeks: completedRoadmap.durationWeeks,
+          status: completedRoadmap.status,
+          totalTasks: completedRoadmap.totalTasks,
+          totalTasksCount: completedRoadmap.totalTasks,
+          completedTasks: completedRoadmap.completedTasks,
+          completedTasksCount: completedRoadmap.completedTasks,
+          progressPercentage: 100,
+          startedAt: completedRoadmap.startedAt,
+          completedAt: completedRoadmap.completedAt,
+          weekProgress: completedRoadmap.weekProgress || [],
+        };
         nextRecommendedAction =
-          'Congratulations! You completed your roadmap. Explore a new career path.';
+          'Congratulations! You graduated from this career route. Choose your next route from Recommendations!';
       } else {
         nextRecommendedAction =
           'Choose a recommended career and generate your personalized roadmap';
@@ -110,6 +129,8 @@ const getDashboard = async (req, res, next) => {
       actionUrl = 'recommendations.html';
     }
 
+    const jobReadyCertification = await evaluateJobReadyCertification(req.user._id).catch(() => null);
+
     res.status(200).json({
       success: true,
       data: {
@@ -130,6 +151,7 @@ const getDashboard = async (req, res, next) => {
           profileStatus: user.profileStatus || { status: 'learning', currentRole: '' },
         },
         activeRoadmap: roadmapData,
+        jobReadyCertification,
         progress: {
           totalTasks: roadmapData ? roadmapData.totalTasks : 0,
           completedTasks: roadmapData ? roadmapData.completedTasks : 0,

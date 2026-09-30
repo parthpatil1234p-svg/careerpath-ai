@@ -158,6 +158,33 @@ const uploadResume = async (fileData, userId) => {
 };
 
 /**
+ * Deletes a resume asset from Cloudinary by public ID.
+ * Tries image resource type first, falls back to raw resource type.
+ * @param {string} publicId - Cloudinary publicId
+ * @returns {Promise<Object|null>}
+ */
+const deleteResumeFromCloudinary = async (publicId) => {
+  if (!isConfigured || !publicId) return null;
+  try {
+    const res = await cloudinary.uploader.destroy(publicId, {
+      resource_type: 'image',
+      invalidate: true,
+    });
+    if (res && res.result !== 'ok') {
+      const rawRes = await cloudinary.uploader.destroy(publicId, {
+        resource_type: 'raw',
+        invalidate: true,
+      });
+      return rawRes;
+    }
+    return res;
+  } catch (err) {
+    console.warn('[cloudinaryService.deleteResumeFromCloudinary] Note:', err.message);
+    return null;
+  }
+};
+
+/**
  * Deletes an asset from Cloudinary by public ID.
  * @param {string} publicId
  * @param {string} resourceType
@@ -179,4 +206,6 @@ module.exports = {
   getResumePreviewUrl,
   downloadResumeBuffer,
   deleteResource,
+  deleteResumeFromCloudinary,
 };
+

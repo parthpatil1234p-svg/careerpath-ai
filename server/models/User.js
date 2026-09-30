@@ -453,6 +453,12 @@ const UserSchema = new mongoose.Schema(
       },
     ],
 
+    // Timestamp of last route abandonment for 7-day rate-limiting cooldown
+    lastAbandonedRouteAt: {
+      type: Date,
+      default: null,
+    },
+
     // User Career Phase Status (Learning | Job-seeking | Working)
     profileStatus: {
       status: {

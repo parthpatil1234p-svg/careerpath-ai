@@ -41,6 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const progressBarEl = document.getElementById('roadmapProgressBar');
   const tasksCounterEl = document.getElementById('roadmapTasksCounter');
 
+  const graduationCard = document.getElementById('graduationCelebrationCard');
+  const graduationSubtitle = document.getElementById('graduationCelebrationSubtitle');
+  const roadmapStatusBadge = document.getElementById('roadmapStatusAtlasBadge');
+  const btnAbandon = document.getElementById('btnAbandonRouteRoadmap');
+
   const weeksContainer = document.getElementById('weeksContainer');
 
   let currentRoadmap = null;
@@ -123,6 +128,35 @@ document.addEventListener('DOMContentLoaded', async () => {
           : currentRoadmap.durationWeeks === 12
           ? 'Deep Dive Pace'
           : 'Balanced Pace';
+    }
+
+    const isCompleted = currentRoadmap.status === 'completed';
+
+    if (graduationCard) {
+      if (isCompleted) {
+        graduationCard.classList.remove('d-none');
+        if (graduationSubtitle) {
+          graduationSubtitle.innerHTML = `
+            You have successfully mastered the <strong>${escapeHtml(career.title || 'chosen track')}</strong> curriculum, passed all weekly milestone assessments (&ge; 70%), and stamped verified competencies into your skill evidence ledger. Your account is now unlocked to attend your next career route!
+          `;
+        }
+        renderJobReadyCard(true);
+      } else {
+        graduationCard.classList.add('d-none');
+        renderJobReadyCard(false);
+      }
+    }
+
+    if (roadmapStatusBadge) {
+      if (isCompleted) {
+        roadmapStatusBadge.innerHTML = '<i class="bi bi-patch-check-fill text-success"></i> GRADUATED ROUTE';
+      } else {
+        roadmapStatusBadge.innerHTML = '<i class="bi bi-compass text-teal"></i> ACTIVE ROUTE';
+      }
+    }
+
+    if (btnAbandon) {
+      btnAbandon.style.display = isCompleted ? 'none' : 'inline-block';
     }
 
     updateProgressUI(currentRoadmap.progressPercentage, currentRoadmap.completedTasksCount, currentRoadmap.totalTasksCount);
@@ -804,6 +838,154 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnCloseResult) {
     btnCloseResult.addEventListener('click', () => {
       loadRoadmap();
+    });
+  }
+
+  // ── Render Decoupled 4-Rule Job Ready Card ──────────────────────
+  const renderJobReadyCard = async (isCompleted) => {
+    const jobReadyCard = document.getElementById('roadmapJobReadyCard');
+    const jobReadyBadge = document.getElementById('jobReadyBadge');
+    const readinessScoreEl = document.getElementById('jobReadyReadinessScore');
+    const criteriaList = document.getElementById('jobReadyCriteriaList');
+    const summaryText = document.getElementById('jobReadySummaryText');
+
+    if (!jobReadyCard || !isCompleted) {
+      if (jobReadyCard) jobReadyCard.classList.add('d-none');
+      return;
+    }
+
+    try {
+      const res = await window.API.get('/readiness/job-ready-check', { auth: true });
+      if (!res.success || !res.data) return;
+
+      const evalData = res.data;
+      jobReadyCard.classList.remove('d-none');
+
+      if (readinessScoreEl) {
+        readinessScoreEl.textContent = `Readiness Score: ${evalData.readiness?.readinessScore || 0}%`;
+      }
+
+      if (evalData.isJobReady) {
+        if (jobReadyBadge) {
+          jobReadyBadge.className = 'badge bg-success text-white font-mono px-3 py-1.5';
+          jobReadyBadge.innerHTML = '<i class="bi bi-fire me-1"></i> 🔥 JOB READY CERTIFIED';
+        }
+        if (summaryText) {
+          summaryText.innerHTML = '<strong class="text-success">Congratulations!</strong> You have passed all 4 industry benchmark criteria and qualify for job placement consideration.';
+        }
+      } else {
+        if (jobReadyBadge) {
+          jobReadyBadge.className = 'badge bg-warning text-dark font-mono px-3 py-1.5';
+          jobReadyBadge.innerHTML = '<i class="bi bi-lock-fill me-1"></i> 🔒 JOB READY IN PROGRESS';
+        }
+        if (summaryText) {
+          summaryText.textContent = 'To achieve official Job Ready status, satisfy all 4 criteria below:';
+        }
+      }
+
+      if (criteriaList && evalData.criteriaStatus) {
+        const c = evalData.criteriaStatus;
+        const items = [
+          {
+            label: 'Readiness Score &ge; 70%',
+            passed: c.score?.passed,
+            detail: `Current: ${c.score?.actual || 0}% / 70% required`,
+            icon: 'bi-speedometer2',
+          },
+          {
+            label: '&ge; 4 Role-Specific Verified Skills',
+            passed: c.skills?.passed,
+            detail: `Verified: ${c.skills?.actual || 0} of 4 required`,
+            icon: 'bi-patch-check-fill',
+          },
+          {
+            label: 'Roadmap Milestone Mastery &ge; 80%',
+            passed: c.roadmap?.passed,
+            detail: `Completed: ${c.roadmap?.actual || 100}%`,
+            icon: 'bi-map-fill',
+          },
+          {
+            label: 'Zero Expired Required Skills',
+            passed: c.expiration?.passed,
+            detail: c.expiration?.passed ? 'All required skill verifications active' : 'Skills require refresh',
+            icon: 'bi-calendar-check-fill',
+          },
+        ];
+
+        criteriaList.innerHTML = items.map(item => `
+          <li class="list-group-item d-flex align-items-center justify-content-between px-2 py-2 border-0 bg-transparent">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi ${item.passed ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} fs-6"></i>
+              <div>
+                <div class="fw-semibold text-ink">${item.label}</div>
+                <div class="text-muted" style="font-size: 0.72rem;">${item.detail}</div>
+              </div>
+            </div>
+            <span class="badge ${item.passed ? 'badge-leaf' : 'badge-warning'} font-mono" style="font-size: 0.68rem;">
+              ${item.passed ? 'PASSED' : 'PENDING'}
+            </span>
+          </li>
+        `).join('');
+      }
+    } catch (e) {
+      console.warn('Could not load Job Ready evaluation:', e.message);
+    }
+  };
+
+  // ── Wire Abandon Route Modal (Roadmap) ──────────────────────────
+  const modalAbandonRoadmapEl = document.getElementById('modalAbandonRouteRoadmap');
+  let modalAbandonRoadmap = null;
+  if (modalAbandonRoadmapEl && typeof bootstrap !== 'undefined') {
+    modalAbandonRoadmap = new bootstrap.Modal(modalAbandonRoadmapEl);
+  }
+
+  const btnConfirmAbandonRoadmap = document.getElementById('btnConfirmAbandonRouteRoadmap');
+  const abandonRoadmapTitle = document.getElementById('abandonRoadmapModalTitle');
+  const abandonRoadmapError = document.getElementById('abandonRoadmapErrorAlert');
+
+  if (btnAbandon) {
+    btnAbandon.addEventListener('click', () => {
+      if (abandonRoadmapError) abandonRoadmapError.classList.add('d-none');
+      if (abandonRoadmapTitle && currentRoadmap) {
+        abandonRoadmapTitle.textContent = currentRoadmap.careerSnapshot?.title || 'Current Track';
+      }
+      if (modalAbandonRoadmap) {
+        modalAbandonRoadmap.show();
+      }
+    });
+  }
+
+  if (btnConfirmAbandonRoadmap) {
+    btnConfirmAbandonRoadmap.addEventListener('click', async () => {
+      try {
+        btnConfirmAbandonRoadmap.disabled = true;
+        btnConfirmAbandonRoadmap.textContent = 'Abandoning Route...';
+        if (abandonRoadmapError) abandonRoadmapError.classList.add('d-none');
+
+        const res = await window.API.post('/roadmaps/current/abandon', {}, { auth: true });
+        if (res.success) {
+          if (modalAbandonRoadmap) modalAbandonRoadmap.hide();
+          showAlert(res.message || 'Route abandoned. Your verified skills and quiz attempts have been saved. Redirecting...', 'info');
+          setTimeout(() => {
+            window.location.href = 'recommendations.html';
+          }, 800);
+        } else {
+          if (abandonRoadmapError) {
+            abandonRoadmapError.textContent = res.message || 'Failed to abandon route.';
+            abandonRoadmapError.classList.remove('d-none');
+          }
+        }
+      } catch (err) {
+        if (abandonRoadmapError) {
+          abandonRoadmapError.textContent = err.message || 'Failed to abandon route.';
+          abandonRoadmapError.classList.remove('d-none');
+        } else {
+          showAlert(err.message || 'Failed to abandon active route.', 'danger');
+        }
+      } finally {
+        btnConfirmAbandonRoadmap.disabled = false;
+        btnConfirmAbandonRoadmap.innerHTML = '<i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route';
+      }
     });
   }
 

@@ -49,12 +49,12 @@
       <div class="container">
         <div class="notch-nav-island">
           <!-- Brand / Logo -->
-          <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-            <div class="brand-icon p-1">
-              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
+          <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <div class="brand-icon">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" class="brand-logo-img" width="40" height="40" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
-            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">&middot; Atlas</span>
+            <span class="brand-tagline-sub d-none d-xl-inline font-mono">&middot; Atlas</span>
           </a>
 
           <!-- Center Links -->
@@ -192,12 +192,48 @@
           </div>
         </div>
 
+        <!-- Graduation Celebration Card (Displayed when roadmap status is completed) -->
+        <div id="graduationCelebrationCard" class="card p-4 p-md-5 mb-4 d-none text-center shadow-sm" style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(99, 102, 241, 0.12)); border: 2px solid var(--color-teal, #14b8a6); border-radius: 16px;">
+          <div class="display-3 mb-2">🎓</div>
+          <div class="badge badge-teal font-mono px-3 py-1 mb-2 d-inline-block">OFFICIAL CAREER ROUTE GRADUATION</div>
+          <h2 class="h3 fw-bold text-ink mb-2">Congratulations! You Have Graduated!</h2>
+          <p class="text-secondary mb-3 mx-auto" style="max-width: 600px;" id="graduationCelebrationSubtitle">
+            You have successfully mastered the curriculum, passed all weekly milestone assessments (&ge; 70%), and stamped verified competencies into your skill evidence ledger.
+          </p>
+
+          <!-- Job Ready Status Card (Decoupled 4-Rule Engine) -->
+          <div id="roadmapJobReadyCard" class="card p-3 my-3 mx-auto text-start shadow-sm d-none" style="max-width: 620px; background: rgba(255, 255, 255, 0.95); border-radius: 12px; border: 1px solid var(--border-color, #e2e8f0);">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge" id="jobReadyBadge">Job Ready Status</span>
+                <span class="small font-mono text-muted" id="jobReadyReadinessScore">Readiness: 0%</span>
+              </div>
+              <span class="badge badge-navy font-mono" style="font-size: 0.7rem;">4-CRITERIA STANDARD</span>
+            </div>
+            <p class="small text-secondary mb-2" id="jobReadySummaryText">
+              Job Ready Certification requires satisfying all 4 industry hiring benchmarks:
+            </p>
+            <ul class="list-group list-group-flush small" id="jobReadyCriteriaList">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap mt-3">
+            <a href="dashboard.html" class="btn btn-outline-navy btn-sm px-4 py-2">
+              <i class="bi bi-award-fill me-1 text-gold"></i> View Credentials on Dashboard
+            </a>
+            <a href="recommendations.html" class="btn cp-btn-primary btn-sm px-4 py-2">
+              <i class="bi bi-compass me-1"></i> Attend Your Next Career Route &rarr;
+            </a>
+          </div>
+        </div>
+
         <!-- Roadmap Header Card -->
         <div class="roadmap-header-card mb-4">
           <div class="row align-items-center g-4">
             <div class="col-lg-8">
               <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-                <span class="atlas-badge">
+                <span class="atlas-badge" id="roadmapStatusAtlasBadge">
                   <i class="bi bi-compass text-teal"></i> ACTIVE ROUTE
                 </span>
                 <span class="badge badge-navy font-mono" id="roadmapDurationBadge">
@@ -214,9 +250,12 @@
               <p class="text-muted text-md mb-0" id="roadmapCareerDesc">
                 Tailored curriculum targeting your missing and developing skills first, leading to job-readiness.
               </p>
-              <div class="mt-3 d-flex align-items-center gap-2">
+              <div class="mt-3 d-flex align-items-center gap-2 flex-wrap">
                 <button class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center" onclick="window.print()" title="Print or save this roadmap as a PDF">
                   <i class="bi bi-printer me-1"></i> Print / Save as PDF
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm px-3" id="btnAbandonRouteRoadmap" title="Abandon this route to pick a new track">
+                  <i class="bi bi-x-circle me-1"></i> Abandon Route
                 </button>
               </div>
             </div>
@@ -287,7 +326,7 @@
               <i class="bi bi-printer me-1"></i> Print / Save PDF
             </button>
             <a href="recommendations.html" class="btn cp-btn-outline btn-sm px-3">
-              <i class="bi bi-arrow-repeat me-1"></i> Create Another Roadmap
+              <i class="bi bi-compass me-1"></i> Career Recommendations
             </a>
           </div>
         </div>
@@ -421,6 +460,35 @@
               </div>
             </div>
 
+      <!-- Abandon Route Modal (Roadmap) -->
+      <div class="modal fade" id="modalAbandonRouteRoadmap" tabindex="-1" aria-labelledby="modalAbandonRouteRoadmapTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content border-line shadow-lg">
+            <div class="modal-header border-bottom border-line">
+              <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalAbandonRouteRoadmapTitle">
+                <i class="bi bi-exclamation-triangle-fill text-danger"></i> Abandon Current Career Route?
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-ink fw-semibold mb-2">
+                Are you sure you want to abandon the <span id="abandonRoadmapModalTitle" class="text-teal">Current Route</span> track?
+              </p>
+              <div class="alert alert-info py-2 px-3 small border-0 mb-3" style="background: rgba(20, 184, 166, 0.1); color: var(--color-teal, #14b8a6);">
+                <i class="bi bi-shield-check me-1"></i>
+                <strong>Your evidence is safe:</strong> All verified skills, quiz attempts, and milestone test scores remain permanently saved on your profile.
+              </div>
+              <p class="text-secondary small mb-2">
+                Abandoning frees your account to enroll in a new career route. To maintain disciplined learning focus, the server limits route resets to <strong>once every 7 days</strong>.
+              </p>
+              <div id="abandonRoadmapErrorAlert" class="alert alert-danger py-2 px-3 small d-none"></div>
+            </div>
+            <div class="modal-footer border-top border-line">
+              <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Keep Learning</button>
+              <button type="button" class="btn btn-danger btn-sm px-3" id="btnConfirmAbandonRouteRoadmap">
+                <i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route
+              </button>
+            </div>
           </div>
         </div>
       </div>

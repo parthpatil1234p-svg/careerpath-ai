@@ -63,3 +63,20 @@ exports.getCertificate = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * GET /api/readiness/job-ready-check
+ * Evaluates the decoupled 4-Rule Job Ready Certification.
+ */
+exports.getJobReadyCheck = async (req, res, next) => {
+  try {
+    const { evaluateJobReadyCertification } = require('../services/readinessService');
+    const result = await evaluateJobReadyCertification(req.user._id);
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

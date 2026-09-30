@@ -49,12 +49,12 @@
       <div class="container">
         <div class="notch-nav-island">
           <!-- Brand / Logo -->
-          <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-            <div class="brand-icon p-1">
-              <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
+          <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <div class="brand-icon">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" class="brand-logo-img" width="40" height="40" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
-            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">&middot; Atlas</span>
+            <span class="brand-tagline-sub d-none d-xl-inline font-mono">&middot; Atlas</span>
           </a>
 
           <!-- Desktop Center Links -->
@@ -225,6 +225,34 @@
         </div>
         <div class="skill-dialog-content" id="skillDialogContent"></div>
       </dialog>
+
+      <!-- Active Route Lock Banner (Shown when user has an active incomplete route) -->
+      <div id="activeRouteLockBanner" class="d-none card p-3 mb-4 shadow-sm" style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(99, 102, 241, 0.08)); border-left: 4px solid var(--color-teal, #14b8a6);">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-circle bg-teal-subtle text-teal border border-teal-subtle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+              <i class="bi bi-compass-fill fs-5 text-teal"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-ink small d-flex align-items-center gap-2 flex-wrap">
+                <span>Active Career Route: <strong id="bannerActiveCareerTitle" class="text-teal">Full-Stack Developer</strong></span>
+                <span class="badge badge-teal font-mono" id="bannerActiveProgress">0% Complete</span>
+              </div>
+              <p class="text-secondary small mb-0" id="bannerActiveSubtitle" style="font-size: 0.8rem;">
+                You are currently enrolled in this career track. To preserve progression integrity, you can only pursue one route at a time. Complete all weekly milestone tests to graduate and unlock other routes, or abandon if you want to switch tracks.
+              </p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <a href="roadmap.html" class="btn cp-btn-primary btn-sm px-3 text-nowrap" id="bannerContinueRouteBtn">
+              <i class="bi bi-map-fill me-1"></i> Continue Active Route
+            </a>
+            <button type="button" class="btn btn-outline-danger btn-sm px-2 text-nowrap" id="btnAbandonRouteBanner" title="Abandon current route to pick a new track">
+              <i class="bi bi-x-circle me-1"></i> Abandon Route
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Alert & Notification Area -->
       <div id="alertContainer" role="alert" aria-live="polite"></div>
@@ -635,6 +663,37 @@
             <button type="button" class="btn cp-btn-primary btn-sm px-4 fw-semibold" id="whatIfApplyRoadmapBtn">
               <i class="bi bi-map-fill me-1"></i>
               <span>Generate Roadmap for This Track</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    <!-- Abandon Route Confirmation Modal -->
+    <div class="modal fade" id="modalAbandonRoute" tabindex="-1" aria-labelledby="modalAbandonRouteTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-line shadow-lg">
+          <div class="modal-header border-bottom border-line">
+            <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalAbandonRouteTitle">
+              <i class="bi bi-exclamation-triangle-fill text-danger"></i> Abandon Current Career Route?
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-ink fw-semibold mb-2">
+              Are you sure you want to abandon the <span id="abandonModalCareerTitle" class="text-teal">Current Route</span> track?
+            </p>
+            <div class="alert alert-info py-2 px-3 small border-0 mb-3" style="background: rgba(20, 184, 166, 0.1); color: var(--color-teal, #14b8a6);">
+              <i class="bi bi-shield-check me-1"></i>
+              <strong>Your evidence is safe:</strong> All verified skills, quiz attempts, and test scores remain permanently saved on your profile.
+            </div>
+            <p class="text-secondary small mb-2">
+              Abandoning frees your account to enroll in a new career route. To maintain disciplined learning, the server limits route resets to <strong>once every 7 days</strong>.
+            </p>
+            <div id="abandonErrorAlert" class="alert alert-danger py-2 px-3 small d-none"></div>
+          </div>
+          <div class="modal-footer border-top border-line">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Keep Learning</button>
+            <button type="button" class="btn btn-danger btn-sm px-3" id="btnConfirmAbandonRoute">
+              <i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route
             </button>
           </div>
         </div>

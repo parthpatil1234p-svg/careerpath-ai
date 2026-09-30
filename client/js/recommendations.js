@@ -277,6 +277,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     whatIfApplyRoadmapBtn.addEventListener('click', () => {
       if (!activeWhatIfItem) return;
       if (whatIfModal) whatIfModal.hide();
+
+      if (userActiveRoadmap && (userActiveRoadmap.career?.slug || '').toLowerCase() !== (activeWhatIfItem.career.slug || '').toLowerCase()) {
+        showAlert(
+          `You currently have an active roadmap for "${userActiveRoadmap.career?.title || 'another track'}". Complete it first or abandon it before switching tracks.`,
+          'warning'
+        );
+        return;
+      }
+
       selectedCareerTitle = activeWhatIfItem.career.title;
       selectedCareerSlug = activeWhatIfItem.career.slug;
       if (modalCareerTitle) modalCareerTitle.textContent = selectedCareerTitle;
@@ -445,8 +454,118 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
   };
 
+  // ── Single Active Career Route State Tracking ────────────────────────
+  let userActiveRoadmap = null;
+  let userCompletedSlugs = new Set();
+
+  // Initialize Abandon Route Modal
+  const modalAbandonEl = document.getElementById('modalAbandonRoute');
+  let modalAbandon = null;
+  if (modalAbandonEl && typeof bootstrap !== 'undefined') {
+    modalAbandon = new bootstrap.Modal(modalAbandonEl);
+  }
+
+  const btnAbandonBanner = document.getElementById('btnAbandonRouteBanner');
+  const btnConfirmAbandon = document.getElementById('btnConfirmAbandonRoute');
+  const abandonCareerTitle = document.getElementById('abandonModalCareerTitle');
+  const abandonErrorAlert = document.getElementById('abandonErrorAlert');
+
+  const renderActiveRouteBanner = () => {
+    const activeLockBanner = document.getElementById('activeRouteLockBanner');
+    const bannerTitle = document.getElementById('bannerActiveCareerTitle');
+    const bannerProgress = document.getElementById('bannerActiveProgress');
+
+    if (userActiveRoadmap && activeLockBanner) {
+      const title = userActiveRoadmap.career?.title || 'Active Track';
+      const pct = Math.round(userActiveRoadmap.progressPercentage || 0);
+      const weekStr = userActiveRoadmap.currentWeekString || `Week ${userActiveRoadmap.currentWeekNumber || 1} of ${userActiveRoadmap.durationWeeks || 4}`;
+      if (bannerTitle) bannerTitle.textContent = title;
+      if (bannerProgress) bannerProgress.textContent = `${weekStr} · ${pct}% Complete`;
+      activeLockBanner.classList.remove('d-none');
+    } else if (activeLockBanner) {
+      activeLockBanner.classList.add('d-none');
+    }
+  };
+
+  const fetchUserRouteState = async () => {
+    try {
+      const rmRes = await window.API.get('/roadmaps/current', { auth: true });
+      if (rmRes.success && rmRes.data?.roadmap && rmRes.data.roadmap.status === 'active') {
+        userActiveRoadmap = rmRes.data.roadmap;
+      } else {
+        userActiveRoadmap = null;
+      }
+    } catch (e) {
+      userActiveRoadmap = null;
+    }
+
+    try {
+      const userRes = await window.API.get('/users/me', { auth: true });
+      if (userRes.success && userRes.data?.user?.completedPaths) {
+        userCompletedSlugs = new Set(
+          userRes.data.user.completedPaths
+            .map((cp) => (cp.slug || '').toLowerCase().trim())
+            .filter(Boolean)
+        );
+      }
+    } catch (e) {
+      userCompletedSlugs = new Set();
+    }
+
+    renderActiveRouteBanner();
+  };
+
+  // Wire Abandon Route Button on Banner to Trigger Confirmation Modal
+  if (btnAbandonBanner) {
+    btnAbandonBanner.addEventListener('click', () => {
+      if (abandonErrorAlert) abandonErrorAlert.classList.add('d-none');
+      if (abandonCareerTitle && userActiveRoadmap) {
+        abandonCareerTitle.textContent = userActiveRoadmap.career?.title || 'Current Route';
+      }
+      if (modalAbandon) {
+        modalAbandon.show();
+      }
+    });
+  }
+
+  // Wire Modal Confirmation Button with Non-Destructive Retention & 7-Day Cooldown
+  if (btnConfirmAbandon) {
+    btnConfirmAbandon.addEventListener('click', async () => {
+      try {
+        btnConfirmAbandon.disabled = true;
+        btnConfirmAbandon.textContent = 'Abandoning Route...';
+        if (abandonErrorAlert) abandonErrorAlert.classList.add('d-none');
+
+        const res = await window.API.post('/roadmaps/current/abandon', {}, { auth: true });
+        if (res.success) {
+          if (modalAbandon) modalAbandon.hide();
+          showAlert(res.message || 'Active career route abandoned. All your verified skills and test history have been safely preserved.', 'info');
+          userActiveRoadmap = null;
+          renderActiveRouteBanner();
+          loadRecommendations();
+        } else {
+          if (abandonErrorAlert) {
+            abandonErrorAlert.textContent = res.message || 'Failed to abandon route.';
+            abandonErrorAlert.classList.remove('d-none');
+          }
+        }
+      } catch (err) {
+        if (abandonErrorAlert) {
+          abandonErrorAlert.textContent = err.message || 'Failed to abandon route.';
+          abandonErrorAlert.classList.remove('d-none');
+        } else {
+          showAlert(err.message || 'Failed to abandon route.', 'danger');
+        }
+      } finally {
+        btnConfirmAbandon.disabled = false;
+        btnConfirmAbandon.innerHTML = '<i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route';
+      }
+    });
+  }
+
   const loadRecommendations = async () => {
     try {
+      await fetchUserRouteState();
       const response = await window.API.post('/recommendations/generate', {}, { auth: true });
 
       loadingState.classList.add('d-none');
@@ -516,8 +635,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         domainBadgeHtml = `<span class="badge badge-cyan"><i class="bi bi-laptop me-1"></i> Tech & Engineering</span>`;
       }
 
+      const careerSlugNorm = (career.slug || '').toLowerCase().trim();
+      const isActiveThisCareer = userActiveRoadmap && (userActiveRoadmap.career?.slug || '').toLowerCase().trim() === careerSlugNorm;
+      const isGraduated = userCompletedSlugs.has(careerSlugNorm);
+
+      let routeStatusBadge = '';
+      if (isActiveThisCareer) {
+        const weekStr = userActiveRoadmap.currentWeekString || `Week ${userActiveRoadmap.currentWeekNumber || 1} of ${userActiveRoadmap.durationWeeks || 4}`;
+        const pct = Math.round(userActiveRoadmap.progressPercentage || 0);
+        routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-lightning-charge-fill me-1"></i> ACTIVE ROUTE · ${escapeHtml(weekStr)} (${pct}% Tasks)</span>`;
+      } else if (userActiveRoadmap) {
+        routeStatusBadge = `<span class="badge bg-secondary text-light font-mono"><i class="bi bi-lock-fill me-1"></i> LOCKED</span>`;
+      } else if (isGraduated) {
+        routeStatusBadge = `<span class="badge bg-success-subtle text-success border border-success font-mono"><i class="bi bi-patch-check-fill me-1"></i> GRADUATED</span>`;
+      }
+
       const card = document.createElement('div');
-      card.className = `recommendation-card card p-4 p-md-5 mb-4 ${isTopRank ? 'top-match-card' : 'secondary-match-card'}`;
+      card.className = `recommendation-card card p-4 p-md-5 mb-4 ${isTopRank ? 'top-match-card' : 'secondary-match-card'} ${isActiveThisCareer ? 'border-teal shadow-sm' : ''}`;
 
       card.innerHTML = `
         <!-- Header: Top Match Badge / Rank & Title -->
@@ -527,6 +661,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="badge ${isTopRank ? 'badge-navy' : 'cp-tag'} px-3 py-1 fw-bold">
                 ${isTopRank ? '★ BEST ROUTE FOR NOW' : `ROUTE #${rank}`}
               </span>
+              ${routeStatusBadge}
               ${domainBadgeHtml}
               <span class="atlas-badge text-capitalize">
                 ${escapeHtml(career.category)}
@@ -804,15 +939,39 @@ document.addEventListener('DOMContentLoaded', async () => {
               <i class="bi bi-briefcase-fill text-cyan me-1"></i>
               <span>Live Market Jobs</span>
             </button>
-            <button
-              type="button"
-              class="btn ${isTopRank ? 'cp-btn-primary' : 'cp-btn-outline'} btn-sm px-4 py-2 fw-semibold choose-career-btn"
-              data-career-title="${escapeHtml(career.title)}"
-              data-career-slug="${escapeHtml(career.slug)}"
-            >
-              <span>Build Roadmap for ${escapeHtml(career.title)}</span>
-              <i class="bi bi-arrow-right ms-1"></i>
-            </button>
+            ${
+              isActiveThisCareer
+                ? `<a href="roadmap.html" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">
+                     <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(userActiveRoadmap.progressPercentage || 0)}%)
+                   </a>`
+                : userActiveRoadmap
+                ? `<div class="d-flex flex-column align-items-center align-items-sm-end">
+                     <button type="button" class="btn btn-secondary btn-sm px-4 py-2 fw-semibold disabled" disabled title="Finish your current route or abandon it to start this one">
+                       <i class="bi bi-lock-fill me-1"></i> Locked (Finish or Abandon Active Route)
+                     </button>
+                     <div class="text-muted small text-center mt-1" style="font-size: 0.72rem;">
+                       Finish your current route or abandon it to start this one.
+                     </div>
+                   </div>`
+                : isGraduated
+                ? `<button
+                     type="button"
+                     class="btn cp-btn-outline btn-sm px-4 py-2 fw-semibold choose-career-btn"
+                     data-career-title="${escapeHtml(career.title)}"
+                     data-career-slug="${escapeHtml(career.slug)}"
+                   >
+                     <i class="bi bi-arrow-repeat me-1"></i> Re-enroll Roadmap
+                   </button>`
+                : `<button
+                     type="button"
+                     class="btn ${isTopRank ? 'cp-btn-primary' : 'cp-btn-outline'} btn-sm px-4 py-2 fw-semibold choose-career-btn"
+                     data-career-title="${escapeHtml(career.title)}"
+                     data-career-slug="${escapeHtml(career.slug)}"
+                   >
+                     <span>Build Roadmap for ${escapeHtml(career.title)}</span>
+                     <i class="bi bi-arrow-right ms-1"></i>
+                   </button>`
+            }
           </div>
         </div>
       `;
@@ -913,12 +1072,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 pt-2 border-top border-line">
           <span class="small text-muted font-mono">Expand your career horizons beyond your primary track without losing your skill foundations.</span>
-          <button type="button" class="btn cp-btn-primary btn-sm px-4 choose-career-btn text-nowrap"
-            data-career-title="${escapeHtml(crossTrack.career.title)}"
-            data-career-slug="${escapeHtml(crossTrack.career.slug)}">
-            <span>Build Roadmap for ${escapeHtml(crossTrack.career.title)}</span>
-            <i class="bi bi-arrow-right ms-1"></i>
-          </button>
+          ${(() => {
+            const crossSlugNorm = (crossTrack.career.slug || '').toLowerCase().trim();
+            const isCrossActive = userActiveRoadmap && (userActiveRoadmap.career?.slug || '').toLowerCase().trim() === crossSlugNorm;
+            if (isCrossActive) {
+              return `<a href="roadmap.html" class="btn cp-btn-primary btn-sm px-4 text-nowrap">
+                        <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Active Route
+                      </a>`;
+            } else if (userActiveRoadmap) {
+              return `<button type="button" class="btn btn-outline-secondary btn-sm px-4 text-nowrap disabled" disabled title="Complete or abandon your active route first">
+                        <i class="bi bi-lock-fill me-1"></i> Locked (Finish Active Route First)
+                      </button>`;
+            } else {
+              return `<button type="button" class="btn cp-btn-primary btn-sm px-4 choose-career-btn text-nowrap"
+                        data-career-title="${escapeHtml(crossTrack.career.title)}"
+                        data-career-slug="${escapeHtml(crossTrack.career.slug)}">
+                        <span>Build Roadmap for ${escapeHtml(crossTrack.career.title)}</span>
+                        <i class="bi bi-arrow-right ms-1"></i>
+                      </button>`;
+            }
+          })()}
         </div>
       `;
 
@@ -971,7 +1144,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       } catch (err) {
         console.error('Roadmap generation error:', err);
-        showAlert(err.message || 'An error occurred while generating roadmap.', 'danger');
+        if (roadmapModal) roadmapModal.hide();
+
+        if (err.status === 409 || err.code === 'ACTIVE_ROUTE_IN_PROGRESS') {
+          showAlert(
+            err.message || 'You already have an active career route in progress. Complete it first or abandon it before starting another track.',
+            'warning'
+          );
+          await fetchUserRouteState();
+          loadRecommendations();
+        } else {
+          showAlert(err.message || 'An error occurred while generating roadmap.', 'danger');
+        }
       } finally {
         if (!window.location.href.includes('roadmap.html')) {
           btnConfirmGenerate.disabled = false;

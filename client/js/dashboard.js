@@ -1690,21 +1690,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  // 2. AI Resume Lab & ATS Analyzer
-  // 2. AI Resume Lab & ATS Analyzer
+  // 2. AI Resume Lab & ATS Analyzer (Strict Single-Resume Architecture)
   const loadResumeLab = async () => {
-    try {
-      const res = await window.API.get('/resume/analysis', { auth: true });
-      if (res.success && res.data) {
-        const analysis = res.data.analysis || res.data;
-        if (analysis?.atsScore) {
-          renderResumeAnalysis(analysis);
-        }
-      }
-    } catch (err) {
-      console.warn('No prior resume analysis loaded:', err);
-    }
-
     // Set target role badge
     const resumeTargetCareerBadge = document.getElementById('resumeTargetCareerBadge');
     const activeCareer = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
@@ -1712,36 +1699,127 @@ document.addEventListener('DOMContentLoaded', async () => {
       resumeTargetCareerBadge.textContent = `Target: ${activeCareer}`;
     }
 
-    // Setup Document Upload Dropzone & Controls
+    // State Elements
     const dropzone = document.getElementById('resumeLabDropzone');
     const fileInput = document.getElementById('resumeLabFileInput');
-    const emptyState = document.getElementById('dropzoneEmptyState');
-    const activeFileState = document.getElementById('dropzoneActiveFileState');
-    const uploadingState = document.getElementById('dropzoneUploadingState');
-    const labResumeFileName = document.getElementById('labResumeFileName');
+    const stateLoading = document.getElementById('resumeStateLoading');
+    const stateLocked = document.getElementById('resumeStateLocked');
+    const stateNoResume = document.getElementById('resumeStateNoResume');
+    const stateUploading = document.getElementById('resumeStateUploading');
+    const stateHasResume = document.getElementById('resumeStateHasResume');
+    const stateFailed = document.getElementById('resumeStateFailed');
+
+    const uploadProgressText = document.getElementById('resumeUploadProgressText');
+    const failedReasonEl = document.getElementById('resumeFailedReason');
+    const resumeFileNameEl = document.getElementById('resumeStateFileName');
+    const resumeMetaEl = document.getElementById('resumeStateMeta');
+    const resumeDocIcon = document.getElementById('resumeStateDocIcon');
+
     const btnViewLabResume = document.getElementById('btnViewLabResume');
-    const btnChangeLabResume = document.getElementById('btnChangeLabResume');
+    const btnDownloadLabResume = document.getElementById('btnDownloadLabResume');
+    const btnReplaceLabResume = document.getElementById('btnReplaceLabResume');
+    const btnDeleteLabResume = document.getElementById('btnDeleteLabResume');
+    const btnRetryResumeUpload = document.getElementById('btnRetryResumeUpload');
     const btnAnalyzeResume = document.getElementById('btnAnalyzeResume');
     const resumeTextInput = document.getElementById('resumeTextInput');
 
-    const currentUser = dashboardData?.user || window.Auth?.getUser() || {};
+    let currentResumeData = null;
+    let isResumeLocked = false;
 
-    const updateDropzoneUI = () => {
-      const u = dashboardData?.user || window.Auth?.getUser() || {};
-      if (u?.resumeUrl) {
-        if (emptyState) emptyState.classList.add('d-none');
-        if (activeFileState) activeFileState.classList.remove('d-none');
-        if (labResumeFileName) {
-          const namePart = (u.name || 'document').toLowerCase().replace(/\s+/g, '_');
-          labResumeFileName.textContent = `resume_${namePart}.pdf`;
+    const setResumeState = (state, meta = {}) => {
+      [stateLoading, stateLocked, stateNoResume, stateUploading, stateHasResume, stateFailed].forEach(el => {
+        if (el) el.classList.add('d-none');
+      });
+
+      if (state === 'loading' && stateLoading) {
+        stateLoading.classList.remove('d-none');
+      } else if (state === 'locked' && stateLocked) {
+        stateLocked.classList.remove('d-none');
+      } else if (state === 'no_resume' && stateNoResume) {
+        stateNoResume.classList.remove('d-none');
+      } else if (state === 'uploading' && stateUploading) {
+        stateUploading.classList.remove('d-none');
+        if (uploadProgressText && meta.text) uploadProgressText.textContent = meta.text;
+      } else if (state === 'has_resume' && stateHasResume) {
+        stateHasResume.classList.remove('d-none');
+        const resume = meta.resume || currentResumeData || {};
+        if (resumeFileNameEl) resumeFileNameEl.textContent = resume.fileName || 'Student_Resume.pdf';
+        if (resumeMetaEl) {
+          const sizeKb = resume.sizeBytes ? Math.round(resume.sizeBytes / 1024) : 0;
+          const sizeStr = sizeKb > 1024 ? `${(sizeKb / 1024).toFixed(1)} MB` : `${sizeKb} KB`;
+          const dateStr = resume.lastUpdatedAt ? new Date(resume.lastUpdatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today';
+          resumeMetaEl.textContent = `${sizeStr} · Updated ${dateStr}`;
         }
+        if (resumeDocIcon) {
+          const isDocx = (resume.fileName || '').match(/\.(docx|doc)$/i);
+          resumeDocIcon.className = isDocx ? 'bi bi-file-earmark-word-fill text-primary fs-5' : 'bi bi-file-earmark-pdf-fill text-teal fs-5';
+        }
+
+        // Direct authenticated download link
+        const token = window.Auth?.getToken() || localStorage.getItem('token') || '';
+        const apiBase = window.API_BASE_URL || (window.CONFIG?.API_BASE_URL) || 'http://localhost:5000/api';
+        if (btnDownloadLabResume) {
+          btnDownloadLabResume.href = `${apiBase}/users/resume/download?token=${encodeURIComponent(token)}`;
+          btnDownloadLabResume.target = '_blank';
+        }
+      } else if (state === 'failed' && stateFailed) {
+        stateFailed.classList.remove('d-none');
+        if (failedReasonEl) failedReasonEl.textContent = meta.reason || 'Upload failed. Your previous resume is unchanged.';
+      }
+
+      // Sync profile card view resume link
+      const viewResumeLink = document.getElementById('viewResumeLink');
+      const noResumeText = document.getElementById('noResumeText');
+      if (state === 'has_resume') {
+        if (viewResumeLink) {
+          viewResumeLink.href = 'javascript:void(0)';
+          viewResumeLink.classList.remove('d-none');
+          viewResumeLink.onclick = (e) => {
+            e.preventDefault();
+            window.openResumeViewerModal();
+          };
+        }
+        if (noResumeText) noResumeText.classList.add('d-none');
       } else {
-        if (emptyState) emptyState.classList.remove('d-none');
-        if (activeFileState) activeFileState.classList.add('d-none');
+        if (viewResumeLink) viewResumeLink.classList.add('d-none');
+        if (noResumeText) noResumeText.classList.remove('d-none');
       }
     };
 
-    updateDropzoneUI();
+    // Load Resume status from server
+    setResumeState('loading');
+    try {
+      const res = await window.API.get('/users/resume', { auth: true });
+      if (res.success && res.data) {
+        isResumeLocked = Boolean(res.data.isLocked);
+        if (res.data.hasResume && res.data.resume) {
+          currentResumeData = res.data.resume;
+          setResumeState('has_resume', { resume: res.data.resume });
+        } else if (isResumeLocked) {
+          setResumeState('locked');
+        } else {
+          setResumeState('no_resume');
+        }
+      } else {
+        setResumeState('no_resume');
+      }
+    } catch (err) {
+      console.warn('Failed to load resume status:', err);
+      setResumeState('no_resume');
+    }
+
+    // Load initial ATS analysis if available
+    try {
+      const analysisRes = await window.API.get('/resume/analysis', { auth: true });
+      if (analysisRes.success && analysisRes.data) {
+        const analysis = analysisRes.data.analysis || analysisRes.data;
+        if (analysis?.atsScore) {
+          renderResumeAnalysis(analysis);
+        }
+      }
+    } catch (atsErr) {
+      console.warn('No prior ATS analysis loaded:', atsErr);
+    }
 
     // View resume button inside lab
     if (btnViewLabResume) {
@@ -1753,71 +1831,129 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
     }
 
-    // Change resume button inside lab
-    if (btnChangeLabResume && fileInput) {
-      btnChangeLabResume.onclick = (e) => {
+    // Replace Resume button with confirmation prompt
+    if (btnReplaceLabResume && fileInput) {
+      btnReplaceLabResume.onclick = (e) => {
+        e.stopPropagation();
+        const currentName = currentResumeData?.fileName || 'current resume';
+        const confirmed = confirm(`Replace your current resume?\n\nUploading will replace "${currentName}" with your new file in secure cloud storage. This cannot be undone.\n\nClick OK to select your replacement file.`);
+        if (confirmed) {
+          fileInput.click();
+        }
+      };
+    }
+
+    // Delete Resume button with confirmation
+    if (btnDeleteLabResume) {
+      btnDeleteLabResume.onclick = async (e) => {
+        e.stopPropagation();
+        const confirmed = confirm('Are you sure you want to delete your stored resume?\n\nThis will remove your document from secure storage and clear your ATS keyword score.');
+        if (!confirmed) return;
+
+        setResumeState('loading');
+        try {
+          const delRes = await window.API.delete('/users/resume', { auth: true });
+          if (delRes.success) {
+            currentResumeData = null;
+            const u = dashboardData?.user || window.Auth?.getUser() || {};
+            u.resumeUrl = '';
+            if (dashboardData) dashboardData.user = u;
+            window.Auth.setCurrentUser(u);
+
+            // Reset ATS score displays
+            const atsScoreValue = document.getElementById('atsScoreValue');
+            const atsProgressBar = document.getElementById('atsProgressBar');
+            const atsScoreSummary = document.getElementById('atsScoreSummary');
+            if (atsScoreValue) atsScoreValue.textContent = '--';
+            if (atsProgressBar) atsProgressBar.style.width = '0%';
+            if (atsScoreSummary) atsScoreSummary.textContent = 'Upload your resume document or click "Scan Resume" to analyze against recruiter benchmarks.';
+
+            if (isResumeLocked) {
+              setResumeState('locked');
+            } else {
+              setResumeState('no_resume');
+            }
+
+            await loadJobReadiness();
+            showAlert('Resume deleted successfully.', 'success');
+          } else {
+            showAlert(delRes.message || 'Failed to delete resume.', 'danger');
+            setResumeState('has_resume', { resume: currentResumeData });
+          }
+        } catch (delErr) {
+          showAlert(delErr.message || 'Error deleting resume.', 'danger');
+          setResumeState('has_resume', { resume: currentResumeData });
+        }
+      };
+    }
+
+    // Retry upload button
+    if (btnRetryResumeUpload && fileInput) {
+      btnRetryResumeUpload.onclick = (e) => {
         e.stopPropagation();
         fileInput.click();
       };
     }
 
-    // Handle Upload Workflow
+    // Single Resume Upload Handler
     const handleResumeUpload = async (file) => {
       if (!file) return;
 
-      if (!file.name.match(/\.(pdf|doc|docx)$/i)) {
-        showAlert('Invalid file type. Please upload a PDF, DOC, or DOCX document.', 'warning');
+      // Client pre-checks
+      if (!file.name.match(/\.(pdf|docx|doc)$/i)) {
+        showAlert('Invalid file format. Please upload a PDF, DOCX, or DOC document.', 'warning');
         return;
       }
-      if (file.size > 10 * 1024 * 1024) {
-        showAlert('File size exceeds 10MB limit.', 'warning');
+      if (file.size > 5 * 1024 * 1024) {
+        showAlert(`File exceeds 5MB limit (${(file.size / 1024 / 1024).toFixed(2)}MB). Please upload a file under 5MB.`, 'warning');
         return;
       }
 
-      if (emptyState) emptyState.classList.add('d-none');
-      if (activeFileState) activeFileState.classList.add('d-none');
-      if (uploadingState) uploadingState.classList.remove('d-none');
+      // If user already has a resume and uploaded via dropzone directly, confirm replacement
+      if (currentResumeData && !fileInput.dataset.confirmedReplacement) {
+        const confirmed = confirm(`Replace your current resume?\n\nUploading will replace "${currentResumeData.fileName || 'current resume'}" with "${file.name}".\n\nClick OK to proceed with replacement.`);
+        if (!confirmed) {
+          if (fileInput) fileInput.value = '';
+          return;
+        }
+      }
+      delete fileInput.dataset.confirmedReplacement;
+
+      setResumeState('uploading', { text: 'Uploading to secure storage & verifying binary signature...' });
 
       try {
         const fileData = await window.CloudinaryService.readFileAsDataURL(file);
-        const res = await window.API.post('/users/resume', { fileData }, { auth: true });
+        const res = await window.API.post('/users/resume', { fileData, fileName: file.name }, { auth: true });
 
         if (res.success && res.data) {
+          currentResumeData = res.data.resume || {
+            fileName: file.name,
+            sizeBytes: file.size,
+            fileType: file.type || 'application/pdf',
+            lastUpdatedAt: new Date(),
+          };
+
           const userObj = res.data.user || dashboardData?.user || {};
           if (res.data.resumeUrl) userObj.resumeUrl = res.data.resumeUrl;
           window.Auth.setCurrentUser(userObj);
           if (dashboardData) dashboardData.user = userObj;
 
-          // Update profile card view link
-          const viewResumeLink = document.getElementById('viewResumeLink');
-          const noResumeText = document.getElementById('noResumeText');
-          if (viewResumeLink) {
-            viewResumeLink.href = 'javascript:void(0)';
-            viewResumeLink.classList.remove('d-none');
-            viewResumeLink.onclick = (e) => {
-              e.preventDefault();
-              window.openResumeViewerModal();
-            };
-          }
-          if (noResumeText) noResumeText.classList.add('d-none');
-
-          // If text was extracted, populate textarea
           if (res.data.extractedText && resumeTextInput) {
             resumeTextInput.value = res.data.extractedText;
           }
 
-          // If analysis was returned, render it immediately
+          setResumeState('has_resume', { resume: currentResumeData });
+
           if (res.data.resumeAnalysis) {
             renderResumeAnalysis(res.data.resumeAnalysis);
             showAlert(`Resume uploaded & parsed! ATS Match: ${res.data.resumeAnalysis.atsScore}/100.`, 'success');
             await loadJobReadiness();
           } else {
-            // Trigger scan with the newly uploaded document
             showAlert('Resume uploaded to Cloudinary! Running ATS keyword analysis...', 'info');
             const targetCareer = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
             const scanRes = await window.API.post('/resume/analyze', {
               resumeText: res.data.extractedText || '',
-              targetCareer
+              targetCareer,
             }, { auth: true });
 
             if (scanRes.success && scanRes.data) {
@@ -1826,27 +1962,36 @@ document.addEventListener('DOMContentLoaded', async () => {
               showAlert(`ATS Analysis complete! Match Score: ${scanRes.data.atsScore}/100.`, 'success');
             }
           }
-
-          updateDropzoneUI();
-          if (labResumeFileName) labResumeFileName.textContent = file.name;
         } else {
+          setResumeState('failed', { reason: res.message || 'Server rejected resume upload.' });
           showAlert(res.message || 'Failed to upload resume.', 'danger');
-          updateDropzoneUI();
         }
       } catch (uploadErr) {
-        console.error('Resume upload error in Resume Lab:', uploadErr);
-        showAlert(uploadErr.message || 'Failed to upload resume file.', 'danger');
-        updateDropzoneUI();
+        console.error('Resume upload error:', uploadErr);
+        const reason = uploadErr.message || 'Failed to upload resume file.';
+        setResumeState('failed', { reason });
+        showAlert(reason, 'danger');
       } finally {
-        if (uploadingState) uploadingState.classList.add('d-none');
         if (fileInput) fileInput.value = '';
       }
     };
 
-    // Dropzone interaction events
+    // Dropzone interaction
     if (dropzone && fileInput) {
       dropzone.onclick = (e) => {
-        if (!e.target.closest('#btnViewLabResume') && !e.target.closest('#btnChangeLabResume')) {
+        if (
+          !e.target.closest('#btnViewLabResume') &&
+          !e.target.closest('#btnDownloadLabResume') &&
+          !e.target.closest('#btnReplaceLabResume') &&
+          !e.target.closest('#btnDeleteLabResume') &&
+          !e.target.closest('#btnRetryResumeUpload') &&
+          !e.target.closest('#resumeStateLocked')
+        ) {
+          if (currentResumeData) {
+            const confirmed = confirm(`Replace your current resume?\n\nUploading will replace "${currentResumeData.fileName || 'current resume'}" with your new file.\n\nClick OK to select a replacement file.`);
+            if (!confirmed) return;
+            fileInput.dataset.confirmedReplacement = 'true';
+          }
           fileInput.click();
         }
       };
@@ -1855,7 +2000,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         dropzone.addEventListener(evt, (e) => {
           e.preventDefault();
           e.stopPropagation();
-          dropzone.classList.add('dragover');
+          dropzone.classList.add('border-teal', 'bg-white');
         });
       });
 
@@ -1863,7 +2008,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         dropzone.addEventListener(evt, (e) => {
           e.preventDefault();
           e.stopPropagation();
-          dropzone.classList.remove('dragover');
+          dropzone.classList.remove('border-teal', 'bg-white');
         });
       });
 
@@ -1878,6 +2023,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const pickedFile = e.target.files?.[0];
         if (pickedFile) handleResumeUpload(pickedFile);
       });
+    }
+
+    // Also wire header button (btnUploadResumeTrigger) to delegate here!
+    const headerResumeBtn = document.getElementById('btnUploadResumeTrigger');
+    if (headerResumeBtn && fileInput) {
+      headerResumeBtn.onclick = (e) => {
+        e.preventDefault();
+        if (currentResumeData) {
+          const confirmed = confirm(`Replace your current resume?\n\nUploading will replace "${currentResumeData.fileName || 'current resume'}" with your new file.\n\nClick OK to select a replacement file.`);
+          if (!confirmed) return;
+          fileInput.dataset.confirmedReplacement = 'true';
+        }
+        fileInput.click();
+      };
     }
 
     // Bind scan button

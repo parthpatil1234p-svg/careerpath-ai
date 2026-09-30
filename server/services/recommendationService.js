@@ -273,8 +273,39 @@ const generateRecommendations = (user, careers, limit = 3) => {
 
   const userEducation = user.education || {};
 
-  // 2. Score Each Active Career
-  const scoredCareers = careers.map((career) => {
+  // 2. Resolve Primary Stream
+  let primaryStream = normalizeText(user.primaryStream || user.stream || (user.education && user.education.stream) || '');
+  if (primaryStream === 'tech') primaryStream = 'engineering';
+  if (!primaryStream) {
+    const course = normalizeText(userEducation?.course || '');
+    if (course.includes('bba') || course.includes('b.com') || course.includes('mba') || course.includes('finance') || course.includes('economics') || course.includes('commerce')) {
+      primaryStream = 'business';
+    } else if (course.includes('marketing') || course.includes('comm') || course.includes('media')) {
+      primaryStream = 'marketing';
+    } else if (course.includes('design') || course.includes('arts') || course.includes('animation') || course.includes('fine arts')) {
+      primaryStream = 'creative';
+    } else if (course.includes('bca') || course.includes('b.tech') || course.includes('btech') || course.includes('mca') || course.includes('cs') || course.includes('engineering')) {
+      primaryStream = 'engineering';
+    }
+  }
+
+  // 3. Strict Candidate Stream Isolation:
+  // If the user selected a dedicated primary stream (engineering, business, marketing, creative),
+  // candidate careers MUST be strictly restricted to that stream only.
+  // Foreign stream careers are never scored or suggested.
+  let candidateCareers = careers;
+  if (primaryStream && primaryStream !== 'cross') {
+    const streamFiltered = careers.filter((c) => {
+      const cDomain = normalizeText(c.domain || 'engineering');
+      return cDomain === primaryStream;
+    });
+    if (streamFiltered.length > 0) {
+      candidateCareers = streamFiltered;
+    }
+  }
+
+  // 4. Score Each Active Candidate Career
+  const scoredCareers = candidateCareers.map((career) => {
     // A. Skill Match (60%)
     const { skillScore, matchedSkills, weakSkills, missingSkills } =
       calculateSkillScore(userSkillsMap, career.requiredSkills);
@@ -289,26 +320,11 @@ const generateRecommendations = (user, careers, limit = 3) => {
     let rawFinalScore =
       skillScore * 0.6 + interestScore * 0.25 + educationScore * 0.15;
 
-    // Detect primary stream
-    let primaryStream = normalizeText(user.primaryStream || user.stream || (user.education && user.education.stream) || '');
-    if (!primaryStream) {
-      const course = normalizeText(userEducation?.course || '');
-      if (course.includes('bba') || course.includes('b.com') || course.includes('mba') || course.includes('finance') || course.includes('economics') || course.includes('commerce')) {
-        primaryStream = 'business';
-      } else if (course.includes('marketing') || course.includes('comm') || course.includes('media')) {
-        primaryStream = 'marketing';
-      } else if (course.includes('design') || course.includes('arts') || course.includes('animation') || course.includes('fine arts')) {
-        primaryStream = 'creative';
-      }
-    }
-
     // Domain alignment weighting
     const careerDomain = normalizeText(career.domain || 'engineering');
     if (primaryStream && primaryStream !== 'cross') {
       if (careerDomain === primaryStream) {
         rawFinalScore = Math.min(100, rawFinalScore * 1.15 + 5);
-      } else {
-        rawFinalScore = rawFinalScore * 0.82;
       }
     }
 
@@ -382,7 +398,7 @@ const generateRecommendations = (user, careers, limit = 3) => {
     };
   });
 
-  // 3. Sort by finalScore desc (tie-break by skillMatch desc)
+  // 5. Sort by finalScore desc (tie-break by skillMatch desc)
   scoredCareers.sort((a, b) => {
     if (b.finalScore !== a.finalScore) {
       return b.finalScore - a.finalScore;
@@ -390,42 +406,47 @@ const generateRecommendations = (user, careers, limit = 3) => {
     return b.scoreBreakdown.skillMatch - a.scoreBreakdown.skillMatch;
   });
 
-  // 4. Assign ranks and limit results
+  // 6. Assign ranks and limit results
   const topRecommendations = scoredCareers.slice(0, limit).map((rec, index) => ({
     rank: index + 1,
     ...rec,
   }));
 
-  // Intelligent Alternative Cross-Track Discovery Bridge
-  const topDomain = topRecommendations[0]?.career?.domain || 'engineering';
-  const crossTrackCandidate = scoredCareers.find(c => c.career.domain !== topDomain && c.finalScore >= 15);
+  // 7. Intelligent Alternative Cross-Track Discovery Bridge
+  // STRICT RULE: Only compute and provide bridge if user selected 'cross' (cross-disciplinary stream).
+  // When a student selected a dedicated stream (business, marketing, creative, or engineering),
+  // crossTrackDiscovery is strictly null to ensure 100% pure focus on their chosen stream.
   let crossTrackDiscovery = null;
-  if (crossTrackCandidate) {
-    const domainNames = {
-      engineering: 'Engineering & Technology',
-      business: 'Business & Finance',
-      marketing: 'Digital Marketing & Growth',
-      creative: 'Design & Creative',
-    };
-    const targetDomainLabel = domainNames[crossTrackCandidate.career.domain] || crossTrackCandidate.career.domain;
-    const bridgeReason = crossTrackCandidate.career.domain === 'business'
-      ? 'Transfer your analytical problem-solving into revenue, finance & operational leadership.'
-      : crossTrackCandidate.career.domain === 'marketing'
-      ? 'Leverage technical and analytical reasoning to dominate algorithmic growth & conversion architectures.'
-      : crossTrackCandidate.career.domain === 'creative'
-      ? 'Combine structural thinking with spatial brand & visual asset storytelling.'
-      : 'Bridge domain and analytical principles with software automation and engineering scalability.';
+  if (primaryStream === 'cross') {
+    const topDomain = topRecommendations[0]?.career?.domain || 'engineering';
+    const crossTrackCandidate = scoredCareers.find(c => c.career.domain !== topDomain && c.finalScore >= 15);
+    if (crossTrackCandidate) {
+      const domainNames = {
+        engineering: 'Engineering & Technology',
+        business: 'Business & Finance',
+        marketing: 'Digital Marketing & Growth',
+        creative: 'Design & Creative',
+      };
+      const targetDomainLabel = domainNames[crossTrackCandidate.career.domain] || crossTrackCandidate.career.domain;
+      const bridgeReason = crossTrackCandidate.career.domain === 'business'
+        ? 'Transfer your analytical problem-solving into revenue, finance & operational leadership.'
+        : crossTrackCandidate.career.domain === 'marketing'
+        ? 'Leverage technical and analytical reasoning to dominate algorithmic growth & conversion architectures.'
+        : crossTrackCandidate.career.domain === 'creative'
+        ? 'Combine structural thinking with spatial brand & visual asset storytelling.'
+        : 'Bridge domain and analytical principles with software automation and engineering scalability.';
 
-    crossTrackDiscovery = {
-      career: crossTrackCandidate.career,
-      finalScore: crossTrackCandidate.finalScore,
-      matchScore: crossTrackCandidate.finalScore,
-      scoreBreakdown: crossTrackCandidate.scoreBreakdown,
-      bridgeReason: bridgeReason,
-      note: `💡 Cross-Domain Discovery: Because of your transferable problem-solving & analytical skills, you also match ${crossTrackCandidate.finalScore}% with ${crossTrackCandidate.career.title} in the ${targetDomainLabel} track.`,
-      matchedSkills: crossTrackCandidate.matchedSkills.map(s => s.displayName || s.name),
-      gapSkills: crossTrackCandidate.missingSkills.slice(0, 3).map(s => s.displayName || s.name),
-    };
+      crossTrackDiscovery = {
+        career: crossTrackCandidate.career,
+        finalScore: crossTrackCandidate.finalScore,
+        matchScore: crossTrackCandidate.finalScore,
+        scoreBreakdown: crossTrackCandidate.scoreBreakdown,
+        bridgeReason: bridgeReason,
+        note: `💡 Cross-Domain Discovery: Because of your transferable problem-solving & analytical skills, you also match ${crossTrackCandidate.finalScore}% with ${crossTrackCandidate.career.title} in the ${targetDomainLabel} track.`,
+        matchedSkills: crossTrackCandidate.matchedSkills.map(s => s.displayName || s.name),
+        gapSkills: crossTrackCandidate.missingSkills.slice(0, 3).map(s => s.displayName || s.name),
+      };
+    }
   }
   topRecommendations.crossTrackDiscovery = crossTrackDiscovery;
 
@@ -434,6 +455,7 @@ const generateRecommendations = (user, careers, limit = 3) => {
 
 module.exports = {
   generateRecommendations,
+  getRuleBasedRecommendations: generateRecommendations,
   calculateSkillScore,
   calculateInterestScore,
   calculateEducationScore,

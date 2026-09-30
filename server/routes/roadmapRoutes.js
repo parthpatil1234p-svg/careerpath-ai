@@ -21,6 +21,8 @@ const {
   generateRoadmap,
   getCurrentRoadmap,
   toggleTask,
+  abandonRoadmap,
+  resumeRoadmap,
   archiveRoadmap,
   linkProjectRepo,
   startWeeklyTestController,
@@ -34,6 +36,8 @@ router.post('/generate', protect, requireSkillVerification, validateRoadmapGener
 router.get('/current', protect, requireSkillVerification, getCurrentRoadmap);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
 router.post('/tasks/:taskId/link-repo', protect, validateTaskId, linkProjectRepo);
+router.post('/current/abandon', protect, abandonRoadmap);
+router.post('/:id/resume', protect, resumeRoadmap);
 router.delete('/current', protect, archiveRoadmap);
 
 // Weekly Milestone Tests (Server-clock 30-min timer & 70% threshold)

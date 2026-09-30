@@ -13,6 +13,7 @@
  */
 
 const User = require('../models/User');
+const Resume = require('../models/Resume');
 
 // ── Permitted update fields whitelist ─────────────────────────
 // Only these fields can be changed via PUT /api/users/me.
@@ -125,8 +126,82 @@ const {
   getResumePreviewUrl,
   downloadResumeBuffer,
   deleteResource,
+  deleteResumeFromCloudinary,
 } = require('../services/cloudinaryService');
 const { getSkillEvidence } = require('../services/evidenceService');
+
+/**
+ * Validates resume binary buffer, magic bytes, and file size.
+ * Enforces magic-byte file signature validation:
+ * - PDF: %PDF- (hex 25 50 44 46)
+ * - DOCX: PK\x03\x04 (hex 50 4b 03 04)
+ * - DOC: \xd0\xcf\x11\xe0 (hex d0 cf 11 e0)
+ * Max size: 5MB
+ * @param {string} fileData - Base64 data URI or raw base64 string
+ * @param {string} declaredName - File name submitted by client
+ * @returns {{ buffer: Buffer, mimeType: string, sizeBytes: number, sanitizedName: string }}
+ */
+function validateResumeBuffer(fileData, declaredName = 'Resume.pdf') {
+  if (!fileData || typeof fileData !== 'string') {
+    const err = new Error('Resume file data is required.');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const match = fileData.match(/^data:([a-zA-Z0-9\/+.-]+);base64,(.+)$/s);
+  const base64Payload = match ? match[2].trim() : fileData.trim();
+
+  let buffer;
+  try {
+    buffer = Buffer.from(base64Payload, 'base64');
+  } catch (e) {
+    const err = new Error('Invalid base64 encoding for resume file.');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const sizeBytes = buffer.length;
+  if (sizeBytes === 0) {
+    const err = new Error('Resume file cannot be empty.');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const maxBytes = 5 * 1024 * 1024; // 5 MB
+  if (sizeBytes > maxBytes) {
+    const actualMb = (sizeBytes / (1024 * 1024)).toFixed(2);
+    const err = new Error(`Resume size (${actualMb} MB) exceeds maximum allowed limit of 5.0 MB.`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  // Inspect first 4 bytes
+  const headerHex = buffer.subarray(0, 4).toString('hex').toLowerCase();
+  const headerAscii = buffer.subarray(0, 4).toString('ascii');
+
+  let mimeType = '';
+  if (headerAscii.startsWith('%PDF')) {
+    mimeType = 'application/pdf';
+  } else if (headerHex === '504b0304') {
+    mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  } else if (headerHex === 'd0cf11e0') {
+    mimeType = 'application/msword';
+  } else {
+    const err = new Error('Invalid file format. Resume must be a valid PDF, DOCX, or DOC document.');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  let sanitizedName = (declaredName || 'Student_Resume.pdf')
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .substring(0, 100);
+  if (!sanitizedName.includes('.')) {
+    sanitizedName += (mimeType === 'application/pdf' ? '.pdf' : '.docx');
+  }
+
+  return { buffer, mimeType, sizeBytes, sanitizedName };
+}
+
 
 /**
  * Strict MIME Type and Size Validator for Base64 Data URIs
@@ -214,49 +289,120 @@ const uploadAvatar = async (req, res, next) => {
 };
 
 /**
+ * GET /api/users/resume
+ * Returns current resume status, file details, ATS score, and locked state.
+ */
+const getMyResume = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const evidence = await getSkillEvidence(req.user._id);
+    const verifiedCount = evidence?.verifiedCount || 0;
+
+    const resume = await Resume.findOne({ user: req.user._id });
+    const hasResume = Boolean(resume?.fileLocation || user.resumeUrl);
+    const isLocked = verifiedCount === 0 && !hasResume;
+
+    let targetRole = user.careerGoals?.primaryTrack || 'Software Engineer';
+    try {
+      const Roadmap = require('../models/Roadmap');
+      const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' }).populate('career');
+      if (activeRoadmap?.career?.title) {
+        targetRole = activeRoadmap.career.title;
+      }
+    } catch (e) {}
+
+    let resumeData = null;
+    if (resume) {
+      resumeData = {
+        fileName: resume.originalName,
+        fileType: resume.fileType,
+        sizeBytes: resume.sizeBytes,
+        fileLocation: resume.fileLocation,
+        version: resume.version,
+        atsScore: resume.atsScore !== null ? resume.atsScore : (user.resumeAnalysis?.atsScore ?? null),
+        firstUploadedAt: resume.firstUploadedAt,
+        lastUpdatedAt: resume.lastUpdatedAt,
+      };
+    } else if (user.resumeUrl) {
+      resumeData = {
+        fileName: user.resumeRecord?.fileName || 'Student_Resume.pdf',
+        fileType: 'application/pdf',
+        sizeBytes: user.resumeRecord?.fileSize || 0,
+        fileLocation: user.resumeUrl,
+        version: 1,
+        atsScore: user.resumeAnalysis?.atsScore ?? null,
+        firstUploadedAt: user.resumeRecord?.firstUploadedDate || user.createdAt,
+        lastUpdatedAt: user.resumeRecord?.lastUpdatedDate || user.updatedAt,
+      };
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        hasResume,
+        isLocked,
+        verifiedSkillsCount: verifiedCount,
+        targetRole,
+        resume: resumeData,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
  * POST /api/users/resume
- * Body: { fileData: "data:application/pdf;base64,..." }
+ * Body: { fileData: "data:application/pdf;base64,...", fileName?: "resume.pdf" }
+ *
+ * Strict Single-Resume Pipeline:
+ * 1. Skill Lock Gate: 0 verified skills blocks initial upload (updating existing resume is allowed).
+ * 2. Deep binary validation: magic-byte signature check for PDF, DOCX, DOC and size <= 5MB.
+ * 3. Safe in-place replacement: old Cloudinary asset destroyed ONLY after new DB record commits.
+ * 4. Database-level invariant: Resume.findOneAndUpdate with upsert enforces unique user constraint.
  */
 const uploadResume = async (req, res, next) => {
   try {
     const { fileData, fileName } = req.body;
 
-    // 1. Server Unlock Rule: Verify at least one skill before unlocking resume upload
-    const evidence = await getSkillEvidence(req.user._id);
-    if (!evidence || evidence.verifiedCount === 0) {
-      return res.status(403).json({
-        success: false,
-        code: 'VERIFICATION_REQUIRED',
-        message: 'Verify one skill to unlock resume upload.',
-      });
+    // 1. Check existing resume
+    const existingResume = await Resume.findOne({ user: req.user._id });
+    const existingUser = await User.findById(req.user._id);
+    const hasExistingResume = Boolean(existingResume?.fileLocation || existingUser?.resumeUrl);
+
+    // 2. Verified skill lock gate (Accounts with 0 verified skills cannot upload INITIAL resume)
+    if (!hasExistingResume) {
+      const evidence = await getSkillEvidence(req.user._id);
+      if (!evidence || evidence.verifiedCount === 0) {
+        return res.status(403).json({
+          success: false,
+          code: 'RESUME_LOCKED',
+          message: 'Verify one skill to unlock resume upload.',
+        });
+      }
     }
 
-    const uploadInfo = validateBase64Upload(
-      fileData,
-      [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      ],
-      5 * 1024 * 1024,
-      'Resume'
-    );
+    // 3. Deep binary buffer & magic-byte validation
+    const validated = validateResumeBuffer(fileData, fileName);
 
-    // Fetch existing user to get old publicId for safe replacement
-    const existingUser = await User.findById(req.user._id);
-    const oldPublicId = existingUser?.resumeRecord?.publicId;
+    // 4. Save old public_id for safe cleanup after DB commit
+    const oldPublicId = existingResume?.publicId || existingUser?.resumeRecord?.publicId;
 
+    // 5. Upload new asset to Cloudinary
     const uploadRes = await uploadResumeToCloudinary(fileData, req.user._id);
     const resumeUrl = uploadRes.secure_url;
+    const newPublicId = uploadRes.public_id;
 
-    // 2. Attempt extracting text from base64 PDF
+    // 6. Extract text from PDF if applicable
     let extractedText = '';
     try {
-      if (fileData.startsWith('data:application/pdf') || fileData.includes('JVBERi0')) {
-        const base64Data = fileData.replace(/^data:application\/pdf;base64,/, '').replace(/^data:[^;]+;base64,/, '');
-        const pdfBuffer = Buffer.from(base64Data, 'base64');
+      if (validated.mimeType === 'application/pdf') {
         const { PDFParse } = require('pdf-parse');
-        const parser = new PDFParse({ data: pdfBuffer });
+        const parser = new PDFParse({ data: validated.buffer });
         await parser.load();
         const parseResult = await parser.getText();
         if (parseResult && typeof parseResult.text === 'string') {
@@ -264,16 +410,16 @@ const uploadResume = async (req, res, next) => {
         }
       }
     } catch (parseErr) {
-      console.warn('[userController.uploadResume] PDF text extraction note:', parseErr.message);
+      console.warn('[userController.uploadResume] Text extraction note:', parseErr.message);
     }
 
-    // 3. Automatically trigger ATS Analysis if text extracted or using candidate data
+    // 7. Auto-trigger ATS analysis
     let resumeAnalysis = null;
     try {
       const { analyzeResumeText } = require('../services/resumeAnalyzerService');
       const Roadmap = require('../models/Roadmap');
       const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' }).populate('career');
-      const targetCareer = activeRoadmap?.career?.title || 'Full-Stack Developer';
+      const targetCareer = activeRoadmap?.career?.title || existingUser?.careerGoals?.primaryTrack || 'Full-Stack Developer';
 
       const candidate = existingUser || await User.findById(req.user._id);
       const textToGrade = (extractedText && extractedText.length > 50) ? extractedText : (
@@ -287,42 +433,75 @@ Target Role: ${targetCareer}`
       console.warn('[userController.uploadResume] ATS analysis note:', atsErr.message);
     }
 
-    // 4. Update user in DB with resumeRecord
+    // 8. Atomic database-level upsert in Resume model (enforces unique user index)
     const now = new Date();
+    const updatedResume = await Resume.findOneAndUpdate(
+      { user: req.user._id },
+      {
+        $set: {
+          originalName: validated.sanitizedName,
+          fileType: validated.mimeType,
+          sizeBytes: validated.sizeBytes,
+          fileLocation: resumeUrl,
+          publicId: newPublicId,
+          extractedText,
+          atsScore: resumeAnalysis?.atsScore ?? null,
+          lastUpdatedAt: now,
+        },
+        $setOnInsert: {
+          firstUploadedAt: now,
+        },
+        $inc: { version: 1 },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    // 9. Sync User document
     const resumeRecord = {
       fileLocation: resumeUrl,
-      fileName: fileName || req.body.fileName || 'Resume.pdf',
-      fileSize: uploadInfo.sizeBytes,
-      firstUploadedDate: existingUser?.resumeRecord?.firstUploadedDate || now,
+      fileName: validated.sanitizedName,
+      fileSize: validated.sizeBytes,
+      firstUploadedDate: existingResume?.firstUploadedAt || existingUser?.resumeRecord?.firstUploadedDate || now,
       lastUpdatedDate: now,
-      publicId: uploadRes.public_id,
+      publicId: newPublicId,
     };
 
-    const updateFields = {
+    const userUpdateFields = {
       resumeUrl,
       resumeRecord,
     };
     if (resumeAnalysis) {
-      updateFields.resumeAnalysis = resumeAnalysis;
+      userUpdateFields.resumeAnalysis = resumeAnalysis;
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: updateFields },
+      { $set: userUpdateFields },
       { new: true, runValidators: false }
     );
 
-    // 5. Delete old asset from Cloudinary only after new file is committed to DB
-    if (oldPublicId && oldPublicId !== uploadRes.public_id) {
-      deleteResource(oldPublicId).catch(() => {});
+    // 10. Safe Cleanup: Old asset is destroyed ONLY after new asset successfully committed to DB
+    if (oldPublicId && oldPublicId !== newPublicId) {
+      deleteResumeFromCloudinary(oldPublicId).catch((delErr) => {
+        console.warn('[userController.uploadResume] Old asset cleanup note:', delErr.message);
+      });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Resume updated successfully.',
       data: {
         resumeUrl,
-        resume: updatedUser.resumeRecord,
+        resume: {
+          fileName: updatedResume.originalName,
+          fileType: updatedResume.fileType,
+          sizeBytes: updatedResume.sizeBytes,
+          fileLocation: updatedResume.fileLocation,
+          version: updatedResume.version,
+          atsScore: updatedResume.atsScore,
+          firstUploadedAt: updatedResume.firstUploadedAt,
+          lastUpdatedAt: updatedResume.lastUpdatedAt,
+        },
         resumeRecord: updatedUser.resumeRecord,
         extractedText,
         resumeAnalysis,
@@ -331,9 +510,52 @@ Target Role: ${targetCareer}`
     });
   } catch (error) {
     console.error('Resume upload error:', error);
-    res.status(error.statusCode || 500).json({
+    return res.status(error.statusCode || 500).json({
       success: false,
       message: error.message || 'Failed to upload resume',
+    });
+  }
+};
+
+/**
+ * DELETE /api/users/resume
+ * Deletes user's resume from Cloudinary, drops Resume document, and resets User model pointers.
+ */
+const deleteMyResume = async (req, res, next) => {
+  try {
+    const resume = await Resume.findOne({ user: req.user._id });
+    const user = await User.findById(req.user._id);
+
+    if (!resume && !user?.resumeUrl) {
+      return res.status(404).json({
+        success: false,
+        message: 'No resume found for this account.',
+      });
+    }
+
+    const publicId = resume?.publicId || user?.resumeRecord?.publicId;
+    if (publicId) {
+      await deleteResumeFromCloudinary(publicId);
+    }
+
+    if (resume) {
+      await Resume.findOneAndDelete({ user: req.user._id });
+    }
+
+    await User.findByIdAndUpdate(req.user._id, {
+      $set: { resumeUrl: '' },
+      $unset: { resumeRecord: 1, resumeAnalysis: 1 },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Resume deleted successfully.',
+    });
+  } catch (error) {
+    console.error('Error deleting resume:', error);
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || 'Failed to delete resume',
     });
   }
 };
@@ -469,10 +691,13 @@ module.exports = {
   getMyProfile,
   updateMyProfile,
   uploadAvatar,
+  getMyResume,
   uploadResume,
+  deleteMyResume,
   viewResume,
   downloadResume,
   getResumePreview,
   updateProfileStatus,
 };
+
 
