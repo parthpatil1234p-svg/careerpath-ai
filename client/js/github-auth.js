@@ -215,7 +215,30 @@ window.GitHubAuth = (function () {
                 : ''
             }
 
-            <!-- Username Input Field -->
+            <!-- Option 1: Real-Time GitHub OAuth Button -->
+            <div class="mb-3">
+              <button
+                type="button"
+                id="btnRealtimeGitHubOAuth"
+                class="btn btn-dark w-100 py-2.5 px-3 d-flex align-items-center justify-content-center gap-2 shadow-sm fw-semibold text-white"
+                style="background: #181717; border-color: #181717;"
+              >
+                <i class="bi bi-github fs-5"></i>
+                <span id="btnRealtimeOAuthText">${isConnectOnly ? 'Authorize with GitHub (Real-Time OAuth)' : 'Sign In with GitHub (Real-Time OAuth)'}</span>
+              </button>
+              <div class="text-center text-secondary small mt-1 font-mono" style="font-size: 0.72rem;">
+                <i class="bi bi-shield-check text-success me-1"></i>Official 1-Click Verification · Authenticates directly on GitHub
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="d-flex align-items-center my-3">
+              <hr class="flex-grow-1 border-line m-0">
+              <span class="px-2 text-secondary font-mono small text-uppercase" style="font-size: 0.70rem;">Or Verify via GitHub Username</span>
+              <hr class="flex-grow-1 border-line m-0">
+            </div>
+
+            <!-- Option 2: Username Input Field -->
             <div class="mb-3">
               <label for="ghUsernameInput" class="form-label small text-secondary fw-semibold">
                 Enter your GitHub Username:
@@ -234,7 +257,7 @@ window.GitHubAuth = (function () {
                 />
               </div>
               <div class="form-text text-secondary small" style="font-size: 0.74rem;">
-                Any student can enter their personal GitHub handle to scan repositories and detect skills.
+                Any student can enter their personal GitHub handle to scan repositories and detect skills in real time.
               </div>
             </div>
 
@@ -367,6 +390,28 @@ window.GitHubAuth = (function () {
       }
     };
 
+    const realtimeOAuthBtn = modalEl.querySelector('#btnRealtimeGitHubOAuth');
+    if (realtimeOAuthBtn) {
+      realtimeOAuthBtn.addEventListener('click', () => {
+        const clientId = githubClientId || window.CONFIG?.GITHUB_CLIENT_ID || 'Ov23liphgi9YF1lbYiUa';
+        const redirectUri = window.location.origin + window.location.pathname;
+
+        try {
+          localStorage.setItem('cp_gh_oauth_intent', JSON.stringify({
+            isConnectOnly: Boolean(isConnectOnly),
+            returnUrl: window.location.href,
+            timestamp: Date.now()
+          }));
+        } catch (e) {}
+
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) modalInstance.hide();
+
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo&redirect_uri=${encodeURIComponent(redirectUri)}`;
+        window.location.href = authUrl;
+      });
+    }
+
     confirmBtn.addEventListener('click', executeAuth);
     usernameInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
@@ -395,6 +440,91 @@ window.GitHubAuth = (function () {
   };
 
   /**
+   * Checks URL query parameters for ?code= on ANY page load (assessment, dashboard, login)
+   */
+  const checkAndHandleOAuthRedirect = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthCode = urlParams.get('code');
+    if (!oauthCode) return;
+
+    // Clean up ?code= from address bar immediately to avoid duplicate processing on refresh
+    const cleanUrl = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, document.title, cleanUrl);
+
+    let intent = {};
+    try {
+      intent = JSON.parse(localStorage.getItem('cp_gh_oauth_intent') || '{}');
+    } catch (e) {}
+    localStorage.removeItem('cp_gh_oauth_intent');
+
+    const isAuthenticated = (typeof window.Auth?.isAuthenticated === 'function' && window.Auth.isAuthenticated()) ||
+                            (typeof window.Auth?.isLoggedIn === 'function' && window.Auth.isLoggedIn()) ||
+                            Boolean(localStorage.getItem('careerpath_token'));
+
+    const notify = (msg, type = 'info') => {
+      if (typeof window.showAlert === 'function') {
+        window.showAlert(msg, type);
+      } else {
+        const alertEl = document.getElementById('alertContainer');
+        if (alertEl) alertEl.innerHTML = `<div class="alert alert-${type} py-2 px-3 small">${msg}</div>`;
+      }
+    };
+
+    if (isAuthenticated) {
+      notify('Authenticating with GitHub and analyzing repositories in real time...', 'info');
+
+      try {
+        const response = await window.API.post('/auth/github/connect', { code: oauthCode }, { auth: true });
+
+        if (response.success && response.data?.user) {
+          window.Auth.setCurrentUser(response.data.user);
+          if (typeof window.Auth?.initNav === 'function') window.Auth.initNav();
+          if (typeof window.applyDetectedSkills === 'function') {
+            window.applyDetectedSkills(response.data);
+          }
+          notify(`✓ Real-time GitHub authentication successful! Connected @${response.data.user.githubProfile?.username || 'user'} with verified skills.`, 'success');
+        } else {
+          showUniversalGitHubModal(
+            { showAlert: notify },
+            true,
+            response.message || 'GitHub OAuth code received! Enter your GitHub username to complete real-time verification:'
+          );
+        }
+      } catch (err) {
+        showUniversalGitHubModal(
+          { showAlert: notify },
+          true,
+          'GitHub OAuth code received! Enter your GitHub username to complete real-time verification:'
+        );
+      }
+    } else {
+      // User is not logged in: Log in via OAuth code
+      sendGitHubAuthPayload(
+        { code: oauthCode },
+        {
+          showAlert: notify,
+          onError: (errRes) => {
+            showUniversalGitHubModal(
+              { showAlert: notify },
+              false,
+              errRes?.message || 'GitHub authorization detected! Enter your GitHub username below to complete instant sign-in:'
+            );
+          },
+        }
+      );
+    }
+  };
+
+  // Run automatically on page load
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkAndHandleOAuthRedirect);
+    } else {
+      checkAndHandleOAuthRedirect();
+    }
+  }
+
+  /**
    * Initializes GitHub Auth Button on Login or Register pages
    */
   const init = async (config = {}) => {
@@ -409,7 +539,7 @@ window.GitHubAuth = (function () {
     const btnGitHub = document.getElementById(buttonId);
     if (!btnGitHub) return;
 
-    // 1. Resolve GitHub Client ID & whether secret is configured on server
+    // Resolve GitHub Client ID & whether secret is configured on server
     if (window.CONFIG?.GITHUB_CLIENT_ID) {
       githubClientId = window.CONFIG.GITHUB_CLIENT_ID.trim();
     }
@@ -425,33 +555,7 @@ window.GitHubAuth = (function () {
       // Continue with universal modal mode
     }
 
-    // 2. Check if page loaded with ?code= from GitHub OAuth redirect
-    const urlParams = new URLSearchParams(window.location.search);
-    const oauthCode = urlParams.get('code');
-    if (oauthCode && !window.Auth?.isAuthenticated()) {
-      // Clean up ?code= from address bar so page refresh never loops
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-      sendGitHubAuthPayload(
-        { code: oauthCode },
-        {
-          showAlert,
-          setLoadingState,
-          onSuccess,
-          onError: () => {
-            // If server secret failed or code exchange expired, smoothly open universal modal
-            showUniversalGitHubModal(
-              { showAlert, setLoadingState, onSuccess },
-              false,
-              'GitHub authorization detected! Enter your GitHub username below to complete instant login & repository analysis:'
-            );
-          },
-        }
-      );
-      return;
-    }
-
-    // 3. Attach click listener: Always open Universal Modal for instant zero-error login
+    // Attach click listener: Always open Universal Modal with real-time OAuth option
     btnGitHub.addEventListener('click', (e) => {
       e.preventDefault();
       showUniversalGitHubModal({ showAlert, setLoadingState, onSuccess }, false);

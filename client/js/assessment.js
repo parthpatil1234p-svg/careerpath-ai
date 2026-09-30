@@ -263,6 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
+  window.showAlert = showAlert;
 
   // 5. Step Navigation System
   const STEP_TITLES = [
@@ -1656,6 +1657,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const applyDetectedSkills = (data) => {
+    window.applyDetectedSkills = applyDetectedSkills;
     const verifiedSkills = data?.detectedSkills || data?.verifiedSkills || (data?.user?.skills || []).filter(s => s.isCodeVerified) || [];
     let countAdded = 0;
 

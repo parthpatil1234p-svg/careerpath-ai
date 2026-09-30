@@ -636,10 +636,24 @@ const connectGitHub = async (req, res, next) => {
     let ghUsername = directUser ? directUser.trim() : '';
 
     if (code) {
+      if (!process.env.GITHUB_CLIENT_SECRET || !process.env.GITHUB_CLIENT_SECRET.trim() || process.env.GITHUB_CLIENT_SECRET.includes('your_github')) {
+        return res.status(400).json({
+          success: false,
+          isSecretMissing: true,
+          message: 'GitHub OAuth Client Secret is not set in server/.env yet. Please enter your GitHub username below for instant real-time API verification.',
+        });
+      }
       try {
         accessToken = await exchangeOAuthCode(code);
       } catch (err) {
         console.warn('OAuth code exchange warning during connect:', err.message);
+        if (!ghUsername) {
+          return res.status(400).json({
+            success: false,
+            isCodeExchangeFailed: true,
+            message: `GitHub code exchange failed (${err.message}). Please enter your GitHub username below.`,
+          });
+        }
       }
     }
 
