@@ -1,5 +1,5 @@
 /**
- * assessment.js â€” Student Profile & Skill Assessment Controller
+ * assessment.js - Student Profile & Skill Assessment Controller
  *
  * Implements:
  * - 4-step progressive wizard with validation and step navigation
@@ -1064,9 +1064,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       pill.className = 'badge badge-navy border d-inline-flex align-items-center gap-1 py-1 px-2 small';
       let verifiedTag = '';
       if (skill.isQuizVerified) {
-        verifiedTag = `<span class="badge bg-success-subtle text-success border border-success ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz â€” Click to Retest" style="padding: 1px 5px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-patch-check-fill"></i> Verified <i class="bi bi-arrow-repeat text-primary ms-0.5"></i></span>`;
+        verifiedTag = `<span class="badge bg-success-subtle text-success border border-success ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz - Click to Retest" style="padding: 1px 5px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-patch-check-fill"></i> Verified <i class="bi bi-arrow-repeat text-primary ms-0.5"></i></span>`;
       } else if (skill.isCodeVerified) {
-        verifiedTag = `<span class="badge-code-verified ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by GitHub Repo Code â€” Click to Quiz" style="padding: 1px 4px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-github"></i> Verified <i class="bi bi-arrow-repeat ms-0.5"></i></span>`;
+        verifiedTag = `<span class="badge-code-verified ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by GitHub Repo Code - Click to Quiz" style="padding: 1px 4px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-github"></i> Verified <i class="bi bi-arrow-repeat ms-0.5"></i></span>`;
       }
 
       const rawProf = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
@@ -1099,7 +1099,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderProveSkillsPanel();
   };
 
-  // â”€â”€ Verification Gate: Prove Your Skills Panel Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // --- Verification Gate: Prove Your Skills Panel Logic ---
   const getRequiredVerificationSkills = () => {
     const candidates = [];
     selectedSkillsMap.forEach((s) => {
@@ -1186,7 +1186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         proveSkillsBadge.className = 'prove-skills-badge completed';
       }
       if (proveSkillsBadgeText) {
-        proveSkillsBadgeText.textContent = 'Account Verified âœ“';
+        proveSkillsBadgeText.textContent = 'Account Verified \u2713';
       }
       if (proveSkillsProgressFill) {
         proveSkillsProgressFill.style.width = '100%';
@@ -1221,7 +1221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
                 <i class="bi bi-patch-check-fill"></i>
-                <span>Verified (${escapeHtml(capitalize(profStr))}) âœ“</span>
+                <span>Verified (${escapeHtml(capitalize(profStr))}) \u2713</span>
               </span>
               <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level">
                 <i class="bi bi-arrow-repeat"></i>
@@ -1234,7 +1234,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
                 <i class="bi bi-github"></i>
-                <span>GitHub-Supported âœ“</span>
+                <span>GitHub-Supported \u2713</span>
               </span>
               <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Take reality check quiz to verify with full confidence">
                 <i class="bi bi-patch-question"></i>
@@ -1264,7 +1264,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const checkmarkIcon = isVerified
-          ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill âœ“"></i>`
+          ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill \u2713"></i>`
           : `<div class="prove-skill-dot"></div>`;
 
         const verifiedTag = isVerified
@@ -1345,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (proveSkillsBadgeText) {
       proveSkillsBadgeText.textContent = isAllComplete
-        ? `Progress: ${verifiedCount} skill(s) verified âœ“`
+        ? `Progress: ${verifiedCount} skill(s) verified \u2713`
         : `Progress: 0 of 1 verified`;
     }
     if (proveSkillsProgressFill) {
@@ -1391,7 +1391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
               <i class="bi bi-patch-check-fill"></i>
-              <span>Verified (${escapeHtml(capitalize(profStr))}) âœ“</span>
+              <span>Verified (${escapeHtml(capitalize(profStr))}) \u2713</span>
             </span>
             <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level">
               <i class="bi bi-arrow-repeat"></i>
@@ -1404,7 +1404,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
               <i class="bi bi-github"></i>
-              <span>GitHub-Supported âœ“</span>
+              <span>GitHub-Supported \u2713</span>
             </span>
             <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Take reality check quiz to verify with full confidence">
               <i class="bi bi-patch-question"></i>
@@ -1434,7 +1434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const checkmarkIcon = isVerified
-        ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill âœ“"></i>`
+        ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill \u2713"></i>`
         : `<div class="prove-skill-dot"></div>`;
 
       const verifiedTag = isVerified
@@ -1474,7 +1474,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  // â”€â”€ Skill Check In-Page Modal Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // --- Skill Check In-Page Modal Logic ---
   let activeQuizSession = null;
   let activeQuestion = null;
   let activeQuestionStep = 1;
@@ -1561,7 +1561,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
       if (document.hidden) {
         modalTabSwitchesCount++;
-        showModalProctorToast('âš ï¸ Proctor Notice: Tab change detected. Quiz session is actively monitored.');
+        showModalProctorToast('\u26A0\uFE0F Proctor Notice: Tab change detected. Quiz session is actively monitored.');
       }
     }
   });
@@ -1569,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('blur', () => {
     if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
       modalTabSwitchesCount++;
-      showModalProctorToast('âš ï¸ Proctor Notice: Window blur detected. Please stay focused on the quiz.');
+      showModalProctorToast('\u26A0\uFE0F Proctor Notice: Window blur detected. Please stay focused on the quiz.');
     }
   });
 
@@ -1647,7 +1647,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isCooldown = err.cooldownActive || (err.message && err.message.includes('24-hour'));
       if (isCooldown) {
         const hours = err.retryAfterHours || 24;
-        showAlert(`â±ï¸ 24-Hour Review Cooldown: Skill checks can only be retaken after a 24-hour review period to protect credential integrity. Retake available in ${hours} hour${hours > 1 ? 's' : ''}.`, 'warning');
+        showAlert(`\u23F3 24-Hour Review Cooldown: Skill checks can only be retaken after a 24-hour review period to protect credential integrity. Retake available in ${hours} hour${hours > 1 ? 's' : ''}.`, 'warning');
       } else {
         showAlert(`Could not start skill check: ${err.message}`, 'danger');
       }
@@ -2015,7 +2015,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error refreshing UI on modal done:', err);
     }
 
-    showAlert('ðŸŽ‰ Account Verified âœ“! Your technical skills are verified. Dashboard, Recommendations, and Active Roadmap are now unlocked!', 'success');
+    showAlert('\u{1F389} Account Verified \u2713! Your technical skills are verified. Dashboard, Recommendations, and Active Roadmap are now unlocked!', 'success');
   });
 
   // Ensure modal dismissal (via X button, backdrop click, or ESC) always guarantees immediate UI refresh
@@ -2378,7 +2378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const ghUser = data?.profile?.username || data?.user?.githubProfile?.username || data?.profile?.login || 'user';
     const repoCount = data?.repositories?.length || data?.repos?.length || data?.user?.githubRepos?.length || 0;
-    showAlert(`âœ“ Scanned @${ghUser} (${repoCount} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
+    showAlert(`\u2713 Scanned @${ghUser} (${repoCount} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
     if (btnAutoDetectGitHubSkills) {
       btnAutoDetectGitHubSkills.disabled = false;
       btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>@${ghUser} (${countAdded} Verified)</span>`;
@@ -2649,7 +2649,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.Auth.setCurrentUser(response.data.user);
         }
 
-        showAlert('âœ“ Profile & verified skills saved! Directing you to your career recommendations...', 'success');
+        showAlert('\u2713 Profile & verified skills saved! Directing you to your career recommendations...', 'success');
         resetSubmitBtn();
         setTimeout(() => {
           window.location.href = 'recommendations.html';

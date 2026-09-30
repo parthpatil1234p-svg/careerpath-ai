@@ -1,5 +1,5 @@
 /**
- * main.js â€” CareerPath AI Landing Page Controller
+ * main.js - CareerPath AI Landing Page Controller
  *
  * Handles:
  *  - Navbar scroll elevation
@@ -11,7 +11,7 @@
  */
 
 // ============================================================
-// 1. Navbar â€” Add 'scrolled' class on scroll for background state
+// 1. Navbar - Add 'scrolled' class on scroll for background state
 // ============================================================
 const mainNav = document.getElementById('mainNav') || document.querySelector('.cp-navbar') || document.querySelector('.cp-navbar-notch');
 
@@ -104,7 +104,7 @@ function initCareerCards() {
 }
 
 // ============================================================
-// 5. Mobile Navigation â€” Auto close on item click
+// 5. Mobile Navigation - Auto close on item click
 // ============================================================
 function initMobileNavClose() {
   const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
@@ -171,16 +171,16 @@ document.addEventListener('DOMContentLoaded', () => {
   initDomainFilter();
 
   console.log(
-    '%cCareerPath AI Â· Career Atlas',
+    '%cCareerPath AI | Career Atlas',
     'color: #167D8D; font-size: 16px; font-weight: bold;'
   );
   console.log(
-    '%cTeam 404 Brain Not Found Â· CareerPath AI Platform',
+    '%cTeam 404 Brain Not Found | CareerPath AI Platform',
     'color: #1C355E; font-size: 12px;'
   );
 });
 // ============================================================
-// 6. Global Unhandled Promise Rejection â€” suppress non-critical noise
+// 6. Global Unhandled Promise Rejection - suppress non-critical noise
 //    (Cloudinary CDN prefetch, optional analytics, network flakes)
 // ============================================================
 window.addEventListener('unhandledrejection', (event) => {
