@@ -218,6 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnContent;
 
+      if (err.status === 429 || (err.data && err.data.rateLimited)) {
+        showAlert(err.message || 'Rate limit reached: Maximum 2 verification codes allowed per 5 minutes. Please wait before requesting another code.', 'warning');
+        return;
+      }
+
       const isExisting =
         (err.message && err.message.toLowerCase().includes('already exists')) ||
         (err.data?.message && err.data.message.toLowerCase().includes('already exists'));
@@ -311,7 +316,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       btnResendOtp.disabled = false;
-      showAlert(err.message || 'Failed to resend code.');
+      const isRateLimited = err.status === 429 || (err.data && err.data.rateLimited);
+      if (isRateLimited) {
+        startResendCountdown(300); // 5-minute countdown display
+        showAlert(err.message || 'Rate limit reached: Maximum 2 verification codes allowed per 5 minutes. Please wait before trying again.', 'warning');
+      } else {
+        showAlert(err.message || 'Failed to resend code.');
+      }
     }
   });
 

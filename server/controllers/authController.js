@@ -74,12 +74,31 @@ const registerUser = async (req, res, next) => {
           message: 'An account with this email already exists. Please log in directly.',
         });
       } else {
+        // Enforce 5-minute / 2 OTP limit
+        const FIVE_MINS_MS = 5 * 60 * 1000;
+        const now = Date.now();
+        const recentHistory = (existingUser.verificationOtp?.sendHistory || []).filter(
+          t => now - new Date(t).getTime() < FIVE_MINS_MS
+        );
+
+        if (recentHistory.length >= 2) {
+          const earliest = new Date(recentHistory[0]).getTime();
+          const waitSec = Math.max(1, Math.ceil((earliest + FIVE_MINS_MS - now) / 1000));
+          return res.status(429).json({
+            success: false,
+            rateLimited: true,
+            message: `Too many OTP requests. Maximum 2 verification codes allowed per 5 minutes. Please wait ${waitSec}s before requesting again.`,
+          });
+        }
+
         // Account exists but is unverified: update details, assign fresh OTP and resend
         existingUser.name = name.trim();
         existingUser.password = password; // Pre-save hook will hash it
+        recentHistory.push(new Date(now));
         existingUser.verificationOtp = {
           code: otpCode,
           expiresAt,
+          sendHistory: recentHistory,
         };
         await existingUser.save();
 
@@ -110,6 +129,7 @@ const registerUser = async (req, res, next) => {
       verificationOtp: {
         code: otpCode,
         expiresAt,
+        sendHistory: [new Date()],
       },
     });
 
@@ -233,7 +253,7 @@ const resendOtp = async (req, res, next) => {
 
     const normalizedEmail = email.trim().toLowerCase();
     const user = await User.findOne({ email: normalizedEmail })
-      .select('+verificationOtp.code +verificationOtp.expiresAt');
+      .select('+verificationOtp.code +verificationOtp.expiresAt +verificationOtp.sendHistory');
 
     if (!user) {
       return res.status(404).json({
@@ -249,10 +269,29 @@ const resendOtp = async (req, res, next) => {
       });
     }
 
+    // Enforce 5-minute / 2 OTP limit
+    const FIVE_MINS_MS = 5 * 60 * 1000;
+    const now = Date.now();
+    const recentHistory = (user.verificationOtp?.sendHistory || []).filter(
+      t => now - new Date(t).getTime() < FIVE_MINS_MS
+    );
+
+    if (recentHistory.length >= 2) {
+      const earliest = new Date(recentHistory[0]).getTime();
+      const waitSec = Math.max(1, Math.ceil((earliest + FIVE_MINS_MS - now) / 1000));
+      return res.status(429).json({
+        success: false,
+        rateLimited: true,
+        message: `Too many OTP requests. Maximum 2 verification codes allowed per 5 minutes. Please wait ${waitSec}s before requesting again.`,
+      });
+    }
+
     const newCode = generateOtp();
+    recentHistory.push(new Date(now));
     user.verificationOtp = {
       code: newCode,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      sendHistory: recentHistory,
     };
     await user.save();
 

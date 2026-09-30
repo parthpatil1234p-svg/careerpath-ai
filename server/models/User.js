@@ -447,7 +447,7 @@ const UserSchema = new mongoose.Schema(
       default: false,
     },
 
-    // 6-digit verification code with expiration
+    // 6-digit verification code with expiration & 5-minute rate limit tracking
     verificationOtp: {
       code: {
         type: String,
@@ -456,6 +456,11 @@ const UserSchema = new mongoose.Schema(
       expiresAt: {
         type: Date,
         select: false,
+      },
+      sendHistory: {
+        type: [Date],
+        select: false,
+        default: [],
       },
     },
   },

@@ -25,17 +25,18 @@ const {
 } = require('../controllers/authController');
 const { validateRegister, validateLogin } = require('../middleware/validateRequest');
 const { protect } = require('../middleware/authMiddleware');
+const otpRateLimiter = require('../middleware/otpRateLimiter');
 
 const router = express.Router();
 
-// POST /api/auth/register
-router.post('/register', validateRegister, registerUser);
+// POST /api/auth/register (max 2 OTP sends per 5 mins per email)
+router.post('/register', otpRateLimiter, validateRegister, registerUser);
 
 // POST /api/auth/verify-otp
 router.post('/verify-otp', verifyOtp);
 
-// POST /api/auth/resend-otp
-router.post('/resend-otp', resendOtp);
+// POST /api/auth/resend-otp (max 2 OTP sends per 5 mins per email)
+router.post('/resend-otp', otpRateLimiter, resendOtp);
 
 // POST /api/auth/login
 router.post('/login', validateLogin, loginUser);
