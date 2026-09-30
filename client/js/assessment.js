@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Constants & Data
   const ALL_INTERESTS = [
-    // Tech & Engineering
+    // Tech & Engineering (stream: 'engineering')
     { id: 'web development', label: 'Web Development', icon: 'bi-code-slash', stream: 'engineering' },
     { id: 'app development', label: 'Mobile App Development', icon: 'bi-phone', stream: 'engineering' },
     { id: 'artificial intelligence', label: 'Artificial Intelligence & ML', icon: 'bi-cpu', stream: 'engineering' },
@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     { id: 'gaming', label: 'Game Development & 3D', icon: 'bi-controller', stream: 'engineering' },
     { id: 'blockchain', label: 'Blockchain & Web3', icon: 'bi-link-45deg', stream: 'engineering' },
     { id: 'cloud security', label: 'Cloud Security & DevSecOps', icon: 'bi-shield-lock', stream: 'engineering' },
-    { id: 'product management', label: 'Technical Product Strategy', icon: 'bi-kanban', stream: 'engineering' },
+    { id: 'product management', label: 'Technical Product Strategy', icon: 'bi-kanban', streams: ['engineering', 'business'] },
 
-    // Business, Finance & Corporate Operations
+    // Business, Finance & Corporate Operations (stream: 'business')
     { id: 'financial modeling', label: 'Financial Modeling & Valuation', icon: 'bi-cash-coin', stream: 'business' },
     { id: 'finance', label: 'Corporate Finance & Reporting', icon: 'bi-bank', stream: 'business' },
     { id: 'valuation', label: 'DCF Valuation & Investment Analysis', icon: 'bi-calculator', stream: 'business' },
@@ -41,27 +41,209 @@ document.addEventListener('DOMContentLoaded', async () => {
     { id: 'management consulting', label: 'Management Consulting & Advisory', icon: 'bi-pie-chart', stream: 'business' },
     { id: 'business strategy', label: 'Corporate Strategy & Scaling', icon: 'bi-graph-up', stream: 'business' },
 
-    // Digital Marketing & Growth
+    // Digital Marketing & Growth (stream: 'marketing')
     { id: 'digital marketing', label: 'Digital Marketing & Growth', icon: 'bi-bullseye', stream: 'marketing' },
     { id: 'advertising', label: 'Paid Ads (Meta, Google, TikTok)', icon: 'bi-badge-ad', stream: 'marketing' },
     { id: 'seo', label: 'SEO & Organic Search Strategy', icon: 'bi-search', stream: 'marketing' },
-    { id: 'content marketing', label: 'Content Strategy & Editorial', icon: 'bi-journal-text', stream: 'marketing' },
+    { id: 'content marketing', label: 'Content Strategy & Editorial', icon: 'bi-journal-text', streams: ['marketing', 'creative'] },
     { id: 'social media', label: 'Social Media & Community Building', icon: 'bi-megaphone', stream: 'marketing' },
     { id: 'viral growth', label: 'Short-Form Video & Viral Loops', icon: 'bi-fire', stream: 'marketing' },
 
-    // Creative, Media & Design
-    { id: 'design', label: 'UI / UX Design & Prototyping', icon: 'bi-palette', stream: 'creative' },
-    { id: 'branding', label: 'Brand Identity & Visual Systems', icon: 'bi-vector-pen', stream: 'creative' },
+    // Creative, Media & Design (stream: 'creative')
+    { id: 'design', label: 'UI / UX Design & Prototyping', icon: 'bi-palette', streams: ['creative', 'engineering'] },
+    { id: 'branding', label: 'Brand Identity & Visual Systems', icon: 'bi-vector-pen', streams: ['creative', 'marketing'] },
     { id: 'motion graphics', label: 'Motion Graphics & After Effects', icon: 'bi-film', stream: 'creative' },
     { id: '3d modeling', label: '3D Modeling & Blender', icon: 'bi-box', stream: 'creative' },
-    { id: 'copywriting', label: 'High-Converting Copywriting', icon: 'bi-pen', stream: 'creative' },
+    { id: 'copywriting', label: 'High-Converting Copywriting', icon: 'bi-pen', streams: ['creative', 'marketing'] },
     { id: 'visual storytelling', label: 'Visual Storytelling & Narrative', icon: 'bi-brush', stream: 'creative' },
 
     // Transferable Cross-Domain
-    { id: 'data analysis', label: 'Data Analysis & BI Dashboards', icon: 'bi-graph-up-arrow' },
-    { id: 'problem solving', label: 'Problem Solving & Logic', icon: 'bi-lightbulb' },
-    { id: 'market research', label: 'Market Research & Analytics', icon: 'bi-bar-chart' },
+    { id: 'data analysis', label: 'Data Analysis & BI Dashboards', icon: 'bi-graph-up-arrow', streams: ['engineering', 'business'] },
+    { id: 'market research', label: 'Market Research & Analytics', icon: 'bi-bar-chart', streams: ['business', 'marketing'] },
+    { id: 'problem solving', label: 'Problem Solving & Logic', icon: 'bi-lightbulb', streams: ['engineering', 'business', 'marketing', 'creative', 'cross'] },
   ];
+
+  // Helper: Strictly validate if an interest is permitted in the active stream
+  const isInterestAllowedInStream = (interestOrId, stream) => {
+    if (!stream || stream === 'cross') return true;
+    const id = typeof interestOrId === 'string' ? interestOrId.toLowerCase().trim() : (interestOrId?.id || '').toLowerCase().trim();
+    const item = ALL_INTERESTS.find((i) => i.id.toLowerCase() === id);
+    if (!item) return false;
+    if (item.stream === stream) return true;
+    if (Array.isArray(item.streams) && item.streams.includes(stream)) return true;
+    return false;
+  };
+
+  // ── Authoritative 94-Skill Stream Mapping ───────────────────────
+  // Guarantees zero cross-stream contamination: a student in one stream
+  // will NEVER see or select skills belonging to an unrelated stream.
+  const SKILL_STREAM_MAP = {
+    // Frontend (Engineering; html also in marketing for landing pages)
+    'html': ['engineering', 'marketing'],
+    'css': ['engineering'],
+    'javascript': ['engineering'],
+    'responsive-design': ['engineering'],
+    'react': ['engineering'],
+    'bootstrap': ['engineering'],
+    'typescript': ['engineering'],
+    'next.js': ['engineering'],
+    'tailwind-css': ['engineering'],
+    'flutter': ['engineering'],
+
+    // Backend (Engineering)
+    'node.js': ['engineering'],
+    'express.js': ['engineering'],
+    'rest-apis': ['engineering'],
+    'authentication': ['engineering'],
+    'python': ['engineering'],
+    'fastapi': ['engineering'],
+    'graphql': ['engineering'],
+    'java': ['engineering'],
+    'spring-boot': ['engineering'],
+    'kafka': ['engineering'],
+    'csharp': ['engineering'],
+    'cpp': ['engineering'],
+
+    // Database (Engineering; sql also in business for data-driven decisions)
+    'mongodb': ['engineering'],
+    'sql': ['engineering', 'business'],
+    'mysql': ['engineering'],
+    'database-design': ['engineering'],
+    'postgresql': ['engineering'],
+    'redis': ['engineering'],
+
+    // Data & Analytics (Engineering, Business, Marketing)
+    'excel': ['business', 'marketing', 'engineering'],
+    'statistics': ['business', 'engineering', 'marketing'],
+    'power-bi': ['business', 'engineering', 'marketing'],
+    'data-visualization': ['business', 'engineering', 'marketing'],
+    'data-cleaning': ['business', 'engineering'],
+    'pandas': ['engineering'],
+
+    // AI & Machine Learning (Engineering)
+    'langchain': ['engineering'],
+    'generative-ai': ['engineering'],
+    'pytorch': ['engineering'],
+    'tensorflow': ['engineering'],
+    'scikit-learn': ['engineering'],
+    'deep-learning': ['engineering'],
+    'natural-language-processing': ['engineering'],
+
+    // Security (Engineering)
+    'networking': ['engineering'],
+    'linux': ['engineering'],
+    'cybersecurity-fundamentals': ['engineering'],
+    'ethical-hacking': ['engineering'],
+    'owasp-basics': ['engineering'],
+
+    // Cloud & DevOps (Engineering)
+    'docker': ['engineering'],
+    'kubernetes': ['engineering'],
+    'aws': ['engineering'],
+    'terraform': ['engineering'],
+    'firebase': ['engineering'],
+
+    // Mobile (Engineering)
+    'react-native': ['engineering'],
+    'dart': ['engineering'],
+
+    // QA & Testing (Engineering)
+    'cypress': ['engineering'],
+    'selenium': ['engineering'],
+    'playwright': ['engineering'],
+    'postman': ['engineering'],
+
+    // Gaming (Engineering)
+    'unity': ['engineering'],
+    'unreal-engine': ['engineering'],
+
+    // Web3 & Blockchain (Engineering)
+    'solidity': ['engineering'],
+    'web3js': ['engineering'],
+    'smart-contracts': ['engineering'],
+
+    // Developer Tools & CI/CD (Engineering)
+    'git': ['engineering'],
+    'github': ['engineering'],
+    'ci-cd': ['engineering'],
+
+    // Product & Agile (Engineering & Business)
+    'agile-scrum': ['business', 'engineering'],
+    'product-management': ['business', 'engineering'],
+    'user-stories': ['business', 'engineering'],
+
+    // Finance & Business Operations (Business)
+    'financial-modeling': ['business'],
+    'dcf-valuation': ['business'],
+    'accounting': ['business'],
+    'business-operations': ['business'],
+    'management-consulting': ['business'],
+    'market-research': ['business', 'marketing', 'creative'],
+
+    // Digital Marketing & Growth (Marketing)
+    'meta-ads': ['marketing'],
+    'google-ads': ['marketing'],
+    'seo': ['marketing'],
+    'content-marketing': ['marketing', 'creative'],
+    'social-media-growth': ['marketing'],
+    'google-analytics': ['marketing'],
+
+    // Creative, Media & Design (Creative; figma/visual-design also in engineering/marketing)
+    'brand-identity': ['creative', 'marketing'],
+    'adobe-illustrator': ['creative'],
+    'motion-graphics': ['creative'],
+    'copywriting': ['creative', 'marketing'],
+    'blender': ['creative'],
+    'typography': ['creative'],
+    'figma': ['creative', 'engineering'],
+    'wireframing': ['creative', 'engineering'],
+    'prototyping': ['creative', 'engineering'],
+    'user-research': ['creative', 'engineering'],
+    'visual-design': ['creative', 'marketing', 'engineering'],
+
+    // Universal Soft Skills (Available across all streams)
+    'problem-solving': ['engineering', 'business', 'marketing', 'creative', 'cross'],
+    'communication': ['engineering', 'business', 'marketing', 'creative', 'cross'],
+    'teamwork': ['engineering', 'business', 'marketing', 'creative', 'cross'],
+  };
+
+  // Helper: Strictly validate if a skill is permitted in the active stream
+  const isSkillAllowedInStream = (skillOrName, stream) => {
+    if (!stream || stream === 'cross') return true;
+    const rawKey = typeof skillOrName === 'string' ? skillOrName : (skillOrName?.name || '');
+    const key = String(rawKey || '').toLowerCase().trim();
+    if (!key) return false;
+
+    // 1. Authoritative lookup in SKILL_STREAM_MAP
+    if (SKILL_STREAM_MAP[key]) {
+      return SKILL_STREAM_MAP[key].includes(stream);
+    }
+
+    // 2. Object properties fallback
+    if (typeof skillOrName === 'object') {
+      if (skillOrName?.stream === 'universal') return true;
+      if (skillOrName?.stream) return skillOrName.stream === stream;
+      if (Array.isArray(skillOrName?.streams)) return skillOrName.streams.includes(stream);
+
+      // Category fallback
+      const cat = skillOrName?.category;
+      if (cat === 'soft-skill') return true;
+      if (['frontend', 'backend', 'database', 'cloud', 'security', 'ai', 'mobile', 'testing', 'gaming', 'web3', 'tool'].includes(cat)) {
+        return stream === 'engineering';
+      }
+      if (['finance', 'business'].includes(cat)) {
+        return stream === 'business';
+      }
+      if (['marketing'].includes(cat)) {
+        return stream === 'marketing';
+      }
+      if (['design'].includes(cat)) {
+        return stream === 'creative';
+      }
+    }
+
+    return false;
+  };
 
   const FALLBACK_SKILLS = [
     // Frontend (9)
@@ -430,8 +612,93 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
+  // Auto-prune any previously selected interests or skills that do not belong to active stream
+  const pruneCrossStreamSelections = () => {
+    if (selectedStream === 'cross') return;
+
+    // 1. Prune unallowed interests
+    for (const interestId of Array.from(selectedInterests)) {
+      if (!isInterestAllowedInStream(interestId, selectedStream)) {
+        selectedInterests.delete(interestId);
+      }
+    }
+    if (interestCount) {
+      interestCount.textContent = selectedInterests.size;
+    }
+
+    // 2. Prune unallowed skills
+    for (const [key, skillData] of Array.from(selectedSkillsMap.entries())) {
+      if (!isSkillAllowedInStream(skillData || key, selectedStream)) {
+        selectedSkillsMap.delete(key);
+      }
+    }
+    updateSelectedSkillsUI();
+  };
+
+  // Dynamically update custom skill category options based on active stream
+  const updateCustomSkillCategoryDropdown = () => {
+    const select = document.getElementById('customSkillCategory');
+    if (!select) return;
+
+    const streamCategoryOptions = {
+      engineering: [
+        { value: 'frontend', label: 'Frontend' },
+        { value: 'backend', label: 'Backend' },
+        { value: 'database', label: 'Database' },
+        { value: 'cloud', label: 'Cloud / DevOps' },
+        { value: 'security', label: 'Security' },
+        { value: 'ai', label: 'AI / Data' },
+        { value: 'mobile', label: 'Mobile' },
+        { value: 'testing', label: 'QA / Testing' },
+        { value: 'gaming', label: 'Gaming' },
+        { value: 'web3', label: 'Web3' },
+        { value: 'product', label: 'Product & Agile' },
+        { value: 'design', label: 'UI / UX Design' },
+        { value: 'tool', label: 'Developer Tool' }
+      ],
+      business: [
+        { value: 'finance', label: 'Corporate Finance & Valuation' },
+        { value: 'business', label: 'Business Operations & Consulting' },
+        { value: 'product', label: 'Product & Project Management' },
+        { value: 'data', label: 'Business Intelligence & Data' },
+        { value: 'tool', label: 'Business Tool / Productivity' }
+      ],
+      marketing: [
+        { value: 'marketing', label: 'Digital Marketing & Ads' },
+        { value: 'data', label: 'Marketing Analytics & Tracking' },
+        { value: 'design', label: 'Content Strategy & Copy' },
+        { value: 'tool', label: 'Marketing Tool / CRM' }
+      ],
+      creative: [
+        { value: 'design', label: 'Visual Design & 3D' },
+        { value: 'marketing', label: 'Branding & Copywriting' },
+        { value: 'tool', label: 'Creative Tool / Software' }
+      ],
+      cross: [
+        { value: 'frontend', label: 'Frontend' },
+        { value: 'backend', label: 'Backend' },
+        { value: 'database', label: 'Database' },
+        { value: 'data', label: 'Data / AI' },
+        { value: 'cloud', label: 'Cloud / DevOps' },
+        { value: 'security', label: 'Security' },
+        { value: 'finance', label: 'Finance & Valuation' },
+        { value: 'business', label: 'Business Operations' },
+        { value: 'marketing', label: 'Digital Marketing' },
+        { value: 'design', label: 'Design & Creative' },
+        { value: 'product', label: 'Product Management' },
+        { value: 'tool', label: 'Tool / Other' }
+      ]
+    };
+
+    const options = streamCategoryOptions[selectedStream] || streamCategoryOptions.engineering;
+    select.innerHTML = options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('');
+  };
+
   const applyStreamUI = (streamKey) => {
     selectedStream = streamKey || 'engineering';
+
+    // Prune cross-stream selections so foreign interests & skills cannot persist
+    pruneCrossStreamSelections();
 
     // Update stream card active state
     document.querySelectorAll('#streamCardsGrid .stream-card').forEach((card) => {
@@ -458,6 +725,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     updateCategoryFilterPills();
+    updateCustomSkillCategoryDropdown();
     renderInterests();
     renderSkillsGrid();
   };
@@ -585,8 +853,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     interestChipsWrapper.innerHTML = '';
 
     const visibleInterests = ALL_INTERESTS.filter((interest) => {
-      if (selectedStream === 'cross' || !selectedStream) return true;
-      return !interest.stream || interest.stream === selectedStream;
+      return isInterestAllowedInStream(interest, selectedStream);
     });
 
     visibleInterests.forEach((interest) => {
@@ -600,6 +867,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
 
       chip.addEventListener('click', () => {
+        if (!isInterestAllowedInStream(interest, selectedStream)) {
+          showAlert(`This domain of interest belongs to another stream and cannot be selected in ${STREAM_META[selectedStream]?.label || selectedStream}.`, 'warning');
+          return;
+        }
         if (selectedInterests.has(interest.id)) {
           selectedInterests.delete(interest.id);
         } else {
@@ -626,27 +897,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     skillsGrid.innerHTML = '';
 
     const filtered = allAvailableSkills.filter((skill) => {
-      // 1. Stream filter
-      const matchesStream = () => {
-        if (selectedStream === 'cross' || !selectedStream) return true;
-        if (skill.category === 'soft-skill') return true;
-        if (skill.stream) return skill.stream === selectedStream;
-        if (['frontend', 'backend', 'database', 'ai', 'security', 'cloud', 'mobile', 'testing', 'gaming', 'web3'].includes(skill.category)) {
-          return selectedStream === 'engineering';
-        }
-        if (['finance', 'business'].includes(skill.category)) {
-          return selectedStream === 'business';
-        }
-        if (['marketing'].includes(skill.category)) {
-          return selectedStream === 'marketing';
-        }
-        if (['design'].includes(skill.category)) {
-          return selectedStream === 'creative';
-        }
-        return true;
-      };
-
-      if (!matchesStream()) return false;
+      // 1. Strict Stream filter (blocks cross-stream skills from rendering or search matches)
+      if (!isSkillAllowedInStream(skill, selectedStream)) return false;
 
       // 2. Category filter
       const matchesCategory =
@@ -732,6 +984,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       checkbox.addEventListener('change', (e) => {
         if (e.target.checked) {
+          if (!isSkillAllowedInStream(skill, selectedStream)) {
+            e.target.checked = false;
+            showAlert(`This skill belongs to another stream and cannot be selected in ${STREAM_META[selectedStream]?.label || selectedStream}.`, 'warning');
+            return;
+          }
           if (selectedSkillsMap.size >= 20) {
             e.target.checked = false;
             showAlert('You can select a maximum of 20 skills for assessment.', 'warning');
@@ -1837,8 +2094,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const cleanSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      const category = customSkillCategorySelect?.value || 'other';
+      const category = customSkillCategorySelect?.value || 'tool';
       const proficiency = customSkillProficiencySelect?.value || 'intermediate';
+
+      // Explicitly register custom skill in active stream
+      const assignedStreams = selectedStream === 'cross' ? ['engineering', 'business', 'marketing', 'creative', 'cross'] : [selectedStream];
+      SKILL_STREAM_MAP[cleanSlug] = assignedStreams;
 
       // Ensure skill is registered in available list
       let existing = allAvailableSkills.find((s) => s.name === cleanSlug);
@@ -1847,15 +2108,19 @@ document.addEventListener('DOMContentLoaded', async () => {
           name: cleanSlug,
           displayName: rawName,
           category: category,
+          stream: selectedStream,
           isCustom: true,
         };
         allAvailableSkills.unshift(existing);
+      } else {
+        existing.stream = selectedStream;
       }
 
       // Add to selected map
       selectedSkillsMap.set(cleanSlug, {
         name: cleanSlug,
         displayName: rawName,
+        category: category,
         proficiency: proficiency,
         selfRatedProficiency: proficiency,
         isCustom: true
@@ -1874,7 +2139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       customSkillNameInput.value = '';
       if (customSkillFeedback) {
         customSkillFeedback.className = 'small mt-2 text-teal';
-        customSkillFeedback.textContent = `âœ“ "${rawName}" added to your skills!`;
+        customSkillFeedback.textContent = `✓ "${rawName}" added to your skills!`;
         customSkillFeedback.classList.remove('d-none');
         setTimeout(() => {
           customSkillFeedback.classList.add('d-none');
@@ -1894,88 +2159,132 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Hackathon Judge Demo Profile Auto-Fill Handler
+  // Hackathon Judge Demo Profile Auto-Fill Handler (Adaptive to Stream)
   const btnJudgeDemoFill = document.getElementById('btnJudgeDemoFill');
   if (btnJudgeDemoFill) {
     btnJudgeDemoFill.addEventListener('click', () => {
-      // 1. Fill Academics
       const nameInput = document.getElementById('fullName');
       const courseInput = document.getElementById('course');
       const branchInput = document.getElementById('branch');
       const yearInput = document.getElementById('year');
       const collegeInput = document.getElementById('college');
+      const careerGoalsInput = document.getElementById('careerGoals');
 
-      if (nameInput) nameInput.value = 'Parth Patil';
-      if (courseInput) courseInput.value = 'B.Tech Computer Science';
-      if (branchInput) branchInput.value = 'Information Technology';
-      if (yearInput) yearInput.value = 'Third Year';
-      if (collegeInput) collegeInput.value = 'Pune Institute of Technology';
-
-      // 2. Fill Interests
+      // Clear existing interests & skills before filling stream-specific demo profile
       selectedInterests.clear();
-      ['web development', 'artificial intelligence', 'problem solving', 'cloud computing'].forEach((i) => {
-        selectedInterests.add(i);
-      });
-      renderInterests();
+      selectedSkillsMap.clear();
 
-      // 3. Fill Skills (preserve already verified skill statuses if previously tested)
+      if (selectedStream === 'business') {
+        if (nameInput) nameInput.value = 'Aarav Sharma';
+        if (courseInput) courseInput.value = 'BBA Finance & Analytics';
+        if (branchInput) branchInput.value = 'Corporate Finance & M&A';
+        if (yearInput) yearInput.value = 'Third Year';
+        if (collegeInput) collegeInput.value = 'Indian Institute of Management';
+        if (careerGoalsInput) careerGoalsInput.value = 'Lead Financial Analyst & Strategic M&A Consultant';
+
+        ['financial modeling', 'finance', 'valuation', 'business operations'].forEach(i => selectedInterests.add(i));
+
+        const demoSkills = [
+          { name: 'financial-modeling', displayName: 'Financial Modeling & Valuation', proficiency: 'advanced', category: 'finance' },
+          { name: 'dcf-valuation', displayName: 'DCF Valuation & Financial Statements', proficiency: 'intermediate', category: 'finance' },
+          { name: 'accounting', displayName: 'Financial Accounting & Reporting', proficiency: 'intermediate', category: 'finance' },
+          { name: 'excel', displayName: 'Excel', proficiency: 'advanced', category: 'data' },
+          { name: 'power-bi', displayName: 'Power BI', proficiency: 'intermediate', category: 'data' },
+          { name: 'communication', displayName: 'Communication', proficiency: 'advanced', category: 'soft-skill' },
+        ];
+        demoSkills.forEach(s => selectedSkillsMap.set(s.name, s));
+      } else if (selectedStream === 'marketing') {
+        if (nameInput) nameInput.value = 'Priya Sen';
+        if (courseInput) courseInput.value = 'B.Com Marketing & Digital Media';
+        if (branchInput) branchInput.value = 'Performance Marketing';
+        if (yearInput) yearInput.value = 'Third Year';
+        if (collegeInput) collegeInput.value = 'St. Xavier College of Commerce';
+        if (careerGoalsInput) careerGoalsInput.value = 'Head of Growth Marketing & Paid Acquisition';
+
+        ['digital marketing', 'advertising', 'seo', 'social media'].forEach(i => selectedInterests.add(i));
+
+        const demoSkills = [
+          { name: 'meta-ads', displayName: 'Meta Ads Manager & Paid Social', proficiency: 'advanced', category: 'marketing' },
+          { name: 'google-ads', displayName: 'Google Ads & SEM', proficiency: 'intermediate', category: 'marketing' },
+          { name: 'seo', displayName: 'SEO & Organic Search Strategy', proficiency: 'advanced', category: 'marketing' },
+          { name: 'content-marketing', displayName: 'Content Marketing & Copywriting', proficiency: 'intermediate', category: 'marketing' },
+          { name: 'google-analytics', displayName: 'Google Analytics 4 & Attribution', proficiency: 'intermediate', category: 'marketing' },
+          { name: 'excel', displayName: 'Excel', proficiency: 'intermediate', category: 'data' },
+        ];
+        demoSkills.forEach(s => selectedSkillsMap.set(s.name, s));
+      } else if (selectedStream === 'creative') {
+        if (nameInput) nameInput.value = 'Ananya Roy';
+        if (courseInput) courseInput.value = 'B.Des Interaction & Visual Design';
+        if (branchInput) branchInput.value = 'Visual Communication';
+        if (yearInput) yearInput.value = 'Third Year';
+        if (collegeInput) collegeInput.value = 'National Institute of Design (NID)';
+        if (careerGoalsInput) careerGoalsInput.value = 'Lead Product & Brand Identity Visual Designer';
+
+        ['design', 'branding', 'motion graphics', 'visual storytelling'].forEach(i => selectedInterests.add(i));
+
+        const demoSkills = [
+          { name: 'brand-identity', displayName: 'Brand Identity & Logo Systems', proficiency: 'advanced', category: 'design' },
+          { name: 'adobe-illustrator', displayName: 'Adobe Illustrator', proficiency: 'advanced', category: 'design' },
+          { name: 'figma', displayName: 'Figma', proficiency: 'advanced', category: 'design' },
+          { name: 'visual-design', displayName: 'Visual Design', proficiency: 'advanced', category: 'design' },
+          { name: 'motion-graphics', displayName: 'Motion Graphics & After Effects', proficiency: 'intermediate', category: 'design' },
+          { name: 'typography', displayName: 'Typography & Layout Design', proficiency: 'intermediate', category: 'design' },
+        ];
+        demoSkills.forEach(s => selectedSkillsMap.set(s.name, s));
+      } else {
+        // Engineering / Cross track
+        if (nameInput) nameInput.value = 'Parth Patil';
+        if (courseInput) courseInput.value = 'B.Tech Computer Science';
+        if (branchInput) branchInput.value = 'Information Technology';
+        if (yearInput) yearInput.value = 'Third Year';
+        if (collegeInput) collegeInput.value = 'Pune Institute of Technology';
+        if (careerGoalsInput) careerGoalsInput.value = 'Full-Stack Web & AI Application Developer';
+
+        ['web development', 'artificial intelligence', 'problem solving', 'cloud computing'].forEach((i) => {
+          selectedInterests.add(i);
+        });
+
+        const demoSkills = [
+          { name: 'html', displayName: 'HTML', proficiency: 'intermediate', category: 'frontend', isDefaultVerified: true, defaultScore: 5 },
+          { name: 'css', displayName: 'CSS', proficiency: 'intermediate', category: 'frontend', isDefaultVerified: false },
+          { name: 'javascript', displayName: 'JavaScript', proficiency: 'advanced', category: 'frontend', isDefaultVerified: true, defaultScore: 5 },
+          { name: 'react', displayName: 'React', proficiency: 'intermediate', category: 'frontend', isDefaultVerified: false },
+          { name: 'node.js', displayName: 'Node.js', proficiency: 'intermediate', category: 'backend', isDefaultVerified: true, defaultScore: 4 },
+          { name: 'python', displayName: 'Python', proficiency: 'intermediate', category: 'backend', isDefaultVerified: false },
+        ];
+
+        demoSkills.forEach((s) => {
+          selectedSkillsMap.set(s.name, {
+            name: s.name,
+            displayName: s.displayName,
+            category: s.category,
+            proficiency: s.proficiency,
+            selfRatedProficiency: s.proficiency,
+            verifiedProficiency: s.isDefaultVerified ? s.proficiency : null,
+            isQuizVerified: s.isDefaultVerified,
+            isCodeVerified: false,
+            quizScore: s.isDefaultVerified ? s.defaultScore : 0,
+            quizGaps: [],
+            verifiedSource: s.isDefaultVerified ? 'quiz' : 'self'
+          });
+        });
+      }
+
+      hasCompletedSkillVerification = true;
       const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
                           (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
-      const existingUserSkills = Array.isArray(currentUser?.skills) ? currentUser.skills : [];
-      const prevSelectedMap = new Map(selectedSkillsMap);
-
-      selectedSkillsMap.clear();
-      const demoSkills = [
-        { name: 'html', displayName: 'HTML', proficiency: 'intermediate', category: 'frontend', isDefaultVerified: true, defaultScore: 5 },
-        { name: 'css', displayName: 'CSS', proficiency: 'intermediate', category: 'frontend', isDefaultVerified: false },
-        { name: 'javascript', displayName: 'JavaScript', proficiency: 'advanced', category: 'frontend', isDefaultVerified: true, defaultScore: 5 },
-        { name: 'react', displayName: 'React', proficiency: 'intermediate', category: 'frontend', isDefaultVerified: false },
-        { name: 'node.js', displayName: 'Node.js', proficiency: 'intermediate', category: 'backend', isDefaultVerified: true, defaultScore: 4 },
-        { name: 'python', displayName: 'Python', proficiency: 'intermediate', category: 'backend', isDefaultVerified: false },
-      ];
-
-      demoSkills.forEach((s) => {
-        const key = s.name.toLowerCase();
-        const fromPrev = prevSelectedMap.get(key) || prevSelectedMap.get(s.name);
-        const fromUser = existingUserSkills.find(us => (us.name || '').toLowerCase() === key);
-
-        const isQuizVerified = Boolean(fromPrev?.isQuizVerified || fromUser?.isQuizVerified || s.isDefaultVerified);
-        const isCodeVerified = Boolean(fromPrev?.isCodeVerified || fromUser?.isCodeVerified);
-        const verifiedProf = fromPrev?.verifiedProficiency || fromUser?.verifiedProficiency || (s.isDefaultVerified ? s.proficiency : null);
-        const currentProf = verifiedProf || fromPrev?.proficiency || fromUser?.proficiency || s.proficiency;
-        const selfRatedProf = fromPrev?.selfRatedProficiency || fromUser?.selfRatedProficiency || s.proficiency;
-
-        selectedSkillsMap.set(key, {
-          name: key,
-          displayName: s.displayName,
-          category: s.category,
-          proficiency: currentProf,
-          selfRatedProficiency: selfRatedProf,
-          verifiedProficiency: verifiedProf,
-          isQuizVerified: isQuizVerified,
-          isCodeVerified: isCodeVerified,
-          quizScore: fromPrev?.quizScore || fromUser?.quizScore || (s.isDefaultVerified ? s.defaultScore : 0),
-          quizGaps: fromPrev?.quizGaps || fromUser?.quizGaps || [],
-          verifiedSource: isQuizVerified ? 'quiz' : (isCodeVerified ? 'github_repo' : 'self')
-        });
-      });
-      hasCompletedSkillVerification = true;
       if (currentUser) {
         currentUser.hasCompletedSkillVerification = true;
         if (typeof window.Auth?.setCurrentUser === 'function') {
           window.Auth.setCurrentUser(currentUser);
         }
       }
+
+      renderInterests();
       renderSkillsGrid();
       updateSelectedSkillsUI();
 
-      // 4. Fill Career Goal in Step 4
-      const careerGoalsInput = document.getElementById('careerGoals');
-      if (careerGoalsInput) {
-        careerGoalsInput.value = 'Full-Stack Web & AI Application Developer';
-      }
-
-      showAlert('âœ“ Demo profile loaded successfully with verified skills and ready for evaluation!', 'success');
+      showAlert(`✓ Demo profile loaded for ${STREAM_META[selectedStream]?.label || 'selected stream'}!`, 'success');
 
       // Scroll smoothly to step 1 form
       const formEl = document.getElementById('assessmentForm');
@@ -2129,11 +2438,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (res.success && Array.isArray(res.data?.skills) && res.data.skills.length > 0) {
         const map = new Map();
         FALLBACK_SKILLS.forEach((s) => map.set(s.name, s));
-        res.data.skills.forEach((s) => map.set(s.name, {
-          name: s.name,
-          displayName: s.displayName,
-          category: s.category,
-        }));
+        res.data.skills.forEach((s) => {
+          const existing = map.get(s.name);
+          map.set(s.name, {
+            name: s.name,
+            displayName: s.displayName,
+            category: s.category,
+            stream: existing?.stream || (SKILL_STREAM_MAP[s.name] && SKILL_STREAM_MAP[s.name].length === 1 ? SKILL_STREAM_MAP[s.name][0] : undefined),
+          });
+        });
         allAvailableSkills = Array.from(map.values());
       }
     } catch (err) {
