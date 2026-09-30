@@ -216,6 +216,81 @@ const JobReadinessSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// ── Sub-schema: Built Resume Structure ────────────────────────
+const BuiltResumeSchema = new mongoose.Schema(
+  {
+    template: {
+      type: String,
+      enum: ['student', 'modern', 'professional', 'ats_simple'],
+      default: 'student',
+    },
+    personalInfo: {
+      fullName: { type: String, default: '' },
+      headline: { type: String, default: '' },
+      title: { type: String, default: '' },
+      email: { type: String, default: '' },
+      phone: { type: String, default: '' },
+      location: { type: String, default: '' },
+      linkedIn: { type: String, default: '' },
+      gitHub: { type: String, default: '' },
+      portfolio: { type: String, default: '' },
+    },
+    summary: { type: String, default: '' },
+    education: [
+      {
+        degree: { type: String, default: '' },
+        college: { type: String, default: '' },
+        university: { type: String, default: '' },
+        startYear: { type: String, default: '' },
+        gradYear: { type: String, default: '' },
+        score: { type: String, default: '' },
+      },
+    ],
+    skills: [
+      {
+        name: { type: String, default: '' },
+        level: { type: String, default: 'Intermediate' },
+        isVerified: { type: Boolean, default: false },
+        category: { type: String, default: 'Technical' },
+      },
+    ],
+    projects: [
+      {
+        title: { type: String, default: '' },
+        description: { type: String, default: '' },
+        techStack: { type: [String], default: [] },
+        githubUrl: { type: String, default: '' },
+        liveUrl: { type: String, default: '' },
+        isVerified: { type: Boolean, default: false },
+      },
+    ],
+    experience: [
+      {
+        company: { type: String, default: '' },
+        role: { type: String, default: '' },
+        type: { type: String, default: 'Internship' }, // Full-time, Internship, Hackathon, Freelance
+        duration: { type: String, default: '' },
+        responsibilities: { type: [String], default: [] },
+      },
+    ],
+    certifications: [
+      {
+        name: { type: String, default: '' },
+        issuer: { type: String, default: '' },
+        date: { type: String, default: '' },
+        credentialUrl: { type: String, default: '' },
+      },
+    ],
+    additional: {
+      languages: { type: [String], default: [] },
+      achievements: { type: [String], default: [] },
+      hobbies: { type: [String], default: [] },
+    },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
 // ── Main User Schema ──────────────────────────────────────────
 const UserSchema = new mongoose.Schema(
   {
@@ -357,6 +432,12 @@ const UserSchema = new mongoose.Schema(
     // Overall Job Readiness Index & Digital Certificate (Career GPS Step 11)
     jobReadiness: {
       type: JobReadinessSchema,
+      default: () => ({}),
+    },
+
+    // Interactive In-App Resume Builder draft state
+    builtResume: {
+      type: BuiltResumeSchema,
       default: () => ({}),
     },
 

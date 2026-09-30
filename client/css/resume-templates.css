@@ -1,0 +1,802 @@
+/**
+ * resume-templates.css — 4 Professional ATS Resume Templates & Builder Styling
+ * Templates: Student/Fresher, Modern Two-Column, Executive Professional, ATS Simple
+ * Team 404 Brain Not Found · CareerPath AI Platform
+ */
+
+/* ============================================================
+   1. RESUME BUILDER PAGE LAYOUT & CONTROLS
+   ============================================================ */
+
+.resume-builder-page {
+  background-color: #0b0f19;
+  color: #f1f5f9;
+  min-height: 100vh;
+}
+
+.builder-header-bar {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 72px;
+  z-index: 90;
+}
+
+.builder-container {
+  max-width: 1720px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+/* Template Switcher Buttons */
+.template-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(30, 41, 59, 0.6);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.template-pill-btn:hover {
+  color: #f8fafc;
+  background: rgba(51, 65, 85, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.template-pill-btn.active {
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+}
+
+/* Form Wizard Section Cards */
+.builder-section-card {
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.builder-section-card:focus-within {
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.builder-section-header {
+  padding: 1rem 1.25rem;
+  background: rgba(30, 41, 59, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.builder-section-header:hover {
+  background: rgba(30, 41, 59, 0.65);
+}
+
+.builder-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.builder-section-title i {
+  color: #818cf8;
+  font-size: 1.1rem;
+}
+
+.builder-section-body {
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+/* Form Field Styling */
+.cp-input-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cp-form-control {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  color: #f8fafc;
+  font-size: 0.88rem;
+  transition: all 0.15s ease;
+}
+
+.cp-form-control:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.cp-form-control::placeholder {
+  color: #64748b;
+}
+
+/* AI Polish Button */
+.btn-ai-polish {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #c084fc;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-ai-polish:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%);
+  color: #e9d5ff;
+  border-color: rgba(192, 132, 252, 0.6);
+  transform: translateY(-1px);
+}
+
+/* Quick Action Badges */
+.btn-quick-import {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-quick-import:hover {
+  background: rgba(51, 65, 85, 0.9);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Dynamic Repeater Items */
+.repeater-item {
+  background: rgba(30, 41, 59, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.85rem;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.repeater-item:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-remove-item {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+}
+
+.btn-remove-item:hover {
+  color: #f43f5e;
+  background: rgba(244, 63, 94, 0.1);
+}
+
+/* ============================================================
+   2. LIVE PREVIEW CHAMBER & A4 CANVAS
+   ============================================================ */
+
+.preview-chamber {
+  position: sticky;
+  top: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: calc(100vh - 150px);
+}
+
+.preview-scroll-wrapper {
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0.5rem 2rem;
+  scroll-behavior: smooth;
+}
+
+/* A4 Paper Dimensions: 210mm x 297mm (Ratio: ~1 : 1.414) */
+.resume-paper {
+  width: 794px; /* Exact standard 210mm at 96 DPI */
+  min-height: 1123px; /* Exact standard 297mm at 96 DPI */
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  box-sizing: border-box;
+  transform-origin: top center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.45;
+  position: relative;
+}
+
+/* ============================================================
+   3. TEMPLATE 1: STUDENT / FRESHER ⭐ (.template-student)
+   Clean single-column flow, Education & GitHub verified projects
+   ============================================================ */
+
+.template-student {
+  padding: 38px 45px;
+}
+
+.template-student .resume-header {
+  border-bottom: 2px solid #4f46e5;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+}
+
+.template-student .candidate-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+.template-student .candidate-headline {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4f46e5;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.template-student .candidate-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11.5px;
+  color: #475569;
+}
+
+.template-student .candidate-contact a {
+  color: #475569;
+  text-decoration: none;
+}
+
+.template-student .candidate-contact a:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+.template-student .section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 4px;
+  margin: 16px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.template-student .section-title::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background: #e2e8f0;
+  margin-left: 10px;
+}
+
+.template-student .summary-text {
+  font-size: 11.5px;
+  color: #334155;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+/* Skills pill tags with verified badges */
+.template-student .skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.template-student .skill-tag {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.template-student .skill-tag.verified {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #3730a3;
+  font-weight: 600;
+}
+
+.verified-badge-mini {
+  color: #10b981;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Projects & Experience items */
+.template-student .item-block {
+  margin-bottom: 12px;
+}
+
+.template-student .item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.template-student .item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.template-student .item-subtitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.template-student .item-date {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.template-student .item-bullets {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 11.5px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.template-student .item-bullets li {
+  margin-bottom: 3px;
+}
+
+.template-student .tech-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.template-student .tech-pill {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   4. TEMPLATE 2: MODERN TWO-COLUMN 💎 (.template-modern)
+   Left sidebar (32%) + Right content panel (68%)
+   ============================================================ */
+
+.template-modern {
+  display: flex;
+  min-height: 1123px;
+}
+
+.template-modern .modern-sidebar {
+  width: 250px;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 34px 24px;
+  box-sizing: border-box;
+}
+
+.template-modern .modern-main {
+  flex: 1;
+  padding: 34px 34px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.template-modern .candidate-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+.template-modern .candidate-headline {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d9488;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.template-modern .sidebar-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #5eead4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 4px;
+  margin: 18px 0 10px;
+}
+
+.template-modern .sidebar-contact-item {
+  font-size: 11px;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.template-modern .sidebar-contact-item a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.template-modern .sidebar-contact-item a:hover {
+  color: #5eead4;
+}
+
+.template-modern .sidebar-skill {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.template-modern .sidebar-skill.verified {
+  background: rgba(13, 148, 136, 0.25);
+  border-color: rgba(94, 234, 212, 0.4);
+  color: #ffffff;
+}
+
+.template-modern .main-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid #0d9488;
+  padding-bottom: 4px;
+  margin: 18px 0 10px;
+}
+
+.template-modern .item-block {
+  margin-bottom: 14px;
+}
+
+.template-modern .item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.template-modern .item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.template-modern .item-subtitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0d9488;
+}
+
+.template-modern .item-date {
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+.template-modern .item-bullets {
+  margin: 4px 0 0;
+  padding-left: 16px;
+  font-size: 11.5px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   5. TEMPLATE 3: EXECUTIVE PROFESSIONAL 💼 (.template-professional)
+   Traditional corporate layout with elegant typography
+   ============================================================ */
+
+.template-professional {
+  padding: 40px 48px;
+}
+
+.template-professional .resume-header {
+  text-align: center;
+  border-bottom: 2px solid #1e293b;
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+.template-professional .candidate-name {
+  font-family: 'Outfit', serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 4px;
+}
+
+.template-professional .candidate-headline {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+
+.template-professional .candidate-contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 11px;
+  color: #475569;
+}
+
+.template-professional .candidate-contact a {
+  color: #1e3a8a;
+  text-decoration: none;
+}
+
+.template-professional .section-title {
+  font-family: 'Outfit', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 3px;
+  margin: 18px 0 10px;
+}
+
+.template-professional .item-block {
+  margin-bottom: 12px;
+}
+
+.template-professional .item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.template-professional .item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.template-professional .item-date {
+  font-size: 11px;
+  color: #475569;
+  font-style: italic;
+}
+
+.template-professional .item-subtitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.template-professional .item-bullets {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 11.5px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   6. TEMPLATE 4: ATS SIMPLE 📄 (.template-ats_simple)
+   100% Plain text standard formatting, zero graphics/columns
+   ============================================================ */
+
+.template-ats_simple {
+  padding: 36px 42px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000;
+  background: #ffffff;
+  line-height: 1.4;
+}
+
+.template-ats_simple .candidate-name {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.template-ats_simple .candidate-contact {
+  text-align: center;
+  font-size: 11px;
+  margin-bottom: 16px;
+  color: #222222;
+}
+
+.template-ats_simple .candidate-contact a {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.template-ats_simple .section-title {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 1px solid #000000;
+  padding-bottom: 2px;
+  margin: 14px 0 8px;
+}
+
+.template-ats_simple .summary-text {
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+.template-ats_simple .item-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  font-weight: bold;
+}
+
+.template-ats_simple .item-subtitle {
+  font-size: 11px;
+  font-weight: normal;
+  font-style: italic;
+}
+
+.template-ats_simple .item-bullets {
+  margin: 4px 0 8px;
+  padding-left: 18px;
+  font-size: 11px;
+}
+
+.template-ats_simple .item-bullets li {
+  margin-bottom: 2px;
+}
+
+.template-ats_simple .skills-line {
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+/* ============================================================
+   7. PRINT & PDF DOWNLOAD RULES (@media print)
+   ============================================================ */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .resume-builder-page,
+  .builder-header-bar,
+  .builder-container,
+  .col-lg-5,
+  .cp-navbar-notch,
+  .atlas-footer,
+  #cpChatTrigger,
+  #cpChatDrawer {
+    display: none !important;
+  }
+
+  .preview-chamber,
+  .preview-scroll-wrapper,
+  #resumePaper,
+  #resumePaper * {
+    visibility: visible;
+  }
+
+  #resumePaper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 10mm 12mm !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  /* Prevent awkward page break splitting across an item */
+  .item-block,
+  .section-title {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none !important;
+  }
+}
