@@ -27,8 +27,28 @@ exports.analyzeResume = async (req, res, next) => {
       selectedCareer = activeRoadmap?.career?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer';
     }
 
-    // Default text fallback if user just wants an evaluation of their logged profile & skills
+    // Determine text to analyze: provided resumeText, or extract from user.resumeUrl, or profile skills fallback
     let textToAnalyze = resumeText;
+    if (!textToAnalyze || textToAnalyze.trim().length < 50) {
+      if (user.resumeUrl) {
+        try {
+          const { downloadResumeBuffer } = require('../services/cloudinaryService');
+          const { PDFParse } = require('pdf-parse');
+          const { data } = await downloadResumeBuffer(user.resumeUrl);
+          if (data && data.length > 0) {
+            const parser = new PDFParse({ data });
+            await parser.load();
+            const parseRes = await parser.getText();
+            if (parseRes && typeof parseRes.text === 'string' && parseRes.text.trim().length > 50) {
+              textToAnalyze = parseRes.text.trim();
+            }
+          }
+        } catch (pdfErr) {
+          console.warn('[resumeController.analyzeResume] Note on resumeUrl extraction:', pdfErr.message);
+        }
+      }
+    }
+
     if (!textToAnalyze || textToAnalyze.trim().length < 50) {
       const skillsStr = (user.skills || []).map(s => `${s.displayName || s.name} (${s.proficiency})`).join(', ');
       const reposStr = (user.githubRepos || []).map(r => `${r.name}: ${r.description} [${r.detectedSkills?.join(', ')}]`).join('\n');

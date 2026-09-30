@@ -184,18 +184,63 @@ const uploadResume = async (req, res, next) => {
     const uploadRes = await uploadResumeToCloudinary(fileData, req.user._id);
     const resumeUrl = uploadRes.secure_url;
 
-    // Update user in DB
+    // 1. Attempt extracting text from base64 PDF
+    let extractedText = '';
+    try {
+      if (fileData.startsWith('data:application/pdf') || fileData.includes('JVBERi0')) {
+        const base64Data = fileData.replace(/^data:application\/pdf;base64,/, '').replace(/^data:[^;]+;base64,/, '');
+        const pdfBuffer = Buffer.from(base64Data, 'base64');
+        const { PDFParse } = require('pdf-parse');
+        const parser = new PDFParse({ data: pdfBuffer });
+        await parser.load();
+        const parseResult = await parser.getText();
+        if (parseResult && typeof parseResult.text === 'string') {
+          extractedText = parseResult.text.trim();
+        }
+      }
+    } catch (parseErr) {
+      console.warn('[userController.uploadResume] PDF text extraction note:', parseErr.message);
+    }
+
+    // 2. Automatically trigger ATS Analysis if text extracted or using candidate data
+    let resumeAnalysis = null;
+    try {
+      const { analyzeResumeText } = require('../services/resumeAnalyzerService');
+      const Roadmap = require('../models/Roadmap');
+      const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' }).populate('career');
+      const targetCareer = activeRoadmap?.career?.title || 'Full-Stack Developer';
+
+      const candidate = await User.findById(req.user._id);
+      const textToGrade = (extractedText && extractedText.length > 50) ? extractedText : (
+        `Candidate Name: ${candidate.name}
+Technical Skills: ${(candidate.skills || []).map(s => s.name).join(', ')}
+Target Role: ${targetCareer}`
+      );
+
+      resumeAnalysis = await analyzeResumeText(textToGrade, targetCareer, candidate?.skills || []);
+    } catch (atsErr) {
+      console.warn('[userController.uploadResume] ATS analysis note:', atsErr.message);
+    }
+
+    // 3. Update user in DB
+    const updateFields = { resumeUrl };
+    if (resumeAnalysis) {
+      updateFields.resumeAnalysis = resumeAnalysis;
+    }
+
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: { resumeUrl } },
+      { $set: updateFields },
       { new: true, runValidators: false }
     );
 
     res.status(200).json({
       success: true,
-      message: 'Resume uploaded and attached to profile successfully',
+      message: 'Resume uploaded and analyzed successfully',
       data: {
         resumeUrl,
+        extractedText,
+        resumeAnalysis,
         user,
       },
     });

@@ -75,7 +75,7 @@ async function generateInterviewQuestions(targetRole = 'Full-Stack Developer', u
 
   const defaultBank = ROLE_QUESTION_BANKS[roleKey] || ROLE_QUESTION_BANKS.fullstack;
 
-  // Attempt dynamic AI personalization
+  // Attempt dynamic AI personalization with fast timeout fallback
   try {
     const skillsList = userSkills.map(s => s.name || s.displayName).join(', ');
     const prompt = `You are a Principal Engineer conducting a live technical job interview for the position of "${targetRole}".
@@ -96,18 +96,25 @@ Return ONLY a valid JSON array of 3 objects with schema:
 ]
 No markdown formatting, return pure JSON.`;
 
-    let aiRes = null;
-    try {
-      aiRes = await callGroq([
-        { role: 'system', content: 'You are an expert technical interviewer. Output valid JSON only.' },
-        { role: 'user', content: prompt }
-      ]);
-    } catch (_) {
-      aiRes = await callGemini([{ role: 'user', parts: [{ text: prompt }] }]);
-    }
+    const aiCall = (async () => {
+      try {
+        return await callGroq([
+          { role: 'system', content: 'You are an expert technical interviewer. Output valid JSON only.' },
+          { role: 'user', content: prompt }
+        ]);
+      } catch (_) {
+        return await callGemini([{ role: 'user', parts: [{ text: prompt }] }]);
+      }
+    })();
+
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('AI interview generation timeout')), 3500)
+    );
+
+    const aiRes = await Promise.race([aiCall, timeoutPromise]);
 
     if (aiRes) {
-      const cleaned = aiRes.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+      const cleaned = String(aiRes).replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
       const parsed = JSON.parse(cleaned);
       if (Array.isArray(parsed) && parsed.length >= 3) {
         return parsed.slice(0, 3);

@@ -1247,11 +1247,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // 2. AI Resume Lab & ATS Analyzer
+  // 2. AI Resume Lab & ATS Analyzer
   const loadResumeLab = async () => {
     try {
       const res = await window.API.get('/resume/analysis', { auth: true });
-      if (res.success && res.data?.analysis) {
-        renderResumeAnalysis(res.data.analysis);
+      if (res.success && res.data) {
+        const analysis = res.data.analysis || res.data;
+        if (analysis?.atsScore) {
+          renderResumeAnalysis(analysis);
+        }
       }
     } catch (err) {
       console.warn('No prior resume analysis loaded:', err);
@@ -1264,18 +1268,184 @@ document.addEventListener('DOMContentLoaded', async () => {
       resumeTargetCareerBadge.textContent = `Target: ${activeCareer}`;
     }
 
-    // Bind scan button
+    // Setup Document Upload Dropzone & Controls
+    const dropzone = document.getElementById('resumeLabDropzone');
+    const fileInput = document.getElementById('resumeLabFileInput');
+    const emptyState = document.getElementById('dropzoneEmptyState');
+    const activeFileState = document.getElementById('dropzoneActiveFileState');
+    const uploadingState = document.getElementById('dropzoneUploadingState');
+    const labResumeFileName = document.getElementById('labResumeFileName');
+    const btnViewLabResume = document.getElementById('btnViewLabResume');
+    const btnChangeLabResume = document.getElementById('btnChangeLabResume');
     const btnAnalyzeResume = document.getElementById('btnAnalyzeResume');
     const resumeTextInput = document.getElementById('resumeTextInput');
 
+    const currentUser = dashboardData?.user || window.Auth?.getUser() || {};
+
+    const updateDropzoneUI = () => {
+      const u = dashboardData?.user || window.Auth?.getUser() || {};
+      if (u?.resumeUrl) {
+        if (emptyState) emptyState.classList.add('d-none');
+        if (activeFileState) activeFileState.classList.remove('d-none');
+        if (labResumeFileName) {
+          const namePart = (u.name || 'document').toLowerCase().replace(/\s+/g, '_');
+          labResumeFileName.textContent = `resume_${namePart}.pdf`;
+        }
+      } else {
+        if (emptyState) emptyState.classList.remove('d-none');
+        if (activeFileState) activeFileState.classList.add('d-none');
+      }
+    };
+
+    updateDropzoneUI();
+
+    // View resume button inside lab
+    if (btnViewLabResume) {
+      btnViewLabResume.onclick = (e) => {
+        e.stopPropagation();
+        if (typeof window.openResumeViewerModal === 'function') {
+          window.openResumeViewerModal();
+        }
+      };
+    }
+
+    // Change resume button inside lab
+    if (btnChangeLabResume && fileInput) {
+      btnChangeLabResume.onclick = (e) => {
+        e.stopPropagation();
+        fileInput.click();
+      };
+    }
+
+    // Handle Upload Workflow
+    const handleResumeUpload = async (file) => {
+      if (!file) return;
+
+      if (!file.name.match(/\.(pdf|doc|docx)$/i)) {
+        showAlert('Invalid file type. Please upload a PDF, DOC, or DOCX document.', 'warning');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showAlert('File size exceeds 10MB limit.', 'warning');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('d-none');
+      if (activeFileState) activeFileState.classList.add('d-none');
+      if (uploadingState) uploadingState.classList.remove('d-none');
+
+      try {
+        const fileData = await window.CloudinaryService.readFileAsDataURL(file);
+        const res = await window.API.post('/users/resume', { fileData }, { auth: true });
+
+        if (res.success && res.data) {
+          const userObj = res.data.user || dashboardData?.user || {};
+          if (res.data.resumeUrl) userObj.resumeUrl = res.data.resumeUrl;
+          window.Auth.setCurrentUser(userObj);
+          if (dashboardData) dashboardData.user = userObj;
+
+          // Update profile card view link
+          const viewResumeLink = document.getElementById('viewResumeLink');
+          const noResumeText = document.getElementById('noResumeText');
+          if (viewResumeLink) {
+            viewResumeLink.href = 'javascript:void(0)';
+            viewResumeLink.classList.remove('d-none');
+            viewResumeLink.onclick = (e) => {
+              e.preventDefault();
+              window.openResumeViewerModal();
+            };
+          }
+          if (noResumeText) noResumeText.classList.add('d-none');
+
+          // If text was extracted, populate textarea
+          if (res.data.extractedText && resumeTextInput) {
+            resumeTextInput.value = res.data.extractedText;
+          }
+
+          // If analysis was returned, render it immediately
+          if (res.data.resumeAnalysis) {
+            renderResumeAnalysis(res.data.resumeAnalysis);
+            showAlert(`Resume uploaded & parsed! ATS Match: ${res.data.resumeAnalysis.atsScore}/100.`, 'success');
+            await loadJobReadiness();
+          } else {
+            // Trigger scan with the newly uploaded document
+            showAlert('Resume uploaded to Cloudinary! Running ATS keyword analysis...', 'info');
+            const targetCareer = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
+            const scanRes = await window.API.post('/resume/analyze', {
+              resumeText: res.data.extractedText || '',
+              targetCareer
+            }, { auth: true });
+
+            if (scanRes.success && scanRes.data) {
+              renderResumeAnalysis(scanRes.data);
+              await loadJobReadiness();
+              showAlert(`ATS Analysis complete! Match Score: ${scanRes.data.atsScore}/100.`, 'success');
+            }
+          }
+
+          updateDropzoneUI();
+          if (labResumeFileName) labResumeFileName.textContent = file.name;
+        } else {
+          showAlert(res.message || 'Failed to upload resume.', 'danger');
+          updateDropzoneUI();
+        }
+      } catch (uploadErr) {
+        console.error('Resume upload error in Resume Lab:', uploadErr);
+        showAlert(uploadErr.message || 'Failed to upload resume file.', 'danger');
+        updateDropzoneUI();
+      } finally {
+        if (uploadingState) uploadingState.classList.add('d-none');
+        if (fileInput) fileInput.value = '';
+      }
+    };
+
+    // Dropzone interaction events
+    if (dropzone && fileInput) {
+      dropzone.onclick = (e) => {
+        if (!e.target.closest('#btnViewLabResume') && !e.target.closest('#btnChangeLabResume')) {
+          fileInput.click();
+        }
+      };
+
+      ['dragenter', 'dragover'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove('dragover');
+        });
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        const droppedFiles = e.dataTransfer?.files;
+        if (droppedFiles && droppedFiles.length > 0) {
+          handleResumeUpload(droppedFiles[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        const pickedFile = e.target.files?.[0];
+        if (pickedFile) handleResumeUpload(pickedFile);
+      });
+    }
+
+    // Bind scan button
     if (btnAnalyzeResume) {
       btnAnalyzeResume.onclick = async () => {
         const text = resumeTextInput ? resumeTextInput.value.trim() : '';
         const targetCareer = dashboardData?.activeRoadmap?.career?.title || 'Full-Stack Developer';
+        const user = dashboardData?.user || window.Auth?.getUser() || {};
 
-        if (!text || text.length < 50) {
-          showAlert('Please paste at least 50 characters of your resume content into the text box below to run the ATS analyzer.', 'warning');
-          if (resumeTextInput) resumeTextInput.focus();
+        if (!text && !user?.resumeUrl) {
+          showAlert('Please upload a resume file above or paste your resume text to scan against recruiter benchmarks.', 'warning');
+          if (fileInput) fileInput.click();
           return;
         }
 
@@ -1292,7 +1462,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (scanRes.success && scanRes.data) {
             renderResumeAnalysis(scanRes.data);
             showAlert(`Resume analyzed! ATS Match Score: ${scanRes.data.atsScore}/100. Check detected keywords & bullet rewrites below.`, 'success');
-            // Refresh composite readiness score
             await loadJobReadiness();
           } else {
             showAlert(scanRes.message || 'Failed to analyze resume.', 'danger');

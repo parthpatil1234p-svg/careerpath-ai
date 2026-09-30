@@ -790,4 +790,23 @@
   line-height: 1.6;
 }
 
+/* 8. AI Resume Lab Dropzone & Upload Styles */
+.resume-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  transition: all 0.2s ease-in-out;
+}
+
+.resume-dropzone:hover,
+.resume-dropzone.dragover {
+  border-color: #14b8a6 !important;
+  background-color: rgba(20, 184, 166, 0.06) !important;
+}
+
+.resume-dropzone:active {
+  transform: scale(0.99);
+}
+
+
 

@@ -485,8 +485,8 @@
           </div>
 
           <div class="row g-4 align-items-start">
-            <!-- Left: ATS Score & Status -->
-            <div class="col-lg-4 text-center border-end border-line pe-lg-4">
+            <!-- Left: ATS Score & Resume Document Upload -->
+            <div class="col-lg-5 text-center border-end border-line pe-lg-4">
               <div class="p-3 rounded-2 stat-box-atlas">
                 <div class="text-muted small fw-bold text-uppercase mb-1">ATS Match Score</div>
                 <div class="ats-score-display my-2">
@@ -497,19 +497,75 @@
                   <div class="progress-bar bg-teal readiness-meter-fill" id="atsProgressBar" style="width: 0%;"></div>
                 </div>
                 <div class="small text-secondary" id="atsScoreSummary">
-                  Click 'Scan Resume' to analyze your profile resume against recruiter benchmarks.
+                  Upload your resume document or click 'Scan Resume' to analyze against recruiter benchmarks.
                 </div>
               </div>
 
-              <!-- Paste / edit resume text toggle -->
+              <!-- Dedicated Resume Document Upload & Management Section -->
               <div class="mt-3 text-start">
-                <label class="form-label small fw-bold text-ink">Resume Content / Paste</label>
-                <textarea id="resumeTextInput" class="form-control form-control-sm font-monospace" rows="4" placeholder="Paste your resume markdown or plain text here to evaluate..."></textarea>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label small fw-bold text-ink mb-0">
+                    <i class="bi bi-file-earmark-arrow-up-fill text-teal me-1"></i> Upload Resume Document
+                  </label>
+                  <span class="badge bg-success bg-opacity-10 text-success font-monospace" style="font-size: 0.65rem;">Cloudinary Synced</span>
+                </div>
+
+                <!-- Drag & drop upload zone -->
+                <div class="resume-dropzone p-3 rounded-2 text-center border border-dashed border-line bg-light position-relative" id="resumeLabDropzone" style="cursor: pointer; transition: all 0.2s ease;">
+                  <input type="file" id="resumeLabFileInput" accept=".pdf,.doc,.docx" class="d-none" />
+
+                  <!-- Empty State -->
+                  <div id="dropzoneEmptyState">
+                    <i class="bi bi-cloud-arrow-up text-teal fs-3 mb-1 d-block"></i>
+                    <div class="small fw-semibold text-ink">Drag & drop resume here, or <span class="text-teal text-decoration-underline">Browse</span></div>
+                    <div class="text-muted" style="font-size: 0.7rem;">Supported: PDF, DOC, DOCX up to 10MB</div>
+                  </div>
+
+                  <!-- Active File Attached State -->
+                  <div id="dropzoneActiveFileState" class="d-none text-start">
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-white border border-line">
+                      <div class="d-flex align-items-center gap-2 overflow-hidden">
+                        <i class="bi bi-file-earmark-pdf-fill text-teal fs-4"></i>
+                        <div class="overflow-hidden">
+                          <div class="fw-semibold text-ink small text-truncate" id="labResumeFileName">resume.pdf</div>
+                          <div class="text-success small d-flex align-items-center gap-1" style="font-size: 0.7rem;">
+                            <i class="bi bi-check-circle-fill"></i> Synced with Profile & ATS
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0" id="btnViewLabResume" title="View document">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-0" id="btnChangeLabResume" title="Upload new version">
+                          <i class="bi bi-arrow-repeat"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Uploading / Parsing Spinner -->
+                  <div id="dropzoneUploadingState" class="d-none py-2 text-center">
+                    <div class="spinner-border spinner-border-sm text-teal mb-1" role="status"></div>
+                    <div class="small text-muted" id="dropzoneUploadText">Uploading to Cloudinary & parsing ATS text...</div>
+                  </div>
+                </div>
+
+                <!-- Textarea option toggle -->
+                <div class="mt-2 d-flex justify-content-between align-items-center">
+                  <span class="text-muted small" style="font-size: 0.72rem;">Have text instead?</span>
+                  <a class="text-teal small text-decoration-underline" data-bs-toggle="collapse" href="#collapseResumePaste" role="button" aria-expanded="false" aria-controls="collapseResumePaste" style="font-size: 0.72rem;">
+                    <i class="bi bi-pencil-square me-1"></i> Paste plain text / markdown
+                  </a>
+                </div>
+                <div class="collapse mt-2" id="collapseResumePaste">
+                  <textarea id="resumeTextInput" class="form-control form-control-sm font-monospace" rows="4" placeholder="Paste your resume markdown or plain text here to evaluate..."></textarea>
+                </div>
               </div>
             </div>
 
             <!-- Right: Keyword Chips & Metric-driven Rewrites -->
-            <div class="col-lg-8">
+            <div class="col-lg-7">
               <!-- Matched & Missing Keywords -->
               <div class="mb-3">
                 <div class="d-flex align-items-center justify-content-between mb-1">
