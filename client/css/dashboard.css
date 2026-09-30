@@ -722,21 +722,22 @@
 
 /* 6. Resume Viewer Modal */
 .resume-viewport-container {
-  background: #0b1120;
+  background: #F1F5F9;
   min-height: 520px;
   position: relative;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
 }
 
 .resume-preview-wrapper {
   max-height: 70vh;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: #CBD5E1 transparent;
 }
 
 .resume-preview-wrapper img {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+  border: 1px solid #E2E8F0;
   transition: transform 0.2s ease;
 }
 

@@ -7,7 +7,7 @@
       name="description"
       content="AI Resume Builder & ATS Job Matcher — Auto-sync verified skills and GitHub projects into job-winning resumes."
     />
-    <meta name="theme-color" content="#0B0F19" />
+    <meta name="theme-color" content="#FFFFFF" />
     <title>AI Resume Builder & ATS Matcher — CareerPath AI</title>
 
     <!-- Favicon & PWA Manifest -->
@@ -118,11 +118,11 @@
 
         <!-- Global Action Buttons -->
         <div class="d-flex align-items-center gap-2">
-          <button class="btn btn-outline-info btn-sm d-flex align-items-center gap-1 px-3 py-1" id="btnJobMatchModal" title="Compare your resume against any Job Description">
+          <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 px-3 py-1" id="btnJobMatchModal" title="Compare your resume against any Job Description">
             <i class="bi bi-fire text-warning"></i>
             <span class="fw-semibold">ATS Job Match</span>
           </button>
-          <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-1 px-3 py-1" id="btnSaveDraft">
+          <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1 px-3 py-1" id="btnSaveDraft">
             <i class="bi bi-floppy"></i>
             <span>Save Draft</span>
           </button>
@@ -136,9 +136,9 @@
 
           <!-- Zoom Preview Controls -->
           <div class="btn-group btn-group-sm ms-2 d-none d-xl-inline-flex" role="group">
-            <button type="button" class="btn btn-dark border-secondary px-2" id="btnZoomOut" title="Zoom Out">−</button>
-            <span class="btn btn-dark border-secondary px-2 font-mono small text-muted" id="zoomLevelDisplay">100%</span>
-            <button type="button" class="btn btn-dark border-secondary px-2" id="btnZoomIn" title="Zoom In">+</button>
+            <button type="button" class="btn btn-light border px-2 text-dark" id="btnZoomOut" title="Zoom Out">−</button>
+            <span class="btn btn-light border px-2 font-mono small text-muted" id="zoomLevelDisplay">100%</span>
+            <button type="button" class="btn btn-light border px-2 text-dark" id="btnZoomIn" title="Zoom In">+</button>
           </div>
         </div>
       </div>
@@ -152,19 +152,19 @@
         <!-- ── LEFT COLUMN: 8-Step Form Wizard ────────────────── -->
         <div class="col-lg-5 col-xl-5">
           <!-- Quick Auto-Fill Banner -->
-          <div class="p-3 mb-3 rounded-3 border border-indigo bg-dark bg-opacity-50 d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div class="p-3 mb-3 rounded-3 border border-primary-subtle bg-light d-flex flex-wrap align-items-center justify-content-between gap-2">
             <div>
-              <div class="fw-bold text-white small d-flex align-items-center gap-2">
-                <i class="bi bi-lightning-charge-fill text-warning"></i> Instant Profile Synchronization
+              <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+                <i class="bi bi-lightning-charge-fill text-primary"></i> Instant Profile Synchronization
               </div>
-              <div class="text-muted" style="font-size: 0.78rem;">Pull verified skills, education, and connected GitHub projects.</div>
+              <div class="text-secondary" style="font-size: 0.78rem;">Pull verified skills, education, and connected GitHub projects.</div>
             </div>
             <div class="d-flex gap-2">
               <button type="button" class="btn-quick-import" id="btnAutoSyncProfile" title="Sync profile data">
-                <i class="bi bi-arrow-repeat text-info"></i> Auto-Fill
+                <i class="bi bi-arrow-repeat text-primary"></i> Auto-Fill
               </button>
               <button type="button" class="btn-quick-import" id="btnImportGithubRepos" title="Import GitHub repositories">
-                <i class="bi bi-github text-white"></i> GitHub Repos
+                <i class="bi bi-github text-dark"></i> GitHub Repos
               </button>
             </div>
           </div>
@@ -394,23 +394,23 @@
          ============================================================ -->
     <div class="modal fade" id="aiImproveModal" tabindex="-1" aria-labelledby="aiImproveModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-dark text-light border border-secondary">
-          <div class="modal-header border-secondary">
+        <div class="modal-content bg-white text-dark border-0 shadow-lg">
+          <div class="modal-header border-bottom">
             <div class="d-flex align-items-center gap-2">
-              <div class="badge bg-purple p-2 text-white">
+              <div class="badge bg-primary p-2 text-white">
                 <i class="bi bi-stars fs-5"></i>
               </div>
               <div>
-                <h5 class="modal-title fw-bold" id="aiImproveModalLabel">AI Resume Enhancer</h5>
+                <h5 class="modal-title fw-bold text-dark" id="aiImproveModalLabel">AI Resume Enhancer</h5>
                 <p class="text-muted small mb-0">Powered by Groq LLaMA-3 & Google Gemini</p>
               </div>
             </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body p-4">
             <div class="mb-3">
               <label class="text-muted small fw-semibold text-uppercase font-mono">Original Text</label>
-              <div class="p-3 rounded bg-secondary bg-opacity-25 border border-secondary text-light small" id="aiOriginalTextDisplay">
+              <div class="p-3 rounded bg-light border text-dark small" id="aiOriginalTextDisplay">
                 Loading original text...
               </div>
             </div>
@@ -430,7 +430,7 @@
               <!-- Suggestion Cards injected here -->
             </div>
           </div>
-          <div class="modal-footer border-secondary">
+          <div class="modal-footer border-top">
             <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -442,18 +442,18 @@
          ============================================================ -->
     <div class="modal fade" id="jobMatchModal" tabindex="-1" aria-labelledby="jobMatchModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-dark text-light border border-secondary">
-          <div class="modal-header border-secondary">
+        <div class="modal-content bg-white text-dark border-0 shadow-lg">
+          <div class="modal-header border-bottom">
             <div class="d-flex align-items-center gap-2">
               <div class="badge bg-primary p-2 text-white">
                 <i class="bi bi-bullseye fs-5"></i>
               </div>
               <div>
-                <h5 class="modal-title fw-bold" id="jobMatchModalLabel">Resume → Job ATS Matcher</h5>
+                <h5 class="modal-title fw-bold text-dark" id="jobMatchModalLabel">Resume → Job ATS Matcher</h5>
                 <p class="text-muted small mb-0">Paste any target Job Description to simulate enterprise ATS scoring</p>
               </div>
             </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body p-4">
             <div class="mb-3">
@@ -471,12 +471,12 @@
             </button>
 
             <!-- Results Section (Initially hidden) -->
-            <div class="mt-4 pt-3 border-top border-secondary d-none" id="jobMatchResultsArea">
-              <div class="d-flex align-items-center justify-content-between p-3 rounded bg-secondary bg-opacity-25 border border-secondary mb-3">
+            <div class="mt-4 pt-3 border-top d-none" id="jobMatchResultsArea">
+              <div class="d-flex align-items-center justify-content-between p-3 rounded bg-light border mb-3">
                 <div>
                   <div class="text-muted small text-uppercase font-mono">ATS Match Score</div>
-                  <h2 class="fw-bold mb-0 text-white" id="matchScoreDisplay">0%</h2>
-                  <div class="small text-info mt-1" id="matchVerdictDisplay">Evaluating...</div>
+                  <h2 class="fw-bold mb-0 text-dark" id="matchScoreDisplay">0%</h2>
+                  <div class="small text-primary mt-1" id="matchVerdictDisplay">Evaluating...</div>
                 </div>
                 <div class="text-end">
                   <div class="badge bg-success py-2 px-3 fs-6 mb-1" id="matchedCountBadge">0 Matched</div>
@@ -503,13 +503,13 @@
               <!-- Tailoring Advice -->
               <div>
                 <div class="text-muted small fw-semibold text-uppercase font-mono mb-2">💡 Tailoring Recommendations</div>
-                <ul class="small text-light ps-3 mb-0" id="tailoringAdviceList">
+                <ul class="small text-dark ps-3 mb-0" id="tailoringAdviceList">
                   <!-- Recommendations -->
                 </ul>
               </div>
             </div>
           </div>
-          <div class="modal-footer border-secondary">
+          <div class="modal-footer border-top">
             <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">Close</button>
           </div>
         </div>

@@ -31,92 +31,92 @@
   --glass-border-hover: #CBD5E1;
 
   /* ------------------------------------------------------------------------
-     2. Primary Blue & Indigo Brand Palette
+     2. Primary Clean Modern Blue Palette (Standard Normal UI)
      ------------------------------------------------------------------------ */
-  --color-primary-900: #172554;
+  --color-primary-900: #0F172A;
   --color-primary-800: #1E3A8A;
   --color-primary-700: #1D4ED8;
   --color-primary-600: #2563EB;
   --color-primary-500: #3B82F6;
 
-  --color-indigo-900: #312E81;
-  --color-indigo-800: #3730A3;
-  --color-indigo-700: #4338CA;
-  --color-indigo-600: #4F46E5;
-  --color-indigo-500: #6366F1;
+  --color-indigo-900: #1E293B;
+  --color-indigo-800: #1E40AF;
+  --color-indigo-700: #1D4ED8;
+  --color-indigo-600: #2563EB;
+  --color-indigo-500: #3B82F6;
 
-  /* Cyan Accents (Used sparingly for path, spark, node highlights) */
-  --color-cyan-700: #0E7490;
-  --color-cyan-600: #0891B2;
-  --color-cyan-500: #06B6D4;
-  --color-cyan-400: #22D3EE;
-  --color-cyan-300: #67E8F9;
+  /* Accent Colors (Natural Blue & Slate) */
+  --color-cyan-700: #0369A1;
+  --color-cyan-600: #0284C7;
+  --color-cyan-500: #0EA5E9;
+  --color-cyan-400: #38BDF8;
+  --color-cyan-300: #7DD3FC;
 
-  /* Semantic Status Colors */
-  --color-success: #16A34A;
-  --color-success-bg: #F0FDF4;
-  --color-warning: #D97706;
+  /* Semantic Status Colors (Clean & Standard) */
+  --color-success: #10B981;
+  --color-success-bg: #ECFDF5;
+  --color-warning: #F59E0B;
   --color-warning-bg: #FFFBEB;
-  --color-danger: #DC2626;
+  --color-danger: #EF4444;
   --color-danger-bg: #FEF2F2;
-  --color-info: #0284C7;
-  --color-info-bg: #F0F9FF;
+  --color-info: #2563EB;
+  --color-info-bg: #EFF6FF;
 
   /* Legacy Palette Aliases */
-  --cyan: var(--color-cyan-500);
-  --cyan-glow: rgba(6, 182, 212, 0.2);
-  --teal: var(--color-cyan-600);
-  --teal-glow: rgba(8, 145, 178, 0.18);
+  --cyan: var(--color-cyan-600);
+  --cyan-glow: transparent;
+  --teal: #0D9488;
+  --teal-glow: transparent;
   --blue: var(--color-primary-600);
-  --indigo: var(--color-indigo-600);
-  --violet: var(--color-indigo-500);
-  --violet-glow: rgba(99, 102, 241, 0.2);
+  --indigo: var(--color-primary-600);
+  --violet: #2563EB;
+  --violet-glow: transparent;
   --emerald: var(--color-success);
-  --emerald-glow: rgba(22, 163, 74, 0.18);
+  --emerald-glow: transparent;
   --amber: var(--color-warning);
-  --amber-glow: rgba(217, 119, 6, 0.18);
+  --amber-glow: transparent;
   --rose: var(--color-danger);
-  --rose-glow: rgba(220, 38, 38, 0.18);
+  --rose-glow: transparent;
 
   /* ------------------------------------------------------------------------
      3. High-Contrast Accessible Typography Colors
      ------------------------------------------------------------------------ */
-  --color-text-primary: #0F172A;      /* Dark navy for headings */
-  --color-text-secondary: #334155;    /* Crisp slate gray for body */
-  --color-text-muted: #64748B;        /* Muted slate for metadata */
-  --color-text-disabled: #94A3B8;     /* Disabled / subtle captions */
-  --color-border: #E2E8F0;            /* Light slate border */
+  --color-text-primary: #0F172A;      /* Clean Dark Slate for headings */
+  --color-text-secondary: #334155;    /* Clear Slate for body text */
+  --color-text-muted: #64748B;        /* Muted slate for captions */
+  --color-text-disabled: #94A3B8;     /* Disabled text */
+  --color-border: #E2E8F0;            /* Clean light border */
 
   /* Legacy Typography Aliases */
   --text-primary: var(--color-text-primary);
   --text-secondary: var(--color-text-secondary);
   --text-muted: var(--color-text-muted);
   --text-dim: var(--color-text-disabled);
-  --text-accent: var(--color-indigo-600);
+  --text-accent: var(--color-primary-600);
 
   /* ------------------------------------------------------------------------
-     4. Professional Subtle Gradients
+     4. Clean Normal UI Gradients (Subtle & Natural)
      ------------------------------------------------------------------------ */
-  --gradient-primary: linear-gradient(135deg, #4F46E5 0%, #2563EB 100%);
-  --gradient-secondary: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
-  --gradient-accent: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
-  --gradient-hero-title: linear-gradient(135deg, #0F172A 20%, #312E81 60%, #2563EB 100%);
-  --gradient-card-border: linear-gradient(135deg, #E2E8F0, #EEF2FF);
-  --gradient-glow-cyan: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
-  --gradient-glow-violet: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  --gradient-secondary: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  --gradient-accent: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+  --gradient-hero-title: linear-gradient(135deg, #0F172A 40%, #2563EB 100%);
+  --gradient-card-border: #E2E8F0;
+  --gradient-glow-cyan: none;
+  --gradient-glow-violet: none;
 
   /* ------------------------------------------------------------------------
      5. Crisp Borders & Subtle Professional Shadows
      ------------------------------------------------------------------------ */
   --line: var(--color-border);
   --line-strong: #CBD5E1;
-  --line-highlight: #C7D2FE;
+  --line-highlight: #BFDBFE;
   
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
-  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 10px 30px rgba(30, 64, 175, 0.08);
-  --shadow-glow-cyan: 0 4px 20px rgba(6, 182, 212, 0.15);
-  --shadow-glow-violet: 0 4px 20px rgba(99, 102, 241, 0.15);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.07);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --shadow-glow-cyan: none;
+  --shadow-glow-violet: none;
 
   /* ------------------------------------------------------------------------
      6. Modern Sleek Typography Stacks (Inter Primary)

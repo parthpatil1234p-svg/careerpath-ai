@@ -14,29 +14,11 @@
   overflow: hidden;
 }
 
-/* Subtle, Soft Indigo Ambient Shapes */
-.ambient-glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(90px);
-  z-index: 0;
-}
-
-.ambient-glow-1 {
-  top: 5%;
-  left: 15%;
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
-}
-
+/* Normal Clean UI: Ambient glow blobs disabled */
+.ambient-glow,
+.ambient-glow-1,
 .ambient-glow-2 {
-  top: 20%;
-  right: 10%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
+  display: none !important;
 }
 
 .hero-grid {

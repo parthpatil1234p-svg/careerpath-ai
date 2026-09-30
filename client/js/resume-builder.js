@@ -1103,8 +1103,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (res.success && Array.isArray(res.suggestions) && res.suggestions.length > 0) {
         container.innerHTML = res.suggestions.map((sug, i) => `
-          <div class="p-3 rounded bg-secondary bg-opacity-15 border border-secondary d-flex flex-column gap-2">
-            <div class="text-light" style="font-size: 0.92rem; line-height: 1.5;">${escapeHtml(sug)}</div>
+          <div class="p-3 rounded bg-light border d-flex flex-column gap-2">
+            <div class="text-dark" style="font-size: 0.92rem; line-height: 1.5;">${escapeHtml(sug)}</div>
             <div class="text-end">
               <button type="button" class="btn btn-outline-primary btn-sm px-3 py-1 btn-apply-ai-sug" data-sug-index="${i}">
                 <i class="bi bi-check2"></i> Apply This Variation
