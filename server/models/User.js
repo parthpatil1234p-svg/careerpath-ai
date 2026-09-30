@@ -108,6 +108,19 @@ const SkillSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    howVerified: {
+      type: String,
+      enum: ['self_rated', 'skill_check', 'weekly_test', 'github_repo', 'interview'],
+      default: 'self_rated',
+    },
+    latestResult: {
+      type: String,
+      default: '',
+    },
+    refreshByDate: {
+      type: Date,
+      default: null,
+    },
   },
   { _id: false } // No separate _id for sub-documents
 );
@@ -414,6 +427,40 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: '',
       trim: true,
+    },
+
+    // Enhanced 3-State Resume Lifecycle Record
+    resumeRecord: {
+      fileLocation: { type: String, default: '' },
+      fileName: { type: String, default: '' },
+      fileSize: { type: Number, default: 0 },
+      firstUploadedDate: { type: Date, default: null },
+      lastUpdatedDate: { type: Date, default: null },
+      publicId: { type: String, default: '' },
+    },
+
+    // Graduation & Milestone Portfolio Records
+    completedPaths: [
+      {
+        roadmap: { type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' },
+        role: { type: String, default: '' },
+        careerTitle: { type: String, default: '' },
+        slug: { type: String, default: '' },
+        credentialId: { type: String, default: '' },
+        verificationCode: { type: String, default: '' },
+        completionDate: { type: Date, default: Date.now },
+        skillsGained: { type: [String], default: [] },
+      },
+    ],
+
+    // User Career Phase Status (Learning | Job-seeking | Working)
+    profileStatus: {
+      status: {
+        type: String,
+        enum: ['learning', 'job_seeking', 'working'],
+        default: 'learning',
+      },
+      currentRole: { type: String, default: '' },
     },
 
     // True once the user has filled in education + interests + skills

@@ -192,6 +192,25 @@
                     <span id="noResumeText" class="text-muted">No Resume</span>
                   </span>
                 </div>
+                <!-- Profile Status Selector (Learning | Job-Seeking | Working) -->
+                <div class="mt-2 pt-2 border-top border-line d-flex align-items-center gap-2 flex-wrap" id="profileStatusBar">
+                  <span class="small fw-semibold text-muted" style="font-size: 0.75rem;"><i class="bi bi-person-badge text-teal me-1"></i> Status:</span>
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Profile Status Selector" id="statusBtnGroup">
+                    <button type="button" class="btn btn-outline-secondary status-toggle-btn active py-0 px-2" data-status="learning" style="font-size: 0.72rem;">
+                      <i class="bi bi-book-half me-1"></i> Learning
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary status-toggle-btn py-0 px-2" data-status="job_seeking" style="font-size: 0.72rem;">
+                      <i class="bi bi-briefcase me-1"></i> Job-Seeking
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary status-toggle-btn py-0 px-2" data-status="working" style="font-size: 0.72rem;">
+                      <i class="bi bi-person-workspace me-1"></i> Working
+                    </button>
+                  </div>
+                  <span class="badge bg-secondary bg-opacity-10 text-teal font-mono small d-none" id="currentRoleBadge"></span>
+                  <button type="button" class="btn btn-link btn-sm text-teal text-decoration-none p-0 d-none" id="btnEditCurrentRole" style="font-size: 0.72rem;">
+                    <i class="bi bi-pencil me-1"></i>Set Role
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -403,9 +422,57 @@
             </div>
           </div>
 
-          <!-- Active Skills Chips Container -->
-          <div id="dashboardSkillsContainer" class="d-flex flex-wrap gap-2">
-            <div class="text-muted small py-2">Loading skills...</div>
+          <!-- View Toggle Tabs: Chips vs Full Canonical Evidence Ledger -->
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <ul class="nav nav-pills nav-pills-sm" id="skillsViewTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active py-1 px-3 small fw-semibold" id="tab-skills-chips" data-bs-toggle="pill" data-bs-target="#view-skills-chips" type="button" role="tab" style="font-size: 0.78rem;">
+                  <i class="bi bi-grid-fill me-1"></i> Interactive Skill Chips
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link py-1 px-3 small fw-semibold" id="tab-skills-evidence" data-bs-toggle="pill" data-bs-target="#view-skills-evidence" type="button" role="tab" style="font-size: 0.78rem;">
+                  <i class="bi bi-award-fill me-1 text-teal"></i> Canonical Evidence Ledger
+                </button>
+              </li>
+            </ul>
+            <span class="badge bg-secondary bg-opacity-10 text-teal font-mono small" id="evidenceVerifiedCounter">
+              0 / 0 Verified (Currency: 180 Days)
+            </span>
+          </div>
+
+          <div class="tab-content" id="skillsTabContent">
+            <!-- Tab 1: Interactive Chips with Popover Audit Trail -->
+            <div class="tab-pane fade show active" id="view-skills-chips" role="tabpanel">
+              <div id="dashboardSkillsContainer" class="d-flex flex-wrap gap-2">
+                <div class="text-muted small py-2">Loading skills...</div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Canonical Skill Evidence Ledger Table -->
+            <div class="tab-pane fade" id="view-skills-evidence" role="tabpanel">
+              <div class="table-responsive border border-line rounded-2">
+                <table class="table table-hover align-middle mb-0 small" id="evidenceLedgerTable">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="ps-3">Competency / Skill</th>
+                      <th>Claimed Level</th>
+                      <th>Verified Level</th>
+                      <th>Method</th>
+                      <th>Score / Output</th>
+                      <th>Verified Date</th>
+                      <th>Currency (180d)</th>
+                      <th class="pe-3 text-end">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="evidenceLedgerBody">
+                    <tr>
+                      <td colspan="8" class="text-center py-4 text-muted">Loading canonical skill evidence ledger...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -514,53 +581,70 @@
                 </div>
               </div>
 
-              <!-- Dedicated Resume Document Upload & Management Section -->
+              <!-- 3-State Dedicated Resume Document Upload & Management Section -->
               <div class="mt-3 text-start">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <label class="form-label small fw-bold text-ink mb-0">
-                    <i class="bi bi-file-earmark-arrow-up-fill text-teal me-1"></i> Upload Resume Document
+                    <i class="bi bi-file-earmark-arrow-up-fill text-teal me-1"></i> Resume Document
                   </label>
                   <span class="badge bg-success bg-opacity-10 text-success font-monospace" style="font-size: 0.65rem;">Cloudinary Synced</span>
                 </div>
 
-                <!-- Drag & drop upload zone -->
-                <div class="resume-dropzone p-3 rounded-2 text-center border border-dashed border-line bg-light position-relative" id="resumeLabDropzone" style="cursor: pointer; transition: all 0.2s ease;">
-                  <input type="file" id="resumeLabFileInput" accept=".pdf,.doc,.docx" class="d-none" />
-
-                  <!-- Empty State -->
-                  <div id="dropzoneEmptyState">
-                    <i class="bi bi-cloud-arrow-up text-teal fs-3 mb-1 d-block"></i>
-                    <div class="small fw-semibold text-ink">Drag & drop resume here, or <span class="text-teal text-decoration-underline">Browse</span></div>
-                    <div class="text-muted" style="font-size: 0.7rem;">Supported: PDF, DOC, DOCX up to 10MB</div>
+                <!-- STATE 1: LOCKED (0 Verified Skills) -->
+                <div id="resumeStateLocked" class="d-none p-3 rounded-2 text-center border border-dashed border-secondary border-opacity-50 bg-light">
+                  <i class="bi bi-lock-fill text-warning fs-3 mb-1 d-block"></i>
+                  <div class="small fw-bold text-ink">🔒 Verify 1 Skill to Unlock Resume Upload</div>
+                  <div class="text-secondary small mt-1" style="font-size: 0.72rem;">
+                    Server security gate requires at least 1 verified skill through Weekly Tests or Skill Checks before accepting candidate resumes.
                   </div>
+                  <a href="roadmap.html" class="btn btn-navy btn-sm mt-2 px-3 py-1" style="font-size: 0.72rem;">
+                    <i class="bi bi-shield-check me-1"></i> Verify a Skill in Roadmap
+                  </a>
+                </div>
 
-                  <!-- Active File Attached State -->
-                  <div id="dropzoneActiveFileState" class="d-none text-start">
-                    <div class="d-flex align-items-center justify-content-between p-2 rounded bg-white border border-line">
-                      <div class="d-flex align-items-center gap-2 overflow-hidden">
-                        <i class="bi bi-file-earmark-pdf-fill text-teal fs-4"></i>
-                        <div class="overflow-hidden">
-                          <div class="fw-semibold text-ink small text-truncate" id="labResumeFileName">resume.pdf</div>
-                          <div class="text-success small d-flex align-items-center gap-1" style="font-size: 0.7rem;">
-                            <i class="bi bi-check-circle-fill"></i> Synced with Profile & ATS
+                <!-- STATE 2 & 3: UNLOCKED CONTAINER -->
+                <div id="resumeStateUnlocked" class="">
+                  <!-- Drag & drop upload zone (STATE 2: Unlocked, No File) -->
+                  <div class="resume-dropzone p-3 rounded-2 text-center border border-dashed border-line bg-light position-relative" id="resumeLabDropzone" style="cursor: pointer; transition: all 0.2s ease;">
+                    <input type="file" id="resumeLabFileInput" accept=".pdf,.doc,.docx" class="d-none" />
+
+                    <!-- Empty State -->
+                    <div id="dropzoneEmptyState">
+                      <i class="bi bi-cloud-arrow-up text-teal fs-3 mb-1 d-block"></i>
+                      <div class="small fw-semibold text-ink">Drag & drop resume here, or <span class="text-teal text-decoration-underline">Browse</span></div>
+                      <div class="text-muted" style="font-size: 0.7rem;">Supported: PDF, DOC, DOCX up to 5MB</div>
+                    </div>
+
+                    <!-- STATE 3: Active File Attached State -->
+                    <div id="dropzoneActiveFileState" class="d-none text-start">
+                      <div class="p-2 rounded bg-white border border-line">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="d-flex align-items-center gap-2 overflow-hidden">
+                            <i class="bi bi-file-earmark-pdf-fill text-teal fs-4"></i>
+                            <div class="overflow-hidden">
+                              <div class="fw-semibold text-ink small text-truncate" id="labResumeFileName">resume.pdf</div>
+                              <div class="text-muted small" style="font-size: 0.7rem;" id="labResumeMeta">
+                                <span id="labResumeFileSize">-- KB</span> · Updated <span id="labResumeDate">Today</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex gap-1 flex-shrink-0">
+                            <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0" id="btnViewLabResume" title="View document">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-0" id="btnChangeLabResume" title="Update your resume">
+                              <i class="bi bi-arrow-repeat"></i> Update
+                            </button>
                           </div>
                         </div>
                       </div>
-                      <div class="d-flex gap-1">
-                        <button type="button" class="btn btn-outline-primary btn-sm px-2 py-0" id="btnViewLabResume" title="View document">
-                          <i class="bi bi-eye"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-0" id="btnChangeLabResume" title="Upload new version">
-                          <i class="bi bi-arrow-repeat"></i>
-                        </button>
-                      </div>
                     </div>
-                  </div>
 
-                  <!-- Uploading / Parsing Spinner -->
-                  <div id="dropzoneUploadingState" class="d-none py-2 text-center">
-                    <div class="spinner-border spinner-border-sm text-teal mb-1" role="status"></div>
-                    <div class="small text-muted" id="dropzoneUploadText">Uploading to Cloudinary & parsing ATS text...</div>
+                    <!-- Uploading / Parsing Spinner -->
+                    <div id="dropzoneUploadingState" class="d-none py-2 text-center">
+                      <div class="spinner-border spinner-border-sm text-teal mb-1" role="status"></div>
+                      <div class="small text-muted" id="dropzoneUploadText">Uploading to Cloudinary & parsing ATS text...</div>
+                    </div>
                   </div>
                 </div>
 
@@ -639,6 +723,35 @@
             <div class="col-12 text-center py-4 text-muted small">
               <div class="spinner-border spinner-border-sm text-teal me-2" role="status"></div>
               Loading live market jobs matched to your verified skills...
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.95 COMPLETED PATHS & VERIFIED CREDENTIALS SHOWCASE -->
+        <div class="card p-4 rounded-3 border-line shadow-sm mb-4" id="completedPathsCard">
+          <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-leaf font-monospace text-uppercase" style="letter-spacing: 0.5px;">
+                  <i class="bi bi-award-fill me-1"></i> GRADUATION CREDENTIALS
+                </span>
+                <span class="badge bg-secondary bg-opacity-25 text-primary font-mono small" id="completedPathsCountBadge">
+                  0 Completed Paths
+                </span>
+              </div>
+              <h3 class="h5 fw-bold text-ink mb-0 mt-1">Completed Learning Paths & Milestone Credentials</h3>
+              <p class="text-muted small mb-0 mt-1">Verified multi-week roadmaps where all weekly milestones and technical exams were passed with ≥70% score.</p>
+            </div>
+            <button type="button" class="btn btn-outline-success btn-sm px-3" id="btnRefreshCredentials">
+              <i class="bi bi-arrow-repeat me-1"></i> Refresh Credentials
+            </button>
+          </div>
+
+          <div id="completedPathsListContainer">
+            <div class="p-3 border border-line rounded-2 text-center text-muted small bg-light">
+              <i class="bi bi-mortarboard display-6 text-teal opacity-75 mb-2 d-block"></i>
+              <div class="fw-semibold text-ink mb-1">Active Curriculum In Progress</div>
+              <div class="text-secondary small">Pass all weekly milestones in your active roadmap to graduate and earn your official verifiable credential!</div>
             </div>
           </div>
         </div>

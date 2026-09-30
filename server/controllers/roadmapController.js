@@ -11,9 +11,14 @@ const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
 const Career = require('../models/Career');
 const User = require('../models/User');
-const Skill = require('../models/Skill'); // Ensure registered
 const { generateRecommendations } = require('../services/recommendationService');
 const { generateRoadmapTasks, calculateRoadmapProgress } = require('../services/roadmapService');
+const {
+  startWeeklyTest,
+  saveWeeklyTestAnswer,
+  submitWeeklyTest,
+  getWeeklyTestStatus,
+} = require('../services/weeklyTestService');
 
 // Helper to group tasks by weekNumber
 const groupTasksByWeek = (tasks, durationWeeks) => {
@@ -114,7 +119,20 @@ const generateRoadmap = async (req, res, next) => {
       weeksCount
     );
 
-    // 8. Create Roadmap document
+    // 8. Create Roadmap document with initial weekly milestone progress
+    const initialWeekProgress = [];
+    for (let w = 1; w <= weeksCount; w++) {
+      initialWeekProgress.push({
+        weekNumber: w,
+        title: `Week ${w} Milestone`,
+        status: w === 1 ? 'in_progress' : 'locked',
+        attemptsCount: 0,
+        passedAt: null,
+        testScore: 0,
+        testPercent: 0,
+      });
+    }
+
     const newRoadmap = await Roadmap.create({
       user: user._id,
       career: selectedCareer._id,
@@ -130,6 +148,7 @@ const generateRoadmap = async (req, res, next) => {
       completedTasks: 0,
       progressPercentage: 0,
       startedAt: new Date(),
+      weekProgress: initialWeekProgress,
     });
 
     // 9. Bulk-create RoadmapTask documents linked to new roadmap
@@ -161,6 +180,7 @@ const generateRoadmap = async (req, res, next) => {
           completedTasks: newRoadmap.completedTasks,
           completedTasksCount: newRoadmap.completedTasks,
           progressPercentage: newRoadmap.progressPercentage,
+          weekProgress: newRoadmap.weekProgress,
         },
         tasks: createdTasks,
         weeks,
@@ -190,6 +210,23 @@ const getCurrentRoadmap = async (req, res, next) => {
       });
     }
 
+    // Ensure weekProgress array exists for existing roadmaps
+    if (!roadmap.weekProgress || roadmap.weekProgress.length === 0) {
+      roadmap.weekProgress = [];
+      for (let w = 1; w <= roadmap.durationWeeks; w++) {
+        roadmap.weekProgress.push({
+          weekNumber: w,
+          title: `Week ${w} Milestone`,
+          status: w === 1 ? 'in_progress' : 'locked',
+          attemptsCount: 0,
+          passedAt: null,
+          testScore: 0,
+          testPercent: 0,
+        });
+      }
+      await roadmap.save();
+    }
+
     const tasks = await RoadmapTask.find({ roadmap: roadmap._id })
       .sort({ weekNumber: 1, order: 1 })
       .select('-__v');
@@ -215,6 +252,7 @@ const getCurrentRoadmap = async (req, res, next) => {
           completedTasksCount: roadmap.completedTasks,
           progressPercentage: roadmap.progressPercentage,
           startedAt: roadmap.startedAt,
+          weekProgress: roadmap.weekProgress,
         },
         tasks,
         weeks,
@@ -265,6 +303,17 @@ const toggleTask = async (req, res, next) => {
     // 4. Recalculate progress on Roadmap
     const updatedRoadmap = await calculateRoadmapProgress(activeRoadmap._id);
 
+    // 5. If all tasks for this task's week are completed, transition week from in_progress to awaiting_test
+    const weekTasks = await RoadmapTask.find({ roadmap: activeRoadmap._id, weekNumber: task.weekNumber });
+    const allWeekTasksDone = weekTasks.length > 0 && weekTasks.every((t) => t.completed);
+    if (allWeekTasksDone && updatedRoadmap.weekProgress) {
+      const wp = updatedRoadmap.weekProgress.find((w) => w.weekNumber === task.weekNumber);
+      if (wp && wp.status === 'in_progress') {
+        wp.status = 'awaiting_test';
+        await updatedRoadmap.save();
+      }
+    }
+
     res.status(200).json({
       success: true,
       message: `Task marked as ${task.completed ? 'completed' : 'incomplete'}`,
@@ -284,6 +333,7 @@ const toggleTask = async (req, res, next) => {
           completedTasks: updatedRoadmap.completedTasks,
           completedTasksCount: updatedRoadmap.completedTasks,
           progressPercentage: updatedRoadmap.progressPercentage,
+          weekProgress: updatedRoadmap.weekProgress,
         },
       },
     });
@@ -483,10 +533,150 @@ const linkProjectRepo = async (req, res, next) => {
   }
 };
 
+/**
+ * POST /api/roadmaps/:id/weeks/:weekNumber/test/start
+ * Starts a 30-minute server-clock weekly milestone test
+ */
+const startWeeklyTestController = async (req, res, next) => {
+  try {
+    const { id, weekNumber } = req.params;
+    const testData = await startWeeklyTest(req.user._id, id, weekNumber);
+    res.status(200).json({
+      success: true,
+      message: testData.resumed
+        ? 'Resumed ongoing weekly milestone test.'
+        : `Week ${weekNumber} milestone test started. 30-minute timer running.`,
+      data: testData,
+    });
+  } catch (error) {
+    if (error.code === 'PREREQUISITE_LOCKED') {
+      return res.status(403).json({
+        success: false,
+        code: error.code,
+        message: error.message,
+      });
+    }
+    next(error);
+  }
+};
+
+/**
+ * POST /api/roadmaps/test/save-answer
+ * Progressive auto-save for question choices during test
+ */
+const saveWeeklyTestAnswerController = async (req, res, next) => {
+  try {
+    const { attemptId, questionId, selectedIndex, selectedOption } = req.body;
+    const choice = selectedIndex !== undefined ? selectedIndex : selectedOption;
+    if (!attemptId || !questionId || choice === undefined || choice === null) {
+      return res.status(400).json({
+        success: false,
+        message: 'attemptId, questionId, and selectedIndex/selectedOption are required.',
+      });
+    }
+    const result = await saveWeeklyTestAnswer(req.user._id, attemptId, questionId, Number(choice));
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * POST /api/roadmaps/test/submit
+ * Grades weekly milestone test, enforces 70% threshold, unlocks next week on pass
+ */
+const submitWeeklyTestController = async (req, res, next) => {
+  try {
+    const { attemptId, answers } = req.body;
+    if (!attemptId) {
+      return res.status(400).json({
+        success: false,
+        message: 'attemptId is required to submit test.',
+      });
+    }
+    const result = await submitWeeklyTest(req.user._id, attemptId, true, answers || []);
+    res.status(200).json({
+      success: true,
+      message: result.passed
+        ? `Passed with ${result.percent}%! Next milestone unlocked.`
+        : `Score: ${result.percent}%. 70% required to pass. Retake available with fresh questions.`,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/roadmaps/test/:attemptId/status
+ * Fetches status, remaining seconds, and saved answers for an attempt
+ */
+const getWeeklyTestStatusController = async (req, res, next) => {
+  try {
+    const { attemptId } = req.params;
+    const result = await getWeeklyTestStatus(req.user._id, attemptId);
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * POST /api/roadmaps/:id/weeks/:weekNumber/complete
+ * Marks all tasks for a week complete and transitions status to awaiting_test
+ */
+const completeWeekMilestoneController = async (req, res, next) => {
+  try {
+    const { id, weekNumber } = req.params;
+    const wNum = Number(weekNumber);
+    const roadmap = await Roadmap.findOne({ _id: id, user: req.user._id });
+    if (!roadmap) {
+      return res.status(404).json({ success: false, message: 'Roadmap not found' });
+    }
+
+    await RoadmapTask.updateMany(
+      { roadmap: id, weekNumber: wNum },
+      { $set: { completed: true, completedAt: new Date() } }
+    );
+
+    const updatedRoadmap = await calculateRoadmapProgress(id);
+
+    if (updatedRoadmap.weekProgress) {
+      const wp = updatedRoadmap.weekProgress.find((w) => w.weekNumber === wNum);
+      if (wp && wp.status === 'in_progress') {
+        wp.status = 'awaiting_test';
+        await updatedRoadmap.save();
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Week ${wNum} tasks completed. Ready for milestone test!`,
+      data: {
+        weekNumber: wNum,
+        roadmap: updatedRoadmap,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   generateRoadmap,
   getCurrentRoadmap,
   toggleTask,
   archiveRoadmap,
   linkProjectRepo,
+  startWeeklyTestController,
+  saveWeeklyTestAnswerController,
+  submitWeeklyTestController,
+  getWeeklyTestStatusController,
+  completeWeekMilestoneController,
 };

@@ -63,6 +63,7 @@ const jobRoutes = require('./routes/jobRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
+const evidenceRoutes = require('./routes/evidenceRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
 const readinessRoutes = require('./routes/readinessRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
@@ -236,6 +237,9 @@ app.use('/api/chat', chatRoutes);
 
 // AI Dev Board Live Market Jobs (Step 5 - Market Telemetry)
 app.use('/api/jobs', jobRoutes);
+
+// Canonical Skill Evidence Ledger (Single Source of Truth)
+app.use('/api/skills/evidence', evidenceRoutes);
 
 // Skills Directory & Custom Skill Catalog (Step 5 - Competency Intelligence)
 app.use('/api/skills', skillRoutes);

@@ -1,0 +1,31 @@
+/**
+ * routes/evidenceRoutes.js — Canonical Skill Evidence API
+ *
+ * Mounted at: /api/skills/evidence (in server.js)
+ * Single source of truth for the Skill Evidence Ledger, Dashboard Table,
+ * Interactive Chips, and Resume Gatekeeper.
+ */
+
+const express = require('express');
+const router = express.Router();
+const { protect } = require('../middleware/authMiddleware');
+const { getSkillEvidence } = require('../services/evidenceService');
+
+/**
+ * GET /api/skills/evidence
+ * Returns the authenticated user's canonical skill evidence ledger.
+ */
+router.get('/', protect, async (req, res, next) => {
+  try {
+    const evidenceData = await getSkillEvidence(req.user._id);
+    res.status(200).json({
+      success: true,
+      message: 'Skill evidence ledger retrieved successfully',
+      data: evidenceData,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = router;

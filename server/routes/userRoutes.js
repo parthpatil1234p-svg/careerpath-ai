@@ -20,6 +20,7 @@ const {
   viewResume,
   downloadResume,
   getResumePreview,
+  updateProfileStatus,
 } = require('../controllers/userController');
 const { protect }                        = require('../middleware/authMiddleware');
 const { validateProfileUpdate }          = require('../middleware/validateRequest');
@@ -34,6 +35,9 @@ router.get('/me', getMyProfile);
 
 // PUT /api/users/me
 router.put('/me', validateProfileUpdate, updateMyProfile);
+
+// PUT /api/users/profile-status (Update Learning / Job Seeking / Working Status)
+router.put('/profile-status', updateProfileStatus);
 
 // POST /api/users/avatar (Cloudinary Media Upload)
 router.post('/avatar', uploadAvatar);

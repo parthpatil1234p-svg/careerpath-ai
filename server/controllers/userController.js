@@ -124,7 +124,9 @@ const {
   uploadResume: uploadResumeToCloudinary,
   getResumePreviewUrl,
   downloadResumeBuffer,
+  deleteResource,
 } = require('../services/cloudinaryService');
+const { getSkillEvidence } = require('../services/evidenceService');
 
 /**
  * Strict MIME Type and Size Validator for Base64 Data URIs
@@ -217,8 +219,19 @@ const uploadAvatar = async (req, res, next) => {
  */
 const uploadResume = async (req, res, next) => {
   try {
-    const { fileData } = req.body;
-    validateBase64Upload(
+    const { fileData, fileName } = req.body;
+
+    // 1. Server Unlock Rule: Verify at least one skill before unlocking resume upload
+    const evidence = await getSkillEvidence(req.user._id);
+    if (!evidence || evidence.verifiedCount === 0) {
+      return res.status(403).json({
+        success: false,
+        code: 'VERIFICATION_REQUIRED',
+        message: 'Verify one skill to unlock resume upload.',
+      });
+    }
+
+    const uploadInfo = validateBase64Upload(
       fileData,
       [
         'application/pdf',
@@ -229,10 +242,14 @@ const uploadResume = async (req, res, next) => {
       'Resume'
     );
 
+    // Fetch existing user to get old publicId for safe replacement
+    const existingUser = await User.findById(req.user._id);
+    const oldPublicId = existingUser?.resumeRecord?.publicId;
+
     const uploadRes = await uploadResumeToCloudinary(fileData, req.user._id);
     const resumeUrl = uploadRes.secure_url;
 
-    // 1. Attempt extracting text from base64 PDF
+    // 2. Attempt extracting text from base64 PDF
     let extractedText = '';
     try {
       if (fileData.startsWith('data:application/pdf') || fileData.includes('JVBERi0')) {
@@ -250,7 +267,7 @@ const uploadResume = async (req, res, next) => {
       console.warn('[userController.uploadResume] PDF text extraction note:', parseErr.message);
     }
 
-    // 2. Automatically trigger ATS Analysis if text extracted or using candidate data
+    // 3. Automatically trigger ATS Analysis if text extracted or using candidate data
     let resumeAnalysis = null;
     try {
       const { analyzeResumeText } = require('../services/resumeAnalyzerService');
@@ -258,7 +275,7 @@ const uploadResume = async (req, res, next) => {
       const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' }).populate('career');
       const targetCareer = activeRoadmap?.career?.title || 'Full-Stack Developer';
 
-      const candidate = await User.findById(req.user._id);
+      const candidate = existingUser || await User.findById(req.user._id);
       const textToGrade = (extractedText && extractedText.length > 50) ? extractedText : (
         `Candidate Name: ${candidate.name}
 Technical Skills: ${(candidate.skills || []).map(s => s.name).join(', ')}
@@ -270,26 +287,46 @@ Target Role: ${targetCareer}`
       console.warn('[userController.uploadResume] ATS analysis note:', atsErr.message);
     }
 
-    // 3. Update user in DB
-    const updateFields = { resumeUrl };
+    // 4. Update user in DB with resumeRecord
+    const now = new Date();
+    const resumeRecord = {
+      fileLocation: resumeUrl,
+      fileName: fileName || req.body.fileName || 'Resume.pdf',
+      fileSize: uploadInfo.sizeBytes,
+      firstUploadedDate: existingUser?.resumeRecord?.firstUploadedDate || now,
+      lastUpdatedDate: now,
+      publicId: uploadRes.public_id,
+    };
+
+    const updateFields = {
+      resumeUrl,
+      resumeRecord,
+    };
     if (resumeAnalysis) {
       updateFields.resumeAnalysis = resumeAnalysis;
     }
 
-    const user = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { $set: updateFields },
       { new: true, runValidators: false }
     );
 
+    // 5. Delete old asset from Cloudinary only after new file is committed to DB
+    if (oldPublicId && oldPublicId !== uploadRes.public_id) {
+      deleteResource(oldPublicId).catch(() => {});
+    }
+
     res.status(200).json({
       success: true,
-      message: 'Resume uploaded and analyzed successfully',
+      message: 'Resume updated successfully.',
       data: {
         resumeUrl,
+        resume: updatedUser.resumeRecord,
+        resumeRecord: updatedUser.resumeRecord,
         extractedText,
         resumeAnalysis,
-        user,
+        user: updatedUser,
       },
     });
   } catch (error) {
@@ -387,6 +424,47 @@ const getResumePreview = async (req, res, next) => {
   }
 };
 
+/**
+ * PUT /api/users/profile-status
+ * Body: { status: 'learning' | 'job_seeking' | 'working', currentRole: String }
+ */
+const updateProfileStatus = async (req, res, next) => {
+  try {
+    const { status, currentRole } = req.body;
+    const validStatuses = ['learning', 'job_seeking', 'working'];
+    if (status && !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid status. Must be learning, job_seeking, or working.',
+      });
+    }
+
+    const updates = {};
+    if (status) updates['profileStatus.status'] = status;
+    if (currentRole !== undefined) updates['profileStatus.currentRole'] = currentRole;
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updates },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile status updated successfully',
+      data: {
+        profileStatus: user.profileStatus,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getMyProfile,
   updateMyProfile,
@@ -395,5 +473,6 @@ module.exports = {
   viewResume,
   downloadResume,
   getResumePreview,
+  updateProfileStatus,
 };
 

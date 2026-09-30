@@ -76,6 +76,7 @@ const getDashboard = async (req, res, next) => {
         completedTasksCount: activeRoadmap.completedTasks,
         progressPercentage: activeRoadmap.progressPercentage,
         startedAt: activeRoadmap.startedAt,
+        weekProgress: activeRoadmap.weekProgress || [],
       };
 
       // Fetch first 5 incomplete tasks
@@ -124,6 +125,9 @@ const getDashboard = async (req, res, next) => {
           profileCompleted: isProfileComplete,
           avatarUrl: user.avatarUrl || '',
           resumeUrl: user.resumeUrl || '',
+          resumeRecord: user.resumeRecord || null,
+          completedPaths: user.completedPaths || [],
+          profileStatus: user.profileStatus || { status: 'learning', currentRole: '' },
         },
         activeRoadmap: roadmapData,
         progress: {

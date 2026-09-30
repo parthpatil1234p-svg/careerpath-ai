@@ -298,6 +298,132 @@
         </div>
 
       </div>
+
+      <!-- Weekly Milestone Test Modal (30-Minute Server Clock, 70% Pass Threshold) -->
+      <div class="modal fade" id="weeklyTestModal" tabindex="-1" aria-labelledby="weeklyTestModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+          <div class="modal-content border-line shadow-lg" style="background: #ffffff; border-radius: 16px;">
+            
+            <!-- Test Modal Header -->
+            <div class="modal-header border-bottom border-line py-3 px-4 d-flex align-items-center justify-content-between">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="atlas-badge"><i class="bi bi-shield-check text-teal"></i> SERVER-VERIFIED MILESTONE</span>
+                  <span id="testWeekBadge" class="badge badge-navy font-mono">Week 1</span>
+                </div>
+                <h5 class="modal-title fw-bold text-ink mb-0" id="weeklyTestModalLabel">Weekly Milestone Skill Verification</h5>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <!-- 30-Minute Server-Authoritative Countdown Timer -->
+                <div class="text-end">
+                  <div class="d-flex align-items-center gap-2 justify-content-end">
+                    <span id="testTimerBadge" class="badge bg-danger-subtle text-danger border border-danger font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm">
+                      <i class="bi bi-stopwatch-fill"></i>
+                      <span id="testTimerText">30:00</span>
+                    </span>
+                  </div>
+                  <div class="mt-1" id="testAutosaveIndicator">
+                    <span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.68rem;">
+                      <i class="bi bi-cloud-check text-success"></i> Auto-saved to server
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Modal Body -->
+            <div class="modal-body p-4">
+              <!-- Active Test Questions View -->
+              <div id="testActiveView">
+                <div class="alert alert-info py-2 px-3 mb-4 d-flex align-items-center gap-2" style="font-size: 0.82rem; border-radius: 8px;">
+                  <i class="bi bi-info-circle-fill text-info fs-5 flex-shrink-0"></i>
+                  <div>
+                    <strong>Server Verification Protocol:</strong> 10 Curated Questions &middot; <strong>70% (7/10)</strong> required to pass &middot; 30-Minute server countdown &middot; Progress auto-saves on every selection &middot; Passing permanently unlocks next week and stamps verified skill evidence into your ledger.
+                  </div>
+                </div>
+
+                <!-- Question List Container -->
+                <div id="testQuestionsContainer" class="d-flex flex-column gap-4">
+                  <!-- Dynamically rendered by roadmap.js -->
+                </div>
+              </div>
+
+              <!-- Test Result / Grading View (Hidden initially) -->
+              <div id="testResultView" class="d-none text-center py-4">
+                <div id="testResultIcon" class="mb-3">
+                  <!-- Icon inserted dynamically -->
+                </div>
+                <h3 class="h4 fw-bold text-ink mb-1" id="testResultTitle">Milestone Test Results</h3>
+                <p class="text-muted mb-4" id="testResultSubtitle"></p>
+
+                <div class="row justify-content-center mb-4">
+                  <div class="col-md-9">
+                    <div class="card p-3 border-line" style="background: var(--color-surface-muted, #F8FAFC); border-radius: 12px;">
+                      <div class="d-flex align-items-center justify-content-around">
+                        <div>
+                          <div class="text-muted small">Score</div>
+                          <div class="h3 fw-bold text-ink mb-0" id="testResultScore">- / 10</div>
+                        </div>
+                        <div class="border-end border-line" style="height: 40px;"></div>
+                        <div>
+                          <div class="text-muted small">Percentage</div>
+                          <div class="h3 fw-bold mb-0" id="testResultPercent">-%</div>
+                        </div>
+                        <div class="border-end border-line" style="height: 40px;"></div>
+                        <div>
+                          <div class="text-muted small">Pass Threshold</div>
+                          <div class="h3 fw-bold text-muted mb-0">70%</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Remediation / Missed Topics (if failed) -->
+                <div id="testMissedTopicsBox" class="text-start p-3 card border-warning border-opacity-50 mb-4 d-none" style="background: rgba(234, 179, 8, 0.05); border-radius: 12px;">
+                  <h6 class="fw-bold text-warning d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Review Needed Topics:
+                  </h6>
+                  <p class="text-muted small mb-2">You missed questions in the following topics. Review week curriculum before retaking:</p>
+                  <div class="d-flex flex-wrap gap-2" id="testMissedTopicsList"></div>
+                </div>
+
+                <!-- Next Steps / Passed Details (if passed) -->
+                <div id="testPassedDetailsBox" class="text-start p-3 card border-success border-opacity-50 mb-4 d-none" style="background: rgba(34, 197, 94, 0.05); border-radius: 12px;">
+                  <h6 class="fw-bold text-success d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-patch-check-fill"></i> Skill Verified & Milestone Completed!
+                  </h6>
+                  <p class="text-muted small mb-1" id="testPassedMessage">
+                    Congratulations! Your verified score has been permanently stamped into your skill evidence ledger (180-day currency) and the next week is now unlocked.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Modal Footer -->
+            <div class="modal-footer border-top border-line py-3 px-4 d-flex align-items-center justify-content-between">
+              <div id="testActiveFooterLeft" class="text-muted small">
+                <span id="testAnsweredCount" class="fw-bold text-ink">0</span> of 10 answered
+              </div>
+              <div class="d-flex align-items-center gap-2 ms-auto" id="testActiveButtons">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal" id="btnCancelTest">Exit Test</button>
+                <button type="button" class="btn cp-btn-primary btn-sm px-4" id="btnSubmitMilestoneTest">
+                  <i class="bi bi-send-check me-1"></i> Submit & Grade
+                </button>
+              </div>
+              <div class="d-none ms-auto align-items-center gap-2" id="testResultButtons">
+                <button type="button" class="btn btn-outline-warning btn-sm px-3 d-none" id="btnRetakeTest">
+                  <i class="bi bi-arrow-repeat me-1"></i> Retake Test (Fresh Questions)
+                </button>
+                <button type="button" class="btn cp-btn-primary btn-sm px-4" data-bs-dismiss="modal" id="btnCloseResult">
+                  Done & Return to Roadmap
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Footer -->

@@ -171,30 +171,137 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Render Weekly Cards in DOM
     weeksContainer.innerHTML = '';
+    const weekProgressList = currentRoadmap.weekProgress || [];
 
     Object.keys(weekMap).forEach((wNum) => {
       const weekNumber = parseInt(wNum, 10);
       const tasks = weekMap[weekNumber];
       const completedCount = tasks.filter((t) => t.completed).length;
-      const isCompleted = tasks.length > 0 && completedCount === tasks.length;
-      const milestone = weeklyMilestones.find((m) => m.weekNumber === weekNumber);
-      const isActive = milestone?.isActive;
+
+      // Milestone progress status: 'locked' | 'in_progress' | 'awaiting_test' | 'passed'
+      let wp = weekProgressList.find((p) => p.weekNumber === weekNumber);
+      if (!wp) {
+        wp = {
+          weekNumber,
+          status: weekNumber === 1 ? 'in_progress' : 'locked',
+          testScore: null,
+          testPercent: null,
+          passedAt: null,
+          attemptsCount: 0
+        };
+      }
+
+      const status = wp.status || (weekNumber === 1 ? 'in_progress' : 'locked');
+      const isLocked = status === 'locked';
+      const isPassed = status === 'passed';
+      const isAwaitingTest = status === 'awaiting_test';
+      const isInProgress = status === 'in_progress';
+
+      let statusCardClass = '';
+      if (isLocked) statusCardClass = 'locked-week';
+      else if (isPassed) statusCardClass = 'completed-week';
+      else if (isAwaitingTest) statusCardClass = 'awaiting-test-week active-week';
+      else if (isInProgress) statusCardClass = 'active-week';
+
+      // Header Pill
+      let pillContent = `${weekNumber}`;
+      if (isLocked) pillContent = '<i class="bi bi-lock-fill"></i>';
+      else if (isPassed) pillContent = '<i class="bi bi-check2"></i>';
+      else if (isAwaitingTest) pillContent = '<i class="bi bi-patch-question-fill text-warning"></i>';
+
+      // Header Status Badge
+      let statusBadgeHtml = '';
+      if (isLocked) {
+        statusBadgeHtml = '<span class="badge bg-secondary-subtle text-muted font-mono"><i class="bi bi-lock-fill me-1"></i> Locked Milestone</span>';
+      } else if (isPassed) {
+        statusBadgeHtml = `<span class="badge badge-matched"><i class="bi bi-patch-check-fill me-1"></i> Passed (${wp.testPercent}%)</span>`;
+      } else if (isAwaitingTest) {
+        statusBadgeHtml = '<span class="badge bg-warning-subtle text-warning border border-warning-subtle"><i class="bi bi-alarm-fill me-1"></i> Ready for Milestone Test</span>';
+      } else if (isInProgress) {
+        statusBadgeHtml = '<span class="badge badge-teal">In Progress</span>';
+      }
+
+      // Milestone Test Action Box
+      let milestoneActionHtml = '';
+      if (isLocked) {
+        milestoneActionHtml = `
+          <div class="mt-3 p-3 card border-line text-muted small d-flex flex-row align-items-center gap-2" style="background: rgba(0,0,0,0.02); border-radius: 8px;">
+            <i class="bi bi-lock-fill text-secondary fs-5"></i>
+            <div>
+              <strong>Milestone Locked:</strong> Complete Week ${weekNumber - 1} tasks and pass its 30-minute milestone test (&ge; 70%) to unlock this curriculum.
+            </div>
+          </div>
+        `;
+      } else if (isAwaitingTest) {
+        milestoneActionHtml = `
+          <div class="mt-3 p-3 card border-warning border-opacity-75 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 shadow-sm" style="background: rgba(234, 179, 8, 0.08); border-radius: 12px;">
+            <div>
+              <div class="fw-bold text-ink d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-award-fill text-warning fs-5"></i>
+                Week ${weekNumber} All Tasks Completed! Milestone Test Ready
+              </div>
+              <div class="text-muted small">
+                Pass the 30-minute server test (10 questions, &ge; 70% threshold) to stamp verified skill evidence into your ledger and unlock Week ${weekNumber + 1}.
+              </div>
+            </div>
+            <button class="btn cp-btn-primary px-4 py-2 btn-open-test flex-shrink-0" data-week="${weekNumber}">
+              <i class="bi bi-pencil-square me-1"></i> Take Milestone Test (30 Mins)
+            </button>
+          </div>
+        `;
+      } else if (isPassed) {
+        milestoneActionHtml = `
+          <div class="mt-3 p-3 card border-success border-opacity-50 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2" style="background: rgba(34, 197, 94, 0.06); border-radius: 10px;">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-patch-check-fill text-success fs-4"></i>
+              <div>
+                <div class="fw-semibold text-ink">
+                  Milestone Verified & Skill Stamped (${wp.testScore}/10 &middot; ${wp.testPercent}%)
+                </div>
+                <div class="text-muted small">
+                  Skill currency active for 180 days. Passed on ${wp.passedAt ? new Date(wp.passedAt).toLocaleDateString() : 'Active'}.
+                </div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <button class="btn btn-outline-secondary btn-sm px-3 btn-review-test" data-week="${weekNumber}">
+                <i class="bi bi-clipboard-check me-1"></i> View Results
+              </button>
+              <button class="btn btn-outline-success btn-sm px-3 btn-open-test" data-week="${weekNumber}">
+                <i class="bi bi-arrow-repeat me-1"></i> Retake Practice
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (isInProgress) {
+        milestoneActionHtml = `
+          <div class="mt-3 d-flex align-items-center justify-content-between pt-2 border-top border-line flex-wrap gap-2">
+            <div class="text-muted small">
+              ${completedCount === tasks.length 
+                ? 'All tasks checked! Take milestone test to unlock the next week.' 
+                : `${completedCount} of ${tasks.length} tasks finished. Complete all tasks or verify skill early when ready.`}
+            </div>
+            <button class="btn btn-outline-primary btn-sm px-3 btn-open-test" data-week="${weekNumber}">
+              <i class="bi bi-stopwatch me-1"></i> Milestone Test ${wp.attemptsCount ? `(${wp.attemptsCount} attempts)` : ''}
+            </button>
+          </div>
+        `;
+      }
 
       const weekCard = document.createElement('div');
-      weekCard.className = `week-card card p-4 mb-4 ${isActive ? 'active-week' : ''} ${isCompleted ? 'completed-week' : ''}`;
+      weekCard.className = `week-card card p-4 mb-4 ${statusCardClass}`;
       weekCard.id = `week-card-${weekNumber}`;
 
       weekCard.innerHTML = `
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 pb-3 border-bottom gap-2">
           <div class="d-flex align-items-center gap-3">
             <div class="week-badge-pill">
-              ${isCompleted ? '<i class="bi bi-check2"></i>' : weekNumber}
+              ${pillContent}
             </div>
             <div>
-              <div class="d-flex align-items-center gap-2">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
                 <h3 class="h5 fw-bold text-ink mb-0">Week ${weekNumber}</h3>
-                ${isActive ? '<span class="badge badge-teal">Current Focus</span>' : ''}
-                ${isCompleted ? '<span class="badge badge-matched">Completed</span>' : ''}
+                ${statusBadgeHtml}
               </div>
               <p class="text-muted small mb-0">
                 ${tasks[0]?.skill ? `Mastering skill: <strong class="text-teal">${escapeHtml(tasks[0].skill.displayName || tasks[0].skill.name)}</strong>` : 'Core Career Competencies'}
@@ -229,7 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   `;
                 } else {
                   projectLinkHtml = `
-                    <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-link-repo d-inline-flex align-items-center gap-1" data-task-id="${task._id}" data-task-title="${escapeHtml(task.title)}" style="font-size: 0.72rem; height: 26px; line-height: 24px;">
+                    <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-link-repo d-inline-flex align-items-center gap-1" data-task-id="${task._id}" data-task-title="${escapeHtml(task.title)}" ${isLocked ? 'disabled' : ''} style="font-size: 0.72rem; height: 26px; line-height: 24px;">
                       <i class="bi bi-github"></i> Link Project Repo
                     </button>
                   `;
@@ -243,6 +350,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                       type="checkbox"
                       class="form-check-input task-checkbox-input"
                       ${task.completed ? 'checked' : ''}
+                      ${isLocked ? 'disabled' : ''}
                       data-task-id="${task._id}"
                     />
                   </div>
@@ -274,6 +382,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             })
             .join('')}
         </div>
+
+        <!-- Milestone Status Action Box -->
+        ${milestoneActionHtml}
       `;
 
       weeksContainer.appendChild(weekCard);
@@ -303,22 +414,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             currentRoadmap.completedTasksCount = roadmap.completedTasksCount;
             currentRoadmap.progressPercentage = roadmap.progressPercentage;
+            if (roadmap.weekProgress) {
+              currentRoadmap.weekProgress = roadmap.weekProgress;
+            }
 
             updateProgressUI(roadmap.progressPercentage, roadmap.completedTasksCount, roadmap.totalTasksCount);
 
-            // Update week card completed state
-            const parentWeekCard = taskItem.closest('.week-card');
-            if (parentWeekCard) {
-              const weekCheckboxes = parentWeekCard.querySelectorAll('.task-checkbox-input');
-              const allChecked = Array.from(weekCheckboxes).every((cb) => cb.checked);
-              parentWeekCard.classList.toggle('completed-week', allChecked);
-              const pill = parentWeekCard.querySelector('.week-badge-pill');
-              if (pill) {
-                const wNum = parentWeekCard.id.replace('week-card-', '');
-                pill.innerHTML = allChecked ? '<i class="bi bi-check2"></i>' : wNum;
-              }
-            }
-
+            // Re-render roadmap so any milestone status transition (e.g. awaiting_test) is instantly reflected
+            renderRoadmap();
             showAlert(`Task marked ${task.completed ? 'complete' : 'incomplete'}.`, 'success');
           } else {
             e.target.checked = !isChecked;
@@ -330,6 +433,24 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (taskItem) taskItem.classList.toggle('is-completed', !isChecked);
           showAlert(err.message || 'Error updating task.');
         }
+      });
+    });
+
+    // Attach Milestone Test button listeners
+    document.querySelectorAll('.btn-open-test').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const weekNum = parseInt(btn.getAttribute('data-week'), 10);
+        openWeeklyTestModal(weekNum);
+      });
+    });
+
+    // Attach Review Test Results button listeners
+    document.querySelectorAll('.btn-review-test').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const weekNum = parseInt(btn.getAttribute('data-week'), 10);
+        openWeeklyTestStatus(weekNum);
       });
     });
 
@@ -364,6 +485,327 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
   };
+
+  // ==========================================================================
+  // Milestone Weekly Test Runner (30-Minute Server Clock, 70% Pass Threshold)
+  // ==========================================================================
+  let activeAttempt = null;
+  let timerCountdownInterval = null;
+  let testAnswersMap = {};
+  const weeklyTestModalEl = document.getElementById('weeklyTestModal');
+  let bsTestModal = null;
+  if (weeklyTestModalEl && window.bootstrap?.Modal) {
+    bsTestModal = new bootstrap.Modal(weeklyTestModalEl);
+  }
+
+  const openWeeklyTestModal = async (weekNumber) => {
+    if (!currentRoadmap?._id) return;
+
+    // Reset Modal UI
+    document.getElementById('testActiveView').classList.remove('d-none');
+    document.getElementById('testActiveButtons').classList.remove('d-none');
+    document.getElementById('testResultView').classList.add('d-none');
+    document.getElementById('testResultButtons').classList.add('d-none');
+    document.getElementById('testWeekBadge').textContent = `Week ${weekNumber}`;
+    document.getElementById('weeklyTestModalLabel').textContent = `Week ${weekNumber} Milestone Verification`;
+    document.getElementById('testTimerText').textContent = '30:00';
+    document.getElementById('testAnsweredCount').textContent = '0';
+    document.getElementById('testQuestionsContainer').innerHTML = `
+      <div class="text-center py-5">
+        <div class="spinner-border text-teal mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
+        <p class="text-ink fw-semibold mb-1">Generating Server Milestone Assessment...</p>
+        <p class="text-muted small mb-0">Curating 10 fresh topic-aligned questions with 30-minute server clock</p>
+      </div>
+    `;
+    document.getElementById('btnSubmitMilestoneTest').disabled = true;
+
+    if (bsTestModal) bsTestModal.show();
+
+    try {
+      const res = await window.API.post(`/roadmaps/${currentRoadmap._id}/weeks/${weekNumber}/test/start`, {}, { auth: true });
+
+      if (!res.success || !res.data) {
+        throw new Error(res.message || 'Could not initiate weekly milestone test.');
+      }
+
+      activeAttempt = res.data;
+      testAnswersMap = {};
+
+      renderActiveQuestions(activeAttempt.questions);
+      startServerCountdown(activeAttempt.deadline);
+      document.getElementById('btnSubmitMilestoneTest').disabled = false;
+    } catch (err) {
+      showAlert(err.message || 'Failed to start weekly milestone test.', 'danger');
+      if (bsTestModal) bsTestModal.hide();
+    }
+  };
+
+  const openWeeklyTestStatus = async (weekNumber) => {
+    if (!currentRoadmap?._id) return;
+    try {
+      const res = await window.API.get(`/roadmaps/${currentRoadmap._id}/weeks/${weekNumber}/test/status`, { auth: true });
+      if (res.success && res.data?.attempt) {
+        if (bsTestModal) bsTestModal.show();
+        renderTestResultView(res.data.attempt);
+      } else {
+        showAlert('No previous test attempt found for this milestone.', 'info');
+      }
+    } catch (err) {
+      showAlert(err.message || 'Could not load milestone test status.', 'danger');
+    }
+  };
+
+  const renderActiveQuestions = (questions) => {
+    const container = document.getElementById('testQuestionsContainer');
+    if (!container) return;
+
+    if (!questions || questions.length === 0) {
+      container.innerHTML = '<div class="text-center text-muted py-4">No questions found for this milestone.</div>';
+      return;
+    }
+
+    container.innerHTML = questions
+      .map((q, idx) => {
+        return `
+          <div class="test-question-item" data-question-id="${escapeHtml(q.questionId)}">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="badge cp-tag font-mono">Question ${idx + 1} of ${questions.length}</span>
+              ${q.topicTag ? `<span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.72rem;">${escapeHtml(q.topicTag)}</span>` : ''}
+            </div>
+            <div class="fw-semibold text-ink mb-3" style="font-size: 0.96rem; line-height: 1.55;">
+              ${escapeHtml(q.question)}
+            </div>
+            <div class="d-flex flex-column gap-2">
+              ${q.options
+                .map(
+                  (opt, optIdx) => `
+                <label class="test-option-item" for="q_${escapeHtml(q.questionId)}_opt_${optIdx}">
+                  <input 
+                    type="radio" 
+                    id="q_${escapeHtml(q.questionId)}_opt_${optIdx}" 
+                    name="q_${escapeHtml(q.questionId)}" 
+                    value="${optIdx}" 
+                    data-question-id="${escapeHtml(q.questionId)}"
+                    data-option-index="${optIdx}"
+                    class="test-radio-input"
+                  />
+                  <span class="text-ink small flex-grow-1">${escapeHtml(opt)}</span>
+                </label>
+              `
+                )
+                .join('')}
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+
+    updateAnsweredCounter();
+
+    // Attach selection listener on options
+    container.querySelectorAll('.test-radio-input').forEach((input) => {
+      input.addEventListener('change', async (e) => {
+        const qId = e.target.getAttribute('data-question-id');
+        const optIdx = parseInt(e.target.getAttribute('data-option-index'), 10);
+        testAnswersMap[qId] = optIdx;
+
+        // Card styling
+        const questionCard = e.target.closest('.test-question-item');
+        if (questionCard) {
+          questionCard.classList.add('is-answered');
+          questionCard.querySelectorAll('.test-option-item').forEach((lbl) => lbl.classList.remove('selected'));
+          const activeLabel = e.target.closest('.test-option-item');
+          if (activeLabel) activeLabel.classList.add('selected');
+        }
+
+        updateAnsweredCounter();
+
+        // Server Progressive Auto-save
+        const autosaveEl = document.getElementById('testAutosaveIndicator');
+        if (autosaveEl) {
+          autosaveEl.innerHTML = `<span class="badge bg-warning-subtle text-warning font-mono" style="font-size: 0.68rem;"><i class="bi bi-arrow-repeat me-1 spinner-border spinner-border-sm" style="width: 8px; height: 8px;"></i> Auto-saving...</span>`;
+        }
+
+        try {
+          await window.API.post('/roadmaps/test/save-answer', {
+            attemptId: activeAttempt.attemptId,
+            questionId: qId,
+            selectedOption: optIdx
+          }, { auth: true });
+
+          if (autosaveEl) {
+            autosaveEl.innerHTML = `<span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.68rem;"><i class="bi bi-cloud-check text-success"></i> Auto-saved to server</span>`;
+          }
+        } catch (err) {
+          if (autosaveEl) {
+            autosaveEl.innerHTML = `<span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.68rem;"><i class="bi bi-cloud-check text-success"></i> Auto-saved to server</span>`;
+          }
+        }
+      });
+    });
+  };
+
+  const updateAnsweredCounter = () => {
+    const countEl = document.getElementById('testAnsweredCount');
+    if (countEl) {
+      const answered = Object.keys(testAnswersMap).length;
+      countEl.textContent = answered;
+    }
+  };
+
+  const startServerCountdown = (deadlineIso) => {
+    if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+
+    const timerTextEl = document.getElementById('testTimerText');
+    const timerBadgeEl = document.getElementById('testTimerBadge');
+    const deadlineMs = new Date(deadlineIso).getTime();
+
+    const updateTimer = () => {
+      const remainingMs = deadlineMs - Date.now();
+      if (remainingMs <= 0) {
+        if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+        if (timerTextEl) timerTextEl.textContent = '00:00';
+        // Auto-submit on server deadline
+        submitActiveTest(true);
+        return;
+      }
+
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      if (timerTextEl) timerTextEl.textContent = formatted;
+
+      if (timerBadgeEl) {
+        if (minutes < 5) {
+          timerBadgeEl.className = 'badge bg-danger text-white font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm animate-pulse';
+        } else {
+          timerBadgeEl.className = 'badge bg-danger-subtle text-danger border border-danger font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm';
+        }
+      }
+    };
+
+    updateTimer();
+    timerCountdownInterval = setInterval(updateTimer, 1000);
+  };
+
+  const submitActiveTest = async (isAutoSubmit = false) => {
+    if (!activeAttempt?.attemptId) return;
+
+    const totalQuestions = activeAttempt?.questions?.length || 10;
+    const answeredCount = Object.keys(testAnswersMap).length;
+
+    if (!isAutoSubmit && answeredCount < totalQuestions) {
+      const proceed = confirm(`You have answered ${answeredCount} of ${totalQuestions} questions. Are you sure you want to submit for grading?`);
+      if (!proceed) return;
+    }
+
+    if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+
+    const submitBtn = document.getElementById('btnSubmitMilestoneTest');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> Grading...`;
+    }
+
+    // Build answers payload: [{ questionId, selectedOption }]
+    const answersPayload = Object.entries(testAnswersMap).map(([questionId, selectedOption]) => ({
+      questionId,
+      selectedOption
+    }));
+
+    try {
+      const res = await window.API.post('/roadmaps/test/submit', {
+        attemptId: activeAttempt.attemptId,
+        answers: answersPayload
+      }, { auth: true });
+
+      if (!res.success || !res.data) {
+        throw new Error(res.message || 'Failed to grade milestone test.');
+      }
+
+      renderTestResultView(res.data);
+    } catch (err) {
+      showAlert(err.message || 'Error submitting milestone test.', 'danger');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="bi bi-send-check me-1"></i> Submit & Grade`;
+      }
+    }
+  };
+
+  const renderTestResultView = (result) => {
+    document.getElementById('testActiveView').classList.add('d-none');
+    document.getElementById('testActiveButtons').classList.add('d-none');
+    document.getElementById('testResultView').classList.remove('d-none');
+    document.getElementById('testResultButtons').classList.remove('d-none');
+
+    const { score, total, percent, passed, missedTopics } = result;
+
+    document.getElementById('testResultScore').textContent = `${score} / ${total || 10}`;
+    const percentEl = document.getElementById('testResultPercent');
+    percentEl.textContent = `${percent}%`;
+
+    const iconEl = document.getElementById('testResultIcon');
+    const titleEl = document.getElementById('testResultTitle');
+    const subtitleEl = document.getElementById('testResultSubtitle');
+    const missedBox = document.getElementById('testMissedTopicsBox');
+    const missedList = document.getElementById('testMissedTopicsList');
+    const passedBox = document.getElementById('testPassedDetailsBox');
+    const retakeBtn = document.getElementById('btnRetakeTest');
+
+    if (passed) {
+      percentEl.className = 'h3 fw-bold text-success mb-0';
+      iconEl.innerHTML = '<i class="bi bi-patch-check-fill text-success" style="font-size: 3.5rem;"></i>';
+      titleEl.textContent = 'Milestone Test Passed!';
+      subtitleEl.textContent = 'You exceeded the 70% threshold. Verified skill evidence has been stamped to your ledger and the next week is now unlocked.';
+      passedBox.classList.remove('d-none');
+      missedBox.classList.add('d-none');
+      retakeBtn.classList.add('d-none');
+
+      // Refresh roadmap data in background so unlocked week renders immediately
+      loadRoadmap();
+    } else {
+      percentEl.className = 'h3 fw-bold text-danger mb-0';
+      iconEl.innerHTML = '<i class="bi bi-x-circle-fill text-danger" style="font-size: 3.5rem;"></i>';
+      titleEl.textContent = 'Milestone Incomplete (70% Required)';
+      subtitleEl.textContent = 'A minimum score of 70% is required to unlock the next week milestone. Review the missed topics below and retake with fresh questions.';
+      passedBox.classList.add('d-none');
+      retakeBtn.classList.remove('d-none');
+
+      if (missedTopics && missedTopics.length > 0) {
+        missedBox.classList.remove('d-none');
+        missedList.innerHTML = missedTopics
+          .map((t) => `<span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1">${escapeHtml(t)}</span>`)
+          .join('');
+      } else {
+        missedBox.classList.add('d-none');
+      }
+    }
+  };
+
+  // Wire Modal Buttons
+  const btnSubmit = document.getElementById('btnSubmitMilestoneTest');
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', () => submitActiveTest(false));
+  }
+
+  const btnRetake = document.getElementById('btnRetakeTest');
+  if (btnRetake) {
+    btnRetake.addEventListener('click', () => {
+      if (activeAttempt?.weekNumber) {
+        openWeeklyTestModal(activeAttempt.weekNumber);
+      }
+    });
+  }
+
+  const btnCloseResult = document.getElementById('btnCloseResult');
+  if (btnCloseResult) {
+    btnCloseResult.addEventListener('click', () => {
+      loadRoadmap();
+    });
+  }
 
   // Safe string escaper
   function escapeHtml(str) {

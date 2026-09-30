@@ -329,6 +329,34 @@ const generateRecommendations = (user, careers, limit = 3) => {
       weakSkills
     );
 
+    // F. Rule-Based Skill Coverage Ratio & Status-Aware Heading (Pillar 5)
+    const totalRequired = Array.isArray(career.requiredSkills) ? career.requiredSkills.length : 1;
+    const verifiedMatchingCount = [...matchedSkills, ...weakSkills].filter((s) =>
+      s.isQuizVerified || s.isCodeVerified || s.verificationTier === 'project_verified' ||
+      s.verificationTier === 'interview_verified' || s.verificationTier === 'quiz_verified'
+    ).length;
+    const coverageRatio = Math.min(100, Math.round((verifiedMatchingCount / Math.max(1, totalRequired)) * 100));
+
+    const profileStatus = user?.profileStatus?.status || 'learning';
+    const currentRole = normalizeText(user?.profileStatus?.currentRole || '');
+    let sectionHeading = 'Your next path';
+
+    if (profileStatus === 'working') {
+      if (currentRole && normalizeText(career.title).includes(currentRole)) {
+        sectionHeading = 'Grow in your role';
+      } else if (coverageRatio >= 40) {
+        sectionHeading = 'Explore a switch';
+      } else {
+        sectionHeading = 'Explore alternative career';
+      }
+    } else if (profileStatus === 'job_seeking') {
+      sectionHeading = "Roles you're closest to";
+    } else {
+      sectionHeading = 'Your next path';
+    }
+
+    const estimatedWeeks = Math.max(2, missingSkills.length * 2);
+
     return {
       career: {
         id: career._id,
@@ -341,6 +369,11 @@ const generateRecommendations = (user, careers, limit = 3) => {
         color: career.color,
       },
       finalScore,
+      coverageRatio,
+      sectionHeading,
+      estimatedWeeks,
+      verifiedSkillsCount: verifiedMatchingCount,
+      totalRequiredSkillsCount: totalRequired,
       scoreBreakdown,
       whyRecommended,
       matchedSkills,

@@ -314,74 +314,337 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // ── 4.5 Render Skills Matrix in Dashboard ───────────────────────
-  const renderSkillsMatrix = (skills) => {
+  // ── 4.5 Canonical Skill Evidence Ledger & Interactive Popover Chips (Pillar 2) ──
+  let cachedSkillEvidence = null;
+
+  const loadSkillEvidenceLedger = async () => {
     const container = document.getElementById('dashboardSkillsContainer');
+    const tableBody = document.getElementById('evidenceLedgerBody');
+    const counterBadge = document.getElementById('evidenceVerifiedCounter');
+
+    try {
+      const res = await window.API.get('/skills/evidence', { auth: true });
+      if (res.success && res.data) {
+        cachedSkillEvidence = res.data;
+        const { totalSkills, verifiedCount, evidence } = res.data;
+
+        // 1. Update Counter Badge
+        if (counterBadge) {
+          counterBadge.textContent = `${verifiedCount} / ${totalSkills} Verified (180d Currency)`;
+          counterBadge.className = `badge font-mono small ${verifiedCount > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-warning-subtle text-warning border border-warning-subtle'}`;
+        }
+
+        // 2. Render Interactive Skill Chips with Popovers
+        if (container) {
+          if (!evidence || evidence.length === 0) {
+            container.innerHTML = `
+              <div class="d-flex align-items-center justify-content-between w-100 p-3 rounded-2 stat-box-atlas flex-wrap gap-2">
+                <span class="text-muted small">
+                  <i class="bi bi-info-circle text-teal me-1"></i> No technical skills logged yet.
+                </span>
+                <button type="button" class="btn cp-btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
+                  <i class="bi bi-plus-lg me-1"></i> Add Your Skills
+                </button>
+              </div>
+            `;
+          } else {
+            container.innerHTML = evidence.map((e, idx) => {
+              const prof = (e.claimedLevel || 'beginner').toLowerCase();
+              let badgeClass = prof === 'advanced' ? 'badge-leaf' : (prof === 'intermediate' ? 'badge-teal' : 'badge-gold');
+              let statusIcon = e.hasEvidence ? '<i class="bi bi-patch-check-fill text-success"></i>' : '<i class="bi bi-circle text-muted"></i>';
+
+              const auditPopoverContent = `
+                <div class="popover-evidence-audit p-2 small">
+                  <div class="fw-bold text-ink mb-1 border-bottom pb-1">${escapeHtml(e.displayName || e.name)}</div>
+                  <div class="mb-1"><strong>Claimed Level:</strong> ${escapeHtml(e.claimedLevel)}</div>
+                  <div class="mb-1"><strong>Verified Level:</strong> ${e.verifiedLevel ? escapeHtml(e.verifiedLevel) : '<span class="text-muted">Unverified</span>'}</div>
+                  <div class="mb-1"><strong>Method:</strong> <span class="badge bg-secondary bg-opacity-25 text-primary">${escapeHtml(e.methodLabel)}</span></div>
+                  <div class="mb-1"><strong>Latest Result:</strong> ${escapeHtml(e.latestResult)}</div>
+                  <div class="mb-1"><strong>Verified Date:</strong> ${e.verifiedDate ? new Date(e.verifiedDate).toLocaleDateString() : 'N/A'}</div>
+                  <div class="mb-1"><strong>Currency:</strong> ${e.refreshByDate ? (e.status === 'refresh_needed' ? '<span class="text-danger fw-bold">⚠️ Refresh Needed (&gt;180d)</span>' : `<span class="text-success">Active (to ${new Date(e.refreshByDate).toLocaleDateString()})</span>`) : 'N/A'}</div>
+                  ${e.missedTopics && e.missedTopics.length > 0 ? `<div class="mt-1 text-danger"><strong>Focus Gaps:</strong> ${escapeHtml(e.missedTopics.join(', '))}</div>` : ''}
+                </div>
+              `.replace(/"/g, '&quot;');
+
+              return `
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2 stat-box-atlas border border-line skill-chip-popover-trigger"
+                     style="cursor: pointer;"
+                     data-bs-toggle="popover"
+                     data-bs-placement="top"
+                     data-bs-trigger="hover focus"
+                     data-bs-html="true"
+                     data-bs-content="${auditPopoverContent}"
+                     title="Audit Trail: ${escapeHtml(e.displayName || e.name)}">
+                  ${statusIcon}
+                  <span class="fw-semibold text-ink small">${escapeHtml(e.displayName || e.name)}</span>
+                  <span class="badge ${badgeClass} text-uppercase font-monospace" style="font-size: 0.68rem; letter-spacing: 0.5px;">
+                    ${escapeHtml(prof)}
+                  </span>
+                  <span class="badge ${e.hasEvidence ? 'bg-success bg-opacity-10 text-success' : 'bg-secondary bg-opacity-10 text-secondary'} font-mono" style="font-size: 0.68rem;">
+                    ${escapeHtml(e.methodLabel)}
+                  </span>
+                </div>
+              `;
+            }).join('');
+
+            // Initialize Bootstrap Popovers
+            container.querySelectorAll('[data-bs-toggle="popover"]').forEach((el) => {
+              new bootstrap.Popover(el, { sanitize: false });
+            });
+          }
+        }
+
+        // 3. Render Canonical Evidence Table
+        if (tableBody) {
+          if (!evidence || evidence.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">No skills in evidence ledger.</td></tr>`;
+          } else {
+            tableBody.innerHTML = evidence.map((e) => {
+              const isExpired = e.status === 'refresh_needed';
+              const currencyHtml = e.refreshByDate
+                ? (isExpired
+                    ? '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">⚠️ Expired (&gt;180d)</span>'
+                    : `<span class="badge bg-success-subtle text-success border border-success-subtle">Valid to ${new Date(e.refreshByDate).toLocaleDateString()}</span>`)
+                : '<span class="text-muted">N/A</span>';
+
+              const actionHtml = e.hasEvidence
+                ? `<a href="quiz.html?skill=${encodeURIComponent((e.name || '').toLowerCase())}" class="btn btn-outline-secondary btn-sm py-0 px-2" style="font-size: 0.72rem;">Retake</a>`
+                : `<a href="quiz.html?skill=${encodeURIComponent((e.name || '').toLowerCase())}" class="btn btn-outline-primary btn-sm py-0 px-2" style="font-size: 0.72rem;">Verify Now</a>`;
+
+              return `
+                <tr>
+                  <td class="ps-3 fw-semibold text-ink">
+                    <i class="bi ${e.hasEvidence ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted'} me-1.5"></i>
+                    ${escapeHtml(e.displayName || e.name)}
+                  </td>
+                  <td><span class="badge bg-light text-secondary border font-mono">${escapeHtml(e.claimedLevel)}</span></td>
+                  <td>${e.verifiedLevel ? `<span class="badge bg-teal-subtle text-teal font-mono">${escapeHtml(e.verifiedLevel)}</span>` : '<span class="text-muted fst-italic">Unverified</span>'}</td>
+                  <td><span class="badge bg-secondary bg-opacity-25 text-primary font-mono">${escapeHtml(e.methodLabel)}</span></td>
+                  <td class="font-mono text-dark">${escapeHtml(e.latestResult)}</td>
+                  <td class="text-muted">${e.verifiedDate ? new Date(e.verifiedDate).toLocaleDateString() : '—'}</td>
+                  <td>${currencyHtml}</td>
+                  <td class="pe-3 text-end">${actionHtml}</td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+
+        // 4. Update Resume Upload Gate
+        updateResumeUploadGate(verifiedCount, dashboardData?.user);
+      }
+    } catch (err) {
+      console.warn('Could not load canonical skill evidence ledger:', err);
+      if (tableBody) {
+        tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-3 text-danger">Failed to load evidence ledger.</td></tr>`;
+      }
+    }
+  };
+
+  // ── 4.52 Update 3-State Resume Manager Gate (Pillar 3) ────────────
+  const updateResumeUploadGate = (verifiedCount, user) => {
+    const lockedBox = document.getElementById('resumeStateLocked');
+    const unlockedBox = document.getElementById('resumeStateUnlocked');
+    const dropzoneEmptyState = document.getElementById('dropzoneEmptyState');
+    const dropzoneActiveFileState = document.getElementById('dropzoneActiveFileState');
+    const labResumeFileName = document.getElementById('labResumeFileName');
+    const labResumeFileSize = document.getElementById('labResumeFileSize');
+    const labResumeDate = document.getElementById('labResumeDate');
+    const btnUploadResumeTrigger = document.getElementById('btnUploadResumeTrigger');
+
+    const isVerified = (verifiedCount || 0) >= 1;
+    const hasResume = Boolean(user?.resumeUrl || user?.resumeRecord?.fileLocation);
+
+    if (!isVerified) {
+      // STATE 1: LOCKED
+      if (lockedBox) lockedBox.classList.remove('d-none');
+      if (unlockedBox) unlockedBox.classList.add('d-none');
+      if (btnUploadResumeTrigger) {
+        btnUploadResumeTrigger.disabled = true;
+        btnUploadResumeTrigger.title = '🔒 Verify at least 1 skill in a Weekly Test to unlock resume upload';
+        btnUploadResumeTrigger.onclick = () => {
+          showAlert('🔒 Resume Upload Locked: You must pass at least 1 skill test or weekly milestone first.', 'warning');
+        };
+      }
+    } else {
+      // STATE 2 & 3: UNLOCKED
+      if (lockedBox) lockedBox.classList.add('d-none');
+      if (unlockedBox) unlockedBox.classList.remove('d-none');
+      if (btnUploadResumeTrigger) {
+        btnUploadResumeTrigger.disabled = false;
+        btnUploadResumeTrigger.title = 'Upload Resume to Cloudinary Media Storage';
+      }
+
+      if (hasResume) {
+        // STATE 3: ACTIVE RESUME ATTACHED
+        if (dropzoneEmptyState) dropzoneEmptyState.classList.add('d-none');
+        if (dropzoneActiveFileState) dropzoneActiveFileState.classList.remove('d-none');
+
+        const rec = user.resumeRecord || {};
+        if (labResumeFileName) labResumeFileName.textContent = rec.fileName || 'resume.pdf';
+        if (labResumeFileSize) {
+          const kb = rec.fileSize ? Math.round(rec.fileSize / 1024) : 0;
+          labResumeFileSize.textContent = kb > 0 ? `${kb} KB` : 'Verified PDF';
+        }
+        if (labResumeDate) {
+          labResumeDate.textContent = rec.lastUpdatedDate ? new Date(rec.lastUpdatedDate).toLocaleDateString() : 'Active';
+        }
+      } else {
+        // STATE 2: READY FOR INITIAL UPLOAD
+        if (dropzoneEmptyState) dropzoneEmptyState.classList.remove('d-none');
+        if (dropzoneActiveFileState) dropzoneActiveFileState.classList.add('d-none');
+      }
+    }
+  };
+
+  // ── 4.53 Profile Status Selector (Learning | Job-Seeking | Working) ──
+  const renderProfileStatus = (user) => {
+    const status = user?.profileStatus?.status || 'learning';
+    const currentRole = user?.profileStatus?.currentRole || '';
+    const statusBtnGroup = document.getElementById('statusBtnGroup');
+    const currentRoleBadge = document.getElementById('currentRoleBadge');
+    const btnEditCurrentRole = document.getElementById('btnEditCurrentRole');
+
+    if (statusBtnGroup) {
+      statusBtnGroup.querySelectorAll('.status-toggle-btn').forEach((btn) => {
+        const btnStatus = btn.getAttribute('data-status');
+        btn.classList.toggle('active', btnStatus === status);
+        btn.classList.toggle('btn-teal', btnStatus === status);
+        btn.classList.toggle('btn-outline-secondary', btnStatus !== status);
+      });
+    }
+
+    if (status === 'working') {
+      if (currentRoleBadge) {
+        currentRoleBadge.textContent = currentRole ? `Role: ${currentRole}` : 'Role: Employed Specialist';
+        currentRoleBadge.classList.remove('d-none');
+      }
+      if (btnEditCurrentRole) btnEditCurrentRole.classList.remove('d-none');
+    } else {
+      if (currentRoleBadge) currentRoleBadge.classList.add('d-none');
+      if (btnEditCurrentRole) btnEditCurrentRole.classList.add('d-none');
+    }
+  };
+
+  // Wire Profile Status Toggle Click Events
+  const statusBtnGroup = document.getElementById('statusBtnGroup');
+  if (statusBtnGroup) {
+    statusBtnGroup.querySelectorAll('.status-toggle-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const targetStatus = btn.getAttribute('data-status');
+        let role = dashboardData?.user?.profileStatus?.currentRole || '';
+
+        if (targetStatus === 'working') {
+          const inputRole = prompt('Please enter your current professional title or role (e.g. Junior Web Developer, Data Intern):', role);
+          if (inputRole !== null) {
+            role = inputRole.trim();
+          }
+        }
+
+        try {
+          const res = await window.API.put('/users/profile-status', { status: targetStatus, currentRole: role }, { auth: true });
+          if (res.success && res.data) {
+            if (dashboardData?.user) {
+              dashboardData.user.profileStatus = res.data.profileStatus;
+            }
+            renderProfileStatus(dashboardData?.user);
+            showAlert(`Profile status updated to ${targetStatus === 'job_seeking' ? 'Job-Seeking' : (targetStatus === 'working' ? 'Working' : 'Learning')}. Career guidance tuned!`, 'success');
+          }
+        } catch (err) {
+          showAlert(err.message || 'Failed to update profile status.', 'danger');
+        }
+      });
+    });
+  }
+
+  const btnEditCurrentRole = document.getElementById('btnEditCurrentRole');
+  if (btnEditCurrentRole) {
+    btnEditCurrentRole.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const existing = dashboardData?.user?.profileStatus?.currentRole || '';
+      const inputRole = prompt('Edit your current professional title:', existing);
+      if (inputRole !== null) {
+        try {
+          const res = await window.API.put('/users/profile-status', { status: 'working', currentRole: inputRole.trim() }, { auth: true });
+          if (res.success && res.data) {
+            if (dashboardData?.user) {
+              dashboardData.user.profileStatus = res.data.profileStatus;
+            }
+            renderProfileStatus(dashboardData?.user);
+            showAlert('Current role updated successfully.', 'success');
+          }
+        } catch (err) {
+          showAlert(err.message || 'Failed to update role.', 'danger');
+        }
+      }
+    });
+  }
+
+  // ── 4.54 Render Completed Paths & Credentials Showcase ──────────
+  const renderCompletedPaths = (user) => {
+    const container = document.getElementById('completedPathsListContainer');
+    const badge = document.getElementById('completedPathsCountBadge');
+    const completed = Array.isArray(user?.completedPaths) ? user.completedPaths : [];
+
+    if (badge) {
+      badge.textContent = `${completed.length} Completed Path${completed.length === 1 ? '' : 's'}`;
+    }
+
     if (!container) return;
 
-    if (!Array.isArray(skills) || skills.length === 0) {
+    if (completed.length === 0) {
       container.innerHTML = `
-        <div class="d-flex align-items-center justify-content-between w-100 p-3 rounded-2 stat-box-atlas flex-wrap gap-2">
-          <span class="text-muted small">
-            <i class="bi bi-info-circle text-teal me-1"></i> No technical skills logged yet.
-          </span>
-          <button type="button" class="btn cp-btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
-            <i class="bi bi-plus-lg me-1"></i> Add Your Skills
-          </button>
+        <div class="p-3 border border-line rounded-2 text-center text-muted small bg-light">
+          <i class="bi bi-mortarboard display-6 text-teal opacity-75 mb-2 d-block"></i>
+          <div class="fw-semibold text-ink mb-1">Active Curriculum In Progress</div>
+          <div class="text-secondary small">Pass all weekly milestones and 70% threshold tests in your roadmap to graduate and earn your official verifiable path credential!</div>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = skills.map((s) => {
-      const prof = (s.proficiency || 'beginner').toLowerCase();
-      let badgeClass = 'badge-navy';
-      let icon = 'bi-circle';
-      if (prof === 'advanced') {
-        badgeClass = 'badge-leaf';
-        icon = 'bi-check-circle-fill text-success';
-      } else if (prof === 'intermediate') {
-        badgeClass = 'badge-teal';
-        icon = 'bi-lightning-charge-fill text-info';
-      } else {
-        badgeClass = 'badge-gold';
-        icon = 'bi-arrow-up-circle-fill text-warning';
-      }
-
-      const sKey = (s.name || '').toLowerCase();
-      const tier = s.verificationTier || (s.isCodeVerified ? 'project_verified' : (s.isQuizVerified ? 'quiz_verified' : 'self_rated'));
-      const isUnconfirmed = s.verificationStatus === 'unconfirmed';
-
-      let verifiedBadge = '';
-      if (tier === 'interview_verified') {
-        verifiedBadge = `<span class="passport-tier-badge badge-passport-t3 ms-1" title="Interview Verified · 100%+ Match Weight"><i class="bi bi-mic-fill"></i> Tier 3: Interview</span>`;
-      } else if (tier === 'project_verified' || s.isCodeVerified) {
-        verifiedBadge = `<span class="passport-tier-badge badge-passport-t2 ms-1" title="Verified from real GitHub repository code · 100% Match Weight"><i class="bi bi-github"></i> Tier 2: Code Verified</span>`;
-      } else if (tier === 'quiz_verified' || s.isQuizVerified) {
-        if (isUnconfirmed) {
-          verifiedBadge = `
-            <span class="passport-tier-badge badge-passport-t1 ms-1" title="Quiz Completed"><i class="bi bi-shield-check"></i> Tier 1: Quiz</span>
-            <span class="badge-status-unconfirmed ms-1" title="Proctor Telemetry Anomaly Detected: Tab changes or velocity anomalies require Tier 2 GitHub confirmation"><i class="bi bi-exclamation-triangle-fill"></i> Unconfirmed</span>
-          `;
-        } else {
-          verifiedBadge = `<span class="passport-tier-badge badge-passport-t1 ms-1" title="Reality-Check Quiz Verified · 85% Match Weight"><i class="bi bi-shield-check"></i> Tier 1: Quiz Verified</span>`;
-        }
-      } else if (['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'].includes(sKey)) {
-        verifiedBadge = `<a href="quiz.html?skill=${sKey}" class="badge-verify-cta ms-1 text-decoration-none" title="Verify this skill in 2 mins to upgrade to Tier 1"><i class="bi bi-speedometer2"></i> Verify (70%)</a>`;
-      } else {
-        verifiedBadge = `<span class="passport-tier-badge badge-passport-t0 ms-1" title="Self-Rated · 70% Match Weight"><i class="bi bi-person"></i> Tier 0: Self-Rated (70%)</span>`;
-      }
+    container.innerHTML = completed.map((cp) => {
+      const dateStr = cp.completionDate ? new Date(cp.completionDate).toLocaleDateString() : 'Completed';
+      const skillsHtml = (cp.skillsGained || [])
+        .map((s) => `<span class="badge bg-light text-secondary border border-line font-mono" style="font-size:0.7rem;">${escapeHtml(s)}</span>`)
+        .join('');
 
       return `
-        <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2 stat-box-atlas border border-line">
-          <i class="bi ${icon} small"></i>
-          <span class="fw-semibold text-ink small">${escapeHtml(s.displayName || s.name)}</span>
-          <span class="badge ${badgeClass} text-uppercase font-monospace" style="font-size: 0.68rem; letter-spacing: 0.5px;">
-            ${escapeHtml(prof)}
-          </span>
-          ${verifiedBadge}
+        <div class="p-3 border border-line rounded-2 mb-2 bg-white d-flex align-items-center justify-content-between flex-wrap gap-2 shadow-sm">
+          <div>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge badge-leaf font-mono"><i class="bi bi-mortarboard-fill me-1"></i> Graduated</span>
+              <strong class="text-ink">${escapeHtml(cp.role)}</strong>
+              <span class="text-muted small">· Completed on ${dateStr}</span>
+            </div>
+            <div class="d-flex align-items-center gap-1 mt-2 flex-wrap">
+              <span class="small text-muted me-1" style="font-size:0.72rem;">Verified Skills Gained:</span>
+              ${skillsHtml || '<span class="text-muted small">Curriculum Competencies</span>'}
+            </div>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-success btn-sm px-3 py-1.5 fw-semibold" onclick="document.getElementById('btnViewCertificate')?.click()">
+              <i class="bi bi-award-fill me-1"></i> View Credential
+            </button>
+          </div>
         </div>
       `;
     }).join('');
+  };
+
+  const btnRefreshCredentials = document.getElementById('btnRefreshCredentials');
+  if (btnRefreshCredentials) {
+    btnRefreshCredentials.addEventListener('click', () => {
+      loadDashboard();
+      loadSkillEvidenceLedger();
+      showAlert('Credentials refreshed from server.', 'info');
+    });
+  }
+
+  // Legacy fallback renderer
+  const renderSkillsMatrix = (skills) => {
+    loadSkillEvidenceLedger();
   };
 
   const DEFAULT_GITHUB_AVATAR = 'assets/images/default-avatar.svg';

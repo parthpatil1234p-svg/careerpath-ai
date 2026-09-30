@@ -23,6 +23,11 @@ const {
   toggleTask,
   archiveRoadmap,
   linkProjectRepo,
+  startWeeklyTestController,
+  saveWeeklyTestAnswerController,
+  submitWeeklyTestController,
+  getWeeklyTestStatusController,
+  completeWeekMilestoneController,
 } = require('../controllers/roadmapController');
 
 router.post('/generate', protect, requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
@@ -30,5 +35,12 @@ router.get('/current', protect, requireSkillVerification, getCurrentRoadmap);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
 router.post('/tasks/:taskId/link-repo', protect, validateTaskId, linkProjectRepo);
 router.delete('/current', protect, archiveRoadmap);
+
+// Weekly Milestone Tests (Server-clock 30-min timer & 70% threshold)
+router.post('/:id/weeks/:weekNumber/test/start', protect, startWeeklyTestController);
+router.post('/test/save-answer', protect, saveWeeklyTestAnswerController);
+router.post('/test/submit', protect, submitWeeklyTestController);
+router.get('/test/:attemptId/status', protect, getWeeklyTestStatusController);
+router.post('/:id/weeks/:weekNumber/complete', protect, completeWeekMilestoneController);
 
 module.exports = router;

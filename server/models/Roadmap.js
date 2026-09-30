@@ -71,6 +71,22 @@ const RoadmapSchema = new mongoose.Schema(
     completedAt: {
       type: Date,
     },
+    // Server-authoritative weekly milestone gating & test progression
+    weekProgress: [
+      {
+        weekNumber: { type: Number, required: true },
+        title: { type: String, default: '' },
+        status: {
+          type: String,
+          enum: ['locked', 'in_progress', 'awaiting_test', 'passed'],
+          default: 'locked',
+        },
+        attemptsCount: { type: Number, default: 0 },
+        passedAt: { type: Date, default: null },
+        testScore: { type: Number, default: 0 },
+        testPercent: { type: Number, default: 0 },
+      },
+    ],
   },
   {
     timestamps: true,

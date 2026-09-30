@@ -157,6 +157,20 @@ const uploadResume = async (fileData, userId) => {
   });
 };
 
+/**
+ * Deletes an asset from Cloudinary by public ID.
+ * @param {string} publicId
+ * @param {string} resourceType
+ */
+const deleteResource = async (publicId, resourceType = 'auto') => {
+  if (!isConfigured || !publicId) return;
+  try {
+    await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+  } catch (err) {
+    console.warn('[cloudinaryService.deleteResource] Note:', err.message);
+  }
+};
+
 module.exports = {
   cloudinary,
   uploadAvatar,
@@ -164,4 +178,5 @@ module.exports = {
   getPublicIdFromUrl,
   getResumePreviewUrl,
   downloadResumeBuffer,
+  deleteResource,
 };
