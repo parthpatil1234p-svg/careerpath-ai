@@ -11,7 +11,7 @@
 const User = require('../models/User');
 const { normalizeSkillKey } = require('../data/quizQuestions');
 
-const ALLOWED_ASSESSMENT_FIELDS = ['education', 'interests', 'skills', 'careerGoals', 'hasCompletedSkillVerification'];
+const ALLOWED_ASSESSMENT_FIELDS = ['education', 'interests', 'skills', 'careerGoals', 'hasCompletedSkillVerification', 'primaryStream'];
 
 // ── updateAssessment ───────────────────────────────────────────
 /**

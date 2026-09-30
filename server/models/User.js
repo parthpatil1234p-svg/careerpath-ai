@@ -369,6 +369,17 @@ const UserSchema = new mongoose.Schema(
       default: 'student',
     },
 
+    // Primary Stream / Domain (Step 0)
+    primaryStream: {
+      type: String,
+      enum: {
+        values: ['engineering', 'business', 'marketing', 'creative', 'cross'],
+        message: 'Invalid primary stream',
+      },
+      default: 'engineering',
+      lowercase: true,
+    },
+
     // Academic background
     education: {
       type: EducationSchema,

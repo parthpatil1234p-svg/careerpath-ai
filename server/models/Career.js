@@ -35,6 +35,9 @@ const CareerCategoryEnum = [
   'gaming',
   'web3',
   'product',
+  'business',
+  'finance',
+  'marketing',
 ];
 
 const RequiredSkillSchema = new mongoose.Schema(
@@ -102,6 +105,15 @@ const CareerSchema = new mongoose.Schema(
       },
       lowercase: true,
     },
+    domain: {
+      type: String,
+      enum: {
+        values: ['engineering', 'business', 'marketing', 'creative'],
+        message: 'Invalid career domain: {VALUE}',
+      },
+      default: 'engineering',
+      lowercase: true,
+    },
     icon: {
       type: String,
       trim: true,
@@ -135,9 +147,10 @@ const CareerSchema = new mongoose.Schema(
   }
 );
 
-// Indexes for active, category, slug, and interestTags
+// Indexes for active, category, domain, slug, and interestTags
 CareerSchema.index({ active: 1 });
 CareerSchema.index({ category: 1 });
+CareerSchema.index({ domain: 1 });
 CareerSchema.index({ interestTags: 1 });
 CareerSchema.index({ title: 'text', shortDescription: 'text' });
 

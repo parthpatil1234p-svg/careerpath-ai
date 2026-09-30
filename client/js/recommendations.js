@@ -453,13 +453,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (response.success && response.data?.recommendations) {
         const recommendations = response.data.recommendations;
+        const crossTrack = response.data.crossTrackDiscovery || recommendations.crossTrackDiscovery || null;
 
         if (recommendations.length === 0) {
           showAlert('No career recommendations could be computed. Please check your assessment inputs.', 'warning');
           return;
         }
 
-        renderRecommendations(recommendations, response.data.profileSummary);
+        renderRecommendations(recommendations, response.data.profileSummary, crossTrack);
 
         renderSkillMap(recommendations[0]);
       } else {
@@ -494,7 +495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // 4. Render Recommendations Cards
-  const renderRecommendations = (recommendations, profileSummary) => {
+  const renderRecommendations = (recommendations, profileSummary, crossTrack = null) => {
     container.classList.remove('d-none');
     container.innerHTML = '';
 
@@ -502,6 +503,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       const { rank, career, finalScore, scoreBreakdown, whyRecommended, matchedSkills = [], weakSkills = [], missingSkills = [], aiBrief } = item;
       const isTopRank = rank === 1;
       const fpMetrics = getFutureProofMetrics(career.slug || career.id, career.category);
+
+      let domainBadgeHtml = '';
+      const domainKey = career.domain || (['finance', 'business'].includes(career.category) ? 'business' : ['marketing'].includes(career.category) ? 'marketing' : ['design'].includes(career.category) ? 'creative' : 'engineering');
+      if (domainKey === 'business') {
+        domainBadgeHtml = `<span class="badge badge-gold font-mono"><i class="bi bi-briefcase me-1"></i> Business & Finance</span>`;
+      } else if (domainKey === 'marketing') {
+        domainBadgeHtml = `<span class="badge badge-emerald font-mono"><i class="bi bi-graph-up-arrow me-1"></i> Digital Marketing</span>`;
+      } else if (domainKey === 'creative') {
+        domainBadgeHtml = `<span class="badge badge-purple font-mono"><i class="bi bi-palette me-1"></i> Design & Creative</span>`;
+      } else {
+        domainBadgeHtml = `<span class="badge badge-cyan font-mono"><i class="bi bi-laptop me-1"></i> Tech & Engineering</span>`;
+      }
 
       const card = document.createElement('div');
       card.className = `recommendation-card card p-4 p-md-5 mb-4 ${isTopRank ? 'top-match-card' : 'secondary-match-card'}`;
@@ -514,6 +527,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="badge ${isTopRank ? 'badge-navy' : 'cp-tag'} px-3 py-1 font-mono">
                 ${isTopRank ? '★ BEST ROUTE FOR NOW' : `ROUTE #${rank}`}
               </span>
+              ${domainBadgeHtml}
               <span class="atlas-badge">
                 ${escapeHtml(career.category)}
               </span>
@@ -840,6 +854,78 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       container.appendChild(card);
     });
+
+    // Render Cross-Track Discovery Bridge if available
+    if (crossTrack && crossTrack.career) {
+      let crossDomainBadge = '';
+      const cDomain = crossTrack.career.domain || (['finance', 'business'].includes(crossTrack.career.category) ? 'business' : ['marketing'].includes(crossTrack.career.category) ? 'marketing' : ['design'].includes(crossTrack.career.category) ? 'creative' : 'engineering');
+      if (cDomain === 'business') {
+        crossDomainBadge = `<span class="badge badge-gold font-mono"><i class="bi bi-briefcase me-1"></i> Business Track</span>`;
+      } else if (cDomain === 'marketing') {
+        crossDomainBadge = `<span class="badge badge-emerald font-mono"><i class="bi bi-graph-up-arrow me-1"></i> Marketing Track</span>`;
+      } else if (cDomain === 'creative') {
+        crossDomainBadge = `<span class="badge badge-purple font-mono"><i class="bi bi-palette me-1"></i> Creative Track</span>`;
+      } else {
+        crossDomainBadge = `<span class="badge badge-cyan font-mono"><i class="bi bi-laptop me-1"></i> Tech Track</span>`;
+      }
+
+      const crossCard = document.createElement('div');
+      crossCard.className = 'cross-track-card card p-4 p-md-5 mb-4';
+      crossCard.innerHTML = `
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+              <span class="badge badge-teal font-mono"><i class="bi bi-compass me-1"></i> CROSS-TRACK DISCOVERY BRIDGE</span>
+              <span class="atlas-badge"><i class="bi bi-shuffle me-1"></i> Alternative Horizon</span>
+              ${crossDomainBadge}
+            </div>
+            <h2 class="h4 fw-bold text-ink mb-1 d-flex align-items-center gap-2">
+              <i class="bi ${crossTrack.career.icon || 'bi-lightbulb-fill'} text-primary"></i>
+              <span>${escapeHtml(crossTrack.career.title)}</span>
+            </h2>
+            <p class="text-muted small mb-0">${escapeHtml(crossTrack.career.shortDescription || '')}</p>
+          </div>
+          <div class="text-md-end flex-shrink-0">
+            <div class="match-score-badge d-inline-block text-center p-2 px-3">
+              <div class="h3 fw-bold text-teal font-mono mb-0">${crossTrack.matchScore}%</div>
+              <div class="text-muted font-mono" style="font-size: 0.72rem;">Transferable Fit</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-2 mb-3" style="background: rgba(99, 102, 241, 0.05); border-left: 3px solid #6366F1;">
+          <div class="small text-ink">
+            <strong>💡 Why explore this cross-domain track:</strong> ${escapeHtml(crossTrack.bridgeReason)}
+          </div>
+          ${crossTrack.matchedSkills && crossTrack.matchedSkills.length > 0 ? `
+          <div class="small text-muted mt-1">
+            <i class="bi bi-check2-circle text-success me-1"></i> Transferable skills already active: <strong>${crossTrack.matchedSkills.slice(0, 4).map(s => escapeHtml(s)).join(', ')}</strong>
+          </div>` : ''}
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 pt-2 border-top border-line">
+          <span class="small text-muted font-mono">Expand your career horizons beyond your primary track without losing your skill foundations.</span>
+          <button type="button" class="btn cp-btn-primary btn-sm px-4 choose-career-btn text-nowrap"
+            data-career-title="${escapeHtml(crossTrack.career.title)}"
+            data-career-slug="${escapeHtml(crossTrack.career.slug)}">
+            <span>Build Roadmap for ${escapeHtml(crossTrack.career.title)}</span>
+            <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+      `;
+
+      const crossChooseBtn = crossCard.querySelector('.choose-career-btn');
+      if (crossChooseBtn) {
+        crossChooseBtn.addEventListener('click', () => {
+          selectedCareerTitle = crossChooseBtn.getAttribute('data-career-title');
+          selectedCareerSlug = crossChooseBtn.getAttribute('data-career-slug');
+          if (modalCareerTitle) modalCareerTitle.textContent = selectedCareerTitle;
+          if (roadmapModal) roadmapModal.show();
+        });
+      }
+
+      container.appendChild(crossCard);
+    }
   };
 
   // Handle roadmap generation confirmation

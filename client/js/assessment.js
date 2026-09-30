@@ -1,5 +1,5 @@
 /**
- * assessment.js — Student Profile & Skill Assessment Controller
+ * assessment.js â€” Student Profile & Skill Assessment Controller
  *
  * Implements:
  * - 4-step progressive wizard with validation and step navigation
@@ -19,56 +19,83 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Constants & Data
   const ALL_INTERESTS = [
-    { id: 'web development', label: 'Web Development', icon: 'bi-code-slash' },
-    { id: 'app development', label: 'Mobile App Development', icon: 'bi-phone' },
-    { id: 'data analysis', label: 'Data Analysis & BI', icon: 'bi-graph-up-arrow' },
-    { id: 'artificial intelligence', label: 'Artificial Intelligence & ML', icon: 'bi-cpu' },
-    { id: 'design', label: 'Creative Design & UI/UX', icon: 'bi-palette' },
-    { id: 'cybersecurity', label: 'Cybersecurity & Defense', icon: 'bi-shield-shaded' },
-    { id: 'cloud computing', label: 'Cloud Computing & DevOps', icon: 'bi-cloud' },
-    { id: 'backend engineering', label: 'Backend & Distributed Systems', icon: 'bi-hdd-network' },
-    { id: 'data science', label: 'Data Science & Deep Learning', icon: 'bi-clipboard-data' },
-    { id: 'qa testing', label: 'QA & Test Automation', icon: 'bi-check2-circle' },
-    { id: 'gaming', label: 'Game Development & 3D', icon: 'bi-controller' },
-    { id: 'blockchain', label: 'Blockchain & Web3', icon: 'bi-link-45deg' },
-    { id: 'cloud security', label: 'Cloud Security & DevSecOps', icon: 'bi-shield-lock' },
-    { id: 'product management', label: 'Technical Product Strategy', icon: 'bi-kanban' },
+    // Tech & Engineering
+    { id: 'web development', label: 'Web Development', icon: 'bi-code-slash', stream: 'engineering' },
+    { id: 'app development', label: 'Mobile App Development', icon: 'bi-phone', stream: 'engineering' },
+    { id: 'artificial intelligence', label: 'Artificial Intelligence & ML', icon: 'bi-cpu', stream: 'engineering' },
+    { id: 'cybersecurity', label: 'Cybersecurity & Defense', icon: 'bi-shield-shaded', stream: 'engineering' },
+    { id: 'cloud computing', label: 'Cloud Computing & DevOps', icon: 'bi-cloud', stream: 'engineering' },
+    { id: 'backend engineering', label: 'Backend & Distributed Systems', icon: 'bi-hdd-network', stream: 'engineering' },
+    { id: 'data science', label: 'Data Science & Deep Learning', icon: 'bi-clipboard-data', stream: 'engineering' },
+    { id: 'qa testing', label: 'QA & Test Automation', icon: 'bi-check2-circle', stream: 'engineering' },
+    { id: 'gaming', label: 'Game Development & 3D', icon: 'bi-controller', stream: 'engineering' },
+    { id: 'blockchain', label: 'Blockchain & Web3', icon: 'bi-link-45deg', stream: 'engineering' },
+    { id: 'cloud security', label: 'Cloud Security & DevSecOps', icon: 'bi-shield-lock', stream: 'engineering' },
+    { id: 'product management', label: 'Technical Product Strategy', icon: 'bi-kanban', stream: 'engineering' },
+
+    // Business, Finance & Corporate Operations
+    { id: 'financial modeling', label: 'Financial Modeling & Valuation', icon: 'bi-cash-coin', stream: 'business' },
+    { id: 'finance', label: 'Corporate Finance & Reporting', icon: 'bi-bank', stream: 'business' },
+    { id: 'valuation', label: 'DCF Valuation & Investment Analysis', icon: 'bi-calculator', stream: 'business' },
+    { id: 'business operations', label: 'Business Operations & RevOps', icon: 'bi-briefcase', stream: 'business' },
+    { id: 'management consulting', label: 'Management Consulting & Advisory', icon: 'bi-pie-chart', stream: 'business' },
+    { id: 'business strategy', label: 'Corporate Strategy & Scaling', icon: 'bi-graph-up', stream: 'business' },
+
+    // Digital Marketing & Growth
+    { id: 'digital marketing', label: 'Digital Marketing & Growth', icon: 'bi-bullseye', stream: 'marketing' },
+    { id: 'advertising', label: 'Paid Ads (Meta, Google, TikTok)', icon: 'bi-badge-ad', stream: 'marketing' },
+    { id: 'seo', label: 'SEO & Organic Search Strategy', icon: 'bi-search', stream: 'marketing' },
+    { id: 'content marketing', label: 'Content Strategy & Editorial', icon: 'bi-journal-text', stream: 'marketing' },
+    { id: 'social media', label: 'Social Media & Community Building', icon: 'bi-megaphone', stream: 'marketing' },
+    { id: 'viral growth', label: 'Short-Form Video & Viral Loops', icon: 'bi-fire', stream: 'marketing' },
+
+    // Creative, Media & Design
+    { id: 'design', label: 'UI / UX Design & Prototyping', icon: 'bi-palette', stream: 'creative' },
+    { id: 'branding', label: 'Brand Identity & Visual Systems', icon: 'bi-vector-pen', stream: 'creative' },
+    { id: 'motion graphics', label: 'Motion Graphics & After Effects', icon: 'bi-film', stream: 'creative' },
+    { id: '3d modeling', label: '3D Modeling & Blender', icon: 'bi-box', stream: 'creative' },
+    { id: 'copywriting', label: 'High-Converting Copywriting', icon: 'bi-pen', stream: 'creative' },
+    { id: 'visual storytelling', label: 'Visual Storytelling & Narrative', icon: 'bi-brush', stream: 'creative' },
+
+    // Transferable Cross-Domain
+    { id: 'data analysis', label: 'Data Analysis & BI Dashboards', icon: 'bi-graph-up-arrow' },
     { id: 'problem solving', label: 'Problem Solving & Logic', icon: 'bi-lightbulb' },
+    { id: 'market research', label: 'Market Research & Analytics', icon: 'bi-bar-chart' },
   ];
 
   const FALLBACK_SKILLS = [
     // Frontend (9)
-    { name: 'html', displayName: 'HTML', category: 'frontend' },
-    { name: 'css', displayName: 'CSS', category: 'frontend' },
-    { name: 'javascript', displayName: 'JavaScript', category: 'frontend' },
-    { name: 'responsive-design', displayName: 'Responsive Design', category: 'frontend' },
-    { name: 'react', displayName: 'React', category: 'frontend' },
-    { name: 'bootstrap', displayName: 'Bootstrap', category: 'frontend' },
-    { name: 'typescript', displayName: 'TypeScript', category: 'frontend' },
-    { name: 'next.js', displayName: 'Next.js', category: 'frontend' },
-    { name: 'tailwind-css', displayName: 'Tailwind CSS', category: 'frontend' },
+    { name: 'html', displayName: 'HTML', category: 'frontend', stream: 'engineering' },
+    { name: 'css', displayName: 'CSS', category: 'frontend', stream: 'engineering' },
+    { name: 'javascript', displayName: 'JavaScript', category: 'frontend', stream: 'engineering' },
+    { name: 'responsive-design', displayName: 'Responsive Design', category: 'frontend', stream: 'engineering' },
+    { name: 'react', displayName: 'React', category: 'frontend', stream: 'engineering' },
+    { name: 'bootstrap', displayName: 'Bootstrap', category: 'frontend', stream: 'engineering' },
+    { name: 'typescript', displayName: 'TypeScript', category: 'frontend', stream: 'engineering' },
+    { name: 'next.js', displayName: 'Next.js', category: 'frontend', stream: 'engineering' },
+    { name: 'tailwind-css', displayName: 'Tailwind CSS', category: 'frontend', stream: 'engineering' },
 
-    // Backend (10)
-    { name: 'node.js', displayName: 'Node.js', category: 'backend' },
-    { name: 'express.js', displayName: 'Express.js', category: 'backend' },
-    { name: 'rest-apis', displayName: 'REST APIs', category: 'backend' },
-    { name: 'authentication', displayName: 'Authentication', category: 'backend' },
-    { name: 'python', displayName: 'Python', category: 'backend' },
-    { name: 'fastapi', displayName: 'FastAPI', category: 'backend' },
-    { name: 'graphql', displayName: 'GraphQL', category: 'backend' },
-    { name: 'java', displayName: 'Java', category: 'backend' },
-    { name: 'spring-boot', displayName: 'Spring Boot', category: 'backend' },
-    { name: 'kafka', displayName: 'Apache Kafka', category: 'backend' },
-    { name: 'csharp', displayName: 'C# Programming', category: 'backend' },
-    { name: 'cpp', displayName: 'C++ Programming', category: 'backend' },
+    // Backend (12)
+    { name: 'node.js', displayName: 'Node.js', category: 'backend', stream: 'engineering' },
+    { name: 'express.js', displayName: 'Express.js', category: 'backend', stream: 'engineering' },
+    { name: 'rest-apis', displayName: 'REST APIs', category: 'backend', stream: 'engineering' },
+    { name: 'authentication', displayName: 'Authentication', category: 'backend', stream: 'engineering' },
+    { name: 'python', displayName: 'Python', category: 'backend', stream: 'engineering' },
+    { name: 'fastapi', displayName: 'FastAPI', category: 'backend', stream: 'engineering' },
+    { name: 'graphql', displayName: 'GraphQL', category: 'backend', stream: 'engineering' },
+    { name: 'java', displayName: 'Java', category: 'backend', stream: 'engineering' },
+    { name: 'spring-boot', displayName: 'Spring Boot', category: 'backend', stream: 'engineering' },
+    { name: 'kafka', displayName: 'Apache Kafka', category: 'backend', stream: 'engineering' },
+    { name: 'csharp', displayName: 'C# Programming', category: 'backend', stream: 'engineering' },
+    { name: 'cpp', displayName: 'C++ Programming', category: 'backend', stream: 'engineering' },
 
     // Database (6)
-    { name: 'mongodb', displayName: 'MongoDB', category: 'database' },
-    { name: 'sql', displayName: 'SQL', category: 'database' },
-    { name: 'mysql', displayName: 'MySQL', category: 'database' },
-    { name: 'database-design', displayName: 'Database Design', category: 'database' },
-    { name: 'postgresql', displayName: 'PostgreSQL', category: 'database' },
-    { name: 'redis', displayName: 'Redis Caching', category: 'database' },
+    { name: 'mongodb', displayName: 'MongoDB', category: 'database', stream: 'engineering' },
+    { name: 'sql', displayName: 'SQL', category: 'database', stream: 'engineering' },
+    { name: 'mysql', displayName: 'MySQL', category: 'database', stream: 'engineering' },
+    { name: 'database-design', displayName: 'Database Design', category: 'database', stream: 'engineering' },
+    { name: 'postgresql', displayName: 'PostgreSQL', category: 'database', stream: 'engineering' },
+    { name: 'redis', displayName: 'Redis Caching', category: 'database', stream: 'engineering' },
 
     // Data & AI (13)
     { name: 'excel', displayName: 'Excel', category: 'data' },
@@ -76,14 +103,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     { name: 'power-bi', displayName: 'Power BI', category: 'data' },
     { name: 'data-visualization', displayName: 'Data Visualization', category: 'data' },
     { name: 'data-cleaning', displayName: 'Data Cleaning', category: 'data' },
-    { name: 'pandas', displayName: 'Pandas & NumPy', category: 'data' },
-    { name: 'langchain', displayName: 'LangChain', category: 'ai' },
-    { name: 'generative-ai', displayName: 'Generative AI & LLMs', category: 'ai' },
-    { name: 'pytorch', displayName: 'PyTorch', category: 'ai' },
-    { name: 'tensorflow', displayName: 'TensorFlow', category: 'ai' },
-    { name: 'scikit-learn', displayName: 'Scikit-Learn', category: 'ai' },
-    { name: 'deep-learning', displayName: 'Deep Learning', category: 'ai' },
-    { name: 'natural-language-processing', displayName: 'NLP (Natural Language Processing)', category: 'ai' },
+    { name: 'pandas', displayName: 'Pandas & NumPy', category: 'data', stream: 'engineering' },
+    { name: 'langchain', displayName: 'LangChain', category: 'ai', stream: 'engineering' },
+    { name: 'generative-ai', displayName: 'Generative AI & LLMs', category: 'ai', stream: 'engineering' },
+    { name: 'pytorch', displayName: 'PyTorch', category: 'ai', stream: 'engineering' },
+    { name: 'tensorflow', displayName: 'TensorFlow', category: 'ai', stream: 'engineering' },
+    { name: 'scikit-learn', displayName: 'Scikit-Learn', category: 'ai', stream: 'engineering' },
+    { name: 'deep-learning', displayName: 'Deep Learning', category: 'ai', stream: 'engineering' },
+    { name: 'natural-language-processing', displayName: 'NLP', category: 'ai', stream: 'engineering' },
 
     // Design (5)
     { name: 'figma', displayName: 'Figma', category: 'design' },
@@ -93,58 +120,86 @@ document.addEventListener('DOMContentLoaded', async () => {
     { name: 'visual-design', displayName: 'Visual Design', category: 'design' },
 
     // Security (5)
-    { name: 'networking', displayName: 'Networking', category: 'security' },
-    { name: 'linux', displayName: 'Linux', category: 'security' },
-    { name: 'cybersecurity-fundamentals', displayName: 'Cybersecurity Fundamentals', category: 'security' },
-    { name: 'ethical-hacking', displayName: 'Ethical Hacking', category: 'security' },
-    { name: 'owasp-basics', displayName: 'OWASP Basics', category: 'security' },
+    { name: 'networking', displayName: 'Networking', category: 'security', stream: 'engineering' },
+    { name: 'linux', displayName: 'Linux', category: 'security', stream: 'engineering' },
+    { name: 'cybersecurity-fundamentals', displayName: 'Cybersecurity Fundamentals', category: 'security', stream: 'engineering' },
+    { name: 'ethical-hacking', displayName: 'Ethical Hacking', category: 'security', stream: 'engineering' },
+    { name: 'owasp-basics', displayName: 'OWASP Basics', category: 'security', stream: 'engineering' },
 
     // Cloud & DevOps (5)
-    { name: 'docker', displayName: 'Docker', category: 'cloud' },
-    { name: 'kubernetes', displayName: 'Kubernetes', category: 'cloud' },
-    { name: 'aws', displayName: 'AWS Cloud', category: 'cloud' },
-    { name: 'terraform', displayName: 'Terraform & IaC', category: 'cloud' },
-    { name: 'firebase', displayName: 'Firebase & Firestore', category: 'cloud' },
+    { name: 'docker', displayName: 'Docker', category: 'cloud', stream: 'engineering' },
+    { name: 'kubernetes', displayName: 'Kubernetes', category: 'cloud', stream: 'engineering' },
+    { name: 'aws', displayName: 'AWS Cloud', category: 'cloud', stream: 'engineering' },
+    { name: 'terraform', displayName: 'Terraform & IaC', category: 'cloud', stream: 'engineering' },
+    { name: 'firebase', displayName: 'Firebase & Firestore', category: 'cloud', stream: 'engineering' },
 
     // Mobile (3)
-    { name: 'flutter', displayName: 'Flutter', category: 'mobile' },
-    { name: 'react-native', displayName: 'React Native', category: 'mobile' },
-    { name: 'dart', displayName: 'Dart', category: 'mobile' },
+    { name: 'flutter', displayName: 'Flutter', category: 'mobile', stream: 'engineering' },
+    { name: 'react-native', displayName: 'React Native', category: 'mobile', stream: 'engineering' },
+    { name: 'dart', displayName: 'Dart', category: 'mobile', stream: 'engineering' },
 
     // QA & Testing (4)
-    { name: 'cypress', displayName: 'Cypress E2E Testing', category: 'testing' },
-    { name: 'selenium', displayName: 'Selenium WebDriver', category: 'testing' },
-    { name: 'playwright', displayName: 'Playwright Automation', category: 'testing' },
-    { name: 'postman', displayName: 'Postman & API Testing', category: 'testing' },
+    { name: 'cypress', displayName: 'Cypress E2E Testing', category: 'testing', stream: 'engineering' },
+    { name: 'selenium', displayName: 'Selenium WebDriver', category: 'testing', stream: 'engineering' },
+    { name: 'playwright', displayName: 'Playwright Automation', category: 'testing', stream: 'engineering' },
+    { name: 'postman', displayName: 'Postman & API Testing', category: 'testing', stream: 'engineering' },
 
     // Gaming (2)
-    { name: 'unity', displayName: 'Unity Engine', category: 'gaming' },
-    { name: 'unreal-engine', displayName: 'Unreal Engine 5', category: 'gaming' },
+    { name: 'unity', displayName: 'Unity Engine', category: 'gaming', stream: 'engineering' },
+    { name: 'unreal-engine', displayName: 'Unreal Engine 5', category: 'gaming', stream: 'engineering' },
 
     // Web3 (3)
-    { name: 'solidity', displayName: 'Solidity Smart Contracts', category: 'web3' },
-    { name: 'web3js', displayName: 'Web3.js & Ethers.js', category: 'web3' },
-    { name: 'smart-contracts', displayName: 'Smart Contract Architecture', category: 'web3' },
+    { name: 'solidity', displayName: 'Solidity Smart Contracts', category: 'web3', stream: 'engineering' },
+    { name: 'web3js', displayName: 'Web3.js & Ethers.js', category: 'web3', stream: 'engineering' },
+    { name: 'smart-contracts', displayName: 'Smart Contract Architecture', category: 'web3', stream: 'engineering' },
 
     // Product & Management (3)
     { name: 'agile-scrum', displayName: 'Agile & Scrum Methodology', category: 'product' },
     { name: 'product-management', displayName: 'Product Management & PRDs', category: 'product' },
     { name: 'user-stories', displayName: 'User Story Mapping & JIRA', category: 'product' },
 
-    // Soft Skills & Tools (5)
-    { name: 'git', displayName: 'Git', category: 'tool' },
-    { name: 'github', displayName: 'GitHub', category: 'tool' },
-    { name: 'ci-cd', displayName: 'CI/CD & GitHub Actions', category: 'tool' },
+    // Business & Finance (6)
+    { name: 'financial-modeling', displayName: 'Financial Modeling & Valuation', category: 'finance', stream: 'business' },
+    { name: 'dcf-valuation', displayName: 'DCF Valuation & Financial Statements', category: 'finance', stream: 'business' },
+    { name: 'accounting', displayName: 'Financial Accounting & Reporting', category: 'finance', stream: 'business' },
+    { name: 'business-operations', displayName: 'Business Operations & RevOps', category: 'business', stream: 'business' },
+    { name: 'management-consulting', displayName: 'Management Consulting & Strategy', category: 'business', stream: 'business' },
+    { name: 'market-research', displayName: 'Market Research & Intelligence', category: 'business', stream: 'business' },
+
+    // Digital Marketing & Growth (6)
+    { name: 'meta-ads', displayName: 'Meta Ads Manager & Paid Social', category: 'marketing', stream: 'marketing' },
+    { name: 'google-ads', displayName: 'Google Ads & SEM', category: 'marketing', stream: 'marketing' },
+    { name: 'seo', displayName: 'SEO & Organic Search Strategy', category: 'marketing', stream: 'marketing' },
+    { name: 'content-marketing', displayName: 'Content Marketing & Copywriting', category: 'marketing', stream: 'marketing' },
+    { name: 'social-media-growth', displayName: 'Social Media & Viral Growth', category: 'marketing', stream: 'marketing' },
+    { name: 'google-analytics', displayName: 'Google Analytics 4 & Attribution', category: 'marketing', stream: 'marketing' },
+
+    // Creative, Media & Design (6)
+    { name: 'brand-identity', displayName: 'Brand Identity & Logo Systems', category: 'design', stream: 'creative' },
+    { name: 'adobe-illustrator', displayName: 'Adobe Illustrator', category: 'design', stream: 'creative' },
+    { name: 'motion-graphics', displayName: 'Motion Graphics & After Effects', category: 'design', stream: 'creative' },
+    { name: 'copywriting', displayName: 'High-Converting Copywriting', category: 'design', stream: 'creative' },
+    { name: 'blender', displayName: 'Blender 3D Modeling', category: 'design', stream: 'creative' },
+    { name: 'typography', displayName: 'Typography & Layout Design', category: 'design', stream: 'creative' },
+
+    // Soft Skills & Tools (6)
+    { name: 'git', displayName: 'Git', category: 'tool', stream: 'engineering' },
+    { name: 'github', displayName: 'GitHub', category: 'tool', stream: 'engineering' },
+    { name: 'ci-cd', displayName: 'CI/CD & GitHub Actions', category: 'tool', stream: 'engineering' },
     { name: 'problem-solving', displayName: 'Problem Solving', category: 'soft-skill' },
     { name: 'communication', displayName: 'Communication', category: 'soft-skill' },
     { name: 'teamwork', displayName: 'Teamwork', category: 'soft-skill' },
   ];
 
   // 3. State
+  const urlParams = new URLSearchParams(window.location.search);
+  const streamParam = urlParams.get('stream') || urlParams.get('track');
+  const validStreams = ['engineering', 'business', 'marketing', 'creative', 'cross'];
+  let selectedStream = (streamParam && validStreams.includes(streamParam)) ? streamParam : 'engineering';
   let allAvailableSkills = [...FALLBACK_SKILLS];
   const selectedInterests = new Set();
   const selectedSkillsMap = new Map(); // key: skillName, value: { name, displayName, proficiency, ... }
-  let currentStep = 1;
+  let currentStep = 0;
   let hasCompletedSkillVerification = false; // Ensures quiz gate is only required once per account
 
   // Reality Check Quiz Constants
@@ -234,12 +289,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Step Wizard Elements
   const stepPanels = [
+    document.getElementById('stepPanel0'),
     document.getElementById('stepPanel1'),
     document.getElementById('stepPanel2'),
     document.getElementById('stepPanel3'),
     document.getElementById('stepPanel4'),
   ];
   const desktopNavItems = [
+    document.getElementById('navStep0'),
     document.getElementById('navStep1'),
     document.getElementById('navStep2'),
     document.getElementById('navStep3'),
@@ -267,6 +324,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 5. Step Navigation System
   const STEP_TITLES = [
+    'Choose Stream',
     'Academic Background',
     'Domains of Interest',
     'Skills & Proficiency',
@@ -279,15 +337,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show active panel
     stepPanels.forEach((panel, idx) => {
       if (panel) {
-        panel.classList.toggle('active', idx + 1 === currentStep);
+        panel.classList.toggle('active', idx === currentStep);
       }
     });
 
     // Update desktop stepper
     desktopNavItems.forEach((item, idx) => {
       if (item) {
-        item.classList.toggle('active', idx + 1 === currentStep);
-        if (idx + 1 < currentStep) {
+        item.classList.toggle('active', idx === currentStep);
+        if (idx < currentStep) {
           item.classList.add('completed');
         } else {
           item.classList.remove('completed');
@@ -297,20 +355,122 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Update mobile progress bar
     if (mobileStepLabel) {
-      mobileStepLabel.textContent = `Step ${currentStep} of 4: ${STEP_TITLES[currentStep - 1]}`;
+      mobileStepLabel.textContent = `Step ${currentStep} of 4: ${STEP_TITLES[currentStep] || ''}`;
     }
-    const pct = currentStep * 25;
+    const pct = currentStep === 0 ? 10 : Math.round((currentStep / 4) * 100);
     if (mobileStepPercent) mobileStepPercent.textContent = `${pct}%`;
     if (mobileProgressBar) {
       mobileProgressBar.style.width = `${pct}%`;
       mobileProgressBar.setAttribute('aria-valuenow', pct);
     }
 
+    // Toggle "Prove Skills" panel visibility: only relevant for engineering/cross tracks
+    if (proveSkillsPanel) {
+      if (selectedStream !== 'engineering' && selectedStream !== 'cross') {
+        proveSkillsPanel.style.display = 'none';
+      } else {
+        proveSkillsPanel.style.display = '';
+      }
+    }
+
     window.scrollTo({ top: 140, behavior: 'smooth' });
+  };
+
+  const STREAM_META = {
+    engineering: {
+      label: 'Engineering & IT',
+      badge: 'ENGINEERING TRACK',
+      badgeClass: 'badge-teal'
+    },
+    business: {
+      label: 'Business & Finance',
+      badge: 'BUSINESS TRACK',
+      badgeClass: 'badge-gold'
+    },
+    marketing: {
+      label: 'Digital Marketing & Growth',
+      badge: 'MARKETING TRACK',
+      badgeClass: 'badge-emerald'
+    },
+    creative: {
+      label: 'Creative & Design',
+      badge: 'CREATIVE TRACK',
+      badgeClass: 'badge-purple'
+    },
+    cross: {
+      label: 'Cross-Disciplinary Track',
+      badge: 'CROSS-TRACK',
+      badgeClass: 'badge-teal'
+    }
+  };
+
+  const updateCategoryFilterPills = () => {
+    if (!skillCategoryFilter) return;
+    const streamPillMap = {
+      engineering: ['all', 'frontend', 'backend', 'data', 'cloud', 'security', 'mobile', 'testing', 'gaming', 'web3', 'product'],
+      business: ['all', 'finance', 'product', 'data'],
+      marketing: ['all', 'marketing', 'design', 'data'],
+      creative: ['all', 'design', 'marketing'],
+      cross: null
+    };
+
+    const allowedCats = streamPillMap[selectedStream];
+    skillCategoryFilter.querySelectorAll('button').forEach((btn) => {
+      const cat = btn.getAttribute('data-cat');
+      if (!allowedCats || allowedCats.includes(cat)) {
+        btn.style.display = '';
+      } else {
+        btn.style.display = 'none';
+      }
+    });
+
+    currentCategoryFilter = 'all';
+    skillCategoryFilter.querySelectorAll('button').forEach((b) => {
+      b.classList.toggle('active', b.getAttribute('data-cat') === 'all');
+    });
+  };
+
+  const applyStreamUI = (streamKey) => {
+    selectedStream = streamKey || 'engineering';
+
+    // Update stream card active state
+    document.querySelectorAll('#streamCardsGrid .stream-card').forEach((card) => {
+      const cardStream = card.getAttribute('data-stream');
+      card.classList.toggle('selected', cardStream === selectedStream);
+    });
+
+    const meta = STREAM_META[selectedStream] || STREAM_META.engineering;
+    const labelEl = document.getElementById('selectedStreamLabel');
+    if (labelEl) labelEl.textContent = meta.label;
+
+    const badgeEl = document.getElementById('streamBadge');
+    if (badgeEl) {
+      badgeEl.textContent = meta.badge;
+      badgeEl.className = `badge ${meta.badgeClass} small font-mono`;
+    }
+
+    if (proveSkillsPanel) {
+      if (selectedStream !== 'engineering' && selectedStream !== 'cross') {
+        proveSkillsPanel.style.display = 'none';
+      } else {
+        proveSkillsPanel.style.display = '';
+      }
+    }
+
+    updateCategoryFilterPills();
+    renderInterests();
+    renderSkillsGrid();
   };
 
   const validateStep = (step) => {
     if (alertContainer) alertContainer.innerHTML = '';
+    if (step === 0) {
+      if (!selectedStream) {
+        showAlert('Please select your primary stream to proceed.');
+        return false;
+      }
+      return true;
+    }
     if (step === 1) {
       const fullName = document.getElementById('fullName').value.trim();
       const course = document.getElementById('course').value.trim();
@@ -319,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return false;
       }
       if (!course) {
-        showAlert('Please enter your degree or course (e.g. BCA, B.Tech, B.Sc Computer Science).');
+        showAlert('Please enter your degree or course (e.g. BCA, B.Tech, B.Com, BBA, B.Des).');
         return false;
       }
       return true;
@@ -335,6 +495,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (selectedSkillsMap.size === 0) {
         showAlert('Please select at least 1 skill you possess before proceeding.');
         return false;
+      }
+      // Non-engineering tracks do not have technical code quizzes: bypass!
+      if (selectedStream !== 'engineering' && selectedStream !== 'cross') {
+        return true;
       }
       // If account already completed one-time skill verification, never block again!
       if (hasCompletedSkillVerification) {
@@ -353,6 +517,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // Wire Step Buttons
+  document.getElementById('step0ContinueBtn')?.addEventListener('click', () => {
+    if (validateStep(0)) updateStepUI(1);
+  });
+
+  document.getElementById('step1BackBtn')?.addEventListener('click', () => {
+    updateStepUI(0);
+  });
   document.getElementById('step1ContinueBtn')?.addEventListener('click', () => {
     if (validateStep(1)) updateStepUI(2);
   });
@@ -378,7 +549,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Allow clicking desktop stepper items if prior steps are valid
   desktopNavItems.forEach((item, idx) => {
     item?.addEventListener('click', () => {
-      const target = idx + 1;
+      const target = idx;
       if (target <= currentStep) {
         updateStepUI(target);
       } else {
@@ -391,12 +562,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  // Wire stream cards in Step 0
+  document.querySelectorAll('#streamCardsGrid .stream-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const stream = card.getAttribute('data-stream');
+      if (stream) {
+        applyStreamUI(stream);
+      }
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const stream = card.getAttribute('data-stream');
+        if (stream) applyStreamUI(stream);
+      }
+    });
+  });
+
   // 6. Render Interest Chips
   const renderInterests = () => {
     if (!interestChipsWrapper) return;
     interestChipsWrapper.innerHTML = '';
 
-    ALL_INTERESTS.forEach((interest) => {
+    const visibleInterests = ALL_INTERESTS.filter((interest) => {
+      if (selectedStream === 'cross' || !selectedStream) return true;
+      return !interest.stream || interest.stream === selectedStream;
+    });
+
+    visibleInterests.forEach((interest) => {
       const isSelected = selectedInterests.has(interest.id);
       const chip = document.createElement('button');
       chip.type = 'button';
@@ -433,6 +626,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     skillsGrid.innerHTML = '';
 
     const filtered = allAvailableSkills.filter((skill) => {
+      // 1. Stream filter
+      const matchesStream = () => {
+        if (selectedStream === 'cross' || !selectedStream) return true;
+        if (skill.category === 'soft-skill') return true;
+        if (skill.stream) return skill.stream === selectedStream;
+        if (['frontend', 'backend', 'database', 'ai', 'security', 'cloud', 'mobile', 'testing', 'gaming', 'web3'].includes(skill.category)) {
+          return selectedStream === 'engineering';
+        }
+        if (['finance', 'business'].includes(skill.category)) {
+          return selectedStream === 'business';
+        }
+        if (['marketing'].includes(skill.category)) {
+          return selectedStream === 'marketing';
+        }
+        if (['design'].includes(skill.category)) {
+          return selectedStream === 'creative';
+        }
+        return true;
+      };
+
+      if (!matchesStream()) return false;
+
+      // 2. Category filter
       const matchesCategory =
         currentCategoryFilter === 'all' ||
         skill.category === currentCategoryFilter ||
@@ -440,7 +656,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         (currentCategoryFilter === 'cloud' && ['cloud', 'tool'].includes(skill.category)) ||
         (currentCategoryFilter === 'security' && ['security'].includes(skill.category)) ||
         (currentCategoryFilter === 'frontend' && ['frontend', 'mobile'].includes(skill.category)) ||
-        (currentCategoryFilter === 'backend' && ['backend', 'database'].includes(skill.category));
+        (currentCategoryFilter === 'backend' && ['backend', 'database'].includes(skill.category)) ||
+        (currentCategoryFilter === 'finance' && ['finance', 'business'].includes(skill.category)) ||
+        (currentCategoryFilter === 'marketing' && ['marketing'].includes(skill.category)) ||
+        (currentCategoryFilter === 'design' && ['design'].includes(skill.category));
 
       const matchesSearch =
         !currentSearchQuery ||
@@ -588,9 +807,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       pill.className = 'badge badge-navy border d-inline-flex align-items-center gap-1 py-1 px-2 small';
       let verifiedTag = '';
       if (skill.isQuizVerified) {
-        verifiedTag = `<span class="badge bg-success-subtle text-success border border-success ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz — Click to Retest" style="padding: 1px 5px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-patch-check-fill"></i> Verified <i class="bi bi-arrow-repeat text-primary ms-0.5"></i></span>`;
+        verifiedTag = `<span class="badge bg-success-subtle text-success border border-success ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz â€” Click to Retest" style="padding: 1px 5px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-patch-check-fill"></i> Verified <i class="bi bi-arrow-repeat text-primary ms-0.5"></i></span>`;
       } else if (skill.isCodeVerified) {
-        verifiedTag = `<span class="badge-code-verified ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by GitHub Repo Code — Click to Quiz" style="padding: 1px 4px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-github"></i> Verified <i class="bi bi-arrow-repeat ms-0.5"></i></span>`;
+        verifiedTag = `<span class="badge-code-verified ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by GitHub Repo Code â€” Click to Quiz" style="padding: 1px 4px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-github"></i> Verified <i class="bi bi-arrow-repeat ms-0.5"></i></span>`;
       }
 
       const rawProf = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
@@ -623,7 +842,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderProveSkillsPanel();
   };
 
-  // ── Verification Gate: Prove Your Skills Panel Logic ───────────────
+  // â”€â”€ Verification Gate: Prove Your Skills Panel Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const getRequiredVerificationSkills = () => {
     const candidates = [];
     selectedSkillsMap.forEach((s) => {
@@ -710,7 +929,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         proveSkillsBadge.className = 'prove-skills-badge completed';
       }
       if (proveSkillsBadgeText) {
-        proveSkillsBadgeText.textContent = 'Account Verified ✓';
+        proveSkillsBadgeText.textContent = 'Account Verified âœ“';
       }
       if (proveSkillsProgressFill) {
         proveSkillsProgressFill.style.width = '100%';
@@ -745,7 +964,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
                 <i class="bi bi-patch-check-fill"></i>
-                <span>Verified (${escapeHtml(capitalize(profStr))}) ✓</span>
+                <span>Verified (${escapeHtml(capitalize(profStr))}) âœ“</span>
               </span>
               <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level">
                 <i class="bi bi-arrow-repeat"></i>
@@ -758,7 +977,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
                 <i class="bi bi-github"></i>
-                <span>GitHub-Supported ✓</span>
+                <span>GitHub-Supported âœ“</span>
               </span>
               <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Take reality check quiz to verify with full confidence">
                 <i class="bi bi-patch-question"></i>
@@ -788,7 +1007,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const checkmarkIcon = isVerified
-          ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill ✓"></i>`
+          ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill âœ“"></i>`
           : `<div class="prove-skill-dot"></div>`;
 
         const verifiedTag = isVerified
@@ -869,7 +1088,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (proveSkillsBadgeText) {
       proveSkillsBadgeText.textContent = isAllComplete
-        ? `Progress: ${verifiedCount} skill(s) verified ✓`
+        ? `Progress: ${verifiedCount} skill(s) verified âœ“`
         : `Progress: 0 of 1 verified`;
     }
     if (proveSkillsProgressFill) {
@@ -915,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
               <i class="bi bi-patch-check-fill"></i>
-              <span>Verified (${escapeHtml(capitalize(profStr))}) ✓</span>
+              <span>Verified (${escapeHtml(capitalize(profStr))}) âœ“</span>
             </span>
             <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level">
               <i class="bi bi-arrow-repeat"></i>
@@ -928,7 +1147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <span class="badge bg-secondary text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Verified from connected GitHub repository code">
               <i class="bi bi-github"></i>
-              <span>GitHub-Supported ✓</span>
+              <span>GitHub-Supported âœ“</span>
             </span>
             <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Take reality check quiz to verify with full confidence">
               <i class="bi bi-patch-question"></i>
@@ -958,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const checkmarkIcon = isVerified
-        ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill ✓"></i>`
+        ? `<i class="bi bi-patch-check-fill text-success fs-5 flex-shrink-0" title="Verified Skill âœ“"></i>`
         : `<div class="prove-skill-dot"></div>`;
 
       const verifiedTag = isVerified
@@ -998,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  // ── Skill Check In-Page Modal Logic ─────────────────────────────────
+  // â”€â”€ Skill Check In-Page Modal Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   let activeQuizSession = null;
   let activeQuestion = null;
   let activeQuestionStep = 1;
@@ -1085,7 +1304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
       if (document.hidden) {
         modalTabSwitchesCount++;
-        showModalProctorToast('⚠️ Proctor Notice: Tab change detected. Quiz session is actively monitored.');
+        showModalProctorToast('âš ï¸ Proctor Notice: Tab change detected. Quiz session is actively monitored.');
       }
     }
   });
@@ -1093,7 +1312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('blur', () => {
     if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
       modalTabSwitchesCount++;
-      showModalProctorToast('⚠️ Proctor Notice: Window blur detected. Please stay focused on the quiz.');
+      showModalProctorToast('âš ï¸ Proctor Notice: Window blur detected. Please stay focused on the quiz.');
     }
   });
 
@@ -1171,7 +1390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isCooldown = err.cooldownActive || (err.message && err.message.includes('24-hour'));
       if (isCooldown) {
         const hours = err.retryAfterHours || 24;
-        showAlert(`⏱️ 24-Hour Review Cooldown: Skill checks can only be retaken after a 24-hour review period to protect credential integrity. Retake available in ${hours} hour${hours > 1 ? 's' : ''}.`, 'warning');
+        showAlert(`â±ï¸ 24-Hour Review Cooldown: Skill checks can only be retaken after a 24-hour review period to protect credential integrity. Retake available in ${hours} hour${hours > 1 ? 's' : ''}.`, 'warning');
       } else {
         showAlert(`Could not start skill check: ${err.message}`, 'danger');
       }
@@ -1539,7 +1758,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error refreshing UI on modal done:', err);
     }
 
-    showAlert('🎉 Account Verified ✓! Your technical skills are verified. Dashboard, Recommendations, and Active Roadmap are now unlocked!', 'success');
+    showAlert('ðŸŽ‰ Account Verified âœ“! Your technical skills are verified. Dashboard, Recommendations, and Active Roadmap are now unlocked!', 'success');
   });
 
   // Ensure modal dismissal (via X button, backdrop click, or ESC) always guarantees immediate UI refresh
@@ -1655,7 +1874,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       customSkillNameInput.value = '';
       if (customSkillFeedback) {
         customSkillFeedback.className = 'small mt-2 text-teal';
-        customSkillFeedback.textContent = `✓ "${rawName}" added to your skills!`;
+        customSkillFeedback.textContent = `âœ“ "${rawName}" added to your skills!`;
         customSkillFeedback.classList.remove('d-none');
         setTimeout(() => {
           customSkillFeedback.classList.add('d-none');
@@ -1756,7 +1975,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         careerGoalsInput.value = 'Full-Stack Web & AI Application Developer';
       }
 
-      showAlert('✓ Demo profile loaded successfully with verified skills and ready for evaluation!', 'success');
+      showAlert('âœ“ Demo profile loaded successfully with verified skills and ready for evaluation!', 'success');
 
       // Scroll smoothly to step 1 form
       const formEl = document.getElementById('assessmentForm');
@@ -1850,7 +2069,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const ghUser = data?.profile?.username || data?.user?.githubProfile?.username || data?.profile?.login || 'user';
     const repoCount = data?.repositories?.length || data?.repos?.length || data?.user?.githubRepos?.length || 0;
-    showAlert(`✓ Scanned @${ghUser} (${repoCount} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
+    showAlert(`âœ“ Scanned @${ghUser} (${repoCount} study repos) and auto-detected ${countAdded} verified skills!`, 'success');
     if (btnAutoDetectGitHubSkills) {
       btnAutoDetectGitHubSkills.disabled = false;
       btnAutoDetectGitHubSkills.innerHTML = `<i class="bi bi-patch-check-fill text-success"></i> <span>@${ghUser} (${countAdded} Verified)</span>`;
@@ -1969,6 +2188,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           });
         }
 
+        if (user.primaryStream && validStreams.includes(user.primaryStream)) {
+          selectedStream = user.primaryStream;
+        }
+
         if (Array.isArray(user.careerGoals) && user.careerGoals.length > 0) {
           document.getElementById('careerGoals').value = user.careerGoals[0] || '';
         }
@@ -1986,13 +2209,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Restore draft state if returning from OAuth redirect or page reload
-    let targetStep = 1;
+    let targetStep = 0;
     try {
       const draftRaw = sessionStorage.getItem('cp_assessment_draft');
       if (draftRaw) {
         const draft = JSON.parse(draftRaw);
-        if (draft.step && draft.step >= 1 && draft.step <= 4) {
+        if (draft.step !== undefined && draft.step >= 0 && draft.step <= 4) {
           targetStep = draft.step;
+        }
+        if (draft.primaryStream && validStreams.includes(draft.primaryStream)) {
+          selectedStream = draft.primaryStream;
         }
         if (draft.fullName && !document.getElementById('fullName').value) document.getElementById('fullName').value = draft.fullName;
         if (draft.course && !document.getElementById('course').value) document.getElementById('course').value = draft.course;
@@ -2016,8 +2242,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (err) {}
 
-    renderInterests();
-    renderSkillsGrid();
+    if (streamParam && validStreams.includes(streamParam)) {
+      selectedStream = streamParam;
+    }
+
+    applyStreamUI(selectedStream);
     updateSelectedSkillsUI();
     updateStepUI(targetStep);
   };
@@ -2041,6 +2270,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const year = document.getElementById('year').value;
     const college = document.getElementById('college').value.trim();
     const goalText = document.getElementById('careerGoals').value.trim();
+
+    if (!selectedStream) {
+      updateStepUI(0);
+      showAlert('Please select your primary stream.');
+      return;
+    }
 
     if (!fullName) {
       updateStepUI(1);
@@ -2068,6 +2303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const payload = {
       name: fullName,
+      primaryStream: selectedStream,
       education: {
         course,
         branch,
@@ -2100,7 +2336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           window.Auth.setCurrentUser(response.data.user);
         }
 
-        showAlert('✓ Profile & verified skills saved! Directing you to your career recommendations...', 'success');
+        showAlert('âœ“ Profile & verified skills saved! Directing you to your career recommendations...', 'success');
         resetSubmitBtn();
         setTimeout(() => {
           window.location.href = 'recommendations.html';

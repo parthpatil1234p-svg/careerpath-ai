@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Student Skill Assessment — CareerPath AI · Career Atlas"
+      content="Student Skill Assessment â€” CareerPath AI Â· Career Atlas"
     />
     <meta name="theme-color" content="#FFFFFF" />
-    <title>Student Skill Assessment — CareerPath AI · Career Atlas</title>
+    <title>Student Skill Assessment â€” CareerPath AI Â· Career Atlas</title>
 
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -52,7 +52,7 @@
               <img src="assets/logo.svg" alt="CareerPath AI Logo" width="24" height="24" style="border-radius: 5px; display: block;" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
-            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">· Atlas</span>
+            <span class="brand-tagline-sub d-none d-xl-inline text-muted font-mono" style="font-size: 0.72rem;">Â· Atlas</span>
           </a>
 
           <!-- Desktop Center Links -->
@@ -178,7 +178,15 @@
         <aside class="step-nav-desktop" id="stepIndicator" aria-label="Assessment step progress">
           <div class="text-xs font-mono text-muted text-uppercase mb-3 px-2">Navigation Steps</div>
 
-          <div class="step-nav-item active" data-step="1" id="navStep1" role="button" tabindex="0">
+          <div class="step-nav-item active" data-step="0" id="navStep0" role="button" tabindex="0">
+            <div class="step-nav-num">0</div>
+            <div>
+              <div class="text-sm fw-bold">Stream</div>
+              <div class="text-xs text-muted">Field & discipline</div>
+            </div>
+          </div>
+
+          <div class="step-nav-item" data-step="1" id="navStep1" role="button" tabindex="0">
             <div class="step-nav-num">1</div>
             <div>
               <div class="text-sm fw-bold">Academics</div>
@@ -222,9 +230,82 @@
           <form id="assessmentForm" novalidate aria-describedby="assessmentFormHint">
 
             <!-- ========================================================
+                 STEP 0: Choose Your Primary Stream
+                 ======================================================== -->
+            <div class="assessment-step-panel active card p-4 p-md-5" id="stepPanel0">
+              <div class="text-center mb-4 pb-3 border-bottom">
+                <span class="step-badge-circle mx-auto mb-2">00</span>
+                <h2 class="h3 fw-bold text-ink">Choose Your Primary Stream / Track</h2>
+                <p class="text-muted small">Select your field so we can show only relevant skills and questions — no clutter, no domain mix-up.</p>
+              </div>
+
+              <div class="row g-3 justify-content-center mb-4" id="streamCardsGrid">
+                <!-- 1. Engineering & IT -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="stream-card selected" data-stream="engineering" role="button" tabindex="0">
+                    <div class="stream-icon text-cyan"><i class="bi bi-laptop"></i></div>
+                    <h4 class="stream-title">Engineering & IT</h4>
+                    <p class="stream-desc">Coding, Web, Mobile, Cloud, AI & Software Systems</p>
+                  </div>
+                </div>
+
+                <!-- 2. Business & Finance -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="stream-card" data-stream="business" role="button" tabindex="0">
+                    <div class="stream-icon text-gold"><i class="bi bi-briefcase"></i></div>
+                    <h4 class="stream-title">Business & Finance</h4>
+                    <p class="stream-desc">Financial Modeling, DCF Valuation, Operations & Strategy</p>
+                  </div>
+                </div>
+
+                <!-- 3. Digital Marketing & Growth -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="stream-card" data-stream="marketing" role="button" tabindex="0">
+                    <div class="stream-icon text-success"><i class="bi bi-graph-up-arrow"></i></div>
+                    <h4 class="stream-title">Digital Marketing</h4>
+                    <p class="stream-desc">Performance Ads, SEO, Content Hubs & Social Growth</p>
+                  </div>
+                </div>
+
+                <!-- 4. Creative & Design -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="stream-card" data-stream="creative" role="button" tabindex="0">
+                    <div class="stream-icon text-purple"><i class="bi bi-palette"></i></div>
+                    <h4 class="stream-title">Creative & Design</h4>
+                    <p class="stream-desc">Brand Identity, Motion Graphics, Blender 3D & Copywriting</p>
+                  </div>
+                </div>
+
+                <!-- 5. Cross-Disciplinary -->
+                <div class="col-md-6 col-lg-4">
+                  <div class="stream-card" data-stream="cross" role="button" tabindex="0">
+                    <div class="stream-icon text-teal"><i class="bi bi-compass"></i></div>
+                    <h4 class="stream-title">Cross-Disciplinary</h4>
+                    <p class="stream-desc">Explore across all technical, business, and creative tracks</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stream Selection Summary Banner -->
+              <div class="p-3 rounded-2 stat-box-atlas mb-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <span class="small text-muted" id="streamSelectedHint">
+                  <i class="bi bi-shield-check text-success me-1"></i> Stream active: <strong class="text-ink" id="selectedStreamLabel">Engineering & IT</strong>. All subsequent interest and skill prompts will be calibrated exclusively for this domain.
+                </span>
+                <span class="badge badge-teal small font-mono" id="streamBadge">ENGINEERING TRACK</span>
+              </div>
+
+              <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                <button type="button" class="btn cp-btn-primary px-4" id="step0ContinueBtn">
+                  <span>Continue to Academics</span>
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- ========================================================
                  STEP 1: Academic Background
                  ======================================================== -->
-            <div class="assessment-step-panel active card p-4 p-md-5" id="stepPanel1">
+            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel1">
               <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                 <span class="step-badge-circle">01</span>
                 <div>
@@ -318,7 +399,11 @@
                 </div>
               </div>
 
-              <div class="d-flex justify-content-end mt-5 pt-3 border-top">
+              <div class="d-flex justify-content-between mt-5 pt-3 border-top">
+                <button type="button" class="btn cp-btn-outline px-4" id="step1BackBtn">
+                  <i class="bi bi-arrow-left"></i>
+                  <span>Back to Stream</span>
+                </button>
                 <button type="button" class="btn cp-btn-primary px-4" id="step1ContinueBtn">
                   <span>Continue to Interests</span>
                   <i class="bi bi-arrow-right"></i>
@@ -428,6 +513,9 @@
                     <button type="button" class="category-filter-btn" data-cat="gaming" aria-pressed="false">Gaming</button>
                     <button type="button" class="category-filter-btn" data-cat="web3" aria-pressed="false">Web3</button>
                     <button type="button" class="category-filter-btn" data-cat="product" aria-pressed="false">Product</button>
+                    <button type="button" class="category-filter-btn" data-cat="finance" aria-pressed="false">Finance & Ops</button>
+                    <button type="button" class="category-filter-btn" data-cat="marketing" aria-pressed="false">Marketing</button>
+                    <button type="button" class="category-filter-btn" data-cat="design" aria-pressed="false">Creative Design</button>
                   </div>
                 </div>
               </div>
@@ -719,7 +807,7 @@
                     <div class="small text-muted mb-1">You Claimed</div>
                     <span class="passport-tier-badge badge-passport-t0" id="modalVerdictSelfClaimed"><i class="bi bi-person-fill"></i> Advanced</span>
                   </div>
-                  <div class="col-2 text-muted fs-4">→</div>
+                  <div class="col-2 text-muted fs-4">â†’</div>
                   <div class="col-5">
                     <div class="small text-muted mb-1">Quiz Verified</div>
                     <div class="d-flex flex-column align-items-center gap-1">
@@ -748,7 +836,7 @@
                 </button>
                 <button type="button" class="btn cp-btn-primary px-4 py-2" id="modalVerdictDoneBtn">
                   <i class="bi bi-check2-circle me-1"></i>
-                  <span>Done — Return to Assessment</span>
+                  <span>Done â€” Return to Assessment</span>
                 </button>
               </div>
             </div>
@@ -762,11 +850,11 @@
       <div class="container">
         <div class="row align-items-center g-3">
           <div class="col-md-6 text-center text-md-start">
-            <div class="footer-title fw-bold text-ink">CareerPath AI — Career Atlas</div>
-            <div class="text-muted small">ED-02 · AI Career Guidance & Skill Roadmap Platform</div>
+            <div class="footer-title fw-bold text-ink">CareerPath AI â€” Career Atlas</div>
+            <div class="text-muted small">ED-02 Â· AI Career Guidance & Skill Roadmap Platform</div>
           </div>
           <div class="col-md-6 text-center text-md-end">
-            <span class="badge badge-teal font-monospace me-2">Hack2Ignite 2026–27</span>
+            <span class="badge badge-teal font-monospace me-2">Hack2Ignite 2026â€“27</span>
             <span class="badge badge-navy font-monospace px-3 py-1">Team: 404 Brain Not Found</span>
           </div>
         </div>

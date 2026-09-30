@@ -1,7 +1,7 @@
 /* ==========================================================================
-   CareerPath AI — EduTech Page Styles (pages.css)
-   Clean Modern Light Aesthetics · Indigo, Blue & Cyan Accents
-   CareerPath AI · Team: 404 Brain Not Found
+   CareerPath AI â€” EduTech Page Styles (pages.css)
+   Clean Modern Light Aesthetics Â· Indigo, Blue & Cyan Accents
+   CareerPath AI Â· Team: 404 Brain Not Found
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -448,7 +448,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. Assessment Page (assessment.html) — Progressive Wizard
+   3. Assessment Page (assessment.html) â€” Progressive Wizard
    -------------------------------------------------------------------------- */
 .assessment-layout {
   padding: 1.5rem 0 4rem;
@@ -830,5 +830,234 @@
   transform: none !important;
   z-index: 1065 !important;
 }
+
+/* ============================================================
+   STRICT SECTION ARCHITECTURE & DOMAIN SWITCHER STYLES
+   ============================================================ */
+
+.career-domain-bar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  display: inline-flex;
+}
+
+.domain-tab-btn {
+  padding: 0.55rem 1.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.domain-tab-btn:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text-primary);
+}
+
+.domain-tab-btn.active {
+  background: #0F172A;
+  color: #FFFFFF !important;
+  border-color: #0F172A;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+}
+
+.domain-track-block {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.domain-track-block.d-none {
+  display: none !important;
+}
+
+/* Track Card Color Accents */
+.career-card-business:hover {
+  border-color: #F59E0B !important;
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.12) !important;
+}
+
+.career-card-marketing:hover {
+  border-color: #10B981 !important;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.12) !important;
+}
+
+.career-card-creative:hover {
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12) !important;
+}
+
+/* Domain Badges & Tags */
+.badge-gold {
+  background: #FEF3C7 !important;
+  color: #B45309 !important;
+  border: 1px solid #FDE68A !important;
+}
+
+.tag-gold {
+  background: #FFFBEB !important;
+  color: #92400E !important;
+  border: 1px solid #FEF3C7 !important;
+}
+
+.btn-gold-outline {
+  border-color: #F59E0B !important;
+  color: #B45309 !important;
+}
+
+.btn-gold-outline:hover {
+  background: #F59E0B !important;
+  color: #FFFFFF !important;
+}
+
+.badge-emerald {
+  background: #D1FAE5 !important;
+  color: #047857 !important;
+  border: 1px solid #A7F3D0 !important;
+}
+
+.tag-emerald {
+  background: #ECFDF5 !important;
+  color: #065F46 !important;
+  border: 1px solid #D1FAE5 !important;
+}
+
+.btn-emerald-outline {
+  border-color: #10B981 !important;
+  color: #059669 !important;
+}
+
+.btn-emerald-outline:hover {
+  background: #10B981 !important;
+  color: #FFFFFF !important;
+}
+
+.badge-purple {
+  background: #EDE9FE !important;
+  color: #6D28D9 !important;
+  border: 1px solid #DDD6FE !important;
+}
+
+.tag-purple {
+  background: #F5F3FF !important;
+  color: #5B21B6 !important;
+  border: 1px solid #EDE9FE !important;
+}
+
+.btn-purple-outline {
+  border-color: #8B5CF6 !important;
+  color: #7C3AED !important;
+}
+
+.btn-purple-outline:hover {
+  background: #8B5CF6 !important;
+  color: #FFFFFF !important;
+}
+
+/* ============================================================
+   ASSESSMENT STEP 0: STREAM SELECTOR CARDS
+   ============================================================ */
+
+.stream-card {
+  background: #FFFFFF;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.stream-card:hover {
+  border-color: #94A3B8;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.stream-card.selected {
+  border-color: var(--color-indigo-600) !important;
+  background: #F8FAFC !important;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.16) !important;
+}
+
+.stream-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 24px;
+  height: 24px;
+  background: var(--color-indigo-600);
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.stream-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.stream-card:hover .stream-icon {
+  transform: scale(1.08);
+}
+
+.stream-card.selected .stream-icon {
+  background: #EEF2FF;
+}
+
+.stream-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.stream-desc {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+/* Cross-Track Discovery Bridge in Recommendations */
+.cross-track-card {
+  border: 2px dashed #CBD5E1;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.6) 100%);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-fast);
+}
+
+.cross-track-card:hover {
+  border-color: var(--color-indigo-500);
+  background: #FFFFFF;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
 
 

@@ -357,6 +357,7 @@ const careersData = [
   {
     title: 'Technical Product Manager',
     slug: 'technical-product-manager',
+    domain: 'engineering',
     shortDescription: 'Bridge business strategy, user experience, and technical architecture to deliver high-impact software.',
     longDescription:
       'Technical Product Managers define product strategy, craft detailed Product Requirement Documents (PRDs), and prioritize roadmaps using Agile/Scrum sprint frameworks. They translate complex user research into actionable JIRA user stories, partner with engineering leads on architectural feasibility, and analyze product KPIs to maximize user value.',
@@ -374,6 +375,202 @@ const careersData = [
       { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'advanced' },
       { skillName: 'statistics', importance: 'medium', requiredProficiency: 'intermediate' },
       { skillName: 'wireframing', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+
+  // ============================================================
+  // SECTION 2: 💼 BUSINESS, FINANCE & CORPORATE OPERATIONS
+  // ============================================================
+  {
+    title: 'Financial Analyst & Modeler',
+    slug: 'financial-analyst',
+    domain: 'business',
+    shortDescription: 'Evaluate corporate valuation, forecast three-statement models, and guide investment decisions with financial data.',
+    longDescription:
+      'Financial Analysts construct robust financial models, analyze balance sheets and cash flows, evaluate investment prospects with DCF methodologies, and synthesize executive reporting in Excel and Power BI.',
+    category: 'finance',
+    icon: 'bi-cash-coin',
+    color: '#F59E0B', // Gold
+    educationPreferences: ['B.Com', 'BBA', 'MBA', 'Economics', 'Finance', 'B.Sc Mathematics', 'Commerce'],
+    interestTags: ['financial modeling', 'finance', 'business', 'data analysis', 'valuation', 'excel'],
+    requiredSkills: [
+      { skillName: 'financial-modeling', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'dcf-valuation', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'accounting', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'excel', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'power-bi', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'communication', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'intermediate' },
+    ],
+  },
+  {
+    title: 'Business Operations Manager',
+    slug: 'business-operations-manager',
+    domain: 'business',
+    shortDescription: 'Optimize cross-department workflows, manage revenue operations, and drive operational KPI growth.',
+    longDescription:
+      'Business Operations Managers streamline internal processes, track company-wide performance metrics, facilitate cross-functional execution between product, sales, and finance teams, and build automated reporting systems.',
+    category: 'business',
+    icon: 'bi-briefcase-fill',
+    color: '#D97706',
+    educationPreferences: ['BBA', 'MBA', 'B.Com', 'Economics', 'Management', 'B.Tech'],
+    interestTags: ['operations', 'business', 'strategy', 'problem solving', 'management'],
+    requiredSkills: [
+      { skillName: 'business-operations', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'agile-scrum', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'excel', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'communication', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'teamwork', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+  {
+    title: 'Management Consultant',
+    slug: 'management-consultant',
+    domain: 'business',
+    shortDescription: 'Solve high-stakes strategic roadblocks, formulate market entry plans, and advise executive leadership.',
+    longDescription:
+      'Management Consultants deconstruct complex corporate challenges into structured hypotheses. They conduct comprehensive market research, build quantitative decision models, and formulate strategic decks to transform enterprise performance.',
+    category: 'business',
+    icon: 'bi-pie-chart-fill',
+    color: '#B45309',
+    educationPreferences: ['MBA', 'BBA', 'B.Com', 'Economics', 'B.Tech', 'Management'],
+    interestTags: ['consulting', 'business strategy', 'market research', 'problem solving', 'finance'],
+    requiredSkills: [
+      { skillName: 'management-consulting', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'market-research', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'financial-modeling', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'communication', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'problem-solving', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'excel', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+
+  // ============================================================
+  // SECTION 3: 📈 DIGITAL MARKETING & GROWTH
+  // ============================================================
+  {
+    title: 'Performance Marketer & Media Buyer',
+    slug: 'performance-marketer',
+    domain: 'marketing',
+    shortDescription: 'Scale customer acquisition through data-driven paid advertising across Meta, Google Ads, and TikTok.',
+    longDescription:
+      'Performance Marketers design, execute, and analyze paid media campaigns across Meta Ads Manager and Google Ads. They optimize conversion funnels, run multi-variant creative tests, and lower customer acquisition cost (CAC) while scaling return on ad spend (ROAS).',
+    category: 'marketing',
+    icon: 'bi-bullseye',
+    color: '#10B981', // Emerald
+    educationPreferences: ['BBA', 'B.Com', 'B.A. Mass Comm', 'Marketing', 'Digital Marketing'],
+    interestTags: ['digital marketing', 'advertising', 'growth', 'data analysis'],
+    requiredSkills: [
+      { skillName: 'meta-ads', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'google-ads', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'google-analytics', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'excel', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'communication', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+  {
+    title: 'SEO & Organic Growth Strategist',
+    slug: 'seo-growth-strategist',
+    domain: 'marketing',
+    shortDescription: 'Drive compounding organic search traffic through technical indexing, search intent, and content hubs.',
+    longDescription:
+      'SEO Strategists audit technical crawlability, design content architecture tailored to high-intent keywords, conduct competitive backlink research, and optimize search performance using Google Search Console and analytics.',
+    category: 'marketing',
+    icon: 'bi-search',
+    color: '#059669',
+    educationPreferences: ['BBA', 'B.Com', 'B.A.', 'Marketing', 'BCA', 'Information Technology'],
+    interestTags: ['seo', 'digital marketing', 'content', 'growth', 'analytics'],
+    requiredSkills: [
+      { skillName: 'seo', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'content-marketing', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'google-analytics', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'html', importance: 'low', requiredProficiency: 'beginner' },
+      { skillName: 'communication', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+  {
+    title: 'Social Media & Content Growth Manager',
+    slug: 'social-media-growth-manager',
+    domain: 'marketing',
+    shortDescription: 'Build engaged brand communities and master short-form viral storytelling across social algorithms.',
+    longDescription:
+      'Social Media Managers develop editorial calendars, craft thumb-stopping short-form hooks, engage online communities, analyze reach and engagement analytics, and convert brand attention into loyal customer advocates.',
+    category: 'marketing',
+    icon: 'bi-megaphone-fill',
+    color: '#047857',
+    educationPreferences: ['B.A. Mass Comm', 'BBA', 'B.Com', 'Marketing', 'Media & Journalism', 'English'],
+    interestTags: ['social media', 'content creation', 'viral growth', 'branding', 'storytelling'],
+    requiredSkills: [
+      { skillName: 'social-media-growth', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'content-marketing', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'copywriting', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'visual-design', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'communication', importance: 'high', requiredProficiency: 'advanced' },
+    ],
+  },
+
+  // ============================================================
+  // SECTION 4: 🎨 DESIGN & CREATIVE MEDIA
+  // ============================================================
+  {
+    title: 'Brand & Visual Identity Designer',
+    slug: 'brand-identity-designer',
+    domain: 'creative',
+    shortDescription: 'Design cohesive corporate identities, typography systems, vector logos, and brand guidelines.',
+    longDescription:
+      'Brand Designers craft visual identities that define company personalities. Using Adobe Illustrator and Figma, they create vector logo marks, color systems, typography pairings, collateral mockups, and comprehensive brand books.',
+    category: 'design',
+    icon: 'bi-vector-pen',
+    color: '#8B5CF6', // Purple
+    educationPreferences: ['B.Des', 'B.A. Fine Arts', 'Visual Communication', 'Multimedia', 'Design'],
+    interestTags: ['branding', 'design', 'visual design', 'creative media', 'illustration'],
+    requiredSkills: [
+      { skillName: 'brand-identity', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'adobe-illustrator', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'figma', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'typography', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'visual-design', importance: 'high', requiredProficiency: 'advanced' },
+    ],
+  },
+  {
+    title: 'Motion Graphics & 3D Designer',
+    slug: 'motion-3d-designer',
+    domain: 'creative',
+    shortDescription: 'Bring visual assets to life with kinetic typography, 3D modeling, and dynamic motion animations.',
+    longDescription:
+      'Motion & 3D Designers produce engaging visual sequences for marketing videos, product launches, and interactive digital interfaces using Adobe After Effects and Blender. They master keyframing, lighting, and spatial composition.',
+    category: 'design',
+    icon: 'bi-film',
+    color: '#7C3AED',
+    educationPreferences: ['B.Des', 'B.Sc Animation', 'Multimedia', 'Visual Arts', 'Fine Arts'],
+    interestTags: ['motion graphics', '3d modeling', 'design', 'video production', 'animation'],
+    requiredSkills: [
+      { skillName: 'motion-graphics', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'blender', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'visual-design', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'prototyping', importance: 'medium', requiredProficiency: 'beginner' },
+      { skillName: 'communication', importance: 'medium', requiredProficiency: 'intermediate' },
+    ],
+  },
+  {
+    title: 'B2B Technical & Creative Copywriter',
+    slug: 'copywriter-content-strategist',
+    domain: 'creative',
+    shortDescription: 'Craft persuasive, high-converting copy for landing pages, product messaging, and technical case studies.',
+    longDescription:
+      'Copywriters translate intricate product capabilities into clear, persuasive, customer-centric narratives. They write high-converting landing page headlines, pitch decks, case studies, and email sequences that drive engagement and revenue.',
+    category: 'design',
+    icon: 'bi-pen-fill',
+    color: '#6D28D9',
+    educationPreferences: ['B.A. English', 'B.A. Mass Comm', 'Journalism', 'BBA', 'Marketing'],
+    interestTags: ['copywriting', 'storytelling', 'creative writing', 'branding', 'marketing'],
+    requiredSkills: [
+      { skillName: 'copywriting', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'content-marketing', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'market-research', importance: 'medium', requiredProficiency: 'intermediate' },
+      { skillName: 'communication', importance: 'high', requiredProficiency: 'advanced' },
+      { skillName: 'problem-solving', importance: 'medium', requiredProficiency: 'intermediate' },
     ],
   },
 ];

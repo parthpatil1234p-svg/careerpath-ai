@@ -65,6 +65,7 @@ const seedDatabase = async () => {
         shortDescription: career.shortDescription,
         longDescription: career.longDescription,
         category: career.category,
+        domain: career.domain || 'engineering',
         icon: career.icon,
         color: career.color,
         educationPreferences: career.educationPreferences,

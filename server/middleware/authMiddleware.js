@@ -110,6 +110,11 @@ const requireSkillVerification = (req, res, next) => {
     });
   }
 
+  // Non-engineering tracks (business, marketing, creative) do not require technical code verification
+  if (req.user.primaryStream && req.user.primaryStream !== 'engineering' && req.user.primaryStream !== 'cross') {
+    return next();
+  }
+
   const isVerified = Boolean(
     req.user.hasCompletedSkillVerification ||
     (Array.isArray(req.user.skills) && req.user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))

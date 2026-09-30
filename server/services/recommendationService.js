@@ -286,8 +286,32 @@ const generateRecommendations = (user, careers, limit = 3) => {
     const educationScore = calculateEducationScore(userEducation, career.educationPreferences);
 
     // D. Weighted Final Score (0–100)
-    const rawFinalScore =
+    let rawFinalScore =
       skillScore * 0.6 + interestScore * 0.25 + educationScore * 0.15;
+
+    // Detect primary stream
+    let primaryStream = normalizeText(user.primaryStream || user.stream || (user.education && user.education.stream) || '');
+    if (!primaryStream) {
+      const course = normalizeText(userEducation?.course || '');
+      if (course.includes('bba') || course.includes('b.com') || course.includes('mba') || course.includes('finance') || course.includes('economics') || course.includes('commerce')) {
+        primaryStream = 'business';
+      } else if (course.includes('marketing') || course.includes('comm') || course.includes('media')) {
+        primaryStream = 'marketing';
+      } else if (course.includes('design') || course.includes('arts') || course.includes('animation') || course.includes('fine arts')) {
+        primaryStream = 'creative';
+      }
+    }
+
+    // Domain alignment weighting
+    const careerDomain = normalizeText(career.domain || 'engineering');
+    if (primaryStream && primaryStream !== 'cross') {
+      if (careerDomain === primaryStream) {
+        rawFinalScore = Math.min(100, rawFinalScore * 1.15 + 5);
+      } else {
+        rawFinalScore = rawFinalScore * 0.82;
+      }
+    }
+
     const finalScore = Math.min(Math.max(Math.round(rawFinalScore), 0), 100);
 
     const scoreBreakdown = {
@@ -312,6 +336,7 @@ const generateRecommendations = (user, careers, limit = 3) => {
         slug: career.slug,
         shortDescription: career.shortDescription,
         category: career.category,
+        domain: careerDomain,
         icon: career.icon,
         color: career.color,
       },
@@ -337,6 +362,39 @@ const generateRecommendations = (user, careers, limit = 3) => {
     rank: index + 1,
     ...rec,
   }));
+
+  // Intelligent Alternative Cross-Track Discovery Bridge
+  const topDomain = topRecommendations[0]?.career?.domain || 'engineering';
+  const crossTrackCandidate = scoredCareers.find(c => c.career.domain !== topDomain && c.finalScore >= 15);
+  let crossTrackDiscovery = null;
+  if (crossTrackCandidate) {
+    const domainNames = {
+      engineering: 'Engineering & Technology',
+      business: 'Business & Finance',
+      marketing: 'Digital Marketing & Growth',
+      creative: 'Design & Creative',
+    };
+    const targetDomainLabel = domainNames[crossTrackCandidate.career.domain] || crossTrackCandidate.career.domain;
+    const bridgeReason = crossTrackCandidate.career.domain === 'business'
+      ? 'Transfer your analytical problem-solving into revenue, finance & operational leadership.'
+      : crossTrackCandidate.career.domain === 'marketing'
+      ? 'Leverage technical and analytical reasoning to dominate algorithmic growth & conversion architectures.'
+      : crossTrackCandidate.career.domain === 'creative'
+      ? 'Combine structural thinking with spatial brand & visual asset storytelling.'
+      : 'Bridge domain and analytical principles with software automation and engineering scalability.';
+
+    crossTrackDiscovery = {
+      career: crossTrackCandidate.career,
+      finalScore: crossTrackCandidate.finalScore,
+      matchScore: crossTrackCandidate.finalScore,
+      scoreBreakdown: crossTrackCandidate.scoreBreakdown,
+      bridgeReason: bridgeReason,
+      note: `💡 Cross-Domain Discovery: Because of your transferable problem-solving & analytical skills, you also match ${crossTrackCandidate.finalScore}% with ${crossTrackCandidate.career.title} in the ${targetDomainLabel} track.`,
+      matchedSkills: crossTrackCandidate.matchedSkills.map(s => s.displayName || s.name),
+      gapSkills: crossTrackCandidate.missingSkills.slice(0, 3).map(s => s.displayName || s.name),
+    };
+  }
+  topRecommendations.crossTrackDiscovery = crossTrackDiscovery;
 
   return topRecommendations;
 };

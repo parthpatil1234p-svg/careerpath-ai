@@ -18,9 +18,14 @@ const Skill = require('../models/Skill');
  */
 const getCareers = async (req, res, next) => {
   try {
-    const { category, search } = req.query;
+    const { category, search, domain } = req.query;
 
     const query = { active: true };
+
+    // Filter by domain (engineering, business, marketing, creative)
+    if (domain && typeof domain === 'string' && domain.trim() !== '') {
+      query.domain = domain.trim().toLowerCase();
+    }
 
     // Filter by category
     if (category && typeof category === 'string' && category.trim() !== '') {

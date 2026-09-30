@@ -477,6 +477,120 @@ const skillsData = [
     category: 'product',
     description: 'Defining persona-based user stories, acceptance criteria, epics, release planning, and tracking in JIRA.',
   },
+
+  // ── Business, Finance & Management Skills ─────────────────
+  {
+    name: 'financial-modeling',
+    displayName: 'Financial Modeling & Valuation',
+    category: 'finance',
+    description: 'Three-statement financial modeling, DCF forecasting, scenario analysis, and valuation benchmarks in Excel.',
+  },
+  {
+    name: 'dcf-valuation',
+    displayName: 'DCF Valuation & Financial Statements',
+    category: 'finance',
+    description: 'Discounted Cash Flow valuation, balance sheet analysis, P&L inspection, and enterprise value calculation.',
+  },
+  {
+    name: 'accounting',
+    displayName: 'Financial Accounting & Reporting',
+    category: 'finance',
+    description: 'GAAP and IFRS accounting standards, ledger maintenance, financial audits, and quarterly corporate reporting.',
+  },
+  {
+    name: 'business-operations',
+    displayName: 'Business Operations & RevOps',
+    category: 'business',
+    description: 'Cross-functional operational efficiency, process optimization, revenue operations, and KPI dashboarding.',
+  },
+  {
+    name: 'management-consulting',
+    displayName: 'Management Consulting & Strategy',
+    category: 'business',
+    description: 'Hypothesis-driven problem solving, market entry strategy, cost rationalization, and C-suite presentation synthesis.',
+  },
+  {
+    name: 'market-research',
+    displayName: 'Market Research & Competitive Intelligence',
+    category: 'business',
+    description: 'Industry sizing, competitor benchmarking, qualitative customer interviews, and TAM/SAM/SOM market estimation.',
+  },
+
+  // ── Digital Marketing & Growth Skills ──────────────────────
+  {
+    name: 'meta-ads',
+    displayName: 'Meta Ads Manager & Paid Social',
+    category: 'marketing',
+    description: 'Campaign architecture on Facebook and Instagram, pixel event tracking, creative testing, and CAC/ROAS scaling.',
+  },
+  {
+    name: 'google-ads',
+    displayName: 'Google Ads & SEM',
+    category: 'marketing',
+    description: 'Paid search keyword bidding, Quality Score optimization, Display network remarketing, and performance max campaigns.',
+  },
+  {
+    name: 'seo',
+    displayName: 'SEO & Organic Search Strategy',
+    category: 'marketing',
+    description: 'On-page SEO, technical crawling audits, keyword intent research, search console diagnostics, and backlink authority building.',
+  },
+  {
+    name: 'content-marketing',
+    displayName: 'Content Marketing & Copywriting',
+    category: 'marketing',
+    description: 'Editorial calendar strategy, high-converting blog and newsletter creation, customer storytelling, and lead magnets.',
+  },
+  {
+    name: 'social-media-growth',
+    displayName: 'Social Media & Viral Growth',
+    category: 'marketing',
+    description: 'Short-form video hooks, audience retention mechanics, cross-platform community building, and organic viral growth.',
+  },
+  {
+    name: 'google-analytics',
+    displayName: 'Google Analytics 4 & Attribution',
+    category: 'marketing',
+    description: 'GA4 event implementation, conversion funnel tracking, user cohort analysis, and multi-touch attribution modeling.',
+  },
+
+  // ── Design & Creative Media Skills ─────────────────────────
+  {
+    name: 'brand-identity',
+    displayName: 'Brand Identity & Logo Systems',
+    category: 'design',
+    description: 'Brand architecture, visual design systems, logo guidelines, color theory, and corporate visual assets.',
+  },
+  {
+    name: 'adobe-illustrator',
+    displayName: 'Adobe Illustrator',
+    category: 'design',
+    description: 'Vector graphics creation, typography styling, custom iconography, illustrations, and print-ready digital exports.',
+  },
+  {
+    name: 'motion-graphics',
+    displayName: 'Motion Graphics & After Effects',
+    category: 'design',
+    description: 'Kinetic typography, UI micro-animations, explainer video production, and 2D visual effects in Adobe After Effects.',
+  },
+  {
+    name: 'copywriting',
+    displayName: 'High-Converting Copywriting',
+    category: 'design',
+    description: 'Direct-response copywriting for landing pages, sales emails, ad copy, value propositions, and investor pitch decks.',
+  },
+  {
+    name: 'blender',
+    displayName: 'Blender 3D Modeling',
+    category: 'design',
+    description: '3D asset modeling, procedural texturing, realistic lighting, and photorealistic rendering in Blender.',
+  },
+  {
+    name: 'typography',
+    displayName: 'Typography & Layout Design',
+    category: 'design',
+    description: 'Font pairing, editorial layout grids, hierarchy scaling, readability standards, and editorial publication styling.',
+  },
 ];
 
 module.exports = skillsData;
