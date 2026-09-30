@@ -13,11 +13,11 @@ All screenshots are real, un-mocked captures of the working CareerPath AI applic
 
 | Filename | Module / Page | Visual Description |
 | :--- | :--- | :--- |
-| `01_landing_page_full.png` | Landing Page | Full-page view of hero, 3D Career Universe, features, and footer |
-| `02_landing_hero_viewport.png` | Landing Page | Above-the-fold viewport showing Three.js stardust particles & orbital nodes |
+| `01_landing_page_full.png` | Landing Page | Full-page landing page with career paths and the technology skill catalog |
+| `02_landing_hero_viewport.png` | Landing Page | Hero section, skill-logo cards, and assessment entry points |
 | `03_landing_career_catalog.png` | Landing Page | Career domain exploration catalog and navigation |
-| `04_dashboard_full.png` | Dashboard | Full student dashboard with quick stats, roadmap progress, and skills |
-| `05_dashboard_top_viewport.png` | Dashboard | 3D Holographic Progress Orb and active target career card |
+| `04_dashboard_full.png` | Dashboard | Full student dashboard with learner profile, readiness summary, and roadmap progress |
+| `05_dashboard_top_viewport.png` | Dashboard | Active roadmap, completion stats, and roadmap journey marker |
 | `06_dashboard_skills_and_tasks.png` | Dashboard | Quick Skills Manager and upcoming weekly milestone checklist |
 | `07_dashboard_ai_mentor_modal.png` | AI Mentor Drawer | Contextual chat drawer powered by Groq Llama 3.3 70B & Gemini |
 | `08_assessment_page_full.png` | Assessment | Full 3-step assessment wizard layout |
@@ -25,12 +25,12 @@ All screenshots are real, un-mocked captures of the working CareerPath AI applic
 | `10_assessment_step2_interests.png` | Assessment | Step 2: Domain interest chips selection with counter |
 | `11_assessment_step3_skills.png` | Assessment | Step 3: Categorized 45+ industry skills with 3-tier proficiency |
 | `12_assessment_step4_goals.png` | Assessment | Assessment review and career matching submission |
-| `13_recommendations_full.png` | Recommendations | Full recommendations page with top 3 matched careers |
-| `14_recommendations_top_card.png` | Recommendations | #1 Career card with 60/25/15 match score & tri-color skill gaps |
+| `13_recommendations_full.png` | Recommendations | Full recommendations page with the interactive skill map and ranked career routes |
+| `14_recommendations_top_card.png` | Recommendations | Clickable skill-logo cards, matched/developing/missing legend, and learning-guide hint |
 | `15_roadmap_duration_modal.png` | Roadmap Setup | 4, 8, or 12-week duration selection modal |
 | `16_live_market_jobs_modal.png` | Market Telemetry | Adzuna Developer API modal showing live Indian tech jobs & CTC ranges |
 | `17_roadmap_page_full.png` | Roadmap | Full structured milestone roadmap schedule |
-| `18_roadmap_milestones_viewport.png`| Roadmap | 3D Roadmap Path and Week 1-2 prioritized missing skill gaps |
+| `18_roadmap_milestones_viewport.png`| Roadmap | Roadmap milestones and prioritized skill gaps |
 | `19_roadmap_tasks_schedule.png` | Roadmap | Actionable step-by-step tasks with curated documentation links |
 | `20_roadmap_task_completed.png` | Roadmap | Checked-off milestone tasks with atomic progress bar update |
 | `21_login_page.png` | Authentication | Secure student login portal with JWT token persistence |
@@ -52,4 +52,4 @@ All screenshots are real, un-mocked captures of the working CareerPath AI applic
 - **Zero Copyrighted Material:** Only self-created screenshots and open-source assets used.
 - **Icons:** Bootstrap Icons (MIT License).
 - **Fonts:** Google Fonts — Space Grotesk (OFL) and Inter (OFL).
-- **3D Assets:** Procedurally generated Three.js geometries and buffer shaders.
+- **Product interface:** Skill logos and page screenshots are captured from the running application.
