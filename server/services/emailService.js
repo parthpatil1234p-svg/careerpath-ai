@@ -20,13 +20,16 @@ function getTransporter() {
 
   transporter = nodemailer.createTransport({
     service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
     auth: {
       user: emailUser,
       pass: emailPass, // Google 16-character App Password (all whitespace stripped)
     },
+    pool: true,
+    maxConnections: 3,
+    maxMessages: 100,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     tls: {
       rejectUnauthorized: false,
     },

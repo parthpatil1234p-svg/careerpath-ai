@@ -84,8 +84,10 @@ const registerUser = async (req, res, next) => {
         await existingUser.save();
 
         console.log(`\n🔑 [REGISTRATION UNVERIFIED OTP] Code for ${normalizedEmail}: ${otpCode}\n`);
+        let mailSent = false;
         try {
-          await sendOtpEmail(normalizedEmail, existingUser.name, otpCode);
+          const mailRes = await sendOtpEmail(normalizedEmail, existingUser.name, otpCode);
+          mailSent = Boolean(mailRes && mailRes.success);
         } catch (mailErr) {
           console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
         }
@@ -94,6 +96,7 @@ const registerUser = async (req, res, next) => {
           success: true,
           requiresOtp: true,
           email: normalizedEmail,
+          debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? otpCode : undefined,
           message: 'Account pending verification. A fresh 6-digit verification code has been sent to your email.',
         });
       }
@@ -114,8 +117,10 @@ const registerUser = async (req, res, next) => {
     await user.save();
 
     console.log(`\n🔑 [NEW REGISTRATION OTP] 6-digit code for ${normalizedEmail}: ${otpCode}\n`);
+    let mailSent = false;
     try {
-      await sendOtpEmail(normalizedEmail, user.name, otpCode);
+      const mailRes = await sendOtpEmail(normalizedEmail, user.name, otpCode);
+      mailSent = Boolean(mailRes && mailRes.success);
     } catch (mailErr) {
       console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
     }
@@ -124,6 +129,7 @@ const registerUser = async (req, res, next) => {
       success: true,
       requiresOtp: true,
       email: normalizedEmail,
+      debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? otpCode : undefined,
       message: 'Account created! A 6-digit verification code has been sent to your email.',
     });
   } catch (error) {
@@ -253,13 +259,20 @@ const resendOtp = async (req, res, next) => {
     await user.save();
 
     console.log(`\n🔄 [OTP RESENT] New Verification Code for ${normalizedEmail}: ${newCode}\n`);
-    await sendOtpEmail(normalizedEmail, user.name, newCode);
+    let mailSent = false;
+    try {
+      const mailRes = await sendOtpEmail(normalizedEmail, user.name, newCode);
+      mailSent = Boolean(mailRes && mailRes.success);
+    } catch (mailErr) {
+      console.error('[authController.resendOtp] Failed to send OTP email:', mailErr.message);
+    }
 
     return res.status(200).json({
       success: true,
       message: 'A fresh 6-digit verification code has been sent to your Gmail inbox.',
       data: {
         email: normalizedEmail,
+        debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? newCode : undefined,
       },
     });
   } catch (error) {
@@ -306,8 +319,10 @@ const loginUser = async (req, res, next) => {
       await user.save();
 
       console.log(`\n🔑 [LOGIN UNVERIFIED OTP] Fresh code for ${normalizedEmail}: ${newCode}\n`);
+      let mailSent = false;
       try {
-        await sendOtpEmail(normalizedEmail, user.name, newCode);
+        const mailRes = await sendOtpEmail(normalizedEmail, user.name, newCode);
+        mailSent = Boolean(mailRes && mailRes.success);
       } catch (mailErr) {
         console.error('[authController.loginUser] Failed to send OTP email:', mailErr.message);
       }
@@ -316,6 +331,7 @@ const loginUser = async (req, res, next) => {
         success: false,
         requiresVerification: true,
         email: normalizedEmail,
+        debugOtp: (process.env.NODE_ENV !== 'production' || !mailSent) ? newCode : undefined,
         message: 'Your email address is not verified. A fresh 6-digit OTP code has been sent to your email. Please verify to continue.',
       });
     }

@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ── Transition to Step 2 (OTP) ──────────────────────────────
-  const showOtpStep = (email) => {
+  const showOtpStep = (email, debugOtp) => {
     currentEmail = email;
     if (displayEmail) displayEmail.textContent = email;
 
@@ -146,7 +146,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (digitInputs[0]) digitInputs[0].focus();
 
     startResendCountdown(60);
-    showAlert('A 6-digit verification code has been sent to your Gmail inbox.', 'info');
+
+    if (debugOtp) {
+      alertContainer.innerHTML = `
+        <div class="alert alert-info border border-info border-opacity-50 py-2 px-3 small mb-3">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+              <i class="bi bi-key-fill text-warning me-1"></i>
+              <span>Verification Code: <strong class="font-mono text-warning fs-6">${escapeHtml(debugOtp)}</strong></span>
+            </div>
+            <button type="button" class="btn btn-warning btn-sm py-0 px-2 fw-semibold" id="btnAutoFillOtp">
+              Auto-fill Code
+            </button>
+          </div>
+          <div class="text-muted mt-1" style="font-size: 0.75rem;">
+            Code sent via email. If your temporary or school inbox is delayed, click Auto-fill Code to proceed immediately.
+          </div>
+        </div>
+      `;
+      const fillBtn = document.getElementById('btnAutoFillOtp');
+      if (fillBtn) {
+        fillBtn.addEventListener('click', () => {
+          String(debugOtp).split('').forEach((digit, i) => {
+            if (digitInputs[i]) digitInputs[i].value = digit;
+          });
+          if (digitInputs[5]) digitInputs[5].focus();
+        });
+      }
+    } else {
+      showAlert('A 6-digit verification code has been sent to your Gmail inbox.', 'info');
+    }
   };
 
   // Back to registration form
@@ -203,8 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.innerHTML = originalBtnContent;
 
       if (response.success && (response.requiresOtp || !response.data?.token)) {
-        showOtpStep(response.email || email);
-        showAlert(response.message || 'A 6-digit verification code has been sent to your email.', 'info');
+        showOtpStep(response.email || email, response.debugOtp);
+        if (!response.debugOtp) {
+          showAlert(response.message || 'A 6-digit verification code has been sent to your email.', 'info');
+        }
       } else if (response.success && response.data?.token) {
         window.Auth.setToken(response.data.token);
         window.Auth.setCurrentUser(response.data.user);
@@ -304,8 +335,12 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await window.API.post('/auth/resend-otp', { email: currentEmail });
       if (response.success) {
-        showAlert('A fresh 6-digit verification code has been sent to your Gmail inbox!', 'success');
         startResendCountdown(60);
+        if (response.data?.debugOtp) {
+          showOtpStep(currentEmail, response.data.debugOtp);
+        } else {
+          showAlert('A fresh 6-digit verification code has been sent to your Gmail inbox!', 'success');
+        }
       } else {
         showAlert(response.message || 'Could not resend OTP. Please try again.');
         btnResendOtp.disabled = false;
