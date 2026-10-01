@@ -75,14 +75,24 @@ window.GoogleAuth = (function () {
         const redirect = urlParams.get('redirect');
 
         setTimeout(() => {
-          if (onSuccess) {
-            onSuccess(response.data);
-          } else if (redirect) {
-            window.location.href = decodeURIComponent(redirect);
-          } else if (isNewUser) {
-            window.location.href = 'assessment.html';
-          } else {
-            window.location.href = 'recommendations.html';
+          let customHandled = false;
+          if (typeof onSuccess === 'function') {
+            try {
+              const res = onSuccess(response.data);
+              if (res === true || res === false) customHandled = true;
+            } catch (cbErr) {
+              console.error('[GoogleAuth] Error in onSuccess callback:', cbErr);
+            }
+          }
+
+          if (!customHandled) {
+            if (redirect) {
+              window.location.href = decodeURIComponent(redirect);
+            } else if (isNewUser) {
+              window.location.href = 'assessment.html';
+            } else {
+              window.location.href = 'dashboard.html';
+            }
           }
         }, 600);
       } else {

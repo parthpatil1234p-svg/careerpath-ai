@@ -4,9 +4,14 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // If already authenticated, redirect to assessment
+  // If already authenticated, redirect to appropriate destination
   if (window.Auth?.isAuthenticated()) {
-    window.location.href = 'assessment.html';
+    const user = window.Auth.getCurrentUser();
+    if (user && user.profileCompleted) {
+      window.location.href = 'dashboard.html';
+    } else {
+      window.location.href = 'assessment.html';
+    }
     return;
   }
 
