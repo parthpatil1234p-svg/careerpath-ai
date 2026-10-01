@@ -750,12 +750,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // 1. Language Breakdown
+    // 1. Language Breakdown (Filter out generic non-language placeholders like 'Code', 'Other', 'Unknown')
     const langCounts = {};
     let totalWithLang = 0;
     repos.forEach(r => {
-      if (r.language) {
-        langCounts[r.language] = (langCounts[r.language] || 0) + 1;
+      const rawLang = (r.language || '').trim();
+      if (rawLang && rawLang.toLowerCase() !== 'code' && rawLang.toLowerCase() !== 'other' && rawLang.toLowerCase() !== 'unknown') {
+        langCounts[rawLang] = (langCounts[rawLang] || 0) + 1;
         totalWithLang++;
       }
     });
@@ -776,10 +777,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const color = getLanguageColor(lang);
         const logoImg = window.TechLogos?.getLogoImg(lang, { size: 14 }) || `<span class="rounded-circle d-inline-block" style="width: 8px; height: 8px; background-color: ${color};"></span>`;
         return `
-          <div class="d-flex align-items-center gap-1.5">
+          <div class="d-flex align-items-center gh-legend-item me-3 mb-1" style="gap: 6px;">
             ${logoImg}
             <span class="fw-semibold text-ink">${escapeHtml(lang)}</span>
-            <span class="text-muted">${pct}%</span>
+            <span class="text-muted font-mono" style="font-size: 0.72rem; margin-left: 2px;">${pct}%</span>
           </div>
         `;
       }).join('');
@@ -824,10 +825,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             <span class="text-muted small" style="font-size: 0.72rem;">${repos.length} Repos Indexed</span>
           </div>
           <div class="gh-lang-bar mb-2">
-            ${segmentsHtml || '<div class="gh-lang-segment w-100 bg-secondary"></div>'}
+            ${segmentsHtml || '<div class="gh-lang-segment w-100 bg-secondary bg-opacity-25" title="Markdown / Documentation"></div>'}
           </div>
-          <div class="d-flex flex-wrap gap-2.5" style="font-size: 0.73rem;">
-            ${legendHtml || '<span class="text-muted small">Multi-language repository</span>'}
+          <div class="d-flex flex-wrap align-items-center" style="gap: 10px; font-size: 0.74rem;">
+            ${legendHtml || '<span class="text-muted small"><i class="bi bi-file-earmark-text me-1"></i>Markdown & Documentation Repositories</span>'}
           </div>
         </div>
 
@@ -955,11 +956,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Top languages with authentic GitHub colors & clean typography
       if (ghTopLanguagesContainer) {
-        let langs = Array.isArray(profile.topLanguages) ? profile.topLanguages : [];
+        let langs = Array.isArray(profile.topLanguages)
+          ? profile.topLanguages.filter(l => l && l.trim().toLowerCase() !== 'code')
+          : [];
         if (langs.length === 0 && repos.length > 0) {
           const counts = {};
           repos.forEach(r => {
-            if (r.language) counts[r.language] = (counts[r.language] || 0) + 1;
+            const raw = (r.language || '').trim();
+            if (raw && raw.toLowerCase() !== 'code' && raw.toLowerCase() !== 'unknown') {
+              counts[raw] = (counts[raw] || 0) + 1;
+            }
           });
           langs = Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, 5);
         }
@@ -1007,9 +1013,12 @@ document.addEventListener('DOMContentLoaded', async () => {
               ? `<span class="badge bg-warning bg-opacity-10 text-warning d-inline-flex align-items-center gap-1" style="font-size: 0.7rem; font-weight: 600;"><i class="bi bi-star-fill"></i>${starCount}</span>`
               : '';
 
-            const lang = repo.language || 'Code';
-            const langColor = getLanguageColor(lang);
-            const langLogo = window.TechLogos?.getLogoImg(lang, { size: 14 }) || `<span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: ${langColor};"></span>`;
+            const rawLang = repo.language && repo.language.trim().toLowerCase() !== 'code' ? repo.language.trim() : '';
+            const lang = rawLang || (repo.topics && repo.topics.length ? repo.topics[0] : 'Markdown / Docs');
+            const langColor = rawLang ? getLanguageColor(rawLang) : '#64748B';
+            const langLogo = rawLang
+              ? (window.TechLogos?.getLogoImg(rawLang, { size: 14 }) || `<span class="rounded-circle d-inline-block" style="width: 10px; height: 10px; background-color: ${langColor};"></span>`)
+              : `<i class="bi bi-file-earmark-code text-secondary" style="font-size: 0.85rem;"></i>`;
             const relevance = getAccurateStudyRelevance(repo, profile);
             const cleanRelevance = relevance.replace(/^(?:study\s*relevance:\s*)+/i, '').trim();
 

@@ -24,24 +24,44 @@ const generateOtp = () => {
 };
 
 // ── Helper: shape the user object returned in responses ───────
-const formatUser = (user) => ({
-  id:                            user._id,
-  name:                          user.name,
-  email:                         user.email,
-  role:                          user.role,
-  authProvider:                  user.authProvider || 'local',
-  profileCompleted:              user.profileCompleted,
-  isVerified:                    user.isVerified || false,
-  hasCompletedSkillVerification: Boolean(
-    user.hasCompletedSkillVerification ||
-    (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
-  ),
-  avatarUrl:                     user.avatarUrl || '',
-  resumeUrl:                     user.resumeUrl || '',
-  githubProfile:                 user.githubProfile || null,
-  githubRepos:                   user.githubRepos || [],
-  skills:                        user.skills || [],
-});
+const formatUser = (user) => {
+  const rawRepos = user.githubRepos || [];
+  const sanitizedRepos = rawRepos.map((r) => ({
+    ...r,
+    language: r.language && r.language.trim().toLowerCase() !== 'code' ? r.language.trim() : '',
+  }));
+
+  let sanitizedTopLanguages = user.githubProfile?.topLanguages || [];
+  if (Array.isArray(sanitizedTopLanguages)) {
+    sanitizedTopLanguages = sanitizedTopLanguages.filter((l) => l && l.trim().toLowerCase() !== 'code');
+  }
+
+  const sanitizedProfile = user.githubProfile
+    ? {
+        ...user.githubProfile,
+        topLanguages: sanitizedTopLanguages,
+      }
+    : null;
+
+  return {
+    id:                            user._id,
+    name:                          user.name,
+    email:                         user.email,
+    role:                          user.role,
+    authProvider:                  user.authProvider || 'local',
+    profileCompleted:              user.profileCompleted,
+    isVerified:                    user.isVerified || false,
+    hasCompletedSkillVerification: Boolean(
+      user.hasCompletedSkillVerification ||
+      (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
+    ),
+    avatarUrl:                     user.avatarUrl || '',
+    resumeUrl:                     user.resumeUrl || '',
+    githubProfile:                 sanitizedProfile,
+    githubRepos:                   sanitizedRepos,
+    skills:                        user.skills || [],
+  };
+};
 
 // ── registerUser ───────────────────────────────────────────────
 /**

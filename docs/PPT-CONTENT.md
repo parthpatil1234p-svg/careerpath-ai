@@ -32,26 +32,28 @@
 - **Headline:** From Career Confusion to Job-Ready Competency
 - **Key Pillars:**
   1. **Explainable 60/25/15 Matching Engine:** Math-backed career scoring based on 60% skill depth, 25% interest overlap, and 15% academic alignment.
-  2. **Two-Factor Skill Verification:** Combines **Auth-Based GitHub Code Audits** with **Dynamic AI Reality-Check Micro-Quizzes**.
-  3. **Adaptive Milestone Roadmaps:** 4, 8, or 12-week time-boxed learning pathways with curated open-source resources.
-  4. **Live Job Market Telemetry:** Streams real-time Indian tech vacancies and CTC salary insights via the **Adzuna Developer API**.
+  2. **4-Tier Skill Passport Confidence Multipliers ($C_i$):** Eliminates self-reporting bias (Tier 0 Self: 0.70x, Tier 1 Quiz: 0.85x, Tier 2 GitHub Code: 1.00x, Tier 3 Interview: 1.05x).
+  3. **Two-Factor Skill Verification Moat:** Combines **Auth-Based GitHub Code Audits** with **Dynamic AI Reality-Check Micro-Quizzes** on Groq LPU.
+  4. **Hardened Single Active Career Route:** Database-level MongoDB partial unique index prevents multi-track "tutorial-hopping" while leaving exploration 100% unlocked.
+  5. **4-Rule Industry Job Ready Engine:** Objective certification benchmark ($\text{Score} \ge 70\%$, $\text{VerifiedSkills} \ge 4$, $\text{Progress} \ge 80\%$, $\text{ExpiredSkills} = 0$).
+  6. **Live Job Market Telemetry:** Streams real-time Indian tech vacancies and CTC salary insights via the **Adzuna Developer API**.
 - **Speaker Note:**  
-  > *"CareerPath AI replaces guesswork with a transparent mathematical algorithm, ensures skills are verified before building a roadmap, and grounds learning in real Indian market salaries."*
+  > *"CareerPath AI replaces guesswork with a transparent mathematical algorithm, ensures skills are verified with 4-tier confidence weights, and grounds learning in real Indian market salaries with a hardened single active route to guarantee milestone completion."*
 
 ---
 
 ## Slide 4: System Architecture & Multi-Model Tech Stack
 - **Headline:** Production-Ready, Sub-300ms Multi-Model Infrastructure
 - **Architecture Highlights:**
-  - **Frontend:** Vanilla JavaScript (ES6+), CSS Grid/Flexbox calibrated to **90% container width**, accessible **2D circular percentage progress gauge**, Three.js 3D Career Universe.
-  - **Backend API:** Node.js, Express.js REST API with process-level crash safety handlers and rate limiting.
-  - **Database:** MongoDB Atlas cloud cluster with Mongoose ODM.
+  - **Frontend:** Vanilla JavaScript (ES6+), CSS Grid/Flexbox, accessible **2D SVG circular percentage progress gauge**, Three.js 3D Career Universe on Vercel CDN.
+  - **Backend API:** Node.js, Express.js REST API with process-level crash safety, Helmet, rate limiting, and **Binary Magic-Byte Inspection** (`%PDF`, `PK..` DOCX) on Render Cloud.
+  - **Database:** MongoDB Atlas cloud cluster with Mongoose ODM and partial unique indexes.
   - **Multi-Model AI Infrastructure:**
     - **Groq LPU (Llama 3.3 70B):** Sub-300ms dynamic quiz generation and 24/7 AI Career Mentor.
     - **Google Gemini 2.5 Flash:** Deep pedagogical reasoning and autonomous failover engine.
     - **Curated Domain Bank (860+ lines):** Zero-breakage offline question fallback.
 - **Speaker Note:**  
-  > *"Our decoupled architecture delivers blistering performance: <50ms recommendation engine calculations, <300ms AI generation via Groq LPUs, and an accessible 2D progress gauge designed for every device."*
+  > *"Our decoupled architecture delivers blistering performance: <50ms recommendation engine calculations, <300ms AI generation via Groq LPUs, and binary magic-byte security for student resumes."*
 
 ---
 
@@ -123,5 +125,8 @@
   - 100% original implementation built by Team 404 Brain Not Found for Hack2Ignite 2026–27.
   - Live, production-tested, and fully functional on Vercel and Render.
 - **Call to Action:** Try the live platform at **[careerpath-ai-jade.vercel.app](https://careerpath-ai-jade.vercel.app)**.
+- **Official Submission Links:**
+  - 🎥 **Demo Walkthrough Video:** [Google Drive Video](https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing)
+  - 📊 **Official Pitch Deck:** [Google Drive Deck](https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing)
 - **Speaker Note:**  
   > *"Thank you, judges. We are now open for your questions."*

@@ -44,8 +44,10 @@
 .dashboard-shell > #dashboardContent > .row,
 .dashboard-shell > #dashboardContent > .dashboard-profile-card,
 .dashboard-shell > #dashboardContent > .readiness-hero-card,
-.dashboard-shell > #dashboardContent > .recommended-action-box {
-  scroll-margin-top: 6rem;
+.dashboard-shell > #dashboardContent > .recommended-action-box,
+.github-study-card,
+#githubStudyLab {
+  scroll-margin-top: calc(var(--notch-nav-height, 70px) + 2.5rem);
 }
 
 /* Profile Header Card */
@@ -1017,3 +1019,31 @@
 .gh-activity-cell.lvl-2 { background-color: #40C463; }
 .gh-activity-cell.lvl-3 { background-color: #30A14E; }
 .gh-activity-cell.lvl-4 { background-color: #216E39; }
+
+/* Fractional gap utilities */
+.gap-1\.5 {
+  gap: 0.375rem !important;
+}
+
+.gap-2\.5 {
+  gap: 0.625rem !important;
+}
+
+/* GitHub Telemetry Legend Pill */
+.gh-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(241, 245, 249, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transition: all 0.15s ease;
+}
+
+.gh-legend-item:hover {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}

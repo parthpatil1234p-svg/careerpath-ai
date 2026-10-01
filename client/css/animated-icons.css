@@ -18,19 +18,24 @@
   will-change: transform;
 }
 
-/* Global button/card icon hover bounce */
-.btn:hover .bi,
-.btn:hover [class^="bi-"],
-.btn:hover [class*=" bi-"],
-.cp-btn:hover .bi,
-.notch-nav-link:hover .bi,
-.career-card:hover .bi,
-.dashboard-task-item:hover .bi,
-.task-checklist-item:hover .bi,
-.recommendation-card:hover .bi,
-.stat-box-atlas:hover .bi {
-  transform: scale(1.18) rotate(4deg);
-  filter: drop-shadow(0 0 8px currentColor);
+/* Global button/interactive icon hover bounce (clean, crisp, no fuzzy drop-shadow artifacts) */
+.btn:not(:disabled):not(.disabled):hover > .bi,
+.btn:not(:disabled):not(.disabled):hover > [class^="bi-"],
+.btn:not(:disabled):not(.disabled):hover > [class*=" bi-"],
+.cp-btn:not(:disabled):hover > .bi,
+.notch-nav-link:hover .bi {
+  transform: scale(1.12);
+}
+
+/* Ensure disabled buttons and static cards never distort child icons */
+.btn:disabled .bi,
+.btn.disabled .bi,
+.cp-btn:disabled .bi,
+.cp-btn-locked .bi,
+.btn-locked-route .bi {
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -97,22 +102,16 @@
   100% { transform: rotate(55deg) scale(1.3); filter: drop-shadow(0 0 28px #38BDF8); }
 }
 
-/* ⚡ Lightning / Spark Pulse */
-.bi-lightning-charge-fill,
-.bi-lightning-charge,
-.bi-lightning,
+/* ⚡ Lightning / Spark Pulse (Clean Amber subtle pulse without cyan drop-shadow boxes) */
 .anim-lightning {
   animation: anim-lightning-flicker 3.2s ease-in-out infinite;
   transform-origin: center bottom;
 }
 
 @keyframes anim-lightning-flicker {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(0, 242, 254, 0.4)); }
-  45%      { transform: scale(1); filter: drop-shadow(0 0 3px rgba(0, 242, 254, 0.4)); }
-  50%      { transform: scale(1.2) translateY(-1px); filter: drop-shadow(0 0 14px #00F2FE); }
-  55%      { transform: scale(0.95); filter: drop-shadow(0 0 2px rgba(0, 242, 254, 0.2)); }
-  60%      { transform: scale(1.25) rotate(-6deg); filter: drop-shadow(0 0 18px #22D3EE); }
-  65%      { transform: scale(1); filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.4)); }
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15) translateY(-1px); }
+  60%      { transform: scale(1.18) rotate(-4deg); }
 }
 
 /* 🚀 Rocket Launch Float */

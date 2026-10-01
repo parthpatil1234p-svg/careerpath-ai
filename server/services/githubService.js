@@ -200,9 +200,10 @@ const analyzeGitHubRepos = (repos = []) => {
     const detectedInThisRepo = new Set();
 
     // 1. Primary language
-    if (repo.language) {
-      const langKey = repo.language.trim().toLowerCase();
-      languageCounts[repo.language] = (languageCounts[repo.language] || 0) + 1;
+    if (repo.language && repo.language.trim().toLowerCase() !== 'code') {
+      const trimmedLang = repo.language.trim();
+      const langKey = trimmedLang.toLowerCase();
+      languageCounts[trimmedLang] = (languageCounts[trimmedLang] || 0) + 1;
 
       if (SKILL_TAXONOMY[langKey]) {
         detectedInThisRepo.add(SKILL_TAXONOMY[langKey].displayName);
@@ -272,11 +273,13 @@ const analyzeGitHubRepos = (repos = []) => {
       studyRelevance = 'Intelligent System Prototype: Hands-on exploration of algorithmic logic and smart system integration.';
     }
 
+    const resolvedLanguage = (repo.language && repo.language.trim().toLowerCase() !== 'code') ? repo.language.trim() : '';
+
     parsedRepos.push({
       name: repo.name,
       description: repo.description || 'Public GitHub project repository.',
       htmlUrl: repo.html_url || `https://github.com/${repo.name}`,
-      language: repo.language || 'Code',
+      language: resolvedLanguage,
       stars: repo.stargazers_count || 0,
       forks: repo.forks_count || 0,
       topics: repo.topics || [],

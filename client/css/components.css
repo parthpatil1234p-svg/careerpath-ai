@@ -41,11 +41,37 @@
 
 .btn:disabled,
 .btn.disabled,
-.cp-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.cp-btn:disabled,
+.cp-btn-outline:disabled {
+  color: #64748B !important;
+  opacity: 0.7;
+  cursor: not-allowed !important;
   transform: none !important;
   box-shadow: none !important;
+  pointer-events: none;
+}
+
+/* Dedicated Locked Route Button State */
+.cp-btn-locked,
+.btn-locked-route {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  pointer-events: none;
+}
+
+.cp-btn-locked i,
+.btn-locked-route i {
+  color: #64748B !important;
+  transform: none !important;
+  filter: none !important;
 }
 
 /* Primary Button (Indigo / Blue) */

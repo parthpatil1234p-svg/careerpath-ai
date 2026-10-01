@@ -803,14 +803,18 @@
 .what-if-btn {
   background: #FFFBEB;
   border: 1px solid #FDE68A;
-  color: #B45309;
+  color: #B45309 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   transition: all var(--transition-fast);
 }
 
 .what-if-btn:hover {
   background: #FEF3C7;
   border-color: #F59E0B;
-  color: #92400E;
+  color: #92400E !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
 }

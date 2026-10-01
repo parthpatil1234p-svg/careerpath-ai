@@ -131,6 +131,23 @@ const getDashboard = async (req, res, next) => {
 
     const jobReadyCertification = await evaluateJobReadyCertification(req.user._id).catch(() => null);
 
+    const sanitizedRepos = (user.githubRepos || []).map((r) => ({
+      ...r,
+      language: r.language && r.language.trim().toLowerCase() !== 'code' ? r.language.trim() : '',
+    }));
+
+    let sanitizedTopLanguages = user.githubProfile?.topLanguages || [];
+    if (Array.isArray(sanitizedTopLanguages)) {
+      sanitizedTopLanguages = sanitizedTopLanguages.filter((l) => l && l.trim().toLowerCase() !== 'code');
+    }
+
+    const sanitizedProfile = user.githubProfile
+      ? {
+          ...user.githubProfile,
+          topLanguages: sanitizedTopLanguages,
+        }
+      : null;
+
     res.status(200).json({
       success: true,
       data: {
@@ -141,8 +158,8 @@ const getDashboard = async (req, res, next) => {
           education: user.education || {},
           interests: user.interests || [],
           skills: user.skills || [],
-          githubProfile: user.githubProfile || null,
-          githubRepos: user.githubRepos || [],
+          githubProfile: sanitizedProfile,
+          githubRepos: sanitizedRepos,
           profileCompleted: isProfileComplete,
           avatarUrl: user.avatarUrl || '',
           resumeUrl: user.resumeUrl || '',

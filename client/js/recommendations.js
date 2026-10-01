@@ -923,11 +923,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <button
               type="button"
-              class="btn what-if-btn btn-sm px-3 py-2 fw-semibold"
+              class="btn cp-btn-outline btn-sm px-3 py-2 fw-semibold what-if-btn"
               data-career-title="${escapeHtml(career.title)}"
               data-career-slug="${escapeHtml(career.slug)}"
             >
-              <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
+              <i class="bi bi-lightning-charge text-warning me-1"></i>
               <span>What-If Simulator</span>
             </button>
             <button
@@ -936,7 +936,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               data-career-title="${escapeHtml(career.title)}"
               data-career-slug="${escapeHtml(career.slug)}"
             >
-              <i class="bi bi-briefcase-fill text-cyan me-1"></i>
+              <i class="bi bi-briefcase text-teal me-1"></i>
               <span>Live Market Jobs</span>
             </button>
             ${
@@ -945,14 +945,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                      <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(userActiveRoadmap.progressPercentage || 0)}%)
                    </a>`
                 : userActiveRoadmap
-                ? `<div class="d-flex flex-column align-items-center align-items-sm-end">
-                     <button type="button" class="btn btn-secondary btn-sm px-4 py-2 fw-semibold disabled" disabled title="Finish your current route or abandon it to start this one">
-                       <i class="bi bi-lock-fill me-1"></i> Locked (Finish or Abandon Active Route)
-                     </button>
-                     <div class="text-muted small text-center mt-1" style="font-size: 0.72rem;">
-                       Finish your current route or abandon it to start this one.
-                     </div>
-                   </div>`
+                ? `<button type="button" class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="Finish your current route or abandon it to start this one">
+                     <i class="bi bi-lock-fill me-1"></i>
+                     <span>Locked (Active Route Enrolled)</span>
+                   </button>`
                 : isGraduated
                 ? `<button
                      type="button"
@@ -1009,15 +1005,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Bind Choose Career button click
       const chooseBtn = card.querySelector('.choose-career-btn');
-      chooseBtn.addEventListener('click', () => {
-        selectedCareerTitle = chooseBtn.getAttribute('data-career-title');
-        selectedCareerSlug = chooseBtn.getAttribute('data-career-slug');
-        if (modalCareerTitle) modalCareerTitle.textContent = selectedCareerTitle;
+      if (chooseBtn) {
+        chooseBtn.addEventListener('click', () => {
+          selectedCareerTitle = chooseBtn.getAttribute('data-career-title');
+          selectedCareerSlug = chooseBtn.getAttribute('data-career-slug');
+          if (modalCareerTitle) modalCareerTitle.textContent = selectedCareerTitle;
 
-        if (roadmapModal) {
-          roadmapModal.show();
-        }
-      });
+          if (roadmapModal) {
+            roadmapModal.show();
+          }
+        });
+      }
 
       container.appendChild(card);
     });
@@ -1080,8 +1078,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Active Route
                       </a>`;
             } else if (userActiveRoadmap) {
-              return `<button type="button" class="btn btn-outline-secondary btn-sm px-4 text-nowrap disabled" disabled title="Complete or abandon your active route first">
-                        <i class="bi bi-lock-fill me-1"></i> Locked (Finish Active Route First)
+              return `<button type="button" class="btn cp-btn-locked btn-sm px-4 py-2 text-nowrap" disabled title="Complete or abandon your active route first">
+                        <i class="bi bi-lock-fill me-1"></i> Locked (Active Route Enrolled)
                       </button>`;
             } else {
               return `<button type="button" class="btn cp-btn-primary btn-sm px-4 choose-career-btn text-nowrap"
