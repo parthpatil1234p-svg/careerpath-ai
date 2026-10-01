@@ -99,6 +99,9 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 📊 **2D SVG Percentage Gauge** | **Accessible Progress Meter** | Replaced confusing 3D degree gauges (90/180) with high-contrast 0% to 100% SVG circular meter |
 | 🎥 **Official Demo Video (Drive)** | **[Watch Demo on Google Drive](https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing)** | Official video walkthrough & prototype demonstration |
 | 📊 **Official Pitch Deck PPT (Drive)** | **[View PPT on Google Drive](https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing)** | 10-Slide presentation deck for Hack2Ignite Round 1 |
+| 📽️ **Official Submission PPTX** | **[`../HACK2IGNITE_2026_CareerPath_AI_Official.pptx`](../HACK2IGNITE_2026_CareerPath_AI_Official.pptx)** | Complete 16:9 PowerPoint submission deck with speaker notes |
+| 🎤 **Interactive Pitch Defense Guide** | **[`../FullStack_Developer_Pitch_Guide.html`](../FullStack_Developer_Pitch_Guide.html)** | Interactive slide-by-slide presentation script & judge viva defense |
+| 📝 **Master Presentation Content** | **[`docs/PPT-CONTENT.md`](docs/PPT-CONTENT.md)** | Full markdown transcript of all presentation slides & technical metrics |
 | 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
 | 🏛️ **System Architecture Spec** | **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** | Comprehensive system architecture & threat model specification |
 | 🔌 **Complete API Specification** | **[`docs/API-SPECIFICATION.md`](docs/API-SPECIFICATION.md)** | Full REST API specification across all 11 modules |
@@ -352,9 +355,18 @@ Students are not locked into a career indefinitely, but abandonment is treated w
 
 ### 5.4 "Lock Enrolling, Never Browsing" UI Paradigm
 On `/recommendations.html`:
-- **Exploration is 100% Unlocked:** Students can inspect requirements, test the interactive What-If Simulator, and view Live Market Jobs on any career card.
-- **Enrolment is Strictly Gated:** Other career cards disable the "Start Roadmap" button with a helpful tooltip: *"Finish your current route or abandon it to start this one."*
-- **Active Route Banner:** Highlights their active route: `[⚡ ACTIVE ROUTE · Week 2 of 4 (45% Tasks)]` with 1-click navigation.
+- **Exploration is 100% Unlocked:** Students can freely inspect requirements, review full skill-gap breakdowns, test the interactive What-If Simulator, and inspect Live Market Jobs on any career card.
+- **Enrolment is Strictly Gated:** Other career tracks show a sleek, accessible locked action:
+  ```html
+  <button class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="Finish your current route or abandon it to start this one">
+    <i class="bi bi-lock-fill me-1"></i> Locked (Active Route Enrolled)
+  </button>
+  ```
+- **High-Contrast Slate Aesthetics (`.cp-btn-locked`):** Uses `#475569` text on a `#F1F5F9` slate background with `#CBD5E1` border—replacing legacy dark-grey-with-blue-text buttons with 100% WCAG AA compliant contrast.
+- **Single Horizontal Baseline Alignment:** Sibling buttons (`⚡ What-If Simulator`, `💼 Live Market Jobs`, and `🔒 Locked (Active Route Enrolled)`) share identical sizing (`btn-sm px-3 py-2 fw-semibold`) and perfect horizontal alignment without dangling text.
+- **Artifact-Free Vector SVG Rendering:** Card hover animations are scoped cleanly to interactive elements, completely eliminating fuzzy `drop-shadow` blur halos and hardware-accelerated bounding box artifacts.
+- **Defensive Null-Safe Listeners:** Safe conditional event registration guarantees that active route enrollments never trigger `addEventListener` TypeError crashes.
+- **Active Route Banner:** Highlights their current enrolled route: `[⚡ ACTIVE ROUTE · Week 2 of 4 (45% Tasks)]` with 1-click navigation to `roadmap.html`.
 
 ---
 
@@ -632,6 +644,34 @@ npm run test:security
 
 # Run Database Migration for Partial Unique Indexes
 npm run migrate:roadmaps
+```
+
+#### 🛡️ Live Automated Invariant Test Results (100% Pass Rate):
+```text
+================================================================
+🚀 9-POINT HARDENED SINGLE ACTIVE ROUTE VERIFICATION SUITE
+================================================================
+✔ Test 1: Start a 2nd route while one is active...
+  -> PASSED: Server rejects with HTTP 409 (ACTIVE_ROUTE_IN_PROGRESS)
+✔ Test 2: Two simultaneous generation requests (Partial Unique Index)...
+  -> PASSED: MongoDB 11000 race condition safely caught and returned as HTTP 409
+✔ Test 3: Pass final week test >= 70% (Graduation unlock)...
+  -> PASSED: Roadmap completed and 1 unique credential added to completedPaths
+✔ Test 4: Re-submit final week test (Idempotency Invariant)...
+  -> PASSED: Re-submission is completely idempotent, zero duplicate paths created
+✔ Test 5: Decoupled Job Ready evaluation (Requires all 4 strict criteria)...
+  -> PASSED: Graduation alone does NOT grant Job Ready; structured missing criteria returned
+✔ Test 6: Non-destructive route abandonment & 7-day cooldown...
+  -> PASSED: Route abandoned with 100% data retention and enforced 7-day rate-limit
+✔ Test 7: Browse locked career cards (Lock enrolling, not browsing)...
+  -> PASSED: Discovery and browsing remains 100% open; only enrollment is gated
+✔ Test 8: Pre-flight migration reconciliation logic...
+  -> PASSED: Migration cleans duplicates safely leaving exactly 1 active route
+✔ Test 9: Session-only User Identity (Immune to userId injection)...
+  -> PASSED: Injected userId in payload/query completely ignored in favor of JWT identity
+================================================================
+🎉 ALL 9 HARDENED VERIFICATION TESTS PASSED WITH 100% COMPLIANCE!
+================================================================
 ```
 
 ---
