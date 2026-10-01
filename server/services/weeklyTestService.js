@@ -60,7 +60,7 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
   // 1. Verify Prerequisite (Week N - 1 must be passed; bypassed for demo/admin)
   const testUser = await User.findById(userId);
   const testUserEmail = (testUser?.email || '').toLowerCase();
-  const isDemoOrAdmin = testUser?.role === 'admin' || testUser?.isDemo || testUserEmail === 'kajimew275@blobapps.com' || testUserEmail.includes('admin') || testUserEmail.includes('demo');
+  const isDemoOrAdmin = testUser?.role === 'admin' || testUser?.isDemo || testUserEmail === 'demouser@gmail.com' || testUserEmail === 'kajimew275@blobapps.com' || testUserEmail.includes('admin') || testUserEmail.includes('demo');
 
   if (wNum > 1 && !isDemoOrAdmin) {
     const prevWeek = roadmap.weekProgress.find((wp) => wp.weekNumber === wNum - 1);

@@ -303,7 +303,7 @@ const getMyResume = async (req, res, next) => {
     let verifiedCount = evidence?.verifiedCount || 0;
 
     const email = (user.email || '').toLowerCase();
-    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
     if (isDemoOrAdmin) {
       verifiedCount = Math.max(4, verifiedCount);
     }
@@ -376,7 +376,7 @@ const uploadResume = async (req, res, next) => {
     const { fileData, fileName } = req.body;
 
     const userEmail = (req.user?.email || '').toLowerCase();
-    const isDemoOrAdmin = req.user?.role === 'admin' || req.user?.isDemo || userEmail === 'kajimew275@blobapps.com' || userEmail.includes('admin') || userEmail.includes('demo');
+    const isDemoOrAdmin = req.user?.role === 'admin' || req.user?.isDemo || userEmail === 'demouser@gmail.com' || userEmail === 'kajimew275@blobapps.com' || userEmail.includes('admin') || userEmail.includes('demo');
 
     // 1. Check existing resume
     const existingResume = await Resume.findOne({ user: req.user._id });

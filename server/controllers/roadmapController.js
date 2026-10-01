@@ -113,7 +113,7 @@ const generateRoadmap = async (req, res, next) => {
     }).populate('career');
 
     const email = (user.email || '').toLowerCase();
-    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
 
     if (activeRoadmap) {
       if (isDemoOrAdmin) {
@@ -448,7 +448,7 @@ const abandonRoadmap = async (req, res, next) => {
     }
 
     const email = (user.email || '').toLowerCase();
-    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
 
     if (!isDemoOrAdmin && user.lastAbandonedRouteAt) {
       const elapsed = Date.now() - new Date(user.lastAbandonedRouteAt).getTime();

@@ -16,7 +16,7 @@ function isDemoOrAdmin(user) {
   if (!user) return false;
   if (user.role === 'admin' || user.isDemo) return true;
   const email = (user.email || '').toLowerCase();
-  return email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+  return email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
 }
 
 /**

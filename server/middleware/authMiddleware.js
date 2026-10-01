@@ -112,7 +112,7 @@ const requireSkillVerification = (req, res, next) => {
 
   // Admin and Demo accounts have all features completely unlocked
   const email = (req.user.email || '').toLowerCase();
-  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
   if (isDemoOrAdmin) {
     return next();
   }

@@ -31,7 +31,7 @@ exports.getCertificate = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     const email = (user?.email || '').toLowerCase();
-    const isDemoOrAdmin = user?.role === 'admin' || user?.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    const isDemoOrAdmin = user?.role === 'admin' || user?.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
 
     const { evaluateJobReadyCertification } = require('../services/readinessService');
     const jobReadyEval = await evaluateJobReadyCertification(req.user._id);
