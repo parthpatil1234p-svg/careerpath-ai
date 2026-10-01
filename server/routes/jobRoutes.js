@@ -126,7 +126,7 @@ router.post('/match', async (req, res, next) => {
   }
 });
 
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
@@ -137,7 +137,7 @@ const JobApplication = require('../models/JobApplication');
  * GET /api/jobs/matched-for-user
  * Fetches real jobs and computes Match % against candidate's verified skills
  */
-router.get('/matched-for-user', protect, async (req, res, next) => {
+router.get('/matched-for-user', protect, requireStudent, async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' }).populate('career');
@@ -215,7 +215,7 @@ router.get('/matched-for-user', protect, async (req, res, next) => {
  * POST /api/jobs/bridge-gap
  * Injects a 1-week learning micro-task for a missing job skill into student's active roadmap
  */
-router.post('/bridge-gap', protect, async (req, res, next) => {
+router.post('/bridge-gap', protect, requireStudent, async (req, res, next) => {
   try {
     const skillName = req.body.skillName || req.body.missingSkill;
     const jobTitle = req.body.jobTitle;
@@ -369,7 +369,7 @@ router.get('/recruiter-openings', async (req, res, next) => {
  * POST /api/jobs/:id/apply
  * 1-Click candidate job application using student profile, verified badges, and ATS resume
  */
-router.post('/:id/apply', protect, async (req, res, next) => {
+router.post('/:id/apply', protect, requireStudent, async (req, res, next) => {
   try {
     const jobId = req.params.id;
     const student = await User.findById(req.user._id);
@@ -451,7 +451,7 @@ router.post('/:id/apply', protect, async (req, res, next) => {
  * GET /api/jobs/my-applications
  * Returns all direct company applications submitted by the student
  */
-router.get('/my-applications', protect, async (req, res, next) => {
+router.get('/my-applications', protect, requireStudent, async (req, res, next) => {
   try {
     const applications = await JobApplication.find({ student: req.user._id })
       .populate('job', 'title companyName companyLogo workplace location salaryRange status')

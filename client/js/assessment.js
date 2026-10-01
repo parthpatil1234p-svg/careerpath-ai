@@ -11,11 +11,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Guard page
-  if (!window.Auth?.isAuthenticated()) {
-    window.Auth?.requireAuth();
+  // 1. Guard page (strict student portal isolation)
+  if (!window.Auth?.requireStudent()) {
     return;
   }
+  window.Auth?.consumePortalAlert();
 
   // 2. Constants & Data
   const ALL_INTERESTS = [

@@ -4,11 +4,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // ── Authentication Check ─────────────────────────────────────
-  if (!window.Auth?.isAuthenticated()) {
-    window.location.href = 'login.html?redirect=resume-builder.html';
+  // ── Authentication Check (strict student portal isolation) ─
+  if (!window.Auth?.requireStudent()) {
     return;
   }
+  window.Auth?.consumePortalAlert();
 
   // ── State Variables ──────────────────────────────────────────
   let resumeData = null;

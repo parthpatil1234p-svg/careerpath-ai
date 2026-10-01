@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // If already authenticated, redirect to appropriate destination
   if (window.Auth?.isAuthenticated()) {
     const user = window.Auth.getCurrentUser();
+    if (user?.role === 'recruiter') {
+      window.location.href = 'recruiter-dashboard.html';
+      return;
+    }
     if (user && user.profileCompleted) {
       window.location.href = 'dashboard.html';
     } else {
@@ -131,12 +135,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const redirect = urlParams.get('redirect');
 
         setTimeout(() => {
+          const role = response.data.user?.role;
           if (redirect) {
-            window.location.href = decodeURIComponent(redirect);
-          } else if (response.data.user?.role === 'recruiter') {
+            const target = decodeURIComponent(redirect);
+            if (role === 'recruiter' && !target.includes('recruiter') && !target.includes('jobs.html')) {
+              window.location.href = 'recruiter-dashboard.html';
+            } else if (role === 'student' && target.includes('recruiter')) {
+              window.location.href = 'dashboard.html';
+            } else {
+              window.location.href = target;
+            }
+          } else if (role === 'recruiter') {
             window.location.href = 'recruiter-dashboard.html';
           } else if (response.data.user?.profileCompleted) {
-            window.location.href = 'recommendations.html';
+            window.location.href = 'dashboard.html';
           } else {
             window.location.href = 'assessment.html';
           }

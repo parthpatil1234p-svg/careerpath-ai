@@ -8,7 +8,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Check Authentication (Graceful guest view + Auto-auth on start)
+  // 1. Check Authentication & Portal Isolation
+  if (window.Auth?.isRecruiter() && !window.Auth?.isAdmin()) {
+    if (!window.Auth?.requireStudent()) return;
+  }
   const isAuth = Boolean(window.Auth?.isAuthenticated?.() || window.Auth?.isLoggedIn?.());
 
   // 2. DOM Elements

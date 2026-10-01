@@ -7,10 +7,10 @@
 const express = require('express');
 const router = express.Router();
 const quizController = require('../controllers/quizController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 
-// All quiz endpoints require JWT authentication
-router.use(protect);
+// All quiz endpoints require JWT authentication and student access
+router.use(protect, requireStudent);
 
 router.get('/status', quizController.getQuizStatus);
 router.get('/providers', quizController.getQuizProviders);

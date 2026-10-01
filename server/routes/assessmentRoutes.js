@@ -9,11 +9,13 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 const { validateAssessment } = require('../middleware/validateRequest');
 const { updateAssessment } = require('../controllers/assessmentController');
 
-router.put('/', protect, validateAssessment, updateAssessment);
-router.post('/', protect, validateAssessment, updateAssessment);
+router.use(protect, requireStudent);
+
+router.put('/', validateAssessment, updateAssessment);
+router.post('/', validateAssessment, updateAssessment);
 
 module.exports = router;

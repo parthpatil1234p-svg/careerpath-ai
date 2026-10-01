@@ -6,11 +6,13 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 const { getReadinessStatus, getCertificate, getJobReadyCheck } = require('../controllers/readinessController');
 
-router.get('/status', protect, getReadinessStatus);
-router.get('/certificate', protect, getCertificate);
-router.get('/job-ready-check', protect, getJobReadyCheck);
+router.use(protect, requireStudent);
+
+router.get('/status', getReadinessStatus);
+router.get('/certificate', getCertificate);
+router.get('/job-ready-check', getJobReadyCheck);
 
 module.exports = router;

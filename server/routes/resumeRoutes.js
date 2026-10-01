@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 const {
   analyzeResume,
   getResumeAnalysis,
@@ -16,14 +16,16 @@ const {
   matchResumeToJob,
 } = require('../controllers/resumeController');
 
+router.use(protect, requireStudent);
+
 // ATS Analysis Endpoints
-router.post('/analyze', protect, analyzeResume);
-router.get('/analysis', protect, getResumeAnalysis);
+router.post('/analyze', analyzeResume);
+router.get('/analysis', getResumeAnalysis);
 
 // Resume Builder Draft & AI Endpoints
-router.get('/builder', protect, getBuiltResume);
-router.post('/builder', protect, saveBuiltResume);
-router.post('/improve-text', protect, improveResumeText);
-router.post('/match-job', protect, matchResumeToJob);
+router.get('/builder', getBuiltResume);
+router.post('/builder', saveBuiltResume);
+router.post('/improve-text', improveResumeText);
+router.post('/match-job', matchResumeToJob);
 
 module.exports = router;

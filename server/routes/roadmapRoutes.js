@@ -12,7 +12,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect, requireSkillVerification } = require('../middleware/authMiddleware');
+const { protect, requireSkillVerification, requireStudent } = require('../middleware/authMiddleware');
 const {
   validateRoadmapGeneration,
   validateTaskId,
@@ -34,8 +34,10 @@ const {
   verifyVideoLearningController,
 } = require('../controllers/roadmapController');
 
-router.post('/generate', protect, requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
-router.get('/current', protect, requireSkillVerification, getCurrentRoadmap);
+router.use(protect, requireStudent);
+
+router.post('/generate', requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
+router.get('/current', requireSkillVerification, getCurrentRoadmap);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
 router.post('/tasks/:taskId/link-repo', protect, validateTaskId, linkProjectRepo);
 router.get('/tasks/:taskId/video-checkpoint', protect, validateTaskId, getVideoCheckpointController);

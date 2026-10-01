@@ -8,14 +8,14 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 const { getSkillEvidence } = require('../services/evidenceService');
 
 /**
  * GET /api/skills/evidence
  * Returns the authenticated user's canonical skill evidence ledger.
  */
-router.get('/', protect, async (req, res, next) => {
+router.get('/', protect, requireStudent, async (req, res, next) => {
   try {
     const evidenceData = await getSkillEvidence(req.user._id);
     res.status(200).json({

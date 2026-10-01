@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { protect, requireStudent } = require('../middleware/authMiddleware');
 const {
   startInterview,
   evaluateAnswer,
@@ -14,9 +14,11 @@ const {
   getInterviewStatus
 } = require('../controllers/interviewController');
 
-router.post('/start', protect, startInterview);
-router.post('/evaluate', protect, evaluateAnswer);
-router.post('/finalize', protect, finalizeInterview);
-router.get('/status', protect, getInterviewStatus);
+router.use(protect, requireStudent);
+
+router.post('/start', startInterview);
+router.post('/evaluate', evaluateAnswer);
+router.post('/finalize', finalizeInterview);
+router.get('/status', getInterviewStatus);
 
 module.exports = router;

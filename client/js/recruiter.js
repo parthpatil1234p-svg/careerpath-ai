@@ -5,20 +5,29 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Enforce Recruiter Auth Guard
+  // 1. Enforce Recruiter Auth Guard or Seamless Demo Recruiter Auto-Login for Guests
   if (!window.Auth?.isAuthenticated()) {
-    window.location.href = 'login.html?redirect=recruiter-dashboard.html';
+    try {
+      const loginRes = await window.API.post('/auth/login', {
+        email: 'recruiter@razorpay.com',
+        password: 'demo123'
+      }, { auth: false });
+      if (loginRes.success && loginRes.data?.token) {
+        window.Auth.setToken(loginRes.data.token);
+        window.Auth.setCurrentUser(loginRes.data.user);
+      }
+    } catch {
+      window.location.href = 'login.html?redirect=recruiter-dashboard.html';
+      return;
+    }
+  }
+
+  // Strict Portal Isolation Guard (blocks students and redirects to dashboard.html)
+  if (!window.Auth?.requireRecruiter()) {
     return;
   }
 
-  const currentUser = window.Auth.getCurrentUser();
-  const email = (currentUser?.email || '').toLowerCase();
-  const isDemoOrAdmin = currentUser?.role === 'admin' || currentUser?.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
-
-  if (currentUser?.role !== 'recruiter' && !isDemoOrAdmin) {
-    window.location.href = 'dashboard.html';
-    return;
-  }
+  let currentUser = window.Auth.getCurrentUser();
 
   // DOM Elements - Profile & KPIs
   const recruiterGreeting = document.getElementById('recruiterGreeting');
@@ -102,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── 1. Fetch Recruiter Profile & Stats ───────────────────────
   const loadRecruiterProfile = async () => {
     try {
-      const response = await window.API.get('/recruiter/profile');
+      const response = await window.API.get('/recruiter/profile', { auth: true });
       if (response.success && response.data) {
         const { recruiter, company, stats } = response.data;
 
@@ -137,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     emptyJobsPlaceholder.classList.add('d-none');
 
     try {
-      const response = await window.API.get('/recruiter/jobs');
+      const response = await window.API.get('/recruiter/jobs', { auth: true });
       jobsLoadingSpinner.classList.add('d-none');
 
       const jobs = response.data?.jobs || [];
@@ -229,7 +238,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const nextStatus = current === 'active' ? 'paused' : 'active';
 
         try {
-          await window.API.patch(`/recruiter/jobs/${jobId}`, { status: nextStatus });
+          await window.API.patch(`/recruiter/jobs/${jobId}`, { status: nextStatus }, { auth: true });
           showAlert(`Opening status updated to "${nextStatus}"`, 'success');
           loadMyJobs();
         } catch (err) {
@@ -261,7 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     emptyRadarPlaceholder.classList.add('d-none');
 
     try {
-      const response = await window.API.get(`/recruiter/jobs/${jobId}/applicants`);
+      const response = await window.API.get(`/recruiter/jobs/${jobId}/applicants`, { auth: true });
       radarLoadingSpinner.classList.add('d-none');
 
       const applicants = response.data?.applicants || [];
@@ -377,7 +386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const newStatus = e.target.value;
 
           try {
-            await window.API.patch(`/recruiter/applications/${appId}/status`, { status: newStatus });
+            await window.API.patch(`/recruiter/applications/${appId}/status`, { status: newStatus }, { auth: true });
             showAlert(`Candidate moved to stage: ${newStatus.replace('_', ' ').toUpperCase()}`, 'success');
             loadRecruiterProfile(); // update shortlisted KPIs
           } catch (err) {
@@ -445,7 +454,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           },
           requiredSkills: parsedSkills,
           description,
-        });
+        }, { auth: true });
 
         btnSubmitJob.disabled = false;
         btnSubmitJob.innerHTML = originalBtn;

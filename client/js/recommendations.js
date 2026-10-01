@@ -7,11 +7,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Route guard
-  if (!window.Auth?.isAuthenticated()) {
-    window.Auth?.requireAuth();
+  // 1. Route guard (strict student portal isolation)
+  if (!window.Auth?.requireStudent()) {
     return;
   }
+  window.Auth?.consumePortalAlert('alertContainer');
 
   // 1.1 Verification Gate Check
   if (!window.Auth?.isSkillVerified()) {

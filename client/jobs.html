@@ -126,35 +126,82 @@
           <!-- Desktop Center Links -->
           <ul class="notch-nav-links d-none d-lg-flex mb-0 ps-0">
             <li>
-              <a href="dashboard.html">
+              <a class="notch-nav-link" href="dashboard.html">
                 <i class="bi bi-speedometer2 text-teal"></i> Dashboard
               </a>
             </li>
             <li>
-              <a href="recommendations.html">
+              <a class="notch-nav-link" href="recommendations.html">
                 <i class="bi bi-compass text-primary"></i> Recommendations
               </a>
             </li>
             <li>
-              <a href="roadmap.html">
+              <a class="notch-nav-link" href="roadmap.html">
                 <i class="bi bi-map text-cyan"></i> Roadmap
               </a>
             </li>
             <li>
-              <a href="resume-builder.html">
+              <a class="notch-nav-link" href="resume-builder.html">
                 <i class="bi bi-file-earmark-person text-warning"></i> ATS Resume
               </a>
             </li>
             <li>
-              <a href="jobs.html" class="active">
+              <a class="notch-nav-link active" href="jobs.html" aria-current="page">
                 <i class="bi bi-briefcase-fill text-success"></i> Verified Jobs
               </a>
             </li>
           </ul>
 
-          <!-- Auth Actions -->
-          <div class="d-flex align-items-center gap-2" id="authNavActions">
-            <a href="login.html" class="btn cp-btn-primary btn-sm px-3">Log In</a>
+          <!-- Actions & Mobile Toggle -->
+          <div class="d-flex align-items-center gap-2">
+            <div id="authNavActions" class="d-flex align-items-center gap-2">
+              <a href="login.html" class="btn cp-btn-primary btn-sm px-3">Log In</a>
+            </div>
+            <button
+              class="notch-mobile-toggle d-lg-none"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#jobsMobileMenu"
+              aria-controls="jobsMobileMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <i class="bi bi-list fs-5"></i>
+            </button>
+          </div>
+
+          <!-- Mobile Dropdown Collapse -->
+          <div class="collapse notch-mobile-collapse" id="jobsMobileMenu">
+            <ul class="notch-mobile-links">
+              <li>
+                <a href="dashboard.html">
+                  <i class="bi bi-speedometer2 text-teal"></i> Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="recommendations.html">
+                  <i class="bi bi-compass text-primary"></i> Recommendations
+                </a>
+              </li>
+              <li>
+                <a href="roadmap.html">
+                  <i class="bi bi-map text-cyan"></i> Roadmap
+                </a>
+              </li>
+              <li>
+                <a href="resume-builder.html">
+                  <i class="bi bi-file-earmark-person text-warning"></i> ATS Resume
+                </a>
+              </li>
+              <li>
+                <a class="active" href="jobs.html">
+                  <i class="bi bi-briefcase-fill text-success"></i> Verified Jobs
+                </a>
+              </li>
+              <li class="pt-2 border-top border-secondary border-opacity-25" id="notchMobileAuthActions">
+                <!-- Injected by Auth.initNav() -->
+              </li>
+            </ul>
           </div>
         </div>
       </div>

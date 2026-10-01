@@ -4,6 +4,64 @@
  * Manages JWT storage, active user persistence, route protection, and logout.
  */
 
+// ── Portal Isolation Catalogs ─────────────────────────────────
+const STUDENT_PAGES = [
+  'dashboard.html',
+  'assessment.html',
+  'recommendations.html',
+  'roadmap.html',
+  'resume-builder.html',
+  'quiz.html',
+];
+
+const RECRUITER_PAGES = [
+  'recruiter-dashboard.html',
+];
+
+// Immediate Portal Isolation Trap (runs synchronously on script load before page DOM renders)
+(function enforcePortalIsolation() {
+  if (typeof window === 'undefined') return;
+  const path = (window.location.pathname || '').toLowerCase();
+
+  const isStudentPage = STUDENT_PAGES.some((p) => path.endsWith(p));
+  const isRecruiterPage = RECRUITER_PAGES.some((p) => path.endsWith(p));
+
+  if (!isStudentPage && !isRecruiterPage) return;
+
+  const rawUser = localStorage.getItem(window.CONFIG?.USER_KEY || 'careerpath_user');
+  const token = localStorage.getItem(window.CONFIG?.TOKEN_KEY || 'careerpath_token');
+  if (!token || !rawUser) return;
+
+  try {
+    const user = JSON.parse(rawUser);
+    if (!user) return;
+    const email = (user.email || '').toLowerCase();
+    const isDemoOrAdmin =
+      user.role === 'admin' ||
+      user.isAdmin ||
+      user.isDemo ||
+      email === 'demouser@gmail.com' ||
+      email.includes('admin');
+    if (isDemoOrAdmin) return; // Dual evaluation access for demo/admin
+
+    if (user.role === 'recruiter' && isStudentPage) {
+      sessionStorage.setItem(
+        'portal_redirect_alert',
+        '🏢 Recruiter accounts cannot access student learning and roadmap resources. You have been redirected to your Recruiter Portal.'
+      );
+      window.location.replace('recruiter-dashboard.html');
+    } else if (user.role === 'student' && isRecruiterPage) {
+      sessionStorage.setItem(
+        'portal_redirect_alert',
+        '🎓 Student accounts cannot access the company recruiter portal. You have been redirected to your Student Dashboard.'
+      );
+      window.location.replace('dashboard.html');
+    }
+  } catch {
+    // Ignore JSON parse errors
+  }
+})();
+
 const Auth = {
   /**
    * Retrieves the stored JWT token
@@ -124,16 +182,80 @@ const Auth = {
   },
 
   /**
+   * Guard for student-only pages: blocks recruiters and redirects to recruiter portal
+   * @returns {boolean}
+   */
+  requireStudent() {
+    if (!this.isAuthenticated()) {
+      const currentPath = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `login.html?redirect=${currentPath}`;
+      return false;
+    }
+    if (this.isRecruiter() && !this.isAdmin()) {
+      sessionStorage.setItem(
+        'portal_redirect_alert',
+        '🏢 Recruiter accounts cannot access student learning and roadmap resources. You have been redirected to your Recruiter Portal.'
+      );
+      window.location.replace('recruiter-dashboard.html');
+      return false;
+    }
+    return true;
+  },
+
+  /**
    * Guard for recruiter-only pages: redirects students or unauthenticated users
    * @returns {boolean}
    */
   requireRecruiter() {
-    this.requireAuth();
+    if (!this.isAuthenticated()) {
+      const currentPath = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `login.html?redirect=${currentPath}`;
+      return false;
+    }
     if (!this.isRecruiter() && !this.isAdmin()) {
-      window.location.href = 'dashboard.html';
+      sessionStorage.setItem(
+        'portal_redirect_alert',
+        '🎓 Student accounts cannot access the company recruiter portal. You have been redirected to your Student Dashboard.'
+      );
+      window.location.replace('dashboard.html');
       return false;
     }
     return true;
+  },
+
+  /**
+   * Consumes and renders session flash alert message from portal redirection
+   * @param {string|null} containerId
+   */
+  consumePortalAlert(containerId = null) {
+    const msg = sessionStorage.getItem('portal_redirect_alert');
+    if (!msg) return;
+    sessionStorage.removeItem('portal_redirect_alert');
+
+    const container = containerId ? document.getElementById(containerId) : (
+      document.getElementById('alertContainer') ||
+      document.getElementById('recruiterAlertContainer') ||
+      document.getElementById('jobAlertContainer') ||
+      document.getElementById('dashboardAlertContainer') ||
+      document.querySelector('main.container') ||
+      document.querySelector('main')
+    );
+
+    if (container) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'alert alert-warning alert-dismissible fade show d-flex align-items-center gap-2.5 py-2.5 px-3.5 mb-4 shadow-sm border border-warning border-opacity-50';
+      alertDiv.setAttribute('role', 'alert');
+      alertDiv.innerHTML = `
+        <i class="bi bi-shield-exclamation fs-5 flex-shrink-0 text-warning"></i>
+        <div class="small fw-semibold text-ink">${escapeHtml(msg)}</div>
+        <button type="button" class="btn-close ms-auto p-2" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      if (container.firstChild) {
+        container.insertBefore(alertDiv, container.firstChild);
+      } else {
+        container.appendChild(alertDiv);
+      }
+    }
   },
 
   /**
@@ -350,11 +472,13 @@ function escapeHtml(str) {
 
 window.Auth = Auth;
 
-// Auto-initialize navbar on page load across all pages
+// Auto-initialize navbar and consume portal flash alert on page load across all pages
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     window.Auth?.initNav();
+    window.Auth?.consumePortalAlert();
   });
 } else {
   window.Auth?.initNav();
+  window.Auth?.consumePortalAlert();
 }

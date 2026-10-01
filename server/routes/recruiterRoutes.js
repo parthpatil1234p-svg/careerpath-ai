@@ -18,24 +18,24 @@ const {
   getJobApplicants,
   updateApplicationStatus,
 } = require('../controllers/recruiterController');
-const { protect, authorize, requireVerifiedRecruiter } = require('../middleware/authMiddleware');
+const { protect, authorize, requireVerifiedRecruiter, requireRecruiter } = require('../middleware/authMiddleware');
 
 // ── Public Routes (Onboarding & Company Verification) ─────────
 router.post('/verify-company-precheck', verifyCompanyPrecheck);
 router.post('/register', registerRecruiter);
 
 // ── Protected Recruiter Routes ────────────────────────────────
-router.get('/profile', protect, getRecruiterProfile);
+router.get('/profile', protect, requireRecruiter, getRecruiterProfile);
 
 // Job Openings Management
 router.post('/jobs', protect, requireVerifiedRecruiter, createJob);
-router.get('/jobs', protect, getMyJobs);
-router.get('/jobs/:id', protect, getJobDetails);
-router.patch('/jobs/:id', protect, updateJob);
-router.delete('/jobs/:id', protect, deleteJob);
+router.get('/jobs', protect, requireRecruiter, getMyJobs);
+router.get('/jobs/:id', protect, requireRecruiter, getJobDetails);
+router.patch('/jobs/:id', protect, requireRecruiter, updateJob);
+router.delete('/jobs/:id', protect, requireRecruiter, deleteJob);
 
 // Candidate Applications & Hiring Stages
-router.get('/jobs/:id/applicants', protect, getJobApplicants);
-router.patch('/applications/:appId/status', protect, updateApplicationStatus);
+router.get('/jobs/:id/applicants', protect, requireRecruiter, getJobApplicants);
+router.patch('/applications/:appId/status', protect, requireRecruiter, updateApplicationStatus);
 
 module.exports = router;

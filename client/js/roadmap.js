@@ -8,11 +8,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Guard check
-  if (!window.Auth?.isAuthenticated()) {
-    window.Auth?.requireAuth();
+  // 1. Guard check (strict student portal isolation)
+  if (!window.Auth?.requireStudent()) {
     return;
   }
+  window.Auth?.consumePortalAlert('alertContainer');
 
   // 1.1 Verification Gate Check
   if (!window.Auth?.isSkillVerified()) {

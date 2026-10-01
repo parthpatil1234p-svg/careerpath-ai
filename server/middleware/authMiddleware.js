@@ -177,5 +177,74 @@ const requireVerifiedRecruiter = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, authorize, requireSkillVerification, requireVerifiedRecruiter };
+// ── requireStudent ─────────────────────────────────────────────
+/**
+ * requireStudent — Ensures authenticated user has student access.
+ * Blocks recruiters from accessing student learning, roadmap, and assessment endpoints.
+ * Admin/demo accounts are permitted.
+ */
+const requireStudent = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Access denied. Authentication required.',
+    });
+  }
+
+  const email = (req.user.email || '').toLowerCase();
+  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email.includes('admin');
+  if (isDemoOrAdmin) {
+    return next();
+  }
+
+  if (req.user.role === 'recruiter') {
+    return res.status(403).json({
+      success: false,
+      code: 'RECRUITER_ACCESS_DENIED',
+      message: 'Access denied. Recruiter accounts cannot access student learning and roadmap resources. Please use the Recruiter Portal.',
+    });
+  }
+
+  next();
+};
+
+// ── requireRecruiter ───────────────────────────────────────────
+/**
+ * requireRecruiter — Ensures authenticated user has recruiter access.
+ * Blocks students from accessing recruiter management endpoints.
+ * Admin/demo accounts are permitted.
+ */
+const requireRecruiter = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Access denied. Authentication required.',
+    });
+  }
+
+  const email = (req.user.email || '').toLowerCase();
+  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email.includes('admin');
+  if (isDemoOrAdmin) {
+    return next();
+  }
+
+  if (req.user.role !== 'recruiter') {
+    return res.status(403).json({
+      success: false,
+      code: 'STUDENT_ACCESS_DENIED',
+      message: 'Access denied. Student accounts cannot access the company recruiter portal.',
+    });
+  }
+
+  next();
+};
+
+module.exports = {
+  protect,
+  authorize,
+  requireSkillVerification,
+  requireVerifiedRecruiter,
+  requireStudent,
+  requireRecruiter,
+};
 

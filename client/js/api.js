@@ -36,12 +36,10 @@ const API = {
       Accept: 'application/json',
     };
 
-    // Attach JWT Bearer token if required
-    if (auth) {
-      const token = window.Auth?.getToken();
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+    // Attach JWT Bearer token if required or available
+    const token = window.Auth?.getToken();
+    if (token && auth !== false) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const fetchConfig = {

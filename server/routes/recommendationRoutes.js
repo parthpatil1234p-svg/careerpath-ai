@@ -9,9 +9,9 @@
 
 const express = require('express');
 const router = express.Router();
-const { protect, requireSkillVerification } = require('../middleware/authMiddleware');
+const { protect, requireSkillVerification, requireStudent } = require('../middleware/authMiddleware');
 const { getRecommendations } = require('../controllers/recommendationController');
 
-router.post('/generate', protect, requireSkillVerification, getRecommendations);
+router.post('/generate', protect, requireStudent, requireSkillVerification, getRecommendations);
 
 module.exports = router;
