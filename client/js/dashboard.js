@@ -2164,13 +2164,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       container.innerHTML = jobs.map(job => {
         const isHighMatch = (job.matchPercentage || 0) >= 75;
-        const verifiedTags = (job.verifiedSkills || []).map(s => `
+        const verifiedList = job.verifiedSkills || (job.matchedTags || []).map(t => typeof t === 'string' ? t : t.name);
+        const missingList = job.missingSkills || job.missingTags || [];
+
+        const verifiedTags = verifiedList.map(s => `
           <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 small">
             <i class="bi bi-check-circle-fill me-1"></i>${escapeHtml(s)}
           </span>
         `).join('');
 
-        const missingTags = (job.missingSkills || []).map(s => `
+        const missingTags = missingList.map(s => `
           <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 font-mono btn-bridge-gap" data-skill="${escapeHtml(s)}" data-job="${escapeHtml(job.title)}" title="1-Click: Add 1-week learning micro-task to your roadmap" style="font-size: 0.72rem;">
             <i class="bi bi-plus-circle me-1"></i>${escapeHtml(s)} <span class="badge bg-danger text-white ms-1" style="font-size: 0.6rem;">Bridge</span>
           </button>
@@ -2203,7 +2206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <div class="text-muted small mb-1" style="font-size: 0.72rem; text-transform: uppercase; font-family: var(--font-mono);">
                     Your Skills: ${verifiedTags || '<span class="text-muted fst-italic">None verified yet</span>'}
                   </div>
-                  ${(job.missingSkills || []).length ? `
+                  ${missingList.length ? `
                     <div class="text-muted small mb-1 mt-2" style="font-size: 0.72rem; text-transform: uppercase; font-family: var(--font-mono);">
                       Missing Skills (Click to Bridge):
                     </div>
@@ -2236,6 +2239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           try {
             const bridgeRes = await window.API.post('/jobs/bridge-gap', {
+              skillName: skill,
               missingSkill: skill,
               jobTitle: jobTitle
             }, { auth: true });

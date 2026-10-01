@@ -155,7 +155,9 @@ router.get('/matched-for-user', protect, async (req, res, next) => {
         ...job,
         matchPercentage,
         matchedTags,
-        missingTags
+        missingTags,
+        verifiedSkills: matchedTags.map(t => t.name),
+        missingSkills: missingTags
       };
     });
 
@@ -182,7 +184,8 @@ router.get('/matched-for-user', protect, async (req, res, next) => {
  */
 router.post('/bridge-gap', protect, async (req, res, next) => {
   try {
-    const { skillName, jobTitle } = req.body;
+    const skillName = req.body.skillName || req.body.missingSkill;
+    const jobTitle = req.body.jobTitle;
     if (!skillName) {
       return res.status(400).json({ success: false, message: 'Skill name is required to bridge the gap.' });
     }
