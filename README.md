@@ -48,6 +48,10 @@
   <img src="https://img.shields.io/badge/Gauge-2D_SVG_Percentage_Meter-10B981?style=flat-square" alt="2D Gauge" />
   <img src="https://img.shields.io/badge/Recruiter_Verification-DNS_MX_%2B_Live_HTTP_%2B_AI-059669?style=flat-square" alt="Recruiter Verification" />
   <img src="https://img.shields.io/badge/Applicant_Radar-Candidate_Proof_of_Work-dc2626?style=flat-square" alt="Applicant Radar" />
+  <img src="https://img.shields.io/badge/Portal_Isolation-RBAC_Enforced-7c3aed?style=flat-square" alt="Portal Isolation" />
+  <img src="https://img.shields.io/badge/Logo_Dispatch-Role--Smart-4338ca?style=flat-square" alt="Logo Dispatch" />
+  <img src="https://img.shields.io/badge/Video_Dedication-Anti--Scrubbing_Guard-0d9488?style=flat-square" alt="Anti-Scrubbing Guard" />
+  <img src="https://img.shields.io/badge/Student_Profile-Apple%2FLinear_Grade-6366f1?style=flat-square" alt="Apple/Linear Profile Header" />
 </p>
 
 ---
@@ -68,6 +72,7 @@
    - [5.3 Course Synergy Rules Engine (3-Level Validation)](#53-course-synergy-rules-engine-3-level-validation)
    - [5.4 Non-Destructive 7-Day Rate-Limited Abandonment](#54-non-destructive-7-day-rate-limited-abandonment)
    - [5.5 Dynamic Track Switcher & "Lock Enrolling, Never Browsing" UI](#55-dynamic-track-switcher--lock-enrolling-never-browsing-ui)
+   - [5.6 AI-Monitored Video Dedication & Anti-Slacking Learning Chamber](#56-ai-monitored-video-dedication--anti-slacking-learning-chamber)
 6. [🏆 4-Rule Industry Job Ready Certification & Readiness Index Engine](#-4-rule-industry-job-ready-certification--readiness-index-engine)
    - [6.1 The 4-Rule Certification Rubric](#61-the-4-rule-certification-rubric)
    - [6.2 10-Step Career GPS & Job Readiness Index Engine](#62-10-step-career-gps--job-readiness-index-engine)
@@ -76,6 +81,7 @@
    - [7.1 Binary Magic-Byte Inspection (`%PDF`, `DOCX`, `DOC`)](#71-binary-magic-byte-inspection-pdf-docx-doc)
    - [7.2 Transactional Cloudinary Asset Destruction (Zero Leakage)](#72-transactional-cloudinary-asset-destruction-zero-leakage)
    - [7.3 6-State Interactive Dashboard Experience](#73-6-state-interactive-dashboard-experience)
+   - [7.4 Modernized Student Profile Header Card (Apple/Linear Aesthetic Overhaul)](#74-modernized-student-profile-header-card-applelinear-aesthetic-overhaul)
 8. [💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem](#-supported-tech-roles--76-standardized-skills-ecosystem)
 9. [💼 Multi-Site Job Market Hub & Direct Portal Launchers](#-multi-site-job-market-hub--direct-portal-launchers)
    - [9.1 6-Portal Deep-Link URL Resolution Engine](#91-6-portal-deep-link-url-resolution-engine)
@@ -93,6 +99,8 @@
     - [11.3 Job Opening Management & Mandatory Skill Verification](#113-job-opening-management--mandatory-skill-verification)
     - [11.4 Recruiter Applicant Radar & Verified Badges](#114-recruiter-applicant-radar--verified-badges)
     - [11.5 Student 1-Click Application & Personalized AI Match Scoring](#115-student-1-click-application--personalized-ai-match-scoring)
+    - [11.6 Recruiter & Student Portal Isolation & RBAC Architecture](#116-recruiter--student-portal-isolation--rbac-architecture)
+    - [11.7 Role-Smart Brand Logo Dispatch & Landing Page Redirection Engine](#117-role-smart-brand-logo-dispatch--landing-page-redirection-engine)
 12. [🏗️ End-to-End System Architecture (Mermaid)](#️-end-to-end-system-architecture-mermaid)
 13. [🔌 Core REST API Directory](#-core-rest-api-directory)
 14. [💰 Business Model & B2B2C Talent & Telemetry Flywheel](#-business-model--b2b2c-talent--telemetry-flywheel)
@@ -112,10 +120,13 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 🌐 **Live Web Application** | **[https://careerpath-ai-jade.vercel.app](https://careerpath-ai-jade.vercel.app)** | Production client deployed on Vercel Global Edge Network |
 | ⚡ **Live API Gateway** | **[https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)** | Node.js Express REST API hosted on Render Cloud |
 | 🩺 **Live Health Check** | **[https://careerpath-ai-bdbt.onrender.com/api/health](https://careerpath-ai-bdbt.onrender.com/api/health)** | Real-time server telemetry, database connection & uptime monitor |
-| 🔑 **Official Demo Account** | **`demouser@gmail.com`** &nbsp;•&nbsp; Pass: **`demo123`** | Pre-seeded with student profile, verified skills & active roadmap *(or click 1-Click Auto-Fill)* |
+| 🔑 **Official Demo Account** | **`demouser@gmail.com`** &nbsp;•&nbsp; Pass: **`demo123`** | Pre-seeded with student profile, verified skills & active roadmap *(Dual Evaluation Bypass enabled)* |
 | 🏢 **Demo Recruiter Account** | **`recruiter@razorpay.com`** &nbsp;•&nbsp; Pass: **`demo123`** | Pre-seeded Razorpay verified company, active job posting & candidate applicant radar *(or click 1-Click Demo Recruiter on `/login.html`)* |
+| 🛡️ **Portal Isolation & RBAC** | **Strict Student vs Recruiter Guard** | Dedicated page catalogs, instant client pre-render redirect traps, and backend `requireStudent` / `requireRecruiter` RBAC |
+| 🧭 **Role-Smart Logo Navigation** | **Contextual Home Dispatch** | Clicking brand logo routes recruiters to `/recruiter-dashboard.html`, students to `/dashboard.html`; auto-redirects recruiters visiting `/index.html` unless `?view=public` |
 | 🛡️ **Recruiter Verification & Radar** | **[`/recruiter-dashboard.html`](https://careerpath-ai-jade.vercel.app/recruiter-dashboard.html)** | Real company domain verification, 60+ webmail blacklist, DNS MX resolution, AI trust scoring, opening creation & Applicant Radar with candidate verified badges |
 | 💼 **Direct Recruiter Job Board** | **[`/jobs.html`](https://careerpath-ai-jade.vercel.app/jobs.html)** | Student-facing verified company job openings with personalized AI skill match percentage & 1-click apply |
+| 📺 **Video Learning Dedication** | **Anti-Scrubbing Guard & 1.5x Cap** | Enforces true video watch time in roadmap learning chamber; auto-pauses on window blur/tab switch |
 | 🌐 **Google Authentication** | **1-Click Google Sign-In & Sign-Up** | Animated Google logo with multi-chromatic micro-interactions & Google Identity Services |
 | 🐙 **GitHub Auth Sync** | **Zero-Prompt Repository Sync** | `POST /api/auth/github/sync` uses JWT session token; eliminates manual username prompt |
 | 🎯 **Skill Reality-Check Quiz** | **[`/quiz.html`](https://careerpath-ai-jade.vercel.app/quiz.html)** | 5-question dynamic micro-quiz powered by **Groq Llama 3.3 70B** (<300ms) with BYOK modal |
@@ -579,6 +590,39 @@ The resume widget on `/dashboard.html` features 6 fluid states:
 5. **Confirm Delete Modal:** Safe confirmation before cloud asset destruction.
 6. **Error / Toast State:** Instant feedback on oversized files (>5MB) or invalid signatures.
 
+### 7.4 Modernized Student Profile Header Card (Apple/Linear Aesthetic Overhaul)
+The primary Student Identity & Status card on `/dashboard.html` features an executive-grade aesthetic overhaul built on Apple HIG and Linear design tokens:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                          EXECUTIVE STUDENT PROFILE HEADER BANNER                                │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                 │
+│  [ Circular 50% Avatar ]  Parth Patil  [ 🛡️ Verified Student ]                                  │
+│  Border: 2.5px Solid      BCA · Second Year · Modern College · 📄 Resume (1-Click Pill)        │
+│                                                                                                 │
+│  [ Segmented Status Track: ⚪ Actively Seeking  |  Open to Learning  |  Interviewing ]           │
+│  Pill Track (#F1F5F9) · Active Pill (#FFFFFF, shadow-sm, #4338CA indigo text)                   │
+│                                                                                                 │
+│  [ Actions: ⚡ Launch AI Quiz (Gradient Glow Capsule) ]  [ ✏️ Edit Profile (Elevation Capsule) ]│
+│                                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Segmented Status Control (`.status-segmented-control`):**
+   - Replaced generic button groups with an iOS/Linear-grade capsule pill track (`background: #F1F5F9`, `border-radius: 9999px`, `padding: 4px`).
+   - The selected status smoothly transitions to a crisp white pill (`#FFFFFF`) with a micro-elevation shadow (`0 1px 3px rgba(15, 23, 42, 0.08)`), active indicator dot, and indigo text (`#4338CA`).
+2. **Circular 50% Profile Avatar (`.dashboard-avatar`):**
+   - Styled with a perfect circular border radius (`border-radius: 50%`), white border (`border: 2.5px solid #FFFFFF`), and clean image containment (`overflow: hidden`).
+   - Built-in `onerror` image fallback automatically renders a crisp typography initial avatar.
+3. **Verified Student Badge (`.badge-verified-student`):**
+   - Soft indigo pill (`#EEF2FF` background, `#C7D2FE` border, `#4338CA` text) featuring a vector shield icon (`bi-shield-check`), replacing monospace styling.
+4. **Vector Metadata Line (`.profile-meta-line`):**
+   - Clean iconography (`bi-mortarboard`, `bi-calendar3`, `bi-building`) with subtle dot separators (`·`) and a capsule pill for `"View Resume"` (`.profile-resume-pill`).
+5. **Executive Action Buttons:**
+   - Primary: `.btn-profile-primary` (indigo-to-cyan gradient capsule with subtle glow on hover).
+   - Secondary: `.btn-profile-secondary` (white capsule with `#E2E8F0` border and hover elevation).
+
 ---
 
 ## 💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem
@@ -786,6 +830,98 @@ Students explore direct company openings on `/jobs.html` and `/dashboard.html`:
 - **Compound Unique Protection:** MongoDB compound index `{ job: 1, student: 1 }` prevents duplicate applications, ensuring a clean pipeline.
 - **Application Tracking:** Students monitor their application review status and recruiter notes live under the "My Submitted Applications" tab.
 
+### 11.6 Recruiter & Student Portal Isolation & RBAC Architecture
+To guarantee absolute professional boundaries between hiring companies and students, CareerPath AI enforces **zero-leakage Portal Isolation** at both client and server tiers:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         TWO-TIER ZERO-LEAKAGE PORTAL ISOLATION ARCHITECTURE                      │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                  │
+│   STUDENT PORTAL SPACE                                       RECRUITER ENTERPRISE SPACE          │
+│   • dashboard.html, assessment.html,                         • recruiter-dashboard.html          │
+│     recommendations.html, roadmap.html,                        (Openings & Candidate Radar)      │
+│     resume-builder.html, quiz.html                           • recruiter-register.html           │
+│                                                              • recruiter-login.html              │
+│                                                                                                  │
+│   TIER 1: SYNCHRONOUS CLIENT-SIDE PRE-RENDER TRAP (auth.js)                                      │
+│   • Executes on script load BEFORE HTML/DOM renders                                              │
+│   • Recruiter on student page ──► Instant redirect to recruiter-dashboard.html + warning flash    │
+│   • Student on recruiter page ──► Instant redirect to dashboard.html + warning flash             │
+│   • Dual evaluation access for demouser@gmail.com / admin accounts preserved                     │
+│                                                                                                  │
+│   TIER 2: SERVER-SIDE RBAC MIDDLEWARE (authMiddleware.js)                                        │
+│   • requireStudent: Rejects recruiters attempting student actions with HTTP 403                  │
+│     (RECRUITER_ACCESS_DENIED)                                                                    │
+│   • requireRecruiter: Rejects students attempting corporate actions with HTTP 403                │
+│     (STUDENT_ACCESS_DENIED)                                                                      │
+│                                                                                                  │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Catalogs of Isolated Routes:**
+   - `STUDENT_PAGES`: `dashboard.html`, `assessment.html`, `recommendations.html`, `roadmap.html`, `resume-builder.html`, `quiz.html`.
+   - `RECRUITER_PAGES`: `recruiter-dashboard.html`.
+   - Shared Public Space: `index.html` (public marketing landing), `jobs.html` (public job board with role-adaptive actions), `login.html`, `register.html`.
+2. **Synchronous Client Pre-Render Traps (`client/js/auth.js`):**
+   - Implemented in an immediate execution function (`enforcePortalIsolation`) running before the browser paints the DOM.
+   - If a recruiter account enters any student-only page, they are instantly redirected via `window.location.replace('recruiter-dashboard.html')` with an explanatory session flash notification (`consumePortalAlert()`).
+   - If a student account attempts to access the recruiter hub, they are instantly redirected to `dashboard.html`.
+3. **Dual Access Evaluator Bypass:**
+   - Evaluator demo credentials (`demouser@gmail.com`) and admin accounts are granted dual bypass privilege, enabling judges to seamlessly inspect student workflows and recruiter applicant radars without having to constantly log out and switch sessions.
+4. **Server-Side Authorization Enforcers (`authMiddleware.js`):**
+   - `requireStudent`: Inspects `req.user.role`. Rejects corporate recruiters with `403 RECRUITER_ACCESS_DENIED`.
+   - `requireRecruiter`: Enforces `user.role === 'recruiter' || user.canPostJobs`. Rejects students with `403 STUDENT_ACCESS_DENIED`.
+
+### 11.7 Role-Smart Brand Logo Dispatch & Landing Page Redirection Engine
+When users click the platform brand logo (`<a class="navbar-brand">`) or navigate to the root landing page (`index.html`), CareerPath AI executes intelligent role-aware routing:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                           ROLE-SMART BRAND LOGO DISPATCH ENGINE                                  │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                  │
+│   USER CLICKS BRAND LOGO (<a class="navbar-brand">)                                              │
+│                                │                                                                 │
+│                                ▼                                                                 │
+│                   Checked via Auth.bindSmartLogo()                                               │
+│                                │                                                                 │
+│       ┌────────────────────────┼────────────────────────┐                                        │
+│       ▼                        ▼                        ▼                                        │
+│  [RECRUITER]               [STUDENT]                [GUEST / LOGGED-OUT]                         │
+│  Always stays inside:      Always returns to:       Navigates to:                                │
+│  recruiter-dashboard.html  dashboard.html           index.html                                   │
+│  (Brand badge: RECRUITER)  (Student Atlas)          (Public Marketing Page)                      │
+│                                                                                                  │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                     WHAT HAPPENS IF A RECRUITER OPENS index.html?                                │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                  │
+│   Strategy A (Auto-Redirect - SaaS Standard):                                                    │
+│   • index.html detects Auth.isRecruiter() === true                                               │
+│   • Automatically executes: window.location.replace('recruiter-dashboard.html')                  │
+│   • Result: Corporate recruiters never get stranded on student assessment onboarding!            │
+│                                                                                                  │
+│   Strategy B (Adaptive Recruiter Landing - If visiting with ?view=public):                       │
+│   • Sleek top floating banner: "🏢 Recruiter Mode: Logged in as [Name]. [Return to Dashboard →]"│
+│   • Hero CTA adapts: "Start Assessment" ──► "Go to Recruiter Dashboard →"                        │
+│   • Secondary CTA adapts: "View Career Matches" ──► "Post Job Opening"                           │
+│   • Navbar CTA adapts: "Start Assessment" ──► "Recruiter Portal"                                 │
+│                                                                                                  │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Centralized Brand Logo Binding (`Auth.bindSmartLogo()`):**
+   - Automatically executes across all pages during `Auth.initNav()` and on `DOMContentLoaded`.
+   - Identifies active role: sets `href="recruiter-dashboard.html"` for recruiters, dynamically inserting an active pulsing `RECRUITER` pill badge (`pulse-dot-green`) into the brand island.
+   - Sets `href="dashboard.html"` for students, and `href="index.html"` for guests.
+2. **Synchronous Pre-Render Landing Auto-Redirect:**
+   - In `<head>` of `index.html` and in `auth.js`, logged-in recruiters opening `index.html` without `?view=public` are automatically redirected to `recruiter-dashboard.html` before any student copy renders.
+3. **Adaptive Recruiter Preview Mode (`?view=public`):**
+   - Visiting `index.html?view=public` allows corporate users to view the public marketing site while retaining full session awareness.
+   - Injects a floating dark session bar (`#recruiterActiveSessionBar`) with recruiter identity, company affiliation, and 1-click return to dashboard.
+   - Dynamically transforms hero buttons: `"Start Assessment"` becomes `"Go to Recruiter Dashboard"`, and secondary CTA becomes `"Post Job Opening"`.
+
 ---
 
 ## 🏗️ End-to-End System Architecture (Mermaid)
@@ -918,6 +1054,8 @@ flowchart TD
 | `POST` | `/api/roadmaps/current/abandon`| Protected (JWT) | **7-day cooldown guard:** Non-destructive route abandonment; preserves 100% of quiz scores and skills |
 | `POST` | `/api/roadmaps/:id/resume` | Protected (JWT) | Re-activates an abandoned roadmap if fewer than 2 active routes exist and synergy passes |
 | `PATCH`| `/api/roadmaps/tasks/:id` | Protected (JWT) | Atomic server-side task checkbox completion & real-time % recalculation |
+| `POST` | `/api/roadmaps/tasks/:taskId/verify-video` | Protected (JWT) | **Video Dedication AI Guard:** Evaluates takeaway synthesis via Groq/Gemini, enforces watch time |
+| `GET`  | `/api/roadmaps/tasks/:taskId/video-checkpoint` | Protected (JWT) | Delivers interactive mid-video 50% comprehension questions |
 | `GET`  | `/api/readiness/job-ready-check`| Protected (JWT) | Evaluates the 4-Rule Industry Job Ready certification rubric |
 | `GET`  | `/api/readiness/composite` | Protected (JWT) | Returns continuous **Career GPS Job Readiness Index ($0-100\%$)** with evidence weights |
 | `POST` | `/api/quiz/start` | Optional / Demo | Generates 5 calibrated questions via Groq Llama 3.3 70B / Gemini Flash / Fallback |
@@ -1024,6 +1162,9 @@ npm run migrate:roadmaps
 
 # Verify Recruiter Verification, Real Company Validation & Job Posting Pipeline
 node tests/recruiter_verification_e2e_test.js
+
+# Verify Portal Isolation RBAC, Smart Logo Navigation & Landing Auto-Redirect (26 Assertions)
+node tests/portal_isolation_rbac_test.js
 ```
 
 #### 🛡️ Live Automated Invariant Test Results (100% Pass Rate):
@@ -1070,6 +1211,22 @@ node tests/recruiter_verification_e2e_test.js
   -> PASSED: Candidate retrieved with verified badges; stage updated to SHORTLISTED and INTERVIEW
 ================================================================
 🎉 ALL 6 SUITE TESTS PASSED WITH 100% SUCCESS!
+================================================================
+
+================================================================
+🚀 PORTAL ISOLATION RBAC & SMART NAVIGATION VERIFICATION SUITE
+================================================================
+✔ Test 1: requireStudent blocks recruiter role (HTTP 403, RECRUITER_ACCESS_DENIED)
+✔ Test 2: requireStudent allows student role (HTTP 200 OK)
+✔ Test 3: requireStudent allows demo/admin account (demouser@gmail.com bypass)
+✔ Test 4: requireRecruiter blocks student role (HTTP 403, STUDENT_ACCESS_DENIED)
+✔ Test 5: requireRecruiter allows recruiter role (HTTP 200 OK)
+✔ Test 6: requireRecruiter allows demo/admin account (dual evaluation bypass)
+✔ Test 7: Client-side Isolation Routing Rules (zero catalog overlap)
+✔ Test 8: Smart Brand Logo Dispatch Logic (Recruiter, Recruiter Page, Student, Guest)
+✔ Test 9: Landing Page Auto-Redirect & ?view=public Logic (Auto-redirect vs Preview Mode)
+================================================================
+🎉 ALL 26 PORTAL ISOLATION TESTS PASSED WITH 100% SUCCESS!
 ================================================================
 ```
 
