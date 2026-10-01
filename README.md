@@ -37,8 +37,10 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Explainable_AI-Deterministic_60%2F25%2F15_Formula-0ea5e9?style=flat-square" alt="Explainable AI" />
-  <img src="https://img.shields.io/badge/Roadmap-Single_Active_Route_(Partial_Index)-0284c7?style=flat-square" alt="Single Route" />
-  <img src="https://img.shields.io/badge/Job_Ready-4--Rule_Certification_Engine-10b981?style=flat-square" alt="Job Ready Engine" />
+  <img src="https://img.shields.io/badge/Roadmaps-Dual_Concurrent_Tracks_(Synergy_Gated)-0284c7?style=flat-square" alt="Dual Routes" />
+  <img src="https://img.shields.io/badge/Job_Hub-6_Portal_Live_Launcher-2563eb?style=flat-square" alt="6-Portal Job Hub" />
+  <img src="https://img.shields.io/badge/Mock_Chamber-AI_Voice_Interactive-ec4899?style=flat-square" alt="AI Voice Chamber" />
+  <img src="https://img.shields.io/badge/Readiness_Index-Realtime_Career_GPS-10b981?style=flat-square" alt="Career GPS" />
   <img src="https://img.shields.io/badge/Resume-Dedicated_1%3A1_Schema_%26_Magic_Bytes-8b5cf6?style=flat-square" alt="Resume Schema" />
   <img src="https://img.shields.io/badge/AI_Quiz-Groq_Llama_3.3_%26_Gemini-FF6F00?style=flat-square&logo=fastapi&logoColor=white" alt="AI Quiz Engine" />
   <img src="https://img.shields.io/badge/Verification-Code--Grounded_Proof_of_Work-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub Verification" />
@@ -58,25 +60,38 @@
    - [3.4 Primary Stream Isolation (No Foreign Stream Spillover)](#34-primary-stream-isolation-no-foreign-stream-spillover)
    - [3.5 Deterministic Natural Language Explanations (Zero Hallucinations)](#35-deterministic-natural-language-explanations-zero-hallucinations)
 4. [🛡️ Two-Factor Skill Verification Moat (Defeating Resume Inflation)](#️-two-factor-skill-verification-moat-defeating-resume-inflation)
-5. [🗺️ Hardened Single Active Career Route Architecture](#️-hardened-single-active-career-route-architecture)
-   - [5.1 The Tutorial-Hopping Dilemma & DB Invariant](#51-the-tutorial-hopping-dilemma--db-invariant)
-   - [5.2 MongoDB Partial Unique Index (`status: 'active'`)](#52-mongodb-partial-unique-index-status-active)
-   - [5.3 Non-Destructive 7-Day Rate-Limited Abandonment](#53-non-destructive-7-day-rate-limited-abandonment)
-   - [5.4 "Lock Enrolling, Never Browsing" UI Paradigm](#54-lock-enrolling-never-browsing-ui-paradigm)
-6. [🏆 4-Rule Industry Job Ready Certification Engine](#-4-rule-industry-job-ready-certification-engine)
+5. [🗺️ Dual Concurrent Career Roadmaps & Course Synergy Architecture](#️-dual-concurrent-career-roadmaps--course-synergy-architecture)
+   - [5.1 The Parallel Learning Dilemma & DB Invariant](#51-the-parallel-learning-dilemma--db-invariant)
+   - [5.2 MongoDB Compound Partial Unique Index (`{ user: 1, career: 1 }`)](#52-mongodb-compound-partial-unique-index-user-1-career-1)
+   - [5.3 Course Synergy Rules Engine (3-Level Validation)](#53-course-synergy-rules-engine-3-level-validation)
+   - [5.4 Non-Destructive 7-Day Rate-Limited Abandonment](#54-non-destructive-7-day-rate-limited-abandonment)
+   - [5.5 Dynamic Track Switcher & "Lock Enrolling, Never Browsing" UI](#55-dynamic-track-switcher--lock-enrolling-never-browsing-ui)
+6. [🏆 4-Rule Industry Job Ready Certification & Readiness Index Engine](#-4-rule-industry-job-ready-certification--readiness-index-engine)
+   - [6.1 The 4-Rule Certification Rubric](#61-the-4-rule-certification-rubric)
+   - [6.2 10-Step Career GPS & Job Readiness Index Engine](#62-10-step-career-gps--job-readiness-index-engine)
+   - [6.3 1-Click "Bridge the Gap" Roadmap Injection](#63-1-click-bridge-the-gap-roadmap-injection)
 7. [📄 Dedicated Single Resume per Account Architecture](#-dedicated-single-resume-per-account-architecture)
    - [7.1 Binary Magic-Byte Inspection (`%PDF`, `DOCX`, `DOC`)](#71-binary-magic-byte-inspection-pdf-docx-doc)
    - [7.2 Transactional Cloudinary Asset Destruction (Zero Leakage)](#72-transactional-cloudinary-asset-destruction-zero-leakage)
    - [7.3 6-State Interactive Dashboard Experience](#73-6-state-interactive-dashboard-experience)
 8. [💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem](#-supported-tech-roles--76-standardized-skills-ecosystem)
-9. [💼 Live Market Jobs Telemetry & ₹ CTC (Adzuna API)](#-live-market-jobs-telemetry---ctc-adzuna-api)
-10. [🏗️ End-to-End System Architecture (Mermaid)](#️-end-to-end-system-architecture-mermaid)
-11. [🔌 Core REST API Directory](#-core-rest-api-directory)
-12. [💰 Business Model & B2B2C Talent & Telemetry Flywheel](#-business-model--b2b2c-talent--telemetry-flywheel)
-13. [🔒 Security, Guardrails & Anti-Abuse Protocols](#-security-guardrails--anti-abuse-protocols)
-14. [⚡ Local Quickstart & Automated Test Suites](#-local-quickstart--automated-test-suites)
-15. [🤖 Official AI Usage Disclosure (Rulebook Compliance)](#-official-ai-usage-disclosure-rulebook-compliance)
-16. [👥 The Team — 404 Brain Not Found & Acknowledgements](#-the-team--404-brain-not-found--acknowledgements)
+9. [💼 Multi-Site Job Market Hub & Direct Portal Launchers](#-multi-site-job-market-hub--direct-portal-launchers)
+   - [9.1 6-Portal Deep-Link URL Resolution Engine](#91-6-portal-deep-link-url-resolution-engine)
+   - [9.2 ⚡ "Launch All Major Portals" Multi-Tab Orchestration](#92--launch-all-major-portals-multi-tab-orchestration)
+   - [9.3 Per-Card Cross-Platform Portal Launchers](#93-per-card-cross-platform-portal-launchers)
+   - [9.4 Live Adzuna API Telemetry & ₹ CTC Salary Ranges](#94-live-adzuna-api-telemetry---ctc-salary-ranges)
+10. [🎙️ AI Voice Interactive Mock Interview Chamber (Career GPS Step 9)](#️-ai-voice-interactive-mock-interview-chamber-career-gps-step-9)
+   - [10.1 Multi-Voice Human Neural Speech Synthesis](#101-multi-voice-human-neural-speech-synthesis)
+   - [10.2 Real-Time Microphone Speech-to-Text Recording](#102-real-time-microphone-speech-to-text-recording)
+   - [10.3 3-Pillar Answer Correctness & Feedback Evaluation Rubric](#103-3-pillar-answer-correctness--feedback-evaluation-rubric)
+   - [10.4 Side-by-Side Model Answer Benchmarking](#104-side-by-side-model-answer-benchmarking)
+11. [🏗️ End-to-End System Architecture (Mermaid)](#️-end-to-end-system-architecture-mermaid)
+12. [🔌 Core REST API Directory](#-core-rest-api-directory)
+13. [💰 Business Model & B2B2C Talent & Telemetry Flywheel](#-business-model--b2b2c-talent--telemetry-flywheel)
+14. [🔒 Security, Guardrails & Anti-Abuse Protocols](#-security-guardrails--anti-abuse-protocols)
+15. [⚡ Local Quickstart & Automated Test Suites](#-local-quickstart--automated-test-suites)
+16. [🤖 Official AI Usage Disclosure (Rulebook Compliance)](#-official-ai-usage-disclosure-rulebook-compliance)
+17. [👥 The Team — 404 Brain Not Found & Acknowledgements](#-the-team--404-brain-not-found--acknowledgements)
 
 ---
 
@@ -93,7 +108,10 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 🌐 **Google Authentication** | **1-Click Google Sign-In & Sign-Up** | Animated Google logo with multi-chromatic micro-interactions & Google Identity Services |
 | 🐙 **GitHub Auth Sync** | **Zero-Prompt Repository Sync** | `POST /api/auth/github/sync` uses JWT session token; eliminates manual username prompt |
 | 🎯 **Skill Reality-Check Quiz** | **[`/quiz.html`](https://careerpath-ai-jade.vercel.app/quiz.html)** | 5-question dynamic micro-quiz powered by **Groq Llama 3.3 70B** (<300ms) with BYOK modal |
-| 🗺️ **Hardened Single Active Route** | **[`docs/ROADMAP-ENGINE.md`](docs/ROADMAP-ENGINE.md)** | MongoDB partial unique index prevents race conditions; "Lock Enrolling, Never Browsing" UX |
+| 🗺️ **Dual Active Roadmaps & Synergy** | **[`docs/ROADMAP-ENGINE.md`](docs/ROADMAP-ENGINE.md)** | Enrolls up to 2 parallel tracks ($\le 2$) with domain/skill synergy checks; compound partial unique index `{ user: 1, career: 1 }` (`status: 'active'`); dynamic track switcher |
+| 💼 **Multi-Site Job Market Hub** | **6 Live Portals & ⚡ Master Launcher** | 1-click direct search deep-links for LinkedIn Jobs, Naukri.com, Indeed India, Wellfound, Internshala, and Google for Jobs + per-card cross-platform search buttons |
+| 🎙️ **AI Voice Mock Interview** | **[`/interview.html`](https://careerpath-ai-jade.vercel.app/interview.html)** | Real-time mic recording, natural voice synthesis (Joanna, Matthew, Amy, Brian), 3-pillar evaluation (Depth, Clarity, Practicality), and model answers |
+| 🧭 **Career GPS & Readiness Index** | **Real-Time 0-100% Metric** | Live composite readiness index, 1-click "Bridge the Gap" roadmap task injection, 3-state resume gate, canonical skill ledger, profile status selector |
 | 🏆 **4-Rule Job Ready Engine** | **[`docs/ROADMAP-ENGINE.md#4-rule-industry-job-ready-certification`](docs/ROADMAP-ENGINE.md)** | Objective industry certification requiring Score ≥70%, ≥4 verified skills, progress ≥80% |
 | 📄 **Single Resume per Account** | **[`docs/RESUME-ENGINE.md`](docs/RESUME-ENGINE.md)** | Dedicated 1:1 schema, magic-byte inspection (`%PDF`, `DOCX`, `DOC`), transactional Cloudinary lifecycle |
 | 📊 **2D SVG Percentage Gauge** | **Accessible Progress Meter** | Replaced confusing 3D degree gauges (90/180) with high-contrast 0% to 100% SVG circular meter |
@@ -114,18 +132,26 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 3. **Assessment (`/assessment.html`):** Click **"Auto-Detect Skills"** in Step 3 — notice that **NO manual username prompt modal appears**! Repositories synchronize instantly via auth session, awarding glowing `[✓ Code Verified]` badges.
 4. **Adaptive Reality-Check Quiz (`/quiz.html`):** Test the 5-question micro-assessment. Test the **BYOK Provider Switcher** (Groq Llama 3.3 70B, Google Gemini 2.5 Flash, or custom key). Notice instant pedagogical feedback. Once completed, verification is permanently saved.
 5. **Explainable Recommendations (`/recommendations.html`):**
-   - View the Top 3 matched careers calculated via our transparent **60/25/15 mathematical matching engine** scoped to the student's declared **Primary Stream**.
-   - Notice the **"Lock Enrolling, Never Browsing"** pattern: open the What-If Simulator and Live Market Jobs on any card, but note that second-route enrollment is safely locked.
-6. **Adaptive Roadmap & Job Ready Engine (`/roadmap.html`):**
+   - View Top matched careers calculated via our transparent **60/25/15 mathematical matching engine** scoped to the student's declared **Primary Stream**.
+   - Test **Dual Concurrent Enrolment & Course Synergy**: Students can enroll in up to 2 complementary courses (e.g. *Full-Stack Developer* + *DevOps & Cloud Engineer*). Attempting to enroll in a 3rd course or an unrelated field is intelligently guarded.
+   - Explore the **Multi-Site Job Market Hub** directly from the recommendations page: 1-click search launchers for LinkedIn, Naukri, Indeed, Wellfound, Internshala, and Google for Jobs.
+6. **Adaptive Roadmap & Dual Track Switchers (`/roadmap.html`):**
+   - Switch seamlessly between Active Track 1 and Active Track 2 using the header pill selector.
    - Inspect milestone tasks and check off an item to observe real-time atomic progress recalculation.
    - Inspect the **`🔥 4-Rule Industry Job Ready Certification`** card with dynamic status tracking.
    - View the safe route abandonment modal (non-destructive with 7-day cooldown alert).
    - Test the **1-Click Print / PDF Export**.
-7. **Student Dashboard (`/dashboard.html`):**
+7. **AI Voice Interactive Mock Interview Chamber (`/interview.html`):**
+   - Experience the **Step 9 Career GPS Chamber**: Select a realistic voice profile (Joanna, Matthew, Amy, Brian, or neural browser default).
+   - Click the microphone button to record answers with live speech-to-text and animated voice waveforms.
+   - Receive an objective **3-Pillar Evaluation** (Technical Depth, Clarity & Communication, Practical Application) and compare your response against the gold-standard **Model Answer**.
+8. **Student Dashboard & Career GPS (`/dashboard.html`):**
+   - Inspect the **Career GPS & Real-Time Job Readiness Index** ($0-100\%$) with dynamic status badges.
    - Check the **Accessible 2D SVG Percentage Progress Gauge** (0% to 100%).
+   - Inspect the **Multi-Site Job Market Hub** with live Indian tech telemetry and the master ⚡ **"Launch All Major Portals"** button.
    - Inspect the **Single Resume per Account** manager with drag-and-drop, magic byte security, and transactional replace actions.
    - Inspect the **GitHub Study Lab**: browse connected public study projects, inspect AI-generated *Study Relevance* notes, and view top programming language breakdowns.
-8. **AI Career Mentor Drawer:** Click the floating **`🤖 AI Mentor`** button in the bottom-right for sub-300ms career coaching powered by **Groq Llama 3.3 70B** with **Gemini 2.5 Flash** failover.
+9. **AI Career Mentor Drawer:** Click the floating **`🤖 AI Mentor`** button in the bottom-right for sub-300ms career coaching powered by **Groq Llama 3.3 70B** with **Gemini 2.5 Flash** failover.
 
 ---
 
@@ -325,53 +351,147 @@ Self-reported resumes in India suffer from severe inflation. CareerPath AI intro
 
 ---
 
-## 🗺️ Hardened Single Active Career Route Architecture
+## 🗺️ Dual Concurrent Career Roadmaps & Course Synergy Architecture
 
-### 5.1 The Tutorial-Hopping Dilemma & DB Invariant
-Online learners frequently drop out because they enroll in 5 different tracks simultaneously, completing 5% of each and mastering none. In multi-tab browsing or rapid clicking, race conditions can also generate duplicate active roadmaps.
+### 5.1 The Parallel Learning Dilemma & DB Invariant
+Online learners frequently drop out when they enroll in 5+ disparate tracks simultaneously, completing 5% of each and mastering none. However, real-world engineering often requires **complementary dual skills** (e.g. *Full-Stack Developer* paired with *DevOps & Cloud Engineer*, or *Front-End Developer* paired with *UI/UX Designer*).
 
-To solve this, CareerPath AI enforces a **Single Active Route Invariant** at the database engine level.
+To balance focus with multidisciplinary synergy, CareerPath AI transitioned from a single rigid route to a **Dual Concurrent Active Roadmaps Architecture** ($\le 2$ parallel tracks), rigorously enforced at both the database engine and service layer.
 
-### 5.2 MongoDB Partial Unique Index (`status: 'active'`)
+### 5.2 MongoDB Compound Partial Unique Index (`{ user: 1, career: 1 }`)
+To prevent duplicate enrollments in the same career track while strictly allowing up to 2 distinct active tracks:
+
 ```javascript
 // server/models/Roadmap.js
 RoadmapSchema.index(
-  { user: 1 },
+  { user: 1, career: 1 },
   { 
     unique: true, 
     partialFilterExpression: { status: 'active' } 
   }
 );
 ```
-- **Guaranteed Singularity:** A student can have at most **one** roadmap with `status: 'active'`.
-- **Concurrency Immune:** If concurrent requests bypass the API controller, MongoDB throws error `E11000 duplicate key error`.
-- **Historical Flexibility:** A student can possess unlimited roadmaps with `status: 'completed'`, `'abandoned'`, or `'archived'`.
+- **Zero Duplicate Tracks:** A student can never have two active roadmaps for the *same* career track (`E11000 duplicate key error`).
+- **Bounded Concurrency:** The service layer restricts total active roadmaps to at most **2 tracks** (`status: 'active'`).
+- **Historical Flexibility:** Unlimited completed, abandoned, or archived roadmaps can coexist in the student's career history.
 
-### 5.3 Non-Destructive 7-Day Rate-Limited Abandonment
+### 5.3 Course Synergy Rules Engine (3-Level Validation)
+When a student attempts to enroll in a second active course via `POST /api/roadmaps/generate`, `server/services/courseSynergyService.js` executes three sequential runtime checks:
+
+```
+                      [ Enroll Second Course Request ]
+                                     │
+                 ┌───────────────────┴───────────────────┐
+                 ▼                                       ▼
+    Check A: Same Career Already?           Check B: Active Courses >= 2?
+        ├── YES -> HTTP 409                     ├── YES -> HTTP 409
+        │   (ALREADY_ENROLLED_IN_COURSE)        │   (MAX_ACTIVE_ROUTES_REACHED)
+        └── NO                                  └── NO
+                 │                                       │
+                 └───────────────────┬───────────────────┘
+                                     ▼
+                      Check C: Course Synergy Analysis
+                                     │
+       ┌─────────────────────────────┼─────────────────────────────┐
+       ▼                             ▼                             ▼
+  Level 1: Category Match?     Level 2: Synergy Pair?     Level 3: Skill Overlap?
+  Same Primary Domain          Pre-mapped Cross-Domain    Shared Tech Skills >= 2
+  (e.g., Dev + Dev,            (e.g., FullStack + DevOps, (e.g., JavaScript & Git
+   Data + Data)                 Frontend + UI/UX)          intersection)
+       │                             │                             │
+       └─────────────────────────────┼─────────────────────────────┘
+                                     ▼
+                        [ At Least 1 Match Passed? ]
+                           ├── YES -> HTTP 201 Created (Dual Active Route Enrolled)
+                           └── NO  -> HTTP 400 (UNRELATED_COURSE_RESTRICTION)
+```
+
+1. **Check A (`HTTP 409 ALREADY_ENROLLED_IN_COURSE`):** Verifies the student is not already actively pursuing this exact role.
+2. **Check B (`HTTP 409 MAX_ACTIVE_ROUTES_REACHED`):** Checks `Roadmap.countDocuments({ user, status: 'active' })`. If $\ge 2$, blocks further active enrollments.
+3. **Check C (`HTTP 400 UNRELATED_COURSE_RESTRICTION`):** Evaluates relationship between the new candidate track and the currently active track across 3 deterministic criteria:
+   - **Level 1 (Domain Match):** Both careers share the same primary industry category (e.g., both `Development`, both `Data`, or both `Security`).
+   - **Level 2 (Cross-Domain Synergy Pairs):** Recognized industry crossover pairings:
+     - `full-stack-developer` $\leftrightarrow$ `devops-cloud-engineer`
+     - `front-end-developer` $\leftrightarrow$ `ui-ux-designer`
+     - `data-analyst` $\leftrightarrow$ `ai-ml-engineer`
+     - `backend-engineer` $\leftrightarrow$ `cloud-security-engineer`
+     - `cybersecurity-analyst` $\leftrightarrow$ `cloud-security-engineer`
+     - `ai-ml-engineer` $\leftrightarrow$ `data-scientist`
+   - **Level 3 (Dynamic Skill Intersection):** If categories differ and no pair is hardcoded, the engine computes set intersection $\ge 2$ shared technical skills from their curriculum definitions.
+
+If all three levels fail (e.g., attempting to enroll in *Game Developer* while pursuing *Healthcare Analytics*), the system returns a descriptive error explaining why learning divergence impairs skill retention.
+
+### 5.4 Non-Destructive 7-Day Rate-Limited Abandonment
 Students are not locked into a career indefinitely, but abandonment is treated with intentional discipline:
 1. **7-Day Rate-Limiting Cooldown:** `User.lastAbandonedRouteAt` tracks abandonment. If a student attempts to abandon again within 7 days, the request returns `HTTP 429 ABANDON_COOLDOWN_ACTIVE`.
 2. **Zero Progress Loss Guarantee:** Abandoning updates roadmap status to `'abandoned'`. All weekly milestone test scores, task checkboxes, and verified skill badges are **100% preserved**.
-3. **Resumption:** An abandoned roadmap can be resumed anytime via `POST /api/roadmaps/:id/resume`, provided the student has no active route.
+3. **Resumption:** An abandoned roadmap can be resumed anytime via `POST /api/roadmaps/:id/resume`, provided the student has $< 2$ active routes and passes course synergy criteria.
 
-### 5.4 "Lock Enrolling, Never Browsing" UI Paradigm
-On `/recommendations.html`:
-- **Exploration is 100% Unlocked:** Students can freely inspect requirements, review full skill-gap breakdowns, test the interactive What-If Simulator, and inspect Live Market Jobs on any career card.
-- **Enrolment is Strictly Gated:** Other career tracks show a sleek, accessible locked action:
+### 5.5 Dynamic Track Switcher & "Lock Enrolling, Never Browsing" UI
+- **Pill Tab Switchers:** Both `/dashboard.html` and `/roadmap.html` feature dynamic dual-track switchers:
   ```html
-  <button class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="Finish your current route or abandon it to start this one">
-    <i class="bi bi-lock-fill me-1"></i> Locked (Active Route Enrolled)
-  </button>
+  <div class="cp-track-switcher btn-group" role="group">
+    <button class="btn btn-primary active">⚡ Track 1: Full-Stack Developer (45%)</button>
+    <button class="btn btn-outline-secondary">⚡ Track 2: DevOps Engineer (20%)</button>
+  </div>
   ```
-- **High-Contrast Slate Aesthetics (`.cp-btn-locked`):** Uses `#475569` text on a `#F1F5F9` slate background with `#CBD5E1` border—replacing legacy dark-grey-with-blue-text buttons with 100% WCAG AA compliant contrast.
-- **Single Horizontal Baseline Alignment:** Sibling buttons (`⚡ What-If Simulator`, `💼 Live Market Jobs`, and `🔒 Locked (Active Route Enrolled)`) share identical sizing (`btn-sm px-3 py-2 fw-semibold`) and perfect horizontal alignment without dangling text.
-- **Artifact-Free Vector SVG Rendering:** Card hover animations are scoped cleanly to interactive elements, completely eliminating fuzzy `drop-shadow` blur halos and hardware-accelerated bounding box artifacts.
-- **Defensive Null-Safe Listeners:** Safe conditional event registration guarantees that active route enrollments never trigger `addEventListener` TypeError crashes.
-- **Active Route Banner:** Highlights their current enrolled route: `[⚡ ACTIVE ROUTE · Week 2 of 4 (45% Tasks)]` with 1-click navigation to `roadmap.html`.
+- **Exploration is 100% Open:** On `/recommendations.html`, students can freely inspect requirements, review full skill-gap breakdowns, test the What-If Simulator, and inspect Live Market Jobs on any card regardless of enrollment status.
+- **Smart Adaptive Action Buttons:**
+  - For currently enrolled courses: `[⚡ Enrolled Active Track]` (direct navigation to roadmap).
+  - For related courses when 1 track is active: `[+ Enroll as 2nd Track (Synergy)]`.
+  - When 2 tracks are active: `[🔒 Locked (Max 2 Active Routes)]`.
+  - For unrelated courses: `[🔒 Locked (Unrelated Track)]`.
+- **High-Contrast Slate Aesthetics (`.cp-btn-locked`):** Uses `#475569` text on a `#F1F5F9` slate background with `#CBD5E1` border—100% WCAG AA compliant.
+
+### 5.6 AI-Monitored Video Dedication & Anti-Slacking Learning Chamber
+To eliminate passive video watching, skipping, scrubbing to the end, background tab idling, and trivial checkbox clicking, CareerPath AI features a specialized in-app **Focus Learning Chamber**:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                   CAREERPATH AI DEDICATED LEARNING CHAMBER                       │
+├──────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                  │
+│   1. ACTIVE TAB / FOCUS GUARDIAN                                                │
+│      • Page Visibility API + window.onblur detection                             │
+│      • Switching tabs, minimizing, or window blur immediately AUTO-PAUSES video │
+│        with a prominent focus warning banner.                                    │
+│                                                                                  │
+│   2. ANTI-SCRUBBING & SPEED CONTROLS                                             │
+│      • Forward scrubbing clamped to highest continuously watched timestamp.     │
+│      • Playback rate capped at 1.5x (prevents unintelligible speed-running).     │
+│                                                                                  │
+│   3. MID-VIDEO AI CONCEPT PULSE (50% Checkpoint)                                 │
+│      • Video seamlessly pauses at 50% timestamp.                                 │
+│      • Interactive single-concept question dynamically generated from topic.     │
+│      • Must answer correctly to resume the second half of the lesson.            │
+│                                                                                  │
+│   4. POST-VIDEO REFLECTION & AI EVALUATION (Gemini 2.5 Flash / Groq)             │
+│      • At ≥85% watch time, reflection panel unlocks.                             │
+│      • Student writes 2–3 key takeaways; LLM evaluates relevance and depth.      │
+│      • Rejects generic buzzwords and spam; passes with score ≥60%.               │
+│                                                                                  │
+│   5. SERVER-AUTHORITATIVE TASK GATE                                              │
+│      • PATCH /api/roadmaps/tasks/:taskId/toggle strictly blocks unverified video │
+│        tasks with HTTP 403 (VIDEO_VERIFICATION_REQUIRED).                        │
+│      • Only verified video completion sets task.completed = true.                │
+│                                                                                  │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+- **Backend Endpoints:**
+  - `POST /api/roadmaps/tasks/:taskId/verify-video`: Evaluates student synthesis text using Gemini 2.5 Flash / Groq Llama 3.3, records verification timestamp and score, and automatically triggers roadmap recalculation.
+  - `GET /api/roadmaps/tasks/:taskId/video-checkpoint`: Delivers targeted mid-video comprehension checks from curated tech question banks or AI generation.
+  - `PATCH /api/roadmaps/tasks/:taskId/toggle`: Enforces server-authoritative 403 blocking on manual checkbox toggling for unverified video lessons.
+- **Client Focus Guardian:**
+  - Integrates YouTube IFrame API with telemetry tracking every 500ms.
+  - Floats `#focusPausedOverlay` whenever tab visibility is lost.
+  - Highlights verified lessons with `[✓ Video Verified (Score%)]` green badges.
 
 ---
 
-## 🏆 4-Rule Industry Job Ready Certification Engine
+## 🏆 4-Rule Industry Job Ready Certification & Readiness Index Engine
 
+### 6.1 The 4-Rule Certification Rubric
 To replace meaningless certificates of completion, CareerPath AI evaluates students against **4 strict industry rules** (`server/services/readinessService.js`):
 
 ```
@@ -396,7 +516,15 @@ A student is awarded the **Job Ready Certified** credential if and only if all 4
 
 $$\text{JobReady} = (\text{Score} \ge 70) \land (\text{VerifiedSkills} \ge 4) \land (\text{Progress} \ge 80 \lor \text{Graduated}) \land (\text{ExpiredSkills} = 0)$$
 
-The live evaluation is accessible via `GET /api/readiness/job-ready-check` and rendered dynamically on `/roadmap.html` and `/dashboard.html`.
+### 6.2 10-Step Career GPS & Job Readiness Index Engine
+Beyond binary certification, the **10-Step Career GPS Engine** calculates a real-time, continuous **Job Readiness Index ($0-100\%$)** reflecting comprehensive hiring preparedness:
+- **Canonical Skill Evidence Ledger:** Distinguishes between self-declared (`self`), micro-quiz certified (`quiz`), and code-verified (`github`) evidence with weighted confidence tiers.
+- **3-State Resume Gate:** Tracks resume status (`missing` $\to$ `draft` $\to$ `ready`) requiring verified magic bytes and active cloud deployment.
+- **Profile Status Selector (`PATCH /api/users/profile-status`):** Students can declare their current job search posture: `actively_seeking`, `open_to_learning`, or `interviewing`.
+- **Live Readiness Gauge:** Visible on the dashboard and roadmap with immediate breakdown of what actions increase the score.
+
+### 6.3 1-Click "Bridge the Gap" Roadmap Injection
+When browsing matched job postings with missing prerequisites, the student clicks **"⚡ Bridge the Gap"** (`POST /api/jobs/bridge-gap`). The engine automatically synthesizes tailored micro-learning tasks and dynamically injects them into the student's current active roadmap week—transforming job rejection anxiety into an immediate 7-day action plan.
 
 ---
 
@@ -457,12 +585,102 @@ CareerPath AI dynamically evaluates, visualizes, and roadmaps **15 high-demand t
 
 ---
 
-## 💼 Live Market Jobs Telemetry & ₹ CTC (Adzuna API)
+## 💼 Multi-Site Job Market Hub & Direct Portal Launchers
 
-CareerPath AI directly bridges learning with Indian market realities by streaming live jobs and verified CTC ranges via the **Adzuna Developer API**:
-- **Real-Time Indian Salary Ranges:** Evaluates market medians across Bengaluru, Hyderabad, Pune, Mumbai, and Delhi-NCR (e.g. ₹4.5 LPA – ₹12.0 LPA).
-- **Direct Job Listings:** Students can click **"Live Market Telemetry & CTC"** on any career card to view current hiring companies, locations, and direct application links.
-- **Explainable Labeling:** In the absence of an external API key or network connectivity, telemetry seamlessly transitions to verified prototype baseline data clearly marked as such.
+CareerPath AI bridges classroom learning with direct hiring pipelines through a dual telemetry architecture: real-time salary analytics via the Adzuna API and zero-API-key dynamic portal deep-linking across **6 leading job platforms**.
+
+### 9.1 6-Portal Deep-Link URL Resolution Engine
+Implemented in `server/services/jobBoardService.js`, the platform constructs parameterized search deep links with zero third-party API keys or scraping overhead:
+
+| Portal | Brand Color | Target Domain | Query Structure & Purpose |
+| :--- | :--- | :--- | :--- |
+| **LinkedIn Jobs** | `#0077B5` | `linkedin.com/jobs` | `?keywords={title}+{skills}&location={city}` — Direct enterprise postings |
+| **Naukri.com** | `#4A90E2` | `naukri.com` | `/{role}-jobs-in-{city}?k={title}` — India's largest corporate tech board |
+| **Indeed India** | `#2164F3` | `in.indeed.com` | `?q={title}&l={city}` — Mass volume & startup postings |
+| **Wellfound (AngelList)** | `#000000` | `wellfound.com/jobs` | `?role={role}` — High-growth Web3 & AI startup hiring |
+| **Internshala** | `#1295C9` | `internshala.com` | `/{role}-internship` — Student internships & fresh graduate entry roles |
+| **Google for Jobs** | `#EA4335` | `google.com/search` | `?q={title}+jobs+in+{city}&ibp=htl;jobs` — Aggregated search across 100+ boards |
+
+The engine is exposed via `GET /api/jobs/portal-links?title=Full+Stack+Developer&location=Bengaluru&skills=React,Node.js`.
+
+### 9.2 ⚡ "Launch All Major Portals" Multi-Tab Orchestration
+On both `/dashboard.html` and `/recommendations.html`, students have access to a master action:
+- **⚡ Launch All Major Portals Button:** Fires a coordinated sequence opening the top 3 job boards (LinkedIn, Naukri, Indeed) in distinct browser tabs.
+- **Popup-Blocker Resilience:** Detects if the browser blocks multi-tab popups, displays a friendly in-app notification badge, and gracefully provides direct individual links so zero jobs are missed.
+
+### 9.3 Per-Card Cross-Platform Portal Launchers
+Every job listing card rendered in the UI features an embedded **"Search on:"** launcher ribbon with dedicated micro-badges:
+- 🔵 **LinkedIn** &nbsp;•&nbsp; 🔷 **Naukri** &nbsp;•&nbsp; 🔷 **Indeed** &nbsp;•&nbsp; 🔴 **Google Jobs**  
+Clicking any badge launches a pre-filtered query for that exact company and job title on the target platform.
+
+### 9.4 Live Adzuna API Telemetry & ₹ CTC Salary Ranges
+- **Real-Time Indian Salary Benchmarks:** Evaluates live salary percentiles across Bengaluru, Hyderabad, Pune, Mumbai, and Delhi-NCR (e.g. ₹4.5 LPA – ₹14.0 LPA).
+- **Graceful Fallback:** If external API quotas expire or the network is unreachable, verified prototype baseline data clearly marked as prototype telemetry ensures uninterrupted evaluator testing.
+
+---
+
+## 🎙️ AI Voice Interactive Mock Interview Chamber (Career GPS Step 9)
+
+Mock interviews represent the highest-friction barrier for Indian engineering graduates. CareerPath AI's **Voice Interactive Mock Interview Chamber** (`/interview.html`) delivers a realistic, low-latency, voice-first simulation directly in the browser.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│             VOICE INTERACTIVE MOCK INTERVIEW ARCHITECTURE              │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│   [ 1. Voice Question Delivery ]                                       │
+│   Web Speech Synthesis API  ──►  Joanna / Matthew / Amy / Brian Voices │
+│                                                                        │
+│   [ 2. Real-Time Voice Recording ]                                     │
+│   Microphone Audio Stream   ──►  Web Speech Recognition (STT)          │
+│                                  Live Animated Waveform Audio Visualizer│
+│                                                                        │
+│   [ 3. 3-Pillar Answer Correctness Engine ]                            │
+│   ├── Technical Depth & Terminology (40%)                              │
+│   ├── Clarity & Communication Flow (30%)                               │
+│   └── Practical Application & Trade-offs (30%)                         │
+│                                                                        │
+│   [ 4. Comprehensive Feedback & Model Answer ]                         │
+│   Dynamic Score (0-100%) + Performance Grade + Side-by-Side Model      │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### 10.1 Multi-Voice Human Neural Speech Synthesis
+Students select their preferred AI interviewer persona from a voice dropdown:
+- **Joanna / Amy:** Clear, measured professional tone with natural pauses.
+- **Matthew / Brian:** Authoritative technical recruiter cadence.
+- **Browser Neural Fallback:** High-performance native speech synthesis when offline.  
+The system highlights each word dynamically as it speaks, simulating human eye-contact pacing.
+
+### 10.2 Real-Time Microphone Speech-to-Text Recording
+- Click **"Start Recording"** to stream audio from the browser microphone.
+- An animated CSS pulse & canvas frequency waveform confirms live audio capture.
+- Words transcribe in real-time onto an editable draft notepad—allowing students to review or supplement their verbal answer before submission.
+
+### 10.3 3-Pillar Answer Correctness & Feedback Evaluation Rubric
+How does CareerPath AI determine whether an answer is correct? Rather than relying on simple keyword matching or unpredictable LLM guesswork, `server/controllers/interviewController.js` and `readinessService.js` evaluate answers across **3 objective pedagogical pillars**:
+
+1. **Pillar 1: Technical Depth & Accuracy (40% Weight):**
+   - Inspects for foundational architectural concepts, accurate terminology, core algorithmic principles, and absence of common anti-patterns.
+   - *Example (Full-Stack):* Did the candidate distinguish between optimistic locking vs pessimistic locking? Did they mention indexing strategies?
+2. **Pillar 2: Clarity & Communication Flow (30% Weight):**
+   - Assesses structured articulation (e.g. STAR method: Situation, Task, Action, Result).
+   - Penalizes repetitive filler words and unstructured rambling; rewards clear progressive explanation.
+3. **Pillar 3: Practical Application & Trade-offs (30% Weight):**
+   - Verifies whether the candidate framed their solution with real-world constraints (e.g. scalability, latency, memory limits, production cost, security).
+
+The composite score ($0-100\%$) maps to an industry grade:
+- **Exceptional (≥85%):** Strong hire recommendation; comprehensive depth.
+- **Proficient (70–84%):** Meets technical benchmark; minor omissions in edge cases.
+- **Developing (50–69%):** Basic conceptual grasp; requires depth in trade-offs.
+- **Needs Improvement (<50%):** Superficial answer or conceptual inaccuracies.
+
+### 10.4 Side-by-Side Model Answer Benchmarking
+Evaluators and students can inspect the official **Model Answer** right alongside their transcript:
+- Highlights **Key Strengths** present in the student's submission.
+- Cites **Actionable Missing Concepts** to review next.
+- Persists completion to **Career GPS Step 9** (`POST /api/interview/finalize`), updating the student's overall Job Readiness Index.
 
 ---
 
@@ -474,13 +692,19 @@ flowchart TD
         Browser["Student Web Browser"]
         UI["Glassmorphism UI Engine (HTML5 · CSS3 · 90% Bento Grid)"]
         ThreeConstellation["Three.js 3D Career Universe (Orbital Constellation + 2D Fallback)"]
+        TrackSwitcher["Dual Track Switcher (Tabs & Synergy Status)"]
         Gauge["2D SVG Percentage Progress Meter (0-100%)"]
+        VoiceChamber["AI Voice Mock Interview Chamber (Mic STT + TTS Voices)"]
+        JobHubWidget["Multi-Site Job Market Hub (6 Portals + ⚡ Launch All)"]
         ResumeWidget["6-State Single Resume Manager"]
-        JobReadyBadge["Job Ready 4-Rule Compliance Widget"]
+        JobReadyBadge["Job Ready 4-Rule Compliance & Career GPS"]
         
         Browser --> UI
         UI --> ThreeConstellation
+        UI --> TrackSwitcher
         UI --> Gauge
+        UI --> VoiceChamber
+        UI --> JobHubWidget
         UI --> ResumeWidget
         UI --> JobReadyBadge
     end
@@ -491,25 +715,32 @@ flowchart TD
         MagicValidator["Magic-Byte Binary Inspector (%PDF · PK · OLE)"]
         StreamFilter["Primary Stream Isolation Controller"]
         RecEngine["60/25/15 Deterministic Matching Engine"]
-        RoadmapController["Hardened Roadmap Controller (409 Conflict Guard)"]
-        ReadinessEngine["4-Rule Job Ready Verification Engine"]
+        SynergyEngine["Course Synergy Rules Engine (Domain + Pairs + Skills)"]
+        RoadmapController["Dual Route Roadmap Controller (Compound Index Guard)"]
+        InterviewController["Voice Mock Interview Evaluation Controller (3-Pillar Rubric)"]
+        JobPortalService["Multi-Site Job Board Service (6 Deep-Link Engines)"]
+        ReadinessEngine["4-Rule Job Ready & Career GPS Readiness Engine"]
         CloudinaryService["Cloudinary Media Lifecycle Service"]
 
         SecurityMW --> AuthGuard
         AuthGuard --> MagicValidator
         AuthGuard --> StreamFilter
         AuthGuard --> RecEngine
+        AuthGuard --> SynergyEngine
         AuthGuard --> RoadmapController
+        AuthGuard --> InterviewController
+        AuthGuard --> JobPortalService
         AuthGuard --> ReadinessEngine
         AuthGuard --> CloudinaryService
     end
 
     subgraph DatabaseLayer ["3. Persistence Layer (MongoDB Atlas Cloud · TLS Encryption)"]
-        UserCollection[("Users Collection\n- Profile, Stream, lastAbandonedRouteAt")]
+        UserCollection[("Users Collection\n- Profile, Stream, ProfileStatus, lastAbandonedRouteAt")]
         ResumeCollection[("Resumes Collection\n- Dedicated 1:1 Schema\n- Unique Index: { user: 1 }")]
-        RoadmapCollection[("Roadmaps Collection\n- Partial Unique Index:\n  { user: 1, status: 'active' }")]
+        RoadmapCollection[("Roadmaps Collection\n- Compound Partial Unique Index:\n  { user: 1, career: 1 } (status: 'active')")]
         SkillCollection[("Skills Collection\n- 76+ Standardized Skills & Categories")]
         CareerCollection[("Careers Collection\n- 15 Tech Curricula & Salary Benchmarks")]
+        InterviewCollection[("Interviews Collection\n- Mock Sessions, Transcripts & 3-Pillar Scores")]
     end
 
     subgraph ExternalCloud ["4. External Cloud Services & Real-Time APIs"]
@@ -517,6 +748,7 @@ flowchart TD
         GroqLPU["Groq Cloud LPU\n(Llama 3.3 70B <300ms Quiz & Mentor)"]
         GeminiCloud["Google Gemini AI\n(Gemini 2.5 Flash Failover)"]
         AdzunaAPI["Adzuna Developer API\n(Live Indian Tech Jobs & ₹ CTC)"]
+        JobBoards["6 External Job Boards\n(LinkedIn, Naukri, Indeed, Wellfound, Internshala, Google)"]
         CloudinaryCDN["Cloudinary Cloud Media CDN\n(Encrypted Resumes & Avatars)"]
         DomainBank["Curated Domain Question Bank\n(860+ Line Offline Safety Fallback)"]
     end
@@ -529,8 +761,11 @@ flowchart TD
     RoadmapController <--> GeminiCloud
     RoadmapController <--> DomainBank
     RecEngine <--> AdzunaAPI
+    JobPortalService --> JobBoards
 
-    RoadmapController -- "Enforce Partial Index" --> RoadmapCollection
+    RoadmapController -- "Enforce Compound Partial Index" --> RoadmapCollection
+    SynergyEngine <--> RoadmapCollection
+    InterviewController <--> InterviewCollection
     MagicValidator -- "Enforce 1:1 Schema" --> ResumeCollection
     ReadinessEngine <--> UserCollection
     ReadinessEngine <--> SkillCollection
@@ -551,20 +786,28 @@ flowchart TD
 | `GET`  | `/api/users/resume` | Protected (JWT) | Returns active single resume metadata, upload date, and download URL |
 | `POST` | `/api/users/resume` | Protected (JWT) | Validates magic bytes (`%PDF`, `DOCX`, `DOC`), enforces 5MB limit, transactionally replaces Cloudinary asset |
 | `DELETE`| `/api/users/resume` | Protected (JWT) | Transactionally destroys Cloudinary asset and removes database record |
+| `PATCH`| `/api/users/profile-status` | Protected (JWT) | Updates student job-search posture (`actively_seeking`, `open_to_learning`, `interviewing`) |
 | `POST` | `/api/assessment` | Protected (JWT) | Saves student academic profile, primary stream, interests, and 76+ skills |
 | `POST` | `/api/recommendations/generate` | Protected (JWT) | Runs deterministic 60/25/15 match engine & tri-color skill-gap decomposition scoped to primary stream |
-| `POST` | `/api/roadmaps/generate` | Protected (JWT) | **Single Active Route guard:** Checks existing route; rejects duplicates with HTTP 409 Conflict |
-| `GET`  | `/api/roadmaps/current` | Protected (JWT) | Returns current active roadmap, progress, `currentWeekString`, and `canEnrollNewRoute` flag |
+| `POST` | `/api/roadmaps/generate` | Protected (JWT) | **Dual Track & Synergy Guard:** Checks duplicate career (409), max 2 courses (409), and course synergy (400) |
+| `GET`  | `/api/roadmaps/current` | Protected (JWT) | Returns current active roadmaps, dual-track progress, and `canEnrollNewRoute` flag |
 | `POST` | `/api/roadmaps/current/abandon`| Protected (JWT) | **7-day cooldown guard:** Non-destructive route abandonment; preserves 100% of quiz scores and skills |
-| `POST` | `/api/roadmaps/:id/resume` | Protected (JWT) | Re-activates an abandoned roadmap if no other active route is in progress |
+| `POST` | `/api/roadmaps/:id/resume` | Protected (JWT) | Re-activates an abandoned roadmap if fewer than 2 active routes exist and synergy passes |
 | `PATCH`| `/api/roadmaps/tasks/:id` | Protected (JWT) | Atomic server-side task checkbox completion & real-time % recalculation |
 | `GET`  | `/api/readiness/job-ready-check`| Protected (JWT) | Evaluates the 4-Rule Industry Job Ready certification rubric |
+| `GET`  | `/api/readiness/composite` | Protected (JWT) | Returns continuous **Career GPS Job Readiness Index ($0-100\%$)** with evidence weights |
 | `POST` | `/api/quiz/start` | Optional / Demo | Generates 5 calibrated questions via Groq Llama 3.3 70B / Gemini Flash / Fallback |
 | `POST` | `/api/quiz/answer` | Optional / Demo | Evaluates submitted answer, returns instant pedagogical explanation, advances stepper |
 | `GET`  | `/api/quiz/status` | Protected (JWT) | Returns current student verification status and verified skills count |
 | `GET`  | `/api/quiz/providers`| Public | Returns active AI generation engines and BYOK status |
-| `GET`  | `/api/dashboard` | Protected (JWT) | Aggregates active career goal, GitHub Study Lab, Single Resume, next milestone, and 2D gauge metrics |
+| `GET`  | `/api/dashboard` | Protected (JWT) | Aggregates active career goals, dual-track progress, GitHub Study Lab, Single Resume, and 2D gauge metrics |
 | `GET`  | `/api/jobs/adzuna` | Public | Streams live Indian tech job vacancies & verified ₹ CTC salary data |
+| `GET`  | `/api/jobs/portal-links` | Public / Protected | Resolves parameterized deep links for LinkedIn, Naukri, Indeed, Wellfound, Internshala, and Google for Jobs |
+| `GET`  | `/api/jobs/matched-for-user` | Protected (JWT) | Delivers personalized job vacancies matching the student's active career tracks with 1-click portal launchers |
+| `POST` | `/api/jobs/bridge-gap` | Protected (JWT) | **1-Click Gap Injection:** Dynamically injects targeted micro-tasks into active roadmap to bridge job missing skills |
+| `POST` | `/api/interview/start` | Protected (JWT) | Initializes an interactive voice mock interview session for a specified target role |
+| `POST` | `/api/interview/evaluate` | Protected (JWT) | **3-Pillar Rubric:** Evaluates speech transcript on Technical Depth (40%), Clarity (30%), and Trade-offs (30%) |
+| `POST` | `/api/interview/finalize` | Protected (JWT) | Persists mock interview grade to student profile and completes Career GPS Step 9 |
 | `POST` | `/api/chat/message` | Protected / Demo | Sub-300ms AI career coaching via Groq Llama 3.3 70B + Gemini failover |
 
 *For complete request schemas, response codes, and curl examples, see the [`docs/API-SPECIFICATION.md`](docs/API-SPECIFICATION.md).*

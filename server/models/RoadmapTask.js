@@ -71,6 +71,11 @@ const RoadmapTaskSchema = new mongoose.Schema(
       title: { type: String, default: '' },
       url: { type: String, default: '' },
       provider: { type: String, default: '' },
+      mediaType: {
+        type: String,
+        enum: ['video', 'reading', 'doc', 'lab', 'project'],
+        default: 'reading',
+      },
     },
     completed: {
       type: Boolean,
@@ -79,6 +84,53 @@ const RoadmapTaskSchema = new mongoose.Schema(
     completedAt: {
       type: Date,
     },
+    // Video Dedication & Anti-Slacking Verification Fields
+    isVideoTask: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    videoWatchTimeSeconds: {
+      type: Number,
+      default: 0,
+    },
+    videoDurationSeconds: {
+      type: Number,
+      default: 0,
+    },
+    videoMaxWatchedTime: {
+      type: Number,
+      default: 0,
+    },
+    videoMidCheckPassed: {
+      type: Boolean,
+      default: false,
+    },
+    isVideoVerified: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    videoVerifiedAt: {
+      type: Date,
+      default: null,
+    },
+    videoReflectionSummary: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    videoAiScore: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
+    videoAiFeedback: {
+      type: String,
+      default: '',
+    },
+    // GitHub Project Verification Fields
     linkedRepoUrl: {
       type: String,
       trim: true,

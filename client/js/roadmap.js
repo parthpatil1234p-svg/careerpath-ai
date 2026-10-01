@@ -406,11 +406,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="tasks-list d-flex flex-column gap-3" id="week-tasks-${weekNumber}">
           ${tasks
             .map((task) => {
-              const resourceBadge = task.resource?.url
-                ? `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn" title="${escapeHtml(task.resource.title)}">
+              const isVideoTask = Boolean(
+                task.isVideoTask ||
+                task.resource?.mediaType === 'video' ||
+                (task.resource?.url && (task.resource.url.includes('youtube.com') || task.resource.url.includes('youtu.be')))
+              );
+
+              let resourceBadge = '';
+              if (!isVideoTask && task.resource?.url) {
+                resourceBadge = `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn" title="${escapeHtml(task.resource.title)}">
                     <i class="bi bi-box-arrow-up-right me-1"></i>${escapeHtml(task.resource.type || 'Resource')}
-                   </a>`
-                : '';
+                   </a>`;
+              }
+
+              let videoBadgeHtml = '';
+              if (isVideoTask) {
+                if (task.isVideoVerified) {
+                  videoBadgeHtml = `
+                    <span class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 font-mono" style="font-size: 0.72rem;">
+                      <i class="bi bi-patch-check-fill"></i> Video Verified ✓ (${task.videoAiScore || 85}%)
+                    </span>
+                    <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 btn-open-video-chamber d-inline-flex align-items-center gap-1" data-task-id="${task._id}" data-task-title="${escapeHtml(task.title)}" data-video-url="${escapeHtml(task.resource?.url || '')}" data-skill-name="${escapeHtml(task.skillName || '')}" data-duration="${task.videoDurationSeconds || 600}" data-verified="true" data-score="${task.videoAiScore || 85}" style="font-size: 0.72rem; height: 24px; line-height: 22px;">
+                      <i class="bi bi-play-circle text-danger"></i> Review Lesson
+                    </button>
+                  `;
+                } else {
+                  videoBadgeHtml = `
+                    <button type="button" class="btn btn-open-video-chamber btn-sm py-0 px-2 d-inline-flex align-items-center gap-1 font-mono" data-task-id="${task._id}" data-task-title="${escapeHtml(task.title)}" data-video-url="${escapeHtml(task.resource?.url || '')}" data-skill-name="${escapeHtml(task.skillName || '')}" data-duration="${task.videoDurationSeconds || 600}" data-verified="false" ${isLocked ? 'disabled' : ''} style="font-size: 0.74rem; font-weight: 600; height: 26px; line-height: 24px;">
+                      <i class="bi bi-play-circle-fill text-danger"></i> Enter Focus Video Chamber
+                    </button>
+                  `;
+                }
+              }
 
               let projectLinkHtml = '';
               if (task.type === 'project' || task.title.toLowerCase().includes('project') || task.title.toLowerCase().includes('capstone')) {
@@ -432,14 +459,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
               }
 
+              const requiresVideoAuth = isVideoTask && !task.isVideoVerified && !isAdminUser && !task.completed;
+
               return `
                 <div class="task-item d-flex align-items-start gap-3 ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
-                  <div class="task-checkbox-wrap pt-1">
+                  <div class="task-checkbox-wrap pt-1" title="${requiresVideoAuth ? 'Active learning verification required. Complete lesson in Video Chamber to unlock.' : ''}">
                     <input
                       type="checkbox"
                       class="form-check-input task-checkbox-input"
                       ${task.completed ? 'checked' : ''}
                       ${isLocked ? 'disabled' : ''}
+                      ${requiresVideoAuth ? 'data-requires-video="true"' : ''}
                       data-task-id="${task._id}"
                     />
                   </div>
@@ -458,6 +488,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="badge cp-tag font-mono">
                           <i class="bi bi-clock me-1"></i>${task.estimatedHours || 2}h
                         </span>
+                        ${videoBadgeHtml}
                         ${resourceBadge}
                         ${projectLinkHtml}
                       </div>
@@ -485,6 +516,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const taskId = e.target.getAttribute('data-task-id');
         const isChecked = e.target.checked;
         const taskItem = e.target.closest('.task-item');
+
+        // Check if task requires active video verification
+        if (checkbox.getAttribute('data-requires-video') === 'true' && isChecked) {
+          e.preventDefault();
+          checkbox.checked = false;
+          if (taskItem) taskItem.classList.remove('is-completed');
+          showAlert('This video lesson requires active learning verification in the Focus Chamber. Launching Chamber...', 'warning');
+          const btnChamber = taskItem?.querySelector('.btn-open-video-chamber');
+          if (btnChamber) {
+            btnChamber.click();
+          }
+          return;
+        }
 
         if (taskItem) {
           taskItem.classList.toggle('is-completed', isChecked);
@@ -522,6 +566,31 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (taskItem) taskItem.classList.toggle('is-completed', !isChecked);
           showAlert(err.message || 'Error updating task.');
         }
+      });
+    });
+
+    // Attach Video Chamber button listeners
+    document.querySelectorAll('.btn-open-video-chamber').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const taskId = btn.getAttribute('data-task-id');
+        const taskTitle = btn.getAttribute('data-task-title');
+        const videoUrl = btn.getAttribute('data-video-url');
+        const skillName = btn.getAttribute('data-skill-name');
+        const durationSeconds = btn.getAttribute('data-duration');
+        const isVerified = btn.getAttribute('data-verified') === 'true';
+        const score = btn.getAttribute('data-score');
+
+        VideoChamber.open({
+          taskId,
+          taskTitle,
+          videoUrl,
+          skillName,
+          durationSeconds,
+          isVerified,
+          score,
+        });
       });
     });
 
@@ -1048,6 +1117,646 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ==========================================================================
+  // Dedicated Focus Learning Chamber & AI Video Dedication Guardian
+  // ==========================================================================
+  const VideoChamber = {
+    modal: null,
+    player: null,
+    playerReady: false,
+    pollInterval: null,
+    currentTaskId: null,
+    currentTaskTitle: '',
+    currentSkillName: '',
+    currentVideoUrl: '',
+    durationSeconds: 600,
+    watchTimeSeconds: 0,
+    maxWatchedTime: 0,
+    midCheckPassed: false,
+    midCheckTriggered: false,
+    checkpointData: null,
+    isVerified: false,
+    isSubmitting: false,
+    isPlaying: false,
+
+    init() {
+      const modalEl = document.getElementById('videoChamberModal');
+      if (!modalEl) return;
+      if (typeof bootstrap !== 'undefined') {
+        this.modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
+      }
+
+      // Close button
+      document.getElementById('btnCloseVideoChamber')?.addEventListener('click', () => {
+        this.close();
+      });
+
+      // Resume focus button on overlay
+      document.getElementById('btnResumeFocus')?.addEventListener('click', () => {
+        this.resumeFocus();
+      });
+
+      // Reflection input listener
+      const reflectionInput = document.getElementById('chamberReflectionInput');
+      const charCounter = document.getElementById('chamberCharCounter');
+      const btnSubmit = document.getElementById('btnSubmitReflection');
+      if (reflectionInput) {
+        reflectionInput.addEventListener('input', () => {
+          const len = reflectionInput.value.trim().length;
+          if (charCounter) {
+            charCounter.textContent = `${len} / 40`;
+            if (len >= 40) {
+              charCounter.className = 'font-mono text-success fw-bold';
+            } else {
+              charCounter.className = 'font-mono text-muted';
+            }
+          }
+          if (btnSubmit && !this.isVerified) {
+            btnSubmit.disabled = len < 40 || this.isSubmitting;
+          }
+        });
+      }
+
+      // Submit reflection button
+      btnSubmit?.addEventListener('click', () => {
+        this.submitReflection();
+      });
+
+      // Resume after mid-check button
+      document.getElementById('btnResumeAfterMidCheck')?.addEventListener('click', () => {
+        const overlay = document.getElementById('midVideoPulseOverlay');
+        if (overlay) overlay.classList.add('d-none');
+        if (this.player && typeof this.player.playVideo === 'function') {
+          try {
+            this.player.playVideo();
+          } catch (e) {}
+        }
+      });
+
+      // Page Visibility API detection
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (this.isPlaying) {
+            this.handleFocusLost();
+          }
+        } else {
+          this.handleFocusReturned();
+        }
+      });
+
+      // Window blur & focus detection
+      window.addEventListener('blur', () => {
+        if (this.isPlaying) {
+          this.handleFocusLost();
+        }
+      });
+
+      window.addEventListener('focus', () => {
+        this.handleFocusReturned();
+      });
+    },
+
+    extractYouTubeId(url) {
+      if (!url) return 'mU6anWqZJcc';
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      if (match && match[2] && match[2].length === 11) {
+        return match[2];
+      }
+      return 'mU6anWqZJcc';
+    },
+
+    open({ taskId, taskTitle, videoUrl, skillName, durationSeconds, isVerified, score }) {
+      this.currentTaskId = taskId;
+      this.currentTaskTitle = taskTitle;
+      this.currentSkillName = skillName || 'Core Competency';
+      this.currentVideoUrl = videoUrl;
+      this.durationSeconds = parseInt(durationSeconds, 10) || 600;
+      this.isVerified = Boolean(isVerified);
+      this.watchTimeSeconds = isVerified ? this.durationSeconds : 0;
+      this.maxWatchedTime = isVerified ? this.durationSeconds : 0;
+      this.midCheckPassed = Boolean(isVerified);
+      this.midCheckTriggered = Boolean(isVerified);
+      this.checkpointData = null;
+      this.isSubmitting = false;
+
+      // Update UI elements
+      const titleEl = document.getElementById('videoChamberModalLabel');
+      if (titleEl) titleEl.textContent = taskTitle;
+
+      const skillBadge = document.getElementById('chamberSkillBadge');
+      if (skillBadge) skillBadge.textContent = this.currentSkillName.toUpperCase();
+
+      this.updateFocusStatus(true);
+
+      const reflectionInput = document.getElementById('chamberReflectionInput');
+      const btnSubmit = document.getElementById('btnSubmitReflection');
+      const gateBadge = document.getElementById('chamberGateStatusBadge');
+      const aiFeedback = document.getElementById('chamberAiFeedbackAlert');
+      const midOverlay = document.getElementById('midVideoPulseOverlay');
+      const pausedOverlay = document.getElementById('focusPausedOverlay');
+      const charCounter = document.getElementById('chamberCharCounter');
+
+      if (aiFeedback) {
+        aiFeedback.className = 'alert d-none py-2 px-3 small mb-3';
+        aiFeedback.innerHTML = '';
+      }
+      if (midOverlay) midOverlay.classList.add('d-none');
+      if (pausedOverlay) pausedOverlay.classList.add('d-none');
+      if (charCounter) {
+        charCounter.textContent = isVerified ? 'Verified' : '0 / 40';
+        charCounter.className = isVerified ? 'font-mono text-success fw-bold' : 'font-mono text-muted';
+      }
+
+      const isAdmin = Boolean(window.Auth?.isAdmin());
+
+      if (isVerified) {
+        if (gateBadge) {
+          gateBadge.className = 'badge bg-success-subtle text-success border border-success-subtle font-mono';
+          gateBadge.innerHTML = `<i class="bi bi-patch-check-fill me-1"></i> Verified ✓ (${score || 85}%)`;
+        }
+        if (reflectionInput) {
+          reflectionInput.disabled = false;
+          reflectionInput.value = 'Verified active learning session & AI reflection.';
+        }
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.className = 'btn btn-success w-100 py-2 font-mono';
+          btnSubmit.innerHTML = '<i class="bi bi-patch-check-fill me-1"></i> Already Verified &amp; Completed';
+        }
+      } else if (isAdmin) {
+        if (gateBadge) {
+          gateBadge.className = 'badge badge-teal font-mono';
+          gateBadge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i> Admin Bypass (Unlocked)';
+        }
+        if (reflectionInput) {
+          reflectionInput.disabled = false;
+          reflectionInput.value = '';
+        }
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.className = 'btn cp-btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2';
+          btnSubmit.innerHTML = '<i class="bi bi-patch-check-fill"></i><span>Verify with AI &amp; Complete Task</span>';
+        }
+      } else {
+        if (gateBadge) {
+          gateBadge.className = 'badge bg-secondary-subtle text-muted font-mono';
+          gateBadge.innerHTML = '<i class="bi bi-lock-fill me-1"></i> Locked (&lt;85%)';
+        }
+        if (reflectionInput) {
+          reflectionInput.disabled = true;
+          reflectionInput.value = '';
+        }
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.className = 'btn cp-btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2';
+          btnSubmit.innerHTML = '<i class="bi bi-patch-check-fill"></i><span>Verify with AI &amp; Complete Task</span>';
+        }
+      }
+
+      this.updateTelemetryUI(isVerified ? this.durationSeconds : 0, this.durationSeconds, isVerified ? 100 : 0);
+
+      // Initialize YouTube Player
+      const videoId = this.extractYouTubeId(videoUrl);
+      this.setupPlayer(videoId);
+
+      if (this.modal) {
+        this.modal.show();
+      }
+    },
+
+    setupPlayer(videoId) {
+      if (window.YT && window.YT.Player) {
+        if (!this.player) {
+          this.player = new window.YT.Player('videoChamberPlayer', {
+            videoId: videoId,
+            playerVars: {
+              autoplay: 1,
+              controls: 1,
+              modestbranding: 1,
+              rel: 0,
+              playsinline: 1,
+              origin: window.location.origin,
+            },
+            events: {
+              onReady: (event) => {
+                this.playerReady = true;
+                try {
+                  event.target.playVideo();
+                } catch (e) {}
+                this.startTelemetryTicker();
+              },
+              onStateChange: (event) => {
+                this.handlePlayerStateChange(event);
+              },
+            },
+          });
+        } else {
+          try {
+            this.player.loadVideoById(videoId);
+            this.player.playVideo();
+            this.startTelemetryTicker();
+          } catch (e) {
+            console.warn('Error loading video by ID:', e);
+          }
+        }
+      } else {
+        window.onYouTubeIframeAPIReady = () => {
+          this.setupPlayer(videoId);
+        };
+      }
+    },
+
+    handlePlayerStateChange(event) {
+      // YT.PlayerState.PLAYING === 1, PAUSED === 2, ENDED === 0
+      if (event.data === 1) {
+        this.isPlaying = true;
+        this.updateFocusStatus(true);
+      } else if (event.data === 2 || event.data === 0) {
+        this.isPlaying = false;
+      }
+    },
+
+    handleFocusLost() {
+      if (this.player && typeof this.player.pauseVideo === 'function') {
+        try {
+          this.player.pauseVideo();
+        } catch (e) {}
+      }
+      this.isPlaying = false;
+      this.updateFocusStatus(false);
+      const pausedOverlay = document.getElementById('focusPausedOverlay');
+      if (pausedOverlay) {
+        pausedOverlay.classList.remove('d-none');
+      }
+    },
+
+    handleFocusReturned() {
+      const badge = document.getElementById('chamberFocusStatusBadge');
+      const text = document.getElementById('chamberFocusStatusText');
+      if (badge && text) {
+        text.textContent = 'Focus Ready (Click Resume)';
+      }
+    },
+
+    resumeFocus() {
+      const pausedOverlay = document.getElementById('focusPausedOverlay');
+      if (pausedOverlay) {
+        pausedOverlay.classList.add('d-none');
+      }
+      this.updateFocusStatus(true);
+      if (this.player && typeof this.player.playVideo === 'function') {
+        try {
+          this.player.playVideo();
+        } catch (e) {}
+      }
+    },
+
+    updateFocusStatus(isActive) {
+      const badge = document.getElementById('chamberFocusStatusBadge');
+      const text = document.getElementById('chamberFocusStatusText');
+      const dot = badge?.querySelector('.focus-pulse-dot');
+      if (!badge || !text) return;
+
+      if (isActive) {
+        badge.className = 'badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 font-mono';
+        text.textContent = 'Active Focus & Learning';
+        if (dot) dot.className = 'focus-pulse-dot';
+      } else {
+        badge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle d-inline-flex align-items-center gap-1 font-mono';
+        text.textContent = 'Focus Paused: Inactive';
+        if (dot) dot.className = 'focus-pulse-dot paused';
+      }
+    },
+
+    startTelemetryTicker() {
+      if (this.pollInterval) clearInterval(this.pollInterval);
+      this.pollInterval = setInterval(() => {
+        this.checkTelemetry();
+      }, 500);
+    },
+
+    checkTelemetry() {
+      if (!this.player || !this.player.getCurrentTime) return;
+
+      try {
+        const currentTime = this.player.getCurrentTime() || 0;
+        const duration = this.player.getDuration() || this.durationSeconds;
+        if (duration > 0 && !isNaN(duration)) {
+          this.durationSeconds = duration;
+        }
+
+        const isAdmin = Boolean(window.Auth?.isAdmin());
+
+        // Anti-scrubbing check: if seeking forward past allowed continuous point + 2.5s (except admin)
+        if (!isAdmin && !this.isVerified && currentTime > this.maxWatchedTime + 2.5) {
+          this.player.seekTo(this.maxWatchedTime, true);
+          this.flashAntiScrubWarning();
+          return;
+        }
+
+        // Advance maxWatchedTime monotonically
+        if (currentTime > this.maxWatchedTime) {
+          this.maxWatchedTime = currentTime;
+        }
+
+        if (this.isPlaying) {
+          this.watchTimeSeconds += 0.5;
+        }
+
+        // Cap playback rate at 1.5x
+        if (typeof this.player.getPlaybackRate === 'function') {
+          const rate = this.player.getPlaybackRate();
+          if (rate > 1.5) {
+            this.player.setPlaybackRate(1.5);
+          }
+        }
+
+        const pct = Math.min(100, Math.round((this.maxWatchedTime / this.durationSeconds) * 100));
+        this.updateTelemetryUI(this.maxWatchedTime, this.durationSeconds, pct);
+
+        // Check 50% milestone for Mid-Video Concept Pulse
+        if (!this.isVerified && !isAdmin && !this.midCheckTriggered && currentTime >= this.durationSeconds * 0.5) {
+          this.triggerMidCheck();
+        }
+
+        // Check 85% milestone for AI Reflection unlocking
+        if (!this.isVerified && (pct >= 85 || isAdmin)) {
+          this.unlockReflectionGate();
+        }
+      } catch (err) {
+        console.warn('Telemetry check warning:', err);
+      }
+    },
+
+    flashAntiScrubWarning() {
+      const badge = document.getElementById('chamberAntiScrubBadge');
+      if (badge) {
+        badge.className = 'badge bg-danger text-white font-mono';
+        badge.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Fast-Forward Blocked!';
+        setTimeout(() => {
+          if (badge) {
+            badge.className = 'badge bg-primary-subtle text-primary border border-primary-subtle font-mono';
+            badge.innerHTML = '<i class="bi bi-shield-lock-fill me-1"></i> Active (No Scrubbing)';
+          }
+        }, 2200);
+      }
+    },
+
+    updateTelemetryUI(current, total, pct) {
+      const watchText = document.getElementById('chamberWatchTimeText');
+      const bar = document.getElementById('chamberProgressBar');
+      const pctText = document.getElementById('chamberPercentText');
+
+      const formatTime = (secs) => {
+        const safeSecs = Math.max(0, Math.round(secs || 0));
+        const m = Math.floor(safeSecs / 60);
+        const s = Math.floor(safeSecs % 60);
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      };
+
+      if (watchText) watchText.textContent = `${formatTime(current)} / ${formatTime(total)}`;
+      if (bar) bar.style.width = `${pct}%`;
+      if (pctText) pctText.textContent = `${pct}%`;
+    },
+
+    async triggerMidCheck() {
+      this.midCheckTriggered = true;
+      if (this.player && typeof this.player.pauseVideo === 'function') {
+        try {
+          this.player.pauseVideo();
+        } catch (e) {}
+      }
+      this.isPlaying = false;
+      this.updateFocusStatus(false);
+
+      const overlay = document.getElementById('midVideoPulseOverlay');
+      const qText = document.getElementById('midCheckQuestionText');
+      const optContainer = document.getElementById('midCheckOptionsContainer');
+      const feedback = document.getElementById('midCheckFeedbackAlert');
+      const btnResume = document.getElementById('btnResumeAfterMidCheck');
+
+      if (overlay) overlay.classList.remove('d-none');
+      if (feedback) feedback.className = 'alert d-none py-2 px-3 small mb-3';
+      if (btnResume) btnResume.classList.add('d-none');
+      if (qText) qText.textContent = 'Generating targeted comprehension checkpoint with Groq AI...';
+      if (optContainer) optContainer.innerHTML = '<div class="spinner-border text-warning spinner-border-sm my-3 mx-auto"></div>';
+
+      try {
+        const res = await window.API.get(`/roadmaps/tasks/${this.currentTaskId}/video-checkpoint`, { auth: true });
+        if (res.success && res.data?.checkpoint) {
+          this.checkpointData = res.data.checkpoint;
+          this.renderMidCheckQuestion(this.checkpointData);
+        } else {
+          throw new Error('Failed to load checkpoint');
+        }
+      } catch (err) {
+        // Fallback question if network error
+        this.checkpointData = {
+          question: `What is the core architectural principle of ${this.currentSkillName || 'this lesson'}?`,
+          options: [
+            `To structure and implement maintainable, robust solutions following industry patterns`,
+            `To disable browser caching and slow down network requests`,
+            `To replace all database tables with random strings`,
+            `To bypass security credentials completely`,
+          ],
+          correctAnswerIndex: 0,
+          explanation: `The foundational objective of ${this.currentSkillName} is structured, scalable implementation.`,
+        };
+        this.renderMidCheckQuestion(this.checkpointData);
+      }
+    },
+
+    renderMidCheckQuestion(cp) {
+      const qText = document.getElementById('midCheckQuestionText');
+      const optContainer = document.getElementById('midCheckOptionsContainer');
+      const feedback = document.getElementById('midCheckFeedbackAlert');
+      const btnResume = document.getElementById('btnResumeAfterMidCheck');
+
+      if (qText) qText.textContent = cp.question;
+      if (!optContainer) return;
+
+      optContainer.innerHTML = cp.options
+        .map(
+          (opt, idx) => `
+        <button type="button" class="mid-check-option-btn" data-option-index="${idx}">
+          <span class="badge bg-secondary-subtle text-muted font-mono" style="width: 24px;">${String.fromCharCode(65 + idx)}</span>
+          <span class="flex-grow-1">${escapeHtml(opt)}</span>
+        </button>
+      `
+        )
+        .join('');
+
+      optContainer.querySelectorAll('.mid-check-option-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const selectedIdx = parseInt(btn.getAttribute('data-option-index'), 10);
+          const isCorrect = selectedIdx === cp.correctAnswerIndex;
+
+          optContainer.querySelectorAll('.mid-check-option-btn').forEach((b) => {
+            b.classList.remove('selected', 'correct', 'incorrect');
+            b.disabled = true;
+          });
+
+          if (isCorrect) {
+            btn.classList.add('correct');
+            this.midCheckPassed = true;
+            if (feedback) {
+              feedback.className = 'alert alert-success py-2 px-3 small mb-3 d-flex align-items-center gap-2';
+              feedback.innerHTML = `<i class="bi bi-check-circle-fill fs-5"></i> <div><strong>Spot on!</strong> ${escapeHtml(cp.explanation)}</div>`;
+            }
+            if (btnResume) btnResume.classList.remove('d-none');
+          } else {
+            btn.classList.add('incorrect');
+            const correctBtn = optContainer.querySelector(`[data-option-index="${cp.correctAnswerIndex}"]`);
+            if (correctBtn) correctBtn.classList.add('correct');
+            if (feedback) {
+              feedback.className = 'alert alert-warning py-2 px-3 small mb-3 d-flex align-items-center gap-2';
+              feedback.innerHTML = `<i class="bi bi-info-circle-fill fs-5"></i> <div>${escapeHtml(cp.explanation)}</div>`;
+            }
+            this.midCheckPassed = true;
+            if (btnResume) btnResume.classList.remove('d-none');
+          }
+        });
+      });
+    },
+
+    unlockReflectionGate() {
+      const gateBadge = document.getElementById('chamberGateStatusBadge');
+      const reflectionInput = document.getElementById('chamberReflectionInput');
+      const btnSubmit = document.getElementById('btnSubmitReflection');
+
+      if (gateBadge && gateBadge.textContent.includes('Locked')) {
+        gateBadge.className = 'badge bg-success-subtle text-success border border-success-subtle font-mono';
+        gateBadge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i> Gate Unlocked &middot; Ready for Reflection';
+      }
+      if (reflectionInput && reflectionInput.disabled) {
+        reflectionInput.disabled = false;
+        reflectionInput.placeholder = 'Write 2–3 key takeaways or how you will apply this concept in code (min 40 characters)...';
+      }
+      if (btnSubmit && reflectionInput && reflectionInput.value.trim().length >= 40) {
+        btnSubmit.disabled = false;
+      }
+    },
+
+    async submitReflection() {
+      const input = document.getElementById('chamberReflectionInput');
+      const text = (input?.value || '').trim();
+      const feedback = document.getElementById('chamberAiFeedbackAlert');
+      const btnSubmit = document.getElementById('btnSubmitReflection');
+
+      if (text.length < 40) {
+        showAlert('Please write at least 40 characters summarizing your takeaways.', 'warning');
+        return;
+      }
+
+      this.isSubmitting = true;
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Evaluating with Gemini AI...';
+      }
+      if (feedback) {
+        feedback.className = 'alert alert-info py-2 px-3 small mb-3 d-flex align-items-center gap-2';
+        feedback.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Groq/Gemini 2.5 Flash evaluating concept depth and application...';
+      }
+
+      try {
+        const payload = {
+          watchTimeSeconds: Math.round(this.watchTimeSeconds),
+          durationSeconds: Math.round(this.durationSeconds),
+          maxWatchedTime: Math.round(this.maxWatchedTime),
+          midCheckPassed: this.midCheckPassed,
+          reflectionText: text,
+        };
+
+        const res = await window.API.post(`/roadmaps/tasks/${this.currentTaskId}/verify-video`, payload, { auth: true });
+
+        if (res.success && res.data) {
+          const { task, evaluation, roadmap } = res.data;
+          this.isVerified = true;
+
+          if (feedback) {
+            feedback.className = 'alert alert-success py-2 px-3 small mb-3';
+            feedback.innerHTML = `
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-patch-check-fill text-success fs-5"></i>
+                <strong>Verified with Honors &middot; Score: ${evaluation.score}%</strong>
+              </div>
+              <div class="mb-1">${escapeHtml(evaluation.feedback)}</div>
+              ${
+                evaluation.keyConceptsIdentified?.length
+                  ? `<div class="font-mono text-muted" style="font-size: 0.72rem;">Concepts: ${escapeHtml(evaluation.keyConceptsIdentified.join(', '))}</div>`
+                  : ''
+              }
+            `;
+          }
+
+          if (btnSubmit) {
+            btnSubmit.className = 'btn btn-success w-100 py-2 font-mono';
+            btnSubmit.innerHTML = `<i class="bi bi-check2-circle me-1"></i> Verified &amp; Task Marked Complete!`;
+          }
+
+          // Update local tasks
+          const localTask = currentTasks.find((t) => t._id === this.currentTaskId);
+          if (localTask) {
+            localTask.isVideoVerified = true;
+            localTask.completed = true;
+            localTask.videoAiScore = evaluation.score;
+            localTask.videoAiFeedback = evaluation.feedback;
+          }
+
+          if (roadmap) {
+            currentRoadmap.progressPercentage = roadmap.progressPercentage;
+            currentRoadmap.completedTasksCount = roadmap.completedTasks;
+            currentRoadmap.totalTasksCount = roadmap.totalTasks;
+            if (roadmap.weekProgress) currentRoadmap.weekProgress = roadmap.weekProgress;
+            updateProgressUI(roadmap.progressPercentage, roadmap.completedTasks, roadmap.totalTasks);
+          }
+
+          showAlert(`Video lesson verified with ${evaluation.score}%! Task completed.`, 'success');
+
+          // Re-render roadmap so badges update
+          renderRoadmap();
+
+          setTimeout(() => {
+            this.close();
+          }, 2000);
+        } else {
+          throw new Error(res.message || 'Verification failed');
+        }
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'alert alert-danger py-2 px-3 small mb-3';
+          feedback.innerHTML = `
+            <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Reflection Needs Improvement</div>
+            <div>${escapeHtml(err.message || 'Please elaborate further with specific technical concepts learned in this lesson.')}</div>
+          `;
+        }
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="bi bi-patch-check-fill me-1"></i> Re-Verify with AI';
+        }
+      } finally {
+        this.isSubmitting = false;
+      }
+    },
+
+    close() {
+      if (this.pollInterval) {
+        clearInterval(this.pollInterval);
+        this.pollInterval = null;
+      }
+      if (this.player && typeof this.player.pauseVideo === 'function') {
+        try {
+          this.player.pauseVideo();
+        } catch (e) {}
+      }
+      this.isPlaying = false;
+      if (this.modal) {
+        this.modal.hide();
+      }
+    },
+  };
+
   // Safe string escaper
   function escapeHtml(str) {
     if (!str) return '';
@@ -1062,14 +1771,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Notch Navbar Scroll Elevation
   const notchNav = document.querySelector('.cp-navbar-notch');
   if (notchNav) {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 30) {
-        notchNav.classList.add('scrolled');
-      } else {
-        notchNav.classList.remove('scrolled');
-      }
-    }, { passive: true });
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (window.scrollY > 30) {
+          notchNav.classList.add('scrolled');
+        } else {
+          notchNav.classList.remove('scrolled');
+        }
+      },
+      { passive: true }
+    );
   }
 
+  VideoChamber.init();
   loadRoadmap();
 });
+

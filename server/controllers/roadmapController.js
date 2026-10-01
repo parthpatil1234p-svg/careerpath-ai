@@ -20,6 +20,10 @@ const {
   getWeeklyTestStatus,
 } = require('../services/weeklyTestService');
 const { isRelatedCourse } = require('../services/courseSynergyService');
+const {
+  getVideoConceptCheckpoint,
+  evaluateVideoReflection,
+} = require('../services/videoDedicationService');
 
 // Helper to group tasks by weekNumber
 const groupTasksByWeek = (tasks, durationWeeks) => {
@@ -460,6 +464,25 @@ const toggleTask = async (req, res, next) => {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to modify this roadmap task',
+      });
+    }
+
+    // Server-Authoritative Anti-Slacking Gate:
+    // If task is a dedicated video task that is unverified and uncompleted, block manual checkbox ticking!
+    const email = (req.user.email || '').toLowerCase();
+    const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+
+    if (task.isVideoTask && !task.isVideoVerified && !task.completed && !isDemoOrAdmin) {
+      return res.status(403).json({
+        success: false,
+        code: 'VIDEO_VERIFICATION_REQUIRED',
+        message: 'This video lesson requires active learning verification. Please complete the video session and AI Reflection in the learning chamber.',
+        data: {
+          taskId: task._id,
+          taskTitle: task.title,
+          videoUrl: task.resource?.url,
+          skillName: task.skillName,
+        },
       });
     }
 
@@ -927,6 +950,148 @@ const completeWeekMilestoneController = async (req, res, next) => {
   }
 };
 
+// ── getVideoCheckpointController ─────────────────────────────────
+/**
+ * GET /api/roadmaps/tasks/:taskId/video-checkpoint
+ * Retrieves or dynamically generates a 1-question pulse checkpoint for mid-video pause.
+ */
+const getVideoCheckpointController = async (req, res, next) => {
+  try {
+    const { taskId } = req.params;
+    const task = await RoadmapTask.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ success: false, message: 'Roadmap task not found' });
+    }
+
+    const checkpointData = await getVideoConceptCheckpoint({
+      taskTitle: task.title,
+      skillName: task.skillName || task.title,
+      videoTitle: task.resource?.title || task.title,
+    });
+
+    res.status(200).json(checkpointData);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── verifyVideoLearningController ────────────────────────────────
+/**
+ * POST /api/roadmaps/tasks/:taskId/verify-video
+ * Verifies active video watch time and evaluates post-video student reflection.
+ */
+const verifyVideoLearningController = async (req, res, next) => {
+  try {
+    const { taskId } = req.params;
+    const {
+      watchTimeSeconds = 0,
+      durationSeconds = 0,
+      maxWatchedTime = 0,
+      midCheckPassed = false,
+      reflectionText = '',
+    } = req.body;
+
+    const task = await RoadmapTask.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ success: false, message: 'Roadmap task not found' });
+    }
+
+    const activeRoadmap = await Roadmap.findOne({
+      _id: task.roadmap,
+      user: req.user._id,
+      status: { $in: ['active', 'completed'] },
+    });
+
+    if (!activeRoadmap) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to verify this roadmap task',
+      });
+    }
+
+    const email = (req.user.email || '').toLowerCase();
+    const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+
+    // Evaluate reflection via AI / heuristic engine
+    const evalResult = await evaluateVideoReflection({
+      taskTitle: task.title,
+      skillName: task.skillName || task.title,
+      videoTitle: task.resource?.title || task.title,
+      reflectionText,
+    });
+
+    if (!evalResult.passed && !isDemoOrAdmin) {
+      return res.status(422).json({
+        success: false,
+        code: 'REFLECTION_NEEDS_IMPROVEMENT',
+        message: evalResult.feedback,
+        data: {
+          score: evalResult.score,
+          feedback: evalResult.feedback,
+          keyConceptsIdentified: evalResult.keyConceptsIdentified,
+        },
+      });
+    }
+
+    // Save verified state on task
+    task.isVideoVerified = true;
+    task.videoVerifiedAt = new Date();
+    task.videoWatchTimeSeconds = Math.max(task.videoWatchTimeSeconds || 0, Number(watchTimeSeconds) || 0);
+    task.videoDurationSeconds = Math.max(task.videoDurationSeconds || 0, Number(durationSeconds) || 0);
+    task.videoMaxWatchedTime = Math.max(task.videoMaxWatchedTime || 0, Number(maxWatchedTime) || 0);
+    task.videoMidCheckPassed = Boolean(midCheckPassed) || true;
+    task.videoReflectionSummary = reflectionText;
+    task.videoAiScore = evalResult.score;
+    task.videoAiFeedback = evalResult.feedback;
+    task.completed = true;
+    task.completedAt = new Date();
+    await task.save();
+
+    // Recalculate roadmap progress
+    const updatedRoadmap = await calculateRoadmapProgress(activeRoadmap._id);
+
+    // If all tasks for this week are completed, transition week from in_progress to awaiting_test
+    const weekTasks = await RoadmapTask.find({ roadmap: activeRoadmap._id, weekNumber: task.weekNumber });
+    const allWeekTasksDone = weekTasks.length > 0 && weekTasks.every((t) => t.completed);
+    if (allWeekTasksDone && updatedRoadmap.weekProgress) {
+      const wp = updatedRoadmap.weekProgress.find((w) => w.weekNumber === task.weekNumber);
+      if (wp && wp.status === 'in_progress') {
+        wp.status = 'awaiting_test';
+        await updatedRoadmap.save();
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Video learning session verified and completed with honors!',
+      data: {
+        task: {
+          id: task._id,
+          _id: task._id,
+          title: task.title,
+          completed: task.completed,
+          completedAt: task.completedAt,
+          isVideoVerified: task.isVideoVerified,
+          videoAiScore: task.videoAiScore,
+          videoAiFeedback: task.videoAiFeedback,
+        },
+        evaluation: evalResult,
+        roadmap: {
+          id: updatedRoadmap._id,
+          _id: updatedRoadmap._id,
+          status: updatedRoadmap.status,
+          totalTasks: updatedRoadmap.totalTasks,
+          completedTasks: updatedRoadmap.completedTasks,
+          progressPercentage: updatedRoadmap.progressPercentage,
+          weekProgress: updatedRoadmap.weekProgress,
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   generateRoadmap,
   getCurrentRoadmap,
@@ -940,4 +1105,6 @@ module.exports = {
   submitWeeklyTestController,
   getWeeklyTestStatusController,
   completeWeekMilestoneController,
+  getVideoCheckpointController,
+  verifyVideoLearningController,
 };

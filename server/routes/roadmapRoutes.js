@@ -30,12 +30,16 @@ const {
   submitWeeklyTestController,
   getWeeklyTestStatusController,
   completeWeekMilestoneController,
+  getVideoCheckpointController,
+  verifyVideoLearningController,
 } = require('../controllers/roadmapController');
 
 router.post('/generate', protect, requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
 router.get('/current', protect, requireSkillVerification, getCurrentRoadmap);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
 router.post('/tasks/:taskId/link-repo', protect, validateTaskId, linkProjectRepo);
+router.get('/tasks/:taskId/video-checkpoint', protect, validateTaskId, getVideoCheckpointController);
+router.post('/tasks/:taskId/verify-video', protect, validateTaskId, verifyVideoLearningController);
 router.post('/current/abandon', protect, abandonRoadmap);
 router.post('/:id/resume', protect, resumeRoadmap);
 router.delete('/current', protect, archiveRoadmap);

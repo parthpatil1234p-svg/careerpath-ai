@@ -80,10 +80,13 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
             skillName: sKey,
             priority: rs.importance === 'high' ? 'high' : 'medium',
             estimatedHours: rs.importance === 'high' ? 5 : 3,
+            isVideoTask: true,
+            videoDurationSeconds: 600,
             resource: {
-              title: `${sName} Official Documentation & Guides`,
-              url: `https://devdocs.io/`,
-              provider: 'DevDocs & Official Documentation',
+              title: `${sName} Video Masterclass & Core Architecture`,
+              url: `https://www.youtube.com/results?search_query=${encodeURIComponent(sName + ' full tutorial for beginners')}`,
+              provider: 'YouTube Learning & DevDocs',
+              mediaType: 'video',
             },
           });
 
@@ -185,6 +188,13 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
         taskDescription += ` • Targeted Focus Areas from Reality-Check Quiz: ${userSkillData.quizGaps.join(', ')}.`;
       }
 
+      const isVideo = Boolean(
+        task.isVideoTask ||
+        task.resource?.mediaType === 'video' ||
+        (task.resource?.url && (task.resource.url.includes('youtube.com') || task.resource.url.includes('youtu.be')))
+      );
+      const mediaType = task.resource?.mediaType || (isVideo ? 'video' : (task.resource?.type || 'reading'));
+
       taskDocuments.push({
         weekNumber: week.weekNumber,
         order: idx + 1,
@@ -194,7 +204,19 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
         skillName: task.skillName || '',
         priority: task.priority || 'medium',
         estimatedHours: task.estimatedHours || 2,
-        resource: task.resource || {},
+        resource: {
+          ...(task.resource || {}),
+          mediaType: mediaType,
+          url: task.resource?.url || 'https://developer.mozilla.org',
+          title: task.resource?.title || `${task.title} Resource`,
+          provider: task.resource?.provider || 'CareerPath AI Learning Hub',
+        },
+        isVideoTask: isVideo,
+        videoDurationSeconds: task.videoDurationSeconds || (isVideo ? 600 : 0),
+        videoMaxWatchedTime: 0,
+        videoWatchTimeSeconds: 0,
+        videoMidCheckPassed: false,
+        isVideoVerified: false,
         completed: false,
       });
     });
@@ -228,6 +250,8 @@ const calculateRoadmapProgress = async (roadmapId) => {
     totalTasks > 0 ? Math.min(Math.max(Math.round((completedTasks / totalTasks) * 100), 0), 100) : 0;
 
   const isFullyCompleted = totalTasks > 0 && completedTasks === totalTasks;
+  const currentRoadmapDoc = await Roadmap.findById(roadmapId);
+  if (!currentRoadmapDoc) return null;
 
   const updateFields = {
     totalTasks,
@@ -238,7 +262,7 @@ const calculateRoadmapProgress = async (roadmapId) => {
   if (isFullyCompleted) {
     updateFields.status = 'completed';
     updateFields.completedAt = new Date();
-  } else {
+  } else if (currentRoadmapDoc.status === 'completed') {
     updateFields.status = 'active';
     updateFields.completedAt = null;
   }
