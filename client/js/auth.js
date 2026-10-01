@@ -359,81 +359,57 @@ const Auth = {
       const isAdmin = this.isAdmin();
       const isVerified = this.isSkillVerified();
 
-      let statusBadge = '';
-      let userCapsule = '';
-      let mobileDashUrl = 'dashboard.html';
-      let mobileDashLabel = 'Dashboard';
+      const name = user.name || (isRecruiter ? 'Recruiter' : 'Student');
+      const initials = name
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(p => p[0].toUpperCase())
+        .join('') || 'U';
+
+      let roleChip = '';
+      let targetDashboardUrl = isRecruiter ? 'recruiter-dashboard.html' : 'dashboard.html';
 
       if (isRecruiter) {
-        statusBadge = `
-          <a href="recruiter-dashboard.html" class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:700;" title="Corporate Recruiter Active">
+        roleChip = `
+          <a href="recruiter-dashboard.html" class="nav-role-chip nav-role-chip-recruiter" title="Verified Corporate Recruiter">
             <i class="bi bi-patch-check-fill text-success"></i>
             <span>Recruiter</span>
           </a>
         `;
-        userCapsule = `
-          <a href="recruiter-dashboard.html"
-             class="nav-user-capsule nav-user-capsule-recruiter d-none d-md-flex align-items-center"
-             title="Logged in as ${escapeHtml(user.name || 'Recruiter')} · Recruiter Portal">
-            <i class="bi bi-building-check"></i>
-            <span>${escapeHtml(user.name || 'Recruiter')}</span>
-          </a>
-        `;
-        mobileDashUrl = 'recruiter-dashboard.html';
-        mobileDashLabel = 'Recruiter Portal';
       } else if (isAdmin) {
-        statusBadge = `
-          <span class="badge badge-leaf d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Full Admin Access">
-            <i class="bi bi-patch-check-fill text-success"></i>
-            <span>Admin / Demo ✓</span>
+        roleChip = `
+          <span class="nav-role-chip nav-role-chip-demo" title="Full Platform Access (Demo & Evaluation Mode)">
+            <i class="bi bi-shield-check text-success"></i>
+            <span>Demo ✓</span>
           </span>
         `;
-        userCapsule = `
-          <a href="dashboard.html"
-             class="nav-user-capsule d-none d-md-flex align-items-center"
-             title="Logged in as ${escapeHtml(user.name || 'Admin')} · Student Dashboard">
-            <i class="bi bi-person-circle"></i>
-            <span>${escapeHtml(user.name || 'Admin')}</span>
-          </a>
-        `;
       } else if (isVerified) {
-        statusBadge = `
-          <span class="badge badge-leaf d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Account Verified — All pages unlocked">
-            <i class="bi bi-patch-check-fill text-success"></i>
+        roleChip = `
+          <span class="nav-role-chip nav-role-chip-verified" title="Account Verified — All platform features unlocked">
+            <i class="bi bi-patch-check-fill text-primary"></i>
             <span>Verified ✓</span>
           </span>
         `;
-        userCapsule = `
-          <a href="dashboard.html"
-             class="nav-user-capsule d-none d-md-flex align-items-center"
-             title="Logged in as ${escapeHtml(user.name || 'Student')} · View Dashboard">
-            <i class="bi bi-person-circle"></i>
-            <span>${escapeHtml(user.name || 'Student')}</span>
-          </a>
-        `;
       } else {
-        // Single compact badge for unverified student (no duplicate button)
-        statusBadge = `
-          <a href="assessment.html#proveSkillsPanel" class="badge badge-gold d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Prove your skills to unlock full roadmaps & badges">
+        roleChip = `
+          <a href="assessment.html#proveSkillsPanel" class="nav-role-chip nav-role-chip-unverified" title="Prove your skills to unlock full roadmaps & badges">
             <i class="bi bi-shield-lock-fill text-warning"></i>
             <span>Prove Skills</span>
-          </a>
-        `;
-        userCapsule = `
-          <a href="dashboard.html"
-             class="nav-user-capsule d-none d-md-flex align-items-center"
-             title="Logged in as ${escapeHtml(user.name || 'Student')} · View Dashboard">
-            <i class="bi bi-person-circle"></i>
-            <span>${escapeHtml(user.name || 'Student')}</span>
           </a>
         `;
       }
 
       authActions.innerHTML = `
-        <div class="d-flex align-items-center gap-1.5 text-nowrap">
-          ${statusBadge}
-          ${userCapsule}
-          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center flex-shrink-0" onclick="Auth.logout()" title="Sign Out">
+        <div class="nav-profile-group d-flex align-items-center gap-1.5 text-nowrap">
+          ${roleChip}
+          <a href="${targetDashboardUrl}"
+             class="nav-user-pill ${isRecruiter ? 'nav-user-pill-recruiter' : ''} d-none d-md-inline-flex align-items-center gap-2"
+             title="Logged in as ${escapeHtml(name)} · ${isRecruiter ? 'Recruiter Portal' : 'Student Hub'}">
+            <span class="nav-avatar-circle">${escapeHtml(initials)}</span>
+            <span class="nav-user-name">${escapeHtml(name)}</span>
+          </a>
+          <button id="logoutBtn" class="nav-btn-logout" onclick="Auth.logout()" title="Sign Out" aria-label="Sign Out">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </div>
@@ -443,12 +419,12 @@ const Auth = {
       if (mobileActions) {
         mobileActions.innerHTML = `
           <div class="d-flex flex-column gap-2 w-100">
-            <div class="d-flex justify-content-center">${statusBadge}</div>
+            <div class="d-flex justify-content-center">${roleChip}</div>
             <div class="d-flex gap-2">
               <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="${mobileDashUrl}">
                 <i class="bi ${isRecruiter ? 'bi-building' : 'bi-speedometer2'} me-1"></i> ${mobileDashLabel}
               </a>
-              <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()" title="Sign Out">
+              <button class="nav-btn-logout" onclick="Auth.logout()" title="Sign Out">
                 <i class="bi bi-box-arrow-right"></i>
               </button>
             </div>

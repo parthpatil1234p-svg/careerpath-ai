@@ -152,15 +152,16 @@
 
 .brand-tagline,
 .brand-tagline-sub {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
   color: var(--color-indigo-700);
   background: var(--color-surface-indigo);
   border: 1px solid #C7D2FE;
-  padding: 2px 7px;
-  border-radius: 6px;
-  letter-spacing: 0.02em;
-  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
 }
 
 /* Nav Links */
