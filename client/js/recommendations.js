@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const weekStr = userActiveRoadmap.currentWeekString || `Week ${userActiveRoadmap.currentWeekNumber || 1} of ${userActiveRoadmap.durationWeeks || 4}`;
         const pct = Math.round(userActiveRoadmap.progressPercentage || 0);
         routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-lightning-charge-fill me-1"></i> ACTIVE ROUTE · ${escapeHtml(weekStr)} (${pct}% Tasks)</span>`;
-      } else if (userActiveRoadmap) {
+      } else if (userActiveRoadmap && !window.Auth?.isAdmin()) {
         routeStatusBadge = `<span class="badge bg-secondary text-light font-mono"><i class="bi bi-lock-fill me-1"></i> LOCKED</span>`;
       } else if (isGraduated) {
         routeStatusBadge = `<span class="badge bg-success-subtle text-success border border-success font-mono"><i class="bi bi-patch-check-fill me-1"></i> GRADUATED</span>`;
@@ -1005,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? `<a href="roadmap.html" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">
                      <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(userActiveRoadmap.progressPercentage || 0)}%)
                    </a>`
-                : userActiveRoadmap
+                : (userActiveRoadmap && !window.Auth?.isAdmin())
                 ? `<button type="button" class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="Finish your current route or abandon it to start this one">
                      <i class="bi bi-lock-fill me-1"></i>
                      <span>Locked (Active Route Enrolled)</span>

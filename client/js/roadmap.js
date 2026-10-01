@@ -230,11 +230,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
       }
 
-      const status = wp.status || (weekNumber === 1 ? 'in_progress' : 'locked');
-      const isLocked = status === 'locked';
+      const isAdminUser = Boolean(window.Auth?.isAdmin());
+      const rawStatus = wp.status || (weekNumber === 1 ? 'in_progress' : 'locked');
+      const status = isAdminUser ? (rawStatus === 'locked' ? 'in_progress' : rawStatus) : rawStatus;
+      const isLocked = isAdminUser ? false : (status === 'locked');
       const isPassed = status === 'passed';
       const isAwaitingTest = status === 'awaiting_test';
-      const isInProgress = status === 'in_progress';
+      const isInProgress = status === 'in_progress' || (isAdminUser && !isPassed && !isAwaitingTest);
 
       let statusCardClass = '';
       if (isLocked) statusCardClass = 'locked-week';
@@ -257,7 +259,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else if (isAwaitingTest) {
         statusBadgeHtml = '<span class="badge bg-warning-subtle text-warning border border-warning-subtle"><i class="bi bi-alarm-fill me-1"></i> Ready for Milestone Test</span>';
       } else if (isInProgress) {
-        statusBadgeHtml = '<span class="badge badge-teal">In Progress</span>';
+        statusBadgeHtml = isAdminUser ? '<span class="badge badge-teal"><i class="bi bi-unlock-fill me-1"></i> Unlocked (Admin)</span>' : '<span class="badge badge-teal">In Progress</span>';
       }
 
       // Milestone Test Action Box
@@ -316,12 +318,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         milestoneActionHtml = `
           <div class="mt-3 d-flex align-items-center justify-content-between pt-2 border-top border-line flex-wrap gap-2">
             <div class="text-muted small">
-              ${completedCount === tasks.length 
+              ${isAdminUser ? '<span class="text-success fw-semibold"><i class="bi bi-unlock-fill me-1"></i> Admin Demo Mode:</span> All tasks and milestone tests are 100% unlocked for testing.' : (completedCount === tasks.length 
                 ? 'All tasks checked! Take milestone test to unlock the next week.' 
-                : `${completedCount} of ${tasks.length} tasks finished. Complete all tasks or verify skill early when ready.`}
+                : `${completedCount} of ${tasks.length} tasks finished. Complete all tasks or verify skill early when ready.`)}
             </div>
-            <button class="btn btn-outline-primary btn-sm px-3 btn-open-test" data-week="${weekNumber}">
-              <i class="bi bi-stopwatch me-1"></i> Milestone Test ${wp.attemptsCount ? `(${wp.attemptsCount} attempts)` : ''}
+            <button class="btn ${isAdminUser ? 'cp-btn-primary' : 'btn-outline-primary'} btn-sm px-3 btn-open-test" data-week="${weekNumber}">
+              <i class="bi bi-stopwatch me-1"></i> ${isAdminUser ? 'Launch Milestone Test' : `Milestone Test ${wp.attemptsCount ? `(${wp.attemptsCount} attempts)` : ''}`}
             </button>
           </div>
         `;

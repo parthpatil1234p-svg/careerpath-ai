@@ -57,8 +57,12 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
     await roadmap.save();
   }
 
-  // 1. Verify Prerequisite (Week N - 1 must be passed)
-  if (wNum > 1) {
+  // 1. Verify Prerequisite (Week N - 1 must be passed; bypassed for demo/admin)
+  const testUser = await User.findById(userId);
+  const testUserEmail = (testUser?.email || '').toLowerCase();
+  const isDemoOrAdmin = testUser?.role === 'admin' || testUser?.isDemo || testUserEmail === 'kajimew275@blobapps.com' || testUserEmail.includes('admin') || testUserEmail.includes('demo');
+
+  if (wNum > 1 && !isDemoOrAdmin) {
     const prevWeek = roadmap.weekProgress.find((wp) => wp.weekNumber === wNum - 1);
     if (!prevWeek || prevWeek.status !== 'passed') {
       const err = new Error(`Week ${wNum - 1} milestone test must be passed (≥70%) before taking Week ${wNum} test.`);

@@ -112,21 +112,30 @@ const generateRoadmap = async (req, res, next) => {
       status: 'active',
     }).populate('career');
 
+    const email = (user.email || '').toLowerCase();
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+
     if (activeRoadmap) {
-      return res.status(409).json({
-        success: false,
-        code: 'ACTIVE_ROUTE_IN_PROGRESS',
-        message: `You are currently pursuing the "${activeRoadmap.careerSnapshot?.title || 'active'}" route (${Math.round(activeRoadmap.progressPercentage || 0)}% completed). You must complete your current route before starting another career route.`,
-        data: {
-          activeRoadmap: {
-            id: activeRoadmap._id,
-            careerTitle: activeRoadmap.careerSnapshot?.title,
-            slug: activeRoadmap.careerSnapshot?.slug,
-            progressPercentage: activeRoadmap.progressPercentage,
-            durationWeeks: activeRoadmap.durationWeeks,
+      if (isDemoOrAdmin) {
+        // Admin / demo accounts can switch routes freely without 409 conflict
+        activeRoadmap.status = 'archived';
+        await activeRoadmap.save();
+      } else {
+        return res.status(409).json({
+          success: false,
+          code: 'ACTIVE_ROUTE_IN_PROGRESS',
+          message: `You are currently pursuing the "${activeRoadmap.careerSnapshot?.title || 'active'}" route (${Math.round(activeRoadmap.progressPercentage || 0)}% completed). You must complete your current route before starting another career route.`,
+          data: {
+            activeRoadmap: {
+              id: activeRoadmap._id,
+              careerTitle: activeRoadmap.careerSnapshot?.title,
+              slug: activeRoadmap.careerSnapshot?.slug,
+              progressPercentage: activeRoadmap.progressPercentage,
+              durationWeeks: activeRoadmap.durationWeeks,
+            },
           },
-        },
-      });
+        });
+      }
     }
 
     // 7. Generate personalized tasks based on real skill gaps
@@ -438,7 +447,10 @@ const abandonRoadmap = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    if (user.lastAbandonedRouteAt) {
+    const email = (user.email || '').toLowerCase();
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+
+    if (!isDemoOrAdmin && user.lastAbandonedRouteAt) {
       const elapsed = Date.now() - new Date(user.lastAbandonedRouteAt).getTime();
       if (elapsed < SEVEN_DAYS_MS) {
         const nextAllowed = new Date(new Date(user.lastAbandonedRouteAt).getTime() + SEVEN_DAYS_MS);

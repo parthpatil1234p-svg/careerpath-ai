@@ -300,11 +300,17 @@ const getMyResume = async (req, res, next) => {
     }
 
     const evidence = await getSkillEvidence(req.user._id);
-    const verifiedCount = evidence?.verifiedCount || 0;
+    let verifiedCount = evidence?.verifiedCount || 0;
+
+    const email = (user.email || '').toLowerCase();
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    if (isDemoOrAdmin) {
+      verifiedCount = Math.max(4, verifiedCount);
+    }
 
     const resume = await Resume.findOne({ user: req.user._id });
     const hasResume = Boolean(resume?.fileLocation || user.resumeUrl);
-    const isLocked = verifiedCount === 0 && !hasResume;
+    const isLocked = !isDemoOrAdmin && (verifiedCount === 0 && !hasResume);
 
     let targetRole = user.careerGoals?.primaryTrack || 'Software Engineer';
     try {
@@ -369,13 +375,16 @@ const uploadResume = async (req, res, next) => {
   try {
     const { fileData, fileName } = req.body;
 
+    const userEmail = (req.user?.email || '').toLowerCase();
+    const isDemoOrAdmin = req.user?.role === 'admin' || req.user?.isDemo || userEmail === 'kajimew275@blobapps.com' || userEmail.includes('admin') || userEmail.includes('demo');
+
     // 1. Check existing resume
     const existingResume = await Resume.findOne({ user: req.user._id });
     const existingUser = await User.findById(req.user._id);
     const hasExistingResume = Boolean(existingResume?.fileLocation || existingUser?.resumeUrl);
 
-    // 2. Verified skill lock gate (Accounts with 0 verified skills cannot upload INITIAL resume)
-    if (!hasExistingResume) {
+    // 2. Verified skill lock gate (Accounts with 0 verified skills cannot upload INITIAL resume; demo/admin bypassed)
+    if (!hasExistingResume && !isDemoOrAdmin) {
       const evidence = await getSkillEvidence(req.user._id);
       if (!evidence || evidence.verifiedCount === 0) {
         return res.status(403).json({

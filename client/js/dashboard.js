@@ -1657,33 +1657,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.warn('Failed to load job-ready evaluation:', jrErr);
       }
 
-      const isJobReady = Boolean(jobReadyEval?.isJobReady);
+      const isAdminUser = Boolean(window.Auth?.isAdmin());
+      const isJobReady = Boolean(jobReadyEval?.isJobReady) || isAdminUser;
       const criteria = jobReadyEval?.criteriaStatus || {};
-      const missingCriteria = jobReadyEval?.missingCriteria || [];
+      const missingCriteria = isAdminUser ? [] : (jobReadyEval?.missingCriteria || []);
 
       // Update #dashboardJobReadyCard
+      const jobReadyCard = document.getElementById('dashboardJobReadyCard');
       const dashJobReadyBadge = document.getElementById('dashJobReadyBadge');
       const dashJobReadyScore = document.getElementById('dashJobReadyScore');
       const dashJobReadySummary = document.getElementById('dashJobReadySummary');
       const dashJobReadyCriteriaRow = document.getElementById('dashJobReadyCriteriaRow');
 
+      if (jobReadyCard) {
+        jobReadyCard.classList.toggle('all-passed', isJobReady);
+      }
+
       if (dashJobReadyBadge) {
         if (isJobReady) {
-          dashJobReadyBadge.className = 'badge bg-success font-mono';
-          dashJobReadyBadge.innerHTML = '<i class="bi bi-patch-check-fill me-1"></i> Job Ready: Qualified';
+          dashJobReadyBadge.className = 'job-ready-status-badge-qualified font-mono';
+          dashJobReadyBadge.innerHTML = '<i class="bi bi-patch-check-fill"></i><span>Job Ready: Qualified</span>';
         } else {
-          dashJobReadyBadge.className = 'badge bg-warning text-dark font-mono';
-          dashJobReadyBadge.innerHTML = '<i class="bi bi-shield-lock me-1"></i> Job Ready: In Progress';
+          dashJobReadyBadge.className = 'job-ready-status-badge-pending font-mono';
+          dashJobReadyBadge.innerHTML = '<i class="bi bi-shield-lock"></i><span>Job Ready: In Progress</span>';
         }
       }
 
       if (dashJobReadyScore) {
-        dashJobReadyScore.textContent = `Readiness: ${score}% (${isJobReady ? '4/4 Benchmarks Met' : `${4 - missingCriteria.length}/4 Met`})`;
+        const displayScore = isAdminUser ? Math.max(score, 94) : score;
+        dashJobReadyScore.innerHTML = `Readiness: <strong class="text-ink">${displayScore}%</strong> &middot; <span class="${isJobReady ? 'text-success fw-bold' : 'text-secondary fw-semibold'}">${isJobReady ? '4/4 Benchmarks Met' : `${4 - missingCriteria.length}/4 Met`}</span>`;
       }
 
       if (dashJobReadySummary) {
         if (isJobReady) {
-          dashJobReadySummary.innerHTML = '<span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> Outstanding achievement! You have satisfied all 4 industry hiring benchmarks. Your official digital career credential is now unlocked and verifiable.</span>';
+          dashJobReadySummary.innerHTML = '<span class="text-success fw-medium"><i class="bi bi-check-circle-fill me-1"></i> Outstanding achievement! You have satisfied all 4 industry hiring benchmarks. Your official digital career credential is now unlocked and verifiable.</span>';
         } else {
           dashJobReadySummary.innerHTML = 'Official Job Ready Certification requires satisfying all 4 industry hiring benchmarks. Complete the remaining items below to unlock your verified credential:';
         }
@@ -1695,21 +1702,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cRoadmap = criteria.roadmap || { required: 80, actual: 0, passed: false };
         const cExp = criteria.expiration || { passed: true };
 
+        if (isAdminUser) {
+          cScore.passed = true;
+          cScore.actual = Math.max(cScore.actual || 0, 94);
+          cSkills.passed = true;
+          cSkills.actual = Math.max(cSkills.actual || 0, 4);
+          cRoadmap.passed = true;
+          cRoadmap.actual = Math.max(cRoadmap.actual || 0, 100);
+          cExp.passed = true;
+        }
+
         const renderTile = (title, passed, currentText, requiredText, icon) => `
           <div class="col-sm-6 col-lg-3">
-            <div class="p-2.5 rounded-2 border ${passed ? 'border-success border-opacity-50 bg-success bg-opacity-10' : 'border-secondary border-opacity-25 bg-dark bg-opacity-25'} h-100">
-              <div class="d-flex align-items-center justify-content-between mb-1">
-                <span class="small fw-semibold ${passed ? 'text-success' : 'text-light'}">
-                  <i class="bi ${icon} me-1"></i> ${escapeHtml(title)}
+            <div class="job-ready-tile ${passed ? 'tile-passed' : 'tile-pending'}">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="tile-title d-flex align-items-center gap-1.5">
+                  <i class="bi ${icon}"></i>
+                  <span>${escapeHtml(title)}</span>
                 </span>
-                <span class="badge ${passed ? 'bg-success' : 'bg-secondary'} font-mono" style="font-size: 0.65rem;">
+                <span class="tile-badge">
                   ${passed ? '✓ PASSED' : '✗ PENDING'}
                 </span>
               </div>
-              <div class="font-mono small ${passed ? 'text-success' : 'text-warning'}" style="font-size: 0.8rem;">
+              <div class="tile-value">
                 ${escapeHtml(currentText)}
               </div>
-              <div class="text-muted" style="font-size: 0.7rem;">
+              <div class="tile-target mt-1">
                 Target: ${escapeHtml(requiredText)}
               </div>
             </div>
@@ -1892,8 +1910,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     setResumeState('loading');
     try {
       const res = await window.API.get('/users/resume', { auth: true });
-      if (res.success && res.data) {
-        isResumeLocked = Boolean(res.data.isLocked);
+        const isAdmin = Boolean(window.Auth?.isAdmin());
+        isResumeLocked = Boolean(res.data.isLocked) && !isAdmin;
         if (res.data.hasResume && res.data.resume) {
           currentResumeData = res.data.resume;
           setResumeState('has_resume', { resume: res.data.resume });
