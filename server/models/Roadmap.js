@@ -97,9 +97,9 @@ const RoadmapSchema = new mongoose.Schema(
   }
 );
 
-// Database-level guarantee: at most ONE active roadmap per user
+// Database-level guarantee: at most ONE active roadmap per user PER CAREER
 RoadmapSchema.index(
-  { user: 1 },
+  { user: 1, career: 1 },
   {
     unique: true,
     partialFilterExpression: { status: 'active' },

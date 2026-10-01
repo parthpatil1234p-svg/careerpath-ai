@@ -1101,3 +1101,156 @@
   color: #FFFFFF;
 }
 
+/* ==========================================================================
+   4-RULE JOB READY CHECKLIST CARD & TILES (HIGH CONTRAST & ACCESSIBLE)
+   ========================================================================== */
+.job-ready-status-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--color-border, #E2E8F0) !important;
+  border-radius: var(--radius-md, 12px) !important;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05)) !important;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal, 0.2s ease);
+}
+
+.job-ready-status-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #F59E0B 0%, #10B981 100%);
+}
+
+.job-ready-status-card.all-passed::before {
+  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+}
+
+.job-ready-status-badge-pending {
+  background: #FFFBEB !important;
+  color: #B45309 !important;
+  border: 1px solid #FCD34D !important;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.08);
+}
+
+.job-ready-status-badge-qualified {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border: 1px solid #6EE7B7 !important;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.08);
+}
+
+.job-ready-tile {
+  border-radius: var(--radius-sm, 10px);
+  padding: 1rem 1.15rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  position: relative;
+}
+
+.job-ready-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Passed Tile (Fresh Mint / Emerald) */
+.job-ready-tile.tile-passed {
+  background: #F0FDF4 !important;
+  border: 1.5px solid #86EFAC !important;
+}
+
+.job-ready-tile.tile-passed .tile-title {
+  color: #166534 !important;
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: -0.01em;
+}
+
+.job-ready-tile.tile-passed .tile-badge {
+  background: #DCFCE7 !important;
+  color: #15803D !important;
+  border: 1px solid #86EFAC !important;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+}
+
+.job-ready-tile.tile-passed .tile-value {
+  color: #15803D !important;
+  font-family: var(--font-mono, monospace);
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  margin-top: 0.4rem;
+}
+
+.job-ready-tile.tile-passed .tile-target {
+  color: #166534 !important;
+  opacity: 0.85;
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+/* Pending Tile (Warm Soft Amber / High Contrast) */
+.job-ready-tile.tile-pending {
+  background: #FFFBEB !important;
+  border: 1.5px solid #FDE68A !important;
+}
+
+.job-ready-tile.tile-pending .tile-title {
+  color: #92400E !important;
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: -0.01em;
+}
+
+.job-ready-tile.tile-pending .tile-badge {
+  background: #FEF3C7 !important;
+  color: #B45309 !important;
+  border: 1px solid #FCD34D !important;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+}
+
+.job-ready-tile.tile-pending .tile-value {
+  color: #B45309 !important;
+  font-family: var(--font-mono, monospace);
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  margin-top: 0.4rem;
+}
+
+.job-ready-tile.tile-pending .tile-target {
+  color: #78350F !important;
+  opacity: 0.88;
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
