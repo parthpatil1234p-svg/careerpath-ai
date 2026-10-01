@@ -120,6 +120,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       careerIconEl.className = `bi ${career.icon} text-teal`;
     }
 
+    const btnRoadmapMock = document.getElementById('btnRoadmapMockInterview');
+    if (btnRoadmapMock && career.title) {
+      btnRoadmapMock.href = `dashboard.html?action=mock-interview&role=${encodeURIComponent(career.title)}`;
+    }
+
     if (durationBadgeEl) durationBadgeEl.textContent = `${currentRoadmap.durationWeeks} Weeks`;
     if (paceBadgeEl) {
       paceBadgeEl.textContent =

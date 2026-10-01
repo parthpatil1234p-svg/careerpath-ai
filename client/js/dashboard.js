@@ -1646,15 +1646,108 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (metricResume) metricResume.textContent = `${data.breakdown?.resumeScore ?? '--'}%`;
       if (metricInterview) metricInterview.textContent = `${data.breakdown?.interviewScore ?? '--'}%`;
 
-      // Certificate button state
+      // 1.5 Decoupled 4-Rule Job Ready Evaluation & Checklist Wire
+      let jobReadyEval = null;
+      try {
+        const jrRes = await window.API.get('/readiness/job-ready-check', { auth: true });
+        if (jrRes.success && jrRes.data) {
+          jobReadyEval = jrRes.data;
+        }
+      } catch (jrErr) {
+        console.warn('Failed to load job-ready evaluation:', jrErr);
+      }
+
+      const isJobReady = Boolean(jobReadyEval?.isJobReady);
+      const criteria = jobReadyEval?.criteriaStatus || {};
+      const missingCriteria = jobReadyEval?.missingCriteria || [];
+
+      // Update #dashboardJobReadyCard
+      const dashJobReadyBadge = document.getElementById('dashJobReadyBadge');
+      const dashJobReadyScore = document.getElementById('dashJobReadyScore');
+      const dashJobReadySummary = document.getElementById('dashJobReadySummary');
+      const dashJobReadyCriteriaRow = document.getElementById('dashJobReadyCriteriaRow');
+
+      if (dashJobReadyBadge) {
+        if (isJobReady) {
+          dashJobReadyBadge.className = 'badge bg-success font-mono';
+          dashJobReadyBadge.innerHTML = '<i class="bi bi-patch-check-fill me-1"></i> Job Ready: Qualified';
+        } else {
+          dashJobReadyBadge.className = 'badge bg-warning text-dark font-mono';
+          dashJobReadyBadge.innerHTML = '<i class="bi bi-shield-lock me-1"></i> Job Ready: In Progress';
+        }
+      }
+
+      if (dashJobReadyScore) {
+        dashJobReadyScore.textContent = `Readiness: ${score}% (${isJobReady ? '4/4 Benchmarks Met' : `${4 - missingCriteria.length}/4 Met`})`;
+      }
+
+      if (dashJobReadySummary) {
+        if (isJobReady) {
+          dashJobReadySummary.innerHTML = '<span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> Outstanding achievement! You have satisfied all 4 industry hiring benchmarks. Your official digital career credential is now unlocked and verifiable.</span>';
+        } else {
+          dashJobReadySummary.innerHTML = 'Official Job Ready Certification requires satisfying all 4 industry hiring benchmarks. Complete the remaining items below to unlock your verified credential:';
+        }
+      }
+
+      if (dashJobReadyCriteriaRow) {
+        const cScore = criteria.score || { required: 70, actual: score, passed: score >= 70 };
+        const cSkills = criteria.skills || { required: 4, actual: 0, passed: false };
+        const cRoadmap = criteria.roadmap || { required: 80, actual: 0, passed: false };
+        const cExp = criteria.expiration || { passed: true };
+
+        const renderTile = (title, passed, currentText, requiredText, icon) => `
+          <div class="col-sm-6 col-lg-3">
+            <div class="p-2.5 rounded-2 border ${passed ? 'border-success border-opacity-50 bg-success bg-opacity-10' : 'border-secondary border-opacity-25 bg-dark bg-opacity-25'} h-100">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="small fw-semibold ${passed ? 'text-success' : 'text-light'}">
+                  <i class="bi ${icon} me-1"></i> ${escapeHtml(title)}
+                </span>
+                <span class="badge ${passed ? 'bg-success' : 'bg-secondary'} font-mono" style="font-size: 0.65rem;">
+                  ${passed ? '✓ PASSED' : '✗ PENDING'}
+                </span>
+              </div>
+              <div class="font-mono small ${passed ? 'text-success' : 'text-warning'}" style="font-size: 0.8rem;">
+                ${escapeHtml(currentText)}
+              </div>
+              <div class="text-muted" style="font-size: 0.7rem;">
+                Target: ${escapeHtml(requiredText)}
+              </div>
+            </div>
+          </div>
+        `;
+
+        dashJobReadyCriteriaRow.innerHTML = `
+          ${renderTile('Readiness Score', cScore.passed, `Score: ${cScore.actual}%`, '≥ 70% required', 'bi-speedometer2')}
+          ${renderTile('Verified Role Skills', cSkills.passed, `${cSkills.actual} of ${cSkills.required} verified`, '≥ 4 required', 'bi-tools')}
+          ${renderTile('Roadmap Progress', cRoadmap.passed, `${cRoadmap.actual}% completed`, '≥ 80% required', 'bi-map')}
+          ${renderTile('Skill Currency', cExp.passed, cExp.passed ? '0 expired skills' : 'Refresh required', '180-day refresh', 'bi-arrow-clockwise')}
+        `;
+      }
+
+      // Certificate button state (Strictly gated behind 4-rule Job Ready qualification)
       const btnViewCertificate = document.getElementById('btnViewCertificate');
       if (btnViewCertificate) {
-        if (score >= 85) {
+        if (isJobReady) {
           btnViewCertificate.className = 'btn btn-warning btn-sm px-3 py-1.5 fw-semibold shadow-sm';
           btnViewCertificate.innerHTML = '<i class="bi bi-award-fill me-1"></i> View Career Certificate (Unlocked ✓)';
+          btnViewCertificate.setAttribute('data-bs-toggle', 'modal');
+          btnViewCertificate.setAttribute('data-bs-target', '#certificateModal');
+          btnViewCertificate.onclick = null;
         } else {
           btnViewCertificate.className = 'btn btn-outline-light btn-sm px-3 py-1.5 fw-semibold';
-          btnViewCertificate.innerHTML = '<i class="bi bi-award me-1"></i> Career Certificate (Unlocks at 85%)';
+          btnViewCertificate.innerHTML = `<i class="bi bi-shield-lock me-1"></i> Certificate Locked (${4 - missingCriteria.length}/4 Criteria)`;
+          btnViewCertificate.removeAttribute('data-bs-toggle');
+          btnViewCertificate.removeAttribute('data-bs-target');
+          btnViewCertificate.onclick = (e) => {
+            e.preventDefault();
+            const jobReadyCard = document.getElementById('dashboardJobReadyCard');
+            if (jobReadyCard) {
+              jobReadyCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              jobReadyCard.classList.add('border-warning');
+              setTimeout(() => jobReadyCard.classList.remove('border-warning'), 2000);
+            }
+            showAlert(`🔒 Job Ready Certificate Locked: You must satisfy all 4 hiring benchmarks (${missingCriteria.join('; ') || 'criteria pending'}).`, 'warning');
+          };
         }
       }
 
@@ -1670,24 +1763,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (certStudentName) certStudentName.textContent = user?.name || 'Verified Student';
       if (certCareerTitle) certCareerTitle.textContent = data.targetRole || 'Full-Stack Developer';
       if (certReadinessScore) certReadinessScore.textContent = `${score}% (${data.tierLabel || 'Developing Practitioner'})`;
-      if (certVerificationId) certVerificationId.textContent = data.certificateId || ('CP-2026-' + (user?._id || 'PROTOTYPE').slice(-6).toUpperCase());
+      if (certVerificationId) certVerificationId.textContent = jobReadyEval?.certificateId || data.certificateId || ('CP-2026-' + (user?._id || 'PROTOTYPE').slice(-6).toUpperCase());
       if (certIssueDate) {
-        const d = data.certifiedAt ? new Date(data.certifiedAt) : new Date();
+        const d = (jobReadyEval?.certifiedAt || data.certifiedAt) ? new Date(jobReadyEval?.certifiedAt || data.certifiedAt) : new Date();
         certIssueDate.textContent = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
       }
 
       if (certSkillsContainer) {
-        const verifiedSkills = (user?.skills || []).filter(s => s.isVerified || s.verificationTier === 'project_verified' || s.verificationTier === 'quiz_verified');
+        const verifiedSkills = (user?.skills || []).filter(s => s.isVerified || s.isCodeVerified || s.isQuizVerified || s.verificationTier === 'project_verified' || s.verificationTier === 'quiz_verified');
         if (verifiedSkills.length > 0) {
           certSkillsContainer.innerHTML = verifiedSkills.map(s => `
             <span class="badge bg-light text-dark border px-2 py-1">
-              <i class="bi bi-check-circle-fill text-success me-1"></i>${escapeHtml(s.name)}
+              <i class="bi bi-check-circle-fill text-success me-1"></i>${escapeHtml(s.displayName || s.name)}
             </span>
           `).join('');
         } else if ((user?.skills || []).length > 0) {
           certSkillsContainer.innerHTML = (user.skills).slice(0, 5).map(s => `
             <span class="badge bg-light text-dark border px-2 py-1">
-              <i class="bi bi-patch-check-fill text-primary me-1"></i>${escapeHtml(s.name)}
+              <i class="bi bi-patch-check-fill text-primary me-1"></i>${escapeHtml(s.displayName || s.name)}
             </span>
           `).join('');
         } else {
@@ -2299,16 +2392,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!btnLaunch || !modalEl) return;
 
+    // Check URL search parameters for cross-page interview triggers (e.g. from Recommendations or Roadmap)
+    let requestedRole = null;
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'mock-interview') {
+        requestedRole = urlParams.get('role');
+        setTimeout(() => {
+          if (btnLaunch) {
+            btnLaunch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            btnLaunch.click();
+          }
+        }, 600);
+      }
+    } catch (_) {}
+
     // Launch button handler
     btnLaunch.onclick = async () => {
       const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
       modalInstance.show();
 
       const user = dashboardData?.user || window.Auth?.getUser() || {};
-      const targetRole = dashboardData?.activeRoadmap?.career?.title || 
+      const targetRole = requestedRole ||
+                         dashboardData?.activeRoadmap?.career?.title || 
                          dashboardData?.readinessData?.targetRole || 
                          (user.interests && user.interests[0]) || 
                          'Full-Stack Developer';
+      requestedRole = null; // Reset after first trigger
 
       if (interviewTargetRole) interviewTargetRole.textContent = targetRole;
       if (interviewProgressText) interviewProgressText.textContent = 'Question 1 of 3';

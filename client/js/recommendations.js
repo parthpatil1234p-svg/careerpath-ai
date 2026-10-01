@@ -361,8 +361,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             <!-- Tags & Direct Apply -->
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pt-2 border-top border-line mt-2">
-              <div class="d-flex flex-wrap gap-1">
-                ${(job.tags || []).map(t => `<span class="badge skill-pill matched-pill font-mono" style="font-size: 0.68rem;">#${escapeHtml(t)}</span>`).join('')}
+              <div class="d-flex flex-wrap gap-1 align-items-center">
+                ${(job.tags || []).map(t => {
+                  const isVerified = userVerifiedSkillNames.has(String(t).toLowerCase().trim());
+                  if (isVerified) {
+                    return `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-mono" style="font-size: 0.68rem;" title="Verified in your skill profile"><i class="bi bi-check-circle-fill me-1"></i>${escapeHtml(t)}</span>`;
+                  } else {
+                    return `<button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 font-mono btn-bridge-gap" data-skill="${escapeHtml(t)}" data-job="${escapeHtml(job.title)}" title="1-Click: Add 1-week micro-task to your active roadmap" style="font-size: 0.68rem;"><i class="bi bi-plus-circle me-1"></i>${escapeHtml(t)} <span class="badge bg-danger text-white ms-1" style="font-size: 0.55rem;">+ Bridge</span></button>`;
+                  }
+                }).join('')}
               </div>
               <a href="${escapeHtml(job.url)}" target="_blank" rel="noopener noreferrer" class="btn cp-btn-primary btn-sm px-3 py-1 text-nowrap">
                 <span>View & Apply</span>
@@ -371,6 +378,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
           </div>
         `).join('');
+
+        // Wire 1-Click Bridge the Gap micro-task injection
+        jobsListContainer.querySelectorAll('.btn-bridge-gap').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const skill = btn.getAttribute('data-skill');
+            const jobTitle = btn.getAttribute('data-job') || activeJobsCareerTitle || 'Target Tech Role';
+            btn.disabled = true;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" style="width: 0.75rem; height: 0.75rem;"></span>';
+
+            try {
+              const bridgeRes = await window.API.post('/jobs/bridge-gap', {
+                skillName: skill,
+                missingSkill: skill,
+                jobTitle: jobTitle
+              }, { auth: true });
+
+              if (bridgeRes.success) {
+                showAlert(`✓ Added "${skill}" to Week 1 of your active roadmap!`, 'success');
+                btn.className = 'btn btn-outline-success btn-sm py-0 px-2 font-mono';
+                btn.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i> Bridged!`;
+              } else {
+                showAlert(bridgeRes.message || 'Failed to bridge skill gap.', 'danger');
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+              }
+            } catch (bridgeErr) {
+              showAlert(bridgeErr.message || 'Could not bridge skill. Please ensure you have an active roadmap.', 'danger');
+              btn.disabled = false;
+              btn.innerHTML = originalContent;
+            }
+          });
+        });
       }
     } catch (err) {
       if (jobsLoadingState) jobsLoadingState.classList.add('d-none');
@@ -457,6 +498,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── Single Active Career Route State Tracking ────────────────────────
   let userActiveRoadmap = null;
   let userCompletedSlugs = new Set();
+  let userVerifiedSkillNames = new Set();
 
   // Initialize Abandon Route Modal
   const modalAbandonEl = document.getElementById('modalAbandonRoute');
@@ -501,15 +543,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const userRes = await window.API.get('/users/me', { auth: true });
-      if (userRes.success && userRes.data?.user?.completedPaths) {
-        userCompletedSlugs = new Set(
-          userRes.data.user.completedPaths
-            .map((cp) => (cp.slug || '').toLowerCase().trim())
-            .filter(Boolean)
-        );
+      if (userRes.success && userRes.data?.user) {
+        const u = userRes.data.user;
+        if (u.completedPaths) {
+          userCompletedSlugs = new Set(
+            u.completedPaths
+              .map((cp) => (cp.slug || '').toLowerCase().trim())
+              .filter(Boolean)
+          );
+        }
+        if (Array.isArray(u.skills)) {
+          userVerifiedSkillNames = new Set(
+            u.skills
+              .filter(s => s.isVerified || s.isCodeVerified || s.isQuizVerified || s.verificationTier === 'project_verified' || s.verificationTier === 'quiz_verified')
+              .map(s => (s.name || s.displayName || '').toLowerCase().trim())
+          );
+        }
       }
     } catch (e) {
       userCompletedSlugs = new Set();
+      userVerifiedSkillNames = new Set();
     }
 
     renderActiveRouteBanner();
@@ -939,6 +992,14 @@ document.addEventListener('DOMContentLoaded', async () => {
               <i class="bi bi-briefcase text-teal me-1"></i>
               <span>Live Market Jobs</span>
             </button>
+            <a
+              href="dashboard.html?action=mock-interview&role=${encodeURIComponent(career.title)}"
+              class="btn cp-btn-outline btn-sm px-3 py-2 fw-semibold"
+              title="Practice AI mock interview tailored for ${escapeHtml(career.title)}"
+            >
+              <i class="bi bi-mic-fill text-primary me-1"></i>
+              <span>Practice AI Mock Interview</span>
+            </a>
             ${
               isActiveThisCareer
                 ? `<a href="roadmap.html" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">

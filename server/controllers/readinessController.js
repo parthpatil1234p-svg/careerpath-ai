@@ -30,17 +30,20 @@ exports.getReadinessStatus = async (req, res, next) => {
 exports.getCertificate = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    const readiness = await computeStudentReadiness(req.user._id);
+    const { evaluateJobReadyCertification } = require('../services/readinessService');
+    const jobReadyEval = await evaluateJobReadyCertification(req.user._id);
 
-    if (readiness.readinessScore < 85 && !readiness.certificateId) {
+    if (!jobReadyEval.isJobReady && !user.jobReadiness?.certificateId) {
       return res.status(403).json({
         success: false,
         isLocked: true,
-        currentScore: readiness.readinessScore,
-        requiredScore: 85,
-        message: `Your Job Readiness score is ${readiness.readinessScore}%. Achieve 85% or higher across verified skills, roadmap completion, resume ATS, and mock interviews to unlock your official certificate.`
+        criteriaStatus: jobReadyEval.criteriaStatus,
+        missingCriteria: jobReadyEval.missingCriteria,
+        message: `Your Job Ready status is locked. Satisfy all 4 benchmarks: ${jobReadyEval.missingCriteria.join(', ')}.`
       });
     }
+
+    const readiness = jobReadyEval.readiness;
 
     return res.status(200).json({
       success: true,

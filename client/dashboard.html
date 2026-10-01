@@ -297,10 +297,28 @@
                 </div>
                 <div class="small text-light text-opacity-75">
                   <div class="fw-bold text-white mb-1"><i class="bi bi-shield-check text-success me-1"></i> Anti-Cheat Grounded</div>
-                  <div style="font-size: 0.75rem;">Requires 85%+ readiness to unlock the official verifiable digital career certificate.</div>
+                  <div style="font-size: 0.75rem;">Requires satisfying all 4 Job Ready benchmarks to unlock the official verifiable digital certificate.</div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- 1.5 Decoupled 4-Rule Job Ready Qualification & Checklist Card -->
+        <div class="card p-3 p-md-4 rounded-3 border-line shadow-sm mb-4" id="dashboardJobReadyCard" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.08);">
+          <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-secondary font-mono" id="dashJobReadyBadge"><i class="bi bi-shield-lock me-1"></i> Job Ready: Evaluating...</span>
+              <span class="small font-mono text-muted" id="dashJobReadyScore">Readiness: --%</span>
+            </div>
+            <span class="badge badge-navy font-mono text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.5px;">4-Criteria Standard</span>
+          </div>
+          <p class="small text-secondary mb-3" id="dashJobReadySummary">
+            Official Job Ready Certification requires satisfying all 4 industry hiring benchmarks:
+          </p>
+          <div class="row g-2" id="dashJobReadyCriteriaRow">
+            <!-- Dynamically populated 4-rule checklist tiles -->
+            <div class="col-12 text-muted small py-2 font-mono"><i class="bi bi-arrow-repeat spin me-1"></i> Evaluating certification benchmarks...</div>
           </div>
         </div>
 

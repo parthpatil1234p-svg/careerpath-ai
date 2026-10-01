@@ -695,7 +695,7 @@ Built with passion, late-night grit, and engineering dedication for **Hack2Ignit
 
 | <img src="https://github.com/parthpatil1234p-svg.png?size=110" width="110px;" style="border-radius:50%" alt="Parth Patil"/><br /><sub><b>Parth Patil</b></sub> | <img src="https://github.com/aditivispute25-gif.png?size=110" width="110px;" style="border-radius:50%" alt="Aditi Vispute"/><br /><sub><b>Aditi Vispute</b></sub> | <img src="https://github.com/Suyog-SP.png?size=110" width="110px;" style="border-radius:50%" alt="Suyog Pawar"/><br /><sub><b>Suyog Pawar</b></sub> | <img src="https://github.com/SanikaMB.png?size=110" width="110px;" style="border-radius:50%" alt="Sanika Bodhnawar"/><br /><sub><b>Sanika Bodhnawar</b></sub> |
 | :---: | :---: | :---: | :---: |
-| 👑 **Team Leader & Full Stack WebDev** | 🔍 **Researcher, Web Explorer & Integration Lead** | 🎨 **UI/UX & Frontend Systems Lead** | 📊 **QA, Data & Docs Lead & Presenter / Speaker** |
+| 👑 **Team Leader & Backend Dev** | 🎨 **UI/UX Designer & Frontend Dev** | 📊 **Docs Handler** | 🔍 **Researcher & Integration Lead** |
 | [![GitHub](https://img.shields.io/badge/GitHub-parthpatil1234p--svg-181717?style=flat-square&logo=github)](https://github.com/parthpatil1234p-svg) | [![GitHub](https://img.shields.io/badge/GitHub-aditivispute25--gif-181717?style=flat-square&logo=github)](https://github.com/aditivispute25-gif) | [![GitHub](https://img.shields.io/badge/GitHub-Suyog--SP-181717?style=flat-square&logo=github)](https://github.com/Suyog-SP) | [![GitHub](https://img.shields.io/badge/GitHub-SanikaMB-181717?style=flat-square&logo=github)](https://github.com/SanikaMB) |
 
 - **Organizer:** Organized by **[G.H. Raisoni International Skill Tech University (GHRISTU)](https://ghristu.edu.in/)**.

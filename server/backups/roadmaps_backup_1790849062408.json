@@ -1,0 +1,2536 @@
+[
+  {
+    "_id": "6aaa3ca90017de613bb933c8",
+    "userId": "6aaa3ca90017de613bb933c7",
+    "targetCareerId": "6aaa3bfae523d4c45a66d53c",
+    "careerTitle": "Full-Stack Web Developer",
+    "durationWeeks": 8,
+    "progress": 13,
+    "tasks": [
+      {
+        "weekNumber": 1,
+        "title": "Environment Setup & HTML/CSS Kickstart",
+        "description": "Install developer toolchain, configure Git version control, and complete foundational tutorials.",
+        "resourceLink": "https://roadmap.sh",
+        "isCompleted": true,
+        "_id": "6aaa3ca90017de613bb933c9"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Deep Dive into HTML/CSS",
+        "description": "Algorithms, data structures, and best coding practices. Complete 10 interactive coding exercises.",
+        "resourceLink": "https://leetcode.com",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933ca"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Mastering JavaScript",
+        "description": "Architect modular components and understand state, data flow, or system mechanics.",
+        "resourceLink": "https://freecodecamp.org",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933cb"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Mid-term Milestone: Interactive Application Prototype",
+        "description": "Build a standalone prototype applying the first month of core concepts.",
+        "resourceLink": "https://github.com",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933cc"
+      },
+      {
+        "weekNumber": 5,
+        "title": "Advanced Frameworks & Tooling (React)",
+        "description": "Learn industry-standard libraries, package ecosystems, and API integration techniques.",
+        "resourceLink": "https://fullstackopen.com",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933cd"
+      },
+      {
+        "weekNumber": 6,
+        "title": "Database, Storage & Data Persistence (Node.js)",
+        "description": "Schema design, query optimization, and connecting backend persistence layers.",
+        "resourceLink": "https://www.mongodb.com/docs/",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933ce"
+      },
+      {
+        "weekNumber": 7,
+        "title": "Testing, Debugging & Performance Optimization",
+        "description": "Write unit tests, analyze bottlenecks, and harden security/error handling.",
+        "resourceLink": "https://web.dev",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933cf"
+      },
+      {
+        "weekNumber": 8,
+        "title": "Production Capstone, CI/CD & Career Readiness",
+        "description": "Finalize live production deployment, prepare resume bullet points, and conduct mock interviews.",
+        "resourceLink": "https://www.linkedin.com",
+        "isCompleted": false,
+        "_id": "6aaa3ca90017de613bb933d0"
+      }
+    ],
+    "createdAt": "2026-09-16T06:52:25.287Z",
+    "updatedAt": "2026-09-16T06:52:25.773Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aaa6a200876448bf78f18f6",
+    "userId": "6aaa6a1e0876448bf78f18bd",
+    "targetCareerId": "6aaa4b8ffaeb181d41d5836e",
+    "careerTitle": "Full-Stack Developer",
+    "durationWeeks": 4,
+    "progress": 0,
+    "tasks": [
+      {
+        "weekNumber": 1,
+        "title": "Master JavaScript Core Concepts",
+        "description": "Learn fundamental syntax, mental model, and best practices for JavaScript. Target proficiency: Level 3.",
+        "resourceLink": "https://javascript.info/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18f7"
+      },
+      {
+        "weekNumber": 1,
+        "title": "Master Express.js Core Concepts",
+        "description": "Learn fundamental syntax, mental model, and best practices for Express.js. Target proficiency: Level 3.",
+        "resourceLink": "https://expressjs.com/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18f8"
+      },
+      {
+        "weekNumber": 1,
+        "title": "Master MongoDB Core Concepts",
+        "description": "Learn fundamental syntax, mental model, and best practices for MongoDB. Target proficiency: Level 3.",
+        "resourceLink": "https://www.mongodb.com/docs/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18f9"
+      },
+      {
+        "weekNumber": 1,
+        "title": "Build Full-Stack Developer Portfolio Capstone Project",
+        "description": "Synthesize all newly acquired skills into a comprehensive capstone project showcasing your end-to-end capabilities.",
+        "resourceLink": "https://github.com/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18fa"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Build a Hands-on Project with JavaScript",
+        "description": "Implement a mini-project or practical exercise applying JavaScript in a real-world scenario. Target proficiency: Level 4.",
+        "resourceLink": "https://javascript.info/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18fb"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Build a Hands-on Project with Express.js",
+        "description": "Implement a mini-project or practical exercise applying Express.js in a real-world scenario. Target proficiency: Level 3.",
+        "resourceLink": "https://expressjs.com/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18fc"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Build a Hands-on Project with MongoDB",
+        "description": "Implement a mini-project or practical exercise applying MongoDB in a real-world scenario. Target proficiency: Level 3.",
+        "resourceLink": "https://www.mongodb.com/docs/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18fd"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Master Node.js Core Concepts",
+        "description": "Learn fundamental syntax, mental model, and best practices for Node.js. Target proficiency: Level 3.",
+        "resourceLink": "https://nodejs.org/en/docs",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18fe"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Master REST APIs Core Concepts",
+        "description": "Learn fundamental syntax, mental model, and best practices for REST APIs. Target proficiency: Level 3.",
+        "resourceLink": "https://restfulapi.net/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f18ff"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Master Authentication Core Concepts",
+        "description": "Learn fundamental syntax, mental model, and best practices for Authentication. Target proficiency: Level 2.",
+        "resourceLink": "https://jwt.io/introduction",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f1900"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Build a Hands-on Project with Node.js",
+        "description": "Implement a mini-project or practical exercise applying Node.js in a real-world scenario. Target proficiency: Level 3.",
+        "resourceLink": "https://nodejs.org/en/docs",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f1901"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Build a Hands-on Project with REST APIs",
+        "description": "Implement a mini-project or practical exercise applying REST APIs in a real-world scenario. Target proficiency: Level 3.",
+        "resourceLink": "https://restfulapi.net/",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f1902"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Build a Hands-on Project with Authentication",
+        "description": "Implement a mini-project or practical exercise applying Authentication in a real-world scenario. Target proficiency: Level 2.",
+        "resourceLink": "https://jwt.io/introduction",
+        "isCompleted": false,
+        "_id": "6aaa6a200876448bf78f1903"
+      }
+    ],
+    "createdAt": "2026-09-16T10:06:24.331Z",
+    "updatedAt": "2026-09-16T10:06:24.331Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aaada7da1d27736869c7250",
+    "user": "6aaab05ddc671fcaa31368de",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "app development",
+        "design",
+        "web development"
+      ],
+      "userSkillNames": [
+        "html"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-16T18:05:49.589Z",
+    "createdAt": "2026-09-16T18:05:49.596Z",
+    "updatedAt": "2026-09-16T18:42:19.488Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aaae30b6575cf64e638b675",
+    "user": "6aaab05ddc671fcaa31368de",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "app development",
+        "design",
+        "web development"
+      ],
+      "userSkillNames": [
+        "html"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-16T18:42:19.581Z",
+    "createdAt": "2026-09-16T18:42:19.591Z",
+    "updatedAt": "2026-09-17T04:45:39.596Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aab6eedca618da85338abb4",
+    "user": "6aab6eecca618da85338aba8",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "web development",
+        "coding"
+      ],
+      "userSkillNames": [
+        "javascript",
+        "html"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-17T04:39:09.512Z",
+    "createdAt": "2026-09-17T04:39:09.514Z",
+    "updatedAt": "2026-09-17T04:39:09.514Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aab6f07ca618da85338abf4",
+    "user": "6aab6f05ca618da85338abdd",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "html",
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "web development"
+      ],
+      "userSkillNames": [
+        "javascript"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 1,
+    "progressPercentage": 11,
+    "startedAt": "2026-09-17T04:39:35.315Z",
+    "createdAt": "2026-09-17T04:39:35.317Z",
+    "updatedAt": "2026-09-17T04:39:35.756Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6aab6f25ca618da85338ac2b",
+    "user": "6aab6f22ca618da85338ac11",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "coding"
+      ],
+      "userSkillNames": [
+        "javascript",
+        "html"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-17T04:40:05.291Z",
+    "createdAt": "2026-09-17T04:40:05.292Z",
+    "updatedAt": "2026-09-17T04:40:05.650Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aab6f25ca618da85338ac3c",
+    "user": "6aab6f22ca618da85338ac11",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "coding"
+      ],
+      "userSkillNames": [
+        "javascript",
+        "html"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-17T04:40:05.723Z",
+    "createdAt": "2026-09-17T04:40:05.724Z",
+    "updatedAt": "2026-09-17T04:40:06.085Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aab6f26ca618da85338ac53",
+    "user": "6aab6f22ca618da85338ac11",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 12,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "coding"
+      ],
+      "userSkillNames": [
+        "javascript",
+        "html"
+      ]
+    },
+    "totalTasks": 19,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-17T04:40:06.180Z",
+    "createdAt": "2026-09-17T04:40:06.181Z",
+    "updatedAt": "2026-09-17T04:40:07.000Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6aab6f2fca618da85338ac8a",
+    "user": "6aab6f2eca618da85338ac81",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "html",
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "web development"
+      ],
+      "userSkillNames": [
+        "javascript"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-17T04:40:15.072Z",
+    "createdAt": "2026-09-17T04:40:15.073Z",
+    "updatedAt": "2026-09-17T04:40:15.073Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aab7073ca618da85338aca2",
+    "user": "6aaab05ddc671fcaa31368de",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "app development",
+        "design",
+        "web development"
+      ],
+      "userSkillNames": [
+        "html"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-17T04:45:39.672Z",
+    "createdAt": "2026-09-17T04:45:39.672Z",
+    "updatedAt": "2026-09-17T04:46:25.638Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aab70a1ca618da85338acbf",
+    "user": "6aaab05ddc671fcaa31368de",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "responsive-design",
+        "bootstrap",
+        "github"
+      ],
+      "weakSkills": [
+        "javascript"
+      ],
+      "userInterests": [
+        "web development",
+        "problem solving"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "git"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 1,
+    "progressPercentage": 11,
+    "startedAt": "2026-09-17T04:46:25.700Z",
+    "createdAt": "2026-09-17T04:46:25.701Z",
+    "updatedAt": "2026-09-17T08:14:14.678Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6aab92631d00985c15f66c45",
+    "user": "6aab91351d00985c15f66c20",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "app development",
+        "web development",
+        "design"
+      ],
+      "userSkillNames": [
+        "html",
+        "rest"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 3,
+    "progressPercentage": 20,
+    "startedAt": "2026-09-17T07:10:27.523Z",
+    "createdAt": "2026-09-17T07:10:27.530Z",
+    "updatedAt": "2026-09-17T07:11:16.430Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6aaba156b9c0405c58ac4c8b",
+    "user": "6aaab05ddc671fcaa31368de",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "responsive-design",
+        "bootstrap",
+        "github"
+      ],
+      "weakSkills": [
+        "javascript"
+      ],
+      "userInterests": [
+        "web development",
+        "problem solving"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "git"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 1,
+    "progressPercentage": 7,
+    "startedAt": "2026-09-17T08:14:14.773Z",
+    "createdAt": "2026-09-17T08:14:14.777Z",
+    "updatedAt": "2026-09-17T08:16:25.756Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6ab7ea40fafce5d78c85c062",
+    "user": "6ab7e5aa75ee5b26b646cd27",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "app development",
+        "design",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "react"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-26T15:52:32.793Z",
+    "createdAt": "2026-09-26T15:52:32.798Z",
+    "updatedAt": "2026-09-26T15:54:29.677Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab7eab5fafce5d78c85c07f",
+    "user": "6ab7e5aa75ee5b26b646cd27",
+    "career": "6aaa752f195fcdb21cce54f3",
+    "careerSnapshot": {
+      "title": "UI/UX Designer",
+      "slug": "ui-ux-designer",
+      "shortDescription": "Craft empathetic user experiences, wireframes, and polished design systems."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "figma",
+        "wireframing",
+        "prototyping",
+        "visual-design",
+        "user-research",
+        "communication"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "web development",
+        "app development",
+        "design",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "react"
+      ]
+    },
+    "totalTasks": 12,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-26T15:54:29.764Z",
+    "createdAt": "2026-09-26T15:54:29.765Z",
+    "updatedAt": "2026-09-26T15:55:56.140Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab7eb0cfafce5d78c85c09f",
+    "user": "6ab7e5aa75ee5b26b646cd27",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "app development",
+        "design",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "react"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-26T15:55:56.176Z",
+    "createdAt": "2026-09-26T15:55:56.178Z",
+    "updatedAt": "2026-09-26T16:04:31.438Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab7ed0ffafce5d78c85c0d4",
+    "user": "6ab7e5aa75ee5b26b646cd27",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "app development",
+        "design",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "react"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-26T16:04:31.473Z",
+    "createdAt": "2026-09-26T16:04:31.474Z",
+    "updatedAt": "2026-09-26T16:27:50.984Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab7f287fafce5d78c85c116",
+    "user": "6ab7e5aa75ee5b26b646cd27",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "css",
+        "javascript",
+        "responsive-design",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "html"
+      ],
+      "userInterests": [
+        "web development",
+        "app development",
+        "design",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "react"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-26T16:27:51.027Z",
+    "createdAt": "2026-09-26T16:27:51.028Z",
+    "updatedAt": "2026-09-26T16:27:51.028Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab7fd677c10585903613446",
+    "user": "6ab7fd4d7c10585903613430",
+    "career": "6aaa752f195fcdb21cce54f0",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "html",
+        "css",
+        "responsive-design",
+        "bootstrap",
+        "github"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "web development",
+        "frontend"
+      ],
+      "userSkillNames": [
+        "javascript",
+        "react",
+        "html5",
+        "css3",
+        "git"
+      ]
+    },
+    "totalTasks": 9,
+    "completedTasks": 1,
+    "progressPercentage": 11,
+    "startedAt": "2026-09-26T17:14:15.205Z",
+    "createdAt": "2026-09-26T17:14:15.209Z",
+    "updatedAt": "2026-09-26T17:15:04.158Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6ab9e2b3cec1f2c4855da6b1",
+    "user": "6ab9e2b2cec1f2c4855da6a0",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 4,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "typescript",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "Web Development",
+        "Artificial Intelligence",
+        "Cloud Computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql"
+      ]
+    },
+    "totalTasks": 8,
+    "completedTasks": 2,
+    "progressPercentage": 25,
+    "startedAt": "2026-09-28T03:44:51.201Z",
+    "createdAt": "2026-09-28T03:44:51.202Z",
+    "updatedAt": "2026-09-28T05:32:49.557Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6ab9f7bfef3059157ae3bf16",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:14:39.757Z",
+    "createdAt": "2026-09-28T05:14:39.763Z",
+    "updatedAt": "2026-09-28T05:18:09.760Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9f891ef3059157ae3bf35",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:18:09.851Z",
+    "createdAt": "2026-09-28T05:18:09.856Z",
+    "updatedAt": "2026-09-28T05:20:53.393Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9f935ef3059157ae3bf54",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:20:53.481Z",
+    "createdAt": "2026-09-28T05:20:53.482Z",
+    "updatedAt": "2026-09-28T05:21:14.082Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9f94aef3059157ae3bf73",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:21:14.185Z",
+    "createdAt": "2026-09-28T05:21:14.186Z",
+    "updatedAt": "2026-09-28T05:21:14.980Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9f94bef3059157ae3bf92",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:21:15.102Z",
+    "createdAt": "2026-09-28T05:21:15.103Z",
+    "updatedAt": "2026-09-28T05:21:27.142Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9f957ef3059157ae3bfb1",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:21:27.220Z",
+    "createdAt": "2026-09-28T05:21:27.221Z",
+    "updatedAt": "2026-09-28T05:21:51.615Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9f96fef3059157ae3bfd0",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:21:51.693Z",
+    "createdAt": "2026-09-28T05:21:51.694Z",
+    "updatedAt": "2026-09-28T05:37:17.532Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9fc01806f28d1290a1277",
+    "user": "6ab9e2b2cec1f2c4855da6a0",
+    "career": "6ab921b63bb371b59ea073f9",
+    "careerSnapshot": {
+      "title": "Blockchain & Web3 Developer",
+      "slug": "blockchain-web3-developer",
+      "shortDescription": "Build decentralized applications, trustless smart contracts, and cryptographic protocols."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "solidity",
+        "smart-contracts",
+        "web3js",
+        "cybersecurity-fundamentals",
+        "rest-apis"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "Web Development",
+        "Artificial Intelligence",
+        "Cloud Computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql"
+      ]
+    },
+    "totalTasks": 16,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:32:49.616Z",
+    "createdAt": "2026-09-28T05:32:49.635Z",
+    "updatedAt": "2026-09-28T05:32:49.635Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9fc38907058521855513e",
+    "user": "6ab9fc37907058521855512c",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 4,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "typescript",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "Web Development",
+        "Artificial Intelligence",
+        "Cloud Computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql"
+      ]
+    },
+    "totalTasks": 8,
+    "completedTasks": 2,
+    "progressPercentage": 25,
+    "startedAt": "2026-09-28T05:33:44.534Z",
+    "createdAt": "2026-09-28T05:33:44.537Z",
+    "updatedAt": "2026-09-28T05:34:32.768Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6ab9fc6852ac715ef580e7c1",
+    "user": "6ab9fc37907058521855512c",
+    "career": "6ab921b63bb371b59ea073f5",
+    "careerSnapshot": {
+      "title": "Backend Engineer",
+      "slug": "backend-engineer",
+      "shortDescription": "Design high-throughput distributed microservices, caching layers, and enterprise databases."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "java",
+        "spring-boot",
+        "postgresql",
+        "redis",
+        "rest-apis",
+        "kafka",
+        "docker"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "artificial intelligence",
+        "cloud computing",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql"
+      ]
+    },
+    "totalTasks": 26,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:34:32.847Z",
+    "createdAt": "2026-09-28T05:34:32.856Z",
+    "updatedAt": "2026-09-28T05:36:47.410Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9fcefc7dab5d737cd2b97",
+    "user": "6ab9fc37907058521855512c",
+    "career": "6ab921b63bb371b59ea073f9",
+    "careerSnapshot": {
+      "title": "Blockchain & Web3 Developer",
+      "slug": "blockchain-web3-developer",
+      "shortDescription": "Build decentralized applications, trustless smart contracts, and cryptographic protocols."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "solidity",
+        "smart-contracts",
+        "web3js",
+        "cybersecurity-fundamentals",
+        "rest-apis"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "artificial intelligence",
+        "cloud computing",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql"
+      ]
+    },
+    "totalTasks": 16,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:36:47.492Z",
+    "createdAt": "2026-09-28T05:36:47.511Z",
+    "updatedAt": "2026-09-29T06:16:44.306Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab9fd0dc7dab5d737cd2bb2",
+    "user": "6ab9e36a82c7d122e853a739",
+    "career": "6ab921b63bb371b59ea073f6",
+    "careerSnapshot": {
+      "title": "Data Scientist",
+      "slug": "data-scientist",
+      "shortDescription": "Uncover hidden patterns, build statistical models, and extract high-value insights from big data."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "statistics",
+        "scikit-learn",
+        "data-visualization",
+        "data-cleaning",
+        "power-bi"
+      ],
+      "weakSkills": [
+        "python",
+        "sql",
+        "pandas"
+      ],
+      "userInterests": [
+        "artificial intelligence",
+        "data analysis",
+        "data science",
+        "qa testing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "python",
+        "mysql",
+        "cpp",
+        "mongodb",
+        "database-design",
+        "pandas",
+        "pytorch",
+        "deep-learning",
+        "natural-language-processing"
+      ]
+    },
+    "totalTasks": 24,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-28T05:37:17.609Z",
+    "createdAt": "2026-09-28T05:37:17.610Z",
+    "updatedAt": "2026-09-28T05:37:17.610Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aba01cfc7dab5d737cd2bf7",
+    "user": "6aba0097c7dab5d737cd2be7",
+    "career": "6ab921b63bb371b59ea073ed",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "react",
+        "responsive-design",
+        "tailwind-css",
+        "typescript",
+        "bootstrap",
+        "git"
+      ],
+      "weakSkills": [
+        "html",
+        "css",
+        "javascript"
+      ],
+      "userInterests": [
+        "data analysis",
+        "artificial intelligence",
+        "web development",
+        "data science",
+        "app development",
+        "cybersecurity"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "python",
+        "excel",
+        "java",
+        "sql",
+        "deep-learning",
+        "github"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 1,
+    "progressPercentage": 7,
+    "startedAt": "2026-09-28T05:57:35.406Z",
+    "createdAt": "2026-09-28T05:57:35.408Z",
+    "updatedAt": "2026-09-30T08:36:03.213Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6abb57ccfea500c8d8f86eb0",
+    "user": "6ab9fc37907058521855512c",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "artificial intelligence",
+        "cloud computing",
+        "data analysis"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql",
+        "typescript"
+      ]
+    },
+    "totalTasks": 12,
+    "completedTasks": 1,
+    "progressPercentage": 8,
+    "startedAt": "2026-09-29T06:16:44.406Z",
+    "createdAt": "2026-09-29T06:16:44.410Z",
+    "updatedAt": "2026-09-29T12:14:59.653Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6abbabc3ca5f1193752ae33f",
+    "user": "6ab9fc37907058521855512c",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "express.js",
+        "mongodb",
+        "rest-apis",
+        "typescript",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "web development",
+        "artificial intelligence",
+        "problem solving",
+        "cloud computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "python"
+      ]
+    },
+    "totalTasks": 12,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-29T12:14:59.685Z",
+    "createdAt": "2026-09-29T12:14:59.687Z",
+    "updatedAt": "2026-09-29T12:15:06.266Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6abbe0806a2eda189f46a325",
+    "user": "6abbe0806a2eda189f46a316",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 4,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "typescript",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "Web Development",
+        "Artificial Intelligence",
+        "Cloud Computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql"
+      ]
+    },
+    "totalTasks": 8,
+    "completedTasks": 2,
+    "progressPercentage": 25,
+    "startedAt": "2026-09-29T16:00:00.596Z",
+    "createdAt": "2026-09-29T16:00:00.597Z",
+    "updatedAt": "2026-09-30T07:43:51.738Z",
+    "__v": 0,
+    "completedAt": null
+  },
+  {
+    "_id": "6abcbdb7dcd05166061f5f7b",
+    "user": "6abbe0806a2eda189f46a316",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 8,
+    "status": "archived",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [
+        "react"
+      ],
+      "userInterests": [
+        "web development",
+        "artificial intelligence",
+        "cloud computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "express.js",
+        "mongodb",
+        "python",
+        "git",
+        "sql",
+        "typescript"
+      ]
+    },
+    "totalTasks": 12,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-30T07:43:51.824Z",
+    "createdAt": "2026-09-30T07:43:51.829Z",
+    "updatedAt": "2026-09-30T12:53:15.857Z",
+    "__v": 1,
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "Week 1 Milestone",
+        "status": "in_progress",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491eddfb"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Week 2 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491eddfc"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Week 3 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491eddfd"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Week 4 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491eddfe"
+      },
+      {
+        "weekNumber": 5,
+        "title": "Week 5 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491eddff"
+      },
+      {
+        "weekNumber": 6,
+        "title": "Week 6 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491ede00"
+      },
+      {
+        "weekNumber": 7,
+        "title": "Week 7 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491ede01"
+      },
+      {
+        "weekNumber": 8,
+        "title": "Week 8 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd05facb76cd71491ede02"
+      }
+    ]
+  },
+  {
+    "_id": "6abcbe76ad39015d1fef1f0d",
+    "user": "6aba617643e0a15e673ad66f",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 8,
+    "status": "completed",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [
+        "javascript"
+      ],
+      "userInterests": [
+        "web development",
+        "artificial intelligence",
+        "problem solving",
+        "cloud computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "python",
+        "express.js",
+        "mongodb",
+        "typescript"
+      ]
+    },
+    "totalTasks": 12,
+    "completedTasks": 12,
+    "progressPercentage": 100,
+    "startedAt": "2026-09-30T07:47:02.510Z",
+    "createdAt": "2026-09-30T07:47:02.516Z",
+    "updatedAt": "2026-09-30T08:23:03.682Z",
+    "__v": 0,
+    "completedAt": "2026-09-30T08:23:03.682Z"
+  },
+  {
+    "_id": "6abcc705ad39015d1fef1fcc",
+    "user": "6aba617643e0a15e673ad66f",
+    "career": "6ab921b63bb371b59ea073ee",
+    "careerSnapshot": {
+      "title": "Full-Stack Developer",
+      "slug": "full-stack-developer",
+      "shortDescription": "Master both client and server architectures to engineer end-to-end digital products."
+    },
+    "durationWeeks": 8,
+    "status": "completed",
+    "generatedFrom": {
+      "missingSkills": [
+        "rest-apis",
+        "next.js",
+        "docker",
+        "authentication"
+      ],
+      "weakSkills": [
+        "javascript"
+      ],
+      "userInterests": [
+        "web development",
+        "artificial intelligence",
+        "problem solving",
+        "cloud computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "python",
+        "express.js",
+        "mongodb",
+        "typescript"
+      ]
+    },
+    "totalTasks": 12,
+    "completedTasks": 12,
+    "progressPercentage": 100,
+    "startedAt": "2026-09-30T08:23:33.327Z",
+    "createdAt": "2026-09-30T08:23:33.329Z",
+    "updatedAt": "2026-10-01T04:35:33.266Z",
+    "__v": 1,
+    "completedAt": "2026-09-30T08:32:33.292Z",
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "Week 1 Milestone",
+        "status": "in_progress",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df676357a"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Week 2 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df676357b"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Week 3 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df676357c"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Week 4 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df676357d"
+      },
+      {
+        "weekNumber": 5,
+        "title": "Week 5 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df676357e"
+      },
+      {
+        "weekNumber": 6,
+        "title": "Week 6 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df676357f"
+      },
+      {
+        "weekNumber": 7,
+        "title": "Week 7 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df6763580"
+      },
+      {
+        "weekNumber": 8,
+        "title": "Week 8 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde3159410078df6763581"
+      }
+    ]
+  },
+  {
+    "_id": "6abd063bcb76cd71491ede24",
+    "user": "6abbe0806a2eda189f46a316",
+    "career": "6abced69d1822acebed37abe",
+    "careerSnapshot": {
+      "title": "Financial Analyst & Modeler",
+      "slug": "financial-analyst",
+      "shortDescription": "Evaluate corporate valuation, forecast three-statement models, and guide investment decisions with financial data."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [
+        "financial-modeling",
+        "dcf-valuation",
+        "accounting",
+        "excel",
+        "power-bi",
+        "communication",
+        "problem-solving"
+      ],
+      "weakSkills": [],
+      "userInterests": [
+        "financial modeling",
+        "finance"
+      ],
+      "userSkillNames": [
+        "sql"
+      ]
+    },
+    "totalTasks": 16,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-09-30T12:53:15.886Z",
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "Week 1 Milestone",
+        "status": "awaiting_test",
+        "attemptsCount": 2,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede25"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Week 2 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede26"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Week 3 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede27"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Week 4 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede28"
+      },
+      {
+        "weekNumber": 5,
+        "title": "Week 5 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede29"
+      },
+      {
+        "weekNumber": 6,
+        "title": "Week 6 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede2a"
+      },
+      {
+        "weekNumber": 7,
+        "title": "Week 7 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede2b"
+      },
+      {
+        "weekNumber": 8,
+        "title": "Week 8 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd063bcb76cd71491ede2c"
+      }
+    ],
+    "createdAt": "2026-09-30T12:53:15.891Z",
+    "updatedAt": "2026-10-01T02:20:52.598Z",
+    "__v": 0
+  },
+  {
+    "_id": "6abd066505095635c658c3a6",
+    "user": "6abd066505095635c658c396",
+    "career": "6abd066505095635c658c3a5",
+    "careerSnapshot": {
+      "title": "Frontend Developer",
+      "slug": "frontend-developer",
+      "shortDescription": ""
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [],
+      "weakSkills": [],
+      "userInterests": [],
+      "userSkillNames": []
+    },
+    "totalTasks": 0,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "HTML & Semantic Layouts",
+        "status": "awaiting_test",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd066505095635c658c3a7"
+      },
+      {
+        "weekNumber": 2,
+        "title": "CSS Modern Flexbox & Grid",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd066505095635c658c3a8"
+      },
+      {
+        "weekNumber": 3,
+        "title": "JavaScript Essentials & DOM",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd066505095635c658c3a9"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Frontend Build Tools & Deployment",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd066505095635c658c3aa"
+      }
+    ],
+    "startedAt": "2026-09-30T12:53:57.882Z",
+    "createdAt": "2026-09-30T12:53:57.884Z",
+    "updatedAt": "2026-09-30T12:53:58.013Z",
+    "__v": 0
+  },
+  {
+    "_id": "6abd06e72a683700046e9a0b",
+    "user": "6abd06e62a683700046e99fc",
+    "career": "6abd06e72a683700046e9a0a",
+    "careerSnapshot": {
+      "title": "Frontend Developer",
+      "slug": "frontend-developer",
+      "shortDescription": ""
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [],
+      "weakSkills": [],
+      "userInterests": [],
+      "userSkillNames": []
+    },
+    "totalTasks": 0,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "HTML & Semantic Layouts",
+        "status": "passed",
+        "attemptsCount": 2,
+        "passedAt": "2026-09-30T12:56:07.759Z",
+        "testScore": 10,
+        "testPercent": 100,
+        "_id": "6abd06e72a683700046e9a0c"
+      },
+      {
+        "weekNumber": 2,
+        "title": "CSS Modern Flexbox & Grid",
+        "status": "in_progress",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd06e72a683700046e9a0d"
+      },
+      {
+        "weekNumber": 3,
+        "title": "JavaScript Essentials & DOM",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd06e72a683700046e9a0e"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Frontend Build Tools & Deployment",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd06e72a683700046e9a0f"
+      }
+    ],
+    "startedAt": "2026-09-30T12:56:07.238Z",
+    "createdAt": "2026-09-30T12:56:07.240Z",
+    "updatedAt": "2026-09-30T12:56:07.759Z",
+    "__v": 0
+  },
+  {
+    "_id": "6abd077c71e016c1bab337fd",
+    "user": "6abd077b71e016c1bab337ec",
+    "career": "6abd077c71e016c1bab337fc",
+    "careerSnapshot": {
+      "title": "Frontend Developer",
+      "slug": "frontend-developer",
+      "shortDescription": ""
+    },
+    "durationWeeks": 4,
+    "status": "active",
+    "generatedFrom": {
+      "missingSkills": [],
+      "weakSkills": [],
+      "userInterests": [],
+      "userSkillNames": []
+    },
+    "totalTasks": 0,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "HTML & Semantic Layouts",
+        "status": "passed",
+        "attemptsCount": 2,
+        "passedAt": "2026-09-30T12:58:36.455Z",
+        "testScore": 10,
+        "testPercent": 100,
+        "_id": "6abd077c71e016c1bab337fe"
+      },
+      {
+        "weekNumber": 2,
+        "title": "CSS Modern Flexbox & Grid",
+        "status": "in_progress",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd077c71e016c1bab337ff"
+      },
+      {
+        "weekNumber": 3,
+        "title": "JavaScript Essentials & DOM",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd077c71e016c1bab33800"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Frontend Build Tools & Deployment",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abd077c71e016c1bab33801"
+      }
+    ],
+    "startedAt": "2026-09-30T12:58:36.026Z",
+    "createdAt": "2026-09-30T12:58:36.027Z",
+    "updatedAt": "2026-09-30T12:58:36.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "6abde38a9410078df67635c6",
+    "user": "6aba617643e0a15e673ad66f",
+    "career": "6abced69d1822acebed37aaf",
+    "careerSnapshot": {
+      "title": "Front-End Developer",
+      "slug": "front-end-developer",
+      "shortDescription": "Build intuitive, responsive, and visually stunning user interfaces for modern web applications."
+    },
+    "durationWeeks": 8,
+    "status": "active",
+    "abandonedAt": null,
+    "generatedFrom": {
+      "missingSkills": [
+        "responsive-design",
+        "tailwind-css",
+        "bootstrap",
+        "git",
+        "github"
+      ],
+      "weakSkills": [
+        "css",
+        "javascript"
+      ],
+      "userInterests": [
+        "web development",
+        "artificial intelligence",
+        "problem solving",
+        "cloud computing"
+      ],
+      "userSkillNames": [
+        "html",
+        "css",
+        "javascript",
+        "react",
+        "node.js",
+        "python",
+        "express.js",
+        "mongodb",
+        "typescript"
+      ]
+    },
+    "totalTasks": 15,
+    "completedTasks": 0,
+    "progressPercentage": 0,
+    "startedAt": "2026-10-01T04:37:30.263Z",
+    "weekProgress": [
+      {
+        "weekNumber": 1,
+        "title": "Week 1 Milestone",
+        "status": "awaiting_test",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635c7"
+      },
+      {
+        "weekNumber": 2,
+        "title": "Week 2 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635c8"
+      },
+      {
+        "weekNumber": 3,
+        "title": "Week 3 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635c9"
+      },
+      {
+        "weekNumber": 4,
+        "title": "Week 4 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635ca"
+      },
+      {
+        "weekNumber": 5,
+        "title": "Week 5 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635cb"
+      },
+      {
+        "weekNumber": 6,
+        "title": "Week 6 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635cc"
+      },
+      {
+        "weekNumber": 7,
+        "title": "Week 7 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635cd"
+      },
+      {
+        "weekNumber": 8,
+        "title": "Week 8 Milestone",
+        "status": "locked",
+        "attemptsCount": 0,
+        "passedAt": null,
+        "testScore": 0,
+        "testPercent": 0,
+        "_id": "6abde38a9410078df67635ce"
+      }
+    ],
+    "createdAt": "2026-10-01T04:37:30.296Z",
+    "updatedAt": "2026-10-01T04:37:50.049Z",
+    "__v": 0
+  }
+]

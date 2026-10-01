@@ -74,13 +74,9 @@ async function computeStudentReadiness(userId) {
     tierLabel = 'Developing Practitioner';
   }
 
-  // Certificate Issuance on >= 85%
-  let certId = user.jobReadiness?.certificateId;
-  let certifiedAt = user.jobReadiness?.certifiedAt;
-  if (compositeScore >= 85 && !certId) {
-    certId = `CP-2026-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
-    certifiedAt = new Date();
-  }
+  // Certificate ID preserved if previously earned
+  let certId = user.jobReadiness?.certificateId || '';
+  let certifiedAt = user.jobReadiness?.certifiedAt || null;
 
   const result = {
     readinessScore: compositeScore,
@@ -165,6 +161,21 @@ async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = 
   const isNotExpiredOk = !hasExpiredRequiredSkills;
 
   const isJobReady = isScoreOk && isSkillsCountOk && isRoadmapOk && isNotExpiredOk;
+  let certificateId = user.jobReadiness?.certificateId || '';
+  let certifiedAt = user.jobReadiness?.certifiedAt || null;
+
+  if (isJobReady) {
+    if (!certificateId) {
+      certificateId = `CP-2026-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+      certifiedAt = new Date();
+      user.jobReadiness = user.jobReadiness || {};
+      user.jobReadiness.certificateId = certificateId;
+      user.jobReadiness.certifiedAt = certifiedAt;
+      user.jobReadiness.tier = 'job_ready';
+      user.jobReadiness.tierLabel = '🔥 JOB READY CERTIFIED';
+      await user.save();
+    }
+  }
 
   const missingCriteria = [];
   if (!isScoreOk) missingCriteria.push(`Readiness score must reach 70% (currently ${readiness.readinessScore}%)`);
@@ -174,6 +185,8 @@ async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = 
 
   return {
     isJobReady,
+    certificateId,
+    certifiedAt,
     missingCriteria,
     criteriaStatus: {
       score: { required: 70, actual: readiness.readinessScore, passed: isScoreOk },
