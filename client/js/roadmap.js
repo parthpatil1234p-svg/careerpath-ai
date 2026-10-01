@@ -62,16 +62,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
   };
 
+  let allActiveRoadmaps = [];
+
+  const renderTrackSwitcher = () => {
+    const switcher = document.getElementById('roadmapTrackSwitcher');
+    const container = document.getElementById('roadmapTrackTabsContainer');
+    const btnEnroll = document.getElementById('btnRoadmapEnrollSecondTrack');
+    if (!switcher || !container) return;
+
+    if (allActiveRoadmaps && allActiveRoadmaps.length > 0) {
+      switcher.classList.remove('d-none');
+      container.innerHTML = allActiveRoadmaps.map((r, idx) => {
+        const isActiveThis = (currentRoadmap && (currentRoadmap.id === r.id || currentRoadmap._id === r.id || currentRoadmap._id === r._id));
+        const pct = Math.round(r.progressPercentage || 0);
+        return `
+          <button type="button" class="btn btn-sm ${isActiveThis ? 'cp-btn-primary' : 'cp-btn-outline'} roadmap-track-tab-btn" data-roadmap-id="${r.id || r._id}">
+            <i class="bi bi-compass me-1"></i> Track ${idx + 1}: ${escapeHtml(r.career?.title || 'Active Track')} (${pct}%)
+          </button>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.roadmap-track-tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const rid = btn.getAttribute('data-roadmap-id');
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set('id', rid);
+          window.history.pushState({}, '', newUrl);
+          loadRoadmap(rid);
+        });
+      });
+
+      if (btnEnroll) {
+        if (allActiveRoadmaps.length === 1) {
+          btnEnroll.classList.remove('d-none');
+        } else {
+          btnEnroll.classList.add('d-none');
+        }
+      }
+    } else {
+      switcher.classList.add('d-none');
+    }
+  };
+
   // 3. Fetch active roadmap
-  const loadRoadmap = async () => {
+  const loadRoadmap = async (targetRoadmapId = null) => {
     try {
-      const res = await window.API.get('/roadmaps/current', { auth: true });
+      const urlParams = new URLSearchParams(window.location.search);
+      const roadmapId = targetRoadmapId || urlParams.get('id') || null;
+      const endpoint = roadmapId ? `/roadmaps/current?roadmapId=${encodeURIComponent(roadmapId)}` : '/roadmaps/current';
+
+      const res = await window.API.get(endpoint, { auth: true });
 
       loadingState.classList.add('d-none');
 
       if (res.success && res.data?.roadmap) {
         currentRoadmap = res.data.roadmap;
         currentTasks = res.data.tasks || [];
+        allActiveRoadmaps = res.data.activeRoadmaps || [];
+        renderTrackSwitcher();
         renderRoadmap();
       } else {
         emptyState.classList.remove('d-none');
@@ -969,7 +1017,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnConfirmAbandonRoadmap.textContent = 'Abandoning Route...';
         if (abandonRoadmapError) abandonRoadmapError.classList.add('d-none');
 
-        const res = await window.API.post('/roadmaps/current/abandon', {}, { auth: true });
+        const res = await window.API.post(
+          '/roadmaps/current/abandon',
+          { roadmapId: currentRoadmap?._id || currentRoadmap?.id },
+          { auth: true }
+        );
         if (res.success) {
           if (modalAbandonRoadmap) modalAbandonRoadmap.hide();
           showAlert(res.message || 'Route abandoned. Your verified skills and quiz attempts have been saved. Redirecting...', 'info');

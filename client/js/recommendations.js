@@ -495,10 +495,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     }).join('');
   };
 
-  // ── Single Active Career Route State Tracking ────────────────────────
+  // ── Dual Active Career Route State Tracking & Course Synergy ─────────
+  let userActiveRoadmaps = [];
   let userActiveRoadmap = null;
   let userCompletedSlugs = new Set();
   let userVerifiedSkillNames = new Set();
+
+  const checkCourseSynergy = (activeCareer, targetCareer) => {
+    if (!activeCareer || !targetCareer) return false;
+    const domainA = (activeCareer.domain || activeCareer.primaryStream || 'engineering').toLowerCase().trim();
+    const domainB = (targetCareer.domain || targetCareer.primaryStream || 'engineering').toLowerCase().trim();
+    if (domainA === domainB) return true;
+
+    const SYNERGY_PAIRS = [
+      ['engineering', 'creative'],
+      ['engineering', 'business'],
+      ['business', 'marketing'],
+    ];
+    const isSynergisticDomain = SYNERGY_PAIRS.some(
+      ([d1, d2]) => (domainA === d1 && domainB === d2) || (domainA === d2 && domainB === d1)
+    );
+    if (isSynergisticDomain) return true;
+
+    const getSkillNames = (c) => (c.requiredSkills || []).map(rs => 
+      (rs.skill?.name || rs.skillName || rs.name || (typeof rs.skill === 'string' ? rs.skill : '')).toLowerCase().trim()
+    ).filter(Boolean);
+
+    const skillsA = getSkillNames(activeCareer);
+    const skillsB = getSkillNames(targetCareer);
+    const shared = skillsA.filter(s => skillsB.includes(s));
+    return shared.length >= 2;
+  };
 
   // Initialize Abandon Route Modal
   const modalAbandonEl = document.getElementById('modalAbandonRoute');
@@ -516,13 +543,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const activeLockBanner = document.getElementById('activeRouteLockBanner');
     const bannerTitle = document.getElementById('bannerActiveCareerTitle');
     const bannerProgress = document.getElementById('bannerActiveProgress');
+    const bannerSubtitle = document.getElementById('bannerActiveSubtitle');
 
-    if (userActiveRoadmap && activeLockBanner) {
-      const title = userActiveRoadmap.career?.title || 'Active Track';
-      const pct = Math.round(userActiveRoadmap.progressPercentage || 0);
-      const weekStr = userActiveRoadmap.currentWeekString || `Week ${userActiveRoadmap.currentWeekNumber || 1} of ${userActiveRoadmap.durationWeeks || 4}`;
-      if (bannerTitle) bannerTitle.textContent = title;
-      if (bannerProgress) bannerProgress.textContent = `${weekStr} · ${pct}% Complete`;
+    if (userActiveRoadmaps.length > 0 && activeLockBanner) {
+      if (userActiveRoadmaps.length === 1) {
+        const r1 = userActiveRoadmaps[0];
+        const title1 = r1.career?.title || 'Active Track';
+        const pct1 = Math.round(r1.progressPercentage || 0);
+        const weekStr1 = r1.currentWeekString || `Week ${r1.currentWeekNumber || 1} of ${r1.durationWeeks || 4}`;
+        if (bannerTitle) bannerTitle.innerHTML = `<span class="badge badge-navy me-1 font-mono">1/2</span> ${escapeHtml(title1)}`;
+        if (bannerProgress) bannerProgress.textContent = `${weekStr1} · ${pct1}% Complete`;
+        if (bannerSubtitle) {
+          bannerSubtitle.innerHTML = `You are actively enrolled in <strong>1 of 2 allowed courses</strong>. You can enroll in a <strong>2nd related course</strong> in parallel to accelerate your skill synergy!`;
+        }
+      } else {
+        const titles = userActiveRoadmaps.map(r => `${escapeHtml(r.career?.title || 'Track')} (${Math.round(r.progressPercentage || 0)}%)`).join(' & ');
+        if (bannerTitle) bannerTitle.innerHTML = `<span class="badge badge-navy me-1 font-mono">2/2 Active</span> ${titles}`;
+        if (bannerProgress) bannerProgress.textContent = `2 Parallel Courses Active`;
+        if (bannerSubtitle) {
+          bannerSubtitle.textContent = `You have reached the maximum concurrency limit of 2 active courses. Complete milestone tests to graduate or abandon a track to unlock new ones.`;
+        }
+      }
       activeLockBanner.classList.remove('d-none');
     } else if (activeLockBanner) {
       activeLockBanner.classList.add('d-none');
@@ -532,12 +573,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fetchUserRouteState = async () => {
     try {
       const rmRes = await window.API.get('/roadmaps/current', { auth: true });
-      if (rmRes.success && rmRes.data?.roadmap && rmRes.data.roadmap.status === 'active') {
-        userActiveRoadmap = rmRes.data.roadmap;
+      if (rmRes.success && rmRes.data) {
+        userActiveRoadmaps = rmRes.data.activeRoadmaps || [];
+        if (userActiveRoadmaps.length === 0 && rmRes.data.roadmap?.status === 'active') {
+          userActiveRoadmaps = [rmRes.data.roadmap];
+        }
+        userActiveRoadmap = userActiveRoadmaps[0] || null;
       } else {
+        userActiveRoadmaps = [];
         userActiveRoadmap = null;
       }
     } catch (e) {
+      userActiveRoadmaps = [];
       userActiveRoadmap = null;
     }
 
@@ -689,16 +736,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const careerSlugNorm = (career.slug || '').toLowerCase().trim();
-      const isActiveThisCareer = userActiveRoadmap && (userActiveRoadmap.career?.slug || '').toLowerCase().trim() === careerSlugNorm;
+      const activeMatch = userActiveRoadmaps.find(
+        (r) => (r.career?.slug || '').toLowerCase().trim() === careerSlugNorm
+      );
+      const isActiveThisCareer = Boolean(activeMatch);
       const isGraduated = userCompletedSlugs.has(careerSlugNorm);
+
+      let isRelatedForSecondTrack = false;
+      if (!isActiveThisCareer && userActiveRoadmaps.length === 1) {
+        isRelatedForSecondTrack = checkCourseSynergy(userActiveRoadmaps[0].career, career);
+      }
 
       let routeStatusBadge = '';
       if (isActiveThisCareer) {
-        const weekStr = userActiveRoadmap.currentWeekString || `Week ${userActiveRoadmap.currentWeekNumber || 1} of ${userActiveRoadmap.durationWeeks || 4}`;
-        const pct = Math.round(userActiveRoadmap.progressPercentage || 0);
-        routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-lightning-charge-fill me-1"></i> ACTIVE ROUTE · ${escapeHtml(weekStr)} (${pct}% Tasks)</span>`;
-      } else if (userActiveRoadmap && !window.Auth?.isAdmin()) {
-        routeStatusBadge = `<span class="badge bg-secondary text-light font-mono"><i class="bi bi-lock-fill me-1"></i> LOCKED</span>`;
+        const weekStr = activeMatch.currentWeekString || `Week ${activeMatch.currentWeekNumber || 1} of ${activeMatch.durationWeeks || 4}`;
+        const pct = Math.round(activeMatch.progressPercentage || 0);
+        routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-lightning-charge-fill me-1"></i> ACTIVE COURSE · ${escapeHtml(weekStr)} (${pct}% Tasks)</span>`;
+      } else if (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin()) {
+        if (isRelatedForSecondTrack) {
+          routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-link-45deg me-1"></i> RELATED TRACK (2nd Slot Open)</span>`;
+        } else {
+          routeStatusBadge = `<span class="badge bg-secondary text-light font-mono"><i class="bi bi-lock-fill me-1"></i> UNRELATED TRACK</span>`;
+        }
+      } else if (userActiveRoadmaps.length >= 2 && !window.Auth?.isAdmin()) {
+        routeStatusBadge = `<span class="badge bg-secondary text-light font-mono"><i class="bi bi-lock-fill me-1"></i> LOCKED (Max 2 Active)</span>`;
       } else if (isGraduated) {
         routeStatusBadge = `<span class="badge bg-success-subtle text-success border border-success font-mono"><i class="bi bi-patch-check-fill me-1"></i> GRADUATED</span>`;
       }
@@ -1002,13 +1063,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             </a>
             ${
               isActiveThisCareer
-                ? `<a href="roadmap.html" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">
-                     <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(userActiveRoadmap.progressPercentage || 0)}%)
+                ? `<a href="roadmap.html?id=${activeMatch._id || activeMatch.id}" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">
+                     <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(activeMatch.progressPercentage || 0)}%)
                    </a>`
-                : (userActiveRoadmap && !window.Auth?.isAdmin())
-                ? `<button type="button" class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="Finish your current route or abandon it to start this one">
+                : (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin())
+                ? (isRelatedForSecondTrack
+                    ? `<button
+                         type="button"
+                         class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold choose-career-btn"
+                         data-career-title="${escapeHtml(career.title)}"
+                         data-career-slug="${escapeHtml(career.slug)}"
+                       >
+                         <i class="bi bi-plus-circle me-1"></i>
+                         <span>Enroll as 2nd Active Course</span>
+                       </button>`
+                    : `<button type="button" class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="You can take up to 2 concurrent courses, but the 2nd course must be in a related domain (e.g. ${userActiveRoadmaps[0].career?.domain || 'Tech'}) or share competencies.">
+                         <i class="bi bi-lock-fill me-1"></i>
+                         <span>Locked (Unrelated Track)</span>
+                       </button>`
+                  )
+                : (userActiveRoadmaps.length >= 2 && !window.Auth?.isAdmin())
+                ? `<button type="button" class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="You already have 2 active courses in progress. Complete or abandon one before starting another.">
                      <i class="bi bi-lock-fill me-1"></i>
-                     <span>Locked (Active Route Enrolled)</span>
+                     <span>Locked (Max 2 Courses Active)</span>
                    </button>`
                 : isGraduated
                 ? `<button
@@ -1133,14 +1210,30 @@ document.addEventListener('DOMContentLoaded', async () => {
           <span class="small text-muted font-mono">Expand your career horizons beyond your primary track without losing your skill foundations.</span>
           ${(() => {
             const crossSlugNorm = (crossTrack.career.slug || '').toLowerCase().trim();
-            const isCrossActive = userActiveRoadmap && (userActiveRoadmap.career?.slug || '').toLowerCase().trim() === crossSlugNorm;
-            if (isCrossActive) {
-              return `<a href="roadmap.html" class="btn cp-btn-primary btn-sm px-4 text-nowrap">
-                        <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Active Route
+            const crossActiveMatch = userActiveRoadmaps.find(
+              (r) => (r.career?.slug || '').toLowerCase().trim() === crossSlugNorm
+            );
+            if (crossActiveMatch) {
+              return `<a href="roadmap.html?id=${crossActiveMatch._id || crossActiveMatch.id}" class="btn cp-btn-primary btn-sm px-4 text-nowrap">
+                        <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Active Course
                       </a>`;
-            } else if (userActiveRoadmap) {
-              return `<button type="button" class="btn cp-btn-locked btn-sm px-4 py-2 text-nowrap" disabled title="Complete or abandon your active route first">
-                        <i class="bi bi-lock-fill me-1"></i> Locked (Active Route Enrolled)
+            } else if (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin()) {
+              const isCrossRelated = checkCourseSynergy(userActiveRoadmaps[0].career, crossTrack.career);
+              if (isCrossRelated) {
+                return `<button type="button" class="btn cp-btn-primary btn-sm px-4 choose-career-btn text-nowrap"
+                          data-career-title="${escapeHtml(crossTrack.career.title)}"
+                          data-career-slug="${escapeHtml(crossTrack.career.slug)}">
+                          <i class="bi bi-plus-circle me-1"></i>
+                          <span>Enroll as 2nd Active Course</span>
+                        </button>`;
+              } else {
+                return `<button type="button" class="btn cp-btn-locked btn-sm px-4 py-2 text-nowrap" disabled title="Cross-domain track must satisfy synergy criteria to take as concurrent course">
+                          <i class="bi bi-lock-fill me-1"></i> Locked (Unrelated Track)
+                        </button>`;
+              }
+            } else if (userActiveRoadmaps.length >= 2 && !window.Auth?.isAdmin()) {
+              return `<button type="button" class="btn cp-btn-locked btn-sm px-4 py-2 text-nowrap" disabled title="You already have 2 active courses in progress">
+                        <i class="bi bi-lock-fill me-1"></i> Locked (Max 2 Courses Active)
                       </button>`;
             } else {
               return `<button type="button" class="btn cp-btn-primary btn-sm px-4 choose-career-btn text-nowrap"

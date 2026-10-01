@@ -18,10 +18,10 @@ const { evaluateJobReadyCertification } = require('../services/readinessService'
  */
 const getDashboard = async (req, res, next) => {
   try {
-    // 1. Fetch user and active roadmap concurrently with .lean() for maximum speed
-    const [user, activeRoadmap] = await Promise.all([
+    // 1. Fetch user and all active roadmaps concurrently with .lean() for maximum speed
+    const [user, allActiveRoadmaps] = await Promise.all([
       User.findById(req.user._id).select('-password').lean(),
-      Roadmap.findOne({ user: req.user._id, status: 'active' }).lean(),
+      Roadmap.find({ user: req.user._id, status: 'active' }).sort({ createdAt: -1 }).lean(),
     ]);
 
     if (!user) {
@@ -29,6 +29,15 @@ const getDashboard = async (req, res, next) => {
         success: false,
         message: 'User account not found',
       });
+    }
+
+    // Determine target active roadmap (either from query or primary active)
+    let activeRoadmap = null;
+    if (req.query.roadmapId) {
+      activeRoadmap = allActiveRoadmaps.find(r => String(r._id) === String(req.query.roadmapId));
+    }
+    if (!activeRoadmap && allActiveRoadmaps.length > 0) {
+      activeRoadmap = allActiveRoadmaps[0];
     }
 
     const hasEducation =
@@ -98,7 +107,7 @@ const getDashboard = async (req, res, next) => {
         weekProgress: activeRoadmap.weekProgress || [],
       };
 
-      // Fetch first 5 incomplete tasks
+      // Fetch first 5 incomplete tasks for this active roadmap
       upcomingTasks = await RoadmapTask.find({
         roadmap: activeRoadmap._id,
         completed: false,
@@ -167,6 +176,23 @@ const getDashboard = async (req, res, next) => {
           completedPaths: user.completedPaths || [],
           profileStatus: user.profileStatus || { status: 'learning', currentRole: '' },
         },
+        activeRoadmaps: allActiveRoadmaps.map((r) => ({
+          id: r._id,
+          _id: r._id,
+          career: {
+            title: r.careerSnapshot?.title || 'Active Track',
+            slug: r.careerSnapshot?.slug || '',
+            shortDescription: r.careerSnapshot?.shortDescription || '',
+          },
+          durationWeeks: r.durationWeeks,
+          status: r.status,
+          progressPercentage: r.progressPercentage,
+          totalTasks: r.totalTasks,
+          completedTasks: r.completedTasks,
+        })),
+        activeCount: allActiveRoadmaps.length,
+        maxAllowed: 2,
+        canEnrollSecondCourse: allActiveRoadmaps.length === 1,
         activeRoadmap: roadmapData,
         jobReadyCertification,
         progress: {

@@ -19,6 +19,7 @@ const {
   submitWeeklyTest,
   getWeeklyTestStatus,
 } = require('../services/weeklyTestService');
+const { isRelatedCourse } = require('../services/courseSynergyService');
 
 // Helper to group tasks by weekNumber
 const groupTasksByWeek = (tasks, durationWeeks) => {
@@ -106,8 +107,8 @@ const generateRoadmap = async (req, res, next) => {
       });
     }
 
-    // 6. Strict Single Active Route Invariant: Check if user already has an active, incomplete roadmap
-    const activeRoadmap = await Roadmap.findOne({
+    // 6. Dual Active Roadmaps & Related Course Synergy Rules
+    const activeRoadmaps = await Roadmap.find({
       user: user._id,
       status: 'active',
     }).populate('career');
@@ -115,24 +116,65 @@ const generateRoadmap = async (req, res, next) => {
     const email = (user.email || '').toLowerCase();
     const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
 
-    if (activeRoadmap) {
+    // Check A: Duplicate Enrollment in same career track
+    const alreadyEnrolled = activeRoadmaps.find(
+      (r) =>
+        r.careerSnapshot?.slug?.toLowerCase().trim() === targetSlug ||
+        String(r.career?._id || r.career) === String(selectedCareer._id)
+    );
+    if (alreadyEnrolled) {
+      return res.status(409).json({
+        success: false,
+        code: 'ALREADY_ENROLLED_IN_COURSE',
+        message: `You are already actively pursuing the "${selectedCareer.title}" track (${Math.round(alreadyEnrolled.progressPercentage || 0)}% completed).`,
+        data: {
+          activeRoadmap: {
+            id: alreadyEnrolled._id,
+            careerTitle: alreadyEnrolled.careerSnapshot?.title,
+            slug: alreadyEnrolled.careerSnapshot?.slug,
+            progressPercentage: alreadyEnrolled.progressPercentage,
+          },
+        },
+      });
+    }
+
+    // Check B: Maximum 2 Active Courses Concurrency Limit
+    if (activeRoadmaps.length >= 2) {
       if (isDemoOrAdmin) {
-        // Admin / demo accounts can switch routes freely without 409 conflict
-        activeRoadmap.status = 'archived';
-        await activeRoadmap.save();
+        // Admin / demo can rotate tracks: archive oldest active roadmap so they can test any track
+        const oldestActive = [...activeRoadmaps].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))[0];
+        if (oldestActive) {
+          oldestActive.status = 'archived';
+          await oldestActive.save();
+        }
       } else {
         return res.status(409).json({
           success: false,
-          code: 'ACTIVE_ROUTE_IN_PROGRESS',
-          message: `You are currently pursuing the "${activeRoadmap.careerSnapshot?.title || 'active'}" route (${Math.round(activeRoadmap.progressPercentage || 0)}% completed). You must complete your current route before starting another career route.`,
+          code: 'MAX_ACTIVE_ROUTES_REACHED',
+          message: `You are already enrolled in 2 active career courses (${activeRoadmaps.map((r) => r.careerSnapshot?.title || 'Active Track').join(' and ')}). Complete or abandon one route before starting another.`,
           data: {
-            activeRoadmap: {
-              id: activeRoadmap._id,
-              careerTitle: activeRoadmap.careerSnapshot?.title,
-              slug: activeRoadmap.careerSnapshot?.slug,
-              progressPercentage: activeRoadmap.progressPercentage,
-              durationWeeks: activeRoadmap.durationWeeks,
-            },
+            activeRoadmaps: activeRoadmaps.map((r) => ({
+              id: r._id,
+              careerTitle: r.careerSnapshot?.title,
+              progressPercentage: r.progressPercentage,
+            })),
+          },
+        });
+      }
+    }
+
+    // Check C: Related Course Synergy when enrolling into 2nd active course
+    if (activeRoadmaps.length === 1 && !isDemoOrAdmin) {
+      const activeCareer = activeRoadmaps[0].career || activeRoadmaps[0].careerSnapshot;
+      const related = isRelatedCourse(activeCareer, selectedCareer);
+      if (!related) {
+        return res.status(400).json({
+          success: false,
+          code: 'UNRELATED_COURSE_RESTRICTION',
+          message: `Course "${selectedCareer.title}" is not related to your active course "${activeRoadmaps[0].careerSnapshot?.title || 'active'}". You can take 2 concurrent courses only in related or complementary domains (e.g. within ${activeCareer?.domain || 'the same domain'} or synergistic tracks).`,
+          data: {
+            activeCourse: activeRoadmaps[0].careerSnapshot?.title,
+            activeDomain: activeCareer?.domain || 'engineering',
           },
         });
       }
@@ -247,12 +289,27 @@ const generateRoadmap = async (req, res, next) => {
  */
 const getCurrentRoadmap = async (req, res, next) => {
   try {
-    let roadmap = await Roadmap.findOne({
+    const allActiveRoadmaps = await Roadmap.find({
       user: req.user._id,
       status: 'active',
-    });
+    }).sort({ createdAt: -1 });
 
+    let roadmap = null;
     let isCompleted = false;
+
+    if (req.query.roadmapId) {
+      roadmap = await Roadmap.findOne({
+        _id: req.query.roadmapId,
+        user: req.user._id,
+      });
+      if (roadmap && roadmap.status === 'completed') {
+        isCompleted = true;
+      }
+    }
+
+    if (!roadmap && allActiveRoadmaps.length > 0) {
+      roadmap = allActiveRoadmaps[0];
+    }
 
     // If no active roadmap, check for the most recently completed roadmap
     if (!roadmap) {
@@ -271,6 +328,10 @@ const getCurrentRoadmap = async (req, res, next) => {
         success: false,
         hasRoadmap: false,
         canStartNewRoute: true,
+        activeCount: 0,
+        maxAllowed: 2,
+        canEnrollSecondCourse: false,
+        activeRoadmaps: [],
         message: 'No active or completed roadmap found. Generate a roadmap first.',
       });
     }
@@ -321,6 +382,22 @@ const getCurrentRoadmap = async (req, res, next) => {
         isCompleted,
         canStartNewRoute: canEnroll,
         canEnrollNewRoute: canEnroll,
+        activeCount: allActiveRoadmaps.length,
+        maxAllowed: 2,
+        canEnrollSecondCourse: allActiveRoadmaps.length === 1,
+        activeRoadmaps: allActiveRoadmaps.map((r) => ({
+          id: r._id,
+          _id: r._id,
+          career: {
+            title: r.careerSnapshot?.title || 'Active Track',
+            slug: r.careerSnapshot?.slug || '',
+            shortDescription: r.careerSnapshot?.shortDescription || '',
+          },
+          durationWeeks: r.durationWeeks,
+          progressPercentage: r.progressPercentage,
+          totalTasks: r.totalTasks,
+          completedTasks: r.completedTasks,
+        })),
         currentWeekNumber,
         currentWeekString,
         roadmap: {
@@ -465,8 +542,13 @@ const abandonRoadmap = async (req, res, next) => {
       }
     }
 
+    const filter = { user: req.user._id, status: 'active' };
+    if (req.body && req.body.roadmapId) {
+      filter._id = req.body.roadmapId;
+    }
+
     const roadmap = await Roadmap.findOneAndUpdate(
-      { user: req.user._id, status: 'active' },
+      filter,
       { $set: { status: 'abandoned', abandonedAt: new Date() } },
       { new: true }
     );
@@ -498,19 +580,19 @@ const abandonRoadmap = async (req, res, next) => {
 // ── resumeRoadmap ──────────────────────────────────────────────
 /**
  * POST /api/roadmaps/:id/resume
- * Resumes a previously abandoned career roadmap if no other route is active.
+ * Resumes a previously abandoned career roadmap if active slots are available (<= 2).
  */
 const resumeRoadmap = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Verify user has no other currently active roadmap
-    const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' });
-    if (activeRoadmap) {
+    // Verify user has fewer than 2 active roadmaps
+    const activeRoadmaps = await Roadmap.find({ user: req.user._id, status: 'active' });
+    if (activeRoadmaps.length >= 2) {
       return res.status(409).json({
         success: false,
-        code: 'ACTIVE_ROUTE_IN_PROGRESS',
-        message: `Cannot resume. You already have an active route in progress (${activeRoadmap.careerSnapshot?.title || 'Current Route'}).`,
+        code: 'MAX_ACTIVE_ROUTES_REACHED',
+        message: `Cannot resume. You already have 2 active routes in progress (${activeRoadmaps.map((r) => r.careerSnapshot?.title).join(' and ')}).`,
       });
     }
 

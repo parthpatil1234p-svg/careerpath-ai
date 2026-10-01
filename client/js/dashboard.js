@@ -153,51 +153,223 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Render GitHub Study Lab & Repositories Card
     renderGitHubStudyLab(user);
 
-    // Active Roadmap & 3D Progress Orb
-    if (activeRoadmap) {
-      activeCareerTitle.textContent = activeRoadmap.career?.title || 'Selected Career';
-      activeCareerDesc.textContent =
-        activeRoadmap.career?.shortDescription ||
-        'Personalized roadmap generated to close your skill gaps.';
-      activeRoadmapPace.textContent = `${activeRoadmap.durationWeeks} Weeks`;
+    // Active Roadmap Card Renderer
+    const renderActiveRoadmapCard = (currentActive) => {
+      if (currentActive) {
+        activeCareerTitle.textContent = currentActive.career?.title || 'Selected Career';
+        activeCareerDesc.textContent =
+          currentActive.career?.shortDescription ||
+          'Personalized roadmap generated to close your skill gaps.';
+        activeRoadmapPace.textContent = `${currentActive.durationWeeks} Weeks`;
 
-      const pct = Math.round(activeRoadmap.progressPercentage || 0);
-      if (typeof window.animateCounter === 'function') {
-        window.animateCounter(statPercentage, pct, { suffix: '%', duration: 1.2 });
+        const pct = Math.round(currentActive.progressPercentage || 0);
+        if (typeof window.animateCounter === 'function') {
+          window.animateCounter(statPercentage, pct, { suffix: '%', duration: 1.2 });
+        } else {
+          statPercentage.textContent = `${pct}%`;
+        }
+
+        const total = currentActive.totalTasksCount ?? currentActive.totalTasks ?? 0;
+        const completed = currentActive.completedTasksCount ?? currentActive.completedTasks ?? 0;
+        statTasks.textContent = `${completed} / ${total}`;
+
+        // Estimated hours remaining (estimate 2 hours per incomplete task)
+        const remainingTasks = Math.max(0, total - completed);
+        statHours.textContent = `~${remainingTasks * 2} hrs left`;
+
+        btnGoToRoadmap.href = `roadmap.html?id=${currentActive.id || currentActive._id}`;
+        btnGoToRoadmap.innerHTML = '<i class="bi bi-map-fill me-1"></i> Open Full Roadmap';
+
+        // Initialize 3D Progress Orb
+        if (window.initProgressOrb) {
+          window.initProgressOrb('progress-orb', pct);
+        }
       } else {
-        statPercentage.textContent = `${pct}%`;
+        activeCareerTitle.textContent = 'No Active Roadmap Yet';
+        activeCareerDesc.textContent = 'Take your assessment and select a career to generate an AI curriculum.';
+        activeRoadmapPace.textContent = 'Not Started';
+        statPercentage.textContent = '0%';
+        statTasks.textContent = '0 / 0';
+        statHours.textContent = '0 hrs';
+
+        btnGoToRoadmap.href = 'recommendations.html';
+        btnGoToRoadmap.innerHTML = '<i class="bi bi-stars me-1"></i> Choose a Career';
+
+        if (window.initProgressOrb) {
+          window.initProgressOrb('progress-orb', 0);
+        }
+      }
+    };
+
+    // Reusable Upcoming Tasks Renderer
+    const renderUpcomingTasksList = (tasks = []) => {
+      if (!upcomingTasksList) return;
+      if (tasks && tasks.length > 0) {
+        upcomingTasksList.innerHTML = tasks
+          .map((task) => {
+            const resourceBadge = task.resource?.url
+              ? `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary py-0 px-2 ms-2" style="font-size: 0.75rem; border-radius: var(--radius-sm);">
+                  <i class="bi bi-box-arrow-up-right me-1"></i>${escapeHtml(task.resource.type || 'Resource')}
+                 </a>`
+              : '';
+
+            return `
+              <div class="dashboard-task-item d-flex align-items-center justify-content-between gap-3 flex-wrap ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
+                <div class="d-flex align-items-center gap-3 flex-grow-1" style="min-width: 0;">
+                  <input
+                    type="checkbox"
+                    class="task-checkbox-input"
+                    ${task.completed ? 'checked' : ''}
+                    data-task-id="${task._id}"
+                    aria-label="Mark task ${escapeHtml(task.title)} complete"
+                  />
+                  <div>
+                    <div class="fw-semibold small task-title mb-0" style="color: var(--ink);">
+                      Week ${task.weekNumber}: ${escapeHtml(task.title)}
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
+                      <span class="badge badge-type-${task.type} text-uppercase font-monospace" style="font-size: 0.75rem;">
+                        ${escapeHtml(task.type)}
+                      </span>
+                      <span class="badge badge-priority-${task.priority}" style="font-size: 0.75rem;">
+                        ${escapeHtml(task.priority)}
+                      </span>
+                      <span class="text-secondary" style="font-size: 0.75rem; font-family: var(--font-mono);">
+                        <i class="bi bi-clock me-1"></i>${task.estimatedHours || 2}h
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  ${resourceBadge}
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+
+        // Wire Task Checkbox Toggles
+        upcomingTasksList.querySelectorAll('.task-checkbox-input').forEach((cb) => {
+          cb.addEventListener('change', async (e) => {
+            const taskId = e.target.getAttribute('data-task-id');
+            const isChecked = e.target.checked;
+            const parentItem = e.target.closest('.dashboard-task-item');
+
+            // DISABLE to prevent spamming
+            const allCheckboxes = upcomingTasksList.querySelectorAll('.task-checkbox-input');
+            allCheckboxes.forEach(c => c.disabled = true);
+
+            if (parentItem) {
+              parentItem.classList.toggle('is-completed', isChecked);
+            }
+
+            try {
+              const res = await window.API.patch(`/roadmaps/tasks/${taskId}/toggle`, {}, { auth: true });
+
+              if (res.success && res.data) {
+                const { roadmap } = res.data;
+                // Refresh telemetry
+                const pct = Math.round(roadmap.progressPercentage || 0);
+                statPercentage.textContent = `${pct}%`;
+                statTasks.textContent = `${roadmap.completedTasksCount} / ${roadmap.totalTasksCount}`;
+
+                if (window.initProgressOrb) {
+                  window.initProgressOrb('progress-orb', pct);
+                }
+
+                showAlert('Task progress updated!', 'success');
+                // Reload dashboard after a brief delay to refresh the first 5 upcoming list
+                setTimeout(() => {
+                  loadDashboard();
+                }, 800);
+              } else {
+                e.target.checked = !isChecked;
+                if (parentItem) parentItem.classList.toggle('is-completed', !isChecked);
+                showAlert(res.message || 'Failed to toggle task.');
+              }
+            } catch (err) {
+              console.error('Toggle error:', err);
+              e.target.checked = !isChecked;
+              if (parentItem) parentItem.classList.toggle('is-completed', !isChecked);
+              showAlert(err.message || 'Error updating task.');
+            } finally {
+              // RE-ENABLE
+              allCheckboxes.forEach(c => c.disabled = false);
+            }
+          });
+        });
+      } else {
+        upcomingTasksList.innerHTML = `
+          <div class="text-secondary small py-3 text-center">
+            ${activeRoadmap ? '🎉 All scheduled tasks completed! Great job!' : 'No active roadmap tasks. Generate a roadmap to begin.'}
+          </div>
+        `;
+      }
+    };
+
+    // Render Dual Active Track Tabs
+    const activeRoadmaps = dashboardData?.activeRoadmaps || (dashboardData?.activeRoadmap ? [dashboardData.activeRoadmap] : []);
+    const trackSwitcherContainer = document.getElementById('dashboardTrackSwitcherContainer');
+    const trackTabs = document.getElementById('dashboardTrackTabs');
+    const trackCapacityBadge = document.getElementById('dashboardTrackCapacityBadge');
+    const btnEnrollSecond = document.getElementById('btnDashEnrollSecondTrack');
+
+    if (trackSwitcherContainer && activeRoadmaps.length > 0) {
+      trackSwitcherContainer.classList.remove('d-none');
+      if (trackTabs) {
+        trackTabs.innerHTML = activeRoadmaps.map((r, idx) => {
+          const isSelected = idx === 0;
+          const pct = Math.round(r.progressPercentage || 0);
+          return `
+            <button type="button" class="btn btn-sm ${isSelected ? 'cp-btn-primary' : 'cp-btn-outline'} dash-track-tab-btn" data-roadmap-id="${r.id || r._id}">
+              <i class="bi bi-compass me-1"></i> Track ${idx + 1}: ${escapeHtml(r.career?.title || 'Active Track')} (${pct}%)
+            </button>
+          `;
+        }).join('');
+
+        trackTabs.querySelectorAll('.dash-track-tab-btn').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const rid = btn.getAttribute('data-roadmap-id');
+            const targetRoadmap = activeRoadmaps.find(r => (r.id === rid || r._id === rid));
+            if (targetRoadmap) {
+              trackTabs.querySelectorAll('.dash-track-tab-btn').forEach(b => {
+                b.classList.remove('cp-btn-primary');
+                b.classList.add('cp-btn-outline');
+              });
+              btn.classList.remove('cp-btn-outline');
+              btn.classList.add('cp-btn-primary');
+              renderActiveRoadmapCard(targetRoadmap);
+              // Fetch upcoming tasks for this roadmap
+              try {
+                const taskRes = await window.API.get(`/roadmaps/current?roadmapId=${rid}`, { auth: true });
+                if (taskRes.success && taskRes.data?.tasks) {
+                  renderUpcomingTasksList(taskRes.data.tasks.filter(t => !t.completed).slice(0, 5));
+                }
+              } catch (e) {
+                console.warn('Failed to load track tasks:', e);
+              }
+            }
+          });
+        });
       }
 
-      const total = activeRoadmap.totalTasksCount ?? activeRoadmap.totalTasks ?? 0;
-      const completed = activeRoadmap.completedTasksCount ?? activeRoadmap.completedTasks ?? 0;
-      statTasks.textContent = `${completed} / ${total}`;
-
-      // Estimated hours remaining (estimate 2 hours per incomplete task)
-      const remainingTasks = Math.max(0, total - completed);
-      statHours.textContent = `~${remainingTasks * 2} hrs left`;
-
-      btnGoToRoadmap.href = 'roadmap.html';
-      btnGoToRoadmap.innerHTML = '<i class="bi bi-map-fill me-1"></i> Open Full Roadmap';
-
-      // Initialize 3D Progress Orb
-      if (window.initProgressOrb) {
-        window.initProgressOrb('progress-orb', pct);
+      if (trackCapacityBadge) {
+        trackCapacityBadge.textContent = activeRoadmaps.length === 1 ? '1/2 TRACK ENROLLED' : '2/2 PARALLEL TRACKS ACTIVE';
+        trackCapacityBadge.className = `badge font-mono ${activeRoadmaps.length === 1 ? 'badge-gold' : 'badge-teal'}`;
       }
-    } else {
-      activeCareerTitle.textContent = 'No Active Roadmap Yet';
-      activeCareerDesc.textContent = 'Take your assessment and select a career to generate an AI curriculum.';
-      activeRoadmapPace.textContent = 'Not Started';
-      statPercentage.textContent = '0%';
-      statTasks.textContent = '0 / 0';
-      statHours.textContent = '0 hrs';
 
-      btnGoToRoadmap.href = 'recommendations.html';
-      btnGoToRoadmap.innerHTML = '<i class="bi bi-stars me-1"></i> Choose a Career';
-
-      if (window.initProgressOrb) {
-        window.initProgressOrb('progress-orb', 0);
+      if (btnEnrollSecond) {
+        if (activeRoadmaps.length === 1) {
+          btnEnrollSecond.classList.remove('d-none');
+        } else {
+          btnEnrollSecond.classList.add('d-none');
+        }
       }
+    } else if (trackSwitcherContainer) {
+      trackSwitcherContainer.classList.add('d-none');
     }
+
+    renderActiveRoadmapCard(activeRoadmap);
 
     // Recommended Next Action
     if (nextAction && nextActionBtn) {
@@ -209,108 +381,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // Upcoming Incomplete Tasks
-    if (upcomingTasks && upcomingTasks.length > 0) {
-      upcomingTasksList.innerHTML = upcomingTasks
-        .map((task) => {
-          const resourceBadge = task.resource?.url
-            ? `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary py-0 px-2 ms-2" style="font-size: 0.75rem; border-radius: var(--radius-sm);">
-                <i class="bi bi-box-arrow-up-right me-1"></i>${escapeHtml(task.resource.type || 'Resource')}
-               </a>`
-            : '';
-
-          return `
-            <div class="dashboard-task-item d-flex align-items-center justify-content-between gap-3 flex-wrap ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
-              <div class="d-flex align-items-center gap-3 flex-grow-1" style="min-width: 0;">
-                <input
-                  type="checkbox"
-                  class="task-checkbox-input"
-                  ${task.completed ? 'checked' : ''}
-                  data-task-id="${task._id}"
-                  aria-label="Mark task ${escapeHtml(task.title)} complete"
-                />
-                <div>
-                  <div class="fw-semibold small task-title mb-0" style="color: var(--ink);">
-                    Week ${task.weekNumber}: ${escapeHtml(task.title)}
-                  </div>
-                  <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-                    <span class="badge badge-type-${task.type} text-uppercase font-monospace" style="font-size: 0.75rem;">
-                      ${escapeHtml(task.type)}
-                    </span>
-                    <span class="badge badge-priority-${task.priority}" style="font-size: 0.75rem;">
-                      ${escapeHtml(task.priority)}
-                    </span>
-                    <span class="text-secondary" style="font-size: 0.75rem; font-family: var(--font-mono);">
-                      <i class="bi bi-clock me-1"></i>${task.estimatedHours || 2}h
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                ${resourceBadge}
-              </div>
-            </div>
-          `;
-        })
-        .join('');
-
-      // Wire Task Checkbox Toggles
-      upcomingTasksList.querySelectorAll('.task-checkbox-input').forEach((cb) => {
-        cb.addEventListener('change', async (e) => {
-          const taskId = e.target.getAttribute('data-task-id');
-          const isChecked = e.target.checked;
-          const parentItem = e.target.closest('.dashboard-task-item');
-
-          // DISABLE to prevent spamming
-          const allCheckboxes = upcomingTasksList.querySelectorAll('.task-checkbox-input');
-          allCheckboxes.forEach(c => c.disabled = true);
-
-          if (parentItem) {
-            parentItem.classList.toggle('is-completed', isChecked);
-          }
-
-          try {
-            const res = await window.API.patch(`/roadmaps/tasks/${taskId}/toggle`, {}, { auth: true });
-
-            if (res.success && res.data) {
-              const { roadmap } = res.data;
-              // Refresh telemetry
-              const pct = Math.round(roadmap.progressPercentage || 0);
-              statPercentage.textContent = `${pct}%`;
-              statTasks.textContent = `${roadmap.completedTasksCount} / ${roadmap.totalTasksCount}`;
-
-              if (window.initProgressOrb) {
-                window.initProgressOrb('progress-orb', pct);
-              }
-
-              showAlert('Task progress updated!', 'success');
-              // Reload dashboard after a brief delay to refresh the first 5 upcoming list
-              setTimeout(() => {
-                loadDashboard();
-              }, 800);
-            } else {
-              e.target.checked = !isChecked;
-              if (parentItem) parentItem.classList.toggle('is-completed', !isChecked);
-              showAlert(res.message || 'Failed to toggle task.');
-            }
-          } catch (err) {
-            console.error('Toggle error:', err);
-            e.target.checked = !isChecked;
-            if (parentItem) parentItem.classList.toggle('is-completed', !isChecked);
-            showAlert(err.message || 'Error updating task.');
-          } finally {
-            // RE-ENABLE
-            allCheckboxes.forEach(c => c.disabled = false);
-          }
-        });
-      });
-    } else {
-      upcomingTasksList.innerHTML = `
-        <div class="text-secondary small py-3 text-center">
-          ${activeRoadmap ? '🎉 All scheduled tasks completed! Great job!' : 'No active roadmap tasks. Generate a roadmap to begin.'}
-        </div>
-      `;
-    }
+    // Render Upcoming Incomplete Tasks
+    renderUpcomingTasksList(upcomingTasks);
 
     // 4.6 Render Career GPS Telemetry & Modules
     loadJobReadiness();
