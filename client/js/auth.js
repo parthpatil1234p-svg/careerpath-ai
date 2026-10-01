@@ -25,8 +25,9 @@ const RECRUITER_PAGES = [
 
   const isStudentPage = STUDENT_PAGES.some((p) => path.endsWith(p));
   const isRecruiterPage = RECRUITER_PAGES.some((p) => path.endsWith(p));
+  const isLandingPage = path === '' || path === '/' || path.endsWith('/index.html') || path.endsWith('index.html');
 
-  if (!isStudentPage && !isRecruiterPage) return;
+  if (!isStudentPage && !isRecruiterPage && !isLandingPage) return;
 
   const rawUser = localStorage.getItem(window.CONFIG?.USER_KEY || 'careerpath_user');
   const token = localStorage.getItem(window.CONFIG?.TOKEN_KEY || 'careerpath_token');
@@ -43,6 +44,14 @@ const RECRUITER_PAGES = [
       email === 'demouser@gmail.com' ||
       email.includes('admin');
     if (isDemoOrAdmin) return; // Dual evaluation access for demo/admin
+
+    const isRecruiter = user.role === 'recruiter' || Boolean(user.isRecruiter) || Boolean(user.recruiterProfile?.canPostJobs);
+
+    // Auto-redirect recruiter from student landing page unless public preview requested
+    if (isRecruiter && isLandingPage && !window.location.search.includes('view=public')) {
+      window.location.replace('recruiter-dashboard.html');
+      return;
+    }
 
     if (user.role === 'recruiter' && isStudentPage) {
       sessionStorage.setItem(
@@ -347,9 +356,47 @@ const Auth = {
   },
 
   /**
+   * Binds smart role-aware destination to brand logos across all pages.
+   * - Recruiters stay inside / return to recruiter-dashboard.html
+   * - Students return to dashboard.html
+   * - Guests / logged-out users navigate to index.html
+   */
+  bindSmartLogo() {
+    const isAuthed = this.isAuthenticated();
+    const isRecruiter = this.isRecruiter();
+    const onRecruiterPage = window.location.pathname.includes('recruiter-');
+    const brandElements = document.querySelectorAll('.navbar-brand');
+
+    brandElements.forEach((brand) => {
+      if (isAuthed && (isRecruiter || onRecruiterPage)) {
+        brand.setAttribute('href', 'recruiter-dashboard.html');
+        brand.setAttribute('title', 'Recruiter Portal Home');
+
+        // Ensure a stylish recruiter badge is rendered if not already present
+        if (!brand.querySelector('.brand-recruiter-badge') && !brand.querySelector('.badge')) {
+          const badge = document.createElement('span');
+          badge.className = 'badge bg-success-subtle text-success border border-success-subtle ms-2 font-mono brand-recruiter-badge';
+          badge.style.fontSize = '0.68rem';
+          badge.style.padding = '2px 7px';
+          badge.style.borderRadius = '9999px';
+          badge.innerHTML = '<span class="pulse-dot-green d-inline-block me-1" style="width: 5px; height: 5px; border-radius: 50%; background: #10B981;"></span> RECRUITER';
+          brand.appendChild(badge);
+        }
+      } else if (isAuthed) {
+        brand.setAttribute('href', 'dashboard.html');
+        brand.setAttribute('title', 'Student Dashboard Home');
+      } else {
+        brand.setAttribute('href', 'index.html');
+        brand.setAttribute('title', 'CareerPath AI Home');
+      }
+    });
+  },
+
+  /**
    * Initializes navbar user state (displays username or login/signup buttons)
    */
   initNav() {
+    this.bindSmartLogo();
     const user = this.getCurrentUser();
     const authActions = document.getElementById('authNavActions');
     if (!authActions) return;
@@ -415,6 +462,9 @@ const Auth = {
         </div>
       `;
 
+      const mobileDashUrl = isRecruiter ? 'recruiter-dashboard.html' : 'dashboard.html';
+      const mobileDashLabel = isRecruiter ? 'Recruiter Portal' : 'Dashboard';
+
       const mobileActions = document.getElementById('notchMobileAuthActions');
       if (mobileActions) {
         mobileActions.innerHTML = `
@@ -446,15 +496,18 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+window.escapeHtml = escapeHtml;
 window.Auth = Auth;
 
 // Auto-initialize navbar and consume portal flash alert on page load across all pages
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
+    window.Auth?.bindSmartLogo();
     window.Auth?.initNav();
     window.Auth?.consumePortalAlert();
   });
 } else {
+  window.Auth?.bindSmartLogo();
   window.Auth?.initNav();
   window.Auth?.consumePortalAlert();
 }

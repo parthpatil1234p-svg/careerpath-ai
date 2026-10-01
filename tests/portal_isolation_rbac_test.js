@@ -160,6 +160,85 @@ console.log('\n▶ TEST 7: Client-side Isolation Routing Rules');
   assert(isDemo === true, 'Demo user correctly bypassed from hard lock');
 }
 
+// --- Test 8: Smart Brand Logo Dispatch Logic ---
+console.log('\n▶ TEST 8: Smart Brand Logo Dispatch Logic');
+{
+  function resolveBrandLogoHref({ isAuthed, isRecruiter, onRecruiterPage }) {
+    if (isAuthed && (isRecruiter || onRecruiterPage)) {
+      return 'recruiter-dashboard.html';
+    } else if (isAuthed) {
+      return 'dashboard.html';
+    } else {
+      return 'index.html';
+    }
+  }
+
+  // Recruiter on any page
+  assert(
+    resolveBrandLogoHref({ isAuthed: true, isRecruiter: true, onRecruiterPage: false }) === 'recruiter-dashboard.html',
+    'Recruiter logo href resolves to recruiter-dashboard.html'
+  );
+
+  // Recruiter inside recruiter portal
+  assert(
+    resolveBrandLogoHref({ isAuthed: true, isRecruiter: true, onRecruiterPage: true }) === 'recruiter-dashboard.html',
+    'Recruiter on recruiter page resolves to recruiter-dashboard.html'
+  );
+
+  // Student on any student page
+  assert(
+    resolveBrandLogoHref({ isAuthed: true, isRecruiter: false, onRecruiterPage: false }) === 'dashboard.html',
+    'Student logo href resolves to dashboard.html'
+  );
+
+  // Guest / Logged-out user
+  assert(
+    resolveBrandLogoHref({ isAuthed: false, isRecruiter: false, onRecruiterPage: false }) === 'index.html',
+    'Guest logo href resolves to index.html'
+  );
+}
+
+// --- Test 9: Landing Page Auto-Redirect & ?view=public Logic ---
+console.log('\n▶ TEST 9: Landing Page Auto-Redirect & ?view=public Logic');
+{
+  function shouldRedirectFromLanding({ user, search }) {
+    if (!user) return false;
+    const isPublic = (search || '').includes('view=public');
+    if (isPublic) return false;
+
+    const email = (user.email || '').toLowerCase();
+    const isDemoOrAdmin = user.role === 'admin' || user.isAdmin || email === 'demouser@gmail.com';
+    if (isDemoOrAdmin) return false;
+
+    const isRecruiter = user.role === 'recruiter' || Boolean(user.isRecruiter) || Boolean(user.recruiterProfile?.canPostJobs);
+    return isRecruiter;
+  }
+
+  // Standard recruiter visiting index.html without search param -> Must redirect
+  assert(
+    shouldRedirectFromLanding({ user: { role: 'recruiter', email: 'hr@razorpay.com' }, search: '' }) === true,
+    'Recruiter on index.html is redirected to recruiter-dashboard.html'
+  );
+
+  // Recruiter visiting index.html with ?view=public -> Must NOT redirect
+  assert(
+    shouldRedirectFromLanding({ user: { role: 'recruiter', email: 'hr@razorpay.com' }, search: '?view=public' }) === false,
+    'Recruiter with ?view=public is NOT redirected'
+  );
+
+  // Student visiting index.html -> Must NOT redirect
+  assert(
+    shouldRedirectFromLanding({ user: { role: 'student', email: 'student@college.edu' }, search: '' }) === false,
+    'Student on index.html is NOT redirected'
+  );
+
+  // Demo user visiting index.html -> Must NOT redirect (evaluation bypass)
+  assert(
+    shouldRedirectFromLanding({ user: { role: 'student', email: 'demouser@gmail.com' }, search: '' }) === false,
+    'Demo user demouser@gmail.com on index.html is NOT redirected'
+  );
+}
+
 console.log('\n════════════════════════════════════════════════════════════════');
 console.log(`Summary: ${passed} passed, ${failed} failed`);
 if (failed === 0) {

@@ -54,6 +54,25 @@
     <link rel="stylesheet" href="css/style.css?v=2.6" />
     <link rel="stylesheet" href="css/three.css?v=2.6" />
     <link rel="stylesheet" href="css/scroll-dissolve.css?v=2.6" />
+    <!-- Immediate Recruiter Auto-Redirect Protection -->
+    <script>
+      (function () {
+        try {
+          if (window.location.search.includes('view=public')) return;
+          var raw = localStorage.getItem('careerpath_user');
+          var token = localStorage.getItem('careerpath_token');
+          if (token && raw) {
+            var u = JSON.parse(raw);
+            if (u && (u.role === 'recruiter' || u.isRecruiter || (u.recruiterProfile && u.recruiterProfile.canPostJobs))) {
+              var email = (u.email || '').toLowerCase();
+              if (email !== 'demouser@gmail.com' && !u.isAdmin) {
+                window.location.replace('recruiter-dashboard.html');
+              }
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body class="landing-page">
@@ -1211,14 +1230,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/auth.js?v=2.7"></script>
     <script src="js/api.js"></script>
     <script src="js/github-auth.js"></script>
     <script src="js/scroll-dissolve.js?v=3.0"></script>
     <script src="js/stats-counter.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=2.7"></script>
     <script src="js/skill-guides.js"></script>
     <script src="js/chat.js"></script>
   </body>

@@ -161,6 +161,67 @@ function initDomainFilter() {
 }
 
 // ============================================================
+// 7. Adaptive Recruiter Landing Experience (when viewing ?view=public)
+// ============================================================
+function initRecruiterLandingExperience() {
+  if (!window.Auth?.isAuthenticated() || !window.Auth?.isRecruiter()) return;
+  const user = window.Auth.getCurrentUser();
+  if (!user) return;
+
+  const escapeFn = window.escapeHtml || function(str) { return str || ''; };
+
+  // 1. Sleek top floating session bar
+  if (!document.getElementById('recruiterActiveSessionBar')) {
+    const banner = document.createElement('div');
+    banner.id = 'recruiterActiveSessionBar';
+    banner.className = 'recruiter-session-banner py-2 px-3 text-white border-bottom border-primary d-flex align-items-center justify-content-between flex-wrap gap-2';
+    banner.style.cssText = 'position: relative; z-index: 1050; background: linear-gradient(90deg, #0F172A 0%, #1E293B 100%) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+    banner.innerHTML = `
+      <div class="d-flex align-items-center gap-2 small flex-wrap">
+        <span class="badge bg-primary text-white px-2 py-1"><i class="bi bi-briefcase-fill me-1"></i> Recruiter Mode</span>
+        <span class="text-light">Logged in as <strong>${escapeFn(user.name || 'Recruiter')}</strong> ${user.recruiterProfile?.companyName ? `(${escapeFn(user.recruiterProfile.companyName)})` : ''}</span>
+        <span class="text-white-50 d-none d-md-inline">&middot; Public Landing Preview Active</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a href="recruiter-dashboard.html" class="btn cp-btn-primary btn-sm py-1 px-3 d-inline-flex align-items-center gap-1.5" style="font-size: 0.8rem;">
+          <i class="bi bi-speedometer2"></i> Return to Recruiter Dashboard &rarr;
+        </a>
+      </div>
+    `;
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+
+  // 2. Adapt Hero CTAs
+  const startBtn = document.getElementById('startAssessmentBtn');
+  if (startBtn) {
+    startBtn.setAttribute('href', 'recruiter-dashboard.html');
+    const label = startBtn.querySelector('.rg-label');
+    if (label) {
+      label.innerHTML = '<i class="bi bi-briefcase-fill me-2"></i> Go to Recruiter Dashboard';
+    }
+  }
+
+  const startNavBtn = document.getElementById('startAssessmentNavBtn');
+  if (startNavBtn) {
+    startNavBtn.setAttribute('href', 'recruiter-dashboard.html');
+    startNavBtn.innerHTML = '<i class="bi bi-speedometer2 me-1"></i> Recruiter Portal';
+  }
+
+  // 3. Secondary CTA adaptation
+  const secondaryHeroCta = document.querySelector('.hero-actions a.btn.cp-btn-outline');
+  if (secondaryHeroCta) {
+    secondaryHeroCta.setAttribute('href', 'recruiter-dashboard.html#postJobModal');
+    secondaryHeroCta.innerHTML = '<i class="bi bi-plus-circle me-1.5"></i> Post Job Opening';
+  }
+
+  // 4. Subtitle helper note adaptation
+  const heroNote = document.querySelector('.hero-text-col p.small.text-secondary');
+  if (heroNote) {
+    heroNote.innerHTML = '<span class="text-teal fw-medium"><i class="bi bi-building-check me-1"></i> Recruiter Preview Active &middot; Switch between candidates, radar, and postings.</span>';
+  }
+}
+
+// ============================================================
 // Init
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -169,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCareerCards();
   initMobileNavClose();
   initDomainFilter();
+  initRecruiterLandingExperience();
 
   console.log(
     '%cCareerPath AI | Career Atlas',
