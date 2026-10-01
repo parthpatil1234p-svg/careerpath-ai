@@ -218,11 +218,11 @@ div[id].cp-section {
 
 .section-tag,
 .atlas-kicker {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   color: var(--color-indigo-700);
   background: var(--color-surface-indigo);
   border: 1px solid #C7D2FE;

@@ -36,9 +36,9 @@
     />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css?v=2.1" />
-    <link rel="stylesheet" href="css/dashboard.css?v=2.1" />
-    <link rel="stylesheet" href="css/quiz.css?v=2.1" />
+    <link rel="stylesheet" href="css/style.css?v=2.6" />
+    <link rel="stylesheet" href="css/dashboard.css?v=2.6" />
+    <link rel="stylesheet" href="css/quiz.css?v=2.6" />
   </head>
 
   <body class="dashboard-page">
@@ -66,22 +66,30 @@
             </li>
             <li>
               <a class="notch-nav-link" href="recommendations.html">
-                <i class="bi bi-compass me-1"></i> Recommendations
+                <i class="bi bi-compass me-1"></i>
+                <span class="nav-text-full">Recommendations</span>
+                <span class="nav-text-short">Recs</span>
               </a>
             </li>
             <li>
               <a class="notch-nav-link" href="roadmap.html">
-                <i class="bi bi-signpost-split me-1"></i> Active Roadmap
+                <i class="bi bi-signpost-split me-1"></i>
+                <span class="nav-text-full">Active Roadmap</span>
+                <span class="nav-text-short">Roadmap</span>
               </a>
             </li>
             <li>
               <a class="notch-nav-link" href="resume-builder.html">
-                <i class="bi bi-file-earmark-person me-1"></i> Resume Builder
+                <i class="bi bi-file-earmark-person me-1"></i>
+                <span class="nav-text-full">Resume Builder</span>
+                <span class="nav-text-short">Resume</span>
               </a>
             </li>
             <li>
               <a class="notch-nav-link" href="jobs.html">
-                <i class="bi bi-briefcase me-1"></i> Verified Jobs
+                <i class="bi bi-briefcase me-1"></i>
+                <span class="nav-text-full">Verified Jobs</span>
+                <span class="nav-text-short">Jobs</span>
               </a>
             </li>
           </ul>
@@ -188,32 +196,36 @@
               <div>
                 <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                   <h1 class="h4 fw-bold text-ink mb-0" id="userName">Student Name</h1>
-                  <span class="badge badge-navy small font-monospace">
-                    Verified Student
+                  <span class="badge badge-verified-student">
+                    <i class="bi bi-patch-check-fill me-1"></i> Verified Student
                   </span>
                 </div>
                 <p class="text-muted small mb-1" id="userEmail">student@example.com</p>
-                <div class="d-flex align-items-center gap-3 text-secondary small flex-wrap">
-                  <span id="userDegree"><i class="bi bi-mortarboard-fill text-gold me-1"></i> Degree Pending</span>
-                  <span id="userSkillsCount"><i class="bi bi-tools text-teal me-1"></i> 0 Skills Logged</span>
-                  <span id="userResumeStatus">
-                    <i class="bi bi-file-earmark-pdf text-teal me-1"></i>
-                    <a href="javascript:void(0)" id="viewResumeLink" class="text-teal text-decoration-underline d-none" role="button" data-bs-toggle="modal" data-bs-target="#resumeViewerModal" title="View resume preview and document">View Resume</a>
+                <div class="profile-meta-line mt-1.5">
+                  <span class="profile-meta-item" id="userDegree"><i class="bi bi-mortarboard-fill text-primary"></i> <span>Degree Pending</span></span>
+                  <span class="profile-meta-dot">·</span>
+                  <span class="profile-meta-item" id="userSkillsCount"><i class="bi bi-cpu-fill text-info"></i> <span>0 Skills Logged</span></span>
+                  <span class="profile-meta-dot">·</span>
+                  <span class="profile-meta-item" id="userResumeStatus">
+                    <i class="bi bi-file-earmark-check-fill text-success"></i>
+                    <a href="javascript:void(0)" id="viewResumeLink" class="profile-resume-pill d-none" role="button" data-bs-toggle="modal" data-bs-target="#resumeViewerModal" title="View resume preview and document">
+                      <i class="bi bi-file-earmark-text"></i> View Resume
+                    </a>
                     <span id="noResumeText" class="text-muted">No Resume</span>
                   </span>
                 </div>
                 <!-- Profile Status Selector (Learning | Job-Seeking | Working) -->
-                <div class="mt-2 pt-2 border-top border-line d-flex align-items-center gap-2 flex-wrap" id="profileStatusBar">
-                  <span class="small fw-semibold text-muted" style="font-size: 0.75rem;"><i class="bi bi-person-badge text-teal me-1"></i> Status:</span>
-                  <div class="btn-group btn-group-sm" role="group" aria-label="Profile Status Selector" id="statusBtnGroup">
-                    <button type="button" class="btn btn-outline-secondary status-toggle-btn active py-0 px-2" data-status="learning" style="font-size: 0.72rem;">
-                      <i class="bi bi-book-half me-1"></i> Learning
+                <div class="mt-2.5 pt-2.5 border-top border-line d-flex align-items-center gap-2 flex-wrap" id="profileStatusBar">
+                  <span class="small fw-semibold text-muted" style="font-size: 0.78rem;"><i class="bi bi-person-badge text-primary me-1"></i> Status:</span>
+                  <div class="status-segmented-control" role="group" aria-label="Profile Status Selector" id="statusBtnGroup">
+                    <button type="button" class="status-toggle-btn active" data-status="learning">
+                      <i class="bi bi-book-half"></i> <span>Learning</span>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary status-toggle-btn py-0 px-2" data-status="job_seeking" style="font-size: 0.72rem;">
-                      <i class="bi bi-briefcase me-1"></i> Job-Seeking
+                    <button type="button" class="status-toggle-btn" data-status="job_seeking">
+                      <i class="bi bi-briefcase"></i> <span>Job-Seeking</span>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary status-toggle-btn py-0 px-2" data-status="working" style="font-size: 0.72rem;">
-                      <i class="bi bi-person-workspace me-1"></i> Working
+                    <button type="button" class="status-toggle-btn" data-status="working">
+                      <i class="bi bi-person-workspace"></i> <span>Working</span>
                     </button>
                   </div>
                   <span class="badge bg-secondary bg-opacity-10 text-teal font-mono small d-none" id="currentRoleBadge"></span>
@@ -225,15 +237,15 @@
             </div>
 
             <div class="col-md-4 text-md-end d-flex flex-column flex-sm-row justify-content-md-end gap-2">
-              <button type="button" class="btn btn-outline-navy btn-sm px-3" id="btnUploadResumeTrigger" title="Upload Resume to Cloudinary Media Storage">
-                <i class="bi bi-file-earmark-arrow-up-fill me-1"></i> Resume
+              <button type="button" class="btn btn-profile-secondary" id="btnUploadResumeTrigger" title="Upload Resume to Cloudinary Media Storage">
+                <i class="bi bi-file-earmark-arrow-up text-primary"></i> <span>Resume</span>
               </button>
               <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx" class="d-none" />
-              <button type="button" class="btn cp-btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
-                <i class="bi bi-lightning-charge-fill me-1"></i> Manage Skills
+              <button type="button" class="btn btn-profile-primary" data-bs-toggle="modal" data-bs-target="#manageSkillsModal">
+                <i class="bi bi-lightning-charge-fill"></i> <span>Manage Skills</span>
               </button>
-              <a href="assessment.html" class="btn btn-outline-navy btn-sm px-3">
-                <i class="bi bi-pencil-square me-1"></i> Full Assessment
+              <a href="assessment.html" class="btn btn-profile-secondary">
+                <i class="bi bi-pencil-square text-indigo"></i> <span>Full Assessment</span>
               </a>
             </div>
           </div>
@@ -1411,8 +1423,8 @@
     <script src="js/stats-counter.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
-    <script src="js/tech-logos.js?v=2.1"></script>
-    <script src="js/dashboard.js?v=2.3"></script>
-    <script src="js/chat.js?v=2.1"></script>
+    <script src="js/tech-logos.js?v=2.6"></script>
+    <script src="js/dashboard.js?v=2.6"></script>
+    <script src="js/chat.js?v=2.6"></script>
   </body>
 </html>

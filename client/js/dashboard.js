@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nameStr = user?.name || 'Student';
     userName.textContent = nameStr;
     if (user?.avatarUrl) {
-      userAvatar.innerHTML = `<img src="${escapeHtml(user.avatarUrl)}" alt="${escapeHtml(nameStr)}" class="rounded-circle w-100 h-100" style="object-fit: cover;" />`;
+      userAvatar.innerHTML = `<img src="${escapeHtml(user.avatarUrl)}" alt="${escapeHtml(nameStr)}" class="w-100 h-100" style="object-fit: cover; border-radius: inherit;" onerror="this.remove(); document.getElementById('userAvatar').textContent = '${nameStr.charAt(0).toUpperCase()}';" />`;
     } else {
       userAvatar.textContent = nameStr.charAt(0).toUpperCase();
     }
@@ -123,10 +123,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const degreeName = user?.education?.course || user?.education?.degree || 'Degree not specified';
     const branchName = user?.education?.branch ? ` (${user.education.branch})` : '';
-    userDegree.innerHTML = `<i class="bi bi-mortarboard-fill text-warning me-1"></i> ${escapeHtml(degreeName + branchName)}`;
+    userDegree.innerHTML = `<i class="bi bi-mortarboard-fill text-primary me-1"></i> ${escapeHtml(degreeName + branchName)}`;
 
     const skillCount = user?.skills?.length || 0;
-    userSkillsCount.innerHTML = `<i class="bi bi-tools text-teal me-1"></i> ${skillCount} Skills Logged`;
+    userSkillsCount.innerHTML = `<i class="bi bi-cpu-fill text-info me-1"></i> ${skillCount} Skills Logged`;
 
     // Render Resume Status
     const viewResumeLink = document.getElementById('viewResumeLink');
@@ -593,8 +593,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       statusBtnGroup.querySelectorAll('.status-toggle-btn').forEach((btn) => {
         const btnStatus = btn.getAttribute('data-status');
         btn.classList.toggle('active', btnStatus === status);
-        btn.classList.toggle('btn-teal', btnStatus === status);
-        btn.classList.toggle('btn-outline-secondary', btnStatus !== status);
+        btn.classList.remove('btn-teal', 'btn-outline-secondary', 'btn-secondary');
       });
     }
 
@@ -1249,18 +1248,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `
         <div class="d-flex align-items-center justify-content-between p-2 rounded-2 stat-box-atlas border border-line gap-2 flex-wrap">
           <div class="d-flex align-items-center gap-2">
-            <span class="badge badge-navy small font-monospace">${escapeHtml(s.category || 'tech')}</span>
+            <span class="badge badge-navy small" style="font-family: var(--font-body);">${escapeHtml(s.category || 'tech')}</span>
             <span class="fw-semibold text-ink small">${escapeHtml(s.displayName || s.name)}</span>
           </div>
           <div class="d-flex align-items-center gap-2 ms-auto">
             <div class="btn-group btn-group-sm" role="group" aria-label="Proficiency selector">
-              <button type="button" class="btn btn-sm ${prof === 'beginner' ? 'btn-warning text-dark fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2 font-monospace" style="font-size: 0.7rem;" data-idx="${idx}" data-prof="beginner">
+              <button type="button" class="btn btn-sm ${prof === 'beginner' ? 'btn-warning text-dark fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2" style="font-size: 0.72rem; font-family: var(--font-body);" data-idx="${idx}" data-prof="beginner">
                 Beg
               </button>
-              <button type="button" class="btn btn-sm ${prof === 'intermediate' ? 'btn-info text-dark fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2 font-monospace" style="font-size: 0.7rem;" data-idx="${idx}" data-prof="intermediate">
+              <button type="button" class="btn btn-sm ${prof === 'intermediate' ? 'btn-info text-dark fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2" style="font-size: 0.72rem; font-family: var(--font-body);" data-idx="${idx}" data-prof="intermediate">
                 Int
               </button>
-              <button type="button" class="btn btn-sm ${prof === 'advanced' ? 'btn-success text-white fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2 font-monospace" style="font-size: 0.7rem;" data-idx="${idx}" data-prof="advanced">
+              <button type="button" class="btn btn-sm ${prof === 'advanced' ? 'btn-success text-white fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2" style="font-size: 0.72rem; font-family: var(--font-body);" data-idx="${idx}" data-prof="advanced">
                 Adv
               </button>
             </div>

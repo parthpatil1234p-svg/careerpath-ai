@@ -45,14 +45,16 @@ main.container {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.cp-navbar-notch .container,
+.cp-navbar-notch .container-fluid,
 .cp-navbar-notch > .container,
 .cp-navbar-notch > .container-fluid {
   pointer-events: auto;
-  padding: 0 16px;
-  display: flex;
-  justify-content: center;
-  max-width: 100% !important;
-  width: 100%;
+  padding: 0 12px !important;
+  display: flex !important;
+  justify-content: center !important;
+  max-width: 1440px !important;
+  width: 98% !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -63,19 +65,37 @@ main.container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  width: 96%;
-  max-width: 1360px;
-  min-height: 60px;
-  background: rgba(255, 255, 255, 0.92);
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 1380px;
+  min-height: 56px;
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: 9999px;
-  padding: 0.4rem 1.15rem;
+  padding: 0.35rem 0.85rem 0.35rem 1.15rem;
   box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.07), 0 4px 12px -2px rgba(15, 23, 42, 0.03), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Responsive Condensed Link Labels */
+.nav-text-short {
+  display: none;
+}
+.nav-text-full {
+  display: inline;
+}
+@media (max-width: 1360px) {
+  .nav-text-full {
+    display: none !important;
+  }
+  .nav-text-short {
+    display: inline !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -190,10 +210,16 @@ main.container {
   color: #4338CA !important;
   letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
-  display: inline-flex !important;
+  display: none !important;
   align-items: center !important;
   gap: 5px !important;
   white-space: nowrap;
+}
+
+@media (min-width: 1360px) {
+  .notch-nav-island .brand-tagline-sub {
+    display: inline-flex !important;
+  }
 }
 
 .pulse-dot-indigo {
@@ -506,24 +532,105 @@ main.container {
 /* --------------------------------------------------------------------------
    7. Responsive Scaling for Laptops & 1024px Viewports
    -------------------------------------------------------------------------- */
-@media (max-width: 1240px) {
+@media (max-width: 1360px) {
   .notch-nav-island {
-    padding: 0.35rem 0.85rem;
-    gap: 0.45rem;
-    width: 98%;
+    padding: 0.32rem 0.75rem 0.32rem 0.95rem;
+    gap: 0.35rem;
+  }
+  .notch-nav-links {
+    gap: 0.2rem;
   }
   .notch-nav-link,
   .notch-link {
     font-size: 0.82rem;
-    padding: 0.35rem 0.55rem;
-    gap: 0.3rem;
+    padding: 0.32rem 0.55rem;
+    gap: 0.25rem;
   }
   .notch-nav-island .brand-name {
     font-size: 1.25rem;
   }
+}
+
+@media (max-width: 1260px) {
+  .notch-nav-island {
+    padding: 0.3rem 0.65rem 0.3rem 0.85rem;
+    gap: 0.28rem;
+  }
+  .notch-nav-links {
+    gap: 0.12rem;
+  }
+  .notch-nav-link,
+  .notch-link {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.45rem;
+    gap: 0.22rem;
+  }
+  .notch-nav-island .brand-name {
+    font-size: 1.2rem;
+  }
+  /* In profile group: convert pill to avatar circle only to save 100px */
   .nav-user-name,
-  .nav-user-capsule span {
-    max-width: 90px;
+  .nav-user-capsule span:not(.nav-avatar-circle) {
+    display: none !important;
+  }
+  .nav-user-pill,
+  .nav-user-capsule {
+    padding: 3px !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    justify-content: center !important;
+  }
+  .nav-avatar-circle {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.72rem !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  .notch-nav-island {
+    padding: 0.25rem 0.55rem 0.25rem 0.75rem;
+    gap: 0.22rem;
+  }
+  .notch-nav-island .brand-icon {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+  }
+  .notch-nav-island .brand-icon img,
+  .notch-nav-island .brand-logo-img {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+  }
+  .notch-nav-island .brand-name {
+    font-size: 1.15rem;
+  }
+  .notch-nav-links {
+    gap: 0.08rem;
+  }
+  .notch-nav-link,
+  .notch-link {
+    font-size: 0.76rem;
+    padding: 0.26rem 0.38rem;
+    gap: 0.18rem;
+  }
+  .notch-nav-link i,
+  .notch-link i {
+    font-size: 0.84rem;
+  }
+  .nav-role-chip {
+    font-size: 0.68rem;
+    padding: 2px 7px;
+  }
+  .nav-btn-logout,
+  #logoutBtn {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.82rem !important;
   }
 }
 
