@@ -2288,6 +2288,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const questionCategoryBadge = document.getElementById('questionCategoryBadge');
     const currentQuestionText = document.getElementById('currentQuestionText');
     const feedbackCard = document.getElementById('evaluationFeedbackCard');
+    const interviewVoiceSelector = document.getElementById('interviewVoiceSelector');
+    const btnSpeakText = document.getElementById('btnSpeakText');
+    const btnSpeakIcon = document.getElementById('btnSpeakIcon');
+    const audioWaveBars = document.getElementById('audioWaveBars');
 
     if (!btnLaunch || !modalEl) return;
 
@@ -2344,6 +2348,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Render Question
     const renderInterviewQuestion = () => {
+      stopInterviewAudio();
       if (!interviewSession || !interviewSession.questions || !interviewSession.questions.length) return;
       const q = interviewSession.questions[currentQuestionIdx];
       if (!q) return;
@@ -2376,36 +2381,223 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (btnFinalize) btnFinalize.classList.add('d-none');
     };
 
-    // Text-to-Speech (TTS)
-    if (btnSpeak) {
-      btnSpeak.onclick = () => {
-        if (!interviewSession || !interviewSession.questions) return;
-        if (!('speechSynthesis' in window)) {
-          showAlert('Text-to-speech audio is not supported in this browser.', 'info');
-          return;
+    // ========================================================================
+    // NATURAL HUMAN VOICE READER ENGINE (CLOUD NEURAL + BROWSER NATURAL)
+    // ========================================================================
+    let currentAudioInstance = null;
+    let isAudioPlaying = false;
+    let cachedVoices = [];
+
+    // Preload speech synthesis voices for instant browser selection
+    const refreshVoices = () => {
+      if ('speechSynthesis' in window) {
+        cachedVoices = window.speechSynthesis.getVoices() || [];
+      }
+    };
+    if ('speechSynthesis' in window) {
+      refreshVoices();
+      window.speechSynthesis.onvoiceschanged = refreshVoices;
+    }
+
+    // Load saved voice preference
+    if (interviewVoiceSelector) {
+      const savedVoice = localStorage.getItem('interview_voice_preference');
+      if (savedVoice) {
+        interviewVoiceSelector.value = savedVoice;
+      }
+      interviewVoiceSelector.addEventListener('change', () => {
+        localStorage.setItem('interview_voice_preference', interviewVoiceSelector.value);
+        if (isAudioPlaying) {
+          stopInterviewAudio();
         }
+      });
+    }
 
-        const q = interviewSession.questions[currentQuestionIdx];
-        if (!q) return;
-        const qText = q.question || q.questionText;
-        if (!qText) return;
+    const setAudioButtonState = (state) => {
+      if (state === 'playing') {
+        isAudioPlaying = true;
+        if (btnSpeakText) btnSpeakText.textContent = 'Stop Audio';
+        if (btnSpeakIcon) btnSpeakIcon.className = 'bi bi-stop-circle-fill text-danger';
+        if (audioWaveBars) audioWaveBars.classList.remove('d-none');
+        if (btnSpeak) {
+          btnSpeak.classList.remove('btn-outline-info');
+          btnSpeak.classList.add('btn-outline-danger');
+        }
+      } else if (state === 'loading') {
+        isAudioPlaying = false;
+        if (btnSpeakText) btnSpeakText.textContent = 'Loading Voice...';
+        if (btnSpeakIcon) btnSpeakIcon.className = 'spinner-border spinner-border-sm text-info';
+        if (audioWaveBars) audioWaveBars.classList.add('d-none');
+      } else {
+        isAudioPlaying = false;
+        if (btnSpeakText) btnSpeakText.textContent = 'Read Question';
+        if (btnSpeakIcon) btnSpeakIcon.className = 'bi bi-volume-up-fill';
+        if (audioWaveBars) audioWaveBars.classList.add('d-none');
+        if (btnSpeak) {
+          btnSpeak.classList.remove('btn-outline-danger');
+          btnSpeak.classList.add('btn-outline-info');
+        }
+      }
+    };
 
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(qText);
-        utterance.rate = 0.95;
-        utterance.pitch = 1.0;
-        const btnSpeakText = document.getElementById('btnSpeakText');
-        if (btnSpeakText) btnSpeakText.textContent = 'Speaking...';
+    const stopInterviewAudio = () => {
+      if (currentAudioInstance) {
+        try {
+          currentAudioInstance.pause();
+          currentAudioInstance.currentTime = 0;
+        } catch (_) {}
+        currentAudioInstance = null;
+      }
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (_) {}
+      }
+      setAudioButtonState('idle');
+    };
 
-        utterance.onend = () => {
-          if (btnSpeakText) btnSpeakText.textContent = 'Read Question';
-        };
-        utterance.onerror = () => {
-          if (btnSpeakText) btnSpeakText.textContent = 'Read Question';
-        };
+    const preprocessForNaturalSpeech = (text) => {
+      if (!text) return '';
+      return String(text)
+        .replace(/[`*_#]/g, '')
+        .replace(/\bRESTful\b/gi, 'Rest-full')
+        .replace(/\bREST\b/gi, 'Rest')
+        .replace(/\bAPIs?\b/gi, (m) => m.toLowerCase().endsWith('s') ? 'A.P.I.s' : 'A.P.I.')
+        .replace(/\bJSON\b/gi, 'Jason')
+        .replace(/\bSQL\b/gi, 'Sequel')
+        .replace(/\bNoSQL\b/gi, 'No-Sequel')
+        .replace(/\bCI\/CD\b/gi, 'C.I. C.D.')
+        .replace(/\bUI\/UX\b/gi, 'U.I. and U.X.')
+        .replace(/\bOAuth\b/gi, 'O-Auth')
+        .replace(/\bJWT\b/gi, 'J-W-T')
+        .replace(/\bAWS\b/gi, 'A.W.S.')
+        .replace(/\bHTML\b/gi, 'H.T.M.L.')
+        .replace(/\bCSS\b/gi, 'C.S.S.')
+        .replace(/\be\.g\.,?\b/gi, 'for example,')
+        .replace(/\bi\.e\.,?\b/gi, 'that is,')
+        .replace(/\betc\.\b/gi, 'and so forth')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
 
-        window.speechSynthesis.speak(utterance);
+    const playBrowserNaturalVoice = (cleanText, voiceOption = 'browser_natural') => {
+      if (!('speechSynthesis' in window)) {
+        showAlert('Text-to-speech audio is not supported in this browser.', 'info');
+        setAudioButtonState('idle');
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+
+      const voices = cachedVoices.length ? cachedVoices : (window.speechSynthesis.getVoices() || []);
+      const engVoices = voices.filter(v => (v.lang || '').toLowerCase().startsWith('en'));
+
+      let chosenVoice = null;
+      if (engVoices.length > 0) {
+        const scored = engVoices.map(v => {
+          const name = (v.name || '').toLowerCase();
+          let score = 0;
+          if (name.includes('natural') || name.includes('online (natural)')) score += 120;
+          else if (name.includes('neural') || name.includes('wavenet') || name.includes('enhanced')) score += 100;
+          else if (name.includes('google')) score += 80;
+          else if (name.includes('samantha') || name.includes('ava') || name.includes('daniel') || name.includes('karen')) score += 70;
+          else if (name.includes('desktop') || name.includes('sapi')) score -= 60; // Reject robotic desktop voice!
+
+          if (voiceOption === 'Matthew') {
+            if (name.includes('guy') || name.includes('male') || name.includes('daniel') || name.includes('george')) score += 25;
+          } else if (voiceOption === 'Amy' || voiceOption === 'Brian') {
+            if ((v.lang || '').includes('GB') || name.includes('united kingdom') || name.includes('sonia') || name.includes('uk')) score += 35;
+          } else {
+            if (name.includes('jenny') || name.includes('female') || name.includes('aria') || name.includes('samantha')) score += 25;
+          }
+          return { voice: v, score };
+        });
+
+        scored.sort((a, b) => b.score - a.score);
+        if (scored.length > 0 && scored[0].score > -50) {
+          chosenVoice = scored[0].voice;
+        }
+      }
+
+      if (chosenVoice) {
+        utterance.voice = chosenVoice;
+      }
+
+      utterance.rate = 0.93;
+      utterance.pitch = 1.02;
+      utterance.volume = 1.0;
+
+      utterance.onstart = () => {
+        setAudioButtonState('playing');
       };
+      utterance.onend = () => {
+        setAudioButtonState('idle');
+      };
+      utterance.onerror = (err) => {
+        console.warn('SpeechSynthesis error:', err);
+        setAudioButtonState('idle');
+      };
+
+      setAudioButtonState('playing');
+      window.speechSynthesis.speak(utterance);
+    };
+
+    const playInterviewAudio = () => {
+      if (!interviewSession || !interviewSession.questions) return;
+      const q = interviewSession.questions[currentQuestionIdx];
+      if (!q) return;
+      const rawText = q.question || q.questionText || '';
+      if (!rawText.trim()) return;
+
+      if (isAudioPlaying) {
+        stopInterviewAudio();
+        return;
+      }
+
+      const cleanText = preprocessForNaturalSpeech(rawText);
+      const selectedVoice = interviewVoiceSelector ? interviewVoiceSelector.value : 'Joanna';
+
+      if (selectedVoice === 'browser_natural') {
+        playBrowserNaturalVoice(cleanText, selectedVoice);
+        return;
+      }
+
+      // High-Definition Neural Cloud Voice Reader (Amazon Polly Joanna / Matthew / Amy / Brian)
+      setAudioButtonState('loading');
+      stopInterviewAudio();
+
+      const audioUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${encodeURIComponent(selectedVoice)}&text=${encodeURIComponent(cleanText)}`;
+      const audio = new Audio(audioUrl);
+      currentAudioInstance = audio;
+
+      audio.onplay = () => {
+        setAudioButtonState('playing');
+      };
+
+      audio.onended = () => {
+        stopInterviewAudio();
+      };
+
+      audio.onerror = (e) => {
+        console.warn('Neural cloud stream unavailable, seamlessly using browser natural voice engine:', e);
+        currentAudioInstance = null;
+        playBrowserNaturalVoice(cleanText, selectedVoice);
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Audio play prevented or blocked, falling back to browser natural voice:', err);
+          currentAudioInstance = null;
+          playBrowserNaturalVoice(cleanText, selectedVoice);
+        });
+      }
+    };
+
+    // Attach click handler to Speak button
+    if (btnSpeak) {
+      btnSpeak.onclick = playInterviewAudio;
     }
 
     // Web Speech API STT
@@ -2470,6 +2662,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Submit Answer & Evaluate
     if (btnSubmit) {
       btnSubmit.onclick = async () => {
+        stopInterviewAudio();
         const text = answerInput ? answerInput.value.trim() : '';
         if (!text || text.length < 10) {
           showAlert('Please provide an answer of at least 10 characters (either spoken or typed).', 'warning');
@@ -2567,6 +2760,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Next Question
     if (btnNext) {
       btnNext.onclick = () => {
+        stopInterviewAudio();
         currentQuestionIdx++;
         renderInterviewQuestion();
       };
@@ -2575,6 +2769,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Finalize Interview
     if (btnFinalize) {
       btnFinalize.onclick = async () => {
+        stopInterviewAudio();
         btnFinalize.disabled = true;
         btnFinalize.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Finalizing Score...';
 
@@ -2618,9 +2813,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Modal hide cleanup
     modalEl.addEventListener('hidden.bs.modal', () => {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
+      stopInterviewAudio();
       if (isSpeechRecording && recognitionInstance) {
         recognitionInstance.stop();
         isSpeechRecording = false;

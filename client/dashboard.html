@@ -1003,9 +1003,30 @@
                 <div class="text-light text-opacity-75 small">Target Role: <strong class="text-cyan fw-bold" id="interviewTargetRole">Full-Stack Developer</strong></div>
                 <div class="text-info small font-monospace" id="interviewProgressText">Question 1 of 3</div>
               </div>
-              <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-outline-info btn-sm px-3" id="btnSpeakQuestion" title="Play AI Interviewer voice">
-                  <i class="bi bi-volume-up-fill me-1"></i> <span id="btnSpeakText">Read Question</span>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <!-- Natural Human Voice Selector -->
+                <div class="d-flex align-items-center voice-select-pill">
+                  <i class="bi bi-soundwave text-cyan me-1.5" style="font-size: 0.85rem;"></i>
+                  <label for="interviewVoiceSelector" class="visually-hidden">Interviewer Voice Persona</label>
+                  <select class="form-select form-select-sm bg-transparent text-white border-0 p-0 font-monospace" id="interviewVoiceSelector" style="font-size: 0.74rem; width: auto; cursor: pointer;" title="Select natural human interviewer voice">
+                    <option value="Joanna" selected>✨ Joanna (Natural US Recruiter)</option>
+                    <option value="Matthew">👨 Matthew (Senior Tech Lead)</option>
+                    <option value="Amy">👩 Amy (British Tech Lead)</option>
+                    <option value="Brian">🇬🇧 Brian (Principal Architect)</option>
+                    <option value="browser_natural">🌐 Browser Neural/Natural Voice</option>
+                  </select>
+                </div>
+
+                <!-- Speak / Stop Question Button -->
+                <button type="button" class="btn btn-outline-info btn-sm px-3 d-inline-flex align-items-center gap-1.5" id="btnSpeakQuestion" title="Play natural AI Interviewer voice">
+                  <span class="audio-wave-anim d-none" id="audioWaveBars" aria-hidden="true">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                  </span>
+                  <i class="bi bi-volume-up-fill" id="btnSpeakIcon"></i>
+                  <span id="btnSpeakText">Read Question</span>
                 </button>
               </div>
             </div>
@@ -1300,7 +1321,7 @@
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
     <script src="js/tech-logos.js?v=2.1"></script>
-    <script src="js/dashboard.js?v=2.1"></script>
+    <script src="js/dashboard.js?v=2.2"></script>
     <script src="js/chat.js?v=2.1"></script>
   </body>
 </html>

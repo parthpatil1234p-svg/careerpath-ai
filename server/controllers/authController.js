@@ -590,7 +590,7 @@ const getGoogleConfig = (req, res) => {
  */
 const githubAuth = async (req, res, next) => {
   try {
-    const { code, username: directUser, email: directEmail, name: directName, avatarUrl: directAvatar, githubId: directId } = req.body;
+    const { code, redirectUri, username: directUser, email: directEmail, name: directName, avatarUrl: directAvatar, githubId: directId } = req.body;
 
     let accessToken = null;
     let ghUsername = directUser ? directUser.trim() : '';
@@ -605,7 +605,7 @@ const githubAuth = async (req, res, next) => {
       }
 
       try {
-        accessToken = await exchangeOAuthCode(code);
+        accessToken = await exchangeOAuthCode(code, redirectUri);
       } catch (err) {
         console.warn('GitHub OAuth code exchange notice:', err.message);
         if (!ghUsername) {
@@ -755,7 +755,7 @@ const githubAuth = async (req, res, next) => {
  */
 const connectGitHub = async (req, res, next) => {
   try {
-    const { username: directUser, code } = req.body;
+    const { username: directUser, code, redirectUri } = req.body;
     const userId = req.user.id;
 
     let accessToken = null;
@@ -770,7 +770,7 @@ const connectGitHub = async (req, res, next) => {
         });
       }
       try {
-        accessToken = await exchangeOAuthCode(code);
+        accessToken = await exchangeOAuthCode(code, redirectUri);
       } catch (err) {
         console.warn('OAuth code exchange warning during connect:', err.message);
         if (!ghUsername) {

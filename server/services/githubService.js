@@ -59,12 +59,22 @@ const SKILL_TAXONOMY = {
 /**
  * Exchange GitHub OAuth temporary code for an access token
  */
-const exchangeOAuthCode = async (code) => {
+const exchangeOAuthCode = async (code, redirectUri = null) => {
   const clientId = (process.env.GITHUB_CLIENT_ID || '').trim().replace(/^["']|["']$/g, '');
   const clientSecret = (process.env.GITHUB_CLIENT_SECRET || '').trim().replace(/^["']|["']$/g, '');
 
   if (!clientId || !clientSecret) {
     throw new Error('GitHub Client ID or Client Secret not configured on server.');
+  }
+
+  const payload = {
+    client_id: clientId,
+    client_secret: clientSecret,
+    code: String(code).trim(),
+  };
+
+  if (redirectUri && typeof redirectUri === 'string' && redirectUri.trim()) {
+    payload.redirect_uri = redirectUri.trim();
   }
 
   const response = await fetch('https://github.com/login/oauth/access_token', {
@@ -74,11 +84,7 @@ const exchangeOAuthCode = async (code) => {
       Accept: 'application/json',
       'User-Agent': 'CareerPath-AI-Platform',
     },
-    body: JSON.stringify({
-      client_id: clientId,
-      client_secret: clientSecret,
-      code,
-    }),
+    body: JSON.stringify(payload),
   });
 
   const data = await response.json();

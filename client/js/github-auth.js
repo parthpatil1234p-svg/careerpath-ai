@@ -13,6 +13,7 @@ window.GitHubAuth = (function () {
   let githubClientId = '';
   let githubHasSecret = false;
   let liveLookupTimer = null;
+  const dispatchedOAuthCodes = new Set();
 
   /**
    * Closes and cleans up any open GitHub modal and backdrop elements
@@ -426,16 +427,18 @@ window.GitHubAuth = (function () {
 
         const clientId = githubClientId || window.CONFIG?.GITHUB_CLIENT_ID || 'Ov23liphgi9YF1lbYiUa';
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const callbackPath = isLocal ? (window.location.pathname.endsWith('.html') ? '/assessment.html' : '/assessment') : '';
-        // If on localhost, pass explicit redirect_uri to remain on local server.
-        // If on production (Vercel), omit redirect_uri so GitHub automatically redirects to the registered
-        // callback URL without displaying the "redirect_uri is not associated with this application" warning!
+        const callbackPath = isLocal
+          ? (window.location.pathname.endsWith('.html')
+              ? window.location.pathname
+              : (window.location.pathname === '/' ? '/index.html' : window.location.pathname))
+          : '';
         const redirectUri = isLocal ? (window.location.origin + callbackPath) : '';
 
         try {
           localStorage.setItem('cp_gh_oauth_intent', JSON.stringify({
             isConnectOnly: Boolean(isConnectOnly),
             returnUrl: window.location.href,
+            redirectUri,
             timestamp: Date.now()
           }));
         } catch (err) {}
@@ -479,8 +482,9 @@ window.GitHubAuth = (function () {
         let isHandled = false;
 
         const handleOAuthCodeReceived = async (code) => {
-          if (isHandled) return;
+          if (isHandled || dispatchedOAuthCodes.has(code)) return;
           isHandled = true;
+          dispatchedOAuthCodes.add(code);
           if (cleanupListeners) cleanupListeners();
 
           try {
@@ -501,7 +505,7 @@ window.GitHubAuth = (function () {
 
           if (isAuthenticated || isConnectOnly) {
             try {
-              const response = await window.API.post('/auth/github/connect', { code }, { auth: true });
+              const response = await window.API.post('/auth/github/connect', { code, redirectUri }, { auth: true });
               closeAndCleanupModals();
 
               if (response.success && response.data?.user) {
@@ -522,7 +526,7 @@ window.GitHubAuth = (function () {
             }
           } else {
             // Sign in / Sign up
-            sendGitHubAuthPayload({ code }, {
+            sendGitHubAuthPayload({ code, redirectUri }, {
               ...callbacks,
               showAlert: notify,
               onSuccess: (data) => {
@@ -628,6 +632,9 @@ window.GitHubAuth = (function () {
     const oauthCode = urlParams.get('code');
     if (!oauthCode) return;
 
+    if (dispatchedOAuthCodes.has(oauthCode)) return;
+    dispatchedOAuthCodes.add(oauthCode);
+
     // Detect if this page is inside a popup or was opened by window.open
     const isPopup = Boolean(
       (window.opener && window.opener !== window) ||
@@ -687,6 +694,9 @@ window.GitHubAuth = (function () {
     } catch (e) {}
     localStorage.removeItem('cp_gh_oauth_intent');
 
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const redirectUri = intent.redirectUri || (isLocal ? (window.location.origin + window.location.pathname) : '');
+
     const isAuthenticated = (typeof window.Auth?.isAuthenticated === 'function' && window.Auth.isAuthenticated()) ||
                             (typeof window.Auth?.isLoggedIn === 'function' && window.Auth.isLoggedIn()) ||
                             Boolean(localStorage.getItem('careerpath_token'));
@@ -704,7 +714,7 @@ window.GitHubAuth = (function () {
       notify('Authenticating with GitHub and analyzing repositories in real time...', 'info');
 
       try {
-        const response = await window.API.post('/auth/github/connect', { code: oauthCode }, { auth: true });
+        const response = await window.API.post('/auth/github/connect', { code: oauthCode, redirectUri }, { auth: true });
         closeAndCleanupModals();
 
         if (response.success && response.data?.user) {
@@ -732,7 +742,7 @@ window.GitHubAuth = (function () {
     } else {
       // User is not logged in: Log in via OAuth code
       sendGitHubAuthPayload(
-        { code: oauthCode },
+        { code: oauthCode, redirectUri },
         {
           showAlert: notify,
           onError: (errRes) => {
