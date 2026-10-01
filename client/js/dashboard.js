@@ -75,7 +75,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loadDashboard = async () => {
     setDashboardState('loading');
     try {
-      const res = await window.API.get('/dashboard', { auth: true });
+      const fetchPromise = window.API.get('/dashboard', { auth: true });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Server request timed out. Please verify your connection or click Try Again.')), 9000)
+      );
+      const res = await Promise.race([fetchPromise, timeoutPromise]);
 
       if (res.success && res.data) {
         dashboardData = res.data;
@@ -103,8 +107,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4. Render Dashboard Views
   const renderDashboard = () => {
     if (!dashboardContent) return;
-    dashboardContent.classList.remove('d-none');
-    const { user, activeRoadmap, upcomingTasks = [], nextAction } = dashboardData || {};
+    try {
+      dashboardContent.classList.remove('d-none');
+      const { user, activeRoadmap, upcomingTasks = [], nextAction } = dashboardData || {};
 
     // Profile Card
     const nameStr = user?.name || 'Student';
@@ -311,6 +316,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadJobReadiness();
     loadResumeLab();
     loadMatchedJobs();
+    } catch (renderErr) {
+      console.error('Dashboard rendering error:', renderErr);
+    }
   };
 
   // ── 4.5 Render Skills Matrix in Dashboard ───────────────────────
@@ -1910,6 +1918,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setResumeState('loading');
     try {
       const res = await window.API.get('/users/resume', { auth: true });
+      if (res.success && res.data) {
         const isAdmin = Boolean(window.Auth?.isAdmin());
         isResumeLocked = Boolean(res.data.isLocked) && !isAdmin;
         if (res.data.hasResume && res.data.resume) {

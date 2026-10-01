@@ -305,10 +305,12 @@
         </div>
 
         <!-- 1.5 Decoupled 4-Rule Job Ready Qualification & Checklist Card -->
-        <div class="card p-3 p-md-4 rounded-3 border-line shadow-sm mb-4" id="dashboardJobReadyCard" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.08);">
+        <div class="card job-ready-status-card p-3 p-md-4 mb-4" id="dashboardJobReadyCard">
           <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-secondary font-mono" id="dashJobReadyBadge"><i class="bi bi-shield-lock me-1"></i> Job Ready: Evaluating...</span>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="job-ready-status-badge-pending font-mono" id="dashJobReadyBadge">
+                <i class="bi bi-shield-lock me-1"></i> Job Ready: Evaluating...
+              </span>
               <span class="small font-mono text-muted" id="dashJobReadyScore">Readiness: --%</span>
             </div>
             <span class="badge badge-navy font-mono text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.5px;">4-Criteria Standard</span>
@@ -316,9 +318,12 @@
           <p class="small text-secondary mb-3" id="dashJobReadySummary">
             Official Job Ready Certification requires satisfying all 4 industry hiring benchmarks:
           </p>
-          <div class="row g-2" id="dashJobReadyCriteriaRow">
+          <div class="row g-3" id="dashJobReadyCriteriaRow">
             <!-- Dynamically populated 4-rule checklist tiles -->
-            <div class="col-12 text-muted small py-2 font-mono"><i class="bi bi-arrow-repeat spin me-1"></i> Evaluating certification benchmarks...</div>
+            <div class="col-12 text-muted small py-3 font-mono text-center">
+              <span class="spinner-border spinner-border-sm text-teal me-2" role="status"></span>
+              Evaluating certification benchmarks...
+            </div>
           </div>
         </div>
 
@@ -1339,7 +1344,7 @@
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
     <script src="js/tech-logos.js?v=2.1"></script>
-    <script src="js/dashboard.js?v=2.2"></script>
+    <script src="js/dashboard.js?v=2.3"></script>
     <script src="js/chat.js?v=2.1"></script>
   </body>
 </html>

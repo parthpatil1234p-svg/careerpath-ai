@@ -108,8 +108,8 @@ async function computeStudentReadiness(userId) {
     ]
   };
 
-  user.jobReadiness = result;
-  await user.save();
+  result.targetRole = activeRoadmap?.career?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer';
+  await User.findByIdAndUpdate(userId, { $set: { jobReadiness: result } });
 
   return result;
 }
@@ -179,12 +179,14 @@ async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = 
       certificateId = `CP-2026-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
       certifiedAt = new Date();
     }
-    user.jobReadiness = user.jobReadiness || {};
-    user.jobReadiness.certificateId = certificateId;
-    user.jobReadiness.certifiedAt = certifiedAt;
-    user.jobReadiness.tier = 'job_ready';
-    user.jobReadiness.tierLabel = '🔥 JOB READY CERTIFIED';
-    await user.save();
+    await User.findByIdAndUpdate(userId, {
+      $set: {
+        'jobReadiness.certificateId': certificateId,
+        'jobReadiness.certifiedAt': certifiedAt,
+        'jobReadiness.tier': 'job_ready',
+        'jobReadiness.tierLabel': '🔥 JOB READY CERTIFIED',
+      }
+    });
   }
 
   const missingCriteria = [];
