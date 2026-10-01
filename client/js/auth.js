@@ -151,9 +151,10 @@ const Auth = {
    * @returns {boolean}
    */
   isSkillVerified() {
-    if (this.isAdmin()) return true;
+    if (this.isAdmin() || this.isRecruiter()) return true;
     const user = this.getCurrentUser();
     if (!user) return false;
+    if (user.role === 'recruiter' || user.isRecruiter) return true;
     return Boolean(
       user.hasCompletedSkillVerification ||
       (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
@@ -232,37 +233,85 @@ const Auth = {
     if (!authActions) return;
 
     if (this.isAuthenticated() && user) {
+      const isRecruiter = this.isRecruiter();
+      const isAdmin = this.isAdmin();
       const isVerified = this.isSkillVerified();
 
-      const statusBadge = isVerified
-        ? `<span class="badge badge-leaf d-inline-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill shadow-xs" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;letter-spacing:0.01em;" title="Account Verified — All pages unlocked">
-             <i class="bi bi-patch-check-fill text-success" style="font-size:0.85rem;"></i>
-             <span>Account Verified ✓</span>
-           </span>`
-        : `<a href="assessment.html#proveSkillsPanel" class="badge badge-gold d-inline-flex align-items-center gap-1.5 px-2.5 py-1 rounded-pill text-decoration-none shadow-xs" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Prove your skills to unlock Dashboard & Roadmaps">
-             <i class="bi bi-lock-fill text-warning"></i>
-             <span>Unverified · Prove Skills</span>
-           </a>`;
+      let statusBadge = '';
+      let userCapsule = '';
+      let mobileDashUrl = 'dashboard.html';
+      let mobileDashLabel = 'Dashboard';
 
-      const unverifiedActionBtn = !isVerified
-        ? `<a href="assessment.html#proveSkillsPanel" class="btn cp-btn-primary btn-sm px-3 d-inline-flex align-items-center gap-1 text-nowrap">
-             <i class="bi bi-shield-check"></i>
-             <span>Verify to Unlock</span>
-           </a>`
-        : '';
+      if (isRecruiter) {
+        statusBadge = `
+          <a href="recruiter-dashboard.html" class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:700;" title="Corporate Recruiter Active">
+            <i class="bi bi-patch-check-fill text-success"></i>
+            <span>Recruiter</span>
+          </a>
+        `;
+        userCapsule = `
+          <a href="recruiter-dashboard.html"
+             class="nav-user-capsule nav-user-capsule-recruiter d-none d-md-flex align-items-center"
+             title="Logged in as ${escapeHtml(user.name || 'Recruiter')} · Recruiter Portal">
+            <i class="bi bi-building-check"></i>
+            <span>${escapeHtml(user.name || 'Recruiter')}</span>
+          </a>
+        `;
+        mobileDashUrl = 'recruiter-dashboard.html';
+        mobileDashLabel = 'Recruiter Portal';
+      } else if (isAdmin) {
+        statusBadge = `
+          <span class="badge badge-leaf d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Full Admin Access">
+            <i class="bi bi-patch-check-fill text-success"></i>
+            <span>Admin / Demo ✓</span>
+          </span>
+        `;
+        userCapsule = `
+          <a href="dashboard.html"
+             class="nav-user-capsule d-none d-md-flex align-items-center"
+             title="Logged in as ${escapeHtml(user.name || 'Admin')} · Student Dashboard">
+            <i class="bi bi-person-circle"></i>
+            <span>${escapeHtml(user.name || 'Admin')}</span>
+          </a>
+        `;
+      } else if (isVerified) {
+        statusBadge = `
+          <span class="badge badge-leaf d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Account Verified — All pages unlocked">
+            <i class="bi bi-patch-check-fill text-success"></i>
+            <span>Verified ✓</span>
+          </span>
+        `;
+        userCapsule = `
+          <a href="dashboard.html"
+             class="nav-user-capsule d-none d-md-flex align-items-center"
+             title="Logged in as ${escapeHtml(user.name || 'Student')} · View Dashboard">
+            <i class="bi bi-person-circle"></i>
+            <span>${escapeHtml(user.name || 'Student')}</span>
+          </a>
+        `;
+      } else {
+        // Single compact badge for unverified student (no duplicate button)
+        statusBadge = `
+          <a href="assessment.html#proveSkillsPanel" class="badge badge-gold d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill text-decoration-none shadow-xs text-nowrap" style="font-family:var(--font-body);font-size:0.75rem;font-weight:600;" title="Prove your skills to unlock full roadmaps & badges">
+            <i class="bi bi-shield-lock-fill text-warning"></i>
+            <span>Prove Skills</span>
+          </a>
+        `;
+        userCapsule = `
+          <a href="dashboard.html"
+             class="nav-user-capsule d-none d-md-flex align-items-center"
+             title="Logged in as ${escapeHtml(user.name || 'Student')} · View Dashboard">
+            <i class="bi bi-person-circle"></i>
+            <span>${escapeHtml(user.name || 'Student')}</span>
+          </a>
+        `;
+      }
 
       authActions.innerHTML = `
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-1.5 text-nowrap">
           ${statusBadge}
-          <a href="dashboard.html"
-             class="d-none d-md-flex align-items-center gap-2 text-decoration-none text-nowrap"
-             style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:0.32rem 0.85rem;transition:all var(--transition-fast);"
-             title="Logged in as ${escapeHtml(user.name || 'Student')} · View Dashboard">
-            <i class="bi bi-person-circle" style="color:#4F46E5;font-size:0.95rem;"></i>
-            <span style="color:#1E1B4B;font-size:0.84rem;font-weight:600;font-family:var(--font-body);letter-spacing:0.01em;">${escapeHtml(user.name || 'Student')}</span>
-          </a>
-          ${unverifiedActionBtn}
-          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2.5 py-1 d-inline-flex align-items-center" onclick="Auth.logout()" title="Sign Out">
+          ${userCapsule}
+          <button id="logoutBtn" class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center flex-shrink-0" onclick="Auth.logout()" title="Sign Out">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </div>
@@ -274,8 +323,8 @@ const Auth = {
           <div class="d-flex flex-column gap-2 w-100">
             <div class="d-flex justify-content-center">${statusBadge}</div>
             <div class="d-flex gap-2">
-              <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="${isVerified ? 'dashboard.html' : 'assessment.html#proveSkillsPanel'}">
-                <i class="bi ${isVerified ? 'bi-speedometer2' : 'bi-lock-fill'} me-1"></i> ${isVerified ? 'Dashboard' : 'Verify to Unlock'}
+              <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="${mobileDashUrl}">
+                <i class="bi ${isRecruiter ? 'bi-building' : 'bi-speedometer2'} me-1"></i> ${mobileDashLabel}
               </a>
               <button class="btn btn-outline-danger btn-sm px-3" onclick="Auth.logout()" title="Sign Out">
                 <i class="bi bi-box-arrow-right"></i>

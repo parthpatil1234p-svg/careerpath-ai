@@ -46,6 +46,57 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
   };
 
+  // ── Role-Aware Navbar Adaptation for Corporate Recruiters ───
+  if (window.Auth?.isRecruiter()) {
+    const desktopNavLinks = document.querySelector('.notch-nav-links');
+    if (desktopNavLinks) {
+      desktopNavLinks.innerHTML = `
+        <li>
+          <a class="notch-nav-link" href="recruiter-dashboard.html">
+            <i class="bi bi-broadcast text-success me-1"></i> Openings &amp; Radar
+          </a>
+        </li>
+        <li>
+          <a class="notch-nav-link active" href="jobs.html" aria-current="page">
+            <i class="bi bi-briefcase-fill text-primary me-1"></i> Public Job Board
+          </a>
+        </li>
+        <li>
+          <a class="notch-nav-link" href="dashboard.html">
+            <i class="bi bi-mortarboard text-secondary me-1"></i> Student View
+          </a>
+        </li>
+      `;
+    }
+    const mobileLinks = document.querySelector('#jobsMobileMenu .notch-mobile-links');
+    if (mobileLinks) {
+      mobileLinks.innerHTML = `
+        <li>
+          <a href="recruiter-dashboard.html">
+            <i class="bi bi-broadcast text-success"></i> Openings &amp; Radar
+          </a>
+        </li>
+        <li>
+          <a class="active" href="jobs.html">
+            <i class="bi bi-briefcase text-primary"></i> Public Job Board
+          </a>
+        </li>
+        <li>
+          <a href="dashboard.html">
+            <i class="bi bi-mortarboard text-secondary"></i> Student View
+          </a>
+        </li>
+        <li class="pt-2 border-top border-secondary border-opacity-25" id="notchMobileAuthActions"></li>
+      `;
+    }
+    const recruiterCtaBtn = document.querySelector('a[href*="role=recruiter"]');
+    if (recruiterCtaBtn) {
+      recruiterCtaBtn.href = 'recruiter-dashboard.html';
+      recruiterCtaBtn.className = 'btn btn-success btn-sm py-2 px-3 fw-semibold';
+      recruiterCtaBtn.innerHTML = '<i class="bi bi-broadcast me-1"></i> Recruiter Dashboard';
+    }
+  }
+
   // ── 1. Fetch & Render Verified Openings ──────────────────────
   const loadOpenings = async () => {
     openingsSpinner.classList.remove('d-none');
@@ -57,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (filterWorkplace?.value) params.set('workplace', filterWorkplace.value);
 
     try {
-      const response = await window.API.get(`/jobs/recruiter-openings?${params.toString()}`);
+      const response = await window.API.get(`/jobs/recruiter-openings?${params.toString()}`, { auth: true });
       openingsSpinner.classList.add('d-none');
 
       const openings = response.data?.openings || [];
@@ -209,7 +260,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     emptyApps.classList.add('d-none');
 
     try {
-      const response = await window.API.get('/jobs/my-applications');
+      const response = await window.API.get('/jobs/my-applications', { auth: true });
       appsSpinner.classList.add('d-none');
 
       const apps = response.data?.applications || [];
@@ -281,7 +332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const response = await window.API.post(`/jobs/${activeApplyJob.id}/apply`, {
           coverNote: applyCoverNote.value.trim(),
-        });
+        }, { auth: true });
 
         btnSubmitApplication.disabled = false;
         btnSubmitApplication.innerHTML = originalBtn;
