@@ -193,10 +193,29 @@
 
           <!-- Right Column: Registration Form -->
           <div class="auth-form-card">
+            <!-- Role Switcher Tabs -->
+            <div class="role-selector-tab-group mb-3 p-1 rounded-3 d-flex border border-line" style="background: #F8FAFC;">
+              <button
+                type="button"
+                class="btn btn-sm flex-fill fw-semibold py-2 rounded-2 role-tab-btn active"
+                id="tabStudentRole"
+                style="background: #FFFFFF; color: #0F172A; box-shadow: 0 1px 3px rgba(0,0,0,0.08);"
+              >
+                <i class="bi bi-mortarboard-fill text-primary me-1"></i> Student Enrollment
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm flex-fill fw-semibold py-2 rounded-2 text-secondary role-tab-btn"
+                id="tabRecruiterRole"
+              >
+                <i class="bi bi-buildings-fill text-success me-1"></i> Company Recruiter
+              </button>
+            </div>
+
             <div class="auth-form-header">
-              <span class="atlas-coordinate">NEW STUDENT ENROLLMENT &middot; REG-01</span>
-              <h2 class="auth-form-title mt-1">Create Account</h2>
-              <p class="auth-form-subtitle mb-0">
+              <span class="atlas-coordinate" id="atlasCoordinate">NEW STUDENT ENROLLMENT &middot; REG-01</span>
+              <h2 class="auth-form-title mt-1" id="authFormTitle">Create Account</h2>
+              <p class="auth-form-subtitle mb-0" id="authFormSubtitle">
                 Enter your details to generate your student profile.
               </p>
             </div>
@@ -206,37 +225,40 @@
 
             <!-- Step 1: Registration Form -->
             <div id="registerStep1">
-              <!-- Social Authentication (Google & GitHub) -->
-              <div class="social-auth-stack mb-3">
-                <button
-                  type="button"
-                  id="btnGoogleAuth"
-                  class="btn btn-google w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-2"
-                >
-                  <svg class="google-icon-animated" width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                    <path class="google-path-blue" fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
-                    <path class="google-path-green" fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
-                    <path class="google-path-yellow" fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.347 2.825.957 4.039l3.007-2.332z"/>
-                    <path class="google-path-red" fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
-                  </svg>
-                  <span class="fw-semibold">Sign Up with Google</span>
-                </button>
-                <button
-                  type="button"
-                  id="btnGitHubAuth"
-                  class="btn btn-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                  style="background: #181717; border-color: #181717; color: white;"
-                >
-                  <i class="bi bi-github fs-5"></i>
-                  <span class="fw-semibold">Sign Up with GitHub</span>
-                </button>
+              <!-- Student View: Social Authentication Stack -->
+              <div id="studentSocialStack">
+                <div class="social-auth-stack mb-3">
+                  <button
+                    type="button"
+                    id="btnGoogleAuth"
+                    class="btn btn-google w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-2"
+                  >
+                    <svg class="google-icon-animated" width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                      <path class="google-path-blue" fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+                      <path class="google-path-green" fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                      <path class="google-path-yellow" fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.347 2.825.957 4.039l3.007-2.332z"/>
+                      <path class="google-path-red" fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/>
+                    </svg>
+                    <span class="fw-semibold">Sign Up with Google</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="btnGitHubAuth"
+                    class="btn btn-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                    style="background: #181717; border-color: #181717; color: white;"
+                  >
+                    <i class="bi bi-github fs-5"></i>
+                    <span class="fw-semibold">Sign Up with GitHub</span>
+                  </button>
+                </div>
+
+                <!-- Divider -->
+                <div class="auth-divider">
+                  <span>or register with email</span>
+                </div>
               </div>
 
-              <!-- Divider -->
-              <div class="auth-divider">
-                <span>or register with email</span>
-              </div>
-
+              <!-- Student Registration Form -->
               <form id="registerForm" novalidate>
                 <!-- Full Name -->
                 <div class="mb-3">
@@ -328,6 +350,175 @@
                   class="btn cp-btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2"
                 >
                   <span>Create Account & Start Assessment</span>
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </form>
+
+              <!-- Recruiter Registration Form (Hidden in Student mode) -->
+              <form id="recruiterForm" class="d-none" novalidate>
+                <!-- Recruiter Full Name -->
+                <div class="row g-2 mb-3">
+                  <div class="col-sm-6">
+                    <label for="recruiterName" class="form-label">
+                      Full Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-person"></i></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="recruiterName"
+                        placeholder="e.g. Priya Sharma"
+                        required
+                        minlength="2"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="recruiterTitle" class="form-label">
+                      Job Title <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="recruiterTitle"
+                        placeholder="e.g. Talent Acquisition Lead"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Corporate Work Email -->
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="recruiterEmail" class="form-label mb-0">
+                      Official Work Email <span class="text-danger">*</span>
+                    </label>
+                    <span class="badge bg-danger-subtle text-danger" style="font-size: 0.7rem;">
+                      No @gmail / @yahoo
+                    </span>
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+                    <input
+                      type="email"
+                      class="form-control font-monospace"
+                      id="recruiterEmail"
+                      placeholder="e.g. priya@razorpay.com"
+                      required
+                    />
+                  </div>
+                  <div id="emailDomainNotice" class="form-text small text-muted mt-1">
+                    Must use official company domain. Free webmail (@gmail, @yahoo, etc.) is blocked.
+                  </div>
+                </div>
+
+                <!-- Company Name & Official Website -->
+                <div class="row g-2 mb-3">
+                  <div class="col-sm-6">
+                    <label for="companyName" class="form-label">
+                      Company Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-building"></i></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="companyName"
+                        placeholder="e.g. Razorpay"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="companyWebsite" class="form-label">
+                      Company Website <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-globe"></i></span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="companyWebsite"
+                        placeholder="https://razorpay.com"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- LinkedIn Profile -->
+                <div class="mb-3">
+                  <label for="recruiterLinkedin" class="form-label">
+                    Recruiter LinkedIn Profile <span class="text-secondary small">(Recommended)</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-linkedin text-primary"></i></span>
+                    <input
+                      type="url"
+                      class="form-control"
+                      id="recruiterLinkedin"
+                      placeholder="https://linkedin.com/in/username"
+                    />
+                  </div>
+                </div>
+
+                <!-- Live Company Verification Status Pill -->
+                <div id="companyPrecheckPill" class="p-2.5 rounded-3 mb-3 border text-start d-flex align-items-center gap-2" style="background: #F8FAFC; border-color: #E2E8F0; font-size: 0.83rem;">
+                  <i class="bi bi-shield-lock-fill text-secondary fs-5 flex-shrink-0" id="precheckIcon"></i>
+                  <div class="flex-grow-1" id="precheckText">
+                    <div class="fw-semibold text-ink">Automated Domain Pre-Check</div>
+                    <div class="small text-muted">Enter your corporate email and company website to verify domain legitimacy.</div>
+                  </div>
+                </div>
+
+                <!-- Password & Confirm Password -->
+                <div class="row g-2 mb-3">
+                  <div class="col-sm-6">
+                    <label for="recruiterPassword" class="form-label">
+                      Password <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-key"></i></span>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="recruiterPassword"
+                        placeholder="Min 6 characters"
+                        required
+                        minlength="6"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="recruiterConfirmPassword" class="form-label">
+                      Confirm Password <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="recruiterConfirmPassword"
+                        placeholder="Re-enter password"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Recruiter Submit Button -->
+                <button
+                  type="submit"
+                  id="recruiterSubmitBtn"
+                  class="btn btn-success w-100 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold"
+                  style="background: #059669; border-color: #059669;"
+                >
+                  <i class="bi bi-patch-check-fill"></i>
+                  <span>Verify Company & Register Recruiter</span>
                   <i class="bi bi-arrow-right"></i>
                 </button>
               </form>

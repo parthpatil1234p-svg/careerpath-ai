@@ -304,6 +304,29 @@ const BuiltResumeSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// ── Sub-schema: Recruiter Corporate Profile ───────────────────
+const RecruiterProfileSchema = new mongoose.Schema(
+  {
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null },
+    companyName: { type: String, trim: true, default: '' },
+    companyDomain: { type: String, lowercase: true, trim: true, default: '' },
+    title: { type: String, trim: true, default: '' }, // e.g. "Senior Technical Recruiter"
+    corporateEmail: { type: String, lowercase: true, trim: true, default: '' },
+    linkedinUrl: { type: String, trim: true, default: '' },
+    workPhone: { type: String, trim: true, default: '' },
+    verificationStatus: {
+      type: String,
+      enum: ['pending', 'verified', 'rejected'],
+      default: 'pending',
+    },
+    verificationScore: { type: Number, default: 0, min: 0, max: 100 },
+    verificationMethod: { type: String, default: 'corporate_email_otp_plus_ai_intel' },
+    canPostJobs: { type: Boolean, default: false },
+    verifiedAt: { type: Date, default: null },
+  },
+  { _id: false }
+);
+
 // ── Main User Schema ──────────────────────────────────────────
 const UserSchema = new mongoose.Schema(
   {
@@ -372,14 +395,20 @@ const UserSchema = new mongoose.Schema(
       default: 'local',
     },
 
-    // Role-based access control (student vs admin)
+    // Role-based access control (student, admin, or recruiter)
     role: {
       type: String,
       enum: {
-        values: ['student', 'admin'],
-        message: 'Role must be student or admin',
+        values: ['student', 'admin', 'recruiter'],
+        message: 'Role must be student, admin, or recruiter',
       },
       default: 'student',
+    },
+
+    // Corporate recruiter verification profile
+    recruiterProfile: {
+      type: RecruiterProfileSchema,
+      default: () => ({}),
     },
 
     // Primary Stream / Domain (Step 0)

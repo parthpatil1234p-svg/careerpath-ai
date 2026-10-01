@@ -130,6 +130,8 @@ const { protect } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
+const JobOpening = require('../models/JobOpening');
+const JobApplication = require('../models/JobApplication');
 
 /**
  * GET /api/jobs/matched-for-user
@@ -269,4 +271,203 @@ router.post('/bridge-gap', protect, async (req, res, next) => {
   }
 });
 
+/**
+ * GET /api/jobs/recruiter-openings
+ * Returns verified direct company postings created by recruiters on the platform.
+ * If user has a token, computes match percentage based on candidate's verified skills.
+ */
+router.get('/recruiter-openings', async (req, res, next) => {
+  try {
+    let user = null;
+    const userAppliedJobIds = new Set();
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const jwt = require('jsonwebtoken');
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        user = await User.findById(decoded.id);
+        if (user) {
+          const apps = await JobApplication.find({ student: user._id }, 'job status');
+          apps.forEach((a) => userAppliedJobIds.add(String(a.job)));
+        }
+      } catch (tokenErr) {
+        // Continue as guest
+      }
+    }
+
+    const { careerSlug, workplace, level } = req.query;
+    const filter = { status: 'active' };
+    if (careerSlug) filter.careerSlug = careerSlug.toLowerCase();
+    if (workplace) filter.workplace = workplace.toLowerCase();
+    if (level) filter.experienceLevel = level.toLowerCase();
+
+    const openings = await JobOpening.find(filter)
+      .populate('company', 'name domain logoUrl industry verificationScore isVerified')
+      .sort({ createdAt: -1 });
+
+    const userSkillsMap = new Map();
+    if (user && Array.isArray(user.skills)) {
+      user.skills.forEach((s) => userSkillsMap.set((s.name || '').toLowerCase(), s));
+    }
+
+    const evaluatedOpenings = openings.map((op) => {
+      const reqSkills = op.requiredSkills || [];
+      let matchScore = 75; // baseline
+      const matched = [];
+      const missing = [];
+
+      if (reqSkills.length > 0 && user) {
+        let earnedPoints = 0;
+        reqSkills.forEach((reqS) => {
+          const sName = reqS.skillName.toLowerCase();
+          const candidateSkill = userSkillsMap.get(sName);
+          if (candidateSkill) {
+            const isVerified = candidateSkill.isQuizVerified || candidateSkill.isCodeVerified;
+            earnedPoints += (isVerified ? 1.0 : 0.7);
+            matched.push({
+              name: sName,
+              isVerified: Boolean(isVerified),
+              tier: candidateSkill.verificationTier || (isVerified ? 'quiz_verified' : 'self_rated'),
+            });
+          } else {
+            missing.push(sName);
+          }
+        });
+        const rawScore = Math.round((earnedPoints / reqSkills.length) * 100);
+        matchScore = Math.min(99, Math.max(40, rawScore));
+      }
+
+      return {
+        ...op.toObject(),
+        matchScore,
+        matchedSkills: matched,
+        missingSkills: missing,
+        hasApplied: userAppliedJobIds.has(String(op._id)),
+        companyVerificationBadge: '✓ Verified Enterprise Employer',
+      };
+    });
+
+    if (user) {
+      evaluatedOpenings.sort((a, b) => b.matchScore - a.matchScore);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Direct verified recruiter openings',
+      data: {
+        total: evaluatedOpenings.length,
+        openings: evaluatedOpenings,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /api/jobs/:id/apply
+ * 1-Click candidate job application using student profile, verified badges, and ATS resume
+ */
+router.post('/:id/apply', protect, async (req, res, next) => {
+  try {
+    const jobId = req.params.id;
+    const student = await User.findById(req.user._id);
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student account not found' });
+    }
+
+    const job = await JobOpening.findById(jobId);
+    if (!job || job.status !== 'active') {
+      return res.status(404).json({ success: false, message: 'Job opening is no longer active or does not exist.' });
+    }
+
+    // Check for duplicate application
+    const existing = await JobApplication.findOne({ job: jobId, student: student._id });
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        message: 'You have already submitted an application for this position.',
+        application: existing,
+      });
+    }
+
+    // Calculate match score
+    const userSkillsMap = new Map();
+    (student.skills || []).forEach((s) => userSkillsMap.set((s.name || '').toLowerCase(), s));
+
+    const reqSkills = job.requiredSkills || [];
+    const matchedSkills = [];
+    const missingSkills = [];
+    let earnedPoints = 0;
+
+    if (reqSkills.length > 0) {
+      reqSkills.forEach((reqS) => {
+        const sName = reqS.skillName.toLowerCase();
+        const candSkill = userSkillsMap.get(sName);
+        if (candSkill) {
+          const isVer = candSkill.isQuizVerified || candSkill.isCodeVerified;
+          earnedPoints += (isVer ? 1.0 : 0.7);
+          matchedSkills.push(sName);
+        } else {
+          missingSkills.push(sName);
+        }
+      });
+    }
+
+    const calculatedMatch = reqSkills.length > 0
+      ? Math.min(99, Math.max(45, Math.round((earnedPoints / reqSkills.length) * 100)))
+      : 85;
+
+    const application = await JobApplication.create({
+      job: job._id,
+      student: student._id,
+      recruiter: job.recruiter,
+      matchScore: calculatedMatch,
+      matchedSkills,
+      missingSkills,
+      readinessTier: student.jobReadiness?.tierLabel || 'Foundational Learner',
+      resumeUrl: student.resumeUrl || '',
+      builtResumeSnapshot: student.builtResume || {},
+      coverNote: req.body.coverNote || '',
+      status: 'applied',
+    });
+
+    // Increment applicants counter on the job
+    job.applicantsCount = (job.applicantsCount || 0) + 1;
+    await job.save();
+
+    return res.status(201).json({
+      success: true,
+      message: `🎉 Application submitted to ${job.companyName} for "${job.title}"!`,
+      data: application,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * GET /api/jobs/my-applications
+ * Returns all direct company applications submitted by the student
+ */
+router.get('/my-applications', protect, async (req, res, next) => {
+  try {
+    const applications = await JobApplication.find({ student: req.user._id })
+      .populate('job', 'title companyName companyLogo workplace location salaryRange status')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        total: applications.length,
+        applications,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
+

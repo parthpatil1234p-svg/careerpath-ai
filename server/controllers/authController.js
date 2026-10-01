@@ -46,13 +46,18 @@ const formatUser = (user) => {
       }
     : null;
 
+  const isRecruiter = user.role === 'recruiter';
+  const resolvedRole = isRecruiter ? 'recruiter' : (isDemoOrAdmin ? 'admin' : user.role);
+
   return {
     id:                            user._id,
     name:                          user.name,
     email:                         user.email,
-    role:                          isDemoOrAdmin ? 'admin' : user.role,
-    isAdmin:                       isDemoOrAdmin,
+    role:                          resolvedRole,
+    isAdmin:                       isDemoOrAdmin && !isRecruiter,
     isDemo:                        isDemoOrAdmin,
+    isRecruiter:                   isRecruiter,
+    recruiterProfile:              user.recruiterProfile || null,
     authProvider:                  user.authProvider || 'local',
     profileCompleted:              isDemoOrAdmin ? true : user.profileCompleted,
     isVerified:                    isDemoOrAdmin ? true : (user.isVerified || false),
@@ -242,7 +247,26 @@ const verifyOtp = async (req, res, next) => {
     // Mark verified and clear OTP
     user.isVerified = true;
     user.verificationOtp = undefined;
+
+    if (user.role === 'recruiter' && user.recruiterProfile) {
+      user.recruiterProfile.verificationStatus = 'verified';
+      user.recruiterProfile.canPostJobs = true;
+      user.recruiterProfile.verifiedAt = new Date();
+    }
+
     await user.save();
+
+    if (user.role === 'recruiter' && user.recruiterProfile?.company) {
+      try {
+        const Company = require('../models/Company');
+        await Company.findByIdAndUpdate(user.recruiterProfile.company, {
+          isVerified: true,
+          $addToSet: { recruiters: user._id },
+        });
+      } catch (cErr) {
+        console.error('Failed to link company recruiters in verifyOtp:', cErr.message);
+      }
+    }
 
     const token = generateToken(user);
 
@@ -398,6 +422,140 @@ const loginUser = async (req, res, next) => {
       await user.save();
     } else if (user && isExplicitDemoEmail) {
       // If demo user exists, allow password match or standard demo passwords
+      const passwordMatches = await user.comparePassword(password);
+      if (!passwordMatches && (password === 'demo123' || password === '123456' || password === 'admin123')) {
+        user.password = password;
+        await user.save();
+      }
+    }
+
+    // Auto-create or login Demo Recruiter account
+    const isExplicitDemoRecruiter = normalizedEmail === 'recruiter@razorpay.com' || normalizedEmail === 'demorecruiter@razorpay.com';
+    if (!user && isExplicitDemoRecruiter) {
+      const Company = require('../models/Company');
+      let company = await Company.findOne({ domain: 'razorpay.com' });
+      if (!company) {
+        company = await Company.create({
+          name: 'Razorpay Software Pvt Ltd',
+          domain: 'razorpay.com',
+          website: 'https://razorpay.com',
+          logoUrl: 'https://www.google.com/s2/favicons?domain=razorpay.com&sz=128',
+          industry: 'Fintech & Cloud Payments',
+          companySize: '1000+',
+          isVerified: true,
+          verificationScore: 99,
+          verificationDetails: {
+            dnsValid: true,
+            websiteLive: true,
+            domainMatch: true,
+            aiSummary: 'Verified prominent fintech and payment gateway enterprise.',
+            verifiedAt: new Date(),
+          },
+          recruiters: [],
+        });
+      }
+
+      user = new User({
+        name: 'Priya Sharma (Lead Recruiter)',
+        email: normalizedEmail,
+        password: password || 'demo123',
+        role: 'recruiter',
+        isVerified: true,
+        profileCompleted: true,
+        recruiterProfile: {
+          company: company._id,
+          companyName: company.name,
+          companyDomain: company.domain,
+          title: 'Lead Technical Recruiter',
+          corporateEmail: normalizedEmail,
+          linkedinUrl: 'https://linkedin.com/in/priya-sharma-recruiter',
+          workPhone: '+91 98765 43210',
+          verificationStatus: 'verified',
+          verificationScore: 99,
+          canPostJobs: true,
+          verifiedAt: new Date(),
+        },
+      });
+      await user.save();
+
+      if (!company.recruiters.includes(user._id)) {
+        company.recruiters.push(user._id);
+        await company.save();
+      }
+
+      // Seed initial sample job openings
+      const JobOpening = require('../models/JobOpening');
+      const existingJobs = await JobOpening.countDocuments({ recruiter: user._id });
+      if (existingJobs === 0) {
+        const job1 = await JobOpening.create({
+          recruiter: user._id,
+          company: company._id,
+          companyName: company.name,
+          companyLogo: company.logoUrl,
+          companyWebsite: company.website,
+          isCompanyVerified: true,
+          title: 'Full-Stack Node.js & React Developer',
+          careerSlug: 'full-stack-developer',
+          jobType: 'full-time',
+          workplace: 'remote',
+          location: 'Bengaluru, India / Remote',
+          experienceLevel: 'fresher',
+          salaryRange: { min: 600000, max: 1100000, currency: 'INR', isDisclosed: true },
+          requiredSkills: [
+            { skillName: 'javascript', minimumProficiency: 'intermediate', requiresVerification: true },
+            { skillName: 'node.js', minimumProficiency: 'intermediate', requiresVerification: true },
+            { skillName: 'react', minimumProficiency: 'intermediate', requiresVerification: true },
+            { skillName: 'mongodb', minimumProficiency: 'beginner', requiresVerification: false },
+          ],
+          description: 'Join Razorpay as a Full-Stack Engineer working on developer APIs and scalable merchant portals. Strong foundational knowledge in asynchronous JavaScript, Node.js, and React required.',
+          status: 'active',
+        });
+
+        const job2 = await JobOpening.create({
+          recruiter: user._id,
+          company: company._id,
+          companyName: company.name,
+          companyLogo: company.logoUrl,
+          companyWebsite: company.website,
+          isCompanyVerified: true,
+          title: 'Junior AI / Machine Learning Engineer',
+          careerSlug: 'ai-ml-engineer',
+          jobType: 'full-time',
+          workplace: 'hybrid',
+          location: 'Bengaluru, India',
+          experienceLevel: 'fresher',
+          salaryRange: { min: 700000, max: 1200000, currency: 'INR', isDisclosed: true },
+          requiredSkills: [
+            { skillName: 'python', minimumProficiency: 'intermediate', requiresVerification: true },
+            { skillName: 'machine learning', minimumProficiency: 'intermediate', requiresVerification: true },
+            { skillName: 'tensorflow', minimumProficiency: 'beginner', requiresVerification: false },
+          ],
+          description: 'Build predictive payment routing and risk intelligence models. Solid Python fundamentals and algorithm proficiency required.',
+          status: 'active',
+        });
+
+        // If demo student exists, seed a sample application to job1
+        const demoStudent = await User.findOne({ email: 'demouser@gmail.com' });
+        if (demoStudent) {
+          const JobApplication = require('../models/JobApplication');
+          await JobApplication.create({
+            job: job1._id,
+            student: demoStudent._id,
+            recruiter: user._id,
+            matchScore: 95,
+            matchedSkills: ['javascript', 'node.js', 'react', 'mongodb'],
+            missingSkills: [],
+            readinessTier: '🔥 JOB READY CERTIFIED',
+            resumeUrl: demoStudent.resumeUrl || '',
+            builtResumeSnapshot: demoStudent.builtResume || {},
+            coverNote: 'Excited about Razorpay fintech scale! I completed verified assessments and roadmaps on CareerPath AI with 94% job readiness score.',
+            status: 'shortlisted',
+          });
+          job1.applicantsCount = 1;
+          await job1.save();
+        }
+      }
+    } else if (user && isExplicitDemoRecruiter) {
       const passwordMatches = await user.comparePassword(password);
       if (!passwordMatches && (password === 'demo123' || password === '123456' || password === 'admin123')) {
         user.password = password;

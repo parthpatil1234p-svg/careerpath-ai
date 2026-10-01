@@ -38,7 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (emailInput && passInput) {
         emailInput.value = 'demouser@gmail.com';
         passInput.value = 'demo123';
-        showAlert('Demo account credentials auto-filled! Click "Log In to Dashboard" to enter.', 'info');
+        showAlert('Student Demo credentials auto-filled! Click "Sign In" to enter.', 'info');
+      }
+    });
+  }
+
+  const judgeRecruiterBtn = document.getElementById('btnJudgeRecruiterAutoFill');
+  if (judgeRecruiterBtn) {
+    judgeRecruiterBtn.addEventListener('click', () => {
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      if (emailInput && passInput) {
+        emailInput.value = 'recruiter@razorpay.com';
+        passInput.value = 'demo123';
+        showAlert('🏢 Recruiter Demo credentials auto-filled! Click "Sign In" to open Recruiter Portal.', 'success');
       }
     });
   }
@@ -120,6 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           if (redirect) {
             window.location.href = decodeURIComponent(redirect);
+          } else if (response.data.user?.role === 'recruiter') {
+            window.location.href = 'recruiter-dashboard.html';
           } else if (response.data.user?.profileCompleted) {
             window.location.href = 'recommendations.html';
           } else {

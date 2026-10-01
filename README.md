@@ -46,6 +46,8 @@
   <img src="https://img.shields.io/badge/Verification-Code--Grounded_Proof_of_Work-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub Verification" />
   <img src="https://img.shields.io/badge/Layout-90%25_Wide_Bento_Grid-6366f1?style=flat-square" alt="90% Layout" />
   <img src="https://img.shields.io/badge/Gauge-2D_SVG_Percentage_Meter-10B981?style=flat-square" alt="2D Gauge" />
+  <img src="https://img.shields.io/badge/Recruiter_Verification-DNS_MX_%2B_Live_HTTP_%2B_AI-059669?style=flat-square" alt="Recruiter Verification" />
+  <img src="https://img.shields.io/badge/Applicant_Radar-Candidate_Proof_of_Work-dc2626?style=flat-square" alt="Applicant Radar" />
 </p>
 
 ---
@@ -81,17 +83,23 @@
    - [9.3 Per-Card Cross-Platform Portal Launchers](#93-per-card-cross-platform-portal-launchers)
    - [9.4 Live Adzuna API Telemetry & ₹ CTC Salary Ranges](#94-live-adzuna-api-telemetry---ctc-salary-ranges)
 10. [🎙️ AI Voice Interactive Mock Interview Chamber (Career GPS Step 9)](#️-ai-voice-interactive-mock-interview-chamber-career-gps-step-9)
-   - [10.1 Multi-Voice Human Neural Speech Synthesis](#101-multi-voice-human-neural-speech-synthesis)
-   - [10.2 Real-Time Microphone Speech-to-Text Recording](#102-real-time-microphone-speech-to-text-recording)
-   - [10.3 3-Pillar Answer Correctness & Feedback Evaluation Rubric](#103-3-pillar-answer-correctness--feedback-evaluation-rubric)
-   - [10.4 Side-by-Side Model Answer Benchmarking](#104-side-by-side-model-answer-benchmarking)
-11. [🏗️ End-to-End System Architecture (Mermaid)](#️-end-to-end-system-architecture-mermaid)
-12. [🔌 Core REST API Directory](#-core-rest-api-directory)
-13. [💰 Business Model & B2B2C Talent & Telemetry Flywheel](#-business-model--b2b2c-talent--telemetry-flywheel)
-14. [🔒 Security, Guardrails & Anti-Abuse Protocols](#-security-guardrails--anti-abuse-protocols)
-15. [⚡ Local Quickstart & Automated Test Suites](#-local-quickstart--automated-test-suites)
-16. [🤖 Official AI Usage Disclosure (Rulebook Compliance)](#-official-ai-usage-disclosure-rulebook-compliance)
-17. [👥 The Team — 404 Brain Not Found & Acknowledgements](#-the-team--404-brain-not-found--acknowledgements)
+    - [10.1 Multi-Voice Human Neural Speech Synthesis](#101-multi-voice-human-neural-speech-synthesis)
+    - [10.2 Real-Time Microphone Speech-to-Text Recording](#102-real-time-microphone-speech-to-text-recording)
+    - [10.3 3-Pillar Answer Correctness & Feedback Evaluation Rubric](#103-3-pillar-answer-correctness--feedback-evaluation-rubric)
+    - [10.4 Side-by-Side Model Answer Benchmarking](#104-side-by-side-model-answer-benchmarking)
+11. [🏢 Recruiter Verification, Real Company Validation & Job Posting System](#-recruiter-verification-real-company-validation--job-posting-system)
+    - [11.1 Real Company Validation Pipeline (60+ Webmail Blacklist, DNS MX Probing, Live HTTP Check, AI Trust Scoring)](#111-real-company-validation-pipeline)
+    - [11.2 Recruiter Authenticity Challenge & Corporate OTP Activation](#112-recruiter-authenticity-challenge--corporate-otp-activation)
+    - [11.3 Job Opening Management & Mandatory Skill Verification](#113-job-opening-management--mandatory-skill-verification)
+    - [11.4 Recruiter Applicant Radar & Verified Badges](#114-recruiter-applicant-radar--verified-badges)
+    - [11.5 Student 1-Click Application & Personalized AI Match Scoring](#115-student-1-click-application--personalized-ai-match-scoring)
+12. [🏗️ End-to-End System Architecture (Mermaid)](#️-end-to-end-system-architecture-mermaid)
+13. [🔌 Core REST API Directory](#-core-rest-api-directory)
+14. [💰 Business Model & B2B2C Talent & Telemetry Flywheel](#-business-model--b2b2c-talent--telemetry-flywheel)
+15. [🔒 Security, Guardrails & Anti-Abuse Protocols](#-security-guardrails--anti-abuse-protocols)
+16. [⚡ Local Quickstart & Automated Test Suites](#-local-quickstart--automated-test-suites)
+17. [🤖 Official AI Usage Disclosure (Rulebook Compliance)](#-official-ai-usage-disclosure-rulebook-compliance)
+18. [👥 The Team — 404 Brain Not Found & Acknowledgements](#-the-team--404-brain-not-found--acknowledgements)
 
 ---
 
@@ -105,6 +113,9 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | ⚡ **Live API Gateway** | **[https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)** | Node.js Express REST API hosted on Render Cloud |
 | 🩺 **Live Health Check** | **[https://careerpath-ai-bdbt.onrender.com/api/health](https://careerpath-ai-bdbt.onrender.com/api/health)** | Real-time server telemetry, database connection & uptime monitor |
 | 🔑 **Official Demo Account** | **`demouser@gmail.com`** &nbsp;•&nbsp; Pass: **`demo123`** | Pre-seeded with student profile, verified skills & active roadmap *(or click 1-Click Auto-Fill)* |
+| 🏢 **Demo Recruiter Account** | **`recruiter@razorpay.com`** &nbsp;•&nbsp; Pass: **`demo123`** | Pre-seeded Razorpay verified company, active job posting & candidate applicant radar *(or click 1-Click Demo Recruiter on `/login.html`)* |
+| 🛡️ **Recruiter Verification & Radar** | **[`/recruiter-dashboard.html`](https://careerpath-ai-jade.vercel.app/recruiter-dashboard.html)** | Real company domain verification, 60+ webmail blacklist, DNS MX resolution, AI trust scoring, opening creation & Applicant Radar with candidate verified badges |
+| 💼 **Direct Recruiter Job Board** | **[`/jobs.html`](https://careerpath-ai-jade.vercel.app/jobs.html)** | Student-facing verified company job openings with personalized AI skill match percentage & 1-click apply |
 | 🌐 **Google Authentication** | **1-Click Google Sign-In & Sign-Up** | Animated Google logo with multi-chromatic micro-interactions & Google Identity Services |
 | 🐙 **GitHub Auth Sync** | **Zero-Prompt Repository Sync** | `POST /api/auth/github/sync` uses JWT session token; eliminates manual username prompt |
 | 🎯 **Skill Reality-Check Quiz** | **[`/quiz.html`](https://careerpath-ai-jade.vercel.app/quiz.html)** | 5-question dynamic micro-quiz powered by **Groq Llama 3.3 70B** (<300ms) with BYOK modal |
@@ -151,7 +162,16 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
    - Inspect the **Multi-Site Job Market Hub** with live Indian tech telemetry and the master ⚡ **"Launch All Major Portals"** button.
    - Inspect the **Single Resume per Account** manager with drag-and-drop, magic byte security, and transactional replace actions.
    - Inspect the **GitHub Study Lab**: browse connected public study projects, inspect AI-generated *Study Relevance* notes, and view top programming language breakdowns.
-9. **AI Career Mentor Drawer:** Click the floating **`🤖 AI Mentor`** button in the bottom-right for sub-300ms career coaching powered by **Groq Llama 3.3 70B** with **Gemini 2.5 Flash** failover.
+9. **Direct Recruiter Job Board (`/jobs.html`):**
+   - Students browse verified employer openings with personalized **AI Skill Match Scores** (`96% Match`).
+   - Submit a 1-click verified application with the student's dedicated ATS resume and proof-of-work badges.
+   - Track application status in real-time under "My Submitted Applications".
+10. **Recruiter Portal & Applicant Radar (`/recruiter-dashboard.html`):**
+    - Sign in via 1-Click **"Demo Recruiter"** (`recruiter@razorpay.com` / `demo123`).
+    - Inspect real-time corporate validation metrics (Razorpay: 99/100 Trust Score, DNS MX active, live SSL).
+    - Post new job openings with required skill criteria and mandatory verification flags.
+    - Open the **Applicant Radar**: inspect candidate rankings, view `[✓ Quiz-Verified]` and `[✓ Code-Verified]` badges, and update candidate hiring stages (`Applied` ➔ `Shortlisted` ➔ `Interview Scheduled`).
+11. **AI Career Mentor Drawer:** Click the floating **`🤖 AI Mentor`** button in the bottom-right for sub-300ms career coaching powered by **Groq Llama 3.3 70B** with **Gemini 2.5 Flash** failover.
 
 ---
 
@@ -684,18 +704,104 @@ Evaluators and students can inspect the official **Model Answer** right alongsid
 
 ---
 
+## 🏢 Recruiter Verification, Real Company Validation & Job Posting System
+
+CareerPath AI bridges the trust gap between ambitious students and hiring companies. Unlike traditional open job boards plagued by spam, predatory third-party staffing agencies, and fake internships, CareerPath AI enforces **cryptographic and domain-grounded corporate authenticity** before any entity can post an opening or contact candidates.
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│               RECRUITER & REAL COMPANY VALIDATION PIPELINE                      │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   [ 1. Work Email & Webmail Blacklist ]                                         │
+│   60+ Free & Disposable Providers Rejected (@gmail, @yahoo, @mailinator, etc.) │
+│                                                                                 │
+│   [ 2. Domain Cross-Match Integrity ]                                           │
+│   Email Domain MUST match Official Corporate Website (e.g. razorpay.com)        │
+│                                                                                 │
+│   [ 3. Native DNS MX Record Resolution ]                                        │
+│   Node dns.promises.resolveMx(domain) verifies live corporate mail exchangers   │
+│                                                                                 │
+│   [ 4. Live Website HTTP & SSL Probing ]                                        │
+│   GET / HEAD probe verifies active TLS, HTTP 200/301/302, eliminates dead sites│
+│                                                                                 │
+│   [ 5. AI Corporate Intelligence Scoring ]                                      │
+│   Groq Llama 3.3 70B & Gemini evaluate legitimacy, industry, and trust (0-100)  │
+│                                                                                 │
+│   [ 6. Recruiter OTP Challenge & Account Provisioning ]                         │
+│   Corporate Email OTP verification activates role: 'recruiter', canPostJobs     │
+│                                                                                 │
+│   [ 7. Applicant Radar with Proof-of-Work Badges ]                              │
+│   Candidates ranked by AI Match % with [✓ Quiz-Verified] & [✓ Code-Verified]   │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 11.1 Real Company Validation Pipeline
+Implemented in `server/services/companyVerificationService.js`, the verification pipeline executes a multi-tiered inspection before granting corporate credentials:
+
+1. **60+ Free Webmail Blacklist (`isFreeWebmail`):**
+   - Automatically rejects consumer email providers (`gmail.com`, `yahoo.com`, `hotmail.com`, `outlook.com`, `icloud.com`, `rediffmail.com`, etc.) and throwaway domains (`mailinator.com`, `tempmail.com`, `10minutemail.com`).
+   - Ensures only corporate domain owners can request recruiter status.
+2. **Domain Cross-Match Integrity (`domainsMatch`):**
+   - Extracts the apex domain from the recruiter's corporate email and compares it to the declared company website URL.
+   - For example: `recruiter@razorpay.com` with `https://razorpay.com` passes, while `recruiter@gmail.com` or `recruiter@stripe.com` with `https://razorpay.com` is immediately rejected.
+3. **Native DNS MX Record Probing (`checkDnsMx`):**
+   - Leverages native Node.js `dns.promises.resolveMx(domain)` to verify that the domain has active, configured Mail Exchange servers.
+   - Prevents spoofed or unregistered fictional domains from passing.
+4. **Live Website Reachability Probing (`checkWebsiteLive`):**
+   - Probes the target corporate website over HTTPS with a strict 4.5-second timeout and browser user-agent headers.
+   - Verifies HTTP 200 OK or legitimate redirects (301/302) with active SSL certificates.
+5. **AI Corporate Intelligence Scoring (`verifyCompanyWithAi`):**
+   - Queries Groq Cloud (`llama-3.3-70b-versatile`) with Google Gemini 2.5 Flash failover to assess company legitimacy, headquarters, industry, and operational scale.
+   - Produces a composite confidence score ($0-100\%$). Scores $\ge 75\%$ qualify the company as verified (`isRealCompany: true`).
+
+### 11.2 Recruiter Authenticity Challenge & Corporate OTP Activation
+- **Corporate Email OTP Challenge:** During registration (`POST /api/recruiter/register`), an unverified account is created with `verificationStatus = 'pending'` and a 6-digit cryptographic OTP is dispatched to the corporate address.
+- **Activation Gate:** Upon successful OTP verification (`POST /api/auth/verify-otp`), the user's role is activated to `role = 'recruiter'`, setting `canPostJobs = true` and `verificationStatus = 'verified'`.
+- **Security Middleware (`requireVerifiedRecruiter`):**
+  Guards all recruiter routes (`server/middleware/authMiddleware.js`). Requests from non-recruiter tokens or unverified recruiters are immediately denied with HTTP 403 Forbidden.
+
+### 11.3 Job Opening Management & Mandatory Skill Verification
+Verified recruiters manage job postings via `/recruiter-dashboard.html` and `server/controllers/recruiterController.js`:
+- **Rich Posting Attributes:** Job title, career roadmap slug, workplace type (`remote`, `hybrid`, `onsite`), job location, experience level, salary range, and job description.
+- **Mandatory Skill Verification Flag:** Recruiters specify required technical skills and toggle `mustBeVerified: true` for critical skills. Candidate matching algorithms heavily reward skills backed by our **Two-Factor Skill Verification Moat** (`Quiz-Verified` and `Code-Verified`).
+
+### 11.4 Recruiter Applicant Radar & Verified Badges
+Recruiters access a real-time **Applicant Radar** for each job posting:
+- **AI Skill Match Ranking:** Candidates are ranked by an intelligent match percentage ($0-100\%$) computed from the candidate's verified skills against the job requirements.
+- **Candidate Trust Badges:**
+  - 🧪 **`[✓ Quiz-Verified]`**: Candidate passed the adaptive Groq/Gemini technical assessment.
+  - 🐙 **`[✓ Code-Verified]`**: Candidate demonstrated production code via GitHub repository analysis.
+  - 🏆 **`[✓ Job Ready Tier]`**: Candidate met all 4 strict criteria of the Industry Job Ready Certification.
+- **1-Click Hiring Stage Progression:**
+  Recruiters update candidate stages in real time: `Applied` ➔ `Reviewing` ➔ `Shortlisted` ➔ `Interview Scheduled` ➔ `Offer Extended` ➔ `Rejected`, complete with optional recruiter feedback notes.
+
+### 11.5 Student 1-Click Application & Personalized AI Match Scoring
+Students explore direct company openings on `/jobs.html` and `/dashboard.html`:
+- **Personalized Match Score Calculation:**
+  For every open listing, the platform calculates a real-time match score based on the student's assessed and verified skill passport:
+  $$\text{Match Score} = \left(\frac{\sum \text{Matched Skills (weighted by verification)}}{\text{Total Required Skills}}\right) \times 100$$
+- **1-Click Instant Apply:** Students apply instantly using their verified profile. Their dedicated ATS-formatted resume and verified skill credentials are automatically bundled into the application (`POST /api/jobs/:id/apply`).
+- **Compound Unique Protection:** MongoDB compound index `{ job: 1, student: 1 }` prevents duplicate applications, ensuring a clean pipeline.
+- **Application Tracking:** Students monitor their application review status and recruiter notes live under the "My Submitted Applications" tab.
+
+---
+
 ## 🏗️ End-to-End System Architecture (Mermaid)
 
 ```mermaid
 flowchart TD
     subgraph ClientLayer ["1. Frontend Presentation Layer (Vercel Edge Network)"]
-        Browser["Student Web Browser"]
+        Browser["Student / Recruiter Browser"]
         UI["Glassmorphism UI Engine (HTML5 · CSS3 · 90% Bento Grid)"]
         ThreeConstellation["Three.js 3D Career Universe (Orbital Constellation + 2D Fallback)"]
         TrackSwitcher["Dual Track Switcher (Tabs & Synergy Status)"]
         Gauge["2D SVG Percentage Progress Meter (0-100%)"]
         VoiceChamber["AI Voice Mock Interview Chamber (Mic STT + TTS Voices)"]
         JobHubWidget["Multi-Site Job Market Hub (6 Portals + ⚡ Launch All)"]
+        RecruiterPortal["Recruiter Portal & Radar (/recruiter-dashboard.html)"]
+        StudentJobsBoard["Verified Recruiter Job Board (/jobs.html)"]
         ResumeWidget["6-State Single Resume Manager"]
         JobReadyBadge["Job Ready 4-Rule Compliance & Career GPS"]
         
@@ -705,6 +811,8 @@ flowchart TD
         UI --> Gauge
         UI --> VoiceChamber
         UI --> JobHubWidget
+        UI --> RecruiterPortal
+        UI --> StudentJobsBoard
         UI --> ResumeWidget
         UI --> JobReadyBadge
     end
@@ -712,6 +820,7 @@ flowchart TD
     subgraph GatewayLayer ["2. Application Gateway Layer (Render Cloud · Node.js & Express)"]
         SecurityMW["Security Middleware (Helmet · CORS · Express-Rate-Limit)"]
         AuthGuard["Stateless JWT Guard (Bearer Token · 7-Day Expiry)"]
+        RecruiterGuard["requireVerifiedRecruiter Middleware Guard"]
         MagicValidator["Magic-Byte Binary Inspector (%PDF · PK · OLE)"]
         StreamFilter["Primary Stream Isolation Controller"]
         RecEngine["60/25/15 Deterministic Matching Engine"]
@@ -719,10 +828,13 @@ flowchart TD
         RoadmapController["Dual Route Roadmap Controller (Compound Index Guard)"]
         InterviewController["Voice Mock Interview Evaluation Controller (3-Pillar Rubric)"]
         JobPortalService["Multi-Site Job Board Service (6 Deep-Link Engines)"]
+        CompanyValidation["Company Verification Service (DNS MX · Live HTTP · AI Trust)"]
+        RecruiterController["Recruiter & Job Controller (Postings, Radar & Stages)"]
         ReadinessEngine["4-Rule Job Ready & Career GPS Readiness Engine"]
         CloudinaryService["Cloudinary Media Lifecycle Service"]
 
         SecurityMW --> AuthGuard
+        AuthGuard --> RecruiterGuard
         AuthGuard --> MagicValidator
         AuthGuard --> StreamFilter
         AuthGuard --> RecEngine
@@ -732,20 +844,26 @@ flowchart TD
         AuthGuard --> JobPortalService
         AuthGuard --> ReadinessEngine
         AuthGuard --> CloudinaryService
+        RecruiterGuard --> RecruiterController
+        SecurityMW --> CompanyValidation
     end
 
     subgraph DatabaseLayer ["3. Persistence Layer (MongoDB Atlas Cloud · TLS Encryption)"]
-        UserCollection[("Users Collection\n- Profile, Stream, ProfileStatus, lastAbandonedRouteAt")]
+        UserCollection[("Users Collection\n- Profile, Stream, ProfileStatus, recruiterProfile")]
         ResumeCollection[("Resumes Collection\n- Dedicated 1:1 Schema\n- Unique Index: { user: 1 }")]
         RoadmapCollection[("Roadmaps Collection\n- Compound Partial Unique Index:\n  { user: 1, career: 1 } (status: 'active')")]
+        CompanyCollection[("Companies Collection\n- Domain Unique Index, DNS & HTTP Flags, Verification Score")]
+        JobOpeningCollection[("JobOpenings Collection\n- Title, Skills, Workplace, Applicants Count")]
+        JobApplicationCollection[("JobApplications Collection\n- Compound Unique: { job: 1, student: 1 }\n- Match Score, Hiring Stages, Notes")]
         SkillCollection[("Skills Collection\n- 76+ Standardized Skills & Categories")]
         CareerCollection[("Careers Collection\n- 15 Tech Curricula & Salary Benchmarks")]
         InterviewCollection[("Interviews Collection\n- Mock Sessions, Transcripts & 3-Pillar Scores")]
     end
 
     subgraph ExternalCloud ["4. External Cloud Services & Real-Time APIs"]
+        DNSResolver["Native DNS Resolver\n(dns.promises.resolveMx)"]
         GitHubAPI["GitHub REST API v3\n(Public Repos & Language Distribution)"]
-        GroqLPU["Groq Cloud LPU\n(Llama 3.3 70B <300ms Quiz & Mentor)"]
+        GroqLPU["Groq Cloud LPU\n(Llama 3.3 70B <300ms Quiz, Recruiter AI & Mentor)"]
         GeminiCloud["Google Gemini AI\n(Gemini 2.5 Flash Failover)"]
         AdzunaAPI["Adzuna Developer API\n(Live Indian Tech Jobs & ₹ CTC)"]
         JobBoards["6 External Job Boards\n(LinkedIn, Naukri, Indeed, Wellfound, Internshala, Google)"]
@@ -754,6 +872,9 @@ flowchart TD
     end
 
     UI -- "HTTPS REST API (JSON / Multipart)" --> SecurityMW
+    CompanyValidation <--> DNSResolver
+    CompanyValidation <--> GroqLPU
+    CompanyValidation <--> GeminiCloud
     MagicValidator --> CloudinaryService
     CloudinaryService <--> CloudinaryCDN
     AuthGuard <--> GitHubAPI
@@ -770,6 +891,9 @@ flowchart TD
     ReadinessEngine <--> UserCollection
     ReadinessEngine <--> SkillCollection
     RecEngine <--> CareerCollection
+    RecruiterController <--> CompanyCollection
+    RecruiterController <--> JobOpeningCollection
+    RecruiterController <--> JobApplicationCollection
 ```
 
 ---
@@ -805,6 +929,16 @@ flowchart TD
 | `GET`  | `/api/jobs/portal-links` | Public / Protected | Resolves parameterized deep links for LinkedIn, Naukri, Indeed, Wellfound, Internshala, and Google for Jobs |
 | `GET`  | `/api/jobs/matched-for-user` | Protected (JWT) | Delivers personalized job vacancies matching the student's active career tracks with 1-click portal launchers |
 | `POST` | `/api/jobs/bridge-gap` | Protected (JWT) | **1-Click Gap Injection:** Dynamically injects targeted micro-tasks into active roadmap to bridge job missing skills |
+| `GET`  | `/api/jobs/recruiter-openings` | Protected (JWT) | Returns direct verified employer job openings with calculated personalized AI match score |
+| `POST` | `/api/jobs/:id/apply` | Protected (JWT) | **1-Click Apply:** Submits student application with attached ATS resume and verified badges |
+| `GET`  | `/api/jobs/my-applications` | Protected (JWT) | Returns student's submitted applications, current hiring stage, and recruiter feedback |
+| `POST` | `/api/recruiter/verify-company-precheck` | Public | Pre-checks corporate domain, DNS MX records, live website HTTP status & AI trust score |
+| `POST` | `/api/recruiter/register` | Public | Registers corporate recruiter account, checks domain mismatch & dispatches corporate OTP |
+| `GET`  | `/api/recruiter/profile` | Recruiter (JWT) | Retrieves authenticated recruiter corporate profile, company affiliation, and trust score |
+| `POST` | `/api/recruiter/jobs` | Recruiter (JWT) | Posts new verified company opening with skill requirements & verification flags |
+| `GET`  | `/api/recruiter/jobs` | Recruiter (JWT) | Lists all job postings created by authenticated corporate recruiter |
+| `GET`  | `/api/recruiter/jobs/:id/applicants` | Recruiter (JWT) | **Applicant Radar:** Fetches candidates ranked by AI Match % with verified proof-of-work badges |
+| `PUT`  | `/api/recruiter/applications/:id/status` | Recruiter (JWT) | Updates candidate hiring stage (`applied`, `shortlisted`, `interview_scheduled`, etc.) |
 | `POST` | `/api/interview/start` | Protected (JWT) | Initializes an interactive voice mock interview session for a specified target role |
 | `POST` | `/api/interview/evaluate` | Protected (JWT) | **3-Pillar Rubric:** Evaluates speech transcript on Technical Depth (40%), Clarity (30%), and Trade-offs (30%) |
 | `POST` | `/api/interview/finalize` | Protected (JWT) | Persists mock interview grade to student profile and completes Career GPS Step 9 |
@@ -887,6 +1021,9 @@ npm run test:security
 
 # Run Database Migration for Partial Unique Indexes
 npm run migrate:roadmaps
+
+# Verify Recruiter Verification, Real Company Validation & Job Posting Pipeline
+node tests/recruiter_verification_e2e_test.js
 ```
 
 #### 🛡️ Live Automated Invariant Test Results (100% Pass Rate):
@@ -914,6 +1051,25 @@ npm run migrate:roadmaps
   -> PASSED: Injected userId in payload/query completely ignored in favor of JWT identity
 ================================================================
 🎉 ALL 9 HARDENED VERIFICATION TESTS PASSED WITH 100% COMPLIANCE!
+================================================================
+
+================================================================
+🚀 RECRUITER VERIFICATION & JOB POSTING E2E TEST SUITE
+================================================================
+✔ Test 1: Free Webmail Blacklist Validation
+  -> PASSED: Blocks @gmail.com, @yahoo.com, @outlook.com, @mailinator.com; permits corporate
+✔ Test 2: Corporate Domain Cross-Match & Precheck
+  -> PASSED: Mismatched domain rejected; Razorpay corporate domain verified (Score: 99/100)
+✔ Test 3: Recruiter Corporate Onboarding & OTP Activation
+  -> PASSED: Pending credentials saved; OTP verified: role=recruiter, canPostJobs=true
+✔ Test 4: Job Opening Creation
+  -> PASSED: Job posted with mandatory verification skills and requireVerifiedRecruiter guard
+✔ Test 5: Candidate 1-Click Application & AI Match Scoring
+  -> PASSED: 1-Click application created; Match Score: 96% with verified skills
+✔ Test 6: Recruiter Applicant Radar & Hiring Stage Updates
+  -> PASSED: Candidate retrieved with verified badges; stage updated to SHORTLISTED and INTERVIEW
+================================================================
+🎉 ALL 6 SUITE TESTS PASSED WITH 100% SUCCESS!
 ================================================================
 ```
 

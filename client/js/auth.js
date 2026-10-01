@@ -114,6 +114,29 @@ const Auth = {
   },
 
   /**
+   * Checks whether the active user is a verified corporate recruiter
+   * @returns {boolean}
+   */
+  isRecruiter() {
+    const user = this.getCurrentUser();
+    if (!user) return false;
+    return user.role === 'recruiter' || Boolean(user.isRecruiter) || Boolean(user.recruiterProfile?.canPostJobs);
+  },
+
+  /**
+   * Guard for recruiter-only pages: redirects students or unauthenticated users
+   * @returns {boolean}
+   */
+  requireRecruiter() {
+    this.requireAuth();
+    if (!this.isRecruiter() && !this.isAdmin()) {
+      window.location.href = 'dashboard.html';
+      return false;
+    }
+    return true;
+  },
+
+  /**
    * Logs out the user by clearing localStorage and redirecting to login.html
    */
   logout() {

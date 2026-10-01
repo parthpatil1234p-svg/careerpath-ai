@@ -1,0 +1,316 @@
+/**
+ * jobs.js — Verified Job Board & 1-Click Recruiter Application Controller
+ *
+ * Team 404 Brain Not Found · CareerPath AI Platform
+ */
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const alertContainer = document.getElementById('jobAlertContainer');
+  const badgeOpeningsCount = document.getElementById('badgeOpeningsCount');
+  const badgeMyAppsCount = document.getElementById('badgeMyAppsCount');
+
+  // Openings Tab Elements
+  const openingsSpinner = document.getElementById('openingsSpinner');
+  const emptyOpenings = document.getElementById('emptyOpenings');
+  const openingsGrid = document.getElementById('openingsGrid');
+  const filterCareerSlug = document.getElementById('filterCareerSlug');
+  const filterWorkplace = document.getElementById('filterWorkplace');
+
+  // Applications Tab Elements
+  const tabApplications = document.getElementById('tabApplications');
+  const appsSpinner = document.getElementById('appsSpinner');
+  const emptyApps = document.getElementById('emptyApps');
+  const appsTableCard = document.getElementById('appsTableCard');
+  const appsTableBody = document.getElementById('appsTableBody');
+
+  // Apply Modal Elements
+  const applyModal = new bootstrap.Modal(document.getElementById('applyModal'));
+  const applyModalSubtitle = document.getElementById('applyModalSubtitle');
+  const applyCandidateName = document.getElementById('applyCandidateName');
+  const applyMatchScoreBadge = document.getElementById('applyMatchScoreBadge');
+  const applyCandidateDetails = document.getElementById('applyCandidateDetails');
+  const applyCoverNote = document.getElementById('applyCoverNote');
+  const applyForm = document.getElementById('applyForm');
+  const btnSubmitApplication = document.getElementById('btnSubmitApplication');
+  const applyModalAlert = document.getElementById('applyModalAlert');
+
+  let activeApplyJob = null;
+
+  const showAlert = (message, type = 'danger') => {
+    alertContainer.innerHTML = `
+      <div class="alert alert-${type} alert-dismissible fade show d-flex align-items-center gap-2 py-2 px-3 small mb-3" role="alert">
+        <i class="bi ${type === 'danger' ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'}"></i>
+        <div>${escapeHtml(message)}</div>
+        <button type="button" class="btn-close ms-auto p-2" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    `;
+  };
+
+  // ── 1. Fetch & Render Verified Openings ──────────────────────
+  const loadOpenings = async () => {
+    openingsSpinner.classList.remove('d-none');
+    openingsGrid.classList.add('d-none');
+    emptyOpenings.classList.add('d-none');
+
+    const params = new URLSearchParams();
+    if (filterCareerSlug?.value) params.set('careerSlug', filterCareerSlug.value);
+    if (filterWorkplace?.value) params.set('workplace', filterWorkplace.value);
+
+    try {
+      const response = await window.API.get(`/jobs/recruiter-openings?${params.toString()}`);
+      openingsSpinner.classList.add('d-none');
+
+      const openings = response.data?.openings || [];
+      if (badgeOpeningsCount) badgeOpeningsCount.textContent = openings.length;
+
+      if (openings.length === 0) {
+        emptyOpenings.classList.remove('d-none');
+        return;
+      }
+
+      openingsGrid.innerHTML = '';
+      openings.forEach((job) => {
+        const score = job.matchScore || 75;
+        const isHighMatch = score >= 80;
+        const matchClass = isHighMatch ? 'match-badge-high' : 'match-badge-med';
+
+        const logoUrl = job.companyLogo || `https://www.google.com/s2/favicons?domain=${job.company?.domain || 'company.com'}&sz=128`;
+        const salaryText = job.salaryRange?.isDisclosed
+          ? `₹${(job.salaryRange.min / 100000).toFixed(1)}L - ₹${(job.salaryRange.max / 100000).toFixed(1)}L / yr`
+          : 'Competitive CTC';
+
+        const skillsHtml = (job.requiredSkills || [])
+          .map((s) => {
+            const sName = s.skillName || s;
+            const isMatched = (job.matchedSkills || []).some((m) => (m.name || m).toLowerCase() === sName.toLowerCase());
+            return `
+              <span class="badge ${isMatched ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-light text-secondary border'} me-1 mb-1" style="font-size:0.75rem;">
+                ${isMatched ? '<i class="bi bi-check-circle-fill me-1"></i>' : ''}${escapeHtml(sName)}
+              </span>
+            `;
+          })
+          .join('');
+
+        const col = document.createElement('div');
+        col.className = 'col-lg-6';
+        col.innerHTML = `
+          <div class="job-card-direct h-100">
+            <div>
+              <!-- Top Row: Company & Match Badge -->
+              <div class="d-flex align-items-start justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2.5">
+                  <div class="company-logo-box">
+                    <img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(job.companyName)}" class="company-logo-img" onerror="this.src='assets/logo.svg'" />
+                  </div>
+                  <div>
+                    <h3 class="h6 fw-bold text-ink mb-0">${escapeHtml(job.companyName)}</h3>
+                    <div class="verified-employer-pill mt-0.5">
+                      <i class="bi bi-patch-check-fill"></i> Verified Enterprise
+                    </div>
+                  </div>
+                </div>
+
+                <div class="match-badge-large ${matchClass}">
+                  <i class="bi bi-lightning-charge-fill"></i>
+                  <span>${score}%</span>
+                </div>
+              </div>
+
+              <!-- Job Title -->
+              <h2 class="h5 fw-bold text-ink mb-2">${escapeHtml(job.title)}</h2>
+
+              <!-- Key Metadata Chips -->
+              <div class="d-flex flex-wrap gap-2 text-muted small mb-3">
+                <span class="d-inline-flex align-items-center gap-1">
+                  <i class="bi bi-geo-alt"></i> ${escapeHtml(job.location || 'Remote')}
+                </span>
+                <span>&middot;</span>
+                <span class="d-inline-flex align-items-center gap-1 text-capitalize">
+                  <i class="bi bi-laptop"></i> ${escapeHtml(job.workplace)}
+                </span>
+                <span>&middot;</span>
+                <span class="d-inline-flex align-items-center gap-1 fw-semibold text-ink">
+                  <i class="bi bi-cash-stack text-success"></i> ${escapeHtml(salaryText)}
+                </span>
+              </div>
+
+              <!-- Job Description Snippet -->
+              <p class="text-secondary small mb-3" style="line-height:1.5;">
+                ${escapeHtml(job.description.slice(0, 160))}${job.description.length > 160 ? '...' : ''}
+              </p>
+
+              <!-- Required Skills Tag Container -->
+              <div class="mb-3">
+                <div class="small fw-semibold text-muted mb-1" style="font-size:0.72rem; letter-spacing:0.02em;">REQUIRED SKILLS:</div>
+                <div class="d-flex flex-wrap">${skillsHtml || '<span class="text-muted small">Open to all tech stacks</span>'}</div>
+              </div>
+            </div>
+
+            <!-- Footer: Application Button -->
+            <div class="pt-3 border-top border-line d-flex align-items-center justify-content-between">
+              <span class="small text-muted font-mono" style="font-size:0.75rem;">
+                Posted by Authorized Recruiter
+              </span>
+
+              ${job.hasApplied
+                ? `<button class="btn btn-outline-success btn-sm px-3 fw-semibold" disabled>
+                     <i class="bi bi-check2-circle me-1"></i> Applied &middot; Under Review
+                   </button>`
+                : `<button class="btn cp-btn-primary btn-sm px-3.5 py-1.5 fw-semibold btn-open-apply" data-job-id="${job._id}" data-job-title="${escapeHtml(job.title)}" data-company="${escapeHtml(job.companyName)}" data-match="${score}">
+                     <i class="bi bi-send-fill me-1"></i> 1-Click Apply
+                   </button>`
+              }
+            </div>
+          </div>
+        `;
+        openingsGrid.appendChild(col);
+      });
+
+      openingsGrid.classList.remove('d-none');
+
+      // Wire Apply Buttons
+      document.querySelectorAll('.btn-open-apply').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (!window.Auth?.isAuthenticated()) {
+            window.location.href = 'login.html?redirect=jobs.html';
+            return;
+          }
+
+          const jobId = btn.getAttribute('data-job-id');
+          const title = btn.getAttribute('data-job-title');
+          const company = btn.getAttribute('data-company');
+          const match = btn.getAttribute('data-match');
+
+          activeApplyJob = { id: jobId, title, company, match };
+
+          const currentUser = window.Auth.getCurrentUser() || {};
+          applyModalSubtitle.textContent = `${title} at ${company}`;
+          applyCandidateName.textContent = currentUser.name || 'Candidate';
+          applyMatchScoreBadge.textContent = `${match}% Personal Match`;
+          applyCandidateDetails.textContent = `${currentUser.education?.course || 'Degree Program'} · ${currentUser.education?.college || 'College'}`;
+
+          applyCoverNote.value = '';
+          applyModalAlert.innerHTML = '';
+          applyModal.show();
+        });
+      });
+    } catch (err) {
+      openingsSpinner.classList.add('d-none');
+      showAlert(err.message || 'Failed to load verified company openings.');
+    }
+  };
+
+  // ── 2. Fetch & Render My Applications ────────────────────────
+  const loadMyApplications = async () => {
+    if (!window.Auth?.isAuthenticated()) return;
+
+    appsSpinner.classList.remove('d-none');
+    appsTableCard.classList.add('d-none');
+    emptyApps.classList.add('d-none');
+
+    try {
+      const response = await window.API.get('/jobs/my-applications');
+      appsSpinner.classList.add('d-none');
+
+      const apps = response.data?.applications || [];
+      if (badgeMyAppsCount) badgeMyAppsCount.textContent = apps.length;
+
+      if (apps.length === 0) {
+        emptyApps.classList.remove('d-none');
+        return;
+      }
+
+      appsTableBody.innerHTML = '';
+      apps.forEach((app) => {
+        const job = app.job || {};
+        let stageBadge = `<span class="badge bg-secondary-subtle text-secondary px-2.5 py-1">📥 Applied</span>`;
+
+        if (app.status === 'reviewed') {
+          stageBadge = `<span class="badge bg-info-subtle text-info px-2.5 py-1">👀 Under Review</span>`;
+        } else if (app.status === 'shortlisted') {
+          stageBadge = `<span class="badge bg-warning-subtle text-warning px-2.5 py-1 fw-bold">⭐ Shortlisted</span>`;
+        } else if (app.status === 'interview_scheduled') {
+          stageBadge = `<span class="badge bg-success-subtle text-success px-2.5 py-1 fw-bold">📅 Interview Scheduled</span>`;
+        } else if (app.status === 'rejected') {
+          stageBadge = `<span class="badge bg-danger-subtle text-danger px-2.5 py-1">✕ Application Closed</span>`;
+        }
+
+        const salaryDisplay = job.salaryRange
+          ? `₹${(job.salaryRange.min / 100000).toFixed(1)}L - ₹${(job.salaryRange.max / 100000).toFixed(1)}L`
+          : '-';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="ps-4">
+            <div class="fw-bold text-ink">${escapeHtml(job.title || 'Role')}</div>
+            <div class="small text-muted">${escapeHtml(job.companyName || 'Verified Employer')}</div>
+          </td>
+          <td class="text-capitalize">${escapeHtml(job.workplace || 'Remote')}</td>
+          <td class="fw-semibold text-ink">${escapeHtml(salaryDisplay)}</td>
+          <td>
+            <span class="badge bg-light text-dark border font-mono">
+              <i class="bi bi-lightning-charge-fill text-warning me-1"></i>${app.matchScore}%
+            </span>
+          </td>
+          <td class="text-muted small">${new Date(app.appliedAt).toLocaleDateString()}</td>
+          <td class="pe-4 text-end">${stageBadge}</td>
+        `;
+        appsTableBody.appendChild(tr);
+      });
+
+      appsTableCard.classList.remove('d-none');
+    } catch (err) {
+      appsSpinner.classList.add('d-none');
+      console.warn('Could not load user applications:', err.message);
+    }
+  };
+
+  // ── 3. Submit 1-Click Application ────────────────────────────
+  if (applyForm) {
+    applyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!activeApplyJob) return;
+
+      const originalBtn = btnSubmitApplication.innerHTML;
+      btnSubmitApplication.disabled = true;
+      btnSubmitApplication.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+        <span>Submitting Application...</span>
+      `;
+
+      try {
+        const response = await window.API.post(`/jobs/${activeApplyJob.id}/apply`, {
+          coverNote: applyCoverNote.value.trim(),
+        });
+
+        btnSubmitApplication.disabled = false;
+        btnSubmitApplication.innerHTML = originalBtn;
+
+        if (response.success) {
+          applyModal.hide();
+          showAlert(`🎉 Your application was successfully delivered to ${activeApplyJob.company} for "${activeApplyJob.title}"!`, 'success');
+          loadOpenings();
+          loadMyApplications();
+        } else {
+          applyModalAlert.innerHTML = `
+            <div class="alert alert-danger py-2 small mb-3">${escapeHtml(response.message || 'Could not submit application.')}</div>
+          `;
+        }
+      } catch (err) {
+        btnSubmitApplication.disabled = false;
+        btnSubmitApplication.innerHTML = originalBtn;
+        applyModalAlert.innerHTML = `
+          <div class="alert alert-danger py-2 small mb-3">${escapeHtml(err.message || 'Application failed.')}</div>
+        `;
+      }
+    });
+  }
+
+  if (filterCareerSlug) filterCareerSlug.addEventListener('change', loadOpenings);
+  if (filterWorkplace) filterWorkplace.addEventListener('change', loadOpenings);
+  if (tabApplications) tabApplications.addEventListener('click', loadMyApplications);
+
+  // Initial Data Load
+  await loadOpenings();
+  await loadMyApplications();
+});

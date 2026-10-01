@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Corporate Recruiter Portal & Talent Radar &mdash; CareerPath AI"
+    />
+    <meta name="theme-color" content="#FFFFFF" />
+    <title>Recruiter Portal &amp; Applicant Radar &mdash; CareerPath AI</title>
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css?v=2.1" />
+    <link rel="stylesheet" href="css/dashboard.css?v=2.1" />
+
+    <style>
+      .recruiter-header-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        background: rgba(5, 150, 105, 0.1);
+        border: 1px solid rgba(5, 150, 105, 0.25);
+        color: #059669;
+        border-radius: 9999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+      .stat-card-recruiter {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+      }
+      .stat-card-recruiter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+      }
+      .candidate-badge-quiz {
+        background: #EFF6FF;
+        color: #1D4ED8;
+        border: 1px solid #BFDBFE;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+      .candidate-badge-code {
+        background: #F0FDF4;
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+      .candidate-badge-certified {
+        background: #FEF3C7;
+        color: #B45309;
+        border: 1px solid #FDE68A;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+      .applicant-card {
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        background: #FFFFFF;
+        transition: all 0.2s ease;
+      }
+      .applicant-card:hover {
+        border-color: #CBD5E1;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      }
+      .match-ring-score {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    </style>
+  </head>
+
+  <body class="dashboard-page bg-light">
+    <!-- ============================================================
+         VENGEANCE UI NOTCH NAVBAR
+         ============================================================ -->
+    <nav class="cp-navbar-notch" id="mainNavbar">
+      <div class="container">
+        <div class="notch-nav-island">
+          <!-- Brand / Logo -->
+          <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <div class="brand-icon">
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" class="brand-logo-img" width="40" height="40" />
+            </div>
+            <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+            <span class="badge bg-success-subtle text-success ms-2 px-2 py-0.5 small" style="font-size: 0.72rem; font-weight: 700;">
+              RECRUITER
+            </span>
+          </a>
+
+          <!-- Desktop Center Links -->
+          <ul class="notch-nav-links d-none d-lg-flex mb-0 ps-0">
+            <li>
+              <a href="recruiter-dashboard.html" class="active">
+                <i class="bi bi-briefcase-fill text-success"></i> Openings &amp; Radar
+              </a>
+            </li>
+            <li>
+              <a href="jobs.html">
+                <i class="bi bi-globe2 text-primary"></i> Public Job Board
+              </a>
+            </li>
+            <li>
+              <a href="dashboard.html">
+                <i class="bi bi-mortarboard text-secondary"></i> Student View
+              </a>
+            </li>
+          </ul>
+
+          <!-- Recruiter Profile & Actions -->
+          <div class="d-flex align-items-center gap-2" id="recruiterNavActions">
+            <div class="d-none d-md-flex align-items-center gap-2 px-2.5 py-1 rounded-pill bg-white border border-line">
+              <i class="bi bi-building text-success"></i>
+              <span class="fw-semibold text-ink small" id="navCompanyName">Loading...</span>
+            </div>
+            <button
+              class="btn cp-btn-primary btn-sm px-3 d-flex align-items-center gap-1.5"
+              data-bs-toggle="modal"
+              data-bs-target="#postJobModal"
+            >
+              <i class="bi bi-plus-circle"></i>
+              <span>Post Opening</span>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm px-2.5 py-1"
+              id="btnRecruiterLogout"
+              title="Sign Out"
+            >
+              <i class="bi bi-box-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container pt-5 mt-4 pb-5">
+      <!-- Recruiter Banner / Identity Row -->
+      <div class="row align-items-center mb-4 mt-2">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="recruiter-header-badge">
+              <i class="bi bi-patch-check-fill"></i> Verified Corporate Recruiter
+            </span>
+            <span class="badge bg-secondary-subtle text-secondary font-mono small" id="companyDomainBadge">
+              domain.com
+            </span>
+          </div>
+          <h1 class="h2 fw-bold text-ink mb-1" id="recruiterGreeting">
+            Welcome back, Recruiter
+          </h1>
+          <p class="text-muted small mb-0" id="companySubtitle">
+            Managing openings &amp; candidate pipelines for <strong class="text-ink" id="companyNameText">Company</strong>
+          </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <button
+            class="btn cp-btn-primary py-2 px-3.5 d-inline-flex align-items-center gap-2 shadow-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#postJobModal"
+          >
+            <i class="bi bi-plus-lg"></i>
+            <span class="fw-semibold">Post New Job Opening</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Feedback Alert Container -->
+      <div id="recruiterAlertContainer" role="alert" aria-live="polite"></div>
+
+      <!-- Executive KPI Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+          <div class="stat-card-recruiter">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted small fw-semibold">Active Openings</span>
+              <span class="p-2 rounded bg-success-subtle text-success"><i class="bi bi-briefcase"></i></span>
+            </div>
+            <div class="h3 fw-bold text-ink mb-0" id="kpiActiveOpenings">0</div>
+            <div class="small text-muted mt-1">Live on Student Job Board</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="stat-card-recruiter">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted small fw-semibold">Total Applicants</span>
+              <span class="p-2 rounded bg-primary-subtle text-primary"><i class="bi bi-people"></i></span>
+            </div>
+            <div class="h3 fw-bold text-ink mb-0" id="kpiTotalApplicants">0</div>
+            <div class="small text-muted mt-1">Direct 1-Click Submissions</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="stat-card-recruiter">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted small fw-semibold">Shortlisted Talent</span>
+              <span class="p-2 rounded bg-warning-subtle text-warning"><i class="bi bi-star"></i></span>
+            </div>
+            <div class="h3 fw-bold text-ink mb-0" id="kpiShortlisted">0</div>
+            <div class="small text-muted mt-1">High-match candidates</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="stat-card-recruiter">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted small fw-semibold">Domain Trust Score</span>
+              <span class="p-2 rounded bg-teal-subtle text-teal"><i class="bi bi-shield-check"></i></span>
+            </div>
+            <div class="h3 fw-bold text-ink mb-0" id="kpiTrustScore">100%</div>
+            <div class="small text-success mt-1"><i class="bi bi-check-circle-fill me-1"></i>DNS MX &amp; Probe Verified</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Openings Table / Card View -->
+      <div class="card border border-line shadow-xs rounded-3 overflow-hidden mb-4">
+        <div class="card-header bg-white py-3 px-4 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <h2 class="h5 fw-bold text-ink mb-0">Job Openings &amp; Applicant Radar</h2>
+            <p class="text-muted small mb-0">Review candidates ranked by CareerPath AI Skill Match score</p>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm px-3" id="btnRefreshJobs">
+              <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <div id="jobsLoadingSpinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading openings...</span>
+            </div>
+            <p class="text-muted small mt-2">Loading active corporate job openings...</p>
+          </div>
+
+          <div id="emptyJobsPlaceholder" class="text-center py-5 d-none">
+            <div class="p-3 bg-light rounded-circle d-inline-block text-secondary mb-3">
+              <i class="bi bi-briefcase fs-1"></i>
+            </div>
+            <h3 class="h5 fw-bold text-ink mb-1">No Job Openings Yet</h3>
+            <p class="text-muted small mb-3">Post your first company opportunity to start receiving AI skill-matched applicants.</p>
+            <button
+              class="btn cp-btn-primary btn-sm px-4 py-2"
+              data-bs-toggle="modal"
+              data-bs-target="#postJobModal"
+            >
+              <i class="bi bi-plus-lg me-1"></i> Post Opening Now
+            </button>
+          </div>
+
+          <!-- Openings List Container -->
+          <div class="table-responsive d-none" id="jobsTableContainer">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light text-secondary small" style="font-size: 0.78rem;">
+                <tr>
+                  <th class="ps-4">JOB TITLE &amp; CAREER TRACK</th>
+                  <th>WORKPLACE / LOCATION</th>
+                  <th>SALARY RANGE</th>
+                  <th>REQUIRED VERIFIED SKILLS</th>
+                  <th>STATUS</th>
+                  <th>APPLICANTS</th>
+                  <th class="pe-4 text-end">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="jobsTableBody" class="small">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============================================================
+         MODAL: POST NEW JOB OPENING
+         ============================================================ -->
+    <div class="modal fade" id="postJobModal" tabindex="-1" aria-labelledby="postJobModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+          <div class="modal-header border-bottom px-4 py-3">
+            <div class="d-flex align-items-center gap-2">
+              <div class="p-2 rounded bg-success-subtle text-success">
+                <i class="bi bi-plus-circle-fill fs-5"></i>
+              </div>
+              <div>
+                <h5 class="modal-title fw-bold text-ink" id="postJobModalLabel">Create Job Opening</h5>
+                <p class="text-muted small mb-0">Direct posting published to CareerPath AI verified students</p>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <form id="createJobForm" novalidate>
+            <div class="modal-body px-4 py-3">
+              <div id="modalAlertContainer"></div>
+
+              <!-- Title & Career Track -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-7">
+                  <label for="jobTitleInput" class="form-label small fw-semibold">Job Title <span class="text-danger">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="jobTitleInput"
+                    placeholder="e.g. Full-Stack Node.js &amp; React Developer"
+                    required
+                  />
+                </div>
+                <div class="col-md-5">
+                  <label for="careerSlugSelect" class="form-label small fw-semibold">Target Career Track <span class="text-danger">*</span></label>
+                  <select class="form-select" id="careerSlugSelect" required>
+                    <option value="front-end-developer">Front-End Developer</option>
+                    <option value="back-end-developer">Back-End Developer</option>
+                    <option value="full-stack-developer" selected>Full-Stack Developer</option>
+                    <option value="ai-ml-engineer">AI / ML Engineer</option>
+                    <option value="data-scientist">Data Scientist</option>
+                    <option value="cloud-architect">Cloud Architect</option>
+                    <option value="devops-engineer">DevOps Engineer</option>
+                    <option value="mobile-app-developer">Mobile App Developer</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Workplace, Location & Experience -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                  <label for="workplaceSelect" class="form-label small fw-semibold">Workplace Mode</label>
+                  <select class="form-select" id="workplaceSelect">
+                    <option value="remote" selected>Remote</option>
+                    <option value="hybrid">Hybrid</option>
+                    <option value="on-site">On-Site</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="locationInput" class="form-label small fw-semibold">Location</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="locationInput"
+                    value="Bengaluru, India / Remote"
+                    placeholder="e.g. Bengaluru, India"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="experienceLevelSelect" class="form-label small fw-semibold">Experience Level</label>
+                  <select class="form-select" id="experienceLevelSelect">
+                    <option value="fresher" selected>Fresher / College Grad</option>
+                    <option value="entry">Entry Level (0-1 yrs)</option>
+                    <option value="mid">Mid Level (2-4 yrs)</option>
+                    <option value="senior">Senior (5+ yrs)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Salary Range -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="salaryMinInput" class="form-label small fw-semibold">Minimum CTC (₹ / Annum)</label>
+                  <input type="number" class="form-control" id="salaryMinInput" value="500000" step="50000" />
+                </div>
+                <div class="col-md-6">
+                  <label for="salaryMaxInput" class="form-label small fw-semibold">Maximum CTC (₹ / Annum)</label>
+                  <input type="number" class="form-control" id="salaryMaxInput" value="900000" step="50000" />
+                </div>
+              </div>
+
+              <!-- Required Skills Tag Builder -->
+              <div class="mb-3">
+                <label class="form-label small fw-semibold d-flex justify-content-between">
+                  <span>Required Skills (Mandate verified credentials)</span>
+                  <span class="text-muted" style="font-size: 0.72rem;">Press enter or click badges</span>
+                </label>
+                <div class="d-flex flex-wrap gap-1.5 mb-2" id="skillPresetChips">
+                  <span class="badge bg-light text-dark border role-skill-chip cursor-pointer" data-skill="javascript">+ JavaScript</span>
+                  <span class="badge bg-light text-dark border role-skill-chip cursor-pointer" data-skill="react">+ React</span>
+                  <span class="badge bg-light text-dark border role-skill-chip cursor-pointer" data-skill="node.js">+ Node.js</span>
+                  <span class="badge bg-light text-dark border role-skill-chip cursor-pointer" data-skill="python">+ Python</span>
+                  <span class="badge bg-light text-dark border role-skill-chip cursor-pointer" data-skill="mongodb">+ MongoDB</span>
+                  <span class="badge bg-light text-dark border role-skill-chip cursor-pointer" data-skill="docker">+ Docker</span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="skillsInput"
+                  placeholder="e.g. javascript, react, node.js (comma-separated)"
+                  value="javascript, react, node.js"
+                />
+                <div class="form-check form-switch mt-2">
+                  <input class="form-check-input" type="checkbox" id="mandateVerifiedCheck" checked />
+                  <label class="form-check-label small text-muted" for="mandateVerifiedCheck">
+                    <strong>Enforce CareerPath AI Skill Verification:</strong> Only rank applicants who completed code or quiz verification.
+                  </label>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="mb-3">
+                <label for="jobDescInput" class="form-label small fw-semibold">Role Description <span class="text-danger">*</span></label>
+                <textarea
+                  class="form-control"
+                  id="jobDescInput"
+                  rows="3"
+                  placeholder="Briefly describe the responsibilities and tech stack expectations..."
+                  required
+                >We are seeking a talented full-stack engineer to build scalable web applications. You will collaborate with cross-functional teams, implement REST APIs, and develop responsive user interfaces.</textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer border-top px-4 py-3">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn cp-btn-primary px-4" id="btnSubmitJob">
+                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Publish Opening
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         MODAL: APPLICANT RADAR & HIRING STAGE UPDATER
+         ============================================================ -->
+    <div class="modal fade" id="applicantRadarModal" tabindex="-1" aria-labelledby="applicantRadarModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+          <div class="modal-header border-bottom px-4 py-3">
+            <div class="d-flex align-items-center gap-2">
+              <div class="p-2 rounded bg-primary-subtle text-primary">
+                <i class="bi bi-radar fs-5"></i>
+              </div>
+              <div>
+                <h5 class="modal-title fw-bold text-ink" id="applicantRadarModalLabel">
+                  Applicant Radar &middot; <span id="radarJobTitle" class="text-primary">Software Engineer</span>
+                </h5>
+                <p class="text-muted small mb-0">
+                  <span id="radarTotalCount">0</span> candidate applications ranked by AI Skill Match Score
+                </p>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body px-4 py-3 bg-light">
+            <div id="radarLoadingSpinner" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="text-muted small mt-2">Loading and scoring candidate applications...</p>
+            </div>
+
+            <div id="emptyRadarPlaceholder" class="text-center py-5 d-none">
+              <i class="bi bi-person-slash fs-1 text-muted"></i>
+              <h5 class="fw-bold text-ink mt-2">No Applications Yet</h5>
+              <p class="text-muted small">No students have applied to this opening yet. Students see direct postings on their job board.</p>
+            </div>
+
+            <!-- Candidate Cards List -->
+            <div class="d-flex flex-column gap-3 d-none" id="radarApplicantsList">
+              <!-- Dynamically populated cards -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/recruiter.js"></script>
+  </body>
+</html>

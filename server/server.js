@@ -66,6 +66,7 @@ const resumeRoutes = require('./routes/resumeRoutes');
 const evidenceRoutes = require('./routes/evidenceRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
 const readinessRoutes = require('./routes/readinessRoutes');
+const recruiterRoutes = require('./routes/recruiterRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect to MongoDB Atlas ───────────────────────────────
@@ -255,6 +256,9 @@ app.use('/api/interview', interviewRoutes);
 
 // Holistic 0-100% Job Readiness Index & Digital Certificate (Career GPS Step 11)
 app.use('/api/readiness', readinessRoutes);
+
+// Corporate Recruiter Verification & Direct Job Openings
+app.use('/api/recruiter', recruiterRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {
