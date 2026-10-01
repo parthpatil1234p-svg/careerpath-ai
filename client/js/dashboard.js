@@ -2346,8 +2346,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      const jobs = res.data.jobs;
+      const jobs = res.data.jobs || [];
+      const careerTitle = res.data.careerTitle || dashboardData?.activeRoadmap?.career?.title || 'Software Engineer';
       if (badge) badge.textContent = `${jobs.length} Positions Analyzed`;
+
+      // Configure Multi-Portal Hub Links
+      const portals = res.data.portals || {
+        linkedin: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(careerTitle)}&location=India`,
+        naukri: `https://www.naukri.com/jobs-in-india?k=${encodeURIComponent(careerTitle)}`,
+        indeed: `https://in.indeed.com/jobs?q=${encodeURIComponent(careerTitle)}&l=India`,
+        wellfound: `https://wellfound.com/jobs?query=${encodeURIComponent(careerTitle)}`,
+        internshala: `https://internshala.com/jobs/${encodeURIComponent(careerTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-'))}-jobs/`,
+        googleJobs: `https://www.google.com/search?q=${encodeURIComponent(careerTitle + ' jobs in India')}&ibp=htl;jobs`
+      };
+
+      const pLinkedin = document.getElementById('portalDashLinkedin');
+      const pNaukri = document.getElementById('portalDashNaukri');
+      const pIndeed = document.getElementById('portalDashIndeed');
+      const pWellfound = document.getElementById('portalDashWellfound');
+      const pInternshala = document.getElementById('portalDashInternshala');
+      const pGoogle = document.getElementById('portalDashGoogle');
+
+      if (pLinkedin) pLinkedin.href = portals.linkedin;
+      if (pNaukri) pNaukri.href = portals.naukri;
+      if (pIndeed) pIndeed.href = portals.indeed;
+      if (pWellfound) pWellfound.href = portals.wellfound;
+      if (pInternshala) pInternshala.href = portals.internshala;
+      if (pGoogle) pGoogle.href = portals.googleJobs;
+
+      // Wire "Launch All Major Portals" Button (Graceful Multi-Tab Handler)
+      const btnLaunchAll = document.getElementById('btnLaunchAllPortalsDash');
+      if (btnLaunchAll) {
+        btnLaunchAll.onclick = () => {
+          // Open primary portal immediately in new tab
+          window.open(portals.linkedin, '_blank', 'noopener,noreferrer');
+          // Show responsive launcher banner with 1-click links for all other portals
+          showAlert(`🚀 Launched LinkedIn Jobs! Click to open others: <a href="${portals.naukri}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Naukri</a> · <a href="${portals.indeed}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Indeed</a> · <a href="${portals.wellfound}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Wellfound</a> · <a href="${portals.internshala}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Internshala</a> · <a href="${portals.googleJobs}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Google</a>`, 'info');
+        };
+      }
 
       if (jobs.length === 0) {
         container.innerHTML = '<div class="col-12 text-center py-4 text-muted small">No live positions currently match your career profile.</div>';
@@ -2371,6 +2407,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           </button>
         `).join('');
 
+        const jobCompany = job.company || job.companyName || 'Tech Employer';
+        const jobPortals = job.portalLinks || {
+          linkedin: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title + ' ' + jobCompany)}&location=India`,
+          naukri: `https://www.naukri.com/jobs-in-india?k=${encodeURIComponent(job.title + ' ' + jobCompany)}`,
+          googleJobs: `https://www.google.com/search?q=${encodeURIComponent(job.title + ' ' + jobCompany + ' jobs in India')}&ibp=htl;jobs`
+        };
+
         return `
           <div class="col-md-6">
             <div class="matched-job-card h-100 d-flex flex-column justify-content-between">
@@ -2379,7 +2422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <div>
                     <h4 class="h6 fw-bold text-ink mb-1">${escapeHtml(job.title)}</h4>
                     <div class="text-secondary small fw-medium">
-                      <i class="bi bi-building me-1 text-teal"></i> ${escapeHtml(job.company)} · <i class="bi bi-geo-alt me-1 text-muted"></i> ${escapeHtml(job.location)}
+                      <i class="bi bi-building me-1 text-teal"></i> ${escapeHtml(jobCompany)} · <i class="bi bi-geo-alt me-1 text-muted"></i> ${escapeHtml(job.location)}
                     </div>
                   </div>
                   <span class="job-match-badge ${isHighMatch ? 'job-match-high' : ''}">
@@ -2409,8 +2452,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
               </div>
 
-              <div class="pt-3 border-top border-line d-flex align-items-center justify-content-between">
-                <span class="text-muted small" style="font-size: 0.75rem;">Source: ${escapeHtml(job.source || 'Tech Board')}</span>
+              <div class="pt-3 border-top border-line d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-1 flex-wrap">
+                  <span class="text-muted small me-1" style="font-size: 0.72rem;">Cross-Search:</span>
+                  <a href="${escapeHtml(jobPortals.linkedin)}" target="_blank" rel="noopener noreferrer" class="cross-search-btn" title="Search this role on LinkedIn">
+                    <i class="bi bi-linkedin text-primary"></i> LinkedIn
+                  </a>
+                  <a href="${escapeHtml(jobPortals.naukri)}" target="_blank" rel="noopener noreferrer" class="cross-search-btn" title="Search this role on Naukri">
+                    <i class="bi bi-briefcase-fill text-danger"></i> Naukri
+                  </a>
+                  <a href="${escapeHtml(jobPortals.googleJobs)}" target="_blank" rel="noopener noreferrer" class="cross-search-btn" title="Search on Google Jobs">
+                    <i class="bi bi-google text-danger"></i> Google
+                  </a>
+                </div>
                 <a href="${escapeHtml(job.url || '#')}" target="_blank" rel="noopener noreferrer" class="btn btn-navy btn-sm px-3 py-1">
                   Quick Apply <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>

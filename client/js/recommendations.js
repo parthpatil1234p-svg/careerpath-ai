@@ -307,6 +307,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     activeJobsCareerTitle = title;
 
     if (jobsModalCareerTitle) jobsModalCareerTitle.textContent = title;
+
+    // Configure Multi-Portal Hub Links for Selected Career
+    const cleanRole = String(title || 'Developer').trim();
+    const cleanSlug = cleanRole.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || slug;
+    const modalPortals = {
+      linkedin: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(cleanRole)}&location=India`,
+      naukri: `https://www.naukri.com/jobs-in-india?k=${encodeURIComponent(cleanRole)}`,
+      indeed: `https://in.indeed.com/jobs?q=${encodeURIComponent(cleanRole)}&l=India`,
+      wellfound: `https://wellfound.com/jobs?query=${encodeURIComponent(cleanRole)}`,
+      internshala: `https://internshala.com/jobs/${encodeURIComponent(cleanSlug)}-jobs/`,
+      googleJobs: `https://www.google.com/search?q=${encodeURIComponent(cleanRole + ' jobs in India')}&ibp=htl;jobs`
+    };
+
+    const pLinkedin = document.getElementById('portalModalLinkedin');
+    const pNaukri = document.getElementById('portalModalNaukri');
+    const pIndeed = document.getElementById('portalModalIndeed');
+    const pWellfound = document.getElementById('portalModalWellfound');
+    const pInternshala = document.getElementById('portalModalInternshala');
+    const pGoogle = document.getElementById('portalModalGoogle');
+
+    if (pLinkedin) pLinkedin.href = modalPortals.linkedin;
+    if (pNaukri) pNaukri.href = modalPortals.naukri;
+    if (pIndeed) pIndeed.href = modalPortals.indeed;
+    if (pWellfound) pWellfound.href = modalPortals.wellfound;
+    if (pInternshala) pInternshala.href = modalPortals.internshala;
+    if (pGoogle) pGoogle.href = modalPortals.googleJobs;
+
+    // Wire "Launch All Major Portals" Button (Graceful Multi-Tab Handler)
+    const btnLaunchAllModal = document.getElementById('btnLaunchAllPortalsModal');
+    if (btnLaunchAllModal) {
+      btnLaunchAllModal.onclick = () => {
+        window.open(modalPortals.linkedin, '_blank', 'noopener,noreferrer');
+        showAlert(`🚀 Launched LinkedIn Jobs! Click to open others: <a href="${modalPortals.naukri}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Naukri</a> · <a href="${modalPortals.indeed}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Indeed</a> · <a href="${modalPortals.wellfound}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Wellfound</a> · <a href="${modalPortals.internshala}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Internshala</a> · <a href="${modalPortals.googleJobs}" target="_blank" rel="noopener noreferrer" class="fw-bold text-decoration-underline ms-1 text-white">Google</a>`, 'info');
+      };
+    }
+
     if (jobsLoadingState) jobsLoadingState.classList.remove('d-none');
     if (jobsListContainer) {
       jobsListContainer.classList.add('d-none');
@@ -333,51 +369,73 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (jobsListContainer) {
         jobsListContainer.classList.remove('d-none');
-        jobsListContainer.innerHTML = jobs.map(job => `
-          <div class="job-item-card">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 mb-2">
-              <div>
-                <h4 class="h6 fw-bold text-ink mb-1 d-flex align-items-center gap-2 flex-wrap">
-                  <span>${escapeHtml(job.title)}</span>
-                  ${job.globalRemote ? '<span class="atlas-badge text-teal border-teal"><i class="bi bi-globe me-1"></i>Worldwide Remote</span>' : ''}
-                </h4>
-                <div class="job-company-tag d-flex align-items-center gap-2 flex-wrap">
-                  <span><i class="bi bi-building me-1 text-cyan"></i>${escapeHtml(job.companyName)}</span>
-                  <span>•</span>
-                  <span><i class="bi bi-geo-alt me-1 text-muted"></i>${escapeHtml(job.location)}</span>
-                  <span>•</span>
-                  <span class="text-secondary font-mono small">${escapeHtml(job.source || 'Live API')}</span>
+        jobsListContainer.innerHTML = jobs.map(job => {
+          const jobCompany = job.companyName || job.company || 'Tech Company';
+          const cardPortals = job.portalLinks || {
+            linkedin: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.title + ' ' + jobCompany)}&location=India`,
+            naukri: `https://www.naukri.com/jobs-in-india?k=${encodeURIComponent(job.title + ' ' + jobCompany)}`,
+            googleJobs: `https://www.google.com/search?q=${encodeURIComponent(job.title + ' ' + jobCompany + ' jobs in India')}&ibp=htl;jobs`
+          };
+
+          return `
+            <div class="job-item-card">
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 mb-2">
+                <div>
+                  <h4 class="h6 fw-bold text-ink mb-1 d-flex align-items-center gap-2 flex-wrap">
+                    <span>${escapeHtml(job.title)}</span>
+                    ${job.globalRemote ? '<span class="atlas-badge text-teal border-teal"><i class="bi bi-globe me-1"></i>Worldwide Remote</span>' : ''}
+                  </h4>
+                  <div class="job-company-tag d-flex align-items-center gap-2 flex-wrap">
+                    <span><i class="bi bi-building me-1 text-cyan"></i>${escapeHtml(jobCompany)}</span>
+                    <span>•</span>
+                    <span><i class="bi bi-geo-alt me-1 text-muted"></i>${escapeHtml(job.location)}</span>
+                    <span>•</span>
+                    <span class="text-secondary font-mono small">${escapeHtml(job.source || 'Live API')}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <span class="job-salary-badge">
+                    <i class="bi bi-cash-stack me-1"></i>${escapeHtml(job.salaryText)}
+                  </span>
+                  <span class="job-remote-badge text-uppercase">
+                    ${escapeHtml(job.workplace)}
+                  </span>
                 </div>
               </div>
-              <div class="d-flex align-items-center gap-2 flex-wrap">
-                <span class="job-salary-badge">
-                  <i class="bi bi-cash-stack me-1"></i>${escapeHtml(job.salaryText)}
-                </span>
-                <span class="job-remote-badge text-uppercase">
-                  ${escapeHtml(job.workplace)}
-                </span>
-              </div>
-            </div>
 
-            <!-- Tags & Direct Apply -->
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pt-2 border-top border-line mt-2">
-              <div class="d-flex flex-wrap gap-1 align-items-center">
-                ${(job.tags || []).map(t => {
-                  const isVerified = userVerifiedSkillNames.has(String(t).toLowerCase().trim());
-                  if (isVerified) {
-                    return `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-mono" style="font-size: 0.68rem;" title="Verified in your skill profile"><i class="bi bi-check-circle-fill me-1"></i>${escapeHtml(t)}</span>`;
-                  } else {
-                    return `<button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 font-mono btn-bridge-gap" data-skill="${escapeHtml(t)}" data-job="${escapeHtml(job.title)}" title="1-Click: Add 1-week micro-task to your active roadmap" style="font-size: 0.68rem;"><i class="bi bi-plus-circle me-1"></i>${escapeHtml(t)} <span class="badge bg-danger text-white ms-1" style="font-size: 0.55rem;">+ Bridge</span></button>`;
-                  }
-                }).join('')}
+              <!-- Tags, Cross-Search & Direct Apply -->
+              <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pt-2 border-top border-line mt-2 flex-wrap">
+                <div class="d-flex flex-wrap gap-1 align-items-center">
+                  ${(job.tags || []).map(t => {
+                    const isVerified = userVerifiedSkillNames.has(String(t).toLowerCase().trim());
+                    if (isVerified) {
+                      return `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-mono" style="font-size: 0.68rem;" title="Verified in your skill profile"><i class="bi bi-check-circle-fill me-1"></i>${escapeHtml(t)}</span>`;
+                    } else {
+                      return `<button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 font-mono btn-bridge-gap" data-skill="${escapeHtml(t)}" data-job="${escapeHtml(job.title)}" title="1-Click: Add 1-week micro-task to your active roadmap" style="font-size: 0.68rem;"><i class="bi bi-plus-circle me-1"></i>${escapeHtml(t)} <span class="badge bg-danger text-white ms-1" style="font-size: 0.55rem;">+ Bridge</span></button>`;
+                    }
+                  }).join('')}
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <div class="d-flex align-items-center gap-1">
+                    <a href="${escapeHtml(cardPortals.linkedin)}" target="_blank" rel="noopener noreferrer" class="cross-search-btn" title="Search this role on LinkedIn">
+                      <i class="bi bi-linkedin text-primary"></i> LinkedIn
+                    </a>
+                    <a href="${escapeHtml(cardPortals.naukri)}" target="_blank" rel="noopener noreferrer" class="cross-search-btn" title="Search this role on Naukri">
+                      <i class="bi bi-briefcase-fill text-danger"></i> Naukri
+                    </a>
+                    <a href="${escapeHtml(cardPortals.googleJobs)}" target="_blank" rel="noopener noreferrer" class="cross-search-btn" title="Search on Google Jobs">
+                      <i class="bi bi-google text-danger"></i> Google
+                    </a>
+                  </div>
+                  <a href="${escapeHtml(job.url)}" target="_blank" rel="noopener noreferrer" class="btn cp-btn-primary btn-sm px-3 py-1 text-nowrap">
+                    <span>View & Apply</span>
+                    <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                  </a>
+                </div>
               </div>
-              <a href="${escapeHtml(job.url)}" target="_blank" rel="noopener noreferrer" class="btn cp-btn-primary btn-sm px-3 py-1 text-nowrap">
-                <span>View & Apply</span>
-                <i class="bi bi-box-arrow-up-right ms-1 small"></i>
-              </a>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         // Wire 1-Click Bridge the Gap micro-task injection
         jobsListContainer.querySelectorAll('.btn-bridge-gap').forEach(btn => {

@@ -276,3 +276,62 @@ main p:not(.text-center) {
     margin: 0;
   }
 }
+
+/* --------------------------------------------------------------------------
+   7. Multi-Portal Job Market Hub & Launcher Badges
+   -------------------------------------------------------------------------- */
+.portal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid var(--border-line, #e2e8f0);
+  color: var(--ink, #0f172a);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.portal-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-teal, #0d9488);
+  color: var(--color-teal, #0d9488);
+}
+.portal-badge i {
+  font-size: 0.95rem;
+  transition: transform 0.2s ease;
+}
+.portal-badge:hover i {
+  transform: scale(1.15);
+}
+.portal-linkedin:hover { border-color: #0a66c2; color: #0a66c2; }
+.portal-naukri:hover { border-color: #e60023; color: #e60023; }
+.portal-indeed:hover { border-color: #2164f3; color: #2164f3; }
+.portal-wellfound:hover { border-color: #ea580c; color: #ea580c; }
+.portal-internshala:hover { border-color: #008bdc; color: #008bdc; }
+.portal-google:hover { border-color: #ea4335; color: #ea4335; }
+
+.cross-search-btn {
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid var(--border-line, #e2e8f0);
+  background: #f8fafc;
+  color: var(--secondary, #475569);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s ease;
+}
+.cross-search-btn:hover {
+  background: #ffffff;
+  color: var(--ink, #0f172a);
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+

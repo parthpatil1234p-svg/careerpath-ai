@@ -5,7 +5,31 @@
 
 const express = require('express');
 const router = express.Router();
-const { getJobsForCareer, searchLiveJobs, searchAdzunaJobs, matchJobsWithSkills } = require('../services/jobBoardService');
+const {
+  getJobsForCareer,
+  searchLiveJobs,
+  searchAdzunaJobs,
+  matchJobsWithSkills,
+  generateMultiPortalLinks
+} = require('../services/jobBoardService');
+
+/**
+ * GET /api/jobs/portal-links
+ * Query params: role, location, company
+ * Returns generated search deep-links for all major platforms (LinkedIn, Naukri, Indeed, Wellfound, Internshala, Google Jobs).
+ */
+router.get('/portal-links', (req, res) => {
+  const { role, location, company } = req.query;
+  const links = generateMultiPortalLinks(role || 'Software Engineer', location || 'India', company || null);
+  return res.status(200).json({
+    success: true,
+    data: {
+      role: role || 'Software Engineer',
+      location: location || 'India',
+      portals: links
+    }
+  });
+});
 
 /**
  * GET /api/jobs/adzuna
@@ -150,9 +174,12 @@ router.get('/matched-for-user', protect, async (req, res, next) => {
 
       const rawPct = Math.round((matches / jobTags.length) * 100);
       const matchPercentage = Math.min(98, Math.max(45, rawPct));
+      const companyStr = job.companyName || job.company || 'Tech Company';
+      const portalLinks = job.portalLinks || generateMultiPortalLinks(job.title, 'India', companyStr);
 
       return {
         ...job,
+        portalLinks,
         matchPercentage,
         matchedTags,
         missingTags,
@@ -164,13 +191,17 @@ router.get('/matched-for-user', protect, async (req, res, next) => {
     // Sort by highest match %
     evaluatedJobs.sort((a, b) => b.matchPercentage - a.matchPercentage);
 
+    const targetCareerTitle = activeRoadmap?.career?.title || 'Software Engineer';
+    const hubPortals = generateMultiPortalLinks(targetCareerTitle, 'India');
+
     return res.status(200).json({
       success: true,
       message: 'Personalized matched jobs with exact match percentages',
       data: {
         total: evaluatedJobs.length,
         jobs: evaluatedJobs,
-        careerTitle: activeRoadmap?.career?.title || 'Developer'
+        careerTitle: targetCareerTitle,
+        portals: hubPortals
       }
     });
   } catch (err) {

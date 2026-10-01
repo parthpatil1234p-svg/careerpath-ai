@@ -170,6 +170,27 @@ const FALLBACK_JOBS = {
 };
 
 /**
+ * Generates verified public search deep-links across 6 major job platforms.
+ * 100% reliable without third-party API keys or rate-limits.
+ */
+function generateMultiPortalLinks(roleTitle = 'Software Engineer', location = 'India', companyName = null) {
+  const cleanRole = String(roleTitle || 'Developer').replace(/<\/?[^>]+(>|$)/g, '').trim();
+  const cleanSlug = cleanRole.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'software-engineer';
+  const searchCompany = companyName ? String(companyName).trim() : '';
+
+  const queryWithCompany = searchCompany ? `${cleanRole} ${searchCompany}` : cleanRole;
+
+  return {
+    linkedin: `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(queryWithCompany)}&location=${encodeURIComponent(location)}`,
+    naukri: `https://www.naukri.com/jobs-in-india?k=${encodeURIComponent(queryWithCompany)}`,
+    indeed: `https://in.indeed.com/jobs?q=${encodeURIComponent(queryWithCompany)}&l=${encodeURIComponent(location)}`,
+    wellfound: `https://wellfound.com/jobs?query=${encodeURIComponent(cleanRole)}`,
+    internshala: `https://internshala.com/jobs/${encodeURIComponent(cleanSlug)}-jobs/`,
+    googleJobs: `https://www.google.com/search?q=${encodeURIComponent(queryWithCompany + ' jobs in ' + location)}&ibp=htl;jobs`,
+  };
+}
+
+/**
  * Normalizes raw job object from AIDevBoard API into clean UI structure
  */
 function normalizeJob(job) {
@@ -180,10 +201,13 @@ function normalizeJob(job) {
     salaryText = `From $${Math.round(job.salary_min / 1000)}k / yr`;
   }
 
+  const jobTitle = job.title || 'Software Engineer';
+  const company = job.company_name || 'Tech Company';
+
   return {
     id: job.id || job.slug || String(Math.random()),
-    title: job.title || 'Software Engineer',
-    companyName: job.company_name || 'Tech Company',
+    title: jobTitle,
+    companyName: company,
     workplace: job.workplace || 'remote',
     globalRemote: !!job.global_remote,
     location: job.location || (job.workplace === 'remote' ? 'Remote' : 'Hybrid'),
@@ -191,6 +215,7 @@ function normalizeJob(job) {
     salaryText,
     tags: Array.isArray(job.tags) ? job.tags.slice(0, 5) : [],
     url: job.url || (job.slug ? `https://aidevboard.com/jobs/${job.slug}` : 'https://aidevboard.com'),
+    portalLinks: generateMultiPortalLinks(jobTitle, 'India', company),
     postedAt: job.created_at || new Date().toISOString(),
     source: 'Live AI Dev Board'
   };
@@ -258,21 +283,26 @@ async function searchAdzunaJobs({ query = 'developer', country = 'in', limit = 8
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data.results) && data.results.length > 0) {
-        return data.results.map(r => ({
-          id: `adzuna-${r.id}`,
-          title: r.title ? r.title.replace(/<\/?[^>]+(>|$)/g, '').trim() : query,
-          companyName: r.company?.display_name || 'Top Tech Employer',
-          workplace: (r.title && r.title.toLowerCase().includes('remote')) ? 'remote' : 'hybrid',
-          globalRemote: false,
-          location: r.location?.display_name || 'India (Metro Hubs)',
-          level: 'entry-to-mid',
-          salaryText: r.salary_min
-            ? `₹${(r.salary_min / 100000).toFixed(1)} – ₹${(r.salary_max / 100000).toFixed(1)} LPA`
-            : '₹5.5 – ₹14.0 LPA (Market Est.)',
-          tags: [r.category?.tag || 'technology', 'india', 'tech-hiring'].filter(Boolean),
-          url: r.redirect_url,
-          source: 'Adzuna India'
-        }));
+        return data.results.map(r => {
+          const jobTitle = r.title ? r.title.replace(/<\/?[^>]+(>|$)/g, '').trim() : query;
+          const company = r.company?.display_name || 'Top Tech Employer';
+          return {
+            id: `adzuna-${r.id}`,
+            title: jobTitle,
+            companyName: company,
+            workplace: (r.title && r.title.toLowerCase().includes('remote')) ? 'remote' : 'hybrid',
+            globalRemote: false,
+            location: r.location?.display_name || 'India (Metro Hubs)',
+            level: 'entry-to-mid',
+            salaryText: r.salary_min
+              ? `₹${(r.salary_min / 100000).toFixed(1)} – ₹${(r.salary_max / 100000).toFixed(1)} LPA`
+              : '₹5.5 – ₹14.0 LPA (Market Est.)',
+            tags: [r.category?.tag || 'technology', 'india', 'tech-hiring'].filter(Boolean),
+            url: r.redirect_url,
+            portalLinks: generateMultiPortalLinks(jobTitle, 'India', company),
+            source: 'Adzuna India'
+          };
+        });
       }
     }
   } catch (err) {
@@ -325,7 +355,10 @@ async function getJobsForCareer(careerSlug, { globalRemote = false, limit = 8 } 
 
   // 3. Graceful fallback from curated cache
   const fallbacks = FALLBACK_JOBS[careerSlug] || FALLBACK_JOBS['front-end-developer'];
-  const filtered = globalRemote ? fallbacks.filter(j => j.globalRemote) : fallbacks;
+  const filtered = (globalRemote ? fallbacks.filter(j => j.globalRemote) : fallbacks).map(j => ({
+    ...j,
+    portalLinks: j.portalLinks || generateMultiPortalLinks(j.title, 'India', j.companyName)
+  }));
 
   return {
     success: true,
@@ -390,11 +423,15 @@ async function matchJobsWithSkills(skills = [], { workplace = 'remote', limit = 
     success: true,
     source: 'verified-cache',
     totalMatches: fallbacks.length,
-    jobs: fallbacks
+    jobs: fallbacks.map(j => ({
+      ...j,
+      portalLinks: j.portalLinks || generateMultiPortalLinks(j.title, 'India', j.companyName)
+    }))
   };
 }
 
 module.exports = {
+  generateMultiPortalLinks,
   getJobsForCareer,
   searchLiveJobs,
   searchAdzunaJobs,
