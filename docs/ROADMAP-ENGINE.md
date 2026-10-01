@@ -140,7 +140,44 @@ exports.evaluateJobReadyCertification = async function(userId) {
 
 ---
 
-## 🧪 Automated Verification Suite
+## 5. 🛡️ AI Video Learning Dedication & Anti-Scrubbing Guard
+
+To ensure genuine skill acquisition rather than superficial checkbox clicks, video milestone tasks in the student's roadmap are protected by the **AI Video Learning Dedication & Anti-Scrubbing Guard**:
+
+```mermaid
+flowchart TD
+    TaskOpen[Student Clicks Video Learning Task] --> EmbedIFrame[Mount YouTube IFrame API Sandbox]
+    EmbedIFrame --> TelemetryLoop[Start 500ms Real-Time Telemetry Polling]
+    
+    subgraph Invariants ["Hardware-Assisted Telemetry Invariants"]
+        ScrubCheck{Current Time > Max Watched + 2s?}
+        SpeedCheck{Playback Rate > 1.5x?}
+        SnapBack[Force seekTo maxWatchedTime + Display Toast]
+        SpeedCap[Enforce 1.5x Speed Ceiling]
+    end
+    
+    TelemetryLoop --> ScrubCheck
+    ScrubCheck -- Yes --> SnapBack
+    ScrubCheck -- No --> SpeedCheck
+    SpeedCheck -- Yes --> SpeedCap
+    SpeedCheck -- No --> RecordWatchTime[Increment Legitimate Watch Duration]
+    
+    RecordWatchTime --> CheckNinety{Watch Duration ≥ 90% of Video?}
+    CheckNinety -- Yes --> PromptReflection[Display Reflection & Synthesis Input]
+    PromptReflection --> SubmitSummary[Student Submits 30+ Character Reflection]
+    SubmitSummary --> PostVerify[POST /api/roadmaps/tasks/:taskId/verify-video]
+    PostVerify --> UnlockCheckbox[Set isVideoVerified=true & Unlock Task Completion]
+```
+
+### 5.1 Enforcement Mechanics
+1. **Forward Scrub Prevention:** If a user drags the playback scrubber beyond `maxWatchedTime + 2` seconds, the player immediately rewinds back to the furthest legitimate timestamp and emits an alert: *"Forward scrubbing is disabled to ensure dedication."*
+2. **Speed-Run Ceiling:** Playback rate is capped at `1.5x`. Attempts to run at `2.0x` or via third-party browser plugins trigger an automatic reset to `1.5x`.
+3. **Reflective Synthesis Gate:** Reaching 90% watch time prompts an interactive reflection modal requiring at least 30 characters summarizing key architectural takeaways.
+4. **Backend Validation:** `/api/roadmaps/tasks/:taskId/verify-video` validates that reported watch duration matches server expectations and stores the student reflection in `RoadmapTask.videoReflectionSummary`.
+
+---
+
+## 6. 🧪 Automated Verification Suite
 
 Run the full verification suite to validate all 9 core assertions:
 ```bash

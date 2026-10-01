@@ -18,6 +18,11 @@
 8. [Multi-Model AI Inference Pipeline (Groq + Gemini + BYOK)](#8-multi-model-ai-inference-pipeline-groq--gemini--byok)
 9. [Database Indexing & Persistence Strategy](#9-database-indexing--persistence-strategy)
 10. [Security, Guardrails & Anti-Abuse Protocols](#10-security-guardrails--anti-abuse-protocols)
+11. [Recruiter Verification, Corporate Validation & ATS Pipeline](#11-recruiter-verification-corporate-validation--ats-pipeline)
+12. [Recruiter & Student Portal Isolation & RBAC Architecture](#12-recruiter--student-portal-isolation--rbac-architecture)
+13. [Role-Smart Brand Logo Dispatch & Landing Redirection Engine](#13-role-smart-brand-logo-dispatch--landing-redirection-engine)
+14. [AI Video Learning Dedication & Anti-Scrubbing Guard](#14-ai-video-learning-dedication--anti-scrubbing-guard)
+15. [Modernized Student Profile Header Card Architecture](#15-modernized-student-profile-header-card-architecture)
 
 ---
 
@@ -37,43 +42,56 @@ CareerPath AI is engineered to bridge India's massive **academic-to-industry emp
 ```mermaid
 flowchart TD
     subgraph ClientLayer ["1. Frontend Presentation Layer (Vercel Edge Network)"]
-        Browser["Student Web Browser (Desktop / Tablet / Mobile)"]
+        Browser["User Web Browser (Student / Recruiter / Evaluator)"]
         UI["Glassmorphism UI Engine (HTML5 · CSS3 · 90% Bento Grid)"]
         ThreeConstellation["Three.js 3D Career Universe (Orbital Constellation + 2D Fallback)"]
         Gauge["2D SVG Percentage Progress Meter (0-100%)"]
         ResumeWidget["6-State Single Resume Manager (Drag-and-Drop)"]
         JobReadyBadge["Job Ready 4-Rule Compliance Widget"]
+        RecruiterDashboard["Recruiter Dashboard & ATS Applicant Radar"]
+        VideoDedicationGuard["AI Video Learning Player (Anti-Scrub Telemetry)"]
+        SmartLogo["Role-Smart Brand Logo Dispatcher (Auth.bindSmartLogo)"]
         
         Browser --> UI
         UI --> ThreeConstellation
         UI --> Gauge
         UI --> ResumeWidget
         UI --> JobReadyBadge
+        UI --> RecruiterDashboard
+        UI --> VideoDedicationGuard
+        UI --> SmartLogo
     end
 
     subgraph GatewayLayer ["2. Application Gateway Layer (Render Cloud · Node.js & Express)"]
         SecurityMW["Security Middleware (Helmet · CORS · Express-Rate-Limit)"]
         AuthGuard["Stateless JWT Guard (Bearer Token · 7-Day Expiry)"]
+        RBACGuard["Portal Isolation RBAC (requireStudent · requireRecruiter)"]
         MagicValidator["Magic-Byte Binary Inspector (%PDF · PK-DOCX · OLE-DOC)"]
         StreamFilter["Primary Stream Isolation Controller"]
         RecEngine["60/25/15 Deterministic Matching Engine"]
-        RoadmapController["Hardened Roadmap Controller (409 Conflict Guard)"]
+        RoadmapController["Hardened Roadmap & Video Controller"]
         ReadinessEngine["4-Rule Job Ready Verification Engine"]
+        RecruiterController["Recruiter Verification & ATS Controller"]
         CloudinaryService["Cloudinary Media Lifecycle Service"]
 
         SecurityMW --> AuthGuard
-        AuthGuard --> MagicValidator
-        AuthGuard --> StreamFilter
-        AuthGuard --> RecEngine
-        AuthGuard --> RoadmapController
-        AuthGuard --> ReadinessEngine
-        AuthGuard --> CloudinaryService
+        AuthGuard --> RBACGuard
+        RBACGuard --> MagicValidator
+        RBACGuard --> StreamFilter
+        RBACGuard --> RecEngine
+        RBACGuard --> RoadmapController
+        RBACGuard --> ReadinessEngine
+        RBACGuard --> RecruiterController
+        RBACGuard --> CloudinaryService
     end
 
     subgraph DatabaseLayer ["3. Persistence Layer (MongoDB Atlas Cloud · TLS Encryption)"]
-        UserCollection[("Users Collection\n- Profile, Stream, lastAbandonedRouteAt")]
-        ResumeCollection[("Resumes Collection\n- Dedicated 1:1 Schema\n- Unique Index: { user: 1 }")]
-        RoadmapCollection[("Roadmaps Collection\n- Partial Unique Index:\n  { user: 1, status: 'active' }\n- Status: active, completed, abandoned, archived")]
+        UserCollection[("Users Collection\n- Role, Corporate Domain, Readiness")]
+        CompanyCollection[("Companies Collection\n- Domain, Verification Score, Logo")]
+        JobOpeningCollection[("JobOpenings Collection\n- Required Skills, Applicants Count")]
+        JobAppCollection[("JobApplications Collection\n- Candidate Match Score, Stage")]
+        ResumeCollection[("Resumes Collection\n- Unique Index: { user: 1 }")]
+        RoadmapCollection[("Roadmaps Collection\n- Partial Unique: { user: 1, status: 'active' }")]
         SkillCollection[("Skills Collection\n- 76+ Standardized Skills & Categories")]
         CareerCollection[("Careers Collection\n- 15 Tech Curricula & Salary Benchmarks")]
     end
@@ -85,6 +103,7 @@ flowchart TD
         AdzunaAPI["Adzuna Developer API\n(Live Indian Tech Jobs & ₹ CTC)"]
         CloudinaryCDN["Cloudinary Cloud Media CDN\n(Encrypted Resumes & Avatars)"]
         DomainBank["Curated Domain Question Bank\n(860+ Line Offline Safety Fallback)"]
+        YouTubeIFrame["YouTube IFrame API\n(Anti-Scrubbing Telemetry & Player Events)"]
     end
 
     UI -- "HTTPS REST API (JSON / Multipart)" --> SecurityMW
@@ -94,10 +113,14 @@ flowchart TD
     RoadmapController <--> GroqLPU
     RoadmapController <--> GeminiCloud
     RoadmapController <--> DomainBank
+    RoadmapController <--> YouTubeIFrame
     RecEngine <--> AdzunaAPI
 
     RoadmapController -- "Enforce Partial Index" --> RoadmapCollection
     MagicValidator -- "Enforce 1:1 Schema" --> ResumeCollection
+    RecruiterController <--> CompanyCollection
+    RecruiterController <--> JobOpeningCollection
+    RecruiterController <--> JobAppCollection
     ReadinessEngine <--> UserCollection
     ReadinessEngine <--> SkillCollection
     RecEngine <--> CareerCollection
@@ -372,3 +395,157 @@ flowchart LR
    - Auth endpoints: Max 10 requests per 15-minute window per IP.
    - AI endpoints: Max 30 requests per minute per IP.
    - Abandonment endpoint: Strictly limited to 1 abandonment per 7 days per account.
+
+---
+
+## 11. Recruiter Verification, Corporate Validation & ATS Pipeline
+
+To combat fake job postings and ensure high-integrity campus recruitment, CareerPath AI incorporates a multi-layer corporate verification and applicant tracking engine:
+
+```
+[ Recruiter Registration ]
+            │
+            ▼
+┌───────────────────────────────────────┐
+│ Free Webmail Domain Blacklist Filter  │
+│ (Rejects @gmail, @yahoo, @outlook)    │
+└───────────────────┬───────────────────┘
+                    ▼
+┌───────────────────────────────────────┐
+│ Corporate Domain Cross-Match & DNS    │
+│ (Validates corporate website & domain)│
+└───────────────────┬───────────────────┘
+                    ▼
+┌───────────────────────────────────────┐
+│ Work Email OTP Activation Challenge   │
+│ (Issues 6-digit cryptographic token)  │
+└───────────────────┬───────────────────┘
+                    ▼
+┌────────────────────────────────────────────────────────┐
+│ Verified Recruiter Status Granted                      │
+│ - canPostJobs: true                                    │
+│ - Company Profile indexed in Companies collection      │
+└───────────────────┬────────────────────────────────────┘
+                    ▼
+┌────────────────────────────────────────────────────────┐
+│ ATS Radar & Candidate 1-Click Application Pipeline     │
+│ - Direct job openings with mandatory verified skills   │
+│ - AI Match Scoring (96%+ with verified skill boost)    │
+│ - Dynamic hiring stage progression (APPLIED ➔          │
+│   SHORTLISTED ➔ INTERVIEW ➔ OFFERED)                   │
+└────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 12. Recruiter & Student Portal Isolation & RBAC Architecture
+
+To guarantee strict organizational boundaries between recruiters and students, the application enforces Role-Based Access Control (RBAC) at both the Express gateway and the browser DOM level:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    PORTAL ISOLATION ARCHITECTURE MATRIX                     │
+├─────────────────────┬───────────────────────────┬───────────────────────────┤
+│ Role / Context      │ Student Portal Catalog    │ Recruiter Portal Catalog  │
+│                     │ (/dashboard, /roadmap,    │ (/recruiter-dashboard,    │
+│                     │  /assessment, /jobs)      │  /recruiter-onboarding)   │
+├─────────────────────┼───────────────────────────┼───────────────────────────┤
+│ Student             │ 🟢 Full Unrestricted      │ 🔴 Blocked (HTTP 403 /    │
+│ (role: 'student')   │    Access                 │    Client Auto-Redirect)  │
+├─────────────────────┼───────────────────────────┼───────────────────────────┤
+│ Recruiter           │ 🟡 View-Only with Floating│ 🟢 Full Job Creation &    │
+│ (role: 'recruiter') │    Return Bar             │    Applicant Management   │
+├─────────────────────┼───────────────────────────┼───────────────────────────┤
+│ Hackathon Evaluator │ 🟢 Dual Evaluation Bypass │ 🟢 Dual Evaluation Bypass │
+│ (demouser@gmail.com)│    (Seamless Testing)     │    (Seamless Testing)     │
+└─────────────────────┴───────────────────────────┴───────────────────────────┘
+```
+
+### 12.1 Backend Middleware Guards
+- **`requireStudent`**: Validates `req.user.role === 'student'`. Rejects corporate recruiters with `HTTP 403 Forbidden` (`code: 'RECRUITER_ACCESS_DENIED'`), while seamlessly bypassing `demouser@gmail.com`.
+- **`requireRecruiter`**: Validates `req.user.role === 'recruiter'`. Rejects students with `HTTP 403 Forbidden` (`code: 'STUDENT_ACCESS_DENIED'`), while allowing `demouser@gmail.com` for instant end-to-end evaluation.
+
+### 12.2 Client-Side Pre-Render Traps & Floating Session Bar
+- **Pre-Render Traps:** Client scripts execute before heavy DOM rendering. If a student attempts to navigate directly to `/recruiter-dashboard.html`, the browser intercepts the token payload and redirects immediately to `/dashboard.html`.
+- **Floating Recruiter Return Bar:** When a corporate recruiter inspects public student catalog pages (`jobs.html`), a floating pill fixed to the viewport displays:
+  `"🏢 Logged in as Recruiter (<Company>) — [Back to Recruiter Dashboard]"`
+
+---
+
+## 13. Role-Smart Brand Logo Dispatch & Landing Redirection Engine
+
+The brand logo (`.brand-logo`, `#brandLogoAnchor`) in the top navigation is role-aware and dynamically dispatches clicks based on authenticated user context via `Auth.bindSmartLogo()`:
+
+```mermaid
+flowchart TD
+    ClickLogo["User Clicks Brand Logo in Navbar"] --> CheckAuth{"Is Authenticated?"}
+    
+    CheckAuth -- "No (Guest)" --> GoIndex["Navigate to /index.html"]
+    CheckAuth -- "Yes" --> CheckRole{"Evaluate User Role"}
+    
+    CheckRole -- "Recruiter" --> CheckPage{"On Recruiter Dashboard?"}
+    CheckPage -- "Yes" --> ReloadRecruiter["Stay on /recruiter-dashboard.html"]
+    CheckPage -- "No" --> GoRecruiter["Dispatch to /recruiter-dashboard.html"]
+    
+    CheckRole -- "Student" --> CheckStudentPage{"On Student Dashboard?"}
+    CheckStudentPage -- "Yes" --> ReloadStudent["Stay on /dashboard.html"]
+    CheckStudentPage -- "No" --> GoStudent["Dispatch to /dashboard.html"]
+    
+    CheckRole -- "Demo Evaluator" --> GoDashboard["Dispatch to /dashboard.html (or ?view=public)"]
+```
+
+### 13.1 Landing Page Auto-Redirect (`index.html`)
+When an authenticated recruiter visits `index.html`, the landing page automatically forwards them directly to `/recruiter-dashboard.html`.
+- **Public Preview Bypass:** If the URL query contains `?view=public`, the landing page bypasses the auto-redirect, allowing corporate users and evaluators to inspect the landing page and 3D Career Universe without logging out.
+- **Adaptive CTAs:** Landing hero and navbar buttons automatically toggle between `"Open Recruiter Dashboard"` and `"Student Portal"`.
+
+---
+
+## 14. AI Video Learning Dedication & Anti-Scrubbing Guard
+
+To prevent passive skipping, forward-scrubbing exploitation, and hollow task completion, the Roadmap execution player incorporates hardware-assisted telemetry via the **YouTube IFrame API**:
+
+```
+                       [ Task Video Modal Opened ]
+                                    │
+                                    ▼
+                     [ YouTube IFrame API Mounted ]
+                                    │
+           ┌────────────────────────┴────────────────────────┐
+           ▼                                                 ▼
+[ Anti-Scrubbing Invariant ]                      [ Max Speed Invariant ]
+If currentTime > maxWatchedTime + 2s              If playbackRate > 1.5x
+➔ Snaps back to maxWatchedTime                    ➔ Enforces 1.5x ceiling
+➔ Displays "Please watch continuously"            ➔ Rejects 2.0x+ speed runs
+           │                                                 │
+           └────────────────────────┬────────────────────────┘
+                                    ▼
+                     [ Minimum Watch Time Satisfied ]
+                     (e.g., ≥ 90% of duration / 300s)
+                                    │
+                                    ▼
+                     [ Reflection & Synthesis Prompt ]
+                     (Student submits 30+ char summary)
+                                    │
+                                    ▼
+                     [ POST /api/roadmaps/tasks/:taskId/verify-video ]
+                     - Server validates duration & reflection text
+                     - Stamps videoCompleted: true
+                     - Unlocks milestone task checkbox
+```
+
+---
+
+## 15. Modernized Student Profile Header Card Architecture
+
+The student profile header card on `dashboard.html` features an Apple and Linear-inspired aesthetic:
+1. **Design Tokens:** `backdrop-blur-md`, subtle zinc border glow (`rgba(255, 255, 255, 0.08)`), dark mode contrast surfaces (`#090D16`), and responsive flex alignment.
+2. **50% Circular Vector Avatar:** Crisp, high-DPI circular portrait with automated initials fallback and glowing status ring.
+3. **Verified Student Badge:** Emerald-accented verified badge (`✓ Verified Student`) linked to completed skill verification.
+4. **Segmented Status Pill Control:** Interactive 4-state recruitment toggle:
+   - `Actively Looking` (Emerald Glow)
+   - `Open to Offers` (Sky Blue Glow)
+   - `Casually Browsing` (Amber Glow)
+   - `Not Available` (Slate Glow)
+5. **Metadata Badging:** Academic stream, graduation year, college institution, and GitHub connection badges.
+

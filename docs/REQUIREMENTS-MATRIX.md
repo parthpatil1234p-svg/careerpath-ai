@@ -49,3 +49,11 @@
 | **TECH-007** | Three.js 3D Career Universe with 2D fallback | TRD Sec 2 | `TECH` | WebGL canvas with instant 2D glassmorphic fallback | Frame rate test (60 FPS) | **Verified** |
 | **INNOV-001** | Dual-Engine AI Career Mentor (Groq + Gemini) | API-ECOSYSTEM | `INNOV`| Sub-300ms LPU mentor drawer with Gemini failover | Live chat speed audit | **Verified** |
 | **INNOV-002** | Live Indian Tech Jobs & CTC Salary Telemetry | API-ECOSYSTEM | `INNOV`| Adzuna Developer API integration with cached failover | Live job query test | **Verified** |
+| **TEAM-009** | Recruiter Verification & Corporate Domain Onboarding | ARCHITECTURE Sec 11 | `TEAM` | Free webmail blacklist + corporate DNS + OTP activation | Corporate email & OTP test | **Verified** |
+| **TEAM-010** | Direct Recruiter Job Posting & ATS Pipeline | ARCHITECTURE Sec 11 | `TEAM` | `POST /api/recruiter/jobs` with mandatory verified skills | Job creation & applicant fetch | **Verified** |
+| **TEAM-011** | Candidate 1-Click Application & AI Match Radar | API-SPEC Sec 14 | `TEAM` | `POST /api/jobs/:id/apply` + real-time match scoring (96%) | 1-Click apply & stage transition | **Verified** |
+| **TEAM-012** | Recruiter & Student Portal Isolation & RBAC | ARCHITECTURE Sec 12 | `TECH` | `requireStudent`, `requireRecruiter`, 403 gates & dual bypass | 26/26 unit test assertions | **Verified** |
+| **TEAM-013** | Role-Smart Brand Logo Dispatch & Landing Auto-Redirect | ARCHITECTURE Sec 13 | `TECH` | `Auth.bindSmartLogo()` + pre-render recruiter forward | Client redirect test suite | **Verified** |
+| **TEAM-014** | AI Video Learning Dedication & Anti-Scrubbing Guard | ROADMAP Sec 5 | `INNOV`| YouTube IFrame telemetry, 1.5x cap & reflection gate | Video verification test | **Verified** |
+| **TEAM-015** | Apple/Linear-Grade Modern Student Profile Header Card | UI-UX Sec 6 | `TEAM` | Glassmorphic card, circular avatar, segmented status pill | Cross-viewport design review | **Verified** |
+

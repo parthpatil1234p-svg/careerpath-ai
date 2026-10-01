@@ -144,7 +144,15 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 📝 **Master Presentation Content** | **[`docs/PPT-CONTENT.md`](docs/PPT-CONTENT.md)** | Full markdown transcript of all presentation slides & technical metrics |
 | 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
 | 🏛️ **System Architecture Spec** | **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** | Comprehensive system architecture & threat model specification |
-| 🔌 **Complete API Specification** | **[`docs/API-SPECIFICATION.md`](docs/API-SPECIFICATION.md)** | Full REST API specification across all 11 modules |
+| 🔌 **Complete API Specification** | **[`docs/API-SPECIFICATION.md`](docs/API-SPECIFICATION.md)** | Full REST API specification across all 15 modules (including ATS & Video Telemetry) |
+| 🗄️ **Backend Schema & Models** | **[`docs/BACKEND-SCHEMA.md`](docs/BACKEND-SCHEMA.md)** | Mongoose data models for User, Company, JobOpening, Application, Resume, Roadmap |
+| 🌐 **External API Ecosystem** | **[`docs/API-ECOSYSTEM.md`](docs/API-ECOSYSTEM.md)** | Multi-model Groq/Gemini AI, Adzuna, GitHub, Cloudinary, YouTube IFrame API mesh |
+| 📋 **Requirements Matrix (RTM)** | **[`docs/REQUIREMENTS-MATRIX.md`](docs/REQUIREMENTS-MATRIX.md)** | 100% verified traceability matrix mapped to official hackathon rules & ED-02 |
+| 🎨 **UI/UX Design Systems** | **[`docs/UI-UX-DESIGN.md`](docs/UI-UX-DESIGN.md)** | Apple/Linear-grade profile card, 90% Bento Grid, 2D percentage gauge, glassmorphic design |
+| 🔄 **Interactive User Flows** | **[`docs/APP-FLOW.md`](docs/APP-FLOW.md)** | End-to-end Mermaid sequence diagrams for student, recruiter, video, and RBAC flows |
+| 🗺️ **Roadmap Engine Architecture** | **[`docs/ROADMAP-ENGINE.md`](docs/ROADMAP-ENGINE.md)** | Single active route invariant, 4-rule Job Ready engine, anti-scrubbing video guard |
+| 📄 **Single Resume Engine** | **[`docs/RESUME-ENGINE.md`](docs/RESUME-ENGINE.md)** | Dedicated 1:1 schema, magic-byte binary validation, transactional Cloudinary lifecycle |
+| 💼 **Business Model & Flywheel** | **[`docs/BUSINESS-MODEL.md`](docs/BUSINESS-MODEL.md)** | B2B2C Talent & Telemetry Flywheel, TPO campus licensing & recruiter talent passes |
 
 ---
 

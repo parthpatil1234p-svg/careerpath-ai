@@ -17,29 +17,38 @@ server/
 ├── config/
 │   └── db.js                      # MongoDB Atlas connection singleton
 ├── models/
-│   ├── User.js                    # Student account, skills, GitHub profile & quiz verification
+│   ├── User.js                    # Student & recruiter accounts, corporate domain & verification
+│   ├── Company.js                 # Corporate entities, domain validation & verification scores
+│   ├── JobOpening.js              # Direct corporate jobs, mandatory verified skills & salary CTC
+│   ├── JobApplication.js          # Candidate 1-click applications, match scores & hiring stages
+│   ├── Resume.js                  # Dedicated 1:1 user resume document schema
 │   ├── Career.js                  # 15+ industry career definitions & required skills
-│   ├── Roadmap.js                 # Generated student roadmaps, weeks & milestones
-│   ├── RoadmapTask.js             # Atomic checklist tasks with progress flags
+│   ├── Roadmap.js                 # Generated student roadmaps, partial unique index & cooldown
+│   ├── RoadmapTask.js             # Atomic checklist tasks & YouTube anti-scrub telemetry
+│   ├── Attempt.js                 # Weekly milestone test attempts and answer scorecards
 │   └── Skill.js                   # Master skill intelligence directory
 ├── routes/
-│   ├── authRoutes.js              # Register, login, google auth, github auth & POST /github/sync
+│   ├── authRoutes.js              # Register, login, OTP verification, Google auth, GitHub sync
+│   ├── recruiterRoutes.js         # Corporate precheck, registration, job openings & ATS pipeline
+│   ├── jobRoutes.js               # Adzuna jobs, recruiter openings, 1-click apply & gap bridging
+│   ├── roadmapRoutes.js           # Roadmap generation, video checkpoints & milestone tests
 │   ├── assessmentRoutes.js        # Student profile evaluation & skills submission
 │   ├── quizRoutes.js              # Reality-check quiz: /start, /answer, /status, /providers
 │   ├── recommendationRoutes.js    # 60/25/15 deterministic matching engine & skill gap analysis
-│   ├── roadmapRoutes.js           # 4, 8, 12-week roadmap generation & task progress toggling
 │   ├── dashboardRoutes.js         # Unified student analytics, verified skills & goals
 │   ├── careerRoutes.js            # Careers directory, slugs & detail lookups
-│   ├── jobRoutes.js               # Adzuna & AIDevBoard live Indian tech vacancies
 │   ├── chatRoutes.js              # AI Career Mentor (Groq Llama 3.3 + Gemini Flash)
+│   ├── resumeRoutes.js            # 1:1 resume upload & magic-byte validation
+│   ├── readinessRoutes.js         # 4-Rule industry job ready compliance evaluations
 │   ├── skillRoutes.js             # Skill directory & catalog
 │   └── userRoutes.js              # Profile updates, Cloudinary avatar & resume uploads
 ├── controllers/
 │   ├── authController.js          # Authentication, token generation & GitHub session sync
+│   ├── recruiterController.js     # Recruiter onboarding, job openings & applicant management
 │   ├── assessmentController.js    # Assessment validation & student profile updating
 │   ├── quizController.js          # Dynamic quiz generation, answer scoring & skill verification
 │   ├── recommendationController.js# In-memory matrix matching & gap classification
-│   ├── roadmapController.js       # Timeline generation & atomic task completion
+│   ├── roadmapController.js       # Timeline generation, task completion & video verification
 │   ├── dashboardController.js     # Dashboard telemetry & progress aggregation
 │   └── userController.js          # User profile management & document uploads
 ├── services/
@@ -48,14 +57,15 @@ server/
 │   ├── githubService.js           # GitHub REST API repository analysis & language parsing
 │   ├── groqService.js             # Groq Cloud AI mentor integration
 │   ├── geminiService.js           # Google Gemini AI failover integration
-│   ├── jobBoardService.js         # Adzuna & AIDevBoard live job streaming
+│   ├── jobBoardService.js         # Adzuna & AIDevBoard live job streaming & multi-portal deep links
 │   ├── cloudinaryService.js       # Cloudinary media and document management
 │   ├── emailService.js            # Nodemailer transactional email delivery
 │   ├── recommendationService.js   # 60/25/15 core mathematical scoring
 │   └── roadmapService.js          # Roadmap templating & task generation
 ├── middleware/
-│   ├── authMiddleware.js          # JWT Bearer token authentication & user hydration
+│   ├── authMiddleware.js          # JWT authentication, requireStudent, requireRecruiter, requireVerifiedRecruiter
 │   ├── errorMiddleware.js         # Centralized error formatting & status codes
+│   ├── otpRateLimiter.js          # In-memory windowed OTP request throttling
 │   └── validateRequest.js         # Express-validator input sanitization
 └── data/
     ├── careersData.js             # Predefined career tracks & requirement matrices
@@ -93,25 +103,33 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['student', 'admin'],
-    default: 'student'
+    enum: ['student', 'recruiter', 'admin'],
+    default: 'student',
+    index: true
   },
+  // Recruiter & Corporate Verification Profile
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+    default: null
+  },
+  companyName: { type: String, default: '' },
+  companyDomain: { type: String, default: '' },
+  isCompanyVerified: { type: Boolean, default: false },
+  recruiterStatus: {
+    type: String,
+    enum: ['pending_otp', 'active', 'rejected', 'suspended'],
+    default: 'active'
+  },
+  canPostJobs: { type: Boolean, default: false },
+  // Academic Profile
   education: {
     type: String,
     default: '' // e.g., "B.Tech CSE 2nd Year", "BCA 3rd Year"
   },
-  branch: {
-    type: String,
-    default: ''
-  },
-  college: {
-    type: String,
-    default: ''
-  },
-  interests: [{
-    type: String,
-    trim: true
-  }],
+  branch: { type: String, default: '' },
+  college: { type: String, default: '' },
+  interests: [{ type: String, trim: true }],
   // Multi-tier skill competency structure
   skills: [{
     skillName: { type: String, required: true },
@@ -121,21 +139,14 @@ const userSchema = new mongoose.Schema({
     quizScore: { type: Number, default: null },
     quizVerifiedAt: { type: Date, default: null }
   }],
-  // One-time verification policy to prevent re-gating
-  hasCompletedSkillVerification: {
-    type: Boolean,
-    default: false
+  hasCompletedSkillVerification: { type: Boolean, default: false },
+  // Job Readiness Index Evaluation State
+  jobReadiness: {
+    score: { type: Number, default: 0 },
+    tierLabel: { type: String, default: 'Foundational Learner' },
+    isJobReady: { type: Boolean, default: false },
+    evaluatedAt: { type: Date, default: null }
   },
-  // Quiz evaluation metrics
-  quizScore: {
-    type: Number,
-    default: 0
-  },
-  quizGaps: [{
-    skill: String,
-    gapDescription: String,
-    recommendedAction: String
-  }],
   // Connected GitHub telemetry
   githubId: { type: String, default: null },
   githubProfile: {
@@ -146,12 +157,153 @@ const userSchema = new mongoose.Schema({
     followers: { type: Number, default: 0 },
     bio: { type: String, default: '' }
   },
-  githubRepos: [mongoose.Schema.Types.Mixed], // Cached study repo analysis
-  // Google OAuth
-  googleId: { type: String, default: null },
-  // Cloudinary media
+  githubRepos: [mongoose.Schema.Types.Mixed],
   avatarUrl: { type: String, default: '' },
-  resumeUrl: { type: String, default: '' }
+  resumeUrl: { type: String, default: '' },
+  lastAbandonedRouteAt: { type: Date, default: null }
+}, {
+  timestamps: true
+});
+```
+
+### 2.2 Company Model (`server/models/Company.js`)
+Stores registered enterprise employers, corporate web domains, and automated legitimacy scoring:
+
+```javascript
+const CompanySchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  domain: { type: String, required: true, unique: true, lowercase: true, index: true },
+  website: { type: String, trim: true, default: '' },
+  logoUrl: { type: String, trim: true, default: '' },
+  industry: { type: String, trim: true, default: 'Technology & Software' },
+  verificationScore: { type: Number, default: 85, min: 0, max: 100 },
+  isVerified: { type: Boolean, default: true },
+  authorizedRecruiters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+}, {
+  timestamps: true
+});
+```
+
+### 2.3 JobOpening Model (`server/models/JobOpening.js`)
+Stores recruiter-published jobs with mandatory verified skill criteria and applicant counts:
+
+```javascript
+const JobOpeningSchema = new mongoose.Schema({
+  recruiter: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true, index: true },
+  companyName: { type: String, required: true },
+  title: { type: String, required: true, trim: true },
+  careerSlug: { type: String, lowercase: true, trim: true, default: 'general' },
+  workplace: { type: String, enum: ['remote', 'hybrid', 'on-site'], default: 'hybrid' },
+  location: { type: String, required: true },
+  experienceLevel: { type: String, enum: ['fresher', 'internship', 'junior', 'mid'], default: 'fresher' },
+  minSalary: { type: Number, default: 400000 },
+  maxSalary: { type: Number, default: 1200000 },
+  requiredSkills: [{
+    skillName: { type: String, required: true, lowercase: true },
+    minimumProficiency: { type: String, enum: ['beginner', 'intermediate', 'advanced'], default: 'intermediate' },
+    requiresVerification: { type: Boolean, default: true }
+  }],
+  status: { type: String, enum: ['active', 'paused', 'closed'], default: 'active', index: true },
+  applicantsCount: { type: Number, default: 0 }
+}, {
+  timestamps: true
+});
+```
+
+### 2.4 JobApplication Model (`server/models/JobApplication.js`)
+Stores candidate 1-click job submissions, match percentages, and recruitment decision stages:
+
+```javascript
+const JobApplicationSchema = new mongoose.Schema({
+  job: { type: mongoose.Schema.Types.ObjectId, ref: 'JobOpening', required: true, index: true },
+  student: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  recruiter: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  matchScore: { type: Number, default: 0, min: 0, max: 100 },
+  matchedSkills: [String],
+  missingSkills: [String],
+  readinessTier: { type: String, default: 'Foundational Learner' },
+  resumeUrl: { type: String, default: '' },
+  coverNote: { type: String, default: '', maxlength: 500 },
+  status: {
+    type: String,
+    enum: ['applied', 'shortlisted', 'interview', 'offered', 'rejected'],
+    default: 'applied',
+    index: true
+  }
+}, {
+  timestamps: true
+});
+JobApplicationSchema.index({ job: 1, student: 1 }, { unique: true }); // Prevent duplicate applications
+```
+
+### 2.5 Resume Model (`server/models/Resume.js`)
+Enforces strict database engine-level 1:1 user resume relationship:
+
+```javascript
+const ResumeSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true, // Database engine level unique index: 1 resume per user
+    index: true
+  },
+  originalName: { type: String, required: true, trim: true },
+  fileType: {
+    type: String,
+    required: true,
+    enum: [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword'
+    ]
+  },
+  sizeBytes: { type: Number, required: true, min: 1, max: 5 * 1024 * 1024 },
+  fileLocation: { type: String, required: true }, // Cloudinary secure_url
+  publicId: { type: String, required: true },
+  version: { type: Number, default: 1 },
+  extractedText: { type: String, default: '' }
+}, {
+  timestamps: true
+});
+```
+
+### 2.6 RoadmapTask Model (`server/models/RoadmapTask.js`)
+Stores atomic weekly learning tasks with YouTube anti-scrubbing telemetry fields:
+
+```javascript
+const RoadmapTaskSchema = new mongoose.Schema({
+  roadmap: { type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap', required: true, index: true },
+  weekNumber: { type: Number, required: true, min: 1, max: 12 },
+  order: { type: Number, required: true, min: 1 },
+  title: { type: String, required: true, trim: true, maxlength: 140 },
+  description: { type: String, required: true, trim: true, maxlength: 500 },
+  type: {
+    type: String,
+    enum: ['learn', 'practice', 'project', 'assessment', 'interview'],
+    default: 'learn'
+  },
+  skillName: { type: String, trim: true, default: '' },
+  priority: { type: String, enum: ['high', 'medium', 'low'], default: 'medium' },
+  estimatedHours: { type: Number, default: 2 },
+  resource: {
+    title: { type: String, default: '' },
+    url: { type: String, default: '' },
+    provider: { type: String, default: '' },
+    mediaType: { type: String, enum: ['video', 'reading', 'doc', 'lab', 'project'], default: 'reading' }
+  },
+  completed: { type: Boolean, default: false },
+  completedAt: { type: Date },
+  // YouTube Video Dedication & Anti-Scrub Telemetry
+  isVideoTask: { type: Boolean, default: false, index: true },
+  videoWatchTimeSeconds: { type: Number, default: 0 },
+  videoDurationSeconds: { type: Number, default: 0 },
+  videoMaxWatchedTime: { type: Number, default: 0 },
+  videoMidCheckPassed: { type: Boolean, default: false },
+  isVideoVerified: { type: Boolean, default: false, index: true },
+  videoVerifiedAt: { type: Date, default: null },
+  videoReflectionSummary: { type: String, trim: true, default: '' }
 }, {
   timestamps: true
 });

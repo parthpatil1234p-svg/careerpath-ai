@@ -130,3 +130,140 @@ flowchart TD
     K --> L[Render 2D Circular SVG Percentage Progress Gauge 0-100%]
     K --> M[Update Completed Tasks Counter & GitHub Study Lab]
 ```
+
+---
+
+## 6. AI Video Learning Dedication & Anti-Scrubbing Flow
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant UI as Roadmap Task UI
+    participant YT as YouTube IFrame Player
+    participant BE as Express API Server
+    participant DB as MongoDB Atlas
+
+    Student->>UI: Click "Watch Video Tutorial" modal
+    UI->>YT: Mount IFrame with origin verification
+    YT-->>UI: onStateChange (PLAYING)
+    
+    loop Real-Time Telemetry Tracking (Every 500ms)
+        UI->>YT: Poll getCurrentTime() & getPlaybackRate()
+        alt Forward Scrub Detected (> maxWatched + 2s)
+            UI->>YT: seekTo(maxWatchedTime, true)
+            UI->>Student: Warning Toast ("Forward scrubbing disabled")
+        else Speed Exceeds 1.5x Ceiling
+            UI->>YT: setPlaybackRate(1.5)
+            UI->>Student: Warning Toast ("Max playback speed is 1.5x")
+        else Legitimate Playback
+            UI->>UI: Update maxWatchedTime & watchDurationSeconds
+        end
+    end
+
+    Note over Student,UI: === 90% WATCH DURATION REACHED ===
+    UI->>Student: Unlock Reflection & Synthesis Prompt
+    Student->>UI: Types 30+ character takeaway summary
+    Student->>UI: Clicks "Verify Video Milestone"
+    UI->>BE: POST /api/roadmaps/tasks/:taskId/verify-video
+    BE->>BE: Validate duration & text length
+    BE->>DB: Set isVideoVerified=true, videoCompleted=true
+    BE-->>UI: 200 OK { success: true, taskUnlocked: true }
+    UI->>Student: Unlock task checkbox & celebrate milestone!
+```
+
+---
+
+## 7. Recruiter Onboarding & Corporate Verification Flow
+
+```mermaid
+flowchart TD
+    A[Recruiter Visits /recruiter-onboarding.html] --> B[Enter Work Email, Company & Website]
+    B --> C[Client-Side Real-Time DNS & Domain Match Precheck]
+    C --> D{Free Webmail Check}
+    D -- Gmail / Yahoo / Outlook --> E[Reject: "Must use corporate work domain"]
+    D -- Corporate Domain --> F[POST /api/recruiter/verify-company-precheck]
+    
+    F --> G[Server Evaluates Domain Legitimacy Score: 99/100]
+    G --> H[Enter Password, Designation & Phone]
+    H --> I[POST /api/recruiter/register]
+    I --> J[Generate 6-Digit Cryptographic OTP]
+    J --> K[Dispatch OTP to Work Inbox]
+    
+    K --> L[Enter OTP on /recruiter-onboarding.html]
+    L --> M[POST /api/auth/verify-otp]
+    M --> N[Role Set to 'recruiter', canPostJobs=true]
+    N --> O[Redirect to /recruiter-dashboard.html]
+```
+
+---
+
+## 8. Recruiter Job Posting & ATS Talent Radar Flow
+
+```mermaid
+flowchart LR
+    A[Recruiter Dashboard] --> B[Click 'Post New Opening']
+    B --> C[Fill Job Form:<br/>Role, CTC, Workplace]
+    C --> D[Select Required Skills<br/>& Toggle 'Requires Verification']
+    D --> E[POST /api/recruiter/jobs]
+    E --> F[Published to Campus Radar]
+    
+    F --> G[Student Applies with Verified Profile]
+    G --> H[Recruiter Opens ATS Radar]
+    H --> I[Sort Applicants by AI Match Score]
+    I --> J[Inspect Two-Factor Verified Badges]
+    J --> K[Update Stage: Applied ➔ Shortlisted ➔ Interview ➔ Offered]
+```
+
+---
+
+## 9. Candidate 1-Click Application Flow (`/jobs.html`)
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant FE as Jobs Page (/jobs.html)
+    participant BE as Express API Gateway
+    participant DB as MongoDB Atlas
+
+    Student->>FE: Browse direct company openings
+    FE->>BE: GET /api/jobs/recruiter-openings (Bearer JWT)
+    BE->>DB: Query active JobOpenings & compare with Student Skills
+    BE-->>FE: Return jobs with calculated Match Scores (e.g. 96%)
+    
+    Student->>FE: Click "1-Click Quick Apply"
+    FE->>FE: Display confirmation modal with attached Resume & Verified Badges
+    Student->>FE: Confirm application with optional note
+    FE->>BE: POST /api/jobs/:id/apply { coverNote }
+    BE->>DB: Check for duplicate submission
+    BE->>DB: Create JobApplication record & increment job.applicantsCount
+    BE-->>FE: 201 Created { success: true }
+    FE->>Student: Display success celebration toast & "Applied" badge
+```
+
+---
+
+## 10. Portal Isolation & Role-Smart Navigation Flow
+
+```mermaid
+flowchart TD
+    UserAction[User Navigates or Clicks Brand Logo] --> CheckAuth{Logged In?}
+    
+    CheckAuth -- No --> GuestNav[Brand Logo ➔ /index.html<br/>Public Jobs & Curricula Open]
+    
+    CheckAuth -- Yes --> RoleSwitch{Role Type}
+    
+    RoleSwitch -- "recruiter" --> RecruiterBranch{Target Page}
+    RecruiterBranch -- Student Page e.g. /jobs.html --> FloatingPill[Render High-Contrast Floating Bar:<br/>'Back to Recruiter Dashboard']
+    RecruiterBranch -- Hard-Locked Student Page e.g. /roadmap.html --> ForceRecruiterDash[Auto-Redirect to /recruiter-dashboard.html]
+    RecruiterBranch -- Brand Logo Click --> GoRecruiterDash[Navigate to /recruiter-dashboard.html]
+    RecruiterBranch -- /index.html --> CheckQuery{Has ?view=public?}
+    CheckQuery -- No --> AutoForward[Auto-Forward to /recruiter-dashboard.html]
+    CheckQuery -- Yes --> AllowPublic[Display Public Landing Page]
+    
+    RoleSwitch -- "student" --> StudentBranch{Target Page}
+    StudentBranch -- /recruiter-dashboard.html --> TrapStudent[Client Traps & Redirects to /dashboard.html]
+    StudentBranch -- Recruiter API Call --> Block403[Server Rejects with HTTP 403 RECRUITER_ACCESS_DENIED]
+    StudentBranch -- Brand Logo Click --> GoStudentDash[Navigate to /dashboard.html]
+    
+    RoleSwitch -- "demouser@gmail.com" --> DualBypass[Full Unrestricted Access to BOTH Portals for Jury Evaluation]
+```

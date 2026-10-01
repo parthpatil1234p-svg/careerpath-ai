@@ -119,5 +119,81 @@ Skills in the assessment profiler and dashboard use luminous badge indicators:
 | **Assessment** | `/assessment.html` | 90% | 3-step profiler, GitHub auto-detect button, verified skill chips |
 | **Micro-Quiz** | `/quiz.html` | 90% (Max 1400px) | 5-question stepper card, BYOK modal, interactive options |
 | **Recommendations** | `/recommendations.html` | 90% | 3-column career match cards, 60/25/15 score breakdowns |
-| **Roadmap** | `/roadmap.html` | 90% | Weekly milestone checklist, 1-click PDF print button |
-| **Dashboard** | `/dashboard.html` | 90% Bento Grid | 2D circular percentage gauge, GitHub Study Lab, verified skills |
+| **Roadmap** | `/roadmap.html` | 90% | Weekly milestone checklist, 1-click PDF print button, video dedication player |
+| **Dashboard** | `/dashboard.html` | 90% Bento Grid | Apple/Linear profile card, 2D circular gauge, GitHub Study Lab |
+| **Direct Jobs** | `/jobs.html` | 90% Bento Grid | Verified enterprise jobs, 1-click apply modal, match percentage cards |
+| **Recruiter Portal** | `/recruiter-dashboard.html` | 90% Bento Grid | ATS applicant radar, job opening creator, candidate stage tracker |
+| **Recruiter Onboarding** | `/recruiter-onboarding.html` | Centered (600px) | Domain verification precheck, corporate email validation, OTP input |
+
+---
+
+## 7. Modernized Student Profile Header Card (Apple & Linear Aesthetic)
+
+The student profile header card on `/dashboard.html` was completely overhauled to align with modern design standards (Apple Developer / Linear design systems):
+
+```html
+<div class="profile-header-card glass-panel">
+  <div class="profile-avatar-wrapper">
+    <div class="profile-avatar-circle">
+      <img src="..." alt="Student Avatar" class="avatar-img-50pct" />
+      <span class="avatar-status-dot online"></span>
+    </div>
+  </div>
+  <div class="profile-meta-column">
+    <div class="profile-name-row">
+      <h2 class="profile-name">Parth Patil</h2>
+      <span class="badge-verified-student">✓ Verified Student</span>
+    </div>
+    <div class="profile-tags-row">
+      <span class="meta-tag"><i class="fas fa-graduation-cap"></i> B.Tech CSE (2026)</span>
+      <span class="meta-tag"><i class="fas fa-university"></i> GHRISTU Pune</span>
+      <span class="meta-tag"><i class="fab fa-github"></i> Connected (8 Repos)</span>
+    </div>
+  </div>
+  <div class="profile-status-pill-column">
+    <div class="segmented-status-pill">
+      <button class="pill-option active" data-status="actively_looking">Actively Looking</button>
+      <button class="pill-option" data-status="open_to_offers">Open to Offers</button>
+      <button class="pill-option" data-status="casually_browsing">Casually Browsing</button>
+      <button class="pill-option" data-status="not_available">Not Available</button>
+    </div>
+  </div>
+</div>
+```
+
+### 7.1 Visual Tokens & Aesthetics
+- **Surface Elevation:** Translucent dark canvas (`background: rgba(15, 23, 42, 0.65)`) with `backdrop-filter: blur(16px)` and 1px crisp border `rgba(255, 255, 255, 0.08)`.
+- **50% Circular Geometry:** Profile image rendered inside a strict `border-radius: 50%` wrapper with smooth cyan glow on hover.
+- **Segmented Control:** Subtle pill switcher with animated sliding background indicator and tactile active states.
+
+---
+
+## 8. Recruiter Dashboard & ATS Talent Radar UI
+
+The recruiter interface on `/recruiter-dashboard.html` is engineered for high-efficiency candidate screening:
+1. **Corporate Trust Header:** Shows verified company domain badge, verification score (e.g. `99/100`), and quick action button to publish jobs.
+2. **Glassmorphic Candidate Radar:** Applicant cards prominently display candidate AI match percentage (`96%`), verified skill badges (`[✓ Quiz Verified]`), and job readiness tier.
+3. **Interactive Stage Pipeline:** 4-state hiring pipeline (`Applied` ➔ `Shortlisted` ➔ `Interview` ➔ `Offered`) with one-click status transitions and recruiter notes modal.
+
+---
+
+## 9. Dedicated AI Video Learning Player & Anti-Scrubbing UX
+
+The video learning modal on `/roadmap.html` transforms YouTube tutorials into dedicated learning sessions:
+1. **Clean Video Container:** 16:9 embedded player with high-contrast playback indicators.
+2. **Telemetry Status Bar:** Real-time progress bar displaying watched seconds versus required minimum duration.
+3. **Tactile Feedback Toasts:** Dispatches warning notifications if a student tries forward-scrubbing beyond watched bounds or attempts to set playback speed above 1.5x.
+4. **Reflection Input Card:** Slides into view upon reaching 90% watch time with live character counter (requiring 30+ chars) before unlocking task completion.
+
+---
+
+## 10. Role-Smart Brand Logo Navigation & Floating Session Bar
+
+1. **Smart Logo Anchor (`Auth.bindSmartLogo()`):**
+   - Clicking the navbar brand logo automatically checks role context:
+     - Recruiter ➔ routes to `/recruiter-dashboard.html`
+     - Student ➔ routes to `/dashboard.html`
+     - Guest ➔ routes to `/index.html`
+2. **Floating Recruiter Session Bar:**
+   - Displayed fixed to the viewport when an authenticated recruiter browses student pages (`jobs.html`), preventing portal confusion and providing a 1-click return button back to the recruiter dashboard.
+
