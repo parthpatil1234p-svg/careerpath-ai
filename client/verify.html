@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Official Public Credential Verification Portal &mdash; CareerPath AI Global Accreditation Registry"
+    />
+    <meta name="theme-color" content="#0B1120" />
+    <title>Official Credential Verification &mdash; CareerPath AI</title>
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Google Fonts: Cinzel, Playfair Display, Outfit, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css?v=2.6" />
+    <link rel="stylesheet" href="css/dashboard.css?v=2.6" />
+
+    <style>
+      body.verify-page {
+        background-color: #070B14;
+        background-image: 
+          radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+          radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
+        color: #E2E8F0;
+        min-height: 100vh;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .verify-nav {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(11, 17, 32, 0.85);
+        backdrop-filter: blur(12px);
+      }
+
+      .verify-lookup-card {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+      }
+
+      .ledger-audit-box {
+        background: #0D1424;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 14px;
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      }
+
+      .status-pill-authentic {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1.5px solid #10B981;
+        color: #34D399;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        font-size: 0.82rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+      }
+
+      .status-pill-invalid {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1.5px solid #EF4444;
+        color: #F87171;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+      }
+
+      .verify-meta-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #94A3B8;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .verify-meta-val {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #F8FAFC;
+      }
+
+      .verify-card-cert {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .hash-block {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px dashed rgba(212, 175, 55, 0.4);
+        padding: 0.4rem 0.75rem;
+        border-radius: 6px;
+        color: #FCD34D;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+
+  <body class="verify-page d-flex flex-column">
+    <!-- Top Navigation -->
+    <header class="verify-nav py-3 sticky-top">
+      <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <a href="index.html" class="d-flex align-items-center text-decoration-none text-white gap-2">
+          <img src="assets/logo.svg" alt="CareerPath AI" width="36" height="36" />
+          <span class="fs-5 fw-bold font-monospace">CareerPath <span class="text-teal" style="color: #0EA5E9;">AI</span></span>
+          <span class="badge bg-secondary bg-opacity-25 text-warning font-monospace small ms-2 border border-warning border-opacity-25">
+            <i class="bi bi-shield-lock-fill me-1"></i> Public Registry
+          </span>
+        </a>
+
+        <!-- Lookup Search Form in Header -->
+        <form id="verifySearchForm" class="d-flex align-items-center gap-2 m-0" style="max-width: 380px;">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text bg-dark border-secondary text-secondary font-mono">ID:</span>
+            <input
+              type="text"
+              id="inputCertId"
+              class="form-control form-control-sm bg-dark text-white border-secondary font-mono"
+              placeholder="e.g. CP-2026-DEMO"
+              required
+            />
+            <button class="btn btn-warning btn-sm fw-semibold" type="submit">
+              <i class="bi bi-search me-1"></i> Verify
+            </button>
+          </div>
+        </form>
+      </div>
+    </header>
+
+    <!-- Main Verification Body -->
+    <main class="container py-4 py-md-5 flex-grow-1">
+      <!-- Loading State -->
+      <div id="verifyLoadingState" class="text-center py-5">
+        <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Auditing Cryptographic Ledger...</span>
+        </div>
+        <h2 class="h5 fw-bold text-white mb-1">Querying CareerPath AI Public Ledger...</h2>
+        <p class="text-secondary small font-mono">Auditing SHA-256 seal &middot; Checking tamper-proof signature &middot; Verifying role competencies</p>
+      </div>
+
+      <!-- Error / Invalid State -->
+      <div id="verifyErrorState" class="d-none text-center py-5">
+        <div class="card p-4 mx-auto verify-lookup-card border-danger border-opacity-50" style="max-width: 580px;">
+          <div class="mb-3">
+            <i class="bi bi-shield-x text-danger display-4"></i>
+          </div>
+          <div class="status-pill-invalid d-inline-block mx-auto mb-3">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i> INVALID OR UNREGISTERED CREDENTIAL
+          </div>
+          <h2 class="h4 fw-bold text-white mb-2">No Matching Credential Found</h2>
+          <p class="text-secondary small mb-4" id="errorMessageText">
+            The credential identifier does not match any authenticated record in the official registry ledger. Please verify the ID for typographical errors.
+          </p>
+          <div class="d-flex justify-content-center gap-2">
+            <a href="verify.html?certId=CP-2026-DEMO" class="btn btn-outline-warning btn-sm font-mono">
+              <i class="bi bi-arrow-repeat me-1"></i> Try Demo Credential (CP-2026-DEMO)
+            </a>
+            <a href="index.html" class="btn btn-outline-light btn-sm">
+              <i class="bi bi-house me-1"></i> Return Home
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Verified Credential Container -->
+      <div id="verifySuccessState" class="d-none">
+        <!-- Top Status Banner -->
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 p-3 rounded-3 ledger-audit-box">
+          <div class="d-flex align-items-center gap-3">
+            <div class="fs-1 text-success">
+              <i class="bi bi-patch-check-fill"></i>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                <span class="status-pill-authentic">
+                  <i class="bi bi-check-circle-fill me-1"></i> VERIFIED ACTIVE & AUTHENTIC
+                </span>
+                <span class="badge bg-secondary bg-opacity-25 text-info font-mono small" id="metaCertId">
+                  ID: CP-2026-DEMO
+                </span>
+              </div>
+              <div class="text-light small font-mono">
+                Official accreditation issued by CareerPath AI Global Registry (Hack2Ignite 2026–27).
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button type="button" class="btn btn-outline-light btn-sm px-3" id="btnCopyRecord">
+              <i class="bi bi-clipboard-check me-1"></i> Copy Record
+            </button>
+            <button type="button" class="btn btn-outline-info btn-sm px-3 text-white" id="btnAddLinkedIn">
+              <i class="bi bi-linkedin text-info me-1"></i> Add to LinkedIn
+            </button>
+            <button type="button" class="btn btn-warning btn-sm px-3 fw-semibold text-dark" onclick="window.print()">
+              <i class="bi bi-printer-fill me-1"></i> Print / PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- The Elevated Ivy-League Certificate Presentation -->
+        <div class="verify-card-cert mb-5">
+          <div class="official-certificate-container" id="printableCertificate">
+            <!-- Guilloche Corners -->
+            <div class="cert-corner cert-corner-tl"></div>
+            <div class="cert-corner cert-corner-tr"></div>
+            <div class="cert-corner cert-corner-bl"></div>
+            <div class="cert-corner cert-corner-br"></div>
+
+            <!-- Top Header -->
+            <div class="cert-header-bar d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2.5 text-start">
+                <div class="cert-crest-monogram">
+                  <i class="bi bi-bank2"></i>
+                </div>
+                <div>
+                  <div class="cert-registry-title">CAREERPATH AI GLOBAL ACCREDITATION REGISTRY</div>
+                  <div class="cert-registry-sub">VERIFIED TALENT CREDENTIAL DIRECTORY &middot; HACK2IGNITE 2026&ndash;27</div>
+                </div>
+              </div>
+
+              <!-- 3D Seal -->
+              <div class="certificate-seal-wrapper">
+                <div class="certificate-seal" title="Authentic Cryptographic Seal">
+                  <div class="seal-inner-circle">
+                    <i class="bi bi-award-fill"></i>
+                    <div class="seal-text-arch">JOB READY</div>
+                  </div>
+                </div>
+                <div class="seal-ribbon seal-ribbon-red"></div>
+                <div class="seal-ribbon seal-ribbon-gold"></div>
+              </div>
+            </div>
+
+            <!-- Attestation Body -->
+            <div class="cert-center-body my-4 text-center">
+              <div class="cert-eyebrow-text">
+                OFFICIAL DIGITAL CREDENTIAL OF MERIT &amp; JOB READINESS
+              </div>
+              <div class="cert-attestation-sub mt-2 mb-1">
+                This is to certify that
+              </div>
+              <h1 class="cert-recipient-name my-2" id="verifiedStudentName">Demo Student</h1>
+              <div class="cert-ornament-divider">
+                <span>✦</span> &nbsp; <span class="ornament-gem">❖</span> &nbsp; <span>✦</span>
+              </div>
+              <p class="cert-attestation-body mx-auto">
+                has successfully demonstrated code-grounded proficiency, passed weekly proctored technical milestones, and satisfied all four verified hiring benchmarks for the professional designation of:
+              </p>
+              <div class="cert-target-role my-2" id="verifiedRoleTitle">Financial Analyst &amp; Modeler</div>
+            </div>
+
+            <!-- Executive 4-Pillar Scorecard -->
+            <div class="cert-scorecard-box p-3 my-3 text-start">
+              <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom border-amber-subtle">
+                <span class="cert-scorecard-label">
+                  <i class="bi bi-shield-check text-success me-1"></i> VERIFIED HIRING BENCHMARK SCORECARD
+                </span>
+                <span class="font-mono text-dark fw-bold small" id="verifiedScoreBadge">94% &middot; 🔥 JOB READY CERTIFIED</span>
+              </div>
+
+              <div class="row g-2 text-center my-2">
+                <div class="col-6 col-md-3">
+                  <div class="cert-metric-pill">
+                    <div class="cert-metric-label">🎯 Skills Mastered</div>
+                    <div class="cert-metric-val" id="metricSkills">100%</div>
+                    <div class="cert-metric-sub">Code Verified ✓</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="cert-metric-pill">
+                    <div class="cert-metric-label">🗺️ Roadmap Progress</div>
+                    <div class="cert-metric-val" id="metricRoadmap">100%</div>
+                    <div class="cert-metric-sub">Milestones Passed ✓</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="cert-metric-pill">
+                    <div class="cert-metric-label">📄 ATS Resume Fit</div>
+                    <div class="cert-metric-val" id="metricResume">92%</div>
+                    <div class="cert-metric-sub">Strict Structure ✓</div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="cert-metric-pill">
+                    <div class="cert-metric-label">🎙️ Technical Interview</div>
+                    <div class="cert-metric-val" id="metricInterview">90%</div>
+                    <div class="cert-metric-sub">Voice / Q&amp;A Passed ✓</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-2.5 pt-2 border-top border-amber-subtle">
+                <div class="cert-scorecard-label mb-1.5">
+                  VERIFIED ROLE COMPETENCIES:
+                </div>
+                <div class="d-flex flex-wrap gap-1.5" id="verifiedSkillsContainer">
+                  <!-- Injected dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Signatures -->
+            <div class="cert-footer-row row align-items-end mt-4 pt-2 text-start g-3">
+              <div class="col-12 col-md-4 text-center text-md-start">
+                <div class="cert-signature-line">
+                  <div class="cert-signature-svg" id="signatoryName1">Dr. Rajiv Mehta</div>
+                </div>
+                <div class="cert-signatory-name">Dr. Rajiv Mehta</div>
+                <div class="cert-signatory-title">Dean of Academic Standards &middot; Evaluation Council</div>
+                <div class="cert-meta-item mt-1">Date: <strong id="verifiedIssueDate">October 1, 2026</strong></div>
+                <div class="cert-meta-item">ID: <strong class="font-mono" id="verifiedIdText">CP-2026-DEMO</strong></div>
+              </div>
+
+              <div class="col-12 col-md-4 text-center">
+                <div class="cert-qr-frame mx-auto">
+                  <img id="verifiedQrImg" src="" alt="Verification QR" width="84" height="84" class="cert-qr-img" />
+                </div>
+                <div class="cert-qr-caption mt-1">
+                  <i class="bi bi-qr-code-scan me-1 text-primary"></i> Scan with mobile camera
+                </div>
+                <div class="cert-qr-subtext text-muted small">
+                  Official Verification Portal
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4 text-center text-md-end">
+                <div class="cert-signature-line ms-auto">
+                  <div class="cert-signature-svg" id="signatoryName2">Team 404 Protocol</div>
+                </div>
+                <div class="cert-signatory-name">Team 404 Brain Not Found</div>
+                <div class="cert-signatory-title">Lead Protocol Stewards &middot; Hack2Ignite 2026&ndash;27</div>
+                <div class="cert-meta-item mt-1">
+                  SHA-256: <span id="verifiedShaHash" class="cert-sha-hash font-mono">CC44899A307E...</span>
+                </div>
+                <div class="cert-meta-item text-success fw-semibold">
+                  <i class="bi bi-patch-check-fill me-1"></i> Cryptographically Grounded
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ledger Audit Details Table for Recruiters -->
+        <div class="card p-4 verify-lookup-card mb-4">
+          <h3 class="h5 fw-bold text-white mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-journal-code text-warning"></i>
+            <span>Cryptographic Ledger Audit Breakdown (For Employers &amp; HR)</span>
+          </h3>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+                <div class="verify-meta-label mb-1">Candidate Profile</div>
+                <div class="verify-meta-val" id="auditCandidate">Demo Student</div>
+                <div class="text-secondary small mt-1">Verified via institutional email and authenticated session check.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+                <div class="verify-meta-label mb-1">Target Professional Track</div>
+                <div class="verify-meta-val text-info" id="auditRole">Financial Analyst &amp; Modeler</div>
+                <div class="text-secondary small mt-1">Curated against current Q1-2027 industry hiring bar.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+                <div class="verify-meta-label mb-1">Issuing Authority</div>
+                <div class="verify-meta-val" id="auditIssuer">CareerPath AI Global Credential Registry</div>
+                <div class="text-secondary small mt-1">Governance by Evaluation Council &amp; Team 404 Brain Not Found.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+                <div class="verify-meta-label mb-1">Tamper-Proof Checksum (SHA-256)</div>
+                <div class="hash-block" id="auditHash">CC44899A307E2F2C5061A29F4E8D...</div>
+                <div class="text-secondary small mt-1">Deterministic hash computed across ID, candidate, role, and timestamp.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-3 text-center text-secondary small border-top border-secondary border-opacity-25">
+      <div class="container">
+        &copy; 2026&ndash;2027 CareerPath AI &middot; Team 404 Brain Not Found &middot; Hack2Ignite Round 1 Credential Protocol
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Verification Controller -->
+    <script src="js/verify.js"></script>
+  </body>
+</html>

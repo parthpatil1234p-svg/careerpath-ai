@@ -7,8 +7,12 @@
 const express = require('express');
 const router = express.Router();
 const { protect, requireStudent } = require('../middleware/authMiddleware');
-const { getReadinessStatus, getCertificate, getJobReadyCheck } = require('../controllers/readinessController');
+const { getReadinessStatus, getCertificate, getJobReadyCheck, verifyPublicCertificate } = require('../controllers/readinessController');
 
+// 1. Public Unauthenticated Credential Verification (Recruiters, LinkedIn, QR Scanners)
+router.get('/public-verify/:certId', verifyPublicCertificate);
+
+// 2. Protected Student Routes
 router.use(protect, requireStudent);
 
 router.get('/status', getReadinessStatus);
