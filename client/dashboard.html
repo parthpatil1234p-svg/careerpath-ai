@@ -1102,21 +1102,27 @@
           <div class="modal-body p-4">
             <!-- Chamber Header / Status -->
             <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-secondary border-opacity-25 flex-wrap gap-2">
-              <div>
-                <div class="text-light text-opacity-75 small">Target Role: <strong class="text-cyan fw-bold" id="interviewTargetRole">Full-Stack Developer</strong></div>
-                <div class="text-info small font-monospace" id="interviewProgressText">Question 1 of 3</div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="chamber-meta-chip">
+                  <span class="chamber-meta-label">TARGET ROLE:</span>
+                  <strong class="chamber-meta-val text-cyan" id="interviewTargetRole">Full-Stack Developer</strong>
+                </div>
+                <div class="chamber-progress-chip font-monospace">
+                  <i class="bi bi-terminal-split me-1 text-cyan"></i>
+                  <span id="interviewProgressText">Question 1 of 3</span>
+                </div>
               </div>
               <div class="d-flex align-items-center gap-2 flex-wrap">
                 <!-- Natural Human Voice Selector -->
                 <div class="d-flex align-items-center voice-select-pill">
-                  <i class="bi bi-soundwave text-cyan me-1.5" style="font-size: 0.85rem;"></i>
+                  <i class="bi bi-soundwave text-cyan me-1.5" style="font-size: 0.95rem;"></i>
                   <label for="interviewVoiceSelector" class="visually-hidden">Interviewer Voice Persona</label>
-                  <select class="form-select form-select-sm border-0 font-monospace" id="interviewVoiceSelector" style="font-size: 0.74rem; width: auto; cursor: pointer;" title="Select natural human interviewer voice">
+                  <select class="form-select form-select-sm border-0" id="interviewVoiceSelector" title="Select natural human interviewer voice">
                     <option value="Joanna" selected>✨ Joanna (Natural US Recruiter)</option>
                     <option value="Matthew">👨 Matthew (Senior Tech Lead)</option>
                     <option value="Amy">👩 Amy (British Tech Lead)</option>
                     <option value="Brian">🇬🇧 Brian (Principal Architect)</option>
-                    <option value="browser_natural">🌐 Browser Neural/Natural Voice</option>
+                    <option value="browser_natural">🌐 Browser Neural Voice</option>
                   </select>
                 </div>
 
@@ -1149,8 +1155,8 @@
                   <i class="bi bi-cpu-fill"></i>
                 </div>
                 <div class="flex-grow-1">
-                  <div class="d-flex align-items-center justify-content-between mb-1">
-                    <span class="badge bg-cyan bg-opacity-15 text-cyan border border-cyan border-opacity-25 font-monospace text-uppercase" id="questionCategoryBadge" style="font-size: 0.68rem; letter-spacing: 0.5px;">TECHNICAL SCENARIO</span>
+                  <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                    <span class="badge chamber-category-badge font-monospace text-uppercase" id="questionCategoryBadge">TECHNICAL SCENARIO</span>
                     <!-- Dynamic Soundwave Visualizer while playing audio or listening -->
                     <div class="interview-audio-spectrum d-none" id="interviewAudioSpectrum">
                       <div class="spectrum-bar"></div>
@@ -1163,7 +1169,7 @@
                       <div class="spectrum-bar"></div>
                     </div>
                   </div>
-                  <h3 class="h6 fw-semibold text-white mb-0" id="currentQuestionText" style="line-height: 1.6;">
+                  <h3 class="h6 fw-semibold text-white mb-0" id="currentQuestionText" style="line-height: 1.65;">
                     Loading your interview question...
                   </h3>
                 </div>
@@ -1172,67 +1178,79 @@
 
             <!-- Student Answer Section -->
             <div class="mb-3">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <label class="form-label small fw-bold text-light mb-0 d-flex align-items-center gap-1.5">
-                  <i class="bi bi-chat-left-quote text-cyan"></i>
+              <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                <label class="form-label interview-section-label small fw-bold mb-0 d-flex align-items-center gap-2" for="interviewAnswerInput">
+                  <i class="bi bi-chat-left-quote-fill text-cyan"></i>
                   <span>Your Spoken or Written Response</span>
                 </label>
                 <div class="d-flex align-items-center gap-2">
-                  <span class="text-danger small font-mono d-none" id="voiceLiveIndicator" style="font-size: 0.72rem;">
+                  <span class="text-danger small font-mono d-none" id="voiceLiveIndicator">
                     <span class="chamber-beacon-dot"></span> Recording Live
                   </span>
-                  <button type="button" class="btn btn-outline-danger btn-sm px-2 py-0.5" id="btnToggleMic">
+                  <button type="button" class="btn btn-outline-danger btn-sm px-2.5 py-1" id="btnToggleMic">
                     <i class="bi bi-mic-fill me-1"></i> <span id="micStatusText">Start Voice Answer</span>
                   </button>
                 </div>
               </div>
               <textarea id="interviewAnswerInput" class="form-control" rows="5" placeholder="Speak into your microphone or type your technical response here..."></textarea>
-              <div class="d-flex align-items-center justify-content-between mt-1 text-muted small" style="font-size: 0.75rem;">
-                <div>
-                  <i class="bi bi-lightbulb text-warning me-1"></i> Tip: Use the STAR method (Situation, Task, Action, Result) for top marks.
+              <div class="d-flex align-items-center justify-content-between mt-2 pt-1 interview-tip-bar flex-wrap gap-2">
+                <div class="interview-tip-text">
+                  <i class="bi bi-lightbulb-fill text-warning me-1"></i> <span class="fw-semibold text-light text-opacity-90">Tip:</span> Use the <strong class="text-cyan">STAR method</strong> (Situation, Task, Action, Result) for top marks.
                 </div>
-                <div class="font-mono text-secondary" id="answerCharCount">0 chars</div>
+                <div class="interview-char-badge" id="answerCharCount">0 chars</div>
               </div>
             </div>
 
             <!-- Evaluation Feedback Card (Visible after submission) -->
-            <div id="evaluationFeedbackCard" class="d-none p-3 rounded-2 bg-primary bg-opacity-10 border border-info border-opacity-25 mb-3">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="fw-bold text-info"><i class="bi bi-check-circle-fill me-1"></i> AI Evaluation Breakdown</div>
-                <div class="badge bg-primary text-white font-mono" id="evalScoreBadge">Score: 85/100</div>
+            <div id="evaluationFeedbackCard" class="d-none p-3 rounded-3 mb-3">
+              <div class="d-flex align-items-center justify-content-between mb-2.5 flex-wrap gap-2">
+                <div class="fw-bold text-info d-flex align-items-center gap-1.5">
+                  <i class="bi bi-shield-check text-cyan"></i>
+                  <span>AI Evaluation Breakdown</span>
+                </div>
+                <div class="badge font-mono" id="evalScoreBadge">Score: 85/100</div>
               </div>
-              <div class="small text-light mb-2" id="evalFeedbackText">Great explanation of the architecture.</div>
-              <div class="row g-2 mb-2">
-                <div class="col-4 text-center p-1 bg-dark bg-opacity-50 rounded">
-                  <div class="text-muted" style="font-size: 0.65rem;">TECHNICAL</div>
-                  <div class="fw-bold text-white small" id="evalTechScore">85%</div>
+              <div class="small text-light mb-3" id="evalFeedbackText">Great explanation of the architecture.</div>
+              <div class="row g-2 mb-3">
+                <div class="col-4">
+                  <div class="eval-score-tile">
+                    <div class="eval-score-label">TECHNICAL DEPTH</div>
+                    <div class="eval-score-num text-cyan" id="evalTechScore">85%</div>
+                  </div>
                 </div>
-                <div class="col-4 text-center p-1 bg-dark bg-opacity-50 rounded">
-                  <div class="text-muted" style="font-size: 0.65rem;">CLARITY</div>
-                  <div class="fw-bold text-white small" id="evalCommScore">90%</div>
+                <div class="col-4">
+                  <div class="eval-score-tile">
+                    <div class="eval-score-label">COMMUNICATION</div>
+                    <div class="eval-score-num text-info" id="evalCommScore">90%</div>
+                  </div>
                 </div>
-                <div class="col-4 text-center p-1 bg-dark bg-opacity-50 rounded">
-                  <div class="text-muted" style="font-size: 0.65rem;">PRACTICAL</div>
-                  <div class="fw-bold text-white small" id="evalPracScore">80%</div>
+                <div class="col-4">
+                  <div class="eval-score-tile">
+                    <div class="eval-score-label">PRACTICALITY</div>
+                    <div class="eval-score-num text-success" id="evalPracScore">80%</div>
+                  </div>
                 </div>
               </div>
-              <div class="p-2 bg-dark bg-opacity-50 rounded text-muted small" style="font-size: 0.75rem;">
-                <strong class="text-light">Model Answer Insight:</strong> <span id="evalModelAnswer">--</span>
+              <div class="eval-model-answer-box">
+                <strong class="text-white d-block mb-1"><i class="bi bi-stars text-warning me-1"></i> Model Answer Benchmark:</strong>
+                <span id="evalModelAnswer">--</span>
               </div>
             </div>
           </div>
 
           <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
-            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Exit Interview</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm chamber-exit-btn" data-bs-dismiss="modal">
+              <i class="bi bi-box-arrow-left me-1.5"></i> Exit Interview
+            </button>
             <div class="d-flex gap-2">
-              <button type="button" class="btn btn-success btn-sm px-4 fw-semibold" id="btnSubmitAnswer">
-                <i class="bi bi-send-fill me-1"></i> Evaluate Response
+              <button type="button" class="btn btn-success btn-sm px-4 fw-semibold chamber-submit-btn" id="btnSubmitAnswer">
+                <i class="bi bi-lightning-charge-fill me-1"></i> Evaluate Response
               </button>
               <button type="button" class="btn btn-primary btn-sm px-4 fw-semibold d-none" id="btnNextQuestion">
                 Next Question <i class="bi bi-arrow-right ms-1"></i>
               </button>
               <button type="button" class="btn btn-warning btn-sm px-4 fw-semibold d-none" id="btnFinalizeInterview">
-                <i class="bi bi-trophy-fill me-1"></i> Complete & Save Score
+                <i class="bi bi-trophy-fill me-1"></i> Complete &amp; Save Score
               </button>
             </div>
           </div>

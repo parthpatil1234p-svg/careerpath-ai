@@ -2722,7 +2722,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (btnSubmit) {
         btnSubmit.classList.remove('d-none');
         btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
+        btnSubmit.innerHTML = '<i class="bi bi-lightning-charge-fill me-1"></i> Evaluate Response';
       }
       if (btnNext) btnNext.classList.add('d-none');
       if (btnFinalize) btnFinalize.classList.add('d-none');
@@ -3121,12 +3121,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isSpeechRecording && recognitionInstance) {
           recognitionInstance.stop();
           isSpeechRecording = false;
-          if (btnToggleMic) btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
+          if (btnToggleMic) btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2.5 py-1';
           if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
         }
 
         btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> AI Evaluating...';
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-1.5"></span> AI Evaluating...';
 
         try {
           const currentQ = interviewSession.questions[currentQuestionIdx];
@@ -3193,13 +3193,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           } else {
             showAlert(evalRes.message || 'Failed to evaluate answer.', 'danger');
             btnSubmit.disabled = false;
-            btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
+            btnSubmit.innerHTML = '<i class="bi bi-lightning-charge-fill me-1"></i> Evaluate Response';
           }
         } catch (evalErr) {
           console.error('Error evaluating interview answer:', evalErr);
           showAlert(evalErr.message || 'Error evaluating interview answer.', 'danger');
           btnSubmit.disabled = false;
-          btnSubmit.innerHTML = '<i class="bi bi-send-fill me-1"></i> Evaluate Response';
+          btnSubmit.innerHTML = '<i class="bi bi-lightning-charge-fill me-1"></i> Evaluate Response';
         }
       };
     }
