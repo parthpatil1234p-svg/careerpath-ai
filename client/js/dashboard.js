@@ -2949,23 +2949,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnToggleMic.title = 'Speech recognition not supported in this browser. Please type your answer.';
       }
 
-      btnToggleMic.onclick = () => {
+      btnToggleMic.onclick = async () => {
         if (!SpeechRecognition) {
-          showAlert('Microphone voice recognition is not supported in this browser. You can type your response in the box below!', 'info');
+          showAlert('Voice recognition is not supported in this browser. You can type your response directly in the box below!', 'info');
           if (answerInput) answerInput.focus();
           return;
         }
 
         if (isSpeechRecording) {
-          if (recognitionInstance) recognitionInstance.stop();
+          if (recognitionInstance) {
+            try { recognitionInstance.stop(); } catch (e) {}
+          }
           isSpeechRecording = false;
           btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
           if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
-        } else {
+          return;
+        }
+
+        // Explicitly request microphone access first (prompts browser permission prompt on Vercel/HTTPS)
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // Release the microphone track immediately so SpeechRecognition has uncontended hardware access
+            stream.getTracks().forEach(track => track.stop());
+          } catch (micErr) {
+            console.warn('Microphone permission check failed:', micErr);
+            if (micErr.name === 'NotAllowedError' || micErr.name === 'PermissionDeniedError') {
+              showAlert('Microphone access was blocked. Please click the camera/lock icon in your browser address bar to allow microphone access, or type your answer below.', 'warning');
+              if (answerInput) answerInput.focus();
+              return;
+            }
+          }
+        }
+
+        try {
+          if (recognitionInstance) {
+            try { recognitionInstance.abort(); } catch (e) {}
+          }
+
           recognitionInstance = new SpeechRecognition();
           recognitionInstance.continuous = true;
           recognitionInstance.interimResults = true;
           recognitionInstance.lang = 'en-US';
+          recognitionInstance.maxAlternatives = 1;
+
+          let baseText = answerInput ? answerInput.value.trim() : '';
+          if (baseText) baseText += ' ';
 
           recognitionInstance.onstart = () => {
             isSpeechRecording = true;
@@ -2974,20 +3003,41 @@ document.addEventListener('DOMContentLoaded', async () => {
           };
 
           recognitionInstance.onresult = (event) => {
-            let transcript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-              transcript += event.results[i][0].transcript;
+            let finalAccumulator = '';
+            let interimAccumulator = '';
+
+            for (let i = 0; i < event.results.length; ++i) {
+              const res = event.results[i];
+              if (res.isFinal) {
+                finalAccumulator += res[0].transcript + ' ';
+              } else {
+                interimAccumulator += res[0].transcript;
+              }
             }
-            if (answerInput && transcript.trim()) {
-              answerInput.value = (answerInput.value ? answerInput.value + ' ' : '') + transcript.trim();
+
+            if (answerInput) {
+              answerInput.value = (baseText + finalAccumulator + interimAccumulator).trim();
             }
           };
 
-          recognitionInstance.onerror = (err) => {
-            console.warn('Speech recognition error:', err);
+          recognitionInstance.onerror = (event) => {
+            console.warn('Speech recognition error event:', event.error || event);
             isSpeechRecording = false;
             btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
             if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+
+            const errCode = event.error || '';
+            if (errCode === 'not-allowed') {
+              showAlert('Microphone permission was denied. Please allow microphone permissions in your browser or type your answer below.', 'warning');
+            } else if (errCode === 'service-not-allowed') {
+              showAlert('Voice recognition service is disabled in your browser (common in Brave/private mode). You can type your answer directly in the box below!', 'info');
+            } else if (errCode === 'network') {
+              showAlert('Speech recognition network service is currently unreachable. You can type your answer directly.', 'warning');
+            } else if (errCode === 'no-speech') {
+              showAlert('No speech detected. Click "Start Voice Answer" when ready to speak, or type below.', 'info');
+            } else if (errCode !== 'aborted') {
+              showAlert(`Microphone status: ${errCode || 'unavailable'}. You can type your response below!`, 'info');
+            }
           };
 
           recognitionInstance.onend = () => {
@@ -2997,6 +3047,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           };
 
           recognitionInstance.start();
+        } catch (startErr) {
+          console.warn('Failed to start SpeechRecognition:', startErr);
+          isSpeechRecording = false;
+          btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
+          if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+          showAlert('Could not activate microphone recognition. Please check your browser permissions or type your answer directly.', 'warning');
         }
       };
     }
