@@ -104,20 +104,20 @@ const registerUser = async (req, res, next) => {
           message: 'An account with this email already exists. Please log in directly.',
         });
       } else {
-        // Enforce 5-minute / 2 OTP limit
+        // Enforce 5-minute / 5 OTP limit
         const FIVE_MINS_MS = 5 * 60 * 1000;
         const now = Date.now();
         const recentHistory = (existingUser.verificationOtp?.sendHistory || []).filter(
           t => now - new Date(t).getTime() < FIVE_MINS_MS
         );
 
-        if (recentHistory.length >= 2) {
+        if (recentHistory.length >= 5) {
           const earliest = new Date(recentHistory[0]).getTime();
           const waitSec = Math.max(1, Math.ceil((earliest + FIVE_MINS_MS - now) / 1000));
           return res.status(429).json({
             success: false,
             rateLimited: true,
-            message: `Too many OTP requests. Maximum 2 verification codes allowed per 5 minutes. Please wait ${waitSec}s before requesting again.`,
+            message: `Too many OTP requests. Maximum 5 verification codes allowed per 5 minutes. Please wait ${waitSec}s before requesting again.`,
           });
         }
 
@@ -145,7 +145,11 @@ const registerUser = async (req, res, next) => {
           success: true,
           requiresOtp: true,
           email: normalizedEmail,
-          message: 'Account pending verification. A fresh 6-digit verification code has been sent to your email.',
+          mailSent,
+          backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+          message: mailSent
+            ? 'Account pending verification. A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
+            : `Email delivery delayed by provider. Your verification code is: ${otpCode}`,
         });
       }
     }
@@ -178,7 +182,11 @@ const registerUser = async (req, res, next) => {
       success: true,
       requiresOtp: true,
       email: normalizedEmail,
-      message: 'Account created! A 6-digit verification code has been sent to your email.',
+      mailSent,
+      backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+      message: mailSent
+        ? 'Account created! A 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
+        : `Account created! Email delivery delayed by provider. Your verification code is: ${otpCode}`,
     });
   } catch (error) {
     next(error);
@@ -318,20 +326,20 @@ const resendOtp = async (req, res, next) => {
       });
     }
 
-    // Enforce 5-minute / 2 OTP limit
+    // Enforce 5-minute / 5 OTP limit
     const FIVE_MINS_MS = 5 * 60 * 1000;
     const now = Date.now();
     const recentHistory = (user.verificationOtp?.sendHistory || []).filter(
       t => now - new Date(t).getTime() < FIVE_MINS_MS
     );
 
-    if (recentHistory.length >= 2) {
+    if (recentHistory.length >= 5) {
       const earliest = new Date(recentHistory[0]).getTime();
       const waitSec = Math.max(1, Math.ceil((earliest + FIVE_MINS_MS - now) / 1000));
       return res.status(429).json({
         success: false,
         rateLimited: true,
-        message: `Too many OTP requests. Maximum 2 verification codes allowed per 5 minutes. Please wait ${waitSec}s before requesting again.`,
+        message: `Too many OTP requests. Maximum 5 verification codes allowed per 5 minutes. Please wait ${waitSec}s before requesting again.`,
       });
     }
 
@@ -355,7 +363,11 @@ const resendOtp = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: 'A fresh 6-digit verification code has been sent to your Gmail inbox.',
+      mailSent,
+      backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? newCode : undefined,
+      message: mailSent
+        ? 'A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
+        : `Email delivery delayed by provider. Your fresh verification code is: ${newCode}`,
       data: {
         email: normalizedEmail,
       },
@@ -598,7 +610,11 @@ const loginUser = async (req, res, next) => {
           success: false,
           requiresVerification: true,
           email: normalizedEmail,
-          message: 'Your email address is not verified. A fresh 6-digit OTP code has been sent to your email. Please verify to continue.',
+          mailSent,
+          backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? newCode : undefined,
+          message: mailSent
+            ? 'Your email address is not verified yet. A fresh 6-digit OTP code has been sent to your email. Please check your Inbox and Spam/Junk folder!'
+            : `Your email address is not verified yet. Backup code: ${newCode}. Please enter it to verify.`,
         });
       }
     }

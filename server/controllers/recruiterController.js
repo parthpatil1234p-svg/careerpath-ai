@@ -199,8 +199,10 @@ const registerRecruiter = async (req, res, next) => {
 
     console.log(`\n🔑 [RECRUITER REGISTRATION OTP] 6-digit corporate code for ${normalizedEmail}: ${otpCode}\n`);
 
+    let mailSent = false;
     try {
-      await sendOtpEmail(normalizedEmail, user.name, otpCode);
+      const mailRes = await sendOtpEmail(normalizedEmail, user.name, otpCode);
+      mailSent = Boolean(mailRes && mailRes.success);
     } catch (mailErr) {
       console.error('[recruiterController.registerRecruiter] Mail dispatch error:', mailErr.message);
     }
@@ -210,7 +212,11 @@ const registerRecruiter = async (req, res, next) => {
       requiresOtp: true,
       email: normalizedEmail,
       companyName: company.name,
-      message: `Corporate verification code sent to ${normalizedEmail}. Enter the 6-digit code to complete recruiter activation.`,
+      mailSent,
+      backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+      message: mailSent
+        ? `Corporate verification code sent to ${normalizedEmail}. Please check your Inbox and Spam/Junk folder.`
+        : `Corporate registration initiated. Your verification code is: ${otpCode}`,
     });
   } catch (error) {
     next(error);

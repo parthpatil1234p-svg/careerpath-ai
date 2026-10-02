@@ -59,11 +59,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnResendOtp = document.getElementById('btnResendOtp');
   const resendCountdown = document.getElementById('resendCountdown');
   const digitInputs = document.querySelectorAll('.otp-digit-field');
+  const backupOtpBanner = document.getElementById('backupOtpBanner');
+  const backupOtpValue = document.getElementById('backupOtpValue');
+  const btnAutoFillBackupOtp = document.getElementById('btnAutoFillBackupOtp');
+  const noticeEmailText = document.getElementById('noticeEmailText');
 
   let currentEmail = '';
   let activeRole = 'student'; // 'student' or 'recruiter'
   let countdownTimer = null;
   let precheckDebounceTimer = null;
+
+  const fillOtpDigits = (code) => {
+    if (!code) return;
+    const digits = String(code).trim().slice(0, 6).split('');
+    digitInputs.forEach((input, i) => {
+      if (digits[i]) input.value = digits[i];
+    });
+    if (digitInputs[5]) digitInputs[5].focus();
+  };
+
+  if (btnAutoFillBackupOtp) {
+    btnAutoFillBackupOtp.addEventListener('click', () => {
+      const code = backupOtpValue ? backupOtpValue.textContent.trim() : '';
+      if (code) fillOtpDigits(code);
+    });
+  }
 
   const showAlert = (message, type = 'danger') => {
     alertContainer.innerHTML = `
@@ -319,9 +339,19 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ── Transition to Step 2 (OTP) ──────────────────────────────
-  const showOtpStep = (email) => {
+  const showOtpStep = (email, backupOtp = null) => {
     currentEmail = email;
     if (displayEmail) displayEmail.textContent = email;
+    if (noticeEmailText) noticeEmailText.textContent = email;
+
+    if (backupOtpBanner && backupOtpValue) {
+      if (backupOtp) {
+        backupOtpValue.textContent = backupOtp;
+        backupOtpBanner.classList.remove('d-none');
+      } else {
+        backupOtpBanner.classList.add('d-none');
+      }
+    }
 
     step1.classList.add('d-none');
     step2.classList.remove('d-none');
@@ -389,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = originalBtnContent;
 
         if (response.success && (response.requiresOtp || !response.data?.token)) {
-          showOtpStep(response.email || email);
+          showOtpStep(response.email || email, response.backupOtp);
         } else if (response.success && response.data?.token) {
           window.Auth.setToken(response.data.token);
           window.Auth.setCurrentUser(response.data.user);
@@ -405,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = originalBtnContent;
 
         if (err.status === 429 || (err.data && err.data.rateLimited)) {
-          showAlert(err.message || 'Rate limit reached: Maximum 2 verification codes allowed per 5 minutes.', 'warning');
+          showAlert(err.message || 'Rate limit reached: Maximum 5 verification codes allowed per 5 minutes.', 'warning');
           return;
         }
 
@@ -513,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recruiterSubmitBtn.innerHTML = originalBtnContent;
 
         if (response.success && response.requiresOtp) {
-          showOtpStep(response.email || email);
+          showOtpStep(response.email || email, response.backupOtp);
         } else {
           showAlert(response.message || 'Corporate registration failed. Please try again.');
         }
@@ -591,7 +621,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await window.API.post('/auth/resend-otp', { email: currentEmail });
       if (response.success) {
         startResendCountdown(60);
-        showAlert('A fresh 6-digit verification code has been sent to your email inbox!', 'success');
+        if (response.backupOtp && backupOtpBanner && backupOtpValue) {
+          backupOtpValue.textContent = response.backupOtp;
+          backupOtpBanner.classList.remove('d-none');
+        }
+        showAlert(response.message || 'A fresh 6-digit verification code has been sent to your email inbox!', 'success');
       } else {
         showAlert(response.message || 'Could not resend OTP. Please try again.');
         btnResendOtp.disabled = false;
@@ -601,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isRateLimited = err.status === 429 || (err.data && err.data.rateLimited);
       if (isRateLimited) {
         startResendCountdown(300);
-        showAlert(err.message || 'Rate limit reached: Maximum 2 verification codes allowed per 5 minutes.', 'warning');
+        showAlert(err.message || 'Rate limit reached: Maximum 5 verification codes allowed per 5 minutes.', 'warning');
       } else {
         showAlert(err.message || 'Failed to resend code.');
       }
@@ -611,11 +645,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Direct URL Parameter Support ────────────────────────────
   const urlParams = new URLSearchParams(window.location.search);
   const targetEmail = urlParams.get('email') || urlParams.get('verifyEmail');
+  const targetBackupOtp = urlParams.get('backupOtp');
   if (urlParams.get('role') === 'recruiter') {
     setRoleTab('recruiter');
   }
   if ((urlParams.get('verify') === 'true' || urlParams.get('verifyEmail')) && targetEmail) {
-    showOtpStep(targetEmail);
+    showOtpStep(targetEmail, targetBackupOtp);
     showAlert('Please enter the 6-digit verification code sent to your email to activate your account.', 'info');
   }
 });
