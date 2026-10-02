@@ -1091,10 +1091,10 @@
         <div class="modal-content border-line bg-dark text-white">
           <div class="modal-header border-bottom border-secondary border-opacity-25">
             <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-danger bg-opacity-25 text-danger font-monospace">
-                <i class="bi bi-record-circle-fill me-1"></i> AI INTERVIEW CHAMBER
+              <span class="chamber-live-badge">
+                <span class="chamber-beacon-dot"></span> AI INTERVIEW CHAMBER
               </span>
-              <h2 class="modal-title h5 fw-bold text-white mb-0" id="mockInterviewModalLabel">Live Technical & Behavioral Interview</h2>
+              <h2 class="modal-title h5 fw-bold text-white mb-0" id="mockInterviewModalLabel">Live Technical &amp; Behavioral Interview</h2>
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="btnCloseMockInterview"></button>
           </div>
@@ -1111,7 +1111,7 @@
                 <div class="d-flex align-items-center voice-select-pill">
                   <i class="bi bi-soundwave text-cyan me-1.5" style="font-size: 0.85rem;"></i>
                   <label for="interviewVoiceSelector" class="visually-hidden">Interviewer Voice Persona</label>
-                  <select class="form-select form-select-sm bg-transparent text-white border-0 p-0 font-monospace" id="interviewVoiceSelector" style="font-size: 0.74rem; width: auto; cursor: pointer;" title="Select natural human interviewer voice">
+                  <select class="form-select form-select-sm border-0 font-monospace" id="interviewVoiceSelector" style="font-size: 0.74rem; width: auto; cursor: pointer;" title="Select natural human interviewer voice">
                     <option value="Joanna" selected>✨ Joanna (Natural US Recruiter)</option>
                     <option value="Matthew">👨 Matthew (Senior Tech Lead)</option>
                     <option value="Amy">👩 Amy (British Tech Lead)</option>
@@ -1135,7 +1135,7 @@
             </div>
 
             <!-- Question Prompt Box -->
-            <div class="p-3 rounded-2 bg-black bg-opacity-60 border border-secondary border-opacity-25 mb-4 position-relative">
+            <div class="interview-hud-card p-3 mb-4">
               <!-- Loading state inside prompt box -->
               <div id="interviewQuestionLoading" class="text-center py-4 d-none">
                 <div class="spinner-border text-info mb-2" role="status" style="width: 2rem; height: 2rem;">
@@ -1145,12 +1145,25 @@
               </div>
 
               <div id="interviewQuestionContainer" class="d-flex align-items-start gap-3">
-                <div class="p-2 rounded-circle bg-primary bg-opacity-25 text-info fs-4 flex-shrink-0">
-                  <i class="bi bi-robot"></i>
+                <div class="ai-interviewer-avatar flex-shrink-0" id="aiAvatarIcon">
+                  <i class="bi bi-cpu-fill"></i>
                 </div>
-                <div>
-                  <div class="text-info small fw-bold font-monospace text-uppercase" id="questionCategoryBadge">TECHNICAL SCENARIO</div>
-                  <h3 class="h6 fw-semibold text-white mt-1 mb-0" id="currentQuestionText" style="line-height: 1.6;">
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span class="badge bg-cyan bg-opacity-15 text-cyan border border-cyan border-opacity-25 font-monospace text-uppercase" id="questionCategoryBadge" style="font-size: 0.68rem; letter-spacing: 0.5px;">TECHNICAL SCENARIO</span>
+                    <!-- Dynamic Soundwave Visualizer while playing audio or listening -->
+                    <div class="interview-audio-spectrum d-none" id="interviewAudioSpectrum">
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                      <div class="spectrum-bar"></div>
+                    </div>
+                  </div>
+                  <h3 class="h6 fw-semibold text-white mb-0" id="currentQuestionText" style="line-height: 1.6;">
                     Loading your interview question...
                   </h3>
                 </div>
@@ -1160,14 +1173,25 @@
             <!-- Student Answer Section -->
             <div class="mb-3">
               <div class="d-flex align-items-center justify-content-between mb-2">
-                <label class="form-label small fw-bold text-light mb-0">Your Spoken or Written Response</label>
-                <button type="button" class="btn btn-outline-danger btn-sm px-2 py-0.5" id="btnToggleMic">
-                  <i class="bi bi-mic-fill me-1"></i> <span id="micStatusText">Start Voice Answer</span>
-                </button>
+                <label class="form-label small fw-bold text-light mb-0 d-flex align-items-center gap-1.5">
+                  <i class="bi bi-chat-left-quote text-cyan"></i>
+                  <span>Your Spoken or Written Response</span>
+                </label>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="text-danger small font-mono d-none" id="voiceLiveIndicator" style="font-size: 0.72rem;">
+                    <span class="chamber-beacon-dot"></span> Recording Live
+                  </span>
+                  <button type="button" class="btn btn-outline-danger btn-sm px-2 py-0.5" id="btnToggleMic">
+                    <i class="bi bi-mic-fill me-1"></i> <span id="micStatusText">Start Voice Answer</span>
+                  </button>
+                </div>
               </div>
-              <textarea id="interviewAnswerInput" class="form-control bg-black text-white border-secondary border-opacity-50" rows="5" placeholder="Speak into your microphone or type your technical response here..."></textarea>
-              <div class="text-muted small mt-1" style="font-size: 0.75rem;">
-                Tip: Speak clearly or provide concrete project examples using the STAR method (Situation, Task, Action, Result).
+              <textarea id="interviewAnswerInput" class="form-control" rows="5" placeholder="Speak into your microphone or type your technical response here..."></textarea>
+              <div class="d-flex align-items-center justify-content-between mt-1 text-muted small" style="font-size: 0.75rem;">
+                <div>
+                  <i class="bi bi-lightbulb text-warning me-1"></i> Tip: Use the STAR method (Situation, Task, Action, Result) for top marks.
+                </div>
+                <div class="font-mono text-secondary" id="answerCharCount">0 chars</div>
               </div>
             </div>
 

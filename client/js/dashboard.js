@@ -2617,6 +2617,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnSpeakText = document.getElementById('btnSpeakText');
     const btnSpeakIcon = document.getElementById('btnSpeakIcon');
     const audioWaveBars = document.getElementById('audioWaveBars');
+    const interviewAudioSpectrum = document.getElementById('interviewAudioSpectrum');
+    const aiAvatarIcon = document.getElementById('aiAvatarIcon');
+    const voiceLiveIndicator = document.getElementById('voiceLiveIndicator');
+    const answerCharCount = document.getElementById('answerCharCount');
 
     if (!btnLaunch || !modalEl) return;
 
@@ -2712,6 +2716,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         answerInput.disabled = false;
         answerInput.focus();
       }
+      if (answerCharCount) answerCharCount.textContent = '0 chars';
       if (feedbackCard) feedbackCard.classList.add('d-none');
 
       if (btnSubmit) {
@@ -2761,6 +2766,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (btnSpeakText) btnSpeakText.textContent = 'Stop Audio';
         if (btnSpeakIcon) btnSpeakIcon.className = 'bi bi-stop-circle-fill text-danger';
         if (audioWaveBars) audioWaveBars.classList.remove('d-none');
+        if (interviewAudioSpectrum) {
+          interviewAudioSpectrum.classList.remove('d-none', 'mic-active');
+        }
+        if (aiAvatarIcon) aiAvatarIcon.classList.add('speaking-pulse');
         if (btnSpeak) {
           btnSpeak.classList.remove('btn-outline-info');
           btnSpeak.classList.add('btn-outline-danger');
@@ -2770,11 +2779,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (btnSpeakText) btnSpeakText.textContent = 'Loading Voice...';
         if (btnSpeakIcon) btnSpeakIcon.className = 'spinner-border spinner-border-sm text-info';
         if (audioWaveBars) audioWaveBars.classList.add('d-none');
+        if (interviewAudioSpectrum && !isSpeechRecording) interviewAudioSpectrum.classList.add('d-none');
+        if (aiAvatarIcon) aiAvatarIcon.classList.remove('speaking-pulse');
       } else {
         isAudioPlaying = false;
         if (btnSpeakText) btnSpeakText.textContent = 'Read Question';
         if (btnSpeakIcon) btnSpeakIcon.className = 'bi bi-volume-up-fill';
         if (audioWaveBars) audioWaveBars.classList.add('d-none');
+        if (interviewAudioSpectrum && !isSpeechRecording) interviewAudioSpectrum.classList.add('d-none');
+        if (aiAvatarIcon) aiAvatarIcon.classList.remove('speaking-pulse');
         if (btnSpeak) {
           btnSpeak.classList.remove('btn-outline-danger');
           btnSpeak.classList.add('btn-outline-info');
@@ -2963,6 +2976,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           isSpeechRecording = false;
           btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
           if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+          if (voiceLiveIndicator) voiceLiveIndicator.classList.add('d-none');
+          if (interviewAudioSpectrum && !isAudioPlaying) {
+            interviewAudioSpectrum.classList.add('d-none');
+            interviewAudioSpectrum.classList.remove('mic-active');
+          }
           return;
         }
 
@@ -3000,6 +3018,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             isSpeechRecording = true;
             btnToggleMic.className = 'btn btn-danger btn-sm px-2 py-0.5 mic-recording-pulse';
             if (micStatusText) micStatusText.textContent = 'Listening (Speak now)...';
+            if (voiceLiveIndicator) voiceLiveIndicator.classList.remove('d-none');
+            if (interviewAudioSpectrum) {
+              interviewAudioSpectrum.classList.remove('d-none');
+              interviewAudioSpectrum.classList.add('mic-active');
+            }
           };
 
           recognitionInstance.onresult = (event) => {
@@ -3017,6 +3040,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (answerInput) {
               answerInput.value = (baseText + finalAccumulator + interimAccumulator).trim();
+              if (answerCharCount) {
+                const len = answerInput.value.length;
+                answerCharCount.textContent = `${len} char${len === 1 ? '' : 's'}`;
+              }
             }
           };
 
@@ -3025,6 +3052,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             isSpeechRecording = false;
             btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
             if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+            if (voiceLiveIndicator) voiceLiveIndicator.classList.add('d-none');
+            if (interviewAudioSpectrum && !isAudioPlaying) {
+              interviewAudioSpectrum.classList.add('d-none');
+              interviewAudioSpectrum.classList.remove('mic-active');
+            }
 
             const errCode = event.error || '';
             if (errCode === 'not-allowed') {
@@ -3044,6 +3076,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             isSpeechRecording = false;
             btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
             if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+            if (voiceLiveIndicator) voiceLiveIndicator.classList.add('d-none');
+            if (interviewAudioSpectrum && !isAudioPlaying) {
+              interviewAudioSpectrum.classList.add('d-none');
+              interviewAudioSpectrum.classList.remove('mic-active');
+            }
           };
 
           recognitionInstance.start();
@@ -3052,9 +3089,21 @@ document.addEventListener('DOMContentLoaded', async () => {
           isSpeechRecording = false;
           btnToggleMic.className = 'btn btn-outline-danger btn-sm px-2 py-0.5';
           if (micStatusText) micStatusText.textContent = 'Start Voice Answer';
+          if (voiceLiveIndicator) voiceLiveIndicator.classList.add('d-none');
+          if (interviewAudioSpectrum && !isAudioPlaying) {
+            interviewAudioSpectrum.classList.add('d-none');
+            interviewAudioSpectrum.classList.remove('mic-active');
+          }
           showAlert('Could not activate microphone recognition. Please check your browser permissions or type your answer directly.', 'warning');
         }
       };
+
+      if (answerInput && answerCharCount) {
+        answerInput.addEventListener('input', () => {
+          const len = answerInput.value.length;
+          answerCharCount.textContent = `${len} char${len === 1 ? '' : 's'}`;
+        });
+      }
     }
 
     // Submit Answer & Evaluate
