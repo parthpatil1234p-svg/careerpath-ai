@@ -1320,7 +1320,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const videoId = this.extractYouTubeId(videoUrl);
       this.setupPlayer(videoId);
 
-      if (this.modal) {
+      const modalEl = document.getElementById('videoChamberModal');
+      if (modalEl && typeof bootstrap !== 'undefined') {
+        this.modal = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: 'static', keyboard: false });
+        this.modal.show();
+      } else if (this.modal) {
         this.modal.show();
       }
     },
@@ -1328,42 +1332,70 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupPlayer(videoId) {
       if (window.YT && window.YT.Player) {
         if (!this.player) {
-          this.player = new window.YT.Player('videoChamberPlayer', {
-            videoId: videoId,
-            playerVars: {
-              autoplay: 1,
-              controls: 1,
-              modestbranding: 1,
-              rel: 0,
-              playsinline: 1,
-              origin: window.location.origin,
-            },
-            events: {
-              onReady: (event) => {
-                this.playerReady = true;
-                try {
-                  event.target.playVideo();
-                } catch (e) {}
-                this.startTelemetryTicker();
+          try {
+            this.player = new window.YT.Player('videoChamberPlayer', {
+              videoId: videoId,
+              playerVars: {
+                autoplay: 1,
+                controls: 1,
+                modestbranding: 1,
+                rel: 0,
+                playsinline: 1,
+                origin: window.location.origin,
               },
-              onStateChange: (event) => {
-                this.handlePlayerStateChange(event);
+              events: {
+                onReady: (event) => {
+                  this.playerReady = true;
+                  try {
+                    event.target.playVideo();
+                  } catch (e) {}
+                  this.startTelemetryTicker();
+                },
+                onStateChange: (event) => {
+                  this.handlePlayerStateChange(event);
+                },
+                onError: () => {
+                  this.fallbackIframeEmbed(videoId);
+                },
               },
-            },
-          });
+            });
+          } catch (initErr) {
+            console.warn('YT.Player initialization error, using fallback:', initErr);
+            this.fallbackIframeEmbed(videoId);
+          }
         } else {
           try {
             this.player.loadVideoById(videoId);
             this.player.playVideo();
             this.startTelemetryTicker();
           } catch (e) {
-            console.warn('Error loading video by ID:', e);
+            console.warn('Error loading video by ID, using fallback:', e);
+            this.fallbackIframeEmbed(videoId);
           }
         }
       } else {
+        const existingCb = window.onYouTubeIframeAPIReady;
         window.onYouTubeIframeAPIReady = () => {
+          if (typeof existingCb === 'function') try { existingCb(); } catch (_) {}
           this.setupPlayer(videoId);
         };
+
+        // Fallback: If YT iframe API is slow or blocked by adblocker, embed responsive iframe directly
+        setTimeout(() => {
+          if (!this.playerReady && !this.player) {
+            this.fallbackIframeEmbed(videoId);
+          }
+        }, 1500);
+      }
+    },
+
+    fallbackIframeEmbed(videoId) {
+      const container = document.getElementById('videoChamberPlayerContainer');
+      if (container) {
+        container.innerHTML = `<iframe id="videoChamberPlayer" class="w-100 h-100 border-0 rounded-3" src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        this.isPlaying = true;
+        this.playerReady = true;
+        this.startTelemetryTicker();
       }
     },
 
@@ -1749,6 +1781,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
           this.player.pauseVideo();
         } catch (e) {}
+      } else {
+        const iframe = document.querySelector('#videoChamberPlayerContainer iframe');
+        if (iframe) iframe.src = 'about:blank';
       }
       this.isPlaying = false;
       if (this.modal) {
