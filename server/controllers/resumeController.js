@@ -29,7 +29,22 @@ exports.analyzeResume = async (req, res, next) => {
 
     // Determine text to analyze: provided resumeText, or extract from user.resumeUrl, or profile skills fallback
     let textToAnalyze = resumeText;
-    if (!textToAnalyze || textToAnalyze.trim().length < 50) {
+    if (textToAnalyze && textToAnalyze.trim().length >= 50) {
+      const { verifyResumeText } = require('../services/resumeAuthenticityService');
+      const textAuth = verifyResumeText(textToAnalyze);
+      if (!textAuth.isValid) {
+        return res.status(422).json({
+          success: false,
+          code: textAuth.code || 'INVALID_RESUME_CONTENT',
+          detectedType: textAuth.detectedType || 'unsupported_document',
+          message: textAuth.message || 'The provided text does not match an authentic resume.',
+        });
+      }
+    } else {
+      textToAnalyze = null;
+    }
+
+    if (!textToAnalyze) {
       if (user.resumeUrl) {
         try {
           const { downloadResumeBuffer } = require('../services/cloudinaryService');

@@ -398,29 +398,30 @@ const uploadResume = async (req, res, next) => {
     // 3. Deep binary buffer & magic-byte validation
     const validated = validateResumeBuffer(fileData, fileName);
 
-    // 4. Save old public_id for safe cleanup after DB commit
+    // 4. Content Authenticity & Document Classification Gate (Pre-Cloudinary!)
+    const { verifyResumeContent } = require('../services/resumeAuthenticityService');
+    const authenticity = await verifyResumeContent(validated.buffer, validated.mimeType, validated.sanitizedName);
+
+    if (!authenticity.isValid) {
+      return res.status(422).json({
+        success: false,
+        code: authenticity.code || 'INVALID_RESUME_CONTENT',
+        detectedType: authenticity.detectedType || 'non_resume_document',
+        message: authenticity.message || 'Document rejected: File does not appear to be an authentic resume.',
+        details: authenticity.details || null,
+      });
+    }
+
+    // 5. Save old public_id for safe cleanup after DB commit
     const oldPublicId = existingResume?.publicId || existingUser?.resumeRecord?.publicId;
 
-    // 5. Upload new asset to Cloudinary
+    // 6. Upload new asset to Cloudinary (ONLY authenticated resumes reach storage!)
     const uploadRes = await uploadResumeToCloudinary(fileData, req.user._id);
     const resumeUrl = uploadRes.secure_url;
     const newPublicId = uploadRes.public_id;
 
-    // 6. Extract text from PDF if applicable
-    let extractedText = '';
-    try {
-      if (validated.mimeType === 'application/pdf') {
-        const { PDFParse } = require('pdf-parse');
-        const parser = new PDFParse({ data: validated.buffer });
-        await parser.load();
-        const parseResult = await parser.getText();
-        if (parseResult && typeof parseResult.text === 'string') {
-          extractedText = parseResult.text.trim();
-        }
-      }
-    } catch (parseErr) {
-      console.warn('[userController.uploadResume] Text extraction note:', parseErr.message);
-    }
+    // 7. Re-use extracted text from authenticity gate (zero redundant parsing!)
+    const extractedText = authenticity.extractedText || '';
 
     // 7. Auto-trigger ATS analysis
     let resumeAnalysis = null;

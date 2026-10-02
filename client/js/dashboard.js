@@ -1532,7 +1532,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           showAlert(updateRes.message || 'Failed to save resume URL in profile.', 'danger');
         }
       } catch (uploadErr) {
-        showAlert(uploadErr.message || 'Failed to upload resume document.', 'danger');
+        if (uploadErr.status === 422 || uploadErr.data?.code === 'INVALID_RESUME_CONTENT' || uploadErr.data?.code?.startsWith?.('NON_RESUME_') || uploadErr.data?.code === 'INSUFFICIENT_TEXT') {
+          showAlert(`🚫 Document Rejected: ${uploadErr.message || 'The selected file is not an authentic resume. Please upload your CV with education, skills, and projects.'}`, 'danger');
+        } else {
+          showAlert(uploadErr.message || 'Failed to upload resume document.', 'danger');
+        }
       } finally {
         btnUploadResumeTrigger.disabled = false;
         btnUploadResumeTrigger.innerHTML = originalBtnHtml;
@@ -2168,7 +2172,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       } catch (uploadErr) {
         console.error('Resume upload error:', uploadErr);
-        const reason = uploadErr.message || 'Failed to upload resume file.';
+        const isAuthenticityError = uploadErr.status === 422 || uploadErr.data?.code === 'INVALID_RESUME_CONTENT' || uploadErr.data?.code?.startsWith?.('NON_RESUME_') || uploadErr.data?.code === 'INSUFFICIENT_TEXT';
+        const reason = isAuthenticityError
+          ? `🚫 Authenticity Check Failed: ${uploadErr.message || 'The uploaded file is not an authentic resume/CV.'}`
+          : (uploadErr.message || 'Failed to upload resume file.');
         setResumeState('failed', { reason });
         showAlert(reason, 'danger');
       } finally {
