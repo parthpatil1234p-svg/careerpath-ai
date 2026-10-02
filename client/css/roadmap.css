@@ -621,4 +621,12 @@
   box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
 }
 
+#videoChamberModal {
+  z-index: 1060 !important;
+}
+
+#videoChamberModal.show {
+  display: block !important;
+}
+
 

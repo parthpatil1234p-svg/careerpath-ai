@@ -1142,9 +1142,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     init() {
       const modalEl = document.getElementById('videoChamberModal');
       if (!modalEl) return;
-      if (typeof bootstrap !== 'undefined') {
-        this.modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
+      if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        try {
+          this.modal = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: 'static', keyboard: false });
+        } catch (_) {}
       }
+
+      // Document-level event delegation: clicking any .btn-open-video-chamber reliably opens the chamber
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-open-video-chamber');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const taskId = btn.getAttribute('data-task-id');
+        const taskTitle = btn.getAttribute('data-task-title');
+        const videoUrl = btn.getAttribute('data-video-url');
+        const skillName = btn.getAttribute('data-skill-name');
+        const durationSeconds = btn.getAttribute('data-duration');
+        const isVerified = btn.getAttribute('data-verified') === 'true';
+        const score = btn.getAttribute('data-score');
+
+        this.open({
+          taskId,
+          taskTitle,
+          videoUrl,
+          skillName,
+          durationSeconds,
+          isVerified,
+          score,
+        });
+      });
 
       // Close button
       document.getElementById('btnCloseVideoChamber')?.addEventListener('click', () => {
@@ -1321,11 +1349,38 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.setupPlayer(videoId);
 
       const modalEl = document.getElementById('videoChamberModal');
-      if (modalEl && typeof bootstrap !== 'undefined') {
-        this.modal = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: 'static', keyboard: false });
-        this.modal.show();
-      } else if (this.modal) {
-        this.modal.show();
+      if (modalEl) {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          try {
+            this.modal = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: 'static', keyboard: false });
+            this.modal.show();
+          } catch (modalErr) {
+            console.warn('Bootstrap modal show failed, using manual fallback:', modalErr);
+            modalEl.classList.add('show');
+            modalEl.style.display = 'block';
+            modalEl.removeAttribute('aria-hidden');
+            modalEl.setAttribute('aria-modal', 'true');
+            let backdrop = document.querySelector('.modal-backdrop');
+            if (!backdrop) {
+              backdrop = document.createElement('div');
+              backdrop.className = 'modal-backdrop fade show';
+              document.body.appendChild(backdrop);
+            }
+            document.body.classList.add('modal-open');
+          }
+        } else {
+          modalEl.classList.add('show');
+          modalEl.style.display = 'block';
+          modalEl.removeAttribute('aria-hidden');
+          modalEl.setAttribute('aria-modal', 'true');
+          let backdrop = document.querySelector('.modal-backdrop');
+          if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            document.body.appendChild(backdrop);
+          }
+          document.body.classList.add('modal-open');
+        }
       }
     },
 
@@ -1786,9 +1841,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (iframe) iframe.src = 'about:blank';
       }
       this.isPlaying = false;
-      if (this.modal) {
-        this.modal.hide();
+      if (this.modal && typeof this.modal.hide === 'function') {
+        try {
+          this.modal.hide();
+        } catch (e) {}
       }
+      const modalEl = document.getElementById('videoChamberModal');
+      if (modalEl) {
+        modalEl.classList.remove('show');
+        modalEl.style.display = 'none';
+        modalEl.setAttribute('aria-hidden', 'true');
+        modalEl.removeAttribute('aria-modal');
+      }
+      document.querySelectorAll('.modal-backdrop').forEach((b) => b.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
     },
   };
 
