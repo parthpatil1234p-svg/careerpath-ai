@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -215,6 +215,9 @@
 
           <!-- Quick Action Buttons -->
           <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button type="button" class="btn btn-outline-warning btn-sm px-3" id="btnToggleVerifyCertTheme" title="Toggle Parchment / Dark Obsidian Theme">
+              <i class="bi bi-moon-stars-fill me-1"></i> <span id="verifyThemeText">Dark Obsidian</span>
+            </button>
             <button type="button" class="btn btn-outline-light btn-sm px-3" id="btnCopyRecord">
               <i class="bi bi-clipboard-check me-1"></i> Copy Record
             </button>
@@ -319,13 +322,16 @@
                 </div>
               </div>
 
-              <div class="mt-2.5 pt-2 border-top border-amber-subtle">
-                <div class="cert-scorecard-label mb-1.5">
-                  VERIFIED ROLE COMPETENCIES:
+              <div class="mt-2.5 pt-2 border-top border-amber-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div class="d-flex align-items-center flex-wrap gap-1.5">
+                  <span class="cert-scorecard-label me-1">VERIFIED ROLE COMPETENCIES:</span>
+                  <div class="d-inline-flex flex-wrap gap-1.5 align-items-center" id="verifiedSkillsContainer">
+                    <!-- Injected dynamically -->
+                  </div>
                 </div>
-                <div class="d-flex flex-wrap gap-1.5" id="verifiedSkillsContainer">
-                  <!-- Injected dynamically -->
-                </div>
+                <span class="cert-competency-status-badge">
+                  <i class="bi bi-shield-check text-success me-1"></i> 5/5 Validated
+                </span>
               </div>
             </div>
 

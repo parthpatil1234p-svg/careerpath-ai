@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
@@ -1218,24 +1218,24 @@
 
     <!-- Official Verifiable Job Ready Certificate Modal -->
     <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable cert-modal-dialog">
         <div class="modal-content border-0 shadow-2xl cert-modal-content">
-          <div class="modal-header border-0 px-4 py-3 bg-dark text-white d-flex align-items-center justify-content-between">
+          <div class="modal-header border-0 px-3 py-2 bg-dark text-white d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-warning text-dark font-monospace text-uppercase fw-bold px-2.5 py-1">IVY-LEAGUE ACCREDITATION</span>
-              <h2 class="modal-title h6 fw-bold text-white mb-0" id="certificateModalLabel">CareerPath AI &mdash; Verified Job Ready Digital Credential</h2>
+              <span class="badge bg-warning text-dark font-monospace text-uppercase fw-bold px-2 py-0.5" style="font-size: 0.68rem;">IVY-LEAGUE ACCREDITATION</span>
+              <h2 class="modal-title h6 fw-bold text-white mb-0" id="certificateModalLabel" style="font-size: 0.88rem;">CareerPath AI &mdash; Verified Job Ready Digital Credential</h2>
             </div>
             <div class="d-flex align-items-center gap-2">
-              <button type="button" class="btn btn-outline-light btn-sm py-1 px-3 d-flex align-items-center gap-1.5" id="btnToggleCertTheme" title="Toggle Parchment / Royal Obsidian Theme">
-                <i class="bi bi-palette2"></i> <span class="d-none d-sm-inline">Theme</span>
+              <button type="button" class="btn btn-outline-light btn-sm py-1 px-2.5 d-flex align-items-center gap-1.5" id="btnToggleCertTheme" title="Toggle Parchment / Royal Obsidian Theme">
+                <i class="bi bi-moon-stars-fill text-warning"></i> <span class="d-none d-sm-inline" id="certThemeBtnText">Dark Obsidian</span>
               </button>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
           </div>
 
-          <div class="modal-body p-2 p-md-4 cert-modal-body">
+          <div class="modal-body p-2 p-md-3 cert-modal-body">
             <!-- Official Certificate Paper Canvas -->
-            <div class="official-certificate-container my-1" id="printableCertificate">
+            <div class="official-certificate-container" id="printableCertificate">
               <!-- Guilloche Corner Ornaments -->
               <div class="cert-corner cert-corner-tl"></div>
               <div class="cert-corner cert-corner-tr"></div>
@@ -1243,8 +1243,8 @@
               <div class="cert-corner cert-corner-br"></div>
 
               <!-- Top Registry Header -->
-              <div class="cert-header-bar d-flex justify-content-between align-items-center mb-3">
-                <div class="d-flex align-items-center gap-2.5 text-start">
+              <div class="cert-header-bar d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center gap-2 text-start">
                   <div class="cert-crest-monogram">
                     <i class="bi bi-bank2"></i>
                   </div>
@@ -1268,26 +1268,26 @@
               </div>
 
               <!-- Main Attestation & Recipient Body -->
-              <div class="cert-center-body my-3 my-md-4 text-center">
+              <div class="cert-center-body my-2 text-center">
                 <div class="cert-eyebrow-text">
                   OFFICIAL DIGITAL CREDENTIAL OF MERIT &amp; JOB READINESS
                 </div>
-                <div class="cert-attestation-sub mt-2 mb-1">
+                <div class="cert-attestation-sub mt-1 mb-0">
                   This is to certify that
                 </div>
-                <h1 class="cert-recipient-name my-2" id="certStudentName">Demo Student</h1>
-                <div class="cert-ornament-divider">
+                <h1 class="cert-recipient-name my-1" id="certStudentName">Demo Student</h1>
+                <div class="cert-ornament-divider my-1">
                   <span>✦</span> &nbsp; <span class="ornament-gem">❖</span> &nbsp; <span>✦</span>
                 </div>
-                <p class="cert-attestation-body mx-auto">
+                <p class="cert-attestation-body mx-auto my-1">
                   has successfully demonstrated code-grounded proficiency, passed weekly proctored technical milestones, and satisfied all four verified hiring benchmarks for the professional designation of:
                 </p>
-                <div class="cert-target-role my-2" id="certCareerTitle">Financial Analyst &amp; Modeler</div>
+                <div class="cert-target-role my-1" id="certCareerTitle">Financial Analyst &amp; Modeler</div>
               </div>
 
               <!-- Executive 4-Pillar Scorecard & Competencies -->
-              <div class="cert-scorecard-box p-3 my-3 text-start">
-                <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom border-amber-subtle">
+              <div class="cert-scorecard-box p-2.5 my-2 text-start">
+                <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom border-amber-subtle">
                   <span class="cert-scorecard-label">
                     <i class="bi bi-shield-check text-success me-1"></i> VERIFIED HIRING BENCHMARK SCORECARD
                   </span>
@@ -1295,7 +1295,7 @@
                 </div>
 
                 <!-- 4 Micro Benchmark Progress Columns -->
-                <div class="row g-2 text-center my-2">
+                <div class="row g-1.5 text-center my-1">
                   <div class="col-6 col-md-3">
                     <div class="cert-metric-pill">
                       <div class="cert-metric-label">🎯 Skills Mastered</div>
@@ -1327,33 +1327,36 @@
                 </div>
 
                 <!-- Role-Specific Verified Competency Badges -->
-                <div class="mt-2.5 pt-2 border-top border-amber-subtle">
-                  <div class="cert-scorecard-label mb-1.5">
-                    VERIFIED ROLE COMPETENCIES:
+                <div class="mt-1.5 pt-1.5 border-top border-amber-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="d-flex align-items-center flex-wrap gap-1">
+                    <span class="cert-scorecard-label me-1">VERIFIED ROLE COMPETENCIES:</span>
+                    <div class="d-inline-flex flex-wrap gap-1 align-items-center" id="certSkillsContainer">
+                      <!-- Injected dynamically with role-appropriate skills -->
+                    </div>
                   </div>
-                  <div class="d-flex flex-wrap gap-1.5" id="certSkillsContainer">
-                    <!-- Injected dynamically with role-appropriate skills -->
-                  </div>
+                  <span class="cert-competency-status-badge">
+                    <i class="bi bi-shield-check text-success me-1"></i> 5/5 Validated
+                  </span>
                 </div>
               </div>
 
               <!-- Trust & Signatures Footer -->
-              <div class="cert-footer-row row align-items-end mt-4 pt-2 text-start g-3">
+              <div class="cert-footer-row row align-items-end mt-2 pt-1 text-start g-2">
                 <div class="col-12 col-md-4 text-center text-md-start">
                   <div class="cert-signature-line">
                     <div class="cert-signature-svg">Dr. Rajiv Mehta</div>
                   </div>
                   <div class="cert-signatory-name">Dr. Rajiv Mehta</div>
                   <div class="cert-signatory-title">Dean of Academic Standards &middot; Evaluation Council</div>
-                  <div class="cert-meta-item mt-1">Date: <strong id="certIssueDate">October 1, 2026</strong></div>
+                  <div class="cert-meta-item mt-0.5">Date: <strong id="certIssueDate">October 1, 2026</strong></div>
                   <div class="cert-meta-item">ID: <strong class="font-mono" id="certVerificationId">CP-2026-DEMO</strong></div>
                 </div>
 
                 <div class="col-12 col-md-4 text-center">
                   <div class="cert-qr-frame mx-auto">
-                    <img id="certQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=0&data=https%3A%2F%2Fcareerpath-ai.onrender.com%2Fverify.html%3FcertId%3DCP-2026-DEMO" alt="Scan to Verify" width="84" height="84" class="cert-qr-img" />
+                    <img id="certQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=0&data=https%3A%2F%2Fcareerpath-ai.onrender.com%2Fverify.html%3FcertId%3DCP-2026-DEMO" alt="Scan to Verify" width="68" height="68" class="cert-qr-img" />
                   </div>
-                  <div class="cert-qr-caption mt-1">
+                  <div class="cert-qr-caption mt-0.5">
                     <i class="bi bi-qr-code-scan me-1 text-primary"></i> Scan with mobile camera
                   </div>
                   <div class="cert-qr-subtext">
@@ -1367,7 +1370,7 @@
                   </div>
                   <div class="cert-signatory-name">Team 404 Brain Not Found</div>
                   <div class="cert-signatory-title">Lead Protocol Stewards &middot; Hack2Ignite 2026&ndash;27</div>
-                  <div class="cert-meta-item mt-1">
+                  <div class="cert-meta-item mt-0.5">
                     SHA-256: <span id="certShaHash" class="cert-sha-hash font-mono">CC44899A307E2F2C50...</span>
                   </div>
                   <div class="cert-meta-item text-success fw-semibold">
@@ -1379,7 +1382,7 @@
           </div>
 
           <!-- Modal Action Controls -->
-          <div class="modal-footer border-0 px-4 py-3 bg-dark d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div class="modal-footer border-0 px-3 py-2 bg-dark d-flex flex-wrap align-items-center justify-content-between gap-2">
             <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <button type="button" class="btn btn-outline-light btn-sm px-3" id="btnCopyCertLink" title="Copy public verification link to clipboard">

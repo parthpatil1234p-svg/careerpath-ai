@@ -84,7 +84,9 @@
 .landing-page .cp-chat-question-popup,
 .recommendations-page .cp-chat-question-popup,
 .assessment-page .cp-chat-question-popup,
-body:has(.quiz-page-container) .cp-chat-question-popup {
+body:has(.quiz-page-container) .cp-chat-question-popup,
+body.modal-open .cp-chat-question-popup,
+body.modal-open .cp-chat-trigger {
   display: none !important;
 }
 

@@ -195,6 +195,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(addLinkedInUrl, '_blank', 'noopener,noreferrer');
       };
     }
+
+    const btnToggleVerifyTheme = document.getElementById('btnToggleVerifyCertTheme');
+    const certCanvas = document.getElementById('printableCertificate');
+    if (btnToggleVerifyTheme && certCanvas) {
+      btnToggleVerifyTheme.onclick = () => {
+        certCanvas.classList.toggle('cert-theme-dark');
+        const isDark = certCanvas.classList.contains('cert-theme-dark');
+        btnToggleVerifyTheme.innerHTML = isDark
+          ? '<i class="bi bi-sun-fill me-1"></i> Royal Parchment'
+          : '<i class="bi bi-moon-stars-fill me-1"></i> Dark Obsidian';
+      };
+    }
   }
 
   function renderError(message) {

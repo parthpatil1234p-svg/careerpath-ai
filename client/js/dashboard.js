@@ -3214,8 +3214,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnToggleTheme.onclick = () => {
         certCanvas.classList.toggle('cert-theme-dark');
         const isDark = certCanvas.classList.contains('cert-theme-dark');
-        btnToggleTheme.innerHTML = `<i class="bi bi-palette2"></i> <span class="d-none d-sm-inline">${isDark ? 'Parchment' : 'Obsidian'}</span>`;
-        showAlert(`Credential aesthetic switched to ${isDark ? 'Dark Obsidian Foil' : 'Classic Royal Parchment'}.`, 'info');
+        btnToggleTheme.innerHTML = isDark
+          ? '<i class="bi bi-sun-fill text-warning me-1"></i> <span class="d-none d-sm-inline">Royal Parchment</span>'
+          : '<i class="bi bi-moon-stars-fill text-warning me-1"></i> <span class="d-none d-sm-inline">Dark Obsidian</span>';
       };
     }
 
