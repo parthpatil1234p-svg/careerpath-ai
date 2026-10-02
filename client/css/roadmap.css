@@ -69,6 +69,27 @@
   z-index: 1;
 }
 
+@media (max-width: 575.98px) {
+  .roadmap-timeline {
+    padding-left: 0 !important;
+  }
+  .roadmap-timeline::before {
+    display: none !important;
+  }
+  .week-card {
+    padding: 1.15rem 0.85rem !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  .task-item {
+    padding: 0.75rem 0.85rem !important;
+    gap: 0.65rem !important;
+  }
+  .roadmap-header-card,
+  .roadmap-path-card {
+    padding: 1.25rem 1rem !important;
+  }
+}
+
 /* Week Cards */
 .week-card {
   background: #FFFFFF;

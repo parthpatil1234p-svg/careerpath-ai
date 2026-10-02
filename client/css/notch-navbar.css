@@ -634,3 +634,99 @@ main.container {
   }
 }
 
+/* --------------------------------------------------------------------------
+   8. Mobile Viewport Adaptations (< 576px & < 380px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 575.98px) {
+  .cp-navbar-notch {
+    top: 6px;
+  }
+  .cp-navbar-notch .container,
+  .cp-navbar-notch .container-fluid,
+  .cp-navbar-notch > .container,
+  .cp-navbar-notch > .container-fluid {
+    padding: 0 6px !important;
+    width: 100% !important;
+  }
+  .notch-nav-island {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 48px;
+    padding: 0.3rem 0.65rem !important;
+    gap: 0.35rem !important;
+    border-radius: 16px;
+  }
+  .notch-nav-island .navbar-brand {
+    gap: 0.45rem !important;
+  }
+  .notch-nav-island .brand-icon {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    border-radius: 8px !important;
+  }
+  .notch-nav-island .brand-icon img,
+  .notch-nav-island .brand-logo-img,
+  .brand-icon img {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+  }
+  .notch-nav-island .brand-name {
+    font-size: clamp(1rem, 4.2vw, 1.2rem) !important;
+    letter-spacing: -0.02em !important;
+  }
+  /* In top floating pill, hide the redundant role chip so island width never exceeds screen; it is fully rendered in the expanded mobile drawer */
+  #authNavActions .nav-role-chip {
+    display: none !important;
+  }
+  #authNavActions .btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+  .nav-btn-logout,
+  #logoutBtn {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.78rem !important;
+  }
+  .notch-mobile-toggle {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .notch-mobile-collapse {
+    padding: 0.85rem 1rem !important;
+    border-radius: 16px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .notch-nav-island {
+    padding: 0.25rem 0.5rem !important;
+    gap: 0.25rem !important;
+  }
+  .notch-nav-island .brand-name {
+    font-size: 0.95rem !important;
+  }
+  .notch-nav-island .brand-icon {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+  }
+  .notch-nav-island .brand-icon img,
+  .notch-nav-island .brand-logo-img,
+  .brand-icon img {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+  }
+  .notch-mobile-toggle {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+

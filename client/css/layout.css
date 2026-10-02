@@ -27,10 +27,22 @@
   .container-lg,
   .container-xl,
   .container-xxl {
-    width: 94% !important;
-    max-width: 94vw !important;
+    width: 95% !important;
+    max-width: 95vw !important;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    width: 98% !important;
+    max-width: 98vw !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
 

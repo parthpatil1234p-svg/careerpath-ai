@@ -56,6 +56,16 @@
   transition: all 0.25s ease;
 }
 
+@media (max-width: 575.98px) {
+  .quiz-stepper {
+    gap: 0.25rem;
+  }
+  .quiz-step-dot {
+    width: 18px;
+    height: 5px;
+  }
+}
+
 .quiz-step-dot.active {
   background: var(--color-indigo-600, #4F46E5);
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);

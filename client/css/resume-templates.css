@@ -238,6 +238,39 @@
   max-height: calc(100vh - 150px);
 }
 
+@media (max-width: 991.98px) {
+  .preview-chamber {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .builder-header-bar {
+    top: 56px;
+    padding: 0.5rem 0.5rem !important;
+  }
+  .builder-container {
+    padding: 0.85rem 0.5rem 3rem !important;
+  }
+  .template-pill-btn {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.76rem;
+  }
+  .builder-section-header {
+    padding: 0.75rem 1rem;
+  }
+  .builder-section-body {
+    padding: 1rem 0.75rem;
+  }
+  .preview-scroll-wrapper {
+    padding: 0.75rem 0.5rem 1.5rem;
+    border-radius: 10px;
+  }
+}
+
 .preview-scroll-wrapper {
   width: 100%;
   overflow-y: auto;

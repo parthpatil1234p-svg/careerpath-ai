@@ -121,6 +121,25 @@
   background-color: var(--color-border);
 }
 
+@media (max-width: 575.98px) {
+  .hero-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5rem !important;
+    padding-top: 1.25rem !important;
+    text-align: center !important;
+  }
+  .stat-divider {
+    display: none !important;
+  }
+  .stat-number {
+    font-size: 1.3rem !important;
+  }
+  .stat-label {
+    font-size: 0.72rem !important;
+  }
+}
+
 /* Three Steps Grid */
 .step-grid {
   display: grid;
@@ -430,6 +449,24 @@
   background: #FFFFFF;
 }
 
+@media (max-width: 575.98px) {
+  .auth-wrapper {
+    padding: 1.5rem 0.5rem !important;
+  }
+  .auth-split-grid {
+    border-radius: var(--radius-md) !important;
+  }
+  .auth-form-card {
+    padding: 1.25rem 0.85rem !important;
+  }
+  .auth-form-title {
+    font-size: 1.45rem !important;
+  }
+  .auth-form-header {
+    margin-bottom: 1.15rem !important;
+  }
+}
+
 .auth-form-header {
   margin-bottom: 1.75rem;
 }
@@ -482,6 +519,17 @@
   }
 }
 
+/* Assessment Step Progress Indicators */
+.step-nav-mobile {
+  display: none;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.15rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
 .step-nav-desktop {
   background: #FFFFFF;
   border: 1px solid var(--color-border);
@@ -490,6 +538,15 @@
   position: sticky;
   top: 105px;
   box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 991.98px) {
+  .step-nav-desktop {
+    display: none !important;
+  }
+  .step-nav-mobile {
+    display: block !important;
+  }
 }
 
 .step-nav-item {
@@ -652,6 +709,15 @@
   position: relative;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
+}
+
+@media (max-width: 575.98px) {
+  .recommendation-card {
+    padding: 1.25rem 0.95rem !important;
+  }
+  .match-score-badge {
+    padding: 0.75rem 1rem !important;
+  }
 }
 
 .recommendation-card:hover {

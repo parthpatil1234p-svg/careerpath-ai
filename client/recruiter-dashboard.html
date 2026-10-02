@@ -229,6 +229,24 @@
         background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
         border-bottom: 1px solid #E2E8F0;
       }
+
+      @media (max-width: 575.98px) {
+        .recruiter-portal-page .navbar-brand .badge {
+          display: none !important;
+        }
+        .recruiter-hero-card {
+          padding: 1.25rem 1rem !important;
+        }
+        .recruiter-kpi-card {
+          padding: 1rem !important;
+        }
+        .kpi-value {
+          font-size: 1.6rem !important;
+        }
+        .recruiter-card-header {
+          padding: 1rem !important;
+        }
+      }
     </style>
   </head>
 
@@ -288,7 +306,8 @@
               data-bs-target="#postJobModal"
             >
               <i class="bi bi-plus-lg"></i>
-              <span>Post Opening</span>
+              <span class="d-none d-sm-inline">Post Opening</span>
+              <span class="d-sm-none">Post</span>
             </button>
             <button
               class="btn btn-outline-danger btn-sm px-2.5 py-1"
