@@ -384,8 +384,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentStep = 0;
   let hasCompletedSkillVerification = false; // Ensures quiz gate is only required once per account
 
-  // Reality Check Quiz Constants
-  const AVAILABLE_QUIZ_SKILLS = ['javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css'];
+  // Reality Check Quiz Constants (All 94 skills eligible; curated bank for instant 0ms launch)
+  const BANKED_QUIZ_SKILLS = [
+    'javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css',
+    'typescript', 'mongodb', 'docker', 'git', 'aws', 'postgresql',
+    'express.js', 'tailwind-css', 'next.js', 'fastapi', 'linux', 'rest-apis',
+    'redis', 'kubernetes'
+  ];
+  const AVAILABLE_QUIZ_SKILLS = BANKED_QUIZ_SKILLS; // Kept for backwards compatibility
   const SKILL_ALIASES = {
     'nodejs': 'node.js',
     'node': 'node.js',
@@ -394,7 +400,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     'html5': 'html',
     'css3': 'css',
     'js': 'javascript',
-    'py': 'python'
+    'py': 'python',
+    'ts': 'typescript',
+    'mongo': 'mongodb',
+    'postgres': 'postgresql',
+    'k8s': 'kubernetes',
+    'tailwind': 'tailwind-css',
+    'tailwindcss': 'tailwind-css',
+    'express': 'express.js',
+    'next': 'next.js',
+    'nextjs': 'next.js',
+    'tf': 'terraform'
   };
   const normalizeSkillSlug = (raw) => {
     const s = String(raw || '').trim().toLowerCase();

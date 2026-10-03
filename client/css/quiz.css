@@ -153,6 +153,86 @@
   font-weight: 600;
 }
 
+/* ── Category Filter Pills ───────────────────────────────────── */
+.category-filter-bar {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.category-filter-bar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.category-filter-bar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.category-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.category-filter-pill:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #1E293B;
+}
+
+.category-filter-pill.active {
+  background: var(--color-indigo-600, #4F46E5);
+  border-color: var(--color-indigo-600, #4F46E5);
+  color: #FFFFFF;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25);
+}
+
+.category-filter-pill .pill-count {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+/* ── Scrollable Skill Tray ───────────────────────────────────── */
+.skill-selector-tray-container {
+  max-height: 250px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 #F8FAFC;
+}
+
+.skill-selector-tray-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.skill-selector-tray-container::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+.skill-selector-tray-container::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.skill-select-btn {
+  padding: 0.55rem 0.95rem;
+  font-size: 0.825rem;
+  border-radius: 0.65rem;
+}
+
 /* ── Question & Prompt ───────────────────────────────────────── */
 .quiz-body {
   padding: 2.75rem 3.25rem;

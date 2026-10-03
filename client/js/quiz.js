@@ -59,6 +59,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // AI Model & Custom Key Controls
   const customSkillInput = document.getElementById('customSkillInput');
   const btnCustomSkillGo = document.getElementById('btnCustomSkillGo');
+  const btnQuizClearSearch = document.getElementById('btnQuizClearSearch');
+  const categoryFilterBar = document.getElementById('categoryFilterBar');
+  const quizSkillCountBadge = document.getElementById('quizSkillCountBadge');
   const aiProviderSelect = document.getElementById('aiProviderSelect');
   const customApiKeyRow = document.getElementById('customApiKeyRow');
   const customApiKeyInput = document.getElementById('customApiKeyInput');
@@ -104,7 +107,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     'postgres': 'postgresql',
     'postgresql': 'postgresql',
     'mongo': 'mongodb',
-    'mongodb': 'mongodb'
+    'mongodb': 'mongodb',
+    'k8s': 'kubernetes',
+    'kubernetes': 'kubernetes',
+    'tailwind': 'tailwind-css',
+    'tailwindcss': 'tailwind-css',
+    'tailwind-css': 'tailwind-css',
+    'next': 'next.js',
+    'nextjs': 'next.js',
+    'next.js': 'next.js',
+    'fastapi': 'fastapi',
+    'tf': 'terraform',
+    'terraform': 'terraform',
+    'rest': 'rest-apis',
+    'restapi': 'rest-apis',
+    'rest-apis': 'rest-apis',
+    'ui/ux': 'ui-ux-design',
+    'ui-ux': 'ui-ux-design',
+    'ui-ux-design': 'ui-ux-design'
   };
 
   const CANONICAL_LABELS = {
@@ -123,7 +143,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     'git': 'Git',
     'aws': 'AWS',
     'flutter': 'Flutter',
-    'go': 'Go'
+    'go': 'Go',
+    'kubernetes': 'Kubernetes',
+    'tailwind-css': 'Tailwind CSS',
+    'next.js': 'Next.js',
+    'fastapi': 'FastAPI',
+    'linux': 'Linux',
+    'rest-apis': 'REST APIs',
+    'redis': 'Redis',
+    'terraform': 'Terraform',
+    'graphql': 'GraphQL',
+    'figma': 'Figma',
+    'ui-ux-design': 'UI/UX Design',
+    'cypress': 'Cypress',
+    'jest': 'Jest',
+    'pandas': 'Pandas',
+    'cybersecurity-fundamentals': 'Cybersecurity Fundamentals'
   };
 
   const normalizeSkillSlug = (raw) => {
@@ -159,16 +194,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     return Array.from(map.values());
   };
 
-  const SUPPORTED_SKILLS = [
-    { key: 'javascript', label: 'JavaScript', icon: 'bi-filetype-js', category: 'Frontend & Full-Stack' },
-    { key: 'python', label: 'Python', icon: 'bi-filetype-py', category: 'AI & Data Engineering' },
-    { key: 'sql', label: 'SQL', icon: 'bi-database-fill', category: 'Databases & Backend' },
-    { key: 'react', label: 'React', icon: 'bi-code-slash', category: 'Modern Frontend' },
-    { key: 'node.js', label: 'Node.js', icon: 'bi-hdd-network', category: 'Backend Runtimes' },
-    { key: 'html', label: 'HTML', icon: 'bi-filetype-html', category: 'Web Essentials' },
-    { key: 'css', label: 'CSS', icon: 'bi-filetype-css', category: 'Styling & Layout' },
-  ];
+  const getSkillIcon = (key, category) => {
+    const k = String(key || '').toLowerCase();
+    const c = String(category || '').toLowerCase();
+    if (k.includes('python')) return 'bi-filetype-py';
+    if (k.includes('javascript') || k === 'js') return 'bi-filetype-js';
+    if (k.includes('typescript') || k === 'ts') return 'bi-filetype-tsx';
+    if (k === 'html') return 'bi-filetype-html';
+    if (k === 'css' || k.includes('tailwind') || k.includes('bootstrap')) return 'bi-filetype-css';
+    if (k.includes('react') || k.includes('next') || k.includes('vue') || k.includes('angular')) return 'bi-code-slash';
+    if (k.includes('node') || k.includes('express') || k.includes('fastapi') || k.includes('django') || k.includes('spring') || k.includes('flask') || c === 'backend') return 'bi-server';
+    if (k.includes('sql') || k.includes('mongo') || k.includes('postgres') || k.includes('redis') || c === 'database') return 'bi-database-fill';
+    if (k.includes('docker') || k.includes('kubernetes') || k.includes('k8s') || k.includes('git') || k.includes('aws') || k.includes('azure') || k.includes('gcp') || k.includes('terraform') || k.includes('linux') || c === 'cloud' || c === 'tool') return 'bi-boxes';
+    if (c === 'ai' || c === 'data' || k.includes('ml') || k.includes('tensor') || k.includes('pytorch')) return 'bi-cpu';
+    if (c === 'security' || k.includes('cyber') || k.includes('crypto')) return 'bi-shield-lock-fill';
+    if (c === 'mobile' || k.includes('flutter') || k.includes('android') || k.includes('ios') || k.includes('swift')) return 'bi-phone-fill';
+    if (c === 'testing' || k.includes('jest') || k.includes('cypress') || k.includes('selenium')) return 'bi-check2-all';
+    if (c === 'design' || k.includes('figma') || k.includes('ui-ux')) return 'bi-palette';
+    return 'bi-lightning-charge-fill';
+  };
 
+  const matchesCategory = (skill, cat) => {
+    if (!cat || cat === 'all') return true;
+    if (cat === 'my-skills') return Boolean(skill.isUserSkill);
+    const sc = String(skill.category || '').toLowerCase();
+    if (cat === 'frontend') return sc === 'frontend';
+    if (cat === 'backend') return sc === 'backend';
+    if (cat === 'database') return sc === 'database';
+    if (cat === 'devops') return sc === 'cloud' || sc === 'tool' || sc === 'devops';
+    if (cat === 'ai') return sc === 'ai' || sc === 'data';
+    if (cat === 'security') return sc === 'security';
+    if (cat === 'mobile') return sc === 'mobile';
+    if (cat === 'testing') return sc === 'testing';
+    if (cat === 'design') return ['design', 'product', 'soft-skill', 'business', 'marketing', 'finance', 'gaming', 'web3'].includes(sc);
+    return sc === cat;
+  };
+
+  // Curated 21 Banked Skills with Instant 0ms Questions
+  const BANKED_SKILL_KEYS = new Set([
+    'javascript', 'python', 'sql', 'react', 'node.js', 'html', 'css',
+    'typescript', 'mongodb', 'docker', 'git', 'aws', 'postgresql',
+    'express.js', 'tailwind-css', 'next.js', 'fastapi', 'linux', 'rest-apis',
+    'redis', 'kubernetes'
+  ]);
+
+  let allSkillsCatalog = [];
+  let activeCategory = 'all';
+  let searchQuery = '';
   let currentUser = window.Auth?.getCurrentUser ? window.Auth.getCurrentUser() : null;
   let userSkills = [];
   let activeSkillKey = 'javascript';
@@ -344,52 +416,147 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // Merge any valid user skills not yet in SUPPORTED_SKILLS (deduplicated by canonical alias)
+    // 5.1 Load Universal Skills Catalog (from API with fallback to DEFAULT_94_SKILLS)
+    try {
+      const skillsRes = await window.API.get('/quiz/skills', { auth: Boolean(window.Auth?.isAuthenticated?.()) });
+      if (skillsRes.success && Array.isArray(skillsRes.data) && skillsRes.data.length > 0) {
+        allSkillsCatalog = skillsRes.data;
+      }
+    } catch (e) {
+      console.warn('Using offline skills catalog fallback:', e.message);
+    }
+
+    if (!allSkillsCatalog || allSkillsCatalog.length === 0) {
+      const fallbackList = Array.isArray(window.DEFAULT_94_SKILLS) ? window.DEFAULT_94_SKILLS : [
+        { key: 'javascript', name: 'javascript', displayName: 'JavaScript', category: 'frontend', description: 'Core scripting language for interactive web experiences.' },
+        { key: 'python', name: 'python', displayName: 'Python', category: 'ai', description: 'Versatile language for backend, automation, and AI/ML.' },
+        { key: 'sql', name: 'sql', displayName: 'SQL', category: 'database', description: 'Structured Query Language for relational database querying.' },
+        { key: 'react', name: 'react', displayName: 'React', category: 'frontend', description: 'Component-based frontend library for reactive web apps.' },
+        { key: 'node.js', name: 'node.js', displayName: 'Node.js', category: 'backend', description: 'V8-powered asynchronous runtime for backend microservices.' },
+        { key: 'html', name: 'html', displayName: 'HTML', category: 'frontend', description: 'Semantic markup structure of modern web pages.' },
+        { key: 'css', name: 'css', displayName: 'CSS', category: 'frontend', description: 'Cascading Style Sheets for responsive layout and styling.' }
+      ];
+      allSkillsCatalog = fallbackList.map((s) => ({
+        ...s,
+        key: normalizeSkillSlug(s.name || s.key),
+        displayName: s.displayName || CANONICAL_LABELS[normalizeSkillSlug(s.name || s.key)] || capitalize(s.name || s.key),
+        isBanked: BANKED_SKILL_KEYS.has(normalizeSkillSlug(s.name || s.key))
+      }));
+    }
+
+    // Annotate catalog with current user profile skills
+    const userSkillMap = new Map();
+    userSkills.forEach((us) => {
+      userSkillMap.set(normalizeSkillSlug(us.name), us);
+    });
+
+    allSkillsCatalog.forEach((skill) => {
+      const normKey = normalizeSkillSlug(skill.key || skill.name);
+      skill.key = normKey;
+      skill.isBanked = skill.isBanked || BANKED_SKILL_KEYS.has(normKey);
+      const uSkill = userSkillMap.get(normKey);
+      if (uSkill) {
+        skill.isUserSkill = true;
+        skill.isVerified = Boolean(uSkill.isQuizVerified || uSkill.isCodeVerified);
+        skill.verifiedProficiency = uSkill.verifiedProficiency || null;
+        skill.selfRatedProficiency = uSkill.selfRatedProficiency || uSkill.proficiency || null;
+        if (uSkill.nextRetakeAvailableAt && new Date() < new Date(uSkill.nextRetakeAvailableAt)) {
+          skill.cooldownActive = true;
+          skill.nextRetakeAvailableAt = uSkill.nextRetakeAvailableAt;
+        }
+      }
+    });
+
+    // Merge any user skills not yet in catalog
     userSkills.forEach((us) => {
       const slug = normalizeSkillSlug(us.name);
       if (!slug || slug.includes('@') || slug.includes('.com') || slug.length > 30) return;
-      if (!SUPPORTED_SKILLS.some((s) => normalizeSkillSlug(s.key) === slug)) {
-        SUPPORTED_SKILLS.push({
+      if (!allSkillsCatalog.some((s) => normalizeSkillSlug(s.key) === slug)) {
+        allSkillsCatalog.push({
           key: slug,
-          label: CANONICAL_LABELS[slug] || us.displayName || capitalize(slug),
-          icon: 'bi-cpu',
-          category: 'Profile Claimed Skill'
+          name: slug,
+          displayName: CANONICAL_LABELS[slug] || us.displayName || capitalize(slug),
+          category: 'profile',
+          description: `Custom competency from your student profile.`,
+          isBanked: BANKED_SKILL_KEYS.has(slug),
+          isUserSkill: true,
+          isVerified: Boolean(us.isQuizVerified || us.isCodeVerified),
+          verifiedProficiency: us.verifiedProficiency || null,
+          selfRatedProficiency: us.selfRatedProficiency || us.proficiency || null
         });
       }
     });
 
-    // Determine initial skill from query params (ignore invalid strings/emails)
+    // Update Counts on UI
+    const countAllEl = document.getElementById('countAll');
+    if (countAllEl) countAllEl.textContent = `(${allSkillsCatalog.length})`;
+    const countMySkillsEl = document.getElementById('countMySkills');
+    const mySkillsCount = allSkillsCatalog.filter((s) => s.isUserSkill).length;
+    if (countMySkillsEl) countMySkillsEl.textContent = `(${mySkillsCount})`;
+
+    // Determine initial skill from query params (e.g. ?skill=docker)
     const urlParams = new URLSearchParams(window.location.search);
     const rawParamSkill = (urlParams.get('skill') || '').toLowerCase().trim();
     const paramSkill = normalizeSkillSlug(rawParamSkill);
+
     if (paramSkill && !paramSkill.includes('@') && !paramSkill.includes('.com') && paramSkill.length <= 30) {
-      let match = SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) === paramSkill);
+      let match = allSkillsCatalog.find((s) => normalizeSkillSlug(s.key) === paramSkill);
       if (!match) {
         match = {
           key: paramSkill,
-          label: CANONICAL_LABELS[paramSkill] || capitalize(paramSkill),
-          icon: 'bi-lightning-charge-fill',
-          category: 'Dynamic AI Reality Check'
+          name: paramSkill,
+          displayName: CANONICAL_LABELS[paramSkill] || capitalize(paramSkill),
+          category: 'general',
+          description: `Adaptive technical reality-check on ${CANONICAL_LABELS[paramSkill] || capitalize(paramSkill)}.`,
+          isBanked: BANKED_SKILL_KEYS.has(paramSkill),
+          isUserSkill: false
         };
-        SUPPORTED_SKILLS.unshift(match);
+        allSkillsCatalog.unshift(match);
       }
       activeSkillKey = match.key;
     } else {
       // Find first unverified skill user possesses
-      const match = SUPPORTED_SKILLS.find((sup) => {
+      const match = allSkillsCatalog.find((sup) => {
         if (sup.key.includes('@') || sup.key.includes('.com')) return false;
-        const uSkill = userSkills.find((us) => normalizeSkillSlug(us.name) === normalizeSkillSlug(sup.key));
-        return uSkill && !uSkill.isQuizVerified;
+        return sup.isUserSkill && !sup.isVerified;
       });
       activeSkillKey = match ? match.key : 'javascript';
     }
 
-    // Setup Provider Select & Custom Key (Runs silently in background)
-    if (aiProviderSelect) {
-      aiProviderSelect.value = 'auto';
+    // Setup Category Filter Pills
+    if (categoryFilterBar) {
+      categoryFilterBar.querySelectorAll('.category-filter-pill').forEach((pill) => {
+        pill.addEventListener('click', () => {
+          categoryFilterBar.querySelectorAll('.category-filter-pill').forEach((p) => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeCategory = pill.getAttribute('data-cat') || 'all';
+          renderSkillTabs();
+        });
+      });
     }
 
-    // Setup Custom Skill Search
+    // Setup Live Search Input
+    if (customSkillInput) {
+      customSkillInput.addEventListener('input', () => {
+        searchQuery = customSkillInput.value.trim().toLowerCase();
+        if (btnQuizClearSearch) {
+          btnQuizClearSearch.classList.toggle('d-none', !searchQuery);
+        }
+        renderSkillTabs();
+      });
+    }
+
+    if (btnQuizClearSearch) {
+      btnQuizClearSearch.addEventListener('click', () => {
+        if (customSkillInput) customSkillInput.value = '';
+        searchQuery = '';
+        btnQuizClearSearch.classList.add('d-none');
+        renderSkillTabs();
+        if (customSkillInput) customSkillInput.focus();
+      });
+    }
+
+    // Setup Custom Skill Search Trigger
     const triggerCustomSkill = () => {
       const rawVal = customSkillInput?.value?.trim();
       if (!rawVal) return;
@@ -400,20 +567,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       const norm = normalizeSkillSlug(rawVal.toLowerCase().replace(/[^a-z0-9._-]/g, ''));
       if (!norm || norm.length > 30) return;
 
-      let existing = SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) === norm);
+      let existing = allSkillsCatalog.find((s) => normalizeSkillSlug(s.key) === norm);
       if (!existing) {
         existing = {
           key: norm,
-          label: CANONICAL_LABELS[norm] || capitalize(rawVal),
-          icon: 'bi-lightning-charge-fill',
-          category: 'AI Adaptive Reality Check'
+          name: norm,
+          displayName: CANONICAL_LABELS[norm] || capitalize(rawVal),
+          category: 'general',
+          description: `Adaptive dynamic technical verification for ${capitalize(rawVal)}.`,
+          isBanked: BANKED_SKILL_KEYS.has(norm),
+          isUserSkill: false
         };
-        SUPPORTED_SKILLS.unshift(existing);
+        allSkillsCatalog.unshift(existing);
       }
       activeSkillKey = existing.key;
       renderSkillTabs();
       loadIntroForSkill(activeSkillKey);
-      customSkillInput.value = '';
+      if (customSkillInput) customSkillInput.value = '';
+      if (btnQuizClearSearch) btnQuizClearSearch.classList.add('d-none');
+      searchQuery = '';
       window.scrollTo({ top: 120, behavior: 'smooth' });
     };
 
@@ -424,6 +596,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         triggerCustomSkill();
       }
     });
+
+    // Provider select default
+    if (aiProviderSelect) {
+      aiProviderSelect.value = 'auto';
+    }
 
     renderSkillTabs();
     const hasRecovered = await checkActiveSessionRecovery();
@@ -481,25 +658,63 @@ document.addEventListener('DOMContentLoaded', async () => {
     return false;
   };
 
-  // 6. Render Skill Switcher Tabs
+  // 6. Render Skill Switcher Tabs (with Category + Live Search Filter)
   const renderSkillTabs = () => {
     if (!skillSelectorTabs) return;
 
-    skillSelectorTabs.innerHTML = SUPPORTED_SKILLS.map((item) => {
-      const uSkill = userSkills.find((s) => normalizeSkillSlug(s.name) === normalizeSkillSlug(item.key));
-      const isVerified = Boolean(uSkill?.isQuizVerified);
-      const isActive = normalizeSkillSlug(item.key) === normalizeSkillSlug(activeSkillKey);
+    const filtered = allSkillsCatalog.filter((item) => {
+      if (!matchesCategory(item, activeCategory)) return false;
+      if (searchQuery) {
+        const dName = (item.displayName || '').toLowerCase();
+        const key = (item.key || '').toLowerCase();
+        const desc = (item.description || '').toLowerCase();
+        if (!dName.includes(searchQuery) && !key.includes(searchQuery) && !desc.includes(searchQuery)) {
+          return false;
+        }
+      }
+      return true;
+    });
 
-      const badgeHtml = isVerified
-        ? `<span class="badge-pill-verified"><i class="bi bi-check2"></i> Verified</span>`
-        : uSkill
-        ? `<span class="badge badge-gold" style="font-size: 0.65rem;">Self-Rated</span>`
-        : `<span class="badge bg-secondary" style="font-size: 0.65rem;">Optional</span>`;
+    if (quizSkillCountBadge) {
+      quizSkillCountBadge.textContent = `Showing ${filtered.length} of ${allSkillsCatalog.length} skills`;
+    }
+
+    if (filtered.length === 0) {
+      skillSelectorTabs.innerHTML = `
+        <div class="p-3 text-muted text-center w-100 small">
+          <i class="bi bi-search me-1"></i> No skills found matching "<strong>${escapeHtml(searchQuery)}</strong>".
+          Press <strong>Enter</strong> or click <strong>Quiz Skill</strong> to generate adaptive AI questions!
+        </div>
+      `;
+      return;
+    }
+
+    skillSelectorTabs.innerHTML = filtered.map((item) => {
+      const uSkill = userSkills.find((s) => normalizeSkillSlug(s.name) === normalizeSkillSlug(item.key));
+      const isVerified = Boolean(item.isVerified || uSkill?.isQuizVerified || uSkill?.isCodeVerified);
+      const isActive = normalizeSkillSlug(item.key) === normalizeSkillSlug(activeSkillKey);
+      const isBanked = Boolean(item.isBanked);
+      const isCooldown = Boolean(item.cooldownActive);
+
+      let badgeHtml = '';
+      if (isVerified) {
+        badgeHtml = `<span class="badge-pill-verified"><i class="bi bi-patch-check-fill text-success"></i> Verified</span>`;
+      } else if (isCooldown) {
+        badgeHtml = `<span class="badge bg-warning-subtle text-warning border border-warning-subtle" style="font-size: 0.65rem;"><i class="bi bi-clock-history"></i> Cooldown</span>`;
+      } else if (isBanked) {
+        badgeHtml = `<span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;"><i class="bi bi-lightning-charge-fill text-warning"></i> Curated</span>`;
+      } else if (item.isUserSkill || uSkill) {
+        badgeHtml = `<span class="badge badge-gold" style="font-size: 0.65rem;">My Profile</span>`;
+      } else {
+        badgeHtml = `<span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.65rem;">Adaptive AI</span>`;
+      }
+
+      const icon = getSkillIcon(item.key, item.category);
 
       return `
-        <button type="button" class="skill-select-btn ${isActive ? 'active' : ''}" data-skill="${item.key}">
-          <i class="bi ${item.icon}"></i>
-          <span>${item.label}</span>
+        <button type="button" class="skill-select-btn ${isActive ? 'active' : ''}" data-skill="${item.key}" title="${escapeHtml(item.displayName || item.key)}">
+          <i class="bi ${icon}"></i>
+          <span>${escapeHtml(item.displayName || item.key)}</span>
           ${badgeHtml}
         </button>
       `;
@@ -513,6 +728,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           activeSkillKey = skill;
           renderSkillTabs();
           loadIntroForSkill(activeSkillKey);
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
       });
     });
@@ -521,41 +737,58 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 7. Load Intro for Target Skill
   const loadIntroForSkill = (skillKey) => {
     const canonical = normalizeSkillSlug(skillKey);
-    activeSkillInfo = SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) === canonical) || {
+    activeSkillInfo = allSkillsCatalog.find((s) => normalizeSkillSlug(s.key) === canonical) || {
       key: canonical,
-      label: CANONICAL_LABELS[canonical] || capitalize(canonical),
-      icon: 'bi-cpu',
-      category: 'Dynamic Technical Reality-Check'
+      displayName: CANONICAL_LABELS[canonical] || capitalize(canonical),
+      category: 'general',
+      description: 'Adaptive dynamic technical verification.',
+      isBanked: BANKED_SKILL_KEYS.has(canonical)
     };
     const userSkillObj = userSkills.find((s) => normalizeSkillSlug(s.name) === canonical);
 
-    const selfRated = userSkillObj?.selfRatedProficiency || userSkillObj?.proficiency || 'intermediate';
-    const isVerified = Boolean(userSkillObj?.isQuizVerified);
+    const selfRated = userSkillObj?.selfRatedProficiency || userSkillObj?.proficiency || activeSkillInfo.selfRatedProficiency || 'Intermediate';
+    const isVerified = Boolean(userSkillObj?.isQuizVerified || activeSkillInfo.isVerified);
+    const isBanked = Boolean(activeSkillInfo.isBanked);
 
-    if (introSkillCategory) introSkillCategory.textContent = activeSkillInfo.category;
-    if (introSkillTitle) introSkillTitle.textContent = `${activeSkillInfo.label} Reality-Check`;
+    if (introSkillCategory) {
+      const catLabel = (activeSkillInfo.category || 'TECHNICAL').toUpperCase();
+      introSkillCategory.textContent = `${catLabel} ${isBanked ? '· CURATED 0MS QUESTION BANK' : '· ADAPTIVE AI PROCTORING'}`;
+    }
+    if (introSkillTitle) introSkillTitle.textContent = `${activeSkillInfo.displayName || activeSkillInfo.label || capitalize(canonical)} Reality-Check`;
     if (introSelfRatedProficiency) introSelfRatedProficiency.textContent = capitalize(selfRated);
 
     if (introSkillDesc) {
       if (isVerified) {
         introSkillDesc.innerHTML = `
-          You have already verified this skill at the <strong class="text-success">${capitalize(userSkillObj.verifiedProficiency || selfRated)}</strong> level.
+          You have already verified this skill at the <strong class="text-success">${capitalize(userSkillObj?.verifiedProficiency || activeSkillInfo.verifiedProficiency || selfRated)}</strong> level.
           Taking it again will recalibrate your knowledge and refresh your reality-check score.
         `;
-      } else {
+      } else if (userSkillObj || activeSkillInfo.isUserSkill) {
         introSkillDesc.innerHTML = `
           You self-rated this skill as <strong class="text-primary">${capitalize(selfRated)}</strong>.
           Take this 2-minute reality-check to confirm your knowledge level and earn your verified badge.
+        `;
+      } else {
+        introSkillDesc.innerHTML = `
+          ${escapeHtml(activeSkillInfo.description || 'Test your real-world problem-solving abilities and algorithmic knowledge.')}
+          <div class="mt-2 text-primary fw-medium small">
+            <i class="bi bi-patch-plus me-1"></i>Taking this quiz will verify this skill and automatically add it with full confidence weight to your profile.
+          </div>
         `;
       }
     }
 
     if (btnStartQuiz) {
-      btnStartQuiz.innerHTML = `
-        <span>Start 2-Min Reality-Check</span>
-        <i class="bi bi-lightning-charge-fill ms-1"></i>
-      `;
-      btnStartQuiz.disabled = false;
+      if (activeSkillInfo.cooldownActive) {
+        btnStartQuiz.innerHTML = `<span>24-Hour Review Cooldown Active</span> <i class="bi bi-clock-history ms-1"></i>`;
+        btnStartQuiz.disabled = true;
+      } else {
+        btnStartQuiz.innerHTML = `
+          <span>Start 2-Min Reality-Check</span>
+          <i class="bi bi-lightning-charge-fill ms-1"></i>
+        `;
+        btnStartQuiz.disabled = false;
+      }
     }
 
     // Switch view to intro
@@ -634,6 +867,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               activeProviderBadge.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-0.5 small';
               activeProviderBadge.innerHTML = `<i class="bi bi-shield-check me-1"></i>Curated Bank`;
             }
+          }
           // Arm AntiCheatLock & Request Fullscreen
           if (window.AntiCheatLock) {
             if (!proctorLock) {
@@ -996,16 +1230,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 14. Verify Another Skill
   if (btnQuizAnotherSkill) {
     btnQuizAnotherSkill.addEventListener('click', () => {
-      // Find next unverified skill with alias normalization
-      const nextSkill = SUPPORTED_SKILLS.find((sup) => {
+      // Find next unverified skill from catalog with alias normalization
+      const nextSkill = allSkillsCatalog.find((sup) => {
         if (normalizeSkillSlug(sup.key) === normalizeSkillSlug(activeSkillKey)) return false;
         const u = userSkills.find((us) => normalizeSkillSlug(us.name) === normalizeSkillSlug(sup.key));
         return u && !u.isQuizVerified;
-      }) || SUPPORTED_SKILLS.find((s) => normalizeSkillSlug(s.key) !== normalizeSkillSlug(activeSkillKey)) || SUPPORTED_SKILLS[0];
+      }) || allSkillsCatalog.find((s) => normalizeSkillSlug(s.key) !== normalizeSkillSlug(activeSkillKey)) || allSkillsCatalog[0];
 
-      activeSkillKey = nextSkill.key;
-      renderSkillTabs();
-      loadIntroForSkill(activeSkillKey);
+      if (nextSkill) {
+        activeSkillKey = nextSkill.key;
+        renderSkillTabs();
+        loadIntroForSkill(activeSkillKey);
+      }
     });
   }
 

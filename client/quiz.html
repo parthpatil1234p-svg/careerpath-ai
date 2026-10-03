@@ -122,36 +122,60 @@
         <!-- Alert Container -->
         <div id="quizAlertContainer" class="w-100 mb-3"></div>
 
-        <!-- Custom Skill Search Bar (AI Engine runs automatically in background) -->
-        <div class="card p-3 mb-3 border border-line bg-surface-muted rounded-3 shadow-xs">
-          <div class="row g-2 align-items-center">
-            <div class="col-lg-8 col-md-12">
+        <!-- Universal 94-Skill Search & Filter Hub -->
+        <div class="card p-3 p-md-4 mb-4 border border-line bg-surface-muted rounded-3 shadow-xs">
+          <!-- Live Search Bar & Stats Header -->
+          <div class="row g-2 align-items-center mb-3">
+            <div class="col-lg-7 col-md-12">
               <div class="input-group input-group-sm">
                 <span class="input-group-text bg-white border-line"><i class="bi bi-search text-primary"></i></span>
-                <input type="text" class="form-control" id="customSkillInput" placeholder="Quiz ANY skill: e.g. Docker, AWS, Flutter, TypeScript, Go..." />
+                <input type="text" class="form-control" id="customSkillInput" placeholder="Search 94+ skills: e.g. Docker, AWS, TypeScript, Mongo, Figma, K8s..." />
+                <button class="btn btn-outline-secondary d-none" type="button" id="btnQuizClearSearch">
+                  <i class="bi bi-x-lg"></i>
+                </button>
                 <button class="btn cp-btn-primary" type="button" id="btnCustomSkillGo">
                   <i class="bi bi-lightning-charge-fill me-1"></i> Quiz Skill
                 </button>
               </div>
             </div>
-            <div class="col-lg-4 col-md-12 text-lg-end">
-              <span class="badge bg-white border border-line text-dark fw-semibold small py-1.5 px-3 d-inline-flex align-items-center gap-1.5 shadow-xs" style="font-family: var(--font-body); letter-spacing: 0.2px;">
-                <i class="bi bi-cpu-fill text-primary"></i>
-                <span>Adaptive AI Engine (Auto)</span>
+            <div class="col-lg-5 col-md-12 text-lg-end d-flex align-items-center justify-content-lg-end gap-2 flex-wrap">
+              <span class="text-muted small" id="quizSkillCountBadge">Showing 94 skills</span>
+              <span class="badge bg-white border border-line text-dark fw-semibold small py-1 px-2.5 shadow-xs">
+                <i class="bi bi-patch-check-fill text-success me-1"></i>Universal Catalog (94 Skills)
               </span>
             </div>
           </div>
+
+          <!-- Category Filter Pills -->
+          <div class="category-filter-bar mb-3" id="categoryFilterBar">
+            <button type="button" class="category-filter-pill active" data-cat="all">
+              <i class="bi bi-grid-fill"></i> All Skills <span class="pill-count" id="countAll">(94)</span>
+            </button>
+            <button type="button" class="category-filter-pill" data-cat="my-skills">
+              <i class="bi bi-star-fill text-warning"></i> My Profile <span class="pill-count" id="countMySkills">(0)</span>
+            </button>
+            <button type="button" class="category-filter-pill" data-cat="frontend">Frontend</button>
+            <button type="button" class="category-filter-pill" data-cat="backend">Backend</button>
+            <button type="button" class="category-filter-pill" data-cat="database">Databases</button>
+            <button type="button" class="category-filter-pill" data-cat="devops">Cloud & DevOps</button>
+            <button type="button" class="category-filter-pill" data-cat="ai">AI & Data</button>
+            <button type="button" class="category-filter-pill" data-cat="security">Security</button>
+            <button type="button" class="category-filter-pill" data-cat="mobile">Mobile</button>
+            <button type="button" class="category-filter-pill" data-cat="testing">Testing & QA</button>
+            <button type="button" class="category-filter-pill" data-cat="design">Design & UI</button>
+          </div>
+
           <!-- Background AI Provider Selection (Runs silently in background) -->
           <select id="aiProviderSelect" class="d-none">
             <option value="auto" selected>Auto</option>
           </select>
           <div id="customApiKeyRow" class="d-none"></div>
-        </div>
 
-        <!-- Skill Selector Tabs -->
-        <div class="w-100 mb-3">
-          <div class="skill-selector-tabs" id="skillSelectorTabs">
-            <!-- Dynamically populated or default skills -->
+          <!-- Scrollable Skill Selector Tray -->
+          <div class="skill-selector-tray-container">
+            <div class="skill-selector-tabs mb-0" id="skillSelectorTabs">
+              <!-- Dynamically populated from universal 94-skill catalog -->
+            </div>
           </div>
         </div>
 
@@ -422,6 +446,7 @@
     <script src="js/crypto-vault.js"></script>
     <script src="js/anti-cheat-lock.js"></script>
     <script src="js/animated-icons.js"></script>
+    <script src="js/skills-catalog.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/chat.js"></script>
   </body>

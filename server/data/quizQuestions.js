@@ -3229,6 +3229,12 @@ const QUIZ_QUESTIONS = {
   }
 };
 
+// Merge curated questions for TypeScript, MongoDB, Docker, Git, AWS, PostgreSQL, Express, Tailwind, Next.js, FastAPI, Linux, REST APIs, Redis, Kubernetes
+const additionalQuestions = require('./additionalQuizQuestions');
+Object.assign(QUIZ_QUESTIONS, additionalQuestions);
+
+const skillsData = require('./skillsData');
+
 function normalizeSkillKey(skill) {
   const s = (skill || '').toLowerCase().trim();
   if (s === 'nodejs' || s === 'node') return 'node.js';
@@ -3242,6 +3248,13 @@ function normalizeSkillKey(skill) {
   if (s === 'ts') return 'typescript';
   if (s === 'postgres') return 'postgresql';
   if (s === 'mongo') return 'mongodb';
+  if (s === 'k8s') return 'kubernetes';
+  if (s === 'tailwind') return 'tailwind-css';
+  if (s === 'next' || s === 'nextjs') return 'next.js';
+  if (s === 'tf') return 'terraform';
+  if (s === 'rest' || s === 'restapi' || s === 'rest-api') return 'rest-apis';
+  if (s === 'fast-api') return 'fastapi';
+  if (s === 'ui/ux' || s === 'uiux') return 'ui/ux-design';
   return s;
 }
 
@@ -3271,7 +3284,11 @@ function getQuestionById(skill, questionId) {
   return null;
 }
 
-const AVAILABLE_QUIZ_SKILLS = Object.keys(QUIZ_QUESTIONS);
+// All 94 standardized skills from skillsData.js are fully available for quiz verification
+const AVAILABLE_QUIZ_SKILLS = Array.from(new Set([
+  ...skillsData.map((s) => s.name),
+  ...Object.keys(QUIZ_QUESTIONS)
+]));
 
 module.exports = {
   QUIZ_QUESTIONS,

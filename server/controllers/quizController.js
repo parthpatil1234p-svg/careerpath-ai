@@ -301,3 +301,63 @@ exports.disqualifyUser = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/quiz/skills
+ * Returns all 94 standardized skills from skillsData, categorized and annotated
+ * with bank availability and (if authenticated) user verification status.
+ */
+exports.getAvailableSkills = async (req, res) => {
+  try {
+    const skillsData = require('../data/skillsData');
+    const { QUIZ_QUESTIONS, normalizeSkillKey } = require('../data/quizQuestions');
+
+    let userSkillsMap = new Map();
+    if (req.user && req.user.skills) {
+      req.user.skills.forEach((us) => {
+        if (us && us.name) {
+          userSkillsMap.set(normalizeSkillKey(us.name), us);
+        }
+      });
+    }
+
+    const categoriesSet = new Set();
+    const formattedSkills = skillsData.map((s) => {
+      const canonicalKey = normalizeSkillKey(s.name);
+      categoriesSet.add(s.category);
+
+      const uSkill = userSkillsMap.get(canonicalKey);
+      const isBanked = Boolean(QUIZ_QUESTIONS[canonicalKey]);
+      const isVerified = Boolean(uSkill?.isQuizVerified || uSkill?.isCodeVerified);
+      const isCooldown = Boolean(
+        uSkill?.nextRetakeAvailableAt && new Date() < new Date(uSkill.nextRetakeAvailableAt)
+      );
+
+      return {
+        key: canonicalKey,
+        name: canonicalKey,
+        displayName: s.displayName || canonicalKey,
+        category: s.category || 'general',
+        description: s.description || '',
+        isBanked,
+        isUserSkill: Boolean(uSkill),
+        isVerified,
+        verifiedProficiency: uSkill?.verifiedProficiency || null,
+        selfRatedProficiency: uSkill?.selfRatedProficiency || uSkill?.proficiency || null,
+        verificationTier: uSkill?.verificationTier || (isVerified ? 'quiz_verified' : 'self_rated'),
+        cooldownActive: isCooldown,
+        nextRetakeAvailableAt: uSkill?.nextRetakeAvailableAt || null
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      total: formattedSkills.length,
+      categories: Array.from(categoriesSet),
+      data: formattedSkills
+    });
+  } catch (err) {
+    console.error('[QuizController.getAvailableSkills] Error:', err.message);
+    return res.status(500).json({ success: false, message: 'Failed to fetch available quiz skills' });
+  }
+};
+
