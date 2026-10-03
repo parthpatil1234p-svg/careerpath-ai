@@ -46,8 +46,7 @@ exports.startQuiz = async (req, res) => {
     const isBypass = Boolean(
       bypassCooldown ||
       req.query.bypassCooldown === 'true' ||
-      req.headers['x-bypass-cooldown'] === 'true' ||
-      (req.user?.email && req.user.email.includes('demo'))
+      req.headers['x-bypass-cooldown'] === 'true'
     );
 
     const session = await quizService.startQuizSession(req.user.id, skill, {
@@ -264,6 +263,41 @@ exports.getActiveSession = async (req, res) => {
   } catch (err) {
     console.error('[QuizController.getActiveSession] Error:', err.message);
     return res.status(500).json({ success: false, message: 'Server error checking active quiz session' });
+  }
+};
+
+/**
+ * POST /api/quiz/disqualify
+ * Authoritatively terminates quiz session due to cheating / proctoring violations.
+ * Writes 0% score, 0 integrity, 'flagged_cheating' status, and 24-hour lockout to MongoDB.
+ */
+exports.disqualifyUser = async (req, res) => {
+  try {
+    const { skill, sessionId, reason, strikes } = req.body;
+    let targetSkill = skill;
+    if (!targetSkill && sessionId && sessionId.includes('_')) {
+      targetSkill = sessionId.split('_').slice(1).join('_');
+    }
+
+    if (!targetSkill) {
+      return res.status(400).json({ success: false, message: 'Skill parameter is required' });
+    }
+
+    const result = await quizService.disqualifyUser(req.user.id, targetSkill, {
+      strikes: strikes || 3,
+      reason: reason || 'REPEATED_PROCTORING_VIOLATIONS'
+    });
+
+    return res.status(200).json({
+      success: true,
+      disqualified: true,
+      retryAfterHours: 24,
+      data: result,
+      message: 'Candidate disqualified for cheating. 24-hour retake lockout activated.'
+    });
+  } catch (err) {
+    console.error('[QuizController.disqualifyUser] Error:', err.message);
+    return res.status(500).json({ success: false, message: 'Failed to record disqualification' });
   }
 };
 

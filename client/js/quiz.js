@@ -255,6 +255,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 1000);
   };
 
+  const handleProctorStrike = (strikeCount, remaining, type) => {
+    tabSwitchesCount = strikeCount;
+    // Strict 10-second timer penalty
+    remainingSeconds = Math.max(5, remainingSeconds - 10);
+    if (quizTimerSeconds) quizTimerSeconds.textContent = Math.max(0, remainingSeconds);
+    if (quizTimerProgressBar) {
+      const pct = Math.max(0, (remainingSeconds / QUESTION_TIME_LIMIT) * 100);
+      quizTimerProgressBar.style.width = `${pct}%`;
+    }
+    if (quizTimerBadge) {
+      quizTimerBadge.classList.add('timer-penalty-flash');
+      setTimeout(() => quizTimerBadge?.classList.remove('timer-penalty-flash'), 1000);
+    }
+    showProctorToast(`⚠️ Proctor Strike ${strikeCount}/3: -10s timer penalty applied!`);
+  };
+
+  const handleProctorLockout = async (reason) => {
+    stopQuestionTimer();
+    isAnswerLocked = true;
+    if (btnSubmitAnswer) btnSubmitAnswer.disabled = true;
+    if (btnNextQuestion) btnNextQuestion.disabled = true;
+    if (questionPrompt) questionPrompt.textContent = 'Assessment Terminated: Disqualified for Cheating';
+    if (questionCode) questionCode.classList.add('d-none');
+    if (optionsContainer) {
+      optionsContainer.innerHTML = '<div class="alert alert-danger my-3 fw-bold"><i class="bi bi-slash-circle me-2"></i>You have been disqualified for repeated cheating violations. 24-hour review lockout is active.</div>';
+    }
+    try {
+      if (window.API) {
+        await window.API.post('/quiz/disqualify', {
+          skill: activeSkillKey,
+          sessionId: currentSessionId,
+          strikes: 3,
+          reason: reason || 'REPEATED_PROCTORING_VIOLATIONS'
+        }, { auth: true });
+      }
+    } catch (e) {
+      console.warn('Disqualification sync error:', e);
+    }
+  };
+
   // 4. Utility Functions
   const showAlert = (message, type = 'danger') => {
     if (!alertContainer) return;
@@ -416,15 +456,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             proctorLock = new window.AntiCheatLock({
               sessionId: currentSessionId,
               skill: activeSkillKey,
-              onStrike: (strikeCount, remaining, type) => {
-                tabSwitchesCount = strikeCount;
-                showProctorToast(`⚠️ Proctor Notice: Focus violation detected. Strike ${strikeCount}/3.`);
-              },
-              onLockout: (reason) => {
-                stopQuestionTimer();
-                isAnswerLocked = true;
-                if (btnSubmitAnswer) btnSubmitAnswer.disabled = true;
-              }
+              onStrike: handleProctorStrike,
+              onLockout: handleProctorLockout
             });
           }
           proctorLock.arm({
@@ -607,15 +640,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               proctorLock = new window.AntiCheatLock({
                 sessionId: currentSessionId,
                 skill: activeSkillKey,
-                onStrike: (strikeCount, remaining, type) => {
-                  tabSwitchesCount = strikeCount;
-                  showProctorToast(`⚠️ Proctor Notice: Focus violation detected. Strike ${strikeCount}/3 (${remaining} remaining).`);
-                },
-                onLockout: (reason) => {
-                  stopQuestionTimer();
-                  isAnswerLocked = true;
-                  if (btnSubmitAnswer) btnSubmitAnswer.disabled = true;
-                }
+                onStrike: handleProctorStrike,
+                onLockout: handleProctorLockout
               });
             }
             proctorLock.arm({

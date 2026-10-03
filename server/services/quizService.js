@@ -75,13 +75,17 @@ async function startQuizSession(userId, skill, options = {}) {
 
   // ── Pillar 5: 24-Hour Retake Cooldown Enforcement ─────────────
   if (existingSkill?.nextRetakeAvailableAt && new Date() < new Date(existingSkill.nextRetakeAvailableAt)) {
-    const isBypassed = Boolean(options.bypassCooldown || options.isDemoUser);
+    const isFlagged = existingSkill.verificationStatus === 'flagged_cheating';
+    // If flagged for cheating, cooldown is strictly enforced unless explicit bypass parameter is provided
+    const isBypassed = Boolean(options.bypassCooldown || options.forceBypass);
     if (!isBypassed) {
       const diffMs = new Date(existingSkill.nextRetakeAvailableAt) - new Date();
       const hoursRemaining = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
-      const cooldownErr = new Error(`Skill check for "${displayName}" has an active 24-hour retake cooldown to maintain credential integrity. Retake available in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`);
+      const reasonPrefix = isFlagged ? 'Cheating Disqualification Lockout:' : 'Retake Cooldown:';
+      const cooldownErr = new Error(`${reasonPrefix} Skill check for "${displayName}" is locked for 24 hours. Retake available in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`);
       cooldownErr.code = 'COOLDOWN_ACTIVE';
       cooldownErr.retryAfterHours = hoursRemaining;
+      cooldownErr.isFlagged = isFlagged;
       throw cooldownErr;
     }
   }
@@ -649,6 +653,9 @@ function recordViolation(userId, skill, violationType, details = {}) {
   if (session.strikeCount >= 3) {
     session.isLocked = true;
     session.lockReason = 'REPEATED_PROCTORING_VIOLATIONS';
+    disqualifyUser(userId, session.skill, { strikes: session.strikeCount, reason: session.lockReason }).catch((err) => {
+      console.error('[quizService.recordViolation] Background disqualify error:', err.message);
+    });
   }
 
   return {
@@ -726,12 +733,81 @@ function getActiveSessionForUser(userId, skill) {
   return null;
 }
 
+/**
+ * Authoritatively disqualifies candidate for cheating / proctoring violations.
+ * Sets score = 0, integrityScore = 0, status = 'flagged_cheating',
+ * nextRetakeAvailableAt = 24 hours from now, and removes any active session.
+ */
+async function disqualifyUser(userId, skill, options = {}) {
+  const normalizedSkill = normalizeSkillKey(skill);
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+
+  const nextRetakeAvailableAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  const strikes = options.strikes || 3;
+  const reason = options.reason || 'REPEATED_PROCTORING_VIOLATIONS';
+
+  // Destroy active session
+  activeSessions.delete(`${userId}_${normalizedSkill}`);
+  for (const [key, session] of activeSessions.entries()) {
+    if (key.startsWith(`${userId}_`)) {
+      activeSessions.delete(key);
+    }
+  }
+
+  const skillIndex = (user.skills || []).findIndex(
+    (s) => normalizeSkillKey(s.name) === normalizedSkill
+  );
+
+  if (skillIndex !== -1) {
+    const existing = user.skills[skillIndex];
+    existing.isQuizVerified = false;
+    existing.quizScore = 0;
+    existing.integrityScore = 0;
+    existing.verificationStatus = 'flagged_cheating';
+    existing.verificationTier = 'self_rated';
+    existing.tabSwitchCount = strikes;
+    existing.nextRetakeAvailableAt = nextRetakeAvailableAt;
+    existing.lastQuizAttemptAt = new Date();
+  } else {
+    user.skills.push({
+      name: normalizedSkill,
+      displayName: options.displayName || capitalize(normalizedSkill),
+      proficiency: 'beginner',
+      selfRatedProficiency: 'beginner',
+      isQuizVerified: false,
+      quizScore: 0,
+      integrityScore: 0,
+      verificationStatus: 'flagged_cheating',
+      verificationTier: 'self_rated',
+      tabSwitchCount: strikes,
+      nextRetakeAvailableAt: nextRetakeAvailableAt,
+      lastQuizAttemptAt: new Date()
+    });
+  }
+
+  await user.save();
+
+  return {
+    disqualified: true,
+    skill: normalizedSkill,
+    strikes,
+    reason,
+    quizScore: 0,
+    integrityScore: 0,
+    verificationStatus: 'flagged_cheating',
+    retryAfterHours: 24,
+    nextRetakeAvailableAt
+  };
+}
+
 module.exports = {
   shuffleOptions,
   startQuizSession,
   submitAnswer,
   finalizeQuiz,
   recordViolation,
+  disqualifyUser,
   getActiveSession,
   getActiveSessionForUser
 };

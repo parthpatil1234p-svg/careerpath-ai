@@ -388,19 +388,24 @@
 
       card.style.borderColor = '#F59E0B';
       icon.innerHTML = '<span style="color: #F59E0B;">⚠️</span>';
-      title.innerHTML = '<span style="color: #D97706;">Strike 1 of 3: Focus Violation Detected</span>';
+      title.innerHTML = '<span style="color: #D97706;">Strike 1 of 3: Cheating Violation Logged</span>';
       desc.innerHTML = `
-        The proctoring system detected an unauthorized window change or focus loss.<br>
+        <div style="margin-bottom: 8px;">
+          <span style="display: inline-block; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 0.82rem;">
+            ⚡ -10s PENALTY DEDUCTED FROM TIMER
+          </span>
+        </div>
+        The proctoring system detected an unauthorized focus loss or tab switch.<br>
         <span style="font-size: 0.85rem; color: #64748B;">Reason: ${details || 'Tab switch or window blur'}</span>
       `;
       extra.innerHTML = `
         <div style="background: #FEF3C7; color: #92400E; padding: 12px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;">
-          ⚠️ 2 Strikes Remaining. Next violation triggers a red final warning!
+          ⚠️ <strong>2 Strikes Remaining.</strong> Next violation triggers a critical final warning and another -10s penalty!
         </div>
       `;
       actions.innerHTML = `
         <button id="btnAcknowledgeStrike1" style="
-          background: #4F46E5;
+          background: #D97706;
           color: #FFFFFF;
           border: none;
           padding: 10px 24px;
@@ -408,7 +413,7 @@
           font-weight: 700;
           font-size: 0.95rem;
           cursor: pointer;
-        ">I Understand — Resume Assessment</button>
+        ">I Acknowledge & Resume Focus</button>
       `;
 
       backdrop.style.display = 'flex';
@@ -432,15 +437,20 @@
 
       card.style.borderColor = '#EF4444';
       icon.innerHTML = '<span style="color: #DC2626;">🚨</span>';
-      title.innerHTML = '<span style="color: #DC2626;">Strike 2 of 3: FINAL WARNING!</span>';
+      title.innerHTML = '<span style="color: #DC2626;">Strike 2 of 3: CRITICAL FINAL WARNING!</span>';
       desc.innerHTML = `
-        Another security focus violation was recorded.<br>
-        <strong style="color: #991B1B;">ONE MORE VIOLATION WILL PERMANENTLY TERMINATE THIS ASSESSMENT.</strong><br>
+        <div style="margin-bottom: 8px;">
+          <span style="display: inline-block; background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 0.82rem;">
+            ⚡ -10s PENALTY DEDUCTED (TOTAL -20s)
+          </span>
+        </div>
+        Second proctoring violation recorded!<br>
+        <strong style="color: #991B1B;">ONE MORE VIOLATION WILL IMMEDIATELY DISQUALIFY YOU WITH 0% AND 24H LOCKOUT.</strong><br>
         <span style="font-size: 0.85rem; color: #64748B;">Reason: ${details || 'Unfocused browser window or tab switch'}</span>
       `;
       extra.innerHTML = `
         <div style="background: #FEE2E2; color: #991B1B; padding: 12px; border-radius: 8px; font-size: 0.88rem; font-weight: 700;">
-          🛑 STRIKE 2/3: Keep this window fullscreen and do not switch applications!
+          🛑 STRIKE 2/3: Stay on this screen. Do not switch tabs or open DevTools.
         </div>
       `;
       actions.innerHTML = `
@@ -453,7 +463,7 @@
           font-weight: 800;
           font-size: 0.95rem;
           cursor: pointer;
-        ">Return to Fullscreen & Focus</button>
+        ">Acknowledge Final Chance</button>
       `;
 
       backdrop.style.display = 'flex';
@@ -473,20 +483,33 @@
       const extra = document.getElementById('antiCheatModalExtra');
       const actions = document.getElementById('antiCheatModalActions');
 
+      // Dispatch disqualify to backend MongoDB
+      try {
+        if (window.API && (this.skill || this.sessionId)) {
+          window.API.post('/quiz/disqualify', {
+            skill: this.skill,
+            sessionId: this.sessionId,
+            strikes: 3,
+            reason: reason || 'REPEATED_PROCTORING_VIOLATIONS'
+          }, { auth: true }).catch(() => {});
+        }
+      } catch (_) {}
+
       if (!backdrop || !card) return;
 
       card.style.borderColor = '#991B1B';
-      icon.innerHTML = '<span style="color: #991B1B;">🔒</span>';
-      title.innerHTML = '<span style="color: #991B1B;">Assessment Session Locked (Terminated)</span>';
+      icon.innerHTML = '<span style="color: #991B1B; font-size: 3.5rem;">🚫</span>';
+      title.innerHTML = '<span style="color: #991B1B;">ASSESSMENT TERMINATED: DISQUALIFIED</span>';
       desc.innerHTML = `
-        Your quiz session has been terminated due to repeated proctoring violations (3 strikes accumulated).<br>
-        The server has locked this attempt. Integrity score is marked as <strong>0% (Flagged)</strong>.
+        Your quiz session has been terminated due to repeated cheating violations (3/3 strikes).<br>
+        Your score is recorded as <strong>0% (Flagged for Cheating)</strong>.
       `;
       extra.innerHTML = `
-        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 12px; border-radius: 8px; text-align: left; font-size: 0.85rem; color: #334155;">
-          <div><strong>Reason:</strong> ${reason || 'REPEATED_PROCTORING_VIOLATIONS'}</div>
-          <div><strong>Strikes:</strong> 3 / 3 (Strikeout)</div>
-          <div><strong>Retake:</strong> Retake will be available after cooldown period.</div>
+        <div style="background: #FEF2F2; border: 1px solid #FCA5A5; padding: 14px; border-radius: 8px; text-align: left; font-size: 0.88rem; color: #7F1D1D;">
+          <div style="margin-bottom: 4px;"><strong>Violation:</strong> ${reason || 'Repeated focus violations (3 strikes)'}</div>
+          <div style="margin-bottom: 4px;"><strong>Status:</strong> Disqualified · Integrity Score: 0%</div>
+          <div style="margin-bottom: 4px;"><strong>Lockout:</strong> 🔒 Strict 24-Hour Cooldown Active</div>
+          <div style="font-size: 0.8rem; color: #991B1B; margin-top: 6px;">Refreshing the browser or clearing cache will not bypass this server-enforced lockout.</div>
         </div>
       `;
       actions.innerHTML = `

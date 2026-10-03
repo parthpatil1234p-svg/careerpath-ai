@@ -1390,7 +1390,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       row.className = `prove-skill-item ${isVerified ? 'item-verified' : ''}`;
 
       let actionHtml = '';
-      if (isQuizVer) {
+      const isFlagged = skill.verificationStatus === 'flagged_cheating';
+      const isCooldown = Boolean(skill.cooldownActive || (skill.nextRetakeAvailableAt && new Date() < new Date(skill.nextRetakeAvailableAt)));
+      const remainingHours = skill.cooldownRemainingHours || (skill.nextRetakeAvailableAt ? Math.max(1, Math.ceil((new Date(skill.nextRetakeAvailableAt) - new Date()) / (1000 * 60 * 60))) : 24);
+
+      if (isFlagged || isCooldown) {
+        actionHtml = `
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm" title="Locked due to proctoring violation">
+              <i class="bi bi-lock-fill"></i>
+              <span>Locked &middot; ${remainingHours}h Cooldown</span>
+            </span>
+            <button type="button" class="btn btn-outline-danger btn-sm" disabled title="24-hour retake lockout active">
+              <i class="bi bi-slash-circle me-1"></i> Disqualified
+            </button>
+          </div>
+        `;
+      } else if (isQuizVer) {
         actionHtml = `
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <span class="badge bg-success text-white py-1.5 px-3 small d-inline-flex align-items-center gap-1 font-mono shadow-sm">
@@ -1427,7 +1443,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       let noteHtml = '';
       const selfRatedStr = String(skill.selfRatedProficiency || '').toLowerCase();
-      if (isQuizVer && selfRatedStr && selfRatedStr !== profClass) {
+      if (isFlagged) {
+        noteHtml = `
+          <div class="skill-adjusted-note text-danger border-danger-subtle bg-danger-subtle">
+            <i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>
+            <span><strong>Integrity Violation:</strong> 3 proctoring strikes recorded. Retake locked for ${remainingHours} hours.</span>
+          </div>
+        `;
+      } else if (isQuizVer && selfRatedStr && selfRatedStr !== profClass) {
         const gapText = skill.quizGaps && skill.quizGaps.length > 0 ? ` Focus on: ${escapeHtml(skill.quizGaps.slice(0, 2).join(', '))}.` : '';
         noteHtml = `
           <div class="skill-adjusted-note">
@@ -1493,23 +1516,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   const modalProctorAlertText = document.getElementById('modalProctorAlertText');
   const modalVerdictIntegrityBadge = document.getElementById('modalVerdictIntegrityBadge');
   const modalVerdictUnconfirmedNotice = document.getElementById('modalVerdictUnconfirmedNotice');
+  const modalStrikesBadge = document.getElementById('modalStrikesBadge');
+  const modalStrikesCount = document.getElementById('modalStrikesCount');
+  const modalStrikeOverlay = document.getElementById('modalStrikeOverlay');
+  const strikeView1 = document.getElementById('strikeView1');
+  const strikeView2 = document.getElementById('strikeView2');
+  const strikeView3 = document.getElementById('strikeView3');
+  const strikeReasonText1 = document.getElementById('strikeReasonText1');
+  const strikeReasonText2 = document.getElementById('strikeReasonText2');
+  const modalStrike1AckBtn = document.getElementById('modalStrike1AckBtn');
+  const modalStrike2AckBtn = document.getElementById('modalStrike2AckBtn');
+  const modalDisqualifiedDoneBtn = document.getElementById('modalDisqualifiedDoneBtn');
 
   const MODAL_QUESTION_TIME_LIMIT = 45;
   let modalTimerInterval = null;
   let modalRemainingSeconds = MODAL_QUESTION_TIME_LIMIT;
   let modalQuestionStartTime = Date.now();
   let modalTabSwitchesCount = 0;
-  let modalProctorToastTimeout = null;
-
-  const showModalProctorToast = (msg) => {
-    if (!modalProctorAlert || !modalProctorAlertText) return;
-    modalProctorAlertText.textContent = msg;
-    modalProctorAlert.classList.remove('d-none');
-    if (modalProctorToastTimeout) clearTimeout(modalProctorToastTimeout);
-    modalProctorToastTimeout = setTimeout(() => {
-      modalProctorAlert.classList.add('d-none');
-    }, 4500);
-  };
+  let modalStrikes = 0;
+  let isModalDisqualified = false;
+  let isModalStrikeActive = false;
+  let activeCheckingSkillName = null;
+  let lastModalViolationTime = 0;
 
   const stopModalQuestionTimer = () => {
     if (modalTimerInterval) {
@@ -1518,13 +1546,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const startModalQuestionTimer = () => {
+  const startModalQuestionTimer = (resumeSeconds) => {
     stopModalQuestionTimer();
-    modalRemainingSeconds = MODAL_QUESTION_TIME_LIMIT;
+    modalRemainingSeconds = typeof resumeSeconds === 'number' ? resumeSeconds : MODAL_QUESTION_TIME_LIMIT;
     modalQuestionStartTime = Date.now();
 
     if (modalQuizTimerSeconds) modalQuizTimerSeconds.textContent = modalRemainingSeconds;
-    if (modalQuizTimerProgressBar) modalQuizTimerProgressBar.style.width = '100%';
+    if (modalQuizTimerProgressBar) {
+      const pct = Math.max(0, (modalRemainingSeconds / MODAL_QUESTION_TIME_LIMIT) * 100);
+      modalQuizTimerProgressBar.style.width = `${pct}%`;
+    }
     if (modalQuizTimerBadge) modalQuizTimerBadge.className = 'quiz-timer-badge';
 
     modalTimerInterval = setInterval(() => {
@@ -1560,34 +1591,242 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 1000);
   };
 
-  // Proctor listeners for modal (Pillar 6)
-  document.addEventListener('visibilitychange', () => {
-    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
-      if (document.hidden) {
-        modalTabSwitchesCount++;
-        showModalProctorToast('\u26A0\uFE0F Proctor Notice: Tab change detected. Quiz session is actively monitored.');
+  const updateModalStrikesHud = () => {
+    const count = Math.min(3, modalStrikes);
+    const countEl = document.getElementById('modalStrikesCount');
+    if (countEl) countEl.textContent = count;
+
+    const badge = document.getElementById('modalStrikesBadge');
+    if (badge) {
+      if (count === 0) {
+        badge.className = 'badge bg-success-subtle text-success border border-success-subtle font-mono px-2.5 py-1';
+        badge.innerHTML = `<i class="bi bi-shield-check me-1"></i> Strikes: <span id="modalStrikesCount">0</span>/3`;
+      } else if (count === 1) {
+        badge.className = 'badge bg-warning-subtle text-warning border border-warning-subtle font-mono px-2.5 py-1';
+        badge.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> Strikes: <span id="modalStrikesCount">1</span>/3`;
+      } else if (count === 2) {
+        badge.className = 'badge bg-danger-subtle text-danger border border-danger-subtle font-mono px-2.5 py-1';
+        badge.innerHTML = `<i class="bi bi-shield-slash-fill me-1"></i> Strikes: <span id="modalStrikesCount">2</span>/3`;
+      } else {
+        badge.className = 'badge bg-danger text-white border border-danger font-mono px-2.5 py-1';
+        badge.innerHTML = `<i class="bi bi-lock-fill me-1"></i> 3/3 DISQUALIFIED`;
       }
+    }
+  };
+
+  const triggerModalStrictStrike = async (violationType, description) => {
+    // Only monitor if the skillCheckModal is currently open and an active question is displayed
+    if (
+      !skillCheckModalEl?.classList.contains('show') ||
+      !modalQuestionState ||
+      modalQuestionState.classList.contains('d-none') ||
+      isModalDisqualified ||
+      isModalStrikeActive
+    ) {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastModalViolationTime < 800) {
+      return; // Debounce rapid consecutive events (e.g. blur followed immediately by visibilitychange)
+    }
+    lastModalViolationTime = now;
+
+    isModalStrikeActive = true;
+    modalStrikes++;
+    modalTabSwitchesCount = modalStrikes;
+
+    // Immediately FREEZE the question countdown timer
+    stopModalQuestionTimer();
+
+    // Deduct 10 seconds from clock
+    modalRemainingSeconds = Math.max(5, modalRemainingSeconds - 10);
+    if (modalQuizTimerSeconds) {
+      modalQuizTimerSeconds.textContent = modalRemainingSeconds;
+      modalQuizTimerBadge?.classList.add('timer-penalty-flash');
+      setTimeout(() => modalQuizTimerBadge?.classList.remove('timer-penalty-flash'), 700);
+    }
+    if (modalQuizTimerProgressBar) {
+      const pct = Math.max(0, (modalRemainingSeconds / MODAL_QUESTION_TIME_LIMIT) * 100);
+      modalQuizTimerProgressBar.style.width = `${pct}%`;
+    }
+
+    // Authoritative Server Violation Sync
+    try {
+      if (window.API && activeCheckingSkillName) {
+        window.API.post('/quiz/violation', {
+          skill: activeCheckingSkillName,
+          violationType,
+          details: { message: description, timestamp: now }
+        }, { auth: true }).catch((e) => console.warn('[StrictProctor] Background violation report warning:', e.message));
+      }
+    } catch (_) {}
+
+    // Update Live Strike HUD Badge in Header
+    updateModalStrikesHud();
+
+    // Show high-impact strike overlay
+    const overlay = document.getElementById('modalStrikeOverlay');
+    const v1 = document.getElementById('strikeView1');
+    const v2 = document.getElementById('strikeView2');
+    const v3 = document.getElementById('strikeView3');
+
+    if (overlay) overlay.classList.remove('d-none');
+    v1?.classList.add('d-none');
+    v2?.classList.add('d-none');
+    v3?.classList.add('d-none');
+
+    if (modalStrikes === 1) {
+      const r1 = document.getElementById('strikeReasonText1');
+      if (r1) r1.textContent = `${description}. 10 seconds deducted from your timer and integrity score penalized.`;
+      v1?.classList.remove('d-none');
+    } else if (modalStrikes === 2) {
+      const r2 = document.getElementById('strikeReasonText2');
+      if (r2) r2.textContent = `${description}. Second violation logged! Another 10 seconds deducted. ONE MORE STRIKE AND YOU WILL BE DISQUALIFIED.`;
+      v2?.classList.remove('d-none');
+    } else if (modalStrikes >= 3) {
+      // STRIKE 3: IMMEDIATE TERMINATION & 24H LOCKOUT
+      isModalDisqualified = true;
+      v3?.classList.remove('d-none');
+
+      // Wipe/hide question state
+      modalQuestionState?.classList.add('d-none');
+
+      // Call authoritative backend disqualify endpoint
+      try {
+        if (window.API && activeCheckingSkillName) {
+          await window.API.post('/quiz/disqualify', {
+            skill: activeCheckingSkillName,
+            strikes: 3,
+            reason: description || 'REPEATED_PROCTORING_VIOLATIONS'
+          }, { auth: true });
+        }
+      } catch (err) {
+        console.error('[StrictProctor] Disqualify API error:', err);
+      }
+
+      // Update local skill record
+      const targetSk = selectedSkillsMap.get(activeCheckingSkillName) ||
+        Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === (activeCheckingSkillName || '').toLowerCase());
+      if (targetSk) {
+        targetSk.isQuizVerified = false;
+        targetSk.quizScore = 0;
+        targetSk.integrityScore = 0;
+        targetSk.verificationStatus = 'flagged_cheating';
+        targetSk.cooldownActive = true;
+        targetSk.cooldownRemainingHours = 24;
+        targetSk.nextRetakeAvailableAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      }
+    }
+  };
+
+  // Wire Acknowledgement Buttons for Strike Overlays
+  document.getElementById('modalStrike1AckBtn')?.addEventListener('click', () => {
+    document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
+    isModalStrikeActive = false;
+    startModalQuestionTimer(modalRemainingSeconds);
+  });
+
+  document.getElementById('modalStrike2AckBtn')?.addEventListener('click', () => {
+    document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
+    isModalStrikeActive = false;
+    startModalQuestionTimer(modalRemainingSeconds);
+  });
+
+  document.getElementById('modalDisqualifiedDoneBtn')?.addEventListener('click', () => {
+    document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
+    const modalInstance = bootstrap.Modal.getInstance(skillCheckModalEl);
+    if (modalInstance) modalInstance.hide();
+    renderSelectedSkills();
+  });
+
+  // Strict Proctor Sensors for in-page modal
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      triggerModalStrictStrike('tab_switch', 'Browser tab switch detected');
     }
   });
 
   window.addEventListener('blur', () => {
-    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none')) {
-      modalTabSwitchesCount++;
-      showModalProctorToast('\u26A0\uFE0F Proctor Notice: Window blur detected. Please stay focused on the quiz.');
-    }
+    triggerModalStrictStrike('window_blur', 'Window focus lost (Alt-Tab or desktop click)');
   });
+
+  document.addEventListener('contextmenu', (e) => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none') && !isModalDisqualified) {
+      e.preventDefault();
+      triggerModalStrictStrike('contextmenu', 'Right-click menu attempt blocked');
+    }
+  }, true);
+
+  document.addEventListener('copy', (e) => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none') && !isModalDisqualified) {
+      e.preventDefault();
+      triggerModalStrictStrike('clipboard', 'Unauthorized copy attempt blocked');
+    }
+  }, true);
+
+  document.addEventListener('paste', (e) => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none') && !isModalDisqualified) {
+      e.preventDefault();
+      triggerModalStrictStrike('clipboard', 'Unauthorized paste attempt blocked');
+    }
+  }, true);
+
+  document.addEventListener('cut', (e) => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none') && !isModalDisqualified) {
+      e.preventDefault();
+      triggerModalStrictStrike('clipboard', 'Unauthorized cut attempt blocked');
+    }
+  }, true);
+
+  document.addEventListener('keydown', (e) => {
+    if (skillCheckModalEl?.classList.contains('show') && modalQuestionState && !modalQuestionState.classList.contains('d-none') && !isModalDisqualified) {
+      const isCtrl = e.ctrlKey || e.metaKey;
+      const key = e.key;
+
+      if (key === 'F12' || (isCtrl && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(key)) || (isCtrl && ['u', 'U'].includes(key))) {
+        e.preventDefault();
+        e.stopPropagation();
+        triggerModalStrictStrike('devtools_attempt', 'Developer inspection shortcut attempt blocked');
+        return false;
+      }
+
+      if (isCtrl && ['c', 'C', 'v', 'V', 'x', 'X'].includes(key)) {
+        e.preventDefault();
+        e.stopPropagation();
+        triggerModalStrictStrike('clipboard_shortcut', `Clipboard shortcut Ctrl+${key.toUpperCase()} blocked`);
+        return false;
+      }
+    }
+  }, true);
 
   const startSkillCheck = async (skillName) => {
     const skill = selectedSkillsMap.get(skillName) ||
       Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
     if (!skill) return;
 
+    // Check if skill has active cheating disqualification or cooldown
+    const isFlagged = skill.verificationStatus === 'flagged_cheating';
+    const isCooldown = Boolean(skill.cooldownActive || (skill.nextRetakeAvailableAt && new Date() < new Date(skill.nextRetakeAvailableAt)));
+    if (isFlagged || isCooldown) {
+      const hoursRemaining = skill.cooldownRemainingHours || (skill.nextRetakeAvailableAt ? Math.max(1, Math.ceil((new Date(skill.nextRetakeAvailableAt) - new Date()) / (1000 * 60 * 60))) : 24);
+      const prefix = isFlagged ? '🚫 Integrity Violation Lockout:' : '⏳ Retake Cooldown Active:';
+      showAlert(`${prefix} Skill check for "${skill.displayName || skill.name}" is locked. Retake available in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}.`, 'danger');
+      return;
+    }
+
     if (!skillCheckModalEl) return;
     const modal = bootstrap.Modal.getOrCreateInstance(skillCheckModalEl);
     modal.show();
 
-    // Reset modal UI state
+    // Reset modal UI and strict proctoring state
+    activeCheckingSkillName = skill.name;
     modalTabSwitchesCount = 0;
+    modalStrikes = 0;
+    isModalDisqualified = false;
+    isModalStrikeActive = false;
+    updateModalStrikesHud();
+    document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
     if (modalSkillBadge) modalSkillBadge.textContent = skill.displayName || skill.name;
     if (skillCheckModalTitle) skillCheckModalTitle.textContent = 'Reality Check';
     modalLoadingState?.classList.remove('d-none');

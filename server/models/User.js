@@ -79,7 +79,7 @@ const SkillSchema = new mongoose.Schema(
     },
     verificationStatus: {
       type: String,
-      enum: ['unverified', 'verified', 'unconfirmed', 'flagged'],
+      enum: ['unverified', 'verified', 'unconfirmed', 'flagged', 'flagged_cheating'],
       default: 'unverified',
     },
     integrityScore: {

@@ -18,5 +18,6 @@ router.get('/active-session', quizController.getActiveSession);
 router.post('/start', quizController.startQuiz);
 router.post('/answer', quizController.submitAnswer);
 router.post('/violation', quizController.recordViolation);
+router.post('/disqualify', quizController.disqualifyUser);
 
 module.exports = router;

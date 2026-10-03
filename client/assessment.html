@@ -712,6 +712,9 @@
               <span class="badge bg-dark-subtle text-body border px-2 py-0.5 small d-none font-mono" id="modalProviderBadge"></span>
             </div>
             <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-success-subtle text-success border border-success-subtle font-mono px-2.5 py-1" id="modalStrikesBadge">
+                <i class="bi bi-shield-check me-1"></i> Strikes: <span id="modalStrikesCount">0</span>/3
+              </span>
               <span class="difficulty-pill medium" id="modalDifficultyPill">MEDIUM</span>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseBtn"></button>
             </div>
@@ -755,10 +758,10 @@
               </div>
 
               <!-- Question title -->
-              <div class="quiz-question-title" id="modalQuestionPrompt"></div>
+              <div class="quiz-question-title proctored-no-select" id="modalQuestionPrompt"></div>
 
               <!-- Code snippet (optional) -->
-              <pre class="quiz-code-block d-none" id="modalCodeSnippet"><code></code></pre>
+              <pre class="quiz-code-block proctored-no-select d-none" id="modalCodeSnippet"><code></code></pre>
 
               <!-- Option cards -->
               <div class="quiz-options-list" id="modalOptionsList"></div>
@@ -837,6 +840,89 @@
                 <button type="button" class="btn cp-btn-primary px-4 py-2" id="modalVerdictDoneBtn">
                   <i class="bi bi-check2-circle me-1"></i>
                   <span>Done &mdash; Return to Assessment</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================
+               STRICT ANTI-CHEATING STRIKE OVERLAY (Interactive Freeze)
+               ============================================================ -->
+          <div id="modalStrikeOverlay" class="d-none">
+            <!-- Strike 1 Card (Amber Warning) -->
+            <div id="strikeView1" class="strike-card strike-card-1 d-none">
+              <div class="strike-card-header">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
+                  <h5 class="fw-bold mb-0">STRIKE 1 of 3: Cheating Violation Logged</h5>
+                </div>
+                <div class="small fw-semibold text-warning-emphasis">Proctor Sensor Triggered</div>
+              </div>
+              <div class="p-4">
+                <div class="strike-penalty-tag mb-3">
+                  <i class="bi bi-stopwatch-fill"></i> &minus;10 SECONDS DEDUCTED &middot; INTEGRITY PENALIZED (&minus;25%)
+                </div>
+                <p class="text-secondary small mb-3" id="strikeReasonText1">
+                  Focus loss detected (tab switch, window blur, or restricted shortcut). The assessment timer has been docked 10 seconds.
+                </p>
+                <div class="alert alert-warning py-2 px-3 small text-start mb-4">
+                  <strong>Strict Policy Notice:</strong> You have <strong>2 strikes remaining</strong>. A second strike will issue a critical warning, and a third strike results in <strong>immediate disqualification and a 24-hour lockout</strong>.
+                </div>
+                <button type="button" class="btn btn-warning fw-bold px-4 py-2 w-100" id="modalStrike1AckBtn">
+                  <i class="bi bi-shield-check me-1"></i> I Acknowledge &amp; Resume Focus
+                </button>
+              </div>
+            </div>
+
+            <!-- Strike 2 Card (Crimson Final Warning) -->
+            <div id="strikeView2" class="strike-card strike-card-2 d-none">
+              <div class="strike-card-header">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-shield-slash-fill fs-2 text-danger"></i>
+                  <h5 class="fw-bold mb-0">STRIKE 2 of 3: FINAL WARNING!</h5>
+                </div>
+                <div class="small fw-bold text-danger">CRITICAL INTEGRITY ALERT</div>
+              </div>
+              <div class="p-4">
+                <div class="strike-penalty-tag mb-3 bg-danger-subtle text-danger border-danger-subtle">
+                  <i class="bi bi-stopwatch-fill"></i> &minus;10 SECONDS DEDUCTED &middot; INTEGRITY AT RISK
+                </div>
+                <p class="text-danger small fw-semibold mb-3" id="strikeReasonText2">
+                  Second proctoring violation detected. The quiz was frozen and 10 seconds were docked.
+                </p>
+                <div class="alert alert-danger py-2.5 px-3 small text-start mb-4 border-danger">
+                  <strong>🚨 IMMEDIATE DISQUALIFICATION RISK:</strong><br/>
+                  If you switch tabs, click away, copy text, or attempt devtools one more time, your test session will be <strong>permanently terminated with 0%</strong> and your account will be <strong>locked out from this skill for 24 hours</strong>.
+                </div>
+                <button type="button" class="btn btn-danger fw-bold px-4 py-2 w-100" id="modalStrike2AckBtn">
+                  <i class="bi bi-exclamation-octagon-fill me-1"></i> I Understand &mdash; Last Chance
+                </button>
+              </div>
+            </div>
+
+            <!-- Strike 3 Card (Disqualification & 24h Lockout) -->
+            <div id="strikeView3" class="strike-card strike-card-3 d-none">
+              <div class="strike-card-header">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-lock-fill fs-1 text-danger"></i>
+                </div>
+                <h5 class="fw-bold mb-1 text-danger">ASSESSMENT TERMINATED &mdash; DISQUALIFIED</h5>
+                <div class="small text-muted font-mono">INTEGRITY POLICY VIOLATION (3/3 STRIKES)</div>
+              </div>
+              <div class="p-4">
+                <div class="bg-danger-subtle text-danger border border-danger-subtle rounded-3 p-3 mb-3 text-center">
+                  <div class="fs-1 fw-bold font-mono">0%</div>
+                  <div class="small fw-bold text-uppercase">Result: Failed (Cheating Flagged)</div>
+                </div>
+                <p class="text-secondary small mb-3">
+                  You exceeded the 3-strike limit for proctoring violations. To maintain industry credential trust, your session has been aborted and a <strong>strict 24-hour lockout</strong> has been activated on this skill.
+                </p>
+                <div class="bg-dark p-3 rounded-3 border border-secondary border-opacity-25 small text-start mb-4 font-mono text-light">
+                  <div class="text-warning mb-1"><i class="bi bi-clock-history me-1"></i> <strong>Cooldown Status:</strong> Active</div>
+                  <div>Next Retake Available: <span class="text-white fw-bold">in 24 Hours</span></div>
+                </div>
+                <button type="button" class="btn btn-outline-light px-4 py-2 w-100" id="modalDisqualifiedDoneBtn">
+                  <i class="bi bi-arrow-left me-1"></i> Return to Assessment Dashboard
                 </button>
               </div>
             </div>

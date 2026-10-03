@@ -1011,4 +1011,122 @@
   gap: 0.75rem;
 }
 
+/* ============================================================
+   STRICT ANTI-CHEATING LOCKDOWN & STRIKE HUD STYLES
+   ============================================================ */
+
+/* Disable Text Selection & Dragging on Proctored Questions */
+.proctored-no-select,
+.proctored-no-select * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Modal Blocking Strike Overlay */
+#modalStrikeOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1055;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-radius: var(--bs-modal-border-radius, 1rem);
+  animation: strikeFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes strikeFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Strike Overlay Cards */
+.strike-card {
+  background: #FFFFFF;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+}
+
+/* Strike 1: Amber Alert */
+.strike-card-1 {
+  border: 2px solid #F59E0B;
+}
+.strike-card-1 .strike-card-header {
+  background: #FFFBEB;
+  color: #B45309;
+  padding: 1.25rem;
+  border-bottom: 1px solid #FDE68A;
+}
+
+/* Strike 2: Crimson Final Warning */
+.strike-card-2 {
+  border: 2px solid #EF4444;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+}
+.strike-card-2 .strike-card-header {
+  background: #FEF2F2;
+  color: #B91C1C;
+  padding: 1.25rem;
+  border-bottom: 1px solid #FECACA;
+  animation: pulseRedHeader 1.8s infinite;
+}
+
+@keyframes pulseRedHeader {
+  0% { background: #FEF2F2; }
+  50% { background: #FEE2E2; }
+  100% { background: #FEF2F2; }
+}
+
+/* Strike 3: Disqualification & 24h Lockout */
+.strike-card-3 {
+  border: 2px solid #991B1B;
+  background: #0F172A;
+  color: #F8FAFC;
+  box-shadow: 0 0 35px rgba(153, 27, 27, 0.45);
+}
+.strike-card-3 .strike-card-header {
+  background: #1E293B;
+  color: #F87171;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid #334155;
+}
+
+.strike-penalty-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FCA5A5;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  margin: 0.5rem 0;
+}
+
+.timer-penalty-flash {
+  animation: timerPenaltyShake 0.6s ease;
+}
+
+@keyframes timerPenaltyShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); background: #EF4444 !important; color: white !important; }
+  40%, 80% { transform: translateX(6px); background: #DC2626 !important; color: white !important; }
+}
+
 
