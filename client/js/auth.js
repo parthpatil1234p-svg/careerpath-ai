@@ -446,30 +446,8 @@ const Auth = {
         `;
       }
 
-      // Contextual navigation button: return to Home or enter Dashboard
-      let contextActionHtml = '';
-      if (!isRecruiter) {
-        if (!isHomePage) {
-          // Inside Student Portal -> Provide direct button to return to Home Page
-          contextActionHtml = `
-            <a href="index.html" class="nav-role-chip nav-home-chip me-1" title="Return to CareerPath AI Home Landing Page">
-              <i class="bi bi-house-door-fill text-primary"></i>
-              <span>Home</span>
-            </a>
-          `;
-        } else {
-          // On Home Page -> Provide direct button to open Student Dashboard
-          contextActionHtml = `
-            <a href="dashboard.html" class="btn cp-btn-primary btn-sm px-3 text-nowrap me-1" title="Open Your Student Dashboard">
-              <i class="bi bi-speedometer2 me-1"></i> Dashboard
-            </a>
-          `;
-        }
-      }
-
       authActions.innerHTML = `
         <div class="nav-profile-group d-flex align-items-center gap-1.5 text-nowrap">
-          ${contextActionHtml}
           ${roleChip}
           <a href="${targetDashboardUrl}"
              class="nav-user-pill ${isRecruiter ? 'nav-user-pill-recruiter' : ''} d-none d-md-inline-flex align-items-center gap-2"

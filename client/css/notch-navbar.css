@@ -89,7 +89,7 @@ main.container {
 .nav-text-full {
   display: inline;
 }
-@media (max-width: 1360px) {
+@media (max-width: 1400px) {
   .nav-text-full {
     display: none !important;
   }
