@@ -467,24 +467,7 @@ const toggleTask = async (req, res, next) => {
       });
     }
 
-    // Server-Authoritative Anti-Slacking Gate:
-    // If task is a dedicated video task that is unverified and uncompleted, block manual checkbox ticking!
-    const email = (req.user.email || '').toLowerCase();
-    const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
 
-    if (task.isVideoTask && !task.isVideoVerified && !task.completed && !isDemoOrAdmin) {
-      return res.status(403).json({
-        success: false,
-        code: 'VIDEO_VERIFICATION_REQUIRED',
-        message: 'This video lesson requires active learning verification. Please complete the video session and AI Reflection in the learning chamber.',
-        data: {
-          taskId: task._id,
-          taskTitle: task.title,
-          videoUrl: task.resource?.url,
-          skillName: task.skillName,
-        },
-      });
-    }
 
     // 3. Toggle completed status
     task.completed = !task.completed;
