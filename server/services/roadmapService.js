@@ -14,7 +14,6 @@ const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
 const roadmapTemplates = require('../data/roadmapTemplates');
 const { calculateSkillScore } = require('./recommendationService');
-const youtubeService = require('./youtubeService');
 
 /**
  * Generates structured task objects ready for bulk insertion
@@ -73,9 +72,6 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
           const sName = rs.skill?.displayName || rs.skill?.name || rs.skillName || 'Core Competency';
           const sKey = (rs.skill?.name || rs.skillName || 'skill').toLowerCase();
 
-          const ytResolved = youtubeService.resolveCuratedSync(sName || sKey);
-          const topVid = ytResolved.video;
-
           tasks.push({
             order: i * 2 + 1,
             title: `Master ${sName} Architecture & Core Principles`,
@@ -84,16 +80,13 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
             skillName: sKey,
             priority: rs.importance === 'high' ? 'high' : 'medium',
             estimatedHours: rs.importance === 'high' ? 5 : 3,
-            isVideoTask: true,
-            videoDurationSeconds: 600,
+            isVideoTask: false,
+            videoDurationSeconds: 0,
             resource: {
-              title: topVid.title || `${sName} Video Masterclass & Core Architecture`,
-              url: topVid.watchUrl || `https://www.youtube.com/watch?v=${topVid.videoId}`,
-              provider: topVid.channelTitle || 'YouTube Learning & DevDocs',
-              mediaType: 'video',
-              videoId: topVid.videoId,
-              channelTitle: topVid.channelTitle,
-              thumbnailUrl: topVid.thumbnailUrl,
+              title: `${sName} Official Documentation & Architecture Guide`,
+              url: `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(sName)}`,
+              provider: 'Official Documentation & MDN',
+              mediaType: 'doc',
             },
           });
 
@@ -195,12 +188,7 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
         taskDescription += ` • Targeted Focus Areas from Reality-Check Quiz: ${userSkillData.quizGaps.join(', ')}.`;
       }
 
-      const isVideo = Boolean(
-        task.isVideoTask ||
-        task.resource?.mediaType === 'video' ||
-        (task.resource?.url && (task.resource.url.includes('youtube.com') || task.resource.url.includes('youtu.be')))
-      );
-      const mediaType = task.resource?.mediaType || (isVideo ? 'video' : (task.resource?.type || 'reading'));
+      const mediaType = task.resource?.mediaType === 'video' ? 'doc' : (task.resource?.mediaType || task.resource?.type || 'doc');
 
       taskDocuments.push({
         weekNumber: week.weekNumber,
@@ -214,12 +202,14 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
         resource: {
           ...(task.resource || {}),
           mediaType: mediaType,
-          url: task.resource?.url || 'https://developer.mozilla.org',
-          title: task.resource?.title || `${task.title} Resource`,
+          url: (task.resource?.url && !task.resource.url.includes('youtube.com') && !task.resource.url.includes('youtu.be'))
+            ? task.resource.url
+            : `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(task.skillName || task.title)}`,
+          title: task.resource?.title || `${task.title} Documentation Guide`,
           provider: task.resource?.provider || 'CareerPath AI Learning Hub',
         },
-        isVideoTask: isVideo,
-        videoDurationSeconds: task.videoDurationSeconds || (isVideo ? 600 : 0),
+        isVideoTask: false,
+        videoDurationSeconds: 0,
         videoMaxWatchedTime: 0,
         videoWatchTimeSeconds: 0,
         videoMidCheckPassed: false,

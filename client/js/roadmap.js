@@ -406,24 +406,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="tasks-list d-flex flex-column gap-3" id="week-tasks-${weekNumber}">
           ${tasks
             .map((task) => {
-              const isVideoTask = Boolean(
+              const isVideo = Boolean(
                 task.isVideoTask ||
                 task.resource?.mediaType === 'video' ||
                 (task.resource?.url && (task.resource.url.includes('youtube.com') || task.resource.url.includes('youtu.be')))
               );
 
               let resourceBadge = '';
-              if (task.resource?.url) {
-                const isVideo = Boolean(
-                  task.isVideoTask ||
-                  task.resource?.mediaType === 'video' ||
-                  task.resource.url.includes('youtube.com') ||
-                  task.resource.url.includes('youtu.be')
-                );
-                const icon = isVideo ? 'bi-play-circle-fill text-danger' : 'bi-box-arrow-up-right';
-                const label = isVideo ? 'Watch Lesson' : (task.resource.type || 'Resource');
-                resourceBadge = `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn" title="${escapeHtml(task.resource.title || label)}">
-                    <i class="bi ${icon} me-1"></i>${escapeHtml(label)}
+              // Only render non-video resources (e.g. official documentation, guides, labs)
+              if (task.resource?.url && !isVideo) {
+                resourceBadge = `<a href="${escapeHtml(task.resource.url)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn" title="${escapeHtml(task.resource.title || 'Documentation')}">
+                    <i class="bi bi-box-arrow-up-right me-1"></i>${escapeHtml(task.resource.type || 'Documentation')}
                    </a>`;
               }
 
