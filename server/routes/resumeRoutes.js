@@ -12,6 +12,8 @@ const {
   getResumeAnalysis,
   getBuiltResume,
   saveBuiltResume,
+  resetBuiltResume,
+  loadSampleResume,
   improveResumeText,
   matchResumeToJob,
 } = require('../controllers/resumeController');
@@ -25,6 +27,8 @@ router.get('/analysis', getResumeAnalysis);
 // Resume Builder Draft & AI Endpoints
 router.get('/builder', getBuiltResume);
 router.post('/builder', saveBuiltResume);
+router.post('/builder/clear', resetBuiltResume);
+router.post('/builder/sample', loadSampleResume);
 router.post('/improve-text', improveResumeText);
 router.post('/match-job', matchResumeToJob);
 

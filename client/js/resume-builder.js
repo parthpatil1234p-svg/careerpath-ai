@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnAddCertification = document.getElementById('btnAddCertification');
   const btnAutoSyncProfile = document.getElementById('btnAutoSyncProfile');
   const btnImportGithubRepos = document.getElementById('btnImportGithubRepos');
+  const btnClearResume = document.getElementById('btnClearResume');
+  const btnClearResumeQuick = document.getElementById('btnClearResumeQuick');
+  const btnLoadSampleTemplate = document.getElementById('btnLoadSampleTemplate');
   const btnImproveSummary = document.getElementById('btnImproveSummary');
   const btnJobMatchModal = document.getElementById('btnJobMatchModal');
   const btnRunJobMatch = document.getElementById('btnRunJobMatch');
@@ -67,6 +70,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Modals
   const aiModal = new bootstrap.Modal(document.getElementById('aiImproveModal'));
   const jobMatchModal = new bootstrap.Modal(document.getElementById('jobMatchModal'));
+
+  // ── Helper: User-Scoped Local Storage Key ────────────────────
+  const getStorageKey = () => {
+    const user = window.Auth?.getUser();
+    const uid = user?._id || user?.id || 'default';
+    return `careerpath_resume_draft_${uid}`;
+  };
 
   // ── Helper: Safe Text Escaping ───────────────────────────────
   const escapeHtml = (str) => {
@@ -95,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Save offline snapshot immediately
     try {
-      localStorage.setItem('careerpath_resume_draft', JSON.stringify(resumeData));
+      localStorage.setItem(getStorageKey(), JSON.stringify(resumeData));
     } catch (e) {}
 
     saveDebounceTimer = setTimeout(async () => {
@@ -536,6 +546,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       paper.innerHTML = renderStudentTemplate(resumeData);
     }
+
+    const hasAnyContent = Boolean(
+      resumeData.summary ||
+      (resumeData.education && resumeData.education.length > 0) ||
+      (resumeData.skills && resumeData.skills.length > 0) ||
+      (resumeData.projects && resumeData.projects.length > 0) ||
+      (resumeData.experience && resumeData.experience.length > 0) ||
+      (resumeData.certifications && resumeData.certifications.length > 0) ||
+      (resumeData.additional?.achievements && resumeData.additional.achievements.length > 0)
+    );
+
+    if (!hasAnyContent) {
+      const emptyNotice = document.createElement('div');
+      emptyNotice.className = 'empty-canvas-prompt p-4 text-center my-4 border border-dashed rounded-3';
+      emptyNotice.style.background = 'rgba(248, 250, 252, 0.75)';
+      emptyNotice.style.borderColor = '#cbd5e1';
+      emptyNotice.innerHTML = `
+        <i class="bi bi-pencil-square fs-1 text-secondary opacity-50 mb-2 d-block"></i>
+        <h6 class="fw-bold text-dark mb-1">Your Resume is Ready to Build</h6>
+        <p class="small text-secondary mb-0">Use the form sections on the left to add your education, skills, and projects, or click <strong>Auto-Fill Profile</strong> to pull your verified assessment results.</p>
+      `;
+      paper.appendChild(emptyNotice);
+    }
   };
 
   // ============================================================
@@ -585,6 +618,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!educationListContainer) return;
     educationListContainer.innerHTML = '';
 
+    if (!resumeData.education || resumeData.education.length === 0) {
+      educationListContainer.innerHTML = '<div class="text-muted small py-2 px-1 fst-italic">No education entries added yet. Click "+ Add Education" below.</div>';
+      return;
+    }
+
     (resumeData.education || []).forEach((ed, index) => {
       const item = document.createElement('div');
       item.className = 'repeater-item';
@@ -624,6 +662,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!skillsListContainer) return;
     skillsListContainer.innerHTML = '';
 
+    if (!resumeData.skills || resumeData.skills.length === 0) {
+      skillsListContainer.innerHTML = '<div class="text-muted small py-2 px-1 fst-italic">No skills added yet. Click "+ Add Skill" or "Auto-Fill Profile".</div>';
+      return;
+    }
+
     (resumeData.skills || []).forEach((s, index) => {
       const item = document.createElement('div');
       item.className = 'repeater-item';
@@ -660,6 +703,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderProjectsList = () => {
     if (!projectsListContainer) return;
     projectsListContainer.innerHTML = '';
+
+    if (!resumeData.projects || resumeData.projects.length === 0) {
+      projectsListContainer.innerHTML = '<div class="text-muted small py-2 px-1 fst-italic">No projects added yet. Click "+ Add Project" or "GitHub Repos".</div>';
+      return;
+    }
 
     (resumeData.projects || []).forEach((pr, index) => {
       const item = document.createElement('div');
@@ -706,6 +754,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderExperienceList = () => {
     if (!experienceListContainer) return;
     experienceListContainer.innerHTML = '';
+
+    if (!resumeData.experience || resumeData.experience.length === 0) {
+      experienceListContainer.innerHTML = '<div class="text-muted small py-2 px-1 fst-italic">No experience or internships added yet. Click "+ Add Experience" below.</div>';
+      return;
+    }
 
     (resumeData.experience || []).forEach((ex, index) => {
       const item = document.createElement('div');
@@ -756,6 +809,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderCertificationsList = () => {
     if (!certificationsListContainer) return;
     certificationsListContainer.innerHTML = '';
+
+    if (!resumeData.certifications || resumeData.certifications.length === 0) {
+      certificationsListContainer.innerHTML = '<div class="text-muted small py-2 px-1 fst-italic">No certifications added yet. Click "+ Add Certification" below.</div>';
+      return;
+    }
 
     (resumeData.certifications || []).forEach((c, index) => {
       const item = document.createElement('div');
@@ -1271,15 +1329,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }));
           }
 
-          // Sync education
+          // Sync education (only actual values, no fake GPA or startYear)
           if (u.education?.course) {
             resumeData.education = [{
               degree: u.education.course,
-              college: u.education.college || 'University',
+              college: u.education.college || '',
               university: u.education.branch || '',
-              startYear: '2023',
-              gradYear: u.education.year || '2026',
-              score: '8.5 CGPA',
+              startYear: '',
+              gradYear: u.education.year || '',
+              score: '',
             }];
           }
 
@@ -1291,7 +1349,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Profile sync failed:', err);
       } finally {
         btnAutoSyncProfile.disabled = false;
-        btnAutoSyncProfile.innerHTML = `<i class="bi bi-arrow-repeat text-info"></i> Auto-Fill`;
+        btnAutoSyncProfile.innerHTML = `<i class="bi bi-arrow-repeat text-primary"></i> Auto-Fill Profile`;
+      }
+    });
+  }
+
+  // ── Clear / Start Blank Resume Handlers ───────────────────────
+  const handleClearResume = async () => {
+    const confirmed = confirm('Are you sure you want to clear your resume and start with a completely empty canvas? All current fields will be emptied.');
+    if (!confirmed) return;
+
+    setSaveStatus('saving', 'Clearing...');
+    try {
+      const res = await window.API.post('/resume/builder/clear', {}, { auth: true });
+      if (res.success && res.data) {
+        resumeData = res.data;
+        try {
+          localStorage.removeItem(getStorageKey());
+          localStorage.removeItem('careerpath_resume_draft');
+        } catch (_) {}
+        populateFormFields();
+        renderResumePreview();
+        setSaveStatus('saved', 'Blank Canvas Ready');
+      }
+    } catch (err) {
+      alert('Failed to clear resume: ' + err.message);
+      setSaveStatus('saved', 'Error');
+    }
+  };
+
+  btnClearResume?.addEventListener('click', handleClearResume);
+  btnClearResumeQuick?.addEventListener('click', handleClearResume);
+
+  // ── Load Sample Template for Inspiration Handler ──────────────
+  if (btnLoadSampleTemplate) {
+    btnLoadSampleTemplate.addEventListener('click', async () => {
+      const confirmed = confirm('Load sample student resume for inspiration? This will replace your current fields with an example structure.');
+      if (!confirmed) return;
+
+      setSaveStatus('saving', 'Loading sample...');
+      try {
+        const res = await window.API.post('/resume/builder/sample', {}, { auth: true });
+        if (res.success && res.data) {
+          resumeData = res.data;
+          try {
+            localStorage.setItem(getStorageKey(), JSON.stringify(resumeData));
+          } catch (_) {}
+          populateFormFields();
+          renderResumePreview();
+          setSaveStatus('saved', 'Sample Template Ready');
+        }
+      } catch (err) {
+        alert('Failed to load sample: ' + err.message);
+        setSaveStatus('saved', 'Error');
       }
     });
   }
@@ -1422,6 +1532,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // INITIAL DATA LOAD
   // ============================================================
 
+  // Cleanup any legacy stale global draft holding fake data
+  try {
+    const legacyDraft = localStorage.getItem('careerpath_resume_draft');
+    if (legacyDraft && (legacyDraft.includes('Demopo') || legacyDraft.includes('Academic & Hackathon'))) {
+      localStorage.removeItem('careerpath_resume_draft');
+    }
+  } catch (_) {}
+
   try {
     setSaveStatus('saving', 'Loading...');
     const response = await window.API.get('/resume/builder', { auth: true });
@@ -1435,12 +1553,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.warn('Could not load existing draft from API. Using local cache fallback:', err);
     try {
-      const cached = localStorage.getItem('careerpath_resume_draft');
+      const storageKey = getStorageKey();
+      const cached = localStorage.getItem(storageKey);
       if (cached) {
-        resumeData = JSON.parse(cached);
-        populateFormFields();
-        renderResumePreview();
-        setSaveStatus('saved', 'Loaded locally');
+        const parsed = JSON.parse(cached);
+        // Avoid legacy fake data in cache
+        if (!parsed.education?.[0]?.college?.includes('Demopo')) {
+          resumeData = parsed;
+          populateFormFields();
+          renderResumePreview();
+          setSaveStatus('saved', 'Loaded locally');
+        }
       }
     } catch (parseErr) {}
   }

@@ -139,96 +139,127 @@ Objective: Aspiring ${targetCareer}
 };
 
 /**
- * Helper to build an initial student resume from user profile data
+ * Helper to build an empty/blank resume for a student.
+ * Contains only the student's real registered info (name, email, and real assessment profile education/skills if any).
+ * Never fabricates fake colleges, dummy GPAs, fake projects, or mock internships.
  */
-function buildInitialResume(user, targetCareer = 'Full-Stack Developer') {
-  const verifiedSkills = (user.skills || []).map((s) => ({
+function buildEmptyResume(user) {
+  const verifiedSkills = (user?.skills || []).map((s) => ({
     name: s.displayName || s.name,
     level: s.proficiency || 'Intermediate',
     isVerified: Boolean(s.isQuizVerified || s.isCodeVerified),
     category: s.category || 'Technical',
   }));
 
-  const gitHubUrl = user.githubProfile
+  const gitHubUrl = (user?.githubProfile && user.githubProfile.login)
     ? `https://github.com/${user.githubProfile.login}`
     : '';
 
-  // Transform GitHub study repositories into structured project items
-  let projects = (user.githubRepos || []).slice(0, 3).map((r) => ({
-    title: r.name ? r.name.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Software Project',
-    description: r.description || `Built a full-stack ${r.language || 'web'} application featuring responsive design and state persistence.`,
-    techStack: Array.isArray(r.detectedSkills) && r.detectedSkills.length > 0
-      ? r.detectedSkills
-      : [r.language || 'JavaScript', 'HTML5', 'CSS3'],
+  // Only include real repositories if user connected their GitHub
+  const realProjects = (user?.githubRepos || []).slice(0, 3).map((r) => ({
+    title: r.name ? r.name.replace(/[-_]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()) : 'Project',
+    description: r.description || '',
+    techStack: Array.isArray(r.detectedSkills) && r.detectedSkills.length > 0 ? r.detectedSkills : [r.language || 'Code'],
     githubUrl: r.htmlUrl || gitHubUrl,
     liveUrl: '',
     isVerified: Boolean(r.stars > 0 || (r.detectedSkills && r.detectedSkills.length > 0)),
   }));
 
-  if (projects.length === 0) {
-    projects = [
-      {
-        title: 'CareerPath AI Web Platform',
-        description: 'Architected responsive student career guidance system with dynamic roadmap tracking and skill quiz verification.',
-        techStack: ['JavaScript', 'HTML5', 'Bootstrap 5', 'Node.js', 'MongoDB'],
-        githubUrl: gitHubUrl,
-        liveUrl: '',
-        isVerified: true,
-      },
-      {
-        title: 'Cloud Task Automation Service',
-        description: 'Developed RESTful API endpoints for authenticated task management with database indexing and input validation.',
-        techStack: ['Node.js', 'Express', 'MongoDB', 'JWT Auth'],
-        githubUrl: gitHubUrl,
-        liveUrl: '',
-        isVerified: false,
-      },
-    ];
-  }
-
-  const topSkillNames = verifiedSkills.slice(0, 4).map(s => s.name).join(', ') || 'JavaScript, Web Development, and Problem Solving';
+  // Only include education if the user actually provided it during registration/assessment
+  const realEducation = user?.education?.course
+    ? [
+        {
+          degree: user.education.course,
+          college: user.education.college || '',
+          university: user.education.branch || '',
+          startYear: '',
+          gradYear: user.education.year || '',
+          score: '',
+        },
+      ]
+    : [];
 
   return {
     template: 'student',
     personalInfo: {
-      fullName: user.name || 'Student Candidate',
-      headline: targetCareer ? `Aspiring ${targetCareer}` : 'Aspiring Software Engineer',
-      email: user.email || '',
+      fullName: user?.name || '',
+      headline: '',
+      email: user?.email || '',
       phone: '',
-      location: 'India',
+      location: '',
       linkedIn: '',
       gitHub: gitHubUrl,
       portfolio: '',
     },
-    summary: `Motivated and detail-oriented student pursuing a career as a ${targetCareer}. Possesses a solid foundation in ${topSkillNames} with hands-on experience developing full-stack web applications and collaborating on version-controlled codebases.`,
+    summary: '',
+    education: realEducation,
+    skills: verifiedSkills,
+    projects: realProjects,
+    experience: [],
+    certifications: [],
+    additional: {
+      languages: [],
+      achievements: [],
+      hobbies: [],
+    },
+    updatedAt: new Date(),
+  };
+}
+
+/**
+ * Illustrative sample resume helper — only loaded when explicitly requested by user.
+ */
+function buildSampleResume(user, targetCareer = 'Full-Stack Developer') {
+  const gitHubUrl = (user?.githubProfile && user.githubProfile.login) ? `https://github.com/${user.githubProfile.login}` : '';
+  return {
+    template: 'student',
+    personalInfo: {
+      fullName: user?.name || 'Student Candidate',
+      headline: `Aspiring ${targetCareer}`,
+      email: user?.email || 'student@example.com',
+      phone: '+91 98765 43210',
+      location: 'India',
+      linkedIn: 'https://linkedin.com/in/username',
+      gitHub: gitHubUrl || 'https://github.com/username',
+      portfolio: '',
+    },
+    summary: `Motivated student pursuing a career in ${targetCareer}. Solid foundation in modern software engineering principles with hands-on project experience.`,
     education: [
       {
-        degree: user.education?.course || 'Bachelor of Computer Applications (BCA)',
-        college: user.education?.college || 'Demopo Institute of Technology',
-        university: user.education?.branch || 'Computer Science',
+        degree: user?.education?.course || 'Bachelor of Technology (B.Tech)',
+        college: user?.education?.college || 'University Engineering College',
+        university: user?.education?.branch || 'Computer Science',
         startYear: '2023',
-        gradYear: user.education?.year ? `Expected ${user.education.year}` : '2026',
+        gradYear: user?.education?.year ? `Expected ${user.education.year}` : '2026',
         score: '8.5 / 10 CGPA',
       },
     ],
-    skills: verifiedSkills.length > 0 ? verifiedSkills : [
+    skills: [
       { name: 'JavaScript', level: 'Intermediate', isVerified: true, category: 'Technical' },
       { name: 'HTML5 & CSS3', level: 'Advanced', isVerified: true, category: 'Technical' },
       { name: 'Node.js & Express', level: 'Intermediate', isVerified: false, category: 'Technical' },
       { name: 'MongoDB', level: 'Beginner', isVerified: false, category: 'Technical' },
       { name: 'Git & GitHub', level: 'Intermediate', isVerified: true, category: 'Tools' },
     ],
-    projects,
+    projects: [
+      {
+        title: 'Full-Stack Web Application',
+        description: 'Architected responsive web application featuring RESTful API integration, authenticated routes, and clean UI.',
+        techStack: ['JavaScript', 'HTML5', 'Node.js', 'MongoDB'],
+        githubUrl: gitHubUrl,
+        liveUrl: '',
+        isVerified: true,
+      },
+    ],
     experience: [
       {
-        company: 'Academic & Hackathon Projects',
-        role: 'Full-Stack Developer Intern / Lead',
+        company: 'Academic Projects & Internships',
+        role: 'Software Development Contributor',
         type: 'Academic',
         duration: '2024 - Present',
         responsibilities: [
           'Engineered responsive, accessible user interfaces following mobile-first design principles.',
-          'Integrated secure RESTful APIs and connected NoSQL database models with input sanitation.',
-          'Maintained version control workflows, branch protections, and continuous automated testing.',
+          'Integrated secure RESTful APIs with input validation and database indexing.',
         ],
       },
     ],
@@ -241,12 +272,9 @@ function buildInitialResume(user, targetCareer = 'Full-Stack Developer') {
       },
     ],
     additional: {
-      languages: ['English (Professional)', 'Hindi (Native)'],
-      achievements: [
-        'Selected for Hack2Ignite 2026 Hackathon Finalist Stage',
-        'Achieved verified skill badges across core computer science competencies',
-      ],
-      hobbies: ['Competitive Coding', 'Open Source Contribution', 'Tech Blogging'],
+      languages: ['English (Professional)'],
+      achievements: ['Achieved verified skill badges across core technical competencies'],
+      hobbies: ['Competitive Programming', 'Tech Blogging'],
     },
     updatedAt: new Date(),
   };
@@ -254,7 +282,7 @@ function buildInitialResume(user, targetCareer = 'Full-Stack Developer') {
 
 /**
  * GET /api/resume/builder
- * Returns existing built resume draft, or auto-populates from user profile + GitHub.
+ * Returns existing built resume draft, or initializes a clean empty resume for new accounts.
  */
 exports.getBuiltResume = async (req, res, next) => {
   try {
@@ -268,16 +296,18 @@ exports.getBuiltResume = async (req, res, next) => {
 
     let resume = user.builtResume;
 
-    // Check if resume draft already exists and has substance
-    const hasData = resume && (
-      (resume.personalInfo && resume.personalInfo.fullName) ||
-      (resume.skills && resume.skills.length > 0) ||
-      (resume.education && resume.education.length > 0)
+    // Detect if this account has the legacy fabricated placeholder draft (Demopo Institute of Technology)
+    const isLegacyFakeResume = resume && (
+      resume.education?.[0]?.college === 'Demopo Institute of Technology' ||
+      resume.projects?.[0]?.title === 'CareerPath AI Web Platform' ||
+      resume.experience?.[0]?.company === 'Academic & Hackathon Projects'
     );
 
-    if (!hasData) {
-      // Auto-populate fresh resume from user profile data
-      resume = buildInitialResume(user, targetCareer);
+    // If no draft exists, or if personalInfo has no fullName, or if it holds legacy fake dummy data, initialize with a clean empty resume
+    const needsInit = !resume || !resume.personalInfo || !resume.personalInfo.fullName || isLegacyFakeResume;
+
+    if (needsInit) {
+      resume = buildEmptyResume(user);
       user.builtResume = resume;
       await user.save();
     }
@@ -290,6 +320,59 @@ exports.getBuiltResume = async (req, res, next) => {
         verifiedSkillsCount: (user.skills || []).filter(s => s.isQuizVerified || s.isCodeVerified).length,
         githubConnected: Boolean(user.githubProfile),
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * POST /api/resume/builder/clear
+ * Resets the student's resume draft to a completely clean, empty canvas.
+ */
+exports.resetBuiltResume = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const emptyResume = buildEmptyResume(user);
+    user.builtResume = emptyResume;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Resume reset to clean empty canvas.',
+      data: emptyResume,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * POST /api/resume/builder/sample
+ * Loads a sample template for reference/inspiration only when explicitly requested.
+ */
+exports.loadSampleResume = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const activeRoadmap = await Roadmap.findOne({ user: user._id, status: 'active' }).populate('career');
+    const targetCareer = activeRoadmap?.career?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer';
+
+    const sample = buildSampleResume(user, targetCareer);
+    user.builtResume = sample;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Sample template loaded for reference.',
+      data: sample,
     });
   } catch (error) {
     next(error);

@@ -130,7 +130,11 @@
         </div>
 
         <!-- Global Action Buttons -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1 px-2.5 py-1" id="btnClearResume" title="Clear all fields and start fresh with an empty resume">
+            <i class="bi bi-trash3"></i>
+            <span>Start Blank</span>
+          </button>
           <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 px-3 py-1" id="btnJobMatchModal" title="Compare your resume against any Job Description">
             <i class="bi bi-fire text-warning"></i>
             <span class="fw-semibold">ATS Job Match</span>
@@ -168,16 +172,22 @@
           <div class="p-3 mb-3 rounded-3 border border-primary-subtle bg-light d-flex flex-wrap align-items-center justify-content-between gap-2">
             <div>
               <div class="fw-bold text-dark small d-flex align-items-center gap-2">
-                <i class="bi bi-lightning-charge-fill text-primary"></i> Instant Profile Synchronization
+                <i class="bi bi-magic text-primary"></i> Canvas Controls &amp; Profile Sync
               </div>
-              <div class="text-secondary" style="font-size: 0.78rem;">Pull verified skills, education, and connected GitHub projects.</div>
+              <div class="text-secondary" style="font-size: 0.78rem;">Build empty, sync real verified profile data, or load an example.</div>
             </div>
-            <div class="d-flex gap-2">
-              <button type="button" class="btn-quick-import" id="btnAutoSyncProfile" title="Sync profile data">
-                <i class="bi bi-arrow-repeat text-primary"></i> Auto-Fill
+            <div class="d-flex gap-2 flex-wrap">
+              <button type="button" class="btn-quick-import text-danger border-danger-subtle" id="btnClearResumeQuick" title="Reset to completely blank resume">
+                <i class="bi bi-trash3 text-danger"></i> Blank Canvas
+              </button>
+              <button type="button" class="btn-quick-import" id="btnAutoSyncProfile" title="Sync verified skills & education from your profile">
+                <i class="bi bi-arrow-repeat text-primary"></i> Auto-Fill Profile
               </button>
               <button type="button" class="btn-quick-import" id="btnImportGithubRepos" title="Import GitHub repositories">
                 <i class="bi bi-github text-dark"></i> GitHub Repos
+              </button>
+              <button type="button" class="btn-quick-import text-secondary" id="btnLoadSampleTemplate" title="Load sample student template for inspiration">
+                <i class="bi bi-file-earmark-text text-warning"></i> Sample Template
               </button>
             </div>
           </div>
