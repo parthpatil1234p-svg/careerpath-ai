@@ -358,13 +358,13 @@ const Auth = {
   /**
    * Binds smart role-aware destination to brand logos across all pages.
    * - Recruiters stay inside / return to recruiter-dashboard.html
-   * - Students return to dashboard.html
-   * - Guests / logged-out users navigate to index.html
+   * - Students and guests: brand logo always links back to the main landing page (index.html)
    */
   bindSmartLogo() {
     const isAuthed = this.isAuthenticated();
     const isRecruiter = this.isRecruiter();
-    const onRecruiterPage = window.location.pathname.includes('recruiter-');
+    const currentPath = (window.location.pathname || '').toLowerCase();
+    const onRecruiterPage = currentPath.includes('recruiter-');
     const brandElements = document.querySelectorAll('.navbar-brand');
 
     brandElements.forEach((brand) => {
@@ -382,9 +382,6 @@ const Auth = {
           badge.innerHTML = '<span class="pulse-dot-green d-inline-block me-1" style="width: 5px; height: 5px; border-radius: 50%; background: #10B981;"></span> RECRUITER';
           brand.appendChild(badge);
         }
-      } else if (isAuthed) {
-        brand.setAttribute('href', 'dashboard.html');
-        brand.setAttribute('title', 'Student Dashboard Home');
       } else {
         brand.setAttribute('href', 'index.html');
         brand.setAttribute('title', 'CareerPath AI Home');
@@ -393,7 +390,7 @@ const Auth = {
   },
 
   /**
-   * Initializes navbar user state (displays username or login/signup buttons)
+   * Initializes navbar user state (displays username, Home navigation button, or login/signup buttons)
    */
   initNav() {
     this.bindSmartLogo();
@@ -405,6 +402,8 @@ const Auth = {
       const isRecruiter = this.isRecruiter();
       const isAdmin = this.isAdmin();
       const isVerified = this.isSkillVerified();
+      const currentPath = (window.location.pathname || '').toLowerCase();
+      const isHomePage = currentPath.endsWith('/index.html') || currentPath.endsWith('/') || currentPath === '' || currentPath.endsWith('\\index.html');
 
       const name = user.name || (isRecruiter ? 'Recruiter' : 'Student');
       const initials = name
@@ -447,8 +446,30 @@ const Auth = {
         `;
       }
 
+      // Contextual navigation button: return to Home or enter Dashboard
+      let contextActionHtml = '';
+      if (!isRecruiter) {
+        if (!isHomePage) {
+          // Inside Student Portal -> Provide direct button to return to Home Page
+          contextActionHtml = `
+            <a href="index.html" class="nav-role-chip nav-home-chip me-1" title="Return to CareerPath AI Home Landing Page">
+              <i class="bi bi-house-door-fill text-primary"></i>
+              <span>Home</span>
+            </a>
+          `;
+        } else {
+          // On Home Page -> Provide direct button to open Student Dashboard
+          contextActionHtml = `
+            <a href="dashboard.html" class="btn cp-btn-primary btn-sm px-3 text-nowrap me-1" title="Open Your Student Dashboard">
+              <i class="bi bi-speedometer2 me-1"></i> Dashboard
+            </a>
+          `;
+        }
+      }
+
       authActions.innerHTML = `
         <div class="nav-profile-group d-flex align-items-center gap-1.5 text-nowrap">
+          ${contextActionHtml}
           ${roleChip}
           <a href="${targetDashboardUrl}"
              class="nav-user-pill ${isRecruiter ? 'nav-user-pill-recruiter' : ''} d-none d-md-inline-flex align-items-center gap-2"
@@ -471,6 +492,11 @@ const Auth = {
           <div class="d-flex flex-column gap-2 w-100">
             <div class="d-flex justify-content-center">${roleChip}</div>
             <div class="d-flex gap-2">
+              ${!isRecruiter && !isHomePage ? `
+                <a class="btn btn-outline-secondary btn-sm flex-grow-1 text-center" href="index.html" title="Return to Home Landing Page">
+                  <i class="bi bi-house-door-fill me-1 text-primary"></i> Home
+                </a>
+              ` : ''}
               <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="${mobileDashUrl}">
                 <i class="bi ${isRecruiter ? 'bi-building' : 'bi-speedometer2'} me-1"></i> ${mobileDashLabel}
               </a>
@@ -480,6 +506,19 @@ const Auth = {
             </div>
           </div>
         `;
+      }
+
+      // Ensure Home link is prepended to mobile drawer links when inside the student portal
+      const mobileLinks = document.querySelector('#notchMobileMenu .notch-mobile-links');
+      if (mobileLinks && !isRecruiter && !isHomePage && !mobileLinks.querySelector('.notch-mobile-home-item')) {
+        const homeLi = document.createElement('li');
+        homeLi.className = 'notch-mobile-home-item';
+        homeLi.innerHTML = `
+          <a href="index.html" class="d-flex align-items-center gap-2 text-primary fw-semibold py-1">
+            <i class="bi bi-house-door-fill text-primary"></i> Home Page
+          </a>
+        `;
+        mobileLinks.insertBefore(homeLi, mobileLinks.firstChild);
       }
     }
   },

@@ -440,6 +440,23 @@ main.container {
   border-color: #FCD34D;
 }
 
+.nav-home-chip {
+  background: #F8FAFC;
+  color: #334155;
+  border: 1px solid #CBD5E1;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-home-chip:hover {
+  background: #EEF2FF;
+  color: #4338CA;
+  border-color: #A5B4FC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
 /* Modern User Capsule with Gradient Initials Avatar */
 .nav-user-pill,
 .nav-user-capsule {
