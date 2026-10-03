@@ -197,10 +197,24 @@
 }
 
 /* Career Paths Grid */
+.track-block-header .d-flex {
+  flex-wrap: wrap !important;
+}
+
 .career-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
+}
+
+@media (max-width: 575.98px) {
+  .career-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .career-card {
+    padding: 1.25rem;
+  }
 }
 
 .career-card {
@@ -391,15 +405,6 @@
   overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .auth-split-grid {
-    grid-template-columns: 1fr;
-  }
-  .auth-orientation-panel {
-    display: none;
-  }
-}
-
 .auth-orientation-panel {
   background: linear-gradient(135deg, var(--color-primary-800) 0%, var(--color-indigo-900) 100%);
   color: #FFFFFF;
@@ -408,6 +413,15 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
+}
+
+@media (max-width: 768px) {
+  .auth-split-grid {
+    grid-template-columns: 1fr;
+  }
+  .auth-orientation-panel {
+    display: none !important;
+  }
 }
 
 .auth-panel-heading {
@@ -455,15 +469,27 @@
   }
   .auth-split-grid {
     border-radius: var(--radius-md) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
   .auth-form-card {
     padding: 1.25rem 0.85rem !important;
+    max-width: 100% !important;
   }
   .auth-form-title {
     font-size: 1.45rem !important;
   }
   .auth-form-header {
     margin-bottom: 1.15rem !important;
+  }
+  #btnDashEnrollSecondTrack {
+    width: 100%;
+    text-align: center;
+    margin-top: 0.35rem;
+  }
+  #dashboardTrackSwitcherContainer .d-flex {
+    flex-wrap: wrap !important;
   }
 }
 

@@ -230,7 +230,27 @@
         border-bottom: 1px solid #E2E8F0;
       }
 
+      /* Applicant Card in Talent Radar Modal */
+      .applicant-card {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        padding: 1.25rem;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+      .applicant-card:hover {
+        border-color: #CBD5E1;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      }
+
       @media (max-width: 575.98px) {
+        .applicant-card {
+          padding: 1rem !important;
+        }
+        #btnRecruiterLogout {
+          display: none !important;
+        }
         .recruiter-portal-page .navbar-brand .badge {
           display: none !important;
         }
@@ -310,7 +330,7 @@
               <span class="d-sm-none">Post</span>
             </button>
             <button
-              class="btn btn-outline-danger btn-sm px-2.5 py-1"
+              class="btn btn-outline-danger btn-sm px-2.5 py-1 d-none d-sm-inline-flex align-items-center"
               id="btnRecruiterLogout"
               title="Sign Out"
             >

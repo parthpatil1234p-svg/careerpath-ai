@@ -30,18 +30,95 @@
 
 ### Slide 2: IDEA TITLE & Proposed Solution
 * **Idea Title:** CareerPath AI — Two-Factor Skill Verified Career GPS & Recruiter Talent Radar Platform
+
 * **Detailed Explanation of Proposed Solution:**
-  * Multimodal student profiling assessing academics, domain interests, and 45+ technical skills to produce deterministic, transparent career roadmaps.
+
+**🔵 SOLUTION ORBIT — CareerPath AI Core Architecture:**
+```
+                              ╭──────────────╮
+                         ╭────│  🎯 STUDENT   │────╮
+                        │    │   PROFILING    │    │
+                        │    ╰───────┬────────╯    │
+                        │            │             │
+               ╭────────┴───╮       │       ╭─────┴────────╮
+               │ 🤖 AI CAREER│       │       │ 🔒 TWO-FACTOR │
+               │   MENTOR    │       │       │ VERIFICATION  │
+               │  (Groq LPU) │       │       │ GitHub + Quiz │
+               ╰────────┬───╯       │       ╰─────┬────────╯
+                        │    ╭──────┴───────╮     │
+                        │    │  💎 CAREER    │     │
+                        │    │  PATH  AI     │     │
+                        │    │   CORE HUB    │     │
+                        │    ╰──────┬───────╯     │
+               ╭────────┴───╮       │       ╭─────┴────────╮
+               │ 💼 RECRUITER│       │       │ 📊 60/25/15   │
+               │   TALENT    │       │       │  MATH ENGINE  │
+               │    RADAR    │       │       │  (Zero Bias)  │
+               ╰────────┬───╯       │       ╰─────┬────────╯
+                        │    ╭──────┴───────╮     │
+                        ╰────│ 🗺️ ADAPTIVE  │─────╯
+                             │   ROADMAP    │
+                             ╰──────────────╯
+```
+
   * **Explainable 60/25/15 Mathematical Match Engine:**
     $$\text{Score} = (0.60 \times S_{\text{norm}}) + (0.25 \times I_{\text{norm}}) + (0.15 \times A_{\text{norm}})$$
     With 4-Tier confidence multipliers ($C_i$): Self-Rated (0.70x), Dynamic Quiz (0.85x), GitHub Code AST (1.00x), and AI Mock Voice Interview (1.05x).
+
+**🟣 SCORING ENGINE — 60/25/15 Mathematical Ring:**
+```
+                        ╭───────────────────────╮
+                   ╭────│    CAREER FIT SCORE    │────╮
+                   │    │ = 0.60×S + 0.25×I +   │    │
+                   │    │       0.15×A           │    │
+                   │    ╰───────────┬───────────╯    │
+                   │                │                 │
+          ╭────────┴────────╮       │       ╭────────┴────────╮
+          │  🔵 60% SKILL    │       │       │  🟢 15% ACADEMIC │
+          │     DEPTH        │       │       │      FIT         │
+          │ S = Σ(Wᵢ×Lᵢ×Cᵢ) │       │       │ Degree, Branch   │
+          │ Self  → 0.70x    │       │       │ & Semester Match │
+          │ Quiz  → 0.85x    │       │       │ Explicit Cutoff  │
+          │ Code  → 1.00x    │       │       │ Gates Applied    │
+          │ Voice → 1.05x    │       │       │                  │
+          ╰────────┬────────╯       │       ╰────────┬────────╯
+                   │       ╭────────┴────────╮       │
+                   ╰───────│  🟡 25% INTEREST │───────╯
+                           │     OVERLAP      │
+                           │ Jaccard Index:   │
+                           │ |I∩D| / |I∪D|   │
+                           ╰──────────────────╯
+```
+
   * **Two-Factor Skill Verification (The Credential Moat):**
     1. Factor 1 (GitHub Code AST Telemetry): Scans public repositories, language distribution, and commit patterns for `[✓ Code Verified]` badges.
     2. Factor 2 (Dynamic AI Quiz): Real-time 5-question micro-quiz generated on Groq LPU (Llama 3.3 70B, <300ms) for `[✓ Quiz Verified]` badges.
   * **Dual Concurrent Roadmaps & Course Synergy:** Supports up to 2 parallel tracks ($\le 2$) locked via MongoDB compound partial unique index `{ user: 1, career: 1 }` with a 7-day rate-limited abandonment guard to eliminate tutorial-hopping.
   * **AI Video Learning Dedication & Anti-Scrubbing Guard:** Enforces 1.5x speed ceiling, forward scrub snapback, tab switch auto-pause, and 30+ char reflection synthesis before marking tasks complete.
+
 * **How It Addresses the Problem:**
-  * **Tri-Color Skill Gap Diagnosis:** Categorizes every role skill into 🟢 Matched (verified & ready), 🟡 Upgrade (needs practice), and 🔴 Missing (critical roadblock).
+
+**🔴🟡🟢 TRI-COLOR SKILL GAP RING:**
+```
+                         ╭─────────────────╮
+                    ╭────│  📋 STUDENT'S    │────╮
+                    │    │  CLAIMED SKILLS  │    │
+                    │    ╰────────┬────────╯    │
+                    │             │              │
+          ╭─────────┴──╮         │         ╭────┴─────────╮
+          │ 🔴 MISSING  │         │         │ 🟢 MATCHED   │
+          │ Docker, K8s │         ▼         │ HTML, CSS, JS│
+          │ ► Converted │  ╭────────────╮  │ ► Verified   │
+          │ to Roadmap  │  │  TWO-FACTOR │  │   Badges ✓   │
+          │ Milestones  │  │ VERIFICATION│  │              │
+          ╰─────────┬──╯  ╰────────────╯   ╰────┬─────────╯
+                    │    ╭───────┴───────╮      │
+                    ╰────│ 🟡 UPGRADE    │──────╯
+                         │ React, Git    │
+                         │ ► Practice    │
+                         ╰───────────────╯
+```
+
   * **Stops Resume Inflation:** Canonical Evidence Ledger locks resume upload without verifiable proof-of-work.
   * **Ends Placement Blindspots:** Gives students clear 2nd/3rd year skill gap awareness before campus placement rejections.
 * **Innovation & Uniqueness:**
@@ -50,59 +127,181 @@
 ---
 
 ### Slide 3: TECHNICAL APPROACH
+
 * **Technologies Used:**
-  * **Frontend:** Vanilla JS (ES6+), Semantic HTML5, CSS Grid/Flexbox, Three.js 3D WebGL, 2D SVG circular gauge (Vercel Global Edge CDN).
-  * **Backend & Security:** Node.js, Express.js REST API, Helmet security, Rate Limiting, Stateless JWT, Strict Portal Isolation RBAC (`requireStudent`, `requireRecruiter`, 403 Guards) on Render Cloud.
-  * **Database & Storage:** MongoDB Atlas Cloud Cluster (Mongoose ODM) with Partial Unique Indexes, Cloudinary API, in-memory `pdf-parse`.
-  * **AI & Telemetry:** Groq Cloud LPU (Llama 3.3 70B, <300ms), Gemini 2.5 Flash Failover, Adzuna Developer Jobs API, DNS/MX corporate email probing, YouTube IFrame API.
+
+**🔷 TECH STACK ORBITAL RING:**
+```
+                            ╭──────────────────╮
+                       ╭────│  🌐 FRONTEND      │────╮
+                       │    │ Vanilla JS (ES6+) │    │
+                       │    │ Three.js 3D WebGL │    │
+                       │    │ Vercel Edge CDN   │    │
+                       │    │ FCP <800ms ~45KB  │    │
+                       │    ╰────────┬─────────╯    │
+                       │             │               │
+             ╭─────────┴───╮         │         ╭─────┴─────────╮
+             │ 🤖 AI & APIs │         │         │ ⚡ BACKEND     │
+             │ Groq LPU     │         ▼         │ Node.js       │
+             │ Llama 3.3    │  ╭────────────╮   │ Express.js    │
+             │ <300ms       │  │ 💎 CAREER   │   │ Helmet + JWT  │
+             │ Gemini Flash │  │  PATH AI    │   │ Rate-Limit    │
+             │ Backup       │  │  RUNTIME    │   │ RBAC Guards   │
+             │ Adzuna API   │  ╰────────────╯   │ Render Cloud  │
+             ╰─────────┬───╯         │         ╰─────┬─────────╯
+                       │    ╭────────┴─────────╮     │
+                       ╰────│  🗄️ DATABASE      │─────╯
+                            │ MongoDB Atlas    │
+                            │ Partial Unique   │
+                            │ Index Invariants │
+                            │ Cloudinary CDN   │
+                            ╰──────────────────╯
+```
+
 * **Methodology & Process for Implementation:**
-  * Process Pipeline: Profiling (Academics/Skills/Interests) ──► Two-Factor Verification ──► 60/25/15 Match Engine ──► Tri-Color Gap Matrix ──► Dual Synergized Roadmaps (Anti-Scrub Video Chamber) ──► AI Resume ATS Parser ──► AI Voice Mock Chamber ──► Recruiter Talent Radar & Job Readiness Index.
-  * **Recruiter Corporate Verification Pipeline:** 60+ webmail provider blacklist, DNS MX resolution, live HTTP website probing, and AI trust scoring.
-  * **Role-Smart Navigation & Portal Isolation:** Isolated student and recruiter catalogs with auto-redirect traps. Brand logo dynamically routes recruiters to `/recruiter-dashboard.html` and students to `/dashboard.html` (`?view=public` bypass).
+
+**🟣 CIRCULAR PIPELINE — 8-Stage System Orbit:**
+```
+                                 ① PROFILE
+                              ╭────────────╮
+                         ╭────│ Academics   │────╮
+                         │    │ 76+ Skills  │    │
+                         │    ╰─────┬──────╯    │
+                    ⑧ JOB │         │            │ ② VERIFY
+                   READY  │         │            │
+              ╭───────────┴╮        │        ╭───┴──────────╮
+              │ Readiness   │        │        │ GitHub AST   │
+              │ Index 0-100 │        │        │ + Groq Quiz  │
+              ╰───────┬────╯        │        ╰───┬──────────╯
+                      │      ╭──────┴──────╮     │
+                      │      │  💎 CAREER   │     │
+                      │      │   PATH AI    │     │
+                      │      ╰──────┬──────╯     │
+              ╭───────┴────╮        │        ╭───┴──────────╮
+              │ ⑦ RECRUITER │        │        │ ③ 60/25/15   │
+              │   RADAR     │        │        │ MATCH <50ms  │
+              ╰───────┬────╯        │        ╰───┬──────────╯
+                      │      ╭──────┴──────╮     │
+                 ⑥ AI │      │             │     │ ④ GAP
+                RESUME├──────│             │─────┤ MATRIX
+              ╭───────┴────╮ ╰─────────────╯ ╭───┴──────────╮
+              │ Magic-Byte  │                 │ 🟢🟡🔴 Tri-  │
+              │ PDF Parser  │                 │ Color Skills │
+              ╰───────┬────╯                 ╰───┬──────────╯
+                      │    ╭───────────────╮     │
+                      ╰────│ ⑤ ADAPTIVE    │─────╯
+                           │  ROADMAP +    │
+                           │ Anti-Scrub    │
+                           ╰───────────────╯
+```
+
+  * **Recruiter Corporate Verification Pipeline:** 60+ webmail blacklist, DNS MX resolution, HTTP probe, AI trust scoring.
+  * **Strict Portal Isolation RBAC:** Student vs Recruiter catalogs with auto-redirect traps. 
 * **Working Prototype & Automated Test Proof:**
   * 100% production-ready and live at `https://careerpath-ai-jade.vercel.app`.
-  * Automated Unit & Integration Tests: **26/26 Portal Isolation RBAC tests passing (100%)**; **6/6 Recruiter Verification E2E tests passing (100%)**.
+  * Automated: **26/26 Portal Isolation RBAC tests passing (100%)**; **6/6 Recruiter Verification E2E tests passing (100%)**.
 
 ---
 
 ### Slide 4: FEASIBILITY AND VIABILITY
-* **Analysis of Feasibility:**
-  * **Technical Feasibility:** Decoupled lightweight architecture runs on budget smartphones and college lab PCs without client installation; sub-50ms math execution; sub-300ms Groq LPU latency; 99.9% uptime.
-  * **Economic & Operational Viability:** Cloud infrastructure operates at **<$15/month** supporting 10,000+ active students; 100% Free for Students; monetized via College Placement Cell (TPO) SaaS licenses (₹1.5L–₹3.5L/year) and Corporate Recruiter Talent Passes (₹24,999/month).
-  * **Anti-Fraud Security:** Binary magic-byte inspection (`%PDF`, `PK..` DOCX) stops spoofed file uploads; Canonical Evidence Ledger prevents unearned credentials.
+
+**🟢 FEASIBILITY WHEEL — 3 Pillars:**
+```
+                           ╭──────────────────╮
+                      ╭────│  🏗️ TECHNICAL     │────╮
+                      │    │ • <50ms Math      │    │
+                      │    │ • <300ms Groq LPU │    │
+                      │    │ • <800ms FCP      │    │
+                      │    │ • 99.9% Uptime    │    │
+                      │    ╰────────┬─────────╯    │
+                      │             │               │
+            ╭─────────┴───╮         │         ╭─────┴──────────╮
+            │ 🔒 SECURITY  │         ▼         │ 💰 ECONOMIC    │
+            │ Magic-Byte   │  ╭────────────╮   │ <$15/month     │
+            │ Binary Check │  │ ✅ FULLY   │   │ 100% Free      │
+            │ HMAC Tamper  │  │ FEASIBLE   │   │ for Students   │
+            │ Proof Certs  │  ╰────────────╯   │ TPO SaaS:      │
+            │ Evidence     │         │         │ ₹1.5L–₹3.5L/yr│
+            │ Ledger       │         │         │ Recruiter Pass:│
+            ╰─────────┬───╯         │         │ ₹24,999/month  │
+                      ╰─────────────┴─────────╰────────────────╯
+```
+
 * **Potential Challenges, Risks & Mitigation Strategies:**
-  * *Challenge 1 (External AI / API Outages):* Multi-Tier Failover: Groq LPU ──► Gemini 2.5 Flash ──► 860+ Line Curated Offline Knowledge Bank.
-  * *Challenge 2 (Low-Spec Tier-3 Hardware):* Adaptive Rendering Engine: Auto-detects WebGL support and instantly falls back to 2D SVG circular gauges.
-  * *Challenge 3 (AI Hallucination in Guidance):* Deterministic Math Anchor: Career match scoring is computed in-memory with deterministic math (0% generative drift).
-  * *Challenge 4 (Fake Recruiter Job Postings):* 4-Step Validation: Webmail blacklist, DNS MX record check, live HTTP corporate probing, and corporate domain OTP verification.
+  * *Challenge 1 (External AI / API Outages):* 3-Tier Failover: Groq LPU ──► Gemini 2.5 Flash ──► 860+ Line Offline Bank.
+  * *Challenge 2 (Low-Spec Tier-3 Hardware):* Adaptive Rendering: WebGL auto-fallback to 2D SVG gauges.
+  * *Challenge 3 (AI Hallucination in Guidance):* Deterministic Math Anchor (0% generative drift).
+  * *Challenge 4 (Fake Recruiter Job Postings):* 4-Step Validation: Webmail blacklist → DNS MX → HTTP probe → Domain OTP.
 
 ---
 
 ### Slide 5: IMPACT AND BENEFITS
-* **Potential Impact on Target Audience:**
-  * Targets 1.5M+ Indian engineering, computer science, and diploma students (especially Tier-2/3 institutions).
-  * **Holistic 0–100% Job Readiness Index:**
-    $$\text{Readiness Index} = (35\% \times \text{VerifiedSkills}) + (30\% \times \text{RoadmapProgress}) + (15\% \times \text{ResumeATS}) + (20\% \times \text{MockInterview})$$
-  * **4-Rule Industry Certification Rubric:**
-    $$\text{JobReady} = (\text{Score} \ge 70\%) \land (\text{VerifiedSkills} \ge 4) \land (\text{Progress} \ge 80\%) \land (\text{ExpiredSkills} = 0)$$
-    Unlocks verifiable digital credential with tamper-proof validation URL: `/verify-cert.html?id=...`.
-  * **Quantified Key Metrics:**
-    * 🎯 **85%** Reduction in Career Confusion in <5 minutes.
-    * ⚡ **3x** Higher Milestone Completion vs fragmented tutorial playlists.
-    * 💼 **60%** Cut in Corporate Recruiter Candidate Screening Cost.
-* **Benefits of the Solution:**
-  * **Social:** Democratizes career guidance across 65%+ Indian colleges lacking counselors; reduces placement depression and career mismatch dropouts.
-  * **Economic:** Aligns student skills with live hiring demand, boosting entry-level CTC from ₹3.5 LPA to ₹8–₹14+ LPA; connects recruiters to pre-screened talent.
-  * **Environmental:** 100% digital, paperless roadmap tracking with 1-click clean PDF export; serverless, energy-efficient cloud footprint.
+
+**🎯 IMPACT DASHBOARD — Key Metrics:**
+```
+    ╭──────────────────╮    ╭──────────────────╮    ╭──────────────────╮
+    │    🎯  8 5 %     │    │    ⚡  3  x      │    │    💼  6 0 %     │
+    │ Career Confusion │    │ Milestone Rate   │    │ Screening Cost  │
+    │ Reduction <5min  │    │ vs Tutorial Chaos│    │ Cut for Corps   │
+    ╰──────────────────╯    ╰──────────────────╯    ╰──────────────────╯
+```
+
+**🏆 JOB READY CERTIFICATION — 4-Rule Wheel:**
+```
+                           ╭──────────────────╮
+                      ╭────│  🏆 JOB READY     │────╮
+                      │    │  CERTIFICATE       │    │
+                      │    │  (ALL 4 Required)  │    │
+                      │    ╰────────┬─────────╯    │
+            ╭─────────┴───╮         │         ╭─────┴──────────╮
+            │ RULE 4       │         │         │ RULE 1         │
+            │ ExpiredSkills│         ▼         │ Score ≥ 70%    │
+            │    = 0       │  ╭────────────╮   │ 60/25/15 Math  │
+            │              │  │  TAMPER-   │   │                │
+            ╰─────────┬───╯  │  PROOF     │   ╰─────┬──────────╯
+                      │      │  VERIFY    │         │
+            ╭─────────┴───╮  ╰────────────╯   ╭─────┴──────────╮
+            │ RULE 3       │                   │ RULE 2         │
+            │ Progress     │                   │ VerifiedSkills │
+            │   ≥ 80%      │                   │   ≥ 4          │
+            ╰──────────────╯                   ╰────────────────╯
+```
+
+  * **Readiness Index:** $(35\% \times \text{VerifiedSkills}) + (30\% \times \text{RoadmapProgress}) + (15\% \times \text{ResumeATS}) + (20\% \times \text{MockInterview})$
+  * Unlocks verifiable digital credential with tamper-proof validation URL: `/verify-cert.html?id=...`.
+
+* **Benefits:**
+  * **Social:** Democratizes career guidance across 65%+ Indian colleges lacking counselors; reduces placement depression.
+  * **Economic:** Boosts entry CTC from ₹3.5 LPA to ₹8–₹14+ LPA; connects recruiters to pre-screened talent.
+  * **Environmental:** 100% digital, paperless tracking; serverless, energy-efficient cloud footprint.
 
 ---
 
 ### Slide 6: RESEARCH AND REFERENCES
-* **Details / Links of Reference and Research Work:**
-  1. **National Employability Reports (Aspiring Minds / SHL India):** Empirical data showing <20% of Indian engineers are ready for product software roles without retraining, validating the need for objective skill gap intervention.
-  2. **Explainable AI in Education (XAI-Ed Research):** Pedagogical research demonstrating that transparent mathematical evaluation (60/25/15 formula) builds 4x higher student trust than black-box neural recommendations.
-  3. **Live Labor Market Telemetry (Adzuna Developer API):** Real-time Indian tech job market statistics, salary distributions (₹3.5L–₹14L+), and regional hiring demand metrics (developer.adzuna.com).
-  4. **Global Engineering Standards (roadmap.sh & IEEE):** Standardized milestone pathways referenced from roadmap.sh, MDN Web Docs, Google web.dev, and IEEE Computer Society.
+
+**📚 4-PILLAR RESEARCH FOUNDATION RING:**
+```
+                            ╭──────────────────────╮
+                       ╭────│  1⃣ EMPLOYABILITY     │────╮
+                       │    │ Aspiring Minds / SHL  │    │
+                       │    │ <20% engineers ready  │    │
+                       │    ╰──────────┬───────────╯    │
+                       │               │                 │
+             ╭─────────┴────╮          │          ╭──────┴──────────╮
+             │ 4⃣ GLOBAL     │          │          │ 2⃣ XAI-Ed       │
+             │  CURRICULA    │          ▼          │  RESEARCH       │
+             │ roadmap.sh    │  ╭──────────────╮   │ Transparent Math│
+             │ MDN, web.dev  │  │ 🔬 CAREERPATH│   │ = 4x Higher     │
+             │ IEEE CS       │  │  AI EMPIRICAL│   │ Student Trust   │
+             ╰─────────┬────╯  │     CORE     │   ╰──────┬──────────╯
+                       │       ╰──────────────╯          │
+                       │     ╭─────────┴──────────╮      │
+                       ╰─────│ 3⃣ ADZUNA API       │──────╯
+                             │ Live ₹3.5L–₹14L+   │
+                             │ CTC & Hiring Demand │
+                             ╰─────────────────────╯
+```
+
 * **Official Working Prototype & Submission Links:**
   * 🌐 Live Web Application: `https://careerpath-ai-jade.vercel.app`
   * ⚡ Production REST API Health: `https://careerpath-ai-bdbt.onrender.com/api/health`

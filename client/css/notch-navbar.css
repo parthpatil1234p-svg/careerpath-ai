@@ -678,8 +678,8 @@ main.container {
     font-size: clamp(1rem, 4.2vw, 1.2rem) !important;
     letter-spacing: -0.02em !important;
   }
-  /* In top floating pill, hide the redundant role chip so island width never exceeds screen; it is fully rendered in the expanded mobile drawer */
-  #authNavActions .nav-role-chip {
+  #authNavActions .nav-role-chip,
+  #btnRecruiterLogout {
     display: none !important;
   }
   #authNavActions .btn {
