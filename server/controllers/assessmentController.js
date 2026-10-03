@@ -12,6 +12,7 @@ const User = require('../models/User');
 const { normalizeSkillKey } = require('../data/quizQuestions');
 
 const ALLOWED_ASSESSMENT_FIELDS = [
+  'name',
   'education',
   'interests',
   'skills',
@@ -239,6 +240,10 @@ const updateAssessment = async (req, res, next) => {
       });
     }
 
+    if (updates.name && typeof updates.name === 'string') {
+      updates.name = updates.name.trim();
+    }
+
     const activeStream = updates.primaryStream || (req.user && req.user.primaryStream) || 'cross';
 
     // Standardize skills casing and preserve verification status with canonical deduplication
@@ -370,7 +375,7 @@ const updateAssessment = async (req, res, next) => {
 const getAssessment = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id).select(
-      'education interests skills careerGoals profileCompleted hasCompletedSkillVerification primaryStream encryptedVault'
+      'name education interests skills careerGoals profileCompleted hasCompletedSkillVerification primaryStream encryptedVault'
     );
 
     if (!user) {
@@ -384,13 +389,14 @@ const getAssessment = async (req, res, next) => {
       success: true,
       data: {
         assessment: {
-          education: user.education,
-          interests: user.interests,
-          skills: user.skills,
-          careerGoals: user.careerGoals,
-          profileCompleted: user.profileCompleted,
-          hasCompletedSkillVerification: user.hasCompletedSkillVerification,
-          primaryStream: user.primaryStream,
+          name: user.name || '',
+          education: user.education || {},
+          interests: user.interests || [],
+          skills: user.skills || [],
+          careerGoals: user.careerGoals || [],
+          profileCompleted: Boolean(user.profileCompleted),
+          hasCompletedSkillVerification: Boolean(user.hasCompletedSkillVerification),
+          primaryStream: user.primaryStream || 'engineering',
           encryptedVault: user.encryptedVault || null,
         }
       }

@@ -59,6 +59,10 @@ const formatUser = (user) => {
     isRecruiter:                   isRecruiter,
     recruiterProfile:              user.recruiterProfile || null,
     authProvider:                  user.authProvider || 'local',
+    primaryStream:                 user.primaryStream || 'engineering',
+    education:                     user.education || {},
+    interests:                     user.interests || [],
+    careerGoals:                   user.careerGoals || [],
     profileCompleted:              isDemoOrAdmin ? true : user.profileCompleted,
     isVerified:                    isDemoOrAdmin ? true : (user.isVerified || false),
     hasCompletedSkillVerification: isDemoOrAdmin ? true : Boolean(

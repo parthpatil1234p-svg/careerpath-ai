@@ -242,7 +242,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    return false;
+    // Custom or unmapped skills that are not exclusively claimed by another stream are allowed
+    return true;
   };
 
   const FALLBACK_SKILLS = [
@@ -947,8 +948,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     filtered.forEach((skill) => {
-      const isSelected = selectedSkillsMap.has(skill.name);
-      const selectedObj = isSelected ? selectedSkillsMap.get(skill.name) : null;
+      const sKey = (skill.name || '').toLowerCase().trim();
+      const isSelected = selectedSkillsMap.has(sKey) || selectedSkillsMap.has(skill.name);
+      const selectedObj = isSelected ? (selectedSkillsMap.get(sKey) || selectedSkillsMap.get(skill.name)) : null;
       const currentProficiency = selectedObj ? selectedObj.proficiency : 'beginner';
       const isCodeVerified = selectedObj?.isCodeVerified;
       const isQuizVerified = selectedObj?.isQuizVerified;
@@ -973,18 +975,18 @@ document.addEventListener('DOMContentLoaded', async () => {
               <input
                 class="form-check-input skill-checkbox flex-shrink-0"
                 type="checkbox"
-                id="skill_${skill.name}"
+                id="skill_${escapeHtml(sKey)}"
                 ${isSelected ? 'checked' : ''}
               />
-              <label class="form-check-label fw-semibold text-ink m-0 d-inline-flex align-items-center gap-1.5" for="skill_${skill.name}" title="${skill.displayName}" style="min-width: 0; cursor: pointer;">
+              <label class="form-check-label fw-semibold text-ink m-0 d-inline-flex align-items-center gap-1.5" for="skill_${escapeHtml(sKey)}" title="${escapeHtml(skill.displayName)}" style="min-width: 0; cursor: pointer;">
                 ${skillLogo}
-                <span class="skill-name-text">${skill.displayName}</span>
+                <span class="skill-name-text">${escapeHtml(skill.displayName)}</span>
                 ${verifiedBadge}
               </label>
             </div>
             <div class="d-flex align-items-center gap-1 flex-shrink-0">
               <select class="form-select form-select-sm skill-proficiency-select"
-                      aria-label="${skill.displayName} proficiency level"
+                      aria-label="${escapeHtml(skill.displayName)} proficiency level"
                       ${!isSelected || isQuizVerified ? 'disabled' : ''}
                       title="${isQuizVerified ? 'Proficiency calibrated by Reality Check quiz (locked)' : ''}">
                 <option value="beginner" ${currentProficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
@@ -1013,13 +1015,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
           }
           const existingUserSkill = (currentUser?.skills || []).find(
-            (s) => (s.name || '').toLowerCase() === skill.name.toLowerCase()
+            (s) => (s.name || '').toLowerCase().trim() === sKey
           );
           const isQuizVer = Boolean(existingUserSkill?.isQuizVerified);
           const profVal = existingUserSkill?.verifiedProficiency || existingUserSkill?.proficiency || select.value || 'beginner';
 
-          selectedSkillsMap.set(skill.name, {
-            name: skill.name,
+          selectedSkillsMap.set(sKey, {
+            name: sKey,
             displayName: skill.displayName,
             category: skill.category || 'tool',
             proficiency: profVal,
@@ -1033,18 +1035,23 @@ document.addEventListener('DOMContentLoaded', async () => {
           });
           select.disabled = isQuizVer;
         } else {
+          selectedSkillsMap.delete(sKey);
           selectedSkillsMap.delete(skill.name);
           select.disabled = true;
         }
         updateSelectedSkillsUI();
         renderSkillsGrid();
+        if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
       select.addEventListener('change', (e) => {
-        if (selectedSkillsMap.has(skill.name)) {
-          selectedSkillsMap.get(skill.name).proficiency = e.target.value;
-          updateSelectedSkillsUI();
+        const item = selectedSkillsMap.get(sKey) || selectedSkillsMap.get(skill.name);
+        if (item) {
+          item.proficiency = e.target.value;
+          item.selfRatedProficiency = e.target.value;
         }
+        updateSelectedSkillsUI();
+        if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
       const gridRetestBtn = col.querySelector('.btn-grid-retest');
@@ -2732,103 +2739,186 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  // ── Persistent Auto-Draft System ──────────────────────────────
+  const getDraftStorageKey = () => {
+    const user = window.Auth?.getUser() || window.Auth?.getCurrentUser();
+    const email = (user?.email || 'student').toLowerCase().trim();
+    return `cp_assessment_auto_draft_${email}`;
+  };
+
+  let autoDraftTimer = null;
+  const saveAutoDraft = () => {
+    if (autoDraftTimer) clearTimeout(autoDraftTimer);
+    autoDraftTimer = setTimeout(() => {
+      try {
+        const draft = {
+          name: document.getElementById('fullName')?.value || '',
+          primaryStream: selectedStream,
+          education: {
+            course: document.getElementById('course')?.value || '',
+            branch: document.getElementById('branch')?.value || '',
+            year: document.getElementById('year')?.value || '',
+            college: document.getElementById('college')?.value || '',
+          },
+          interests: Array.from(selectedInterests),
+          skills: Array.from(selectedSkillsMap.values()),
+          careerGoals: document.getElementById('careerGoals')?.value || '',
+          hasCompletedSkillVerification: Boolean(hasCompletedSkillVerification),
+          savedAt: Date.now(),
+        };
+        localStorage.setItem(getDraftStorageKey(), JSON.stringify(draft));
+      } catch (e) {
+        console.warn('AutoDraft write error:', e);
+      }
+    }, 400);
+  };
+  window.saveAssessmentDraft = saveAutoDraft;
+
+  // Wire auto-draft triggers on form text inputs
+  ['fullName', 'course', 'branch', 'year', 'college', 'careerGoals'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', saveAutoDraft);
+      el.addEventListener('change', saveAutoDraft);
+    }
+  });
+
+  const populateFormWithData = (data, source = 'db') => {
+    if (!data) return;
+
+    if (data.name) {
+      const fullNameEl = document.getElementById('fullName');
+      if (fullNameEl && (!fullNameEl.value || source === 'db')) {
+        fullNameEl.value = data.name;
+      }
+    }
+
+    if (data.education) {
+      const cEl = document.getElementById('course');
+      if (cEl && (data.education.course || source === 'db')) cEl.value = data.education.course || '';
+      const bEl = document.getElementById('branch');
+      if (bEl && (data.education.branch || source === 'db')) bEl.value = data.education.branch || '';
+      const yEl = document.getElementById('year');
+      if (yEl && (data.education.year || source === 'db')) yEl.value = data.education.year || '';
+      const clgEl = document.getElementById('college');
+      if (clgEl && (data.education.college || source === 'db')) clgEl.value = data.education.college || '';
+    }
+
+    if (Array.isArray(data.interests) && data.interests.length > 0) {
+      if (source === 'db') selectedInterests.clear();
+      data.interests.forEach((i) => {
+        if (typeof i === 'string' && i.trim()) {
+          selectedInterests.add(i.trim().toLowerCase());
+        }
+      });
+    }
+
+    if (Array.isArray(data.skills) && data.skills.length > 0) {
+      data.skills.forEach((s) => {
+        const rawKey = s.name || '';
+        const key = rawKey.toLowerCase().trim();
+        if (!key) return;
+
+        if (!allAvailableSkills.some(item => (item.name || '').toLowerCase() === key)) {
+          allAvailableSkills.unshift({
+            name: key,
+            displayName: s.displayName || s.name || key,
+            category: s.category || 'tool'
+          });
+        }
+
+        selectedSkillsMap.set(key, {
+          name: key,
+          displayName: s.displayName || s.name || key,
+          category: s.category || 'tool',
+          proficiency: s.verifiedProficiency || s.proficiency || 'beginner',
+          isCodeVerified: Boolean(s.isCodeVerified),
+          verifiedSource: s.verifiedSource || 'self',
+          isQuizVerified: Boolean(s.isQuizVerified),
+          selfRatedProficiency: s.selfRatedProficiency || s.proficiency || 'beginner',
+          verifiedProficiency: s.verifiedProficiency || null,
+          quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
+          quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
+          quizVerifiedAt: s.quizVerifiedAt || null,
+          verificationTier: s.verificationTier || (s.isCodeVerified ? 'project_verified' : (s.isQuizVerified ? 'quiz_verified' : 'self_rated')),
+          verificationStatus: s.verificationStatus || (s.isQuizVerified || s.isCodeVerified ? 'verified' : 'unverified'),
+          integrityScore: typeof s.integrityScore === 'number' ? s.integrityScore : 100,
+        });
+      });
+    }
+
+    if (data.primaryStream && validStreams.includes(data.primaryStream)) {
+      selectedStream = data.primaryStream;
+    }
+
+    if (Array.isArray(data.careerGoals) && data.careerGoals.length > 0) {
+      const gEl = document.getElementById('careerGoals');
+      if (gEl && data.careerGoals[0]) gEl.value = data.careerGoals[0];
+    } else if (typeof data.careerGoals === 'string' && data.careerGoals.trim()) {
+      const gEl = document.getElementById('careerGoals');
+      if (gEl) gEl.value = data.careerGoals.trim();
+    }
+
+    if (data.hasCompletedSkillVerification || (Array.isArray(data.skills) && data.skills.some((s) => s.isQuizVerified || s.isCodeVerified))) {
+      hasCompletedSkillVerification = true;
+    }
+  };
+
   // 10. Preload Profile Data
   const preloadProfile = async () => {
     await loadRemoteSkills();
-    try {
-      const response = await window.API.get('/users/me', { auth: true });
-      if (response.success && response.data?.user) {
-        const user = response.data.user;
 
-        if (user.name) document.getElementById('fullName').value = user.name;
-        if (user.education) {
-          if (user.education.course) document.getElementById('course').value = user.education.course;
-          if (user.education.branch) document.getElementById('branch').value = user.education.branch;
-          if (user.education.year) document.getElementById('year').value = user.education.year;
-          if (user.education.college) document.getElementById('college').value = user.education.college;
-        }
-
-        if (Array.isArray(user.interests)) {
-          user.interests.forEach((i) => selectedInterests.add(String(i).toLowerCase()));
-        }
-
-        if (Array.isArray(user.skills)) {
-          user.skills.forEach((s) => {
-            const key = s.name.toLowerCase();
-            if (!allAvailableSkills.some(item => item.name.toLowerCase() === key)) {
-              allAvailableSkills.unshift({
-                name: key,
-                displayName: s.displayName || s.name,
-                category: s.category || 'tool'
-              });
-            }
-            selectedSkillsMap.set(key, {
-              name: key,
-              displayName: s.displayName || s.name,
-              category: s.category || 'tool',
-              proficiency: s.verifiedProficiency || s.proficiency || 'beginner',
-              isCodeVerified: !!s.isCodeVerified,
-              verifiedSource: s.verifiedSource || 'self',
-              isQuizVerified: !!s.isQuizVerified,
-              selfRatedProficiency: s.selfRatedProficiency || null,
-              verifiedProficiency: s.verifiedProficiency || null,
-              quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
-              quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
-              quizVerifiedAt: s.quizVerifiedAt || null,
-            });
-          });
-        }
-
-        if (user.primaryStream && validStreams.includes(user.primaryStream)) {
-          selectedStream = user.primaryStream;
-        }
-
-        if (Array.isArray(user.careerGoals) && user.careerGoals.length > 0) {
-          document.getElementById('careerGoals').value = user.careerGoals[0] || '';
-        }
-
-        if (user.hasCompletedSkillVerification || (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified))) {
-          hasCompletedSkillVerification = true;
-        }
-
-        if (typeof window.Auth?.setCurrentUser === 'function') {
-          window.Auth.setCurrentUser(user);
-        }
-      }
-    } catch (err) {
-      console.warn('Could not preload existing profile:', err.message);
+    // Step 1: Immediate local sync from Auth cache (zero visual delay)
+    const cachedUser = window.Auth?.getUser() || window.Auth?.getCurrentUser();
+    if (cachedUser) {
+      populateFormWithData(cachedUser, 'cache');
     }
 
-    // Restore draft state if returning from OAuth redirect or page reload
-    let targetStep = 0;
+    // Step 2: Authoritative DB fetch
+    let authoritativeData = null;
     try {
-      const draftRaw = sessionStorage.getItem('cp_assessment_draft');
+      const assessRes = await window.API.get('/assessment', { auth: true });
+      if (assessRes.success && assessRes.data?.assessment) {
+        authoritativeData = assessRes.data.assessment;
+      }
+    } catch (err) {
+      console.warn('GET /assessment fallback:', err.message);
+    }
+
+    if (!authoritativeData) {
+      try {
+        const userRes = await window.API.get('/users/me', { auth: true });
+        if (userRes.success && userRes.data?.user) {
+          authoritativeData = userRes.data.user;
+        }
+      } catch (err) {
+        console.warn('GET /users/me fallback:', err.message);
+      }
+    }
+
+    if (authoritativeData) {
+      populateFormWithData(authoritativeData, 'db');
+      if (typeof window.Auth?.setCurrentUser === 'function') {
+        const merged = Object.assign({}, cachedUser || {}, authoritativeData);
+        window.Auth.setCurrentUser(merged);
+      }
+    }
+
+    // Step 3: Restore any local draft edits
+    try {
+      const draftRaw = localStorage.getItem(getDraftStorageKey());
       if (draftRaw) {
         const draft = JSON.parse(draftRaw);
-        if (draft.step !== undefined && draft.step >= 0 && draft.step <= 4) {
-          targetStep = draft.step;
-        }
-        if (draft.primaryStream && validStreams.includes(draft.primaryStream)) {
-          selectedStream = draft.primaryStream;
-        }
-        if (draft.fullName && !document.getElementById('fullName').value) document.getElementById('fullName').value = draft.fullName;
-        if (draft.course && !document.getElementById('course').value) document.getElementById('course').value = draft.course;
-        if (draft.branch && !document.getElementById('branch').value) document.getElementById('branch').value = draft.branch;
-        if (draft.year && !document.getElementById('year').value) document.getElementById('year').value = draft.year;
-        if (draft.college && !document.getElementById('college').value) document.getElementById('college').value = draft.college;
-        if (draft.careerGoals && !document.getElementById('careerGoals').value) document.getElementById('careerGoals').value = draft.careerGoals;
-        if (Array.isArray(draft.selectedInterests)) {
-          draft.selectedInterests.forEach((i) => selectedInterests.add(String(i).toLowerCase()));
-        }
-        if (Array.isArray(draft.selectedSkills)) {
-          draft.selectedSkills.forEach((s) => {
-            const key = (s.name || '').toLowerCase();
-            if (key) selectedSkillsMap.set(key, s);
-          });
-        }
-        if (draft.hasCompletedSkillVerification) {
-          hasCompletedSkillVerification = true;
-        }
+        populateFormWithData(draft, 'draft');
+      }
+    } catch (err) {}
+
+    // Step 4: Check OAuth sessionStorage draft
+    try {
+      const sessDraftRaw = sessionStorage.getItem('cp_assessment_draft');
+      if (sessDraftRaw) {
+        const sessDraft = JSON.parse(sessDraftRaw);
+        populateFormWithData(sessDraft, 'draft');
         sessionStorage.removeItem('cp_assessment_draft');
       }
     } catch (err) {}
@@ -2838,7 +2928,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     applyStreamUI(selectedStream);
+    renderInterests();
+    renderSkillsGrid();
     updateSelectedSkillsUI();
+
+    // Check if user has an existing saved assessment
+    const courseVal = document.getElementById('course')?.value?.trim();
+    const hasExistingAssessment = Boolean(
+      (authoritativeData && (authoritativeData.profileCompleted || authoritativeData.education?.course)) ||
+      (cachedUser && (cachedUser.profileCompleted || cachedUser.education?.course)) ||
+      courseVal ||
+      selectedSkillsMap.size > 0
+    );
+
+    const banner = document.getElementById('profileLoadedBanner');
+    const details = document.getElementById('profileLoadedDetails');
+    const jumpBtn = document.getElementById('btnJumpToAcademics');
+
+    if (hasExistingAssessment && banner) {
+      banner.classList.remove('d-none');
+      if (details) {
+        const streamLabel = STREAM_META[selectedStream]?.label || selectedStream;
+        const skCount = selectedSkillsMap.size;
+        const intCount = selectedInterests.size;
+        details.innerHTML = `Loaded saved profile for <strong>${escapeHtml(streamLabel)}</strong> &bull; ${skCount} skills &bull; ${intCount} domains of interest. All information is restored.`;
+      }
+      if (jumpBtn) {
+        jumpBtn.onclick = () => updateStepUI(1);
+      }
+    }
+
+    // Determine target step: if already filled and not explicitly starting at 0, open Step 1 so data is immediately visible!
+    let targetStep = 0;
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedStep = urlParams.get('step');
+    if (requestedStep !== null && !isNaN(parseInt(requestedStep))) {
+      targetStep = Math.min(4, Math.max(0, parseInt(requestedStep)));
+    } else if (hasExistingAssessment && courseVal) {
+      targetStep = 1;
+    }
+
     updateStepUI(targetStep);
   };
 
@@ -2923,6 +3052,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const response = await window.API.put('/assessment', payload, { auth: true });
 
       if (response.success) {
+        try {
+          localStorage.removeItem(getDraftStorageKey());
+        } catch (e) {}
+
         if (response.data?.user) {
           window.Auth.setCurrentUser(response.data.user);
         }
