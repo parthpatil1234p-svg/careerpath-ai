@@ -904,22 +904,37 @@
 }
 
 /* Modal styling overrides */
+#skillCheckModal .modal-dialog {
+  max-width: 680px;
+  margin: 1.75rem auto;
+}
+
 #skillCheckModal .modal-content {
+  position: relative;
+  min-height: 560px;
   border: none;
   border-radius: 1.25rem;
-  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
 }
 
 #skillCheckModal .modal-header {
   background: #F8FAFC;
   border-bottom: 1px solid #E2E8F0;
   padding: 1.25rem 1.75rem;
+  flex-shrink: 0;
 }
 
 #skillCheckModal .modal-body {
   padding: 1.75rem;
   background: #FFFFFF;
+  flex: 1 1 auto;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── 45-Second Countdown Timer & Telemetry HUD (Pillar 6) ───── */
@@ -1107,20 +1122,23 @@
 /* Modal Blocking Strike Overlay */
 #modalStrikeOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1055;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  inset: 0;
+  z-index: 1060;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  border-radius: var(--bs-modal-border-radius, 1rem);
+  border-radius: 1.25rem;
+  overflow-y: auto;
+  min-height: 540px;
   animation: strikeFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#modalStrikeOverlay.d-none {
+  display: none !important;
 }
 
 @keyframes strikeFadeIn {
@@ -1134,10 +1152,11 @@
   border-radius: 1rem;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
   overflow: hidden;
   text-align: center;
   position: relative;
+  margin: auto;
 }
 
 /* Strike 1: Amber Alert */
@@ -1172,16 +1191,20 @@
 
 /* Strike 3: Disqualification & 24h Lockout */
 .strike-card-3 {
-  border: 2px solid #991B1B;
+  border: 2px solid #DC2626;
   background: #0F172A;
   color: #F8FAFC;
-  box-shadow: 0 0 35px rgba(153, 27, 27, 0.45);
+  box-shadow: 0 0 40px rgba(220, 38, 38, 0.5);
 }
 .strike-card-3 .strike-card-header {
   background: #1E293B;
   color: #F87171;
   padding: 1.5rem 1.25rem;
   border-bottom: 1px solid #334155;
+}
+.strike-card-3 .text-secondary,
+.strike-card-3 p.text-secondary {
+  color: #94A3B8 !important;
 }
 
 .strike-penalty-tag {

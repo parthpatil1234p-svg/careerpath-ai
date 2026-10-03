@@ -1705,6 +1705,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       isModalDisqualified = true;
       v3?.classList.remove('d-none');
 
+      // Guarantee minimum height on modal elements to prevent collapse
+      const modalContentEl = skillCheckModalEl?.querySelector('.modal-content');
+      if (modalContentEl) modalContentEl.style.minHeight = '560px';
+      const modalBodyEl = document.getElementById('modalQuizBody');
+      if (modalBodyEl) modalBodyEl.style.minHeight = '480px';
+
       // Wipe/hide question state
       modalQuestionState?.classList.add('d-none');
 
@@ -1751,6 +1757,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('modalDisqualifiedDoneBtn')?.addEventListener('click', () => {
     document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
+    const modalContentEl = skillCheckModalEl?.querySelector('.modal-content');
+    if (modalContentEl) modalContentEl.style.minHeight = '';
+    const modalBodyEl = document.getElementById('modalQuizBody');
+    if (modalBodyEl) modalBodyEl.style.minHeight = '';
     const modalInstance = bootstrap.Modal.getInstance(skillCheckModalEl);
     if (modalInstance) modalInstance.hide();
     renderSelectedSkills();
@@ -1843,6 +1853,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     isModalStrikeActive = false;
     updateModalStrikesHud();
     document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
+    const modalContentEl = skillCheckModalEl?.querySelector('.modal-content');
+    if (modalContentEl) modalContentEl.style.minHeight = '';
+    const modalBodyEl = document.getElementById('modalQuizBody');
+    if (modalBodyEl) modalBodyEl.style.minHeight = '';
     if (modalSkillBadge) modalSkillBadge.textContent = skill.displayName || skill.name;
     if (skillCheckModalTitle) skillCheckModalTitle.textContent = 'Reality Check';
     modalLoadingState?.classList.remove('d-none');
@@ -2283,6 +2297,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     activeQuizSession = null;
     activeQuestion = null;
     activeQuizSummary = null;
+    const modalContentEl = skillCheckModalEl?.querySelector('.modal-content');
+    if (modalContentEl) modalContentEl.style.minHeight = '';
+    const modalBodyEl = document.getElementById('modalQuizBody');
+    if (modalBodyEl) modalBodyEl.style.minHeight = '';
+    document.getElementById('modalStrikeOverlay')?.classList.add('d-none');
     try {
       renderSkillsGrid();
       updateSelectedSkillsUI();
