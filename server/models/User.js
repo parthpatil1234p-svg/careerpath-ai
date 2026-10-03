@@ -556,6 +556,17 @@ const UserSchema = new mongoose.Schema(
         default: [],
       },
     },
+
+    // Client-Side Encrypted Storage Vault (Zero-knowledge encrypted payload)
+    encryptedVault: {
+      ciphertext: { type: String, default: null },
+      iv: { type: String, default: null },
+      salt: { type: String, default: null },
+      version: { type: String, default: 'AES-GCM-256' },
+      algorithm: { type: String, default: 'AES-GCM' },
+      iterations: { type: Number, default: 100000 },
+      updatedAt: { type: Date, default: null },
+    },
   },
   {
     // Automatically adds createdAt and updatedAt fields

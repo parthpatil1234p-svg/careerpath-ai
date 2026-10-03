@@ -204,3 +204,66 @@ exports.getQuizProviders = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error retrieving quiz providers' });
   }
 };
+
+/**
+ * POST /api/quiz/violation
+ * Authoritative proctoring violation recorder (fullscreen exit, tab switch, devtools attempt, clipboard)
+ * Applies 3-strike policy with automatic session lock on Strike 3.
+ */
+exports.recordViolation = async (req, res) => {
+  try {
+    const { sessionId, skill, violationType, details } = req.body;
+    let targetSkill = skill;
+    if (!targetSkill && sessionId && sessionId.includes('_')) {
+      targetSkill = sessionId.split('_').slice(1).join('_');
+    }
+
+    const violation = quizService.recordViolation(
+      req.user.id,
+      targetSkill,
+      violationType || 'proctoring_anomaly',
+      details || {}
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: violation
+    });
+  } catch (err) {
+    console.error('[QuizController.recordViolation] Error:', err.message);
+    const status = err.status || 400;
+    return res.status(status).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * GET /api/quiz/active-session
+ * Returns active proctored quiz session state for recovery on page reload
+ */
+exports.getActiveSession = async (req, res) => {
+  try {
+    const { skill, sessionId } = req.query;
+    let targetSkill = skill;
+    if (!targetSkill && sessionId && sessionId.includes('_')) {
+      targetSkill = sessionId.split('_').slice(1).join('_');
+    }
+
+    const session = quizService.getActiveSession(req.user.id, targetSkill);
+    if (!session) {
+      return res.status(200).json({
+        success: true,
+        data: null,
+        message: 'No active quiz session found'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: session
+    });
+  } catch (err) {
+    console.error('[QuizController.getActiveSession] Error:', err.message);
+    return res.status(500).json({ success: false, message: 'Server error checking active quiz session' });
+  }
+};
+

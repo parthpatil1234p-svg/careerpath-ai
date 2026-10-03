@@ -14,7 +14,9 @@ router.use(protect, requireStudent);
 
 router.get('/status', quizController.getQuizStatus);
 router.get('/providers', quizController.getQuizProviders);
+router.get('/active-session', quizController.getActiveSession);
 router.post('/start', quizController.startQuiz);
 router.post('/answer', quizController.submitAnswer);
+router.post('/violation', quizController.recordViolation);
 
 module.exports = router;

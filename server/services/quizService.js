@@ -137,8 +137,19 @@ async function startQuizSession(userId, skill, options = {}) {
     totalSteps: 5,
     currentDifficulty: firstQuestion.difficulty || 'medium',
     currentQuestionId: firstQuestion.id,
+    currentQuestionTopic: firstQuestion.topic || 'General',
+    currentQuestionText: firstQuestion.question,
+    currentQuestionCodeSnippet: firstQuestion.codeSnippet || null,
+    currentQuestionShuffledOptions: shuffledFirst.shuffledOptions,
     currentQuestionShuffledCorrectIndex: shuffledFirst.newCorrectIndex,
     currentQuestionServedAt: Date.now(),
+    timeLimitSeconds: 45,
+    strikes: [],
+    strikeCount: 0,
+    isLocked: false,
+    lockReason: null,
+    fullscreenExits: 0,
+    clipboardViolations: 0,
     tabSwitchCount: 0,
     velocityAnomalyCount: 0,
     anomalies: [],
@@ -166,6 +177,10 @@ async function startQuizSession(userId, skill, options = {}) {
     totalSteps: 5,
     currentDifficulty: firstQuestion.difficulty || 'medium',
     difficulty: firstQuestion.difficulty || 'medium',
+    timeLimitSeconds: 45,
+    strikeCount: 0,
+    strikesRemaining: 3,
+    isLocked: false,
     question: {
       id: firstQuestion.id,
       topic: firstQuestion.topic,
@@ -188,6 +203,14 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
 
   if (!session) {
     throw new Error('No active quiz session found. Please start the quiz again.');
+  }
+
+  // Anti-Cheating Lock Guard: Disallow submissions on locked sessions
+  if (session.isLocked) {
+    const lockedErr = new Error(`Quiz session has been locked due to proctoring violations: ${session.lockReason || 'REPEATED_PROCTORING_VIOLATIONS'}`);
+    lockedErr.status = 403;
+    lockedErr.code = 'SESSION_LOCKED';
+    throw lockedErr;
   }
 
   // Locate question in dynamic questionPool or static bank
@@ -215,12 +238,16 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
 
   const isCorrect = Number(selectedIndex) === authoritativeCorrectIndex;
 
-  // 2. Pillar 6: High-Fidelity Proctoring Telemetry & Anomaly Detection
+  // 2. High-Fidelity Proctoring Telemetry & Server-Enforced 45s Timer (Pillars 2 & 6)
   const clientTimeTaken = Number(telemetry.timeTakenSeconds) || 0;
   const serverDurationSeconds = session.currentQuestionServedAt
     ? (Date.now() - session.currentQuestionServedAt) / 1000
     : clientTimeTaken;
   const effectiveDuration = Math.max(clientTimeTaken, Math.round(serverDurationSeconds * 10) / 10);
+
+  // Server-Enforced 45s Timer + 5s Network Grace Period
+  const MAX_ALLOWED_SECONDS = (session.timeLimitSeconds || 45) + 5;
+  const isLate = effectiveDuration > MAX_ALLOWED_SECONDS;
 
   // Velocity Anomaly Detection: Hard < 2.0s, Medium < 1.2s
   let isVelocityAnomaly = false;
@@ -240,14 +267,15 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
     session.tabSwitchCount = clientTabSwitches;
   }
 
-  // Track scoring and identified learning gaps
-  if (isCorrect) {
+  // Track scoring (submissions arriving past 45s limit receive 0 points)
+  const isAwarded = isCorrect && !isLate;
+  if (isAwarded) {
     session.score += 1;
     if (currentDiff === 'hard') {
       session.hardCorrectCount += 1;
     }
   } else {
-    // Pedagogical gap tracking (Pillar 5)
+    // Pedagogical gap tracking
     if (question.topic) {
       session.identifiedGaps.add(question.topic);
     }
@@ -258,7 +286,9 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
     difficulty: currentDiff,
     selectedIndex: Number(selectedIndex),
     correctIndex: authoritativeCorrectIndex,
-    isCorrect,
+    isCorrect: isAwarded,
+    rawCorrect: isCorrect,
+    isLate,
     topic: question.topic,
     explanation: question.explanation,
     timeTaken: effectiveDuration,
@@ -273,9 +303,10 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
     activeSessions.delete(sessionKey);
 
     return {
-      isCorrect,
+      isCorrect: isAwarded,
+      isLate,
       correctAnswer: authoritativeCorrectIndex,
-      explanation: question.explanation,
+      explanation: isLate ? `${question.explanation} (Time limit of 45s expired — 0 points awarded)` : question.explanation,
       isFinished: true,
       isCompleted: true,
       currentScore: session.score,
@@ -304,7 +335,7 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
 
   // Calculate next adaptive difficulty
   let nextDiff = currentDiff;
-  if (isCorrect) {
+  if (isAwarded) {
     if (currentDiff === 'easy') nextDiff = 'medium';
     else if (currentDiff === 'medium') nextDiff = 'hard';
     else if (currentDiff === 'hard') nextDiff = 'hard';
@@ -333,19 +364,28 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
   const shuffledNext = shuffleOptions(nextQ.options, nextQ.correctIndex);
 
   session.currentQuestionId = nextQ.id;
+  session.currentQuestionTopic = nextQ.topic || 'General';
+  session.currentQuestionText = nextQ.question;
+  session.currentQuestionCodeSnippet = nextQ.codeSnippet || null;
+  session.currentQuestionShuffledOptions = shuffledNext.shuffledOptions;
   session.currentQuestionShuffledCorrectIndex = shuffledNext.newCorrectIndex;
   session.currentQuestionServedAt = Date.now();
 
   return {
-    isCorrect,
+    isCorrect: isAwarded,
+    isLate,
     correctAnswer: authoritativeCorrectIndex,
-    explanation: question.explanation,
+    explanation: isLate ? `${question.explanation} (Time limit of 45s expired — 0 points awarded)` : question.explanation,
     isFinished: false,
     isCompleted: false,
     currentScore: session.score,
     nextStep: session.currentStep,
     totalSteps: session.totalSteps,
     nextDifficulty: nextDiff,
+    timeLimitSeconds: session.timeLimitSeconds || 45,
+    strikeCount: session.strikeCount || 0,
+    strikesRemaining: Math.max(0, 3 - (session.strikeCount || 0)),
+    isLocked: Boolean(session.isLocked),
     nextQuestion: {
       id: nextQ.id,
       topic: nextQ.topic,
@@ -354,7 +394,6 @@ async function submitAnswer(userId, skill, questionId, selectedIndex, telemetry 
       codeSnippet: nextQ.codeSnippet || null,
       difficulty: nextDiff,
       options: shuffledNext.shuffledOptions
-      // Zero answer keys sent to client!
     }
   };
 }
@@ -511,7 +550,13 @@ async function finalizeQuiz(userId, skill, session) {
     summaryMessage = `Great job! You claimed ${capitalize(selfRated)}, but tested at an ${capitalize(verifiedLevel)} level!`;
   }
 
-  if (isSuspicious) {
+  if (session.isLocked || (session.strikeCount && session.strikeCount >= 3)) {
+    verifiedLevel = 'beginner';
+    integrityScore = 0;
+    verificationStatus = 'flagged';
+    comparisonStatus = 'locked';
+    summaryMessage = 'Assessment was terminated due to repeated proctoring violations (3 strikes accumulated). Credential status flagged with 0% integrity score.';
+  } else if (isSuspicious) {
     summaryMessage += ` (⚠️ Proctor Notice: Telemetry recorded ${tabSwitches} tab switches and velocity anomalies. Status marked as 'Unconfirmed' pending Tier 2 GitHub repository validation).`;
   }
 
@@ -546,6 +591,128 @@ async function finalizeQuiz(userId, skill, session) {
   };
 }
 
+/**
+ * Record a proctoring violation (fullscreen exit, tab switch, clipboard, devtools)
+ * Applies the 3-strike policy with authoritative server-side lockout on Strike 3.
+ */
+function recordViolation(userId, skill, violationType, details = {}) {
+  let session = null;
+  if (skill) {
+    const norm = normalizeSkillKey(skill);
+    session = activeSessions.get(`${userId}_${norm}`);
+  }
+  if (!session) {
+    for (const [key, s] of activeSessions.entries()) {
+      if (key.startsWith(`${userId}_`)) {
+        session = s;
+        break;
+      }
+    }
+  }
+
+  if (!session) {
+    const notFoundErr = new Error('No active quiz session found');
+    notFoundErr.status = 404;
+    throw notFoundErr;
+  }
+
+  if (session.isLocked) {
+    return {
+      strikeCount: session.strikeCount,
+      strikesRemaining: 0,
+      isLocked: true,
+      lockReason: session.lockReason,
+      strikes: session.strikes
+    };
+  }
+
+  const timestamp = Date.now();
+  const strikeRecord = {
+    type: violationType,
+    details,
+    timestamp,
+    questionStep: session.currentStep
+  };
+
+  session.strikes = session.strikes || [];
+  session.strikes.push(strikeRecord);
+  session.strikeCount = (session.strikeCount || 0) + 1;
+
+  if (violationType === 'fullscreen_exit') {
+    session.fullscreenExits = (session.fullscreenExits || 0) + 1;
+  } else if (['copy', 'paste', 'cut', 'contextmenu', 'clipboard', 'clipboard_shortcut', 'devtools_attempt'].includes(violationType)) {
+    session.clipboardViolations = (session.clipboardViolations || 0) + 1;
+  } else if (['tab_switch', 'window_blur', 'visibilitychange'].includes(violationType)) {
+    session.tabSwitchCount = (session.tabSwitchCount || 0) + 1;
+  }
+
+  if (session.strikeCount >= 3) {
+    session.isLocked = true;
+    session.lockReason = 'REPEATED_PROCTORING_VIOLATIONS';
+  }
+
+  return {
+    strikeCount: session.strikeCount,
+    strikesRemaining: Math.max(0, 3 - session.strikeCount),
+    isLocked: session.isLocked,
+    lockReason: session.lockReason,
+    strikes: session.strikes
+  };
+}
+
+/**
+ * Retrieve active quiz session state for recovery on page reload
+ */
+function getActiveSession(userId, skill) {
+  let session = null;
+  if (skill) {
+    const norm = normalizeSkillKey(skill);
+    session = activeSessions.get(`${userId}_${norm}`);
+  }
+  if (!session) {
+    for (const [key, s] of activeSessions.entries()) {
+      if (key.startsWith(`${userId}_`)) {
+        session = s;
+        break;
+      }
+    }
+  }
+  if (!session) return null;
+
+  const elapsedSeconds = session.currentQuestionServedAt
+    ? Math.round((Date.now() - session.currentQuestionServedAt) / 1000)
+    : 0;
+  const remainingSeconds = Math.max(0, (session.timeLimitSeconds || 45) - elapsedSeconds);
+
+  return {
+    sessionId: `${session.userId}_${session.skill}`,
+    skill: session.skill,
+    displayName: session.displayName,
+    selfRated: session.selfRated,
+    currentStep: session.currentStep,
+    questionIndex: session.currentStep,
+    totalSteps: session.totalSteps,
+    totalQuestions: session.totalSteps,
+    currentDifficulty: session.currentDifficulty,
+    score: session.score,
+    timeLimitSeconds: session.timeLimitSeconds || 45,
+    elapsedSeconds,
+    remainingSeconds,
+    strikeCount: session.strikeCount || 0,
+    strikesRemaining: Math.max(0, 3 - (session.strikeCount || 0)),
+    isLocked: Boolean(session.isLocked),
+    lockReason: session.lockReason || null,
+    question: {
+      id: session.currentQuestionId,
+      topic: session.currentQuestionTopic || 'General',
+      text: session.currentQuestionText,
+      prompt: session.currentQuestionText,
+      codeSnippet: session.currentQuestionCodeSnippet || null,
+      options: session.currentQuestionShuffledOptions || []
+    }
+  };
+}
+
 function getActiveSessionForUser(userId, skill) {
   if (skill) {
     const norm = normalizeSkillKey(skill);
@@ -564,5 +731,7 @@ module.exports = {
   startQuizSession,
   submitAnswer,
   finalizeQuiz,
+  recordViolation,
+  getActiveSession,
   getActiveSessionForUser
 };

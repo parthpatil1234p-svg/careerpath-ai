@@ -190,6 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let questionStartTime = Date.now();
   let tabSwitchesCount = 0;
   let proctorToastTimeout = null;
+  let proctorLock = null;
 
   const showProctorToast = (msg) => {
     if (!quizProctorAlert || !quizProctorAlertText) return;
@@ -208,13 +209,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const startQuestionTimer = () => {
+  const startQuestionTimer = (initialSeconds = QUESTION_TIME_LIMIT) => {
     stopQuestionTimer();
-    remainingSeconds = QUESTION_TIME_LIMIT;
-    questionStartTime = Date.now();
+    remainingSeconds = initialSeconds;
+    questionStartTime = Date.now() - (QUESTION_TIME_LIMIT - initialSeconds) * 1000;
 
-    if (quizTimerSeconds) quizTimerSeconds.textContent = remainingSeconds;
-    if (quizTimerProgressBar) quizTimerProgressBar.style.width = '100%';
+    if (quizTimerSeconds) quizTimerSeconds.textContent = Math.max(0, remainingSeconds);
+    if (quizTimerProgressBar) {
+      const pct = Math.max(0, (remainingSeconds / QUESTION_TIME_LIMIT) * 100);
+      quizTimerProgressBar.style.width = `${pct}%`;
+    }
     if (quizTimerBadge) quizTimerBadge.className = 'quiz-timer-badge';
 
     timerInterval = setInterval(() => {
@@ -250,23 +254,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }, 1000);
   };
-
-  // Proctoring listeners: Tab switch & blur events (Pillar 6)
-  document.addEventListener('visibilitychange', () => {
-    if (screenQuiz && !screenQuiz.classList.contains('d-none') && !isAnswerLocked) {
-      if (document.hidden) {
-        tabSwitchesCount++;
-        showProctorToast('⚠️ Proctor Notice: Tab change detected. Quiz session is actively monitored.');
-      }
-    }
-  });
-
-  window.addEventListener('blur', () => {
-    if (screenQuiz && !screenQuiz.classList.contains('d-none') && !isAnswerLocked) {
-      tabSwitchesCount++;
-      showProctorToast('⚠️ Proctor Notice: Window blur detected. Please stay focused on the quiz.');
-    }
-  });
 
   // 4. Utility Functions
   const showAlert = (message, type = 'danger') => {
@@ -399,7 +386,66 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     renderSkillTabs();
-    loadIntroForSkill(activeSkillKey);
+    const hasRecovered = await checkActiveSessionRecovery();
+    if (!hasRecovered) {
+      loadIntroForSkill(activeSkillKey);
+    }
+  };
+
+  // 5.5 Active Session Recovery (Pillars 2 & 6)
+  const checkActiveSessionRecovery = async () => {
+    if (!window.Auth?.isAuthenticated?.()) return false;
+    try {
+      const activeRes = await window.API.get('/quiz/active-session', { auth: true });
+      if (activeRes.success && activeRes.data) {
+        const data = activeRes.data;
+        currentSessionId = data.sessionId;
+        activeSkillKey = data.skill;
+        currentQuestionIdx = data.currentStep || data.questionIndex || 1;
+        currentQuestion = data.question;
+        sessionCompleted = false;
+
+        // Transition to Quiz Screen
+        screenIntro.classList.add('d-none');
+        screenVerdict.classList.add('d-none');
+        screenQuiz.classList.remove('d-none');
+
+        // Arm AntiCheatLock
+        if (window.AntiCheatLock) {
+          if (!proctorLock) {
+            proctorLock = new window.AntiCheatLock({
+              sessionId: currentSessionId,
+              skill: activeSkillKey,
+              onStrike: (strikeCount, remaining, type) => {
+                tabSwitchesCount = strikeCount;
+                showProctorToast(`⚠️ Proctor Notice: Focus violation detected. Strike ${strikeCount}/3.`);
+              },
+              onLockout: (reason) => {
+                stopQuestionTimer();
+                isAnswerLocked = true;
+                if (btnSubmitAnswer) btnSubmitAnswer.disabled = true;
+              }
+            });
+          }
+          proctorLock.arm({
+            sessionId: currentSessionId,
+            skill: activeSkillKey,
+            strikeCount: data.strikeCount || 0,
+            isLocked: data.isLocked || false,
+            lockReason: data.lockReason || null
+          });
+        }
+
+        renderActiveQuestion(data.question, data.currentDifficulty, currentQuestionIdx, data.totalSteps || 5);
+        if (data.remainingSeconds !== undefined) {
+          startQuestionTimer(data.remainingSeconds);
+        }
+        return true;
+      }
+    } catch (err) {
+      console.warn('Could not check active quiz session recovery:', err.message);
+    }
+    return false;
   };
 
   // 6. Render Skill Switcher Tabs
@@ -555,6 +601,31 @@ document.addEventListener('DOMContentLoaded', async () => {
               activeProviderBadge.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-0.5 small';
               activeProviderBadge.innerHTML = `<i class="bi bi-shield-check me-1"></i>Curated Bank`;
             }
+          // Arm AntiCheatLock & Request Fullscreen
+          if (window.AntiCheatLock) {
+            if (!proctorLock) {
+              proctorLock = new window.AntiCheatLock({
+                sessionId: currentSessionId,
+                skill: activeSkillKey,
+                onStrike: (strikeCount, remaining, type) => {
+                  tabSwitchesCount = strikeCount;
+                  showProctorToast(`⚠️ Proctor Notice: Focus violation detected. Strike ${strikeCount}/3 (${remaining} remaining).`);
+                },
+                onLockout: (reason) => {
+                  stopQuestionTimer();
+                  isAnswerLocked = true;
+                  if (btnSubmitAnswer) btnSubmitAnswer.disabled = true;
+                }
+              });
+            }
+            proctorLock.arm({
+              sessionId: currentSessionId,
+              skill: activeSkillKey,
+              strikeCount: data.strikeCount || 0,
+              isLocked: data.isLocked || false,
+              lockReason: data.lockReason || null
+            });
+            proctorLock.requestFullscreen();
           }
 
           renderActiveQuestion(data.question, data.currentDifficulty, currentQuestionIdx, data.totalQuestions || 5);
@@ -798,6 +869,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 12. Render Reality-Check Verdict
   const renderVerdict = (result) => {
     stopQuestionTimer();
+    if (proctorLock) {
+      proctorLock.disarm();
+      proctorLock.exitFullscreen();
+    }
     screenQuiz.classList.add('d-none');
     screenVerdict.classList.remove('d-none');
     window.scrollTo({ top: 120, behavior: 'smooth' });

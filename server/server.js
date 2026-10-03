@@ -79,8 +79,55 @@ const app = express();
 // Enable trust proxy for Render / Vercel reverse proxy rate-limiting
 app.set('trust proxy', 1);
 
-// ── Security: Helmet sets sensible HTTP headers ───────────────
-app.use(helmet());
+// ── Security: Helmet sets robust HTTP headers (HSTS, CSP, X-Frame-Options) ──
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'",
+        "https://cdn.jsdelivr.net",
+        "https://cdnjs.cloudflare.com",
+        "https://unpkg.com"
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://cdn.jsdelivr.net",
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.googleapis.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com",
+        "https://cdn.jsdelivr.net",
+        "data:"
+      ],
+      frameSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:", "blob:"],
+      connectSrc: [
+        "'self'",
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "https://careerpath-ai-bdbt.onrender.com",
+        "https://api.groq.com",
+        "https://generativelanguage.googleapis.com"
+      ],
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  },
+  frameguard: { action: 'sameorigin' },
+  noSniff: true
+}));
 
 // ── CORS: Strict Domain Whitelist ─────────────────────────────
 const rawOrigins = [

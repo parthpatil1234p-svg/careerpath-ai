@@ -11,10 +11,11 @@ const express = require('express');
 const router = express.Router();
 const { protect, requireStudent } = require('../middleware/authMiddleware');
 const { validateAssessment } = require('../middleware/validateRequest');
-const { updateAssessment } = require('../controllers/assessmentController');
+const { updateAssessment, getAssessment } = require('../controllers/assessmentController');
 
 router.use(protect, requireStudent);
 
+router.get('/', getAssessment);
 router.put('/', validateAssessment, updateAssessment);
 router.post('/', validateAssessment, updateAssessment);
 

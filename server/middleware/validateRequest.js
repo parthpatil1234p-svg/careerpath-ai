@@ -161,8 +161,17 @@ const validateProfileUpdate = (req, res, next) => {
  *  - no duplicate skills allowed (case-insensitive check)
  */
 const validateAssessment = (req, res, next) => {
-  const { education, interests, skills, careerGoals } = req.body;
+  const { education, interests, skills, careerGoals, encryptedVault } = req.body;
   const errors = [];
+
+  // Support Client-Side Encrypted Storage standalone updates
+  if (encryptedVault && !education && !interests && !skills) {
+    if (typeof encryptedVault !== 'object' || !encryptedVault.ciphertext) {
+      errors.push({ field: 'encryptedVault', message: 'Encrypted vault must include ciphertext' });
+    }
+    if (errors.length > 0) return sendValidationError(res, errors);
+    return next();
+  }
 
   // 1. education
   if (!education || typeof education !== 'object' || Array.isArray(education)) {

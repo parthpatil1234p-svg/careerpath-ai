@@ -220,8 +220,11 @@
                 </span>
               </div>
 
-              <!-- Anti-Cheating 45s Countdown Timer & Difficulty Pill (Pillars 2 & 6) -->
+              <!-- Anti-Cheating 45s Countdown Timer, Proctoring HUD & Difficulty Pill (Pillars 2 & 6) -->
               <div class="d-flex align-items-center gap-2">
+                <div class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small" id="proctoringHudBadge" title="Proctoring Anti-Cheating Lock: 3-strikes policy">
+                  <i class="bi bi-shield-lock-fill me-1"></i>Strikes: <span id="strikeBadgeCount" class="fw-bold">0</span>/3
+                </div>
                 <div class="quiz-timer-badge" id="quizTimerBadge" title="Anti-cheating 45-second timer per question">
                   <i class="bi bi-clock-history"></i>
                   <span id="quizTimerSeconds">45</span>s
@@ -416,6 +419,8 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js?v=2.7"></script>
     <script src="js/api.js"></script>
+    <script src="js/crypto-vault.js"></script>
+    <script src="js/anti-cheat-lock.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/chat.js"></script>

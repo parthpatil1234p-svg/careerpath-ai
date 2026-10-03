@@ -11,7 +11,15 @@
 const User = require('../models/User');
 const { normalizeSkillKey } = require('../data/quizQuestions');
 
-const ALLOWED_ASSESSMENT_FIELDS = ['education', 'interests', 'skills', 'careerGoals', 'hasCompletedSkillVerification', 'primaryStream'];
+const ALLOWED_ASSESSMENT_FIELDS = [
+  'education',
+  'interests',
+  'skills',
+  'careerGoals',
+  'hasCompletedSkillVerification',
+  'primaryStream',
+  'encryptedVault'
+];
 
 // ── Authoritative Skill-to-Stream Map for Server-Side Enforcement ──
 const SKILL_STREAM_MAP = {
@@ -310,6 +318,19 @@ const updateAssessment = async (req, res, next) => {
     const hasInterest = Array.isArray(updates.interests) && updates.interests.length > 0;
     const hasSkill = Array.isArray(updates.skills) && updates.skills.length > 0;
 
+    // Process Client-Side Encrypted Vault payload if provided
+    if (updates.encryptedVault && typeof updates.encryptedVault === 'object') {
+      updates.encryptedVault = {
+        ciphertext: typeof updates.encryptedVault.ciphertext === 'string' ? updates.encryptedVault.ciphertext : null,
+        iv: typeof updates.encryptedVault.iv === 'string' ? updates.encryptedVault.iv : null,
+        salt: typeof updates.encryptedVault.salt === 'string' ? updates.encryptedVault.salt : null,
+        version: updates.encryptedVault.version || 'AES-GCM-256',
+        algorithm: updates.encryptedVault.algorithm || 'AES-GCM',
+        iterations: updates.encryptedVault.iterations || 100000,
+        updatedAt: new Date()
+      };
+    }
+
     updates.profileCompleted = Boolean(hasEducation && hasInterest && hasSkill);
 
     // Persist one-time skill verification completion for account
@@ -342,6 +363,44 @@ const updateAssessment = async (req, res, next) => {
   }
 };
 
+/**
+ * GET /api/assessment
+ * Retrieves current student's assessment profile, verified skills, and encryptedVault.
+ */
+const getAssessment = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).select(
+      'education interests skills careerGoals profileCompleted hasCompletedSkillVerification primaryStream encryptedVault'
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User profile not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        assessment: {
+          education: user.education,
+          interests: user.interests,
+          skills: user.skills,
+          careerGoals: user.careerGoals,
+          profileCompleted: user.profileCompleted,
+          hasCompletedSkillVerification: user.hasCompletedSkillVerification,
+          primaryStream: user.primaryStream,
+          encryptedVault: user.encryptedVault || null,
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   updateAssessment,
+  getAssessment,
 };
