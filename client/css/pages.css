@@ -719,9 +719,54 @@
   font-size: 0.82rem;
   font-weight: 600;
   padding: 0.25rem 0.55rem;
-  min-width: 104px;
+  min-width: 98px;
   border-color: #CBD5E1;
 }
+
+/* In-Card Instant Take Quiz Button */
+.btn-grid-take-quiz {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  color: #FFFFFF !important;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.25);
+}
+.btn-grid-take-quiz:hover {
+  background: linear-gradient(135deg, #0369A1 0%, #075985 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+  color: #FFFFFF !important;
+}
+.btn-grid-take-quiz:active {
+  transform: translateY(0);
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.94; transform: scale(1.02); }
+}
+.animate-pulse-soft {
+  animation: pulseSoft 2.5s ease-in-out infinite;
+}
+
+@media (max-width: 575.98px) {
+  .skill-picker-card {
+    padding: 0.65rem 0.75rem;
+  }
+  .skill-picker-card .d-flex.w-100 {
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+  .skill-proficiency-select {
+    min-width: 86px;
+    font-size: 0.78rem;
+  }
+}
+
 
 /* --------------------------------------------------------------------------
    4. Recommendations Page (recommendations.html)

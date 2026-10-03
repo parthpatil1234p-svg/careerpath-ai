@@ -957,13 +957,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       const skillLogo = window.TechLogos?.getLogoImg(skill.name, { size: 16, className: 'me-1' }) || '';
 
       let verifiedBadge = '';
-      let retestBtnHtml = '';
-      if (isQuizVerified) {
-        verifiedBadge = `<span class="badge bg-success-subtle text-success border border-success ms-1" title="Verified by Reality Check Quiz" style="padding: 1px 5px; font-size: 0.62rem;"><i class="bi bi-patch-check-fill me-1"></i>Verified (${capitalize(selectedObj.verifiedProficiency || selectedObj.proficiency)})</span>`;
-        retestBtnHtml = `<button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level" style="font-size: 0.72rem; height: 28px; line-height: 26px;"><i class="bi bi-arrow-repeat me-1"></i>Retest</button>`;
-      } else if (isCodeVerified) {
-        verifiedBadge = `<span class="badge-code-verified ms-1" title="Verified by real GitHub repo code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github me-1"></i>Code Verified</span>`;
-        retestBtnHtml = `<button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Take quiz to verify with full confidence" style="font-size: 0.72rem; height: 28px; line-height: 26px;"><i class="bi bi-patch-question me-1"></i>Quiz</button>`;
+      let actionBtnHtml = '';
+      if (isSelected) {
+        if (isQuizVerified) {
+          verifiedBadge = `<span class="badge bg-success-subtle text-success border border-success ms-1" title="Verified by Reality Check Quiz" style="padding: 1px 5px; font-size: 0.62rem;"><i class="bi bi-patch-check-fill me-1"></i>Verified (${capitalize(selectedObj.verifiedProficiency || selectedObj.proficiency)})</span>`;
+          actionBtnHtml = `<button type="button" class="btn btn-outline-success btn-sm py-0 px-2 btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz - Click to Retest" style="font-size: 0.72rem; height: 28px; line-height: 26px;"><i class="bi bi-patch-check-fill me-1"></i>Verified ✓</button>`;
+        } else if (isCodeVerified) {
+          verifiedBadge = `<span class="badge-code-verified ms-1" title="Verified by real GitHub repo code" style="padding: 1px 4px; font-size: 0.62rem;"><i class="bi bi-github me-1"></i>Code Verified</span>`;
+          actionBtnHtml = `<button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Take quiz to verify with full confidence" style="font-size: 0.72rem; height: 28px; line-height: 26px;"><i class="bi bi-patch-question me-1"></i>Quiz</button>`;
+        } else {
+          actionBtnHtml = `<button type="button" class="btn cp-btn-primary btn-sm py-0 px-2 btn-grid-take-quiz ms-1 text-nowrap animate-pulse-soft" data-skill="${escapeHtml(skill.name)}" title="Take 90s reality check quiz to verify this skill" style="font-size: 0.74rem; height: 28px; line-height: 26px; font-weight: 600;"><i class="bi bi-lightning-charge-fill me-1"></i>Take Quiz</button>`;
+        }
       }
 
       const col = document.createElement('div');
@@ -993,7 +997,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <option value="intermediate" ${currentProficiency === 'intermediate' ? 'selected' : ''}>Intermediate</option>
                 <option value="advanced" ${currentProficiency === 'advanced' ? 'selected' : ''}>Advanced</option>
               </select>
-              ${retestBtnHtml}
+              ${actionBtnHtml}
             </div>
           </div>
         </div>
@@ -1004,6 +1008,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       checkbox.addEventListener('change', (e) => {
         if (e.target.checked) {
+          // Auto-clear validation alert immediately upon selecting a skill
+          if (alertContainer) {
+            alertContainer.innerHTML = '';
+          }
           if (!isSkillAllowedInStream(skill, selectedStream)) {
             e.target.checked = false;
             showAlert(`This skill belongs to another stream and cannot be selected in ${STREAM_META[selectedStream]?.label || selectedStream}.`, 'warning');
@@ -1041,6 +1049,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         updateSelectedSkillsUI();
         renderSkillsGrid();
+        renderProveSkillsPanel();
         if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
@@ -1051,8 +1060,18 @@ document.addEventListener('DOMContentLoaded', async () => {
           item.selfRatedProficiency = e.target.value;
         }
         updateSelectedSkillsUI();
+        renderProveSkillsPanel();
         if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
+
+      const gridTakeQuizBtn = col.querySelector('.btn-grid-take-quiz');
+      if (gridTakeQuizBtn) {
+        gridTakeQuizBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          startSkillCheck(skill.name);
+        });
+      }
 
       const gridRetestBtn = col.querySelector('.btn-grid-retest');
       if (gridRetestBtn) {
@@ -1077,10 +1096,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (selectedSkillsMap.size === 0) {
       selectedSkillsSummary.innerHTML = `
-        <span class="text-muted small fst-italic">No skills selected yet. Click any skill above to add it.</span>
+        <span class="text-muted small fst-italic">No skills selected yet. Click any skill below to add it and take the reality check quiz.</span>
       `;
+      const topHint = document.getElementById('topQuizStatusHint');
+      if (topHint) topHint.classList.add('d-none');
       renderProveSkillsPanel();
       return;
+    }
+
+    // Auto-clear validation error if present
+    if (alertContainer) {
+      const text = alertContainer.textContent || '';
+      if (text.includes('select at least 1 skill')) {
+        alertContainer.innerHTML = '';
+      }
+    }
+
+    const topHint = document.getElementById('topQuizStatusHint');
+    if (topHint) {
+      topHint.classList.remove('d-none');
     }
 
     selectedSkillsSummary.innerHTML = '';
@@ -1092,6 +1126,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         verifiedTag = `<span class="badge bg-success-subtle text-success border border-success ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz - Click to Retest" style="padding: 1px 5px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-patch-check-fill"></i> Verified <i class="bi bi-arrow-repeat text-primary ms-0.5"></i></span>`;
       } else if (skill.isCodeVerified) {
         verifiedTag = `<span class="badge-code-verified ms-1 cursor-pointer retest-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Verified by GitHub Repo Code - Click to Quiz" style="padding: 1px 4px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-github"></i> Verified <i class="bi bi-arrow-repeat ms-0.5"></i></span>`;
+      } else {
+        verifiedTag = `<span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1 cursor-pointer take-quiz-pill-badge" role="button" data-skill="${escapeHtml(skill.name)}" title="Click to take 90s reality check quiz" style="padding: 1px 5px; font-size: 0.62rem; cursor: pointer;"><i class="bi bi-lightning-charge-fill text-warning me-0.5"></i>Take Quiz</span>`;
       }
 
       const rawProf = String(skill.verifiedProficiency || skill.proficiency || 'intermediate');
@@ -1106,6 +1142,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         <i class="bi bi-x ms-1 cursor-pointer" title="Remove" style="cursor: pointer;"></i>
       `;
 
+      const quizBadge = pill.querySelector('.take-quiz-pill-badge');
+      if (quizBadge) {
+        quizBadge.addEventListener('click', (e) => {
+          e.stopPropagation();
+          startSkillCheck(skill.name);
+        });
+      }
+
       const retestBadge = pill.querySelector('.retest-pill-badge');
       if (retestBadge) {
         retestBadge.addEventListener('click', (e) => {
@@ -1118,6 +1162,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectedSkillsMap.delete(skill.name);
         updateSelectedSkillsUI();
         renderSkillsGrid();
+        renderProveSkillsPanel();
+        if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
       selectedSkillsSummary.appendChild(pill);
@@ -1132,44 +1178,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectedSkillsMap.forEach((s) => {
       const norm = normalizeSkillSlug(s.name);
       const isBanked = AVAILABLE_QUIZ_SKILLS.includes(norm);
-      const profStr = String(s.verifiedProficiency || s.proficiency || '').toLowerCase();
-      const selfProfStr = String(s.selfRatedProficiency || '').toLowerCase();
       const isVerified = Boolean(s.isQuizVerified || s.isCodeVerified);
-      const isLevelEligible =
-        ['intermediate', 'advanced'].includes(profStr) ||
-        ['intermediate', 'advanced'].includes(selfProfStr) ||
-        isVerified;
 
-      if (isLevelEligible) {
-        let score = 0;
-        // Prioritize already-verified skills so they ALWAYS remain visible with their checkmarks!
-        if (isVerified) {
-          score += 1000;
-        }
-        // Banked skills get a slight affinity boost for 0ms loading
-        if (isBanked) {
-          score += 20;
-        }
-        selectedInterests.forEach((interest) => {
-          const affinity = INTEREST_SKILL_AFFINITY[interest] || [];
-          if (affinity.includes(norm)) score += 10;
-        });
-        const levelToCheck = String(s.selfRatedProficiency || s.proficiency || '').toLowerCase();
-        if (levelToCheck === 'advanced') score += 5;
-        else if (levelToCheck === 'intermediate') score += 2;
-
-        candidates.push({ key: s.name, norm, skill: s, score, isVerified, isBanked });
+      let score = 0;
+      // Prioritize already-verified skills so they ALWAYS remain visible with their checkmarks!
+      if (isVerified) {
+        score += 1000;
       }
-    });
-
-    // If all skills are self-rated beginner, include them as baseline candidates
-    if (candidates.length === 0 && selectedSkillsMap.size > 0) {
-      selectedSkillsMap.forEach((s) => {
-        const norm = normalizeSkillSlug(s.name);
-        const isBanked = AVAILABLE_QUIZ_SKILLS.includes(norm);
-        candidates.push({ key: s.name, norm, skill: s, score: isBanked ? 20 : 0, isVerified: false, isBanked });
+      // Banked skills get a slight affinity boost for 0ms loading
+      if (isBanked) {
+        score += 20;
+      }
+      selectedInterests.forEach((interest) => {
+        const affinity = INTEREST_SKILL_AFFINITY[interest] || [];
+        if (affinity.includes(norm)) score += 10;
       });
-    }
+      const levelToCheck = String(s.selfRatedProficiency || s.proficiency || '').toLowerCase();
+      if (levelToCheck === 'advanced') score += 5;
+      else if (levelToCheck === 'intermediate') score += 2;
+      else score += 1;
+
+      candidates.push({ key: s.name, norm, skill: s, score, isVerified, isBanked });
+    });
 
     // Sort by verified first, then score descending, then alphabetical
     candidates.sort((a, b) => {
@@ -1179,11 +1209,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       return b.score - a.score || (a.skill.displayName || a.skill.name).localeCompare(b.skill.displayName || b.skill.name);
     });
 
-    // Always include ALL verified skills that are selected, plus unverified ones up to at least 3 items total
+    // Always include ALL verified skills that are selected, plus unverified ones up to at least 5 items total
     const verifiedList = candidates.filter(c => c.isVerified).map(c => c.skill);
     const unverifiedList = candidates.filter(c => !c.isVerified).map(c => c.skill);
 
-    const neededUnverified = Math.max(0, 3 - verifiedList.length);
+    const neededUnverified = Math.max(0, 5 - verifiedList.length);
     return [...verifiedList, ...unverifiedList.slice(0, neededUnverified)];
   };
 
@@ -1332,33 +1362,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // When 0 skills need verification (e.g. only beginner or unbanked skills)
+    // When 0 skills are selected
     if (requiredSkills.length === 0) {
       if (proveSkillsBadge) {
         proveSkillsBadge.className = 'prove-skills-badge skipped';
       }
       if (proveSkillsBadgeText) {
-        proveSkillsBadgeText.textContent = 'No verification required';
+        proveSkillsBadgeText.textContent = 'No skills selected';
       }
       if (proveSkillsProgressFill) {
-        proveSkillsProgressFill.style.width = '100%';
-        proveSkillsProgressFill.className = 'prove-skills-progress-fill completed';
+        proveSkillsProgressFill.style.width = '0%';
+        proveSkillsProgressFill.className = 'prove-skills-progress-fill';
       }
       if (proveSkillsSubtitle) {
-        proveSkillsSubtitle.textContent = "All your selected skills are beginner level or don't require verification. You're ready to proceed to Goals!";
+        proveSkillsSubtitle.textContent = 'Select skills above to unlock your 90-second reality-check quizzes.';
       }
       proveSkillsPanel.classList.remove('all-verified');
 
       proveSkillsList.innerHTML = `
         <div class="text-muted small py-2 fst-italic">
-          <i class="bi bi-check-circle-fill text-success me-1"></i> No Intermediate or Advanced technical claims requiring reality-check verification. You can proceed directly to Goals.
+          <i class="bi bi-info-circle me-1"></i> Select at least 1 skill above to see reality-check quiz options.
         </div>
       `;
 
       if (step3ContinueBtn) {
         step3ContinueBtn.disabled = false;
-        step3ContinueBtn.title = 'Continue to Goals';
-        step3ContinueBtn.classList.remove('opacity-50');
+        step3ContinueBtn.title = 'Select at least 1 skill to continue';
       }
       return;
     }
@@ -2431,8 +2460,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3500);
       }
 
+      if (alertContainer) {
+        alertContainer.innerHTML = '';
+      }
       renderSkillsGrid();
       updateSelectedSkillsUI();
+      renderProveSkillsPanel();
+      if (typeof saveAutoDraft === 'function') saveAutoDraft();
     };
 
     btnAddCustomSkill.addEventListener('click', handleAddCustomSkill);

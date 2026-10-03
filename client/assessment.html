@@ -539,6 +539,27 @@
                 </div>
               </div>
 
+              <!-- Top Selected Skills Summary Box (Visible immediately above grid) -->
+              <div class="selected-skills-box mb-3 p-3 rounded-2 stat-box-atlas border border-line" id="topSelectedSkillsBox">
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                  <span class="small fw-bold text-ink d-flex align-items-center gap-1.5">
+                    <i class="bi bi-check2-circle text-success fs-6"></i>
+                    <span>Your Selected Skills (<span id="selectedSkillsCount">0</span>/20):</span>
+                  </span>
+                  <div class="d-flex align-items-center gap-2">
+                    <span id="topQuizStatusHint" class="badge badge-teal small d-none">
+                      <i class="bi bi-lightning-charge-fill text-warning me-1"></i>Take 90s Quiz on any skill below
+                    </span>
+                    <button type="button" id="clearAllSkillsBtn" class="btn btn-link text-danger btn-sm p-0 text-decoration-none small">
+                      Clear All
+                    </button>
+                  </div>
+                </div>
+                <div id="selectedSkillsSummary" class="d-flex flex-wrap gap-2">
+                  <span class="text-muted small fst-italic">No skills selected yet. Click any skill below to add it and take the reality check quiz.</span>
+                </div>
+              </div>
+
               <!-- Skills Grid Container -->
               <div class="skills-grid-container row g-3 mb-4" id="skillsGrid" role="group" aria-label="Available skills" aria-live="polite" style="min-height: 520px; max-height: calc(85vh - 200px); overflow-y: auto;">
                 <!-- Dynamically populated via assessment.js -->
@@ -597,21 +618,6 @@
                  <div id="customSkillFeedback" class="small mt-2 d-none" role="status" aria-live="polite"></div>
               </div>
 
-              <!-- Selected Skills Summary Box -->
-              <div class="selected-skills-box mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="small fw-bold text-ink">
-                    <i class="bi bi-check2-circle text-success me-1"></i> Your Selected Skills (<span id="selectedSkillsCount">0</span>/20):
-                  </span>
-                  <button type="button" id="clearAllSkillsBtn" class="btn btn-link text-danger btn-sm p-0 text-decoration-none small">
-                    Clear All
-                  </button>
-                </div>
-                <div id="selectedSkillsSummary" class="d-flex flex-wrap gap-2">
-                  <span class="text-muted small fst-italic">No skills selected yet. Click any skill above to add it.</span>
-                </div>
-              </div>
-
               <!-- Prove your skills Panel (Verification Gate) -->
               <div class="prove-skills-panel" id="proveSkillsPanel">
                 <div class="prove-skills-header">
@@ -634,7 +640,7 @@
 
                 <div class="prove-skills-list" id="proveSkillsList">
                   <div class="text-muted small py-2 fst-italic">
-                    Select Intermediate or Advanced skills above to see required verification checks.
+                    <i class="bi bi-info-circle me-1"></i> Select at least 1 skill above to see reality-check quiz options.
                   </div>
                 </div>
 
