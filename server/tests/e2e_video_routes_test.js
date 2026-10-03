@@ -59,11 +59,12 @@ async function testSuite() {
   console.log('Spam passed:', spamRes.passed, 'Score:', spamRes.score);
   if (spamRes.passed) throw new Error('Spam should not pass!');
 
+  const goodReflectionText = `In this lesson on ${task.title || 'CSS Flexbox and Grid'}, I learned how display flex establishes a flexible layout along main and cross axes using justify-content and align-items. For complex two-dimensional layouts, CSS Grid with grid-template-columns and fractional fr units enables structured responsive grids without float hacks. Using the gap property and media queries allows building clean and maintainable UI interfaces.`;
   const goodRes = await evaluateVideoReflection({
     taskTitle: task.title,
-    skillName: task.skillName,
+    skillName: task.skillName || 'css',
     videoTitle: task.resource?.title,
-    reflectionText: 'In this lesson on Asynchronous JavaScript, I learned how async and await simplify working with Promises. Using try/catch blocks with the fetch API allows handling HTTP errors gracefully instead of unhandled Promise rejections. I will use this to consume external REST endpoints and update the DOM.',
+    reflectionText: goodReflectionText,
   });
   console.log('Good reflection passed:', goodRes.passed, 'Score:', goodRes.score);
   console.log('Key concepts:', goodRes.keyConceptsIdentified);

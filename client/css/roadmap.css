@@ -629,4 +629,57 @@
   display: block !important;
 }
 
+/* Instructor Switcher Drawer & Cards */
+.instructor-switcher-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  max-width: 92%;
+  background: #FFFFFF;
+  border-left: 1px solid #E2E8F0;
+  box-shadow: -8px 0 24px rgba(15, 23, 42, 0.12);
+  z-index: 1070;
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.instructor-card {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 0.85rem;
+  background: #F8FAFC;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.instructor-card:hover {
+  border-color: #0D9488;
+  background: #F0FDFA;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.12);
+}
+.instructor-card.active-course {
+  border-color: #0D9488;
+  background: #ECFDF5;
+  box-shadow: 0 0 0 1.5px #0D9488;
+}
+.instructor-thumbnail {
+  width: 84px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: #0F172A;
+}
+
+
 

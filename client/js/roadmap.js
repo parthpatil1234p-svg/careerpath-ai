@@ -1242,16 +1242,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.addEventListener('focus', () => {
         this.handleFocusReturned();
       });
+
+      // Switch course / instructor drawer toggle
+      document.getElementById('btnToggleInstructorDrawer')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleInstructorDrawer();
+      });
+
+      document.getElementById('btnCloseInstructorDrawer')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closeInstructorDrawer();
+      });
     },
 
     extractYouTubeId(url) {
-      if (!url) return 'mU6anWqZJcc';
+      if (!url || typeof url !== 'string') return null;
+      if (url.includes('results?search_query=')) return null;
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
       if (match && match[2] && match[2].length === 11) {
         return match[2];
       }
-      return 'mU6anWqZJcc';
+      return null;
     },
 
     open({ taskId, taskTitle, videoUrl, skillName, durationSeconds, isVerified, score }) {
@@ -1267,6 +1279,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       this.midCheckTriggered = Boolean(isVerified);
       this.checkpointData = null;
       this.isSubmitting = false;
+      this.alternativeCourses = [];
+      this.closeInstructorDrawer();
 
       // Update UI elements
       const titleEl = document.getElementById('videoChamberModalLabel');
@@ -1344,10 +1358,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       this.updateTelemetryUI(isVerified ? this.durationSeconds : 0, this.durationSeconds, isVerified ? 100 : 0);
 
-      // Initialize YouTube Player
-      const videoId = this.extractYouTubeId(videoUrl);
-      this.setupPlayer(videoId);
-
       const modalEl = document.getElementById('videoChamberModal');
       if (modalEl) {
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -1380,6 +1390,172 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.appendChild(backdrop);
           }
           document.body.classList.add('modal-open');
+        }
+      }
+
+      // Initialize or resolve YouTube Player
+      const extractedId = this.extractYouTubeId(videoUrl);
+      this.currentVideoId = extractedId || 'bMknfKXIFA8';
+      this.resolveAndMountVideo(extractedId, this.currentSkillName, taskTitle);
+    },
+
+    async resolveAndMountVideo(existingId, skillName, taskTitle) {
+      const instructorNameEl = document.getElementById('chamberInstructorName');
+      try {
+        const querySkill = skillName || 'computer science';
+        const res = await window.API.get(`/youtube/resolve?skill=${encodeURIComponent(querySkill)}&topic=${encodeURIComponent(taskTitle || '')}`);
+        if (res && res.success && res.data) {
+          const resolvedVideo = res.data.video;
+          this.alternativeCourses = res.data.alternatives || [];
+
+          if (resolvedVideo) {
+            if (instructorNameEl) {
+              instructorNameEl.textContent = `Instructor: ${resolvedVideo.channelTitle || 'Verified Educator'}`;
+            }
+            // If the task had no valid videoId or had generic fallback, mount the resolved video!
+            if (!existingId || existingId === 'mU6anWqZJcc') {
+              this.currentVideoId = resolvedVideo.videoId;
+              this.currentVideoUrl = resolvedVideo.watchUrl || `https://www.youtube.com/watch?v=${resolvedVideo.videoId}`;
+              this.setupPlayer(this.currentVideoId);
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[VideoChamber] Could not resolve YouTube masterclass metadata:', err);
+      }
+
+      if (instructorNameEl && (!instructorNameEl.textContent || instructorNameEl.textContent.includes('Loading') || instructorNameEl.textContent.includes('Resolving'))) {
+        instructorNameEl.textContent = 'Instructor: Verified Educator';
+      }
+
+      // If existingId was already valid, mount it directly
+      this.setupPlayer(this.currentVideoId);
+    },
+
+    toggleInstructorDrawer() {
+      const drawer = document.getElementById('instructorDrawer');
+      if (!drawer) return;
+      if (drawer.classList.contains('d-none')) {
+        this.openInstructorDrawer();
+      } else {
+        this.closeInstructorDrawer();
+      }
+    },
+
+    closeInstructorDrawer() {
+      const drawer = document.getElementById('instructorDrawer');
+      if (drawer) drawer.classList.add('d-none');
+    },
+
+    async openInstructorDrawer() {
+      const drawer = document.getElementById('instructorDrawer');
+      const spinner = document.getElementById('instructorDrawerSpinner');
+      const container = document.getElementById('instructorCoursesContainer');
+      if (!drawer || !container) return;
+
+      drawer.classList.remove('d-none');
+      if (this.alternativeCourses && this.alternativeCourses.length > 0) {
+        if (spinner) spinner.classList.add('d-none');
+        container.classList.remove('d-none');
+        this.renderInstructorCourses(this.alternativeCourses);
+        return;
+      }
+
+      if (spinner) spinner.classList.remove('d-none');
+      container.classList.add('d-none');
+
+      try {
+        const querySkill = this.currentSkillName || 'computer science';
+        const res = await window.API.get(`/youtube/search?skill=${encodeURIComponent(querySkill)}&maxResults=6`);
+        if (spinner) spinner.classList.add('d-none');
+        container.classList.remove('d-none');
+        const videos = res.data?.videos || [];
+        this.alternativeCourses = videos;
+        this.renderInstructorCourses(videos);
+      } catch (err) {
+        if (spinner) spinner.innerHTML = `<span class="text-danger small"><i class="bi bi-exclamation-triangle me-1"></i> Could not load instructors.</span>`;
+      }
+    },
+
+    renderInstructorCourses(videos) {
+      const container = document.getElementById('instructorCoursesContainer');
+      if (!container) return;
+      if (!videos || videos.length === 0) {
+        container.innerHTML = '<div class="text-muted small text-center py-3">No alternative courses found.</div>';
+        return;
+      }
+
+      container.innerHTML = videos.map((v) => {
+        const isActive = v.videoId === this.currentVideoId;
+        return `
+          <div class="instructor-card ${isActive ? 'active-course' : ''}" data-video-id="${v.videoId}">
+            <img src="${escapeHtml(v.thumbnailUrl || 'https://i.ytimg.com/vi/' + v.videoId + '/hqdefault.jpg')}" alt="Thumbnail" class="instructor-thumbnail" onerror="this.src='assets/logo.svg'" />
+            <div class="flex-grow-1" style="min-width: 0;">
+              <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle font-mono" style="font-size: 0.65rem;">
+                  <i class="bi bi-youtube me-0.5"></i> ${escapeHtml(v.channelTitle || 'Educator')}
+                </span>
+                ${isActive ? '<span class="badge bg-success font-mono" style="font-size: 0.6rem;">PLAYING</span>' : ''}
+              </div>
+              <h6 class="fw-bold text-ink mb-1 text-truncate" style="font-size: 0.82rem;" title="${escapeHtml(v.title)}">
+                ${escapeHtml(v.title)}
+              </h6>
+              <button type="button" class="btn btn-sm ${isActive ? 'btn-success' : 'cp-btn-primary'} py-0.5 px-2 font-mono btn-switch-course" data-video-id="${v.videoId}" style="font-size: 0.72rem;">
+                ${isActive ? '<i class="bi bi-check-lg me-1"></i>Current Course' : '<i class="bi bi-play-fill me-1"></i>Watch This Course'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.btn-switch-course, .instructor-card').forEach((el) => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const vid = el.getAttribute('data-video-id') || el.closest('[data-video-id]')?.getAttribute('data-video-id');
+          const chosen = videos.find(x => x.videoId === vid);
+          if (chosen && chosen.videoId !== this.currentVideoId) {
+            this.switchInstructor(chosen);
+          }
+        });
+      });
+    },
+
+    async switchInstructor(course) {
+      this.currentVideoId = course.videoId;
+      this.currentVideoUrl = course.watchUrl || `https://www.youtube.com/watch?v=${course.videoId}`;
+      
+      const instructorNameEl = document.getElementById('chamberInstructorName');
+      if (instructorNameEl) {
+        instructorNameEl.textContent = course.channelTitle ? `Instructor: ${course.channelTitle}` : 'Verified Masterclass';
+      }
+
+      // Update player
+      if (this.player && typeof this.player.loadVideoById === 'function') {
+        try {
+          this.player.loadVideoById(course.videoId);
+          this.player.playVideo();
+        } catch (e) {
+          this.fallbackIframeEmbed(course.videoId);
+        }
+      } else {
+        this.fallbackIframeEmbed(course.videoId);
+      }
+
+      this.closeInstructorDrawer();
+
+      // Persist selection to backend task
+      if (this.currentTaskId) {
+        try {
+          await window.API.patch(`/youtube/tasks/${this.currentTaskId}/switch-video`, {
+            videoId: course.videoId,
+            videoTitle: course.title,
+            channelTitle: course.channelTitle,
+            videoUrl: this.currentVideoUrl,
+            thumbnailUrl: course.thumbnailUrl,
+          }, { auth: true });
+        } catch (saveErr) {
+          console.warn('[VideoChamber] Failed to persist switched instructor:', saveErr);
         }
       }
     },

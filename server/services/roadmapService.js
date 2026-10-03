@@ -14,6 +14,7 @@ const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
 const roadmapTemplates = require('../data/roadmapTemplates');
 const { calculateSkillScore } = require('./recommendationService');
+const youtubeService = require('./youtubeService');
 
 /**
  * Generates structured task objects ready for bulk insertion
@@ -72,6 +73,9 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
           const sName = rs.skill?.displayName || rs.skill?.name || rs.skillName || 'Core Competency';
           const sKey = (rs.skill?.name || rs.skillName || 'skill').toLowerCase();
 
+          const ytResolved = youtubeService.resolveCuratedSync(sName || sKey);
+          const topVid = ytResolved.video;
+
           tasks.push({
             order: i * 2 + 1,
             title: `Master ${sName} Architecture & Core Principles`,
@@ -83,10 +87,13 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
             isVideoTask: true,
             videoDurationSeconds: 600,
             resource: {
-              title: `${sName} Video Masterclass & Core Architecture`,
-              url: `https://www.youtube.com/results?search_query=${encodeURIComponent(sName + ' full tutorial for beginners')}`,
-              provider: 'YouTube Learning & DevDocs',
+              title: topVid.title || `${sName} Video Masterclass & Core Architecture`,
+              url: topVid.watchUrl || `https://www.youtube.com/watch?v=${topVid.videoId}`,
+              provider: topVid.channelTitle || 'YouTube Learning & DevDocs',
               mediaType: 'video',
+              videoId: topVid.videoId,
+              channelTitle: topVid.channelTitle,
+              thumbnailUrl: topVid.thumbnailUrl,
             },
           });
 

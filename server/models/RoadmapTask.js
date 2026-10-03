@@ -76,6 +76,9 @@ const RoadmapTaskSchema = new mongoose.Schema(
         enum: ['video', 'reading', 'doc', 'lab', 'project'],
         default: 'reading',
       },
+      videoId: { type: String, default: '' },
+      channelTitle: { type: String, default: '' },
+      thumbnailUrl: { type: String, default: '' },
     },
     completed: {
       type: Boolean,

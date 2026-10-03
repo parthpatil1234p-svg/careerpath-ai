@@ -67,6 +67,7 @@ const evidenceRoutes = require('./routes/evidenceRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
 const readinessRoutes = require('./routes/readinessRoutes');
 const recruiterRoutes = require('./routes/recruiterRoutes');
+const youtubeRoutes = require('./routes/youtubeRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect to MongoDB Atlas ───────────────────────────────
@@ -259,6 +260,9 @@ app.use('/api/readiness', readinessRoutes);
 
 // Corporate Recruiter Verification & Direct Job Openings
 app.use('/api/recruiter', recruiterRoutes);
+
+// YouTube Data API v3 & Focus Video Chamber Masterclasses
+app.use('/api/youtube', youtubeRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

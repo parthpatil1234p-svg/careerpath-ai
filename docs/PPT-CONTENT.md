@@ -33,7 +33,34 @@
 
 * **Detailed Explanation of Proposed Solution:**
 
-**🔵 SOLUTION ORBIT — CareerPath AI Core Architecture:**
+#### 🌐 CIRCULAR SOLUTION ORBIT
+```mermaid
+flowchart TD
+    classDef hub fill:#3B1A6E,stroke:#A855F7,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef profile fill:#0284C7,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef verify fill:#16A34A,stroke:#4ADE80,stroke-width:2px,color:#FFFFFF;
+    classDef math fill:#D97706,stroke:#FCD34D,stroke-width:2px,color:#FFFFFF;
+    classDef roadmap fill:#2563EB,stroke:#60A5FA,stroke-width:2px,color:#FFFFFF;
+    classDef recruiter fill:#9333EA,stroke:#C084FC,stroke-width:2px,color:#FFFFFF;
+    classDef mentor fill:#EA580C,stroke:#FB923C,stroke-width:2px,color:#FFFFFF;
+
+    HUB((💎 CareerPath AI<br/>Core Hub)):::hub
+    S1((🎯 1. Student<br/>Profiling)):::profile
+    S2((🔒 2. Two-Factor<br/>Verification)):::verify
+    S3((📊 3. 60/25/15<br/>Match Engine)):::math
+    S4((🗺️ 4. Adaptive<br/>Roadmap)):::roadmap
+    S5((💼 5. Recruiter<br/>Talent Radar)):::recruiter
+    S6((🤖 6. AI Career<br/>Mentor)):::mentor
+
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S1
+    S1 -.-> HUB
+    S2 -.-> HUB
+    S3 -.-> HUB
+    S4 -.-> HUB
+    S5 -.-> HUB
+    S6 -.-> HUB
+```
+
 ```
                               ╭──────────────╮
                          ╭────│  🎯 STUDENT   │────╮
@@ -65,7 +92,25 @@
     $$\text{Score} = (0.60 \times S_{\text{norm}}) + (0.25 \times I_{\text{norm}}) + (0.15 \times A_{\text{norm}})$$
     With 4-Tier confidence multipliers ($C_i$): Self-Rated (0.70x), Dynamic Quiz (0.85x), GitHub Code AST (1.00x), and AI Mock Voice Interview (1.05x).
 
-**🟣 SCORING ENGINE — 60/25/15 Mathematical Ring:**
+#### 🟣 SCORING ENGINE — Explainable 60/25/15 Mathematical Ring
+```mermaid
+flowchart TD
+    classDef center fill:#3B1A6E,stroke:#A855F7,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef skill fill:#0284C7,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef interest fill:#D97706,stroke:#FCD34D,stroke-width:2px,color:#FFFFFF;
+    classDef academic fill:#16A34A,stroke:#4ADE80,stroke-width:2px,color:#FFFFFF;
+
+    CENTER((🏆 CAREER FIT SCORE<br/>0.60·S + 0.25·I + 0.15·A<br/>100% Deterministic Math)):::center
+    C1((🔵 60% SKILL DEPTH<br/>S = Σ Wᵢ · Lᵢ · Cᵢ<br/>Confidence: 0.70x to 1.05x)):::skill
+    C2((🟡 25% INTEREST FIT<br/>Jaccard: |I ∩ D| / |I ∪ D|<br/>Domain Curiosity Badges)):::interest
+    C3((🟢 15% ACADEMIC FIT<br/>Degree, Branch & Semester<br/>Cutoff Qualification Gate)):::academic
+
+    C1 ==> CENTER
+    C2 ==> CENTER
+    C3 ==> CENTER
+    C1 --- C2 --- C3 --- C1
+```
+
 ```
                         ╭───────────────────────╮
                    ╭────│    CAREER FIT SCORE    │────╮
@@ -98,7 +143,25 @@
 
 * **How It Addresses the Problem:**
 
-**🔴🟡🟢 TRI-COLOR SKILL GAP RING:**
+#### 🔴🟡🟢 TRI-COLOR SKILL GAP RING
+```mermaid
+flowchart TD
+    classDef input fill:#3B1A6E,stroke:#A855F7,stroke-width:2px,color:#FFFFFF,font-weight:bold;
+    classDef matched fill:#16A34A,stroke:#4ADE80,stroke-width:2px,color:#FFFFFF;
+    classDef upgrade fill:#D97706,stroke:#FCD34D,stroke-width:2px,color:#FFFFFF;
+    classDef missing fill:#DC2626,stroke:#F87171,stroke-width:2px,color:#FFFFFF;
+
+    CENTER((🎯 TWO-FACTOR<br/>VERIFICATION<br/>ENGINE)):::input
+    G1((🟢 MATCHED SKILLS<br/>HTML, CSS, JS, React<br/>✓ Code & Quiz Verified)):::matched
+    G2((🟡 UPGRADE SKILLS<br/>TypeScript, Git, SQL<br/>⚡ Targeted Practice)):::upgrade
+    G3((🔴 MISSING SKILLS<br/>Docker, CI/CD, K8s<br/>🔥 Converted to Roadmap)):::missing
+
+    CENTER ==> G1
+    CENTER ==> G2
+    CENTER ==> G3
+    G1 -.-> G2 -.-> G3 -.-> G1
+```
+
 ```
                          ╭─────────────────╮
                     ╭────│  📋 STUDENT'S    │────╮
@@ -130,7 +193,28 @@
 
 * **Technologies Used:**
 
-**🔷 TECH STACK ORBITAL RING:**
+#### 🔷 TECH STACK ORBITAL RING
+```mermaid
+flowchart TD
+    classDef core fill:#3B1A6E,stroke:#A855F7,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef fe fill:#0284C7,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef be fill:#16A34A,stroke:#4ADE80,stroke-width:2px,color:#FFFFFF;
+    classDef db fill:#9333EA,stroke:#C084FC,stroke-width:2px,color:#FFFFFF;
+    classDef ai fill:#D97706,stroke:#FCD34D,stroke-width:2px,color:#FFFFFF;
+
+    CORE((💎 CAREERPATH AI<br/>PRODUCTION<br/>RUNTIME)):::core
+    T1((🌐 FRONTEND<br/>Vanilla JS ES6+<br/>Three.js 3D WebGL<br/>Vercel Edge &lt;800ms)):::fe
+    T2((⚡ BACKEND<br/>Node.js + Express<br/>Helmet + JWT Auth<br/>Render 99.9% Up)):::be
+    T3((🗄️ DATABASE<br/>MongoDB Atlas<br/>Partial Unique Index<br/>Cloudinary CDN)):::db
+    T4((🤖 AI &amp; APIS<br/>Groq LPU &lt;300ms<br/>Gemini 2.5 Flash<br/>Adzuna Jobs API)):::ai
+
+    CORE === T1
+    CORE === T2
+    CORE === T3
+    CORE === T4
+    T1 -.-> T2 -.-> T3 -.-> T4 -.-> T1
+```
+
 ```
                             ╭──────────────────╮
                        ╭────│  🌐 FRONTEND      │────╮
@@ -160,7 +244,30 @@
 
 * **Methodology & Process for Implementation:**
 
-**🟣 CIRCULAR PIPELINE — 8-Stage System Orbit:**
+#### 🟣 CIRCULAR PIPELINE — 8-Stage System Orbit
+```mermaid
+flowchart TD
+    classDef stage fill:#1E1B4B,stroke:#8B5CF6,stroke-width:2px,color:#FFFFFF;
+    classDef center fill:#3B1A6E,stroke:#F59E0B,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+
+    CENTER((💎 CAREERPATH AI<br/>CONTINUOUS PROGRESSION<br/>ORBIT)):::center
+
+    P1((① Profile<br/>Academics &amp; 76+ Skills)):::stage
+    P2((② Verify<br/>GitHub AST + Groq Quiz)):::stage
+    P3((③ Match<br/>60/25/15 Engine &lt;50ms)):::stage
+    P4((④ Gap Matrix<br/>Tri-Color Classification)):::stage
+    P5((⑤ Roadmap<br/>Anti-Scrub Video Track)):::stage
+    P6((⑥ Resume ATS<br/>Magic-Byte PDF Parser)):::stage
+    P7((⑦ Recruiter Radar<br/>Corporate Match 96%)):::stage
+    P8((⑧ Job Ready<br/>4-Rule Cert &amp; QR Verify)):::stage
+
+    P1 ==> P2 ==> P3 ==> P4 ==> P5 ==> P6 ==> P7 ==> P8 ==> P1
+    P1 -.-> CENTER
+    P3 -.-> CENTER
+    P5 -.-> CENTER
+    P7 -.-> CENTER
+```
+
 ```
                                  ① PROFILE
                               ╭────────────╮
@@ -192,7 +299,7 @@
                       ╰────│ ⑤ ADAPTIVE    │─────╯
                            │  ROADMAP +    │
                            │ Anti-Scrub    │
-                           ╰───────────────╯
+                           ╰──────────────╯
 ```
 
   * **Recruiter Corporate Verification Pipeline:** 60+ webmail blacklist, DNS MX resolution, HTTP probe, AI trust scoring.
@@ -205,7 +312,28 @@
 
 ### Slide 4: FEASIBILITY AND VIABILITY
 
-**🟢 FEASIBILITY WHEEL — 3 Pillars:**
+#### 🟢 FEASIBILITY WHEEL — 3 Pillars
+```mermaid
+flowchart TD
+    classDef center fill:#16A34A,stroke:#4ADE80,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef tech fill:#0284C7,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef econ fill:#D97706,stroke:#FCD34D,stroke-width:2px,color:#FFFFFF;
+    classDef sec fill:#9333EA,stroke:#C084FC,stroke-width:2px,color:#FFFFFF;
+    classDef scale fill:#2563EB,stroke:#60A5FA,stroke-width:2px,color:#FFFFFF;
+
+    CENTER((✅ PRODUCTION<br/>FEASIBLE &amp;<br/>VIABLE)):::center
+    P1((🏗️ TECHNICAL<br/>&lt;50ms Math<br/>&lt;300ms Groq LPU<br/>99.9% Uptime)):::tech
+    P2((💰 ECONOMIC<br/>&lt;$15/mo Cloud<br/>100% Free Students<br/>TPO SaaS ₹1.5L-3.5L)):::econ
+    P3((🔒 SECURITY<br/>Magic-Byte Check<br/>HMAC Tamper Proof<br/>Canonical Ledger)):::sec
+    P4((📈 SCALABILITY<br/>10K+ Students<br/>Stateless JWT<br/>Connection Pooling)):::scale
+
+    CENTER === P1
+    CENTER === P2
+    CENTER === P3
+    CENTER === P4
+    P1 -.-> P2 -.-> P3 -.-> P4 -.-> P1
+```
+
 ```
                            ╭──────────────────╮
                       ╭────│  🏗️ TECHNICAL     │────╮
@@ -228,6 +356,33 @@
 ```
 
 * **Potential Challenges, Risks & Mitigation Strategies:**
+
+#### 🛡️ RISK-SHIELD CIRCULAR ORBIT
+```mermaid
+flowchart LR
+    classDef risk fill:#DC2626,stroke:#F87171,stroke-width:2px,color:#FFFFFF;
+    classDef shield fill:#16A34A,stroke:#4ADE80,stroke-width:2px,color:#FFFFFF;
+
+    subgraph RISKS [⚠️ CHALLENGES]
+        R1((⚠️ API Outage<br/>Latency Spikes)):::risk
+        R2((⚠️ Low-Spec PC<br/>Tier-3 Labs)):::risk
+        R3((⚠️ AI Drift<br/>Hallucination)):::risk
+        R4((⚠️ Fake Corp<br/>Scam Recruiters)):::risk
+    end
+
+    subgraph SHIELDS [🛡️ OUR MITIGATION SHIELDS]
+        S1((🛡️ 3-Tier Failover<br/>Groq → Gemini → Offline Bank)):::shield
+        S2((🛡️ Adaptive Render<br/>WebGL → 2D SVG Gauge)):::shield
+        S3((🛡️ Deterministic Math<br/>0% Generative Drift)):::shield
+        S4((🛡️ 4-Step Gate<br/>Blacklist → MX → HTTP → OTP)):::shield
+    end
+
+    R1 ==> S1
+    R2 ==> S2
+    R3 ==> S3
+    R4 ==> S4
+```
+
   * *Challenge 1 (External AI / API Outages):* 3-Tier Failover: Groq LPU ──► Gemini 2.5 Flash ──► 860+ Line Offline Bank.
   * *Challenge 2 (Low-Spec Tier-3 Hardware):* Adaptive Rendering: WebGL auto-fallback to 2D SVG gauges.
   * *Challenge 3 (AI Hallucination in Guidance):* Deterministic Math Anchor (0% generative drift).
@@ -246,7 +401,26 @@
     ╰──────────────────╯    ╰──────────────────╯    ╰──────────────────╯
 ```
 
-**🏆 JOB READY CERTIFICATION — 4-Rule Wheel:**
+#### 🏆 JOB READY CERTIFICATION — 4-Rule Qualification Wheel
+```mermaid
+flowchart TD
+    classDef center fill:#D97706,stroke:#FCD34D,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef rule fill:#3B1A6E,stroke:#8B5CF6,stroke-width:2px,color:#FFFFFF;
+
+    CENTER((🏆 INDUSTRY<br/>JOB READY<br/>CERTIFICATION<br/>ALL 4 Must Pass)):::center
+
+    R1((RULE 1<br/>Readiness Score<br/>≥ 70% Math Grounded)):::rule
+    R2((RULE 2<br/>Two-Factor Verified<br/>Skills ≥ 4)):::rule
+    R3((RULE 3<br/>Roadmap Task<br/>Progress ≥ 80%)):::rule
+    R4((RULE 4<br/>Expired Skills = 0<br/>&lt;90 Days Fresh)):::rule
+
+    R1 ==> CENTER
+    R2 ==> CENTER
+    R3 ==> CENTER
+    R4 ==> CENTER
+    R1 --- R2 --- R3 --- R4 --- R1
+```
+
 ```
                            ╭──────────────────╮
                       ╭────│  🏆 JOB READY     │────╮
@@ -271,6 +445,27 @@
   * Unlocks verifiable digital credential with tamper-proof validation URL: `/verify-cert.html?id=...`.
 
 * **Benefits:**
+
+#### 🌍 TRIPLE-IMPACT BENEFIT RING
+```mermaid
+flowchart TD
+    classDef center fill:#16A34A,stroke:#4ADE80,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef social fill:#0284C7,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef econ fill:#D97706,stroke:#FCD34D,stroke-width:2px,color:#FFFFFF;
+    classDef env fill:#10B981,stroke:#6EE7B7,stroke-width:2px,color:#FFFFFF;
+
+    CENTER((🌍 TRIPLE BOTTOM<br/>LINE IMPACT<br/>100% Free for Students)):::center
+
+    B1((🤝 SOCIAL<br/>Democratizes guidance<br/>for 65%+ colleges<br/>Cuts dropout depression)):::social
+    B2((💰 ECONOMIC<br/>Boosts CTC ₹3.5L → ₹14L+<br/>Cuts recruiter cost 60%<br/>College TPO SaaS)):::econ
+    B3((🌱 ENVIRONMENTAL<br/>100% Digital paperless<br/>1-Click PDF export<br/>Serverless green cloud)):::env
+
+    CENTER === B1
+    CENTER === B2
+    CENTER === B3
+    B1 -.-> B2 -.-> B3 -.-> B1
+```
+
   * **Social:** Democratizes career guidance across 65%+ Indian colleges lacking counselors; reduces placement depression.
   * **Economic:** Boosts entry CTC from ₹3.5 LPA to ₹8–₹14+ LPA; connects recruiters to pre-screened talent.
   * **Environmental:** 100% digital, paperless tracking; serverless, energy-efficient cloud footprint.
@@ -279,7 +474,26 @@
 
 ### Slide 6: RESEARCH AND REFERENCES
 
-**📚 4-PILLAR RESEARCH FOUNDATION RING:**
+#### 📚 4-PILLAR RESEARCH FOUNDATION RING
+```mermaid
+flowchart TD
+    classDef center fill:#3B1A6E,stroke:#A855F7,stroke-width:3px,color:#FFFFFF,font-weight:bold;
+    classDef node fill:#1E1B4B,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+
+    CENTER((🔬 CAREERPATH AI<br/>EMPIRICAL RESEARCH<br/>CORE)):::center
+
+    R1((1⃣ EMPLOYABILITY<br/>Aspiring Minds / SHL<br/>&lt;20% Indian engineers<br/>ready without retraining)):::node
+    R2((2⃣ EXPLAINABLE AI<br/>XAI-Ed Research<br/>Transparent math yields<br/>4x higher student trust)):::node
+    R3((3⃣ LIVE TELEMETRY<br/>Adzuna Developer API<br/>Real-time ₹3.5L-14L+ CTC<br/>&amp; Indian tech vacancies)):::node
+    R4((4⃣ GLOBAL STANDARDS<br/>roadmap.sh, MDN<br/>Google web.dev, IEEE CS<br/>Standard milestones)):::node
+
+    CENTER === R1
+    CENTER === R2
+    CENTER === R3
+    CENTER === R4
+    R1 -.-> R2 -.-> R3 -.-> R4 -.-> R1
+```
+
 ```
                             ╭──────────────────────╮
                        ╭────│  1⃣ EMPLOYABILITY     │────╮
@@ -309,7 +523,7 @@
   * 💼 Live Recruiter Job Board: `https://careerpath-ai-jade.vercel.app/jobs.html`
   * 🎬 Official Demo Video (Google Drive): `https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing`
   * 📊 Official Pitch Deck PPT (Google Drive): `https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing`
-  * 🏆 Hackathon Portal: Hack 2 Ignite on Unstop — G.H. Raisoni International Skill Tech University, Pune.
+  * 🏆 Hackathon Registration: Hack 2 Ignite on Unstop — G.H. Raisoni International Skill Tech University, Pune.
 
 ---
 
