@@ -57,6 +57,23 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
     await roadmap.save();
   }
 
+  // 0. Verify Cooldown Lockout (Cheating violations enforce unbreakable 24h lockout)
+  const currentWeekProgress = roadmap.weekProgress.find((wp) => wp.weekNumber === wNum);
+  if (currentWeekProgress && currentWeekProgress.cooldownUntil) {
+    const cooldownTime = new Date(currentWeekProgress.cooldownUntil).getTime();
+    if (Date.now() < cooldownTime) {
+      const remainingMs = cooldownTime - Date.now();
+      const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
+      const remainingMinutes = Math.ceil(remainingMs / (1000 * 60));
+      const err = new Error(`Cheating Disqualification Lockout: Week ${wNum} retake is locked for 24 hours due to proctoring violation. Available in ~${remainingHours} hour${remainingHours > 1 ? 's' : ''} (${remainingMinutes} mins).`);
+      err.statusCode = 403;
+      err.code = 'COOLDOWN_ACTIVE';
+      err.cooldownUntil = currentWeekProgress.cooldownUntil;
+      err.remainingSeconds = Math.ceil(remainingMs / 1000);
+      throw err;
+    }
+  }
+
   // 1. Verify Prerequisite (Week N - 1 must be passed; bypassed for demo/admin)
   const testUser = await User.findById(userId);
   const testUserEmail = (testUser?.email || '').toLowerCase();
@@ -543,9 +560,143 @@ async function getWeeklyTestStatus(userId, attemptId) {
   };
 }
 
+/**
+ * Records an anti-cheating violation during weekly milestone test session.
+ * Applies server-authoritative timer deductions (-120s on Strike 1, -180s on Strike 2).
+ *
+ * @param {string|ObjectId} userId
+ * @param {string|ObjectId} attemptId
+ * @param {string} violationType
+ * @param {number} penaltySeconds
+ * @param {string|Object} details
+ * @returns {Promise<Object>}
+ */
+async function recordWeeklyTestViolation(userId, attemptId, violationType = 'focus_lost', penaltySeconds = 120, details = '') {
+  const attempt = await Attempt.findOne({
+    _id: attemptId,
+    user: userId,
+  });
+
+  if (!attempt) {
+    const err = new Error('Test attempt not found or unauthorized');
+    err.statusCode = 404;
+    throw err;
+  }
+
+  if (attempt.status !== 'in_progress') {
+    return {
+      success: false,
+      message: 'Attempt is no longer in progress',
+      status: attempt.status,
+    };
+  }
+
+  const pSec = Number(penaltySeconds) || 120;
+  attempt.strikesCount = (attempt.strikesCount || 0) + 1;
+
+  attempt.violationLog.push({
+    violationType,
+    penaltySeconds: pSec,
+    timestamp: new Date(),
+    details: typeof details === 'object' ? JSON.stringify(details) : String(details || ''),
+  });
+
+  // Deduct penalty from server-authoritative deadline
+  const currentDeadline = new Date(attempt.deadline).getTime();
+  const newDeadline = new Date(currentDeadline - pSec * 1000);
+  attempt.deadline = newDeadline;
+
+  await attempt.save();
+
+  const remainingSeconds = Math.max(0, Math.floor((newDeadline.getTime() - Date.now()) / 1000));
+
+  return {
+    success: true,
+    attemptId: attempt._id,
+    strikesCount: attempt.strikesCount,
+    penaltySeconds: pSec,
+    deadline: attempt.deadline,
+    remainingSeconds,
+  };
+}
+
+/**
+ * Disqualifies a weekly milestone test for cheating (3 strikes).
+ * Sets score to 0%, marks attempt as disqualified_cheating, and locks week with 24h cooldown.
+ *
+ * @param {string|ObjectId} userId
+ * @param {string|ObjectId} attemptId
+ * @param {string} reason
+ * @returns {Promise<Object>}
+ */
+async function disqualifyWeeklyTest(userId, attemptId, reason = 'Repeated proctoring violations (3 strikes)') {
+  const attempt = await Attempt.findOne({
+    _id: attemptId,
+    user: userId,
+  });
+
+  if (!attempt) {
+    const err = new Error('Test attempt not found or unauthorized');
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const now = new Date();
+  const cooldownUntil = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+  attempt.status = 'disqualified_cheating';
+  attempt.score = 0;
+  attempt.percent = 0;
+  attempt.passed = false;
+  attempt.submitTime = now;
+  attempt.strikesCount = 3;
+
+  attempt.violationLog.push({
+    violationType: 'disqualification',
+    penaltySeconds: 0,
+    timestamp: now,
+    details: reason || 'Disqualified: 3 anti-cheating strikes recorded',
+  });
+
+  await attempt.save();
+
+  // Lock the roadmap week with 24-hour cooldown
+  let weekNumber = attempt.roadmapWeek;
+  if (attempt.roadmap) {
+    const roadmap = await Roadmap.findOne({ _id: attempt.roadmap, user: userId });
+    if (roadmap && roadmap.weekProgress) {
+      const wp = roadmap.weekProgress.find((w) => w.weekNumber === attempt.roadmapWeek);
+      if (wp) {
+        wp.status = 'awaiting_test'; // Ensure it cannot pass
+        wp.testScore = 0;
+        wp.testPercent = 0;
+        wp.cooldownUntil = cooldownUntil;
+        wp.lastDisqualifiedAt = now;
+        wp.disqualifiedReason = reason || 'Disqualified: 3 anti-cheating strikes recorded';
+        await roadmap.save();
+      }
+    }
+  }
+
+  return {
+    success: true,
+    disqualified: true,
+    status: 'disqualified_cheating',
+    score: 0,
+    percent: 0,
+    passed: false,
+    weekNumber,
+    cooldownUntil,
+    cooldownHours: 24,
+    reason: reason || 'Accumulated 3 anti-cheating strikes',
+  };
+}
+
 module.exports = {
   startWeeklyTest,
   saveWeeklyTestAnswer,
   submitWeeklyTest,
   getWeeklyTestStatus,
+  recordWeeklyTestViolation,
+  disqualifyWeeklyTest,
 };

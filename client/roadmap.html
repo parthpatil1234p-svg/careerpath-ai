@@ -375,11 +375,20 @@
           <div class="modal-content border-line shadow-lg" style="background: #ffffff; border-radius: 16px;">
             
             <!-- Test Modal Header -->
-            <div class="modal-header border-bottom border-line py-3 px-4 d-flex align-items-center justify-content-between">
+            <div class="modal-header border-bottom border-line py-3 px-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
               <div>
-                <div class="d-flex align-items-center gap-2 mb-1">
+                <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                   <span class="atlas-badge"><i class="bi bi-shield-check text-teal"></i> SERVER-VERIFIED MILESTONE</span>
                   <span id="testWeekBadge" class="badge badge-navy font-mono">Week 1</span>
+                  <span id="testProctorBadge" class="badge bg-danger-subtle text-danger border border-danger-subtle font-mono px-2 py-1 small">
+                    <i class="bi bi-shield-lock-fill text-danger me-1"></i>STRICT PROCTOR: ACTIVE
+                  </span>
+                  <span id="testStrikesBadge" class="badge bg-success-subtle text-success border border-success-subtle font-mono px-2 py-1 small">
+                    <i class="bi bi-shield-check me-1"></i>Strikes: <span id="testStrikesCount">0</span>/3
+                  </span>
+                  <span id="testFullscreenBadge" class="badge bg-secondary-subtle text-muted font-mono px-2 py-1 small d-none d-md-inline-flex">
+                    <i class="bi bi-fullscreen me-1"></i>Fullscreen Locked
+                  </span>
                 </div>
                 <h5 class="modal-title fw-bold text-ink mb-0" id="weeklyTestModalLabel">Weekly Milestone Skill Verification</h5>
               </div>
@@ -406,9 +415,9 @@
               <!-- Active Test Questions View -->
               <div id="testActiveView">
                 <div class="alert alert-info py-2 px-3 mb-4 d-flex align-items-center gap-2" style="font-size: 0.82rem; border-radius: 8px;">
-                  <i class="bi bi-info-circle-fill text-info fs-5 flex-shrink-0"></i>
+                  <i class="bi bi-shield-lock-fill text-danger fs-5 flex-shrink-0"></i>
                   <div>
-                    <strong>Server Verification Protocol:</strong> 10 Curated Questions &middot; <strong>70% (7/10)</strong> required to pass &middot; 30-Minute server countdown &middot; Progress auto-saves on every selection &middot; Passing permanently unlocks next week and stamps verified skill evidence into your ledger.
+                    <strong>Strict Proctoring Enforced:</strong> 10 Questions &middot; <strong>70% (7/10)</strong> required &middot; 30-Min server clock &middot; Tab switches, window minimization, or copy/paste trigger <strong>Strike 1 (-2:00)</strong>, <strong>Strike 2 (-3:00)</strong>, and <strong>Strike 3 (Disqualification: 0% + 24-Hour Retake Lockout)</strong>.
                   </div>
                 </div>
 
@@ -558,6 +567,7 @@
     <script src="js/typing-character-fx.js"></script>
     <script src="js/tech-logos.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="js/anti-cheat-lock.js?v=2.1"></script>
     <script src="js/roadmap.js"></script>
     <script src="js/chat.js"></script>
   </body>

@@ -24,6 +24,12 @@
     constructor(options = {}) {
       this.sessionId = options.sessionId || null;
       this.skill = options.skill || null;
+      this.attemptId = options.attemptId || null;
+      this.roadmapId = options.roadmapId || null;
+      this.weekNumber = options.weekNumber || null;
+      this.violationEndpoint = options.violationEndpoint || '/quiz/violation';
+      this.disqualifyEndpoint = options.disqualifyEndpoint || '/quiz/disqualify';
+      this.strikePenalties = options.strikePenalties || [10, 10]; // seconds for strike 1 and strike 2
       this.maxStrikes = options.maxStrikes || 3;
       this.strikeCount = 0;
       this.isArmed = false;
@@ -36,6 +42,7 @@
       this.onStrikeCallback = options.onStrike || null;
       this.onLockoutCallback = options.onLockout || null;
       this.onNoticeCallback = options.onNotice || null;
+      this.onDeductTimeCallback = options.onDeductTime || null;
 
       // Bound event listeners
       this._handleVisibilityChange = this._handleVisibilityChange.bind(this);
@@ -54,6 +61,9 @@
     arm(sessionInfo = {}) {
       if (sessionInfo.sessionId) this.sessionId = sessionInfo.sessionId;
       if (sessionInfo.skill) this.skill = sessionInfo.skill;
+      if (sessionInfo.attemptId) this.attemptId = sessionInfo.attemptId;
+      if (sessionInfo.roadmapId) this.roadmapId = sessionInfo.roadmapId;
+      if (sessionInfo.weekNumber) this.weekNumber = sessionInfo.weekNumber;
       if (typeof sessionInfo.strikeCount === 'number') this.strikeCount = sessionInfo.strikeCount;
       if (sessionInfo.isLocked) {
         this.isLocked = true;
@@ -226,21 +236,31 @@
       // Optimistic increment
       this.strikeCount += 1;
       const strikesRemaining = Math.max(0, this.maxStrikes - this.strikeCount);
+      const penaltySeconds = (this.strikePenalties && this.strikePenalties[this.strikeCount - 1]) || 10;
 
-      console.warn(`[AntiCheatLock] Proctoring Violation [${type}]: ${message}. Strike ${this.strikeCount}/${this.maxStrikes}`);
+      console.warn(`[AntiCheatLock] Proctoring Violation [${type}]: ${message}. Strike ${this.strikeCount}/${this.maxStrikes} (-${penaltySeconds}s penalty)`);
+
+      // Trigger time deduction callback immediately
+      if (this.onDeductTimeCallback) {
+        this.onDeductTimeCallback(penaltySeconds);
+      }
 
       // Sync with server authoritative state
       try {
-        if (window.API && (this.sessionId || this.skill)) {
-          const resp = await window.API.post('/quiz/violation', {
+        if (window.API && (this.sessionId || this.skill || this.attemptId)) {
+          const resp = await window.API.post(this.violationEndpoint, {
             sessionId: this.sessionId,
             skill: this.skill,
+            attemptId: this.attemptId,
+            roadmapId: this.roadmapId,
+            weekNumber: this.weekNumber,
             violationType: type,
+            penaltySeconds: penaltySeconds,
             details: { message, timestamp: now }
           }, { auth: true });
 
           if (resp && resp.data) {
-            this.strikeCount = resp.data.strikeCount || this.strikeCount;
+            this.strikeCount = resp.data.strikesCount || resp.data.strikeCount || this.strikeCount;
             if (resp.data.isLocked) {
               this.isLocked = true;
               this.lockReason = resp.data.lockReason || 'REPEATED_PROCTORING_VIOLATIONS';
@@ -277,19 +297,19 @@
      * Update Proctoring HUD indicator badge on the page
      */
     _updateHudBadge() {
-      const strikeEl = document.getElementById('strikeBadgeCount');
-      const badgeContainer = document.getElementById('proctoringHudBadge');
+      const strikeEl = document.getElementById('strikeBadgeCount') || document.getElementById('testStrikesCount');
+      const badgeContainer = document.getElementById('proctoringHudBadge') || document.getElementById('testStrikesBadge');
       if (strikeEl) {
         strikeEl.textContent = this.strikeCount;
       }
       if (badgeContainer) {
         badgeContainer.classList.remove('d-none', 'bg-success', 'bg-warning', 'bg-danger');
         if (this.strikeCount === 0) {
-          badgeContainer.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small';
+          badgeContainer.className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small font-mono';
         } else if (this.strikeCount === 1) {
-          badgeContainer.className = 'badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 small';
+          badgeContainer.className = 'badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 small font-mono';
         } else {
-          badgeContainer.className = 'badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 small';
+          badgeContainer.className = 'badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 small font-mono';
         }
       }
     }
@@ -386,13 +406,18 @@
 
       if (!backdrop || !card) return;
 
+      const p1 = (this.strikePenalties && this.strikePenalties[0]) || 10;
+      const p1Text = p1 >= 60 ? `-${Math.round(p1 / 60)}:00 (${Math.round(p1 / 60)} MINS)` : `-${p1}s`;
+      const p2 = (this.strikePenalties && this.strikePenalties[1]) || 10;
+      const p2Text = p2 >= 60 ? `-${Math.round(p2 / 60)}:00` : `-${p2}s`;
+
       card.style.borderColor = '#F59E0B';
       icon.innerHTML = '<span style="color: #F59E0B;">⚠️</span>';
       title.innerHTML = '<span style="color: #D97706;">Strike 1 of 3: Cheating Violation Logged</span>';
       desc.innerHTML = `
         <div style="margin-bottom: 8px;">
           <span style="display: inline-block; background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 0.82rem;">
-            ⚡ -10s PENALTY DEDUCTED FROM TIMER
+            ⚡ ${p1Text} PENALTY DEDUCTED FROM TIMER
           </span>
         </div>
         The proctoring system detected an unauthorized focus loss or tab switch.<br>
@@ -400,7 +425,7 @@
       `;
       extra.innerHTML = `
         <div style="background: #FEF3C7; color: #92400E; padding: 12px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;">
-          ⚠️ <strong>2 Strikes Remaining.</strong> Next violation triggers a critical final warning and another -10s penalty!
+          ⚠️ <strong>2 Strikes Remaining.</strong> Next violation triggers a critical final warning and another ${p2Text} penalty!
         </div>
       `;
       actions.innerHTML = `
@@ -435,13 +460,19 @@
 
       if (!backdrop || !card) return;
 
+      const p1 = (this.strikePenalties && this.strikePenalties[0]) || 10;
+      const p2 = (this.strikePenalties && this.strikePenalties[1]) || 10;
+      const p2Text = p2 >= 60 ? `-${Math.round(p2 / 60)}:00 (${Math.round(p2 / 60)} MINS)` : `-${p2}s`;
+      const totalP = p1 + p2;
+      const totalPText = totalP >= 60 ? `-${Math.round(totalP / 60)} MINS TOTAL` : `-${totalP}s TOTAL`;
+
       card.style.borderColor = '#EF4444';
       icon.innerHTML = '<span style="color: #DC2626;">🚨</span>';
       title.innerHTML = '<span style="color: #DC2626;">Strike 2 of 3: CRITICAL FINAL WARNING!</span>';
       desc.innerHTML = `
         <div style="margin-bottom: 8px;">
           <span style="display: inline-block; background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 0.82rem;">
-            ⚡ -10s PENALTY DEDUCTED (TOTAL -20s)
+            ⚡ ${p2Text} PENALTY DEDUCTED (${totalPText})
           </span>
         </div>
         Second proctoring violation recorded!<br>
@@ -485,10 +516,13 @@
 
       // Dispatch disqualify to backend MongoDB
       try {
-        if (window.API && (this.skill || this.sessionId)) {
-          window.API.post('/quiz/disqualify', {
+        if (window.API && (this.skill || this.sessionId || this.attemptId)) {
+          window.API.post(this.disqualifyEndpoint, {
             skill: this.skill,
             sessionId: this.sessionId,
+            attemptId: this.attemptId,
+            roadmapId: this.roadmapId,
+            weekNumber: this.weekNumber,
             strikes: 3,
             reason: reason || 'REPEATED_PROCTORING_VIOLATIONS'
           }, { auth: true }).catch(() => {});
@@ -512,8 +546,10 @@
           <div style="font-size: 0.8rem; color: #991B1B; margin-top: 6px;">Refreshing the browser or clearing cache will not bypass this server-enforced lockout.</div>
         </div>
       `;
-      actions.innerHTML = `
-        <a href="dashboard.html" style="
+        const returnUrl = (this.roadmapId || window.location.pathname.includes('roadmap')) ? 'roadmap.html' : 'dashboard.html';
+        const returnLabel = returnUrl === 'roadmap.html' ? 'Return to Roadmap' : 'Return to Dashboard';
+        actions.innerHTML = `
+        <a href="${returnUrl}" style="
           display: inline-block;
           background: #0F172A;
           color: #FFFFFF;
@@ -522,7 +558,7 @@
           border-radius: 8px;
           font-weight: 700;
           font-size: 0.95rem;
-        ">Return to Dashboard</a>
+        ">${returnLabel}</a>
       `;
 
       backdrop.style.display = 'flex';

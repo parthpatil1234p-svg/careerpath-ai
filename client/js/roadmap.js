@@ -298,9 +298,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       else if (isPassed) pillContent = '<i class="bi bi-check2"></i>';
       else if (isAwaitingTest) pillContent = '<i class="bi bi-patch-question-fill text-warning"></i>';
 
+      const isCooldownActive = Boolean(wp?.cooldownUntil && new Date(wp.cooldownUntil).getTime() > Date.now());
+      let cooldownRemainingText = '';
+      if (isCooldownActive) {
+        const remainingMs = new Date(wp.cooldownUntil).getTime() - Date.now();
+        const remH = Math.floor(remainingMs / (1000 * 60 * 60));
+        const remM = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+        cooldownRemainingText = remH > 0 ? `${remH}h ${remM}m` : `${remM}m`;
+      }
+
       // Header Status Badge
       let statusBadgeHtml = '';
-      if (isLocked) {
+      if (isCooldownActive) {
+        statusBadgeHtml = `<span class="badge bg-danger-subtle text-danger border border-danger font-mono"><i class="bi bi-shield-x-fill me-1"></i> Cheating Lockout (${cooldownRemainingText})</span>`;
+      } else if (isLocked) {
         statusBadgeHtml = '<span class="badge bg-secondary-subtle text-muted font-mono"><i class="bi bi-lock-fill me-1"></i> Locked Milestone</span>';
       } else if (isPassed) {
         statusBadgeHtml = `<span class="badge badge-matched"><i class="bi bi-patch-check-fill me-1"></i> Passed (${wp.testPercent}%)</span>`;
@@ -312,7 +323,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Milestone Test Action Box
       let milestoneActionHtml = '';
-      if (isLocked) {
+      if (isCooldownActive) {
+        milestoneActionHtml = `
+          <div class="mt-3 p-3 card border-danger border-opacity-75 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 shadow-sm" style="background: rgba(239, 68, 68, 0.08); border-radius: 12px;">
+            <div>
+              <div class="fw-bold text-danger d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-shield-x-fill text-danger fs-5"></i>
+                🔒 Retake Locked: Strict Anti-Cheating Cooldown Active
+              </div>
+              <div class="text-muted small">
+                Repeated focus loss or proctoring violations were recorded. The server has enforced a 24-hour retake lockout on Week ${weekNumber}. <strong>Unlocks in ~${cooldownRemainingText}</strong>.
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm px-3 py-2 flex-shrink-0" disabled title="24-hour anti-cheat lockout active">
+              <i class="bi bi-lock-fill me-1"></i> Locked (~${cooldownRemainingText})
+            </button>
+          </div>
+        `;
+      } else if (isLocked) {
         milestoneActionHtml = `
           <div class="mt-3 p-3 card border-line text-muted small d-flex flex-row align-items-center gap-2" style="background: rgba(0,0,0,0.02); border-radius: 8px;">
             <i class="bi bi-lock-fill text-secondary fs-5"></i>
@@ -588,7 +616,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================================================
   let activeAttempt = null;
   let timerCountdownInterval = null;
+  let currentDeadlineMs = 0;
   let testAnswersMap = {};
+  let antiCheatLock = null;
   const weeklyTestModalEl = document.getElementById('weeklyTestModal');
   let bsTestModal = null;
   if (weeklyTestModalEl && window.bootstrap?.Modal) {
@@ -607,6 +637,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('weeklyTestModalLabel').textContent = `Week ${weekNumber} Milestone Verification`;
     document.getElementById('testTimerText').textContent = '30:00';
     document.getElementById('testAnsweredCount').textContent = '0';
+
+    const testStrikesEl = document.getElementById('testStrikesCount');
+    const testStrikesBadge = document.getElementById('testStrikesBadge');
+    if (testStrikesEl) testStrikesEl.textContent = '0';
+    if (testStrikesBadge) {
+      testStrikesBadge.className = 'badge bg-success-subtle text-success border border-success-subtle font-mono px-2.5 py-1 small';
+    }
+
     document.getElementById('testQuestionsContainer').innerHTML = `
       <div class="text-center py-5">
         <div class="spinner-border text-teal mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
@@ -631,9 +669,75 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderActiveQuestions(activeAttempt.questions);
       startServerCountdown(activeAttempt.deadline);
       document.getElementById('btnSubmitMilestoneTest').disabled = false;
+
+      // Arm AntiCheatLock for strict milestone proctoring
+      if (window.AntiCheatLock) {
+        if (antiCheatLock) antiCheatLock.disarm();
+        antiCheatLock = new window.AntiCheatLock({
+          attemptId: activeAttempt.attemptId,
+          roadmapId: currentRoadmap._id,
+          weekNumber: weekNumber,
+          violationEndpoint: '/roadmaps/test/violation',
+          disqualifyEndpoint: '/roadmaps/test/disqualify',
+          strikePenalties: [120, 180],
+          onStrike: (strikeNumber, count) => {
+            const countEl = document.getElementById('testStrikesCount');
+            const badgeEl = document.getElementById('testStrikesBadge');
+            if (countEl) countEl.textContent = count;
+            if (badgeEl) {
+              if (count === 1) {
+                badgeEl.className = 'badge bg-warning-subtle text-warning border border-warning-subtle font-mono px-2.5 py-1 small';
+              } else if (count >= 2) {
+                badgeEl.className = 'badge bg-danger text-white font-mono px-2.5 py-1 small';
+              }
+            }
+          },
+          onDeductTime: (penaltySeconds) => {
+            currentDeadlineMs -= penaltySeconds * 1000;
+            const timerBadgeEl = document.getElementById('testTimerBadge');
+            if (timerBadgeEl) {
+              timerBadgeEl.classList.add('bg-danger', 'text-white');
+              setTimeout(() => {
+                timerBadgeEl.classList.remove('bg-danger', 'text-white');
+              }, 1500);
+            }
+          },
+          onLockout: (reason) => {
+            if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+            const container = document.getElementById('testQuestionsContainer');
+            if (container) {
+              container.innerHTML = `
+                <div class="alert alert-danger p-4 text-center my-4" style="border-radius: 12px;">
+                  <div class="display-5 mb-2">🚫</div>
+                  <h4 class="fw-bold text-danger mb-1">Session Terminated for Cheating</h4>
+                  <p class="small text-muted mb-3">3 anti-cheating strikes recorded. Your questions have been wiped, score set to 0%, and a strict 24-hour retake lockout has been applied to Week ${weekNumber}.</p>
+                  <button type="button" class="btn btn-outline-danger btn-sm px-4" data-bs-dismiss="modal" onclick="window.location.reload()">Return to Roadmap</button>
+                </div>
+              `;
+            }
+            renderTestResultView({
+              score: 0,
+              total: activeAttempt?.questions?.length || 10,
+              percent: 0,
+              passed: false,
+              missedTopics: ['Session Disqualified for Proctoring Violations (3 Strikes)'],
+              status: 'disqualified_cheating'
+            });
+            if (antiCheatLock) {
+              antiCheatLock.disarm();
+              antiCheatLock.exitFullscreen().catch(() => {});
+            }
+            loadRoadmap();
+          }
+        });
+        antiCheatLock.arm();
+        antiCheatLock.requestFullscreen().catch(() => {});
+      }
     } catch (err) {
+      if (antiCheatLock) antiCheatLock.disarm();
       showAlert(err.message || 'Failed to start weekly milestone test.', 'danger');
       if (bsTestModal) bsTestModal.hide();
+      loadRoadmap();
     }
   };
 
@@ -755,10 +859,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const timerTextEl = document.getElementById('testTimerText');
     const timerBadgeEl = document.getElementById('testTimerBadge');
-    const deadlineMs = new Date(deadlineIso).getTime();
+    currentDeadlineMs = new Date(deadlineIso).getTime();
 
     const updateTimer = () => {
-      const remainingMs = deadlineMs - Date.now();
+      const remainingMs = currentDeadlineMs - Date.now();
       if (remainingMs <= 0) {
         if (timerCountdownInterval) clearInterval(timerCountdownInterval);
         if (timerTextEl) timerTextEl.textContent = '00:00';
@@ -799,6 +903,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+    if (antiCheatLock) {
+      antiCheatLock.disarm();
+      antiCheatLock.exitFullscreen().catch(() => {});
+    }
 
     const submitBtn = document.getElementById('btnSubmitMilestoneTest');
     if (submitBtn) {
@@ -838,7 +946,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('testResultView').classList.remove('d-none');
     document.getElementById('testResultButtons').classList.remove('d-none');
 
-    const { score, total, percent, passed, missedTopics } = result;
+    const { score, total, percent, passed, missedTopics, status } = result;
 
     document.getElementById('testResultScore').textContent = `${score} / ${total || 10}`;
     const percentEl = document.getElementById('testResultPercent');
@@ -851,6 +959,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const missedList = document.getElementById('testMissedTopicsList');
     const passedBox = document.getElementById('testPassedDetailsBox');
     const retakeBtn = document.getElementById('btnRetakeTest');
+
+    if (status === 'disqualified_cheating') {
+      percentEl.className = 'h3 fw-bold text-danger mb-0';
+      iconEl.innerHTML = '<span style="font-size: 3.5rem;">🚫</span>';
+      titleEl.textContent = 'Assessment Terminated: Disqualified (0%)';
+      subtitleEl.textContent = 'Your attempt was terminated due to repeated anti-cheating strikes (3/3). A strict 24-hour server lockout is now active on this milestone.';
+      passedBox.classList.add('d-none');
+      missedBox.classList.add('d-none');
+      retakeBtn.classList.add('d-none');
+      loadRoadmap();
+      return;
+    }
 
     if (passed) {
       percentEl.className = 'h3 fw-bold text-success mb-0';
@@ -901,6 +1021,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnCloseResult) {
     btnCloseResult.addEventListener('click', () => {
       loadRoadmap();
+    });
+  }
+
+  if (weeklyTestModalEl) {
+    weeklyTestModalEl.addEventListener('hidden.bs.modal', () => {
+      if (timerCountdownInterval) clearInterval(timerCountdownInterval);
+      if (antiCheatLock) {
+        antiCheatLock.disarm();
+        antiCheatLock.exitFullscreen().catch(() => {});
+      }
     });
   }
 

@@ -102,10 +102,22 @@ const AttemptSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['in_progress', 'completed', 'timed_out', 'abandoned'],
+      enum: ['in_progress', 'completed', 'timed_out', 'abandoned', 'disqualified_cheating'],
       default: 'in_progress',
       index: true,
     },
+    strikesCount: {
+      type: Number,
+      default: 0,
+    },
+    violationLog: [
+      {
+        violationType: { type: String, required: true },
+        penaltySeconds: { type: Number, default: 0 },
+        timestamp: { type: Date, default: Date.now },
+        details: { type: String, default: '' },
+      },
+    ],
   },
   {
     timestamps: true,

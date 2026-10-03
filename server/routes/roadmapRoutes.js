@@ -29,6 +29,8 @@ const {
   saveWeeklyTestAnswerController,
   submitWeeklyTestController,
   getWeeklyTestStatusController,
+  recordWeeklyTestViolationController,
+  disqualifyWeeklyTestController,
   completeWeekMilestoneController,
   getVideoCheckpointController,
   verifyVideoLearningController,
@@ -51,6 +53,8 @@ router.post('/:id/weeks/:weekNumber/test/start', protect, startWeeklyTestControl
 router.post('/test/save-answer', protect, saveWeeklyTestAnswerController);
 router.post('/test/submit', protect, submitWeeklyTestController);
 router.get('/test/:attemptId/status', protect, getWeeklyTestStatusController);
+router.post('/test/violation', protect, recordWeeklyTestViolationController);
+router.post('/test/disqualify', protect, disqualifyWeeklyTestController);
 router.post('/:id/weeks/:weekNumber/complete', protect, completeWeekMilestoneController);
 
 module.exports = router;

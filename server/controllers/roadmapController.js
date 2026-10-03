@@ -18,6 +18,8 @@ const {
   saveWeeklyTestAnswer,
   submitWeeklyTest,
   getWeeklyTestStatus,
+  recordWeeklyTestViolation,
+  disqualifyWeeklyTest,
 } = require('../services/weeklyTestService');
 const { isRelatedCourse } = require('../services/courseSynergyService');
 const {
@@ -893,6 +895,56 @@ const getWeeklyTestStatusController = async (req, res, next) => {
 };
 
 /**
+ * POST /api/roadmaps/test/violation
+ * Authoritative anti-cheating violation logging for weekly milestone tests
+ */
+const recordWeeklyTestViolationController = async (req, res, next) => {
+  try {
+    const { attemptId, violationType, penaltySeconds, details } = req.body;
+    if (!attemptId) {
+      return res.status(400).json({ success: false, message: 'attemptId is required' });
+    }
+    const result = await recordWeeklyTestViolation(
+      req.user._id,
+      attemptId,
+      violationType || 'focus_lost',
+      penaltySeconds || 120,
+      details || ''
+    );
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * POST /api/roadmaps/test/disqualify
+ * Authoritative disqualification on 3 strikes for weekly milestone tests
+ */
+const disqualifyWeeklyTestController = async (req, res, next) => {
+  try {
+    const { attemptId, reason } = req.body;
+    if (!attemptId) {
+      return res.status(400).json({ success: false, message: 'attemptId is required' });
+    }
+    const result = await disqualifyWeeklyTest(
+      req.user._id,
+      attemptId,
+      reason || 'Repeated proctoring violations (3 strikes)'
+    );
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * POST /api/roadmaps/:id/weeks/:weekNumber/complete
  * Marks all tasks for a week complete and transitions status to awaiting_test
  */
@@ -1087,6 +1139,8 @@ module.exports = {
   saveWeeklyTestAnswerController,
   submitWeeklyTestController,
   getWeeklyTestStatusController,
+  recordWeeklyTestViolationController,
+  disqualifyWeeklyTestController,
   completeWeekMilestoneController,
   getVideoCheckpointController,
   verifyVideoLearningController,
