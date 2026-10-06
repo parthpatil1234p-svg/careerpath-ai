@@ -563,14 +563,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       mobileProgressBar.setAttribute('aria-valuenow', pct);
     }
 
-    // Toggle "Prove Skills" panel visibility: only relevant for engineering/cross tracks
-    if (proveSkillsPanel) {
-      if (selectedStream !== 'engineering' && selectedStream !== 'cross') {
-        proveSkillsPanel.style.display = 'none';
-      } else {
-        proveSkillsPanel.style.display = '';
-      }
-    }
+
 
     window.scrollTo({ top: 140, behavior: 'smooth' });
   };
@@ -733,13 +726,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       badgeEl.className = `badge ${meta.badgeClass} small font-mono`;
     }
 
-    if (proveSkillsPanel) {
-      if (selectedStream !== 'engineering' && selectedStream !== 'cross') {
-        proveSkillsPanel.style.display = 'none';
-      } else {
-        proveSkillsPanel.style.display = '';
-      }
-    }
+
 
     updateCategoryFilterPills();
     updateCustomSkillCategoryDropdown();
@@ -779,21 +766,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (step === 3) {
       if (selectedSkillsMap.size === 0) {
         showAlert('Please select at least 1 skill you possess before proceeding.');
-        return false;
-      }
-      // Non-engineering tracks do not have technical code quizzes: bypass!
-      if (selectedStream !== 'engineering' && selectedStream !== 'cross') {
-        return true;
-      }
-      // If account already completed one-time skill verification, never block again!
-      if (hasCompletedSkillVerification) {
-        return true;
-      }
-      const required = getRequiredVerificationSkills();
-      const verifiedCount = required.filter(s => s.isQuizVerified || s.isCodeVerified).length;
-      if (required.length > 0 && verifiedCount < 1) {
-        showAlert('Please verify at least 1 of your claimed technical skills (or auto-detect via GitHub) in the "Prove your skills" panel below to continue.', 'warning');
-        document.getElementById('proveSkillsPanel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return false;
       }
       return true;
