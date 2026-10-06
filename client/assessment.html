@@ -125,7 +125,7 @@
     </nav>
 
     <!-- Main Assessment Container -->
-    <main class="container assessment-layout pt-5 mt-5">
+    <main class="container-xl assessment-layout">
 
       <!-- Page Header -->
       <div class="mb-4">
@@ -251,7 +251,7 @@
             <!-- ========================================================
                  STEP 0: Choose Your Primary Stream
                  ======================================================== -->
-            <div class="assessment-step-panel active card p-4 p-md-5" id="stepPanel0">
+            <div class="assessment-step-panel active card p-3 p-md-4" id="stepPanel0">
               <div class="text-center mb-4 pb-3 border-bottom">
                 <span class="step-badge-circle mx-auto mb-2">00</span>
                 <h2 class="h3 fw-bold text-ink">Choose Your Primary Stream / Track</h2>
@@ -324,7 +324,7 @@
             <!-- ========================================================
                  STEP 1: Academic Background
                  ======================================================== -->
-            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel1">
+            <div class="assessment-step-panel card p-3 p-md-4" id="stepPanel1">
               <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                 <span class="step-badge-circle">01</span>
                 <div>
@@ -433,7 +433,7 @@
             <!-- ========================================================
                  STEP 2: Career Interests
                  ======================================================== -->
-            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel2">
+            <div class="assessment-step-panel card p-3 p-md-4" id="stepPanel2">
               <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                 <span class="step-badge-circle">02</span>
                 <div>
@@ -471,7 +471,7 @@
             <!-- ========================================================
                  STEP 3: Skills & Proficiency
                  ======================================================== -->
-            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel3">
+            <div class="assessment-step-panel card p-3 p-md-4" id="stepPanel3">
               <div class="d-flex align-items-center justify-content-between gap-3 mb-4 pb-3 border-bottom flex-wrap">
                 <div class="d-flex align-items-center gap-3">
                   <span class="step-badge-circle">03</span>
@@ -503,39 +503,34 @@
               </div>
 
               <!-- Filter & Search Toolbar -->
-              <div class="row g-2 mb-4 align-items-center">
-                <div class="col-md-6">
-                  <div class="input-group">
-                    <span class="input-group-text">
-                      <i class="bi bi-search text-muted"></i>
-                    </span>
-                    <input
-                      type="text"
-                      id="skillSearchInput"
-                      class="form-control"
-                       placeholder="Search skills (e.g. HTML, Python, Figma, SQL)..."
-                       aria-label="Search available skills"
-                    />
-                  </div>
+              <div class="mb-3">
+                <div class="input-group mb-2">
+                  <span class="input-group-text bg-white border-end-0 text-muted">
+                    <i class="bi bi-search"></i>
+                  </span>
+                  <input
+                    type="text"
+                    id="skillSearchInput"
+                    class="form-control border-start-0 ps-0"
+                    placeholder="Search 90+ skills (e.g. HTML, Python, Figma, SQL, React, Java)..."
+                    aria-label="Search available skills"
+                  />
                 </div>
-
-                <div class="col-md-6">
-                  <div class="skills-category-filter" id="skillCategoryFilter">
-                    <button type="button" class="category-filter-btn active" data-cat="all" aria-pressed="true">All</button>
-                    <button type="button" class="category-filter-btn" data-cat="frontend" aria-pressed="false">Frontend</button>
-                    <button type="button" class="category-filter-btn" data-cat="backend" aria-pressed="false">Backend</button>
-                    <button type="button" class="category-filter-btn" data-cat="data" aria-pressed="false">Data & AI</button>
-                    <button type="button" class="category-filter-btn" data-cat="cloud" aria-pressed="false">Cloud / DevOps</button>
-                    <button type="button" class="category-filter-btn" data-cat="security" aria-pressed="false">Security</button>
-                    <button type="button" class="category-filter-btn" data-cat="mobile" aria-pressed="false">Mobile</button>
-                    <button type="button" class="category-filter-btn" data-cat="testing" aria-pressed="false">Testing</button>
-                    <button type="button" class="category-filter-btn" data-cat="gaming" aria-pressed="false">Gaming</button>
-                    <button type="button" class="category-filter-btn" data-cat="web3" aria-pressed="false">Web3</button>
-                    <button type="button" class="category-filter-btn" data-cat="product" aria-pressed="false">Product</button>
-                    <button type="button" class="category-filter-btn" data-cat="finance" aria-pressed="false">Finance & Ops</button>
-                    <button type="button" class="category-filter-btn" data-cat="marketing" aria-pressed="false">Marketing</button>
-                    <button type="button" class="category-filter-btn" data-cat="design" aria-pressed="false">Creative Design</button>
-                  </div>
+                <div class="skills-category-filter" id="skillCategoryFilter">
+                  <button type="button" class="category-filter-btn active" data-cat="all" aria-pressed="true">All</button>
+                  <button type="button" class="category-filter-btn" data-cat="frontend" aria-pressed="false">Frontend</button>
+                  <button type="button" class="category-filter-btn" data-cat="backend" aria-pressed="false">Backend</button>
+                  <button type="button" class="category-filter-btn" data-cat="data" aria-pressed="false">Data & AI</button>
+                  <button type="button" class="category-filter-btn" data-cat="cloud" aria-pressed="false">Cloud / DevOps</button>
+                  <button type="button" class="category-filter-btn" data-cat="security" aria-pressed="false">Security</button>
+                  <button type="button" class="category-filter-btn" data-cat="mobile" aria-pressed="false">Mobile</button>
+                  <button type="button" class="category-filter-btn" data-cat="testing" aria-pressed="false">Testing</button>
+                  <button type="button" class="category-filter-btn" data-cat="gaming" aria-pressed="false">Gaming</button>
+                  <button type="button" class="category-filter-btn" data-cat="web3" aria-pressed="false">Web3</button>
+                  <button type="button" class="category-filter-btn" data-cat="product" aria-pressed="false">Product</button>
+                  <button type="button" class="category-filter-btn" data-cat="finance" aria-pressed="false">Finance & Ops</button>
+                  <button type="button" class="category-filter-btn" data-cat="marketing" aria-pressed="false">Marketing</button>
+                  <button type="button" class="category-filter-btn" data-cat="design" aria-pressed="false">Creative Design</button>
                 </div>
               </div>
 
@@ -560,21 +555,23 @@
                 </div>
               </div>
 
-              <!-- Skills Grid Container -->
-              <div class="skills-grid-container row g-3 mb-4" id="skillsGrid" role="group" aria-label="Available skills" aria-live="polite" style="min-height: 520px; max-height: calc(85vh - 200px); overflow-y: auto;">
-                <!-- Dynamically populated via assessment.js -->
+              <!-- Skills Grid Container with Dedicated Scroll Wrapper -->
+              <div class="skills-grid-scroll-wrap mb-4">
+                <div class="skills-grid-container row g-2.5" id="skillsGrid" role="group" aria-label="Available skills" aria-live="polite">
+                  <!-- Dynamically populated via assessment.js -->
+                </div>
               </div>
 
               <!-- Custom Skill Addition Bar -->
               <div class="custom-skill-card p-3 rounded-2 stat-box-atlas mb-4 border border-line">
-                <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
                   <span class="small fw-semibold text-ink">
                     <i class="bi bi-plus-circle-dotted text-teal me-1"></i> Don't see your skill? Add Custom Skill
                   </span>
                   <span class="badge badge-navy small">Universal Skill Input</span>
                 </div>
                 <div class="row g-2 align-items-center">
-                  <div class="col-md-5">
+                  <div class="col-12 col-md-5">
                     <label class="visually-hidden" for="customSkillName">Custom skill name</label>
                     <input
                       type="text"
@@ -584,7 +581,7 @@
                       maxlength="40"
                     />
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-6 col-md-3">
                     <label class="visually-hidden" for="customSkillCategory">Custom skill category</label>
                     <select id="customSkillCategory" class="form-select form-select-sm">
                       <option value="frontend">Frontend</option>
@@ -601,7 +598,7 @@
                       <option value="tool">Tool / Other</option>
                     </select>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-6 col-md-2">
                     <label class="visually-hidden" for="customSkillProficiency">Custom skill proficiency</label>
                     <select id="customSkillProficiency" class="form-select form-select-sm">
                       <option value="beginner">Beginner</option>
@@ -609,7 +606,7 @@
                       <option value="advanced">Advanced</option>
                     </select>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-12 col-md-2">
                     <button type="button" id="btnAddCustomSkill" class="btn cp-btn-primary btn-sm w-100 py-1">
                       <i class="bi bi-plus-lg me-1"></i> Add
                     </button>
@@ -635,7 +632,7 @@
             <!-- ========================================================
                  STEP 4: Career Goals & Submission
                  ======================================================== -->
-            <div class="assessment-step-panel card p-4 p-md-5" id="stepPanel4">
+            <div class="assessment-step-panel card p-3 p-md-4" id="stepPanel4">
               <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                 <span class="step-badge-circle">04</span>
                 <div>
