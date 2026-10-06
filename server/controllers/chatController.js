@@ -2,7 +2,7 @@
  * controllers/chatController.js — Dual-Engine AI Career Mentor Controller
  * Primary: Groq Cloud (Ultra-Fast <100ms Inference)
  * Secondary Fallback: Google Gemini 3.6 Flash
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const User = require('../models/User');

@@ -207,7 +207,7 @@ app.get('/', (req, res) => {
     message: 'Welcome to CareerPath AI API 🚀',
     frontendUrl: process.env.CLIENT_URL || 'http://localhost:5500',
     version: '1.0.0',
-    team: '404 Brain Not Found',
+    platform: 'CareerPath AI Enterprise',
     endpoints: {
       health: 'GET /api/health',
       version: 'GET /api/version',
@@ -239,7 +239,7 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     version: '1.0.0',
-    team: '404 Brain Not Found',
+    platform: 'CareerPath AI Enterprise',
     emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
   });
 });
@@ -340,7 +340,7 @@ app.listen(PORT, () => {
   console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
   console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
   console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
-  console.log('👥 Team              : 404 Brain Not Found · Hack2Ignite 2026–27');
+  console.log('👥 Platform          : CareerPath AI Production Server');
   console.log('');
 });
 

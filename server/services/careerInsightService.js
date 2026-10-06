@@ -1,7 +1,7 @@
 /**
  * careerInsightService.js — AI-Powered Career Fit Brief & Market Insights
  * Powered by Groq Cloud & Google Gemini
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const { callGroq } = require('./groqService');
@@ -265,7 +265,7 @@ async function generateCareerBrief(recommendation, user) {
   const promptMessages = [
     {
       role: 'system',
-      content: `You are an expert Career & Industry Talent Analyst for the Hack2Ignite 2026-27 hackathon.
+      content: `You are an expert Career & Industry Talent Analyst for CareerPath AI.
 Generate an executive Career Fit & Market Brief for this college student.
 Return strictly a raw, valid JSON object (no markdown code fences, no extra text) with these 5 keys:
 {

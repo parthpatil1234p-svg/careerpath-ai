@@ -10,7 +10,7 @@
  * 6. requireRecruiter permits demo/admin user
  * 7. Client-side page list isolation logic verification
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026-27
+ * CareerPath AI · Enterprise Test Suite
  */
 
 const path = require('path');

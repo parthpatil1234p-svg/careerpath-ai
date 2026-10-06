@@ -8,7 +8,7 @@
  *   4. 3-Strike HUD Modals (Strike 1 Amber, Strike 2 Red Urgent, Strike 3 Termination)
  *   5. Authoritative Server Violation Sync (POST /api/quiz/violation)
  *
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Platform
  */
 
 (function (root, factory) {

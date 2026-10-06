@@ -9,7 +9,7 @@
  *    - business <-> marketing (e.g. Business Ops + Digital Marketing)
  * 3. Shared required skill overlap >= 2
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 function isRelatedCourse(careerA, careerB) {

@@ -1,7 +1,7 @@
 /**
  * stats-counter.js — VengeanceUI Stats Counter (@vengeanceui/stats-counter)
  * Smooth Spring/Easing Numerical Counter Engine
- * CareerPath AI Platform · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Platform
  */
 
 (function () {

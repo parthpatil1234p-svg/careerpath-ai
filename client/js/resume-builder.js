@@ -1,6 +1,6 @@
 /**
  * resume-builder.js — Dual-Pane Reactive Resume Builder & ATS Job Matcher
- * Team 404 Brain Not Found · CareerPath AI Platform
+ * CareerPath AI · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', async () => {

@@ -5,7 +5,7 @@
  * Stores role requirements, required skill verifications, salary ranges,
  * and live application metrics.
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const mongoose = require('mongoose');

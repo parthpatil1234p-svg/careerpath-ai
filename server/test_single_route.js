@@ -1,7 +1,7 @@
 /**
  * test_single_route.js — Integration & Invariant Test Suite
  * Single Active Career Route per Account Progression Model
- * Team: 404 Brain Not Found · CareerPath AI
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const assert = require('assert');

@@ -1,6 +1,6 @@
 /**
  * github-auth.js — Universal Client-Side GitHub Authentication & Study Connector
- * Team 404 Brain Not Found · CareerPath AI Platform
+ * CareerPath AI · Enterprise Platform Engine
  *
  * Implements:
  * - Universal GitHub Sign-In for EVERY user

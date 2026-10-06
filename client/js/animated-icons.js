@@ -1,6 +1,6 @@
 /**
  * animated-icons.js — 21st.dev Animated State Icons Engine
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Platform
  *
  * Micro-animated state icons with SVG morphing and spring physics
  * inspired by 21st.dev/community/icons/animated

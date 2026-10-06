@@ -1,7 +1,7 @@
 /**
  * middleware/otpRateLimiter.js — Balanced OTP Rate Limiting
  * Enforces: Maximum 5 OTP sends per 5 minutes per email/IP.
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const rateLimit = require('express-rate-limit');

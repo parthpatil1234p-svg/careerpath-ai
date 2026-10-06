@@ -9,7 +9,7 @@
  * 5. Full 5-Question Adaptive Flow & Verdict Graduation
  * 6. 24-Hour Review Cooldown Integrity Check
  *
- * CareerPath AI · Team 404 Brain Not Found · Hack2Ignite 2026-27
+ * CareerPath AI · Enterprise Test Suite
  */
 
 require('dotenv').config({ path: __dirname + '/../.env' });

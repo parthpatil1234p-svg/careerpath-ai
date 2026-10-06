@@ -1,6 +1,6 @@
 /**
  * skills-catalog.js — Standardized 94-Skill Reference Catalog for CareerPath AI
- * Team: 404 Brain Not Found
+ * CareerPath AI · Skills Ontology
  */
 window.DEFAULT_94_SKILLS = [
   {

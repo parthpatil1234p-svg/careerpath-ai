@@ -3,7 +3,7 @@
  * Comprehensive unit and integration test suite for the Resume Authenticity
  * & Non-Resume Content Guard (Document Classification Gate).
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Test Suite
  */
 
 const http = require('http');

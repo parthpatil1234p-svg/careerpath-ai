@@ -9,7 +9,7 @@
  * 5. 3-Strike Anti-Cheating System & Authoritative Session Lockout
  * 6. Refresh & Reload Session Persistence (Anti-Reset Guard)
  *
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Backend Service
  */
 
 require('dotenv').config({ path: __dirname + '/../.env' });

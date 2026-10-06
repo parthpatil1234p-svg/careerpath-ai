@@ -5,7 +5,7 @@
  * Stores domain verification metadata, DNS status, AI legitimacy scores,
  * and associated authorized recruiters.
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const mongoose = require('mongoose');

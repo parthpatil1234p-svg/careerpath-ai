@@ -1,6 +1,6 @@
 /**
  * chat.js — Floating AI Career Mentor Chatbot Widget
- * Team 404 Brain Not Found · CareerPath AI Platform
+ * CareerPath AI · Enterprise Platform Engine
  */
 
 (function () {
@@ -143,7 +143,7 @@
             <i class="bi bi-send-fill"></i>
           </button>
         </form>
-        <p class="cp-chat-disclaimer">CareerPath AI Assistant · Team 404 Brain Not Found</p>
+        <p class="cp-chat-disclaimer">CareerPath AI Career Intelligence Assistant</p>
       </div>
     `;
     document.body.appendChild(drawer);

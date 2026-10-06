@@ -5,7 +5,7 @@
  * Stores match score percentages, verified skill snapshots, candidate resume links,
  * and recruiter decision states.
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const mongoose = require('mongoose');

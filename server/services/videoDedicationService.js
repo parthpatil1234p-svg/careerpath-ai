@@ -6,7 +6,7 @@
  *  2. AI Post-Video Reflection Evaluation (scored with Groq Llama 3.3 / Gemini / heuristic fallback)
  *  3. Anti-spam and gibberish detection
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const { callGroq } = require('./groqService');

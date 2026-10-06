@@ -2,7 +2,7 @@
   "name": "careerpath-ai",
   "version": "1.0.0",
   "private": true,
-  "description": "CareerPath AI — AI Career Guidance and Skill Roadmap Platform (Hack2Ignite 2026–27)",
+  "description": "CareerPath AI — Autonomous AI Career Guidance and Skill Roadmap Platform",
   "scripts": {
     "start": "npm --prefix server start",
     "dev": "npm --prefix server run dev",
@@ -20,9 +20,9 @@
     "ai",
     "career-guidance",
     "edtech",
-    "hack2ignite",
+    "career-atlas",
     "roadmap"
   ],
-  "author": "Team 404 Brain Not Found",
+  "author": "CareerPath AI Team",
   "license": "MIT"
 }

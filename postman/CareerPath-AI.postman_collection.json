@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "c7f991b1-2a62-432c-8a1a-8e2b5839db01",
-    "name": "CareerPath AI — API Collection (Round 1 MVP)",
-    "description": "Comprehensive Postman collection for CareerPath AI (Hack2Ignite 2026–27 Round 1 MVP) covering Authentication, Profile Assessments, Career Directory, Deterministic Recommendations, Roadmap Generation, Task Tracking, and Student Dashboard.",
+    "name": "CareerPath AI — API Collection (Enterprise Release)",
+    "description": "Comprehensive Postman collection for CareerPath AI Enterprise Platform covering Authentication, Profile Assessments, Career Directory, Deterministic Recommendations, Roadmap Generation, Task Tracking, and Student Dashboard.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

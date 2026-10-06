@@ -1,7 +1,7 @@
 /**
  * groqService.js — Groq Cloud Ultra-Fast Inference for CareerPath AI
  * Powers instant AI Career Mentoring (< 100ms response time)
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const SYSTEM_PROMPT = `You are CareerPath AI Mentor, an encouraging, friendly, and expert tech career counselor.

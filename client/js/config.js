@@ -41,8 +41,9 @@
     // App Metadata
     APP_NAME: 'CareerPath AI',
     TAGLINE: 'Discover Your Career. Build Your Skills.',
-    TEAM_NAME: '404 Brain Not Found',
-    EDITION: 'Production Release 2026–27',
+    PLATFORM_NAME: 'CareerPath AI',
+    TEAM_NAME: 'CareerPath AI Team',
+    EDITION: 'Enterprise Edition 2026',
     VERSION: '1.0.0',
   };
 

@@ -1,7 +1,7 @@
 /**
  * routes/recruiterRoutes.js — Corporate Recruiter & Job Management Routes
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const express = require('express');

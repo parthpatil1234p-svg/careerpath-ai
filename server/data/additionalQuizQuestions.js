@@ -8,7 +8,7 @@
  * Each question conforms strictly to:
  * - id, skill, difficulty, topic, question, options (4), correctIndex (0-3), explanation
  *
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const ADDITIONAL_QUIZ_QUESTIONS = {

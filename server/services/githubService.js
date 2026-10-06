@@ -1,6 +1,6 @@
 /**
  * services/githubService.js — GitHub Integration & Repository Study Analyzer
- * Team 404 Brain Not Found · CareerPath AI Platform
+ * CareerPath AI · Enterprise Backend Service
  *
  * Provides:
  * - GitHub REST API integration for student profile and repository fetching

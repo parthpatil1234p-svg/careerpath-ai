@@ -1,7 +1,7 @@
 /**
  * data/weeklyTestQuestions.js — Curated Topic-Tagged Question Bank for Roadmap Weekly Tests
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026-27
+ * CareerPath AI · Enterprise Backend Service
  *
  * Provides vetted, deterministic technical and conceptual questions for weekly milestone tests
  * across 4 core domains: Engineering/Tech, Business/Finance, Marketing, and Creative/Design.

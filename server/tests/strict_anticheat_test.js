@@ -8,7 +8,7 @@
  * 4. Strike 3 Automatic Disqualification & Session Destruction
  * 5. Prevention of Demo Account Bypass on Cheating Disqualifications
  *
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Backend Service
  */
 
 require('dotenv').config({ path: __dirname + '/../.env' });

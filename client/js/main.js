@@ -237,8 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
     'color: #167D8D; font-size: 16px; font-weight: bold;'
   );
   console.log(
-    '%cTeam 404 Brain Not Found | CareerPath AI Platform',
-    'color: #1C355E; font-size: 12px;'
+    '%cCareerPath AI | Next-Gen AI Career Intelligence Platform',
+    'color: #4F46E5; font-size: 12px;'
   );
 });
 // ============================================================

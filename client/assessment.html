@@ -127,18 +127,22 @@
     <!-- Main Assessment Container -->
     <main class="container-xl assessment-layout">
 
-      <!-- Page Header -->
-      <div class="mb-4">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <span class="atlas-badge">
-            <i class="bi bi-compass text-teal"></i> CAREER ATLAS NAVIGATION
-          </span>
-          <span class="text-muted font-mono small">FORM-AST-01</span>
+      <!-- Sleek Compact Assessment Header Bar -->
+      <div class="assessment-header-bar mb-3 py-1">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="atlas-badge py-1 px-2.5 font-mono" style="font-size: 0.72rem;">
+              <i class="bi bi-compass text-teal"></i> CAREER ATLAS
+            </span>
+            <span class="text-muted font-mono text-xs d-none d-sm-inline">FORM-AST-01</span>
+            <h1 class="h5 mb-0 fw-bold text-ink ms-1">Student Profile &amp; Skill Assessment</h1>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-light text-secondary border font-mono small py-1 px-2.5">
+              <i class="bi bi-shield-check text-success me-1"></i> Deterministic: 60% skills &bull; 25% interests &bull; 15% academics
+            </span>
+          </div>
         </div>
-        <h1 class="h2 mb-1">Student Profile & Skill Assessment</h1>
-        <p class="text-muted small mb-0">
-          Your answers help us identify suitable career paths and learning priorities. Complete the four progressive checkpoints below to compare your capabilities against industry career profiles.
-        </p>
       </div>
 
       <!-- Feedback Alert Area -->
@@ -231,7 +235,7 @@
           <form id="assessmentForm" novalidate aria-describedby="assessmentFormHint">
 
             <!-- Active Profile Saved Notification Banner -->
-            <div id="profileLoadedBanner" class="alert alert-primary py-2.5 px-3 mb-4 d-none shadow-sm border-primary border-opacity-25" role="alert">
+            <div id="profileLoadedBanner" class="alert alert-primary py-1.5 px-3 mb-2.5 d-none shadow-sm border-primary border-opacity-25" role="alert">
               <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-2">
                   <i class="bi bi-patch-check-fill text-primary fs-5"></i>
@@ -333,14 +337,14 @@
                 </div>
               </div>
 
-              <!-- Hackathon Judge 1-Click Profile Autofill -->
+              <!-- Sample Student Profile 1-Click Autofill -->
               <div class="mb-4 p-3 rounded-2 border border-line d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3" style="background: #F8FAFC;">
                 <div>
                   <div class="d-flex align-items-center gap-2 mb-1">
-                    <span class="badge badge-teal font-monospace small"><i class="bi bi-award-fill me-1"></i> HACKATHON EVALUATION</span>
-                    <strong class="text-ink small">Judge Quick-Fill Mode</strong>
+                    <span class="badge badge-teal font-monospace small"><i class="bi bi-lightning-charge-fill me-1"></i> INSTANT PREVIEW</span>
+                    <strong class="text-ink small">Sample Profile Autofill</strong>
                   </div>
-                  <p class="text-muted small mb-0">Pre-populates an engineering student profile with academics, 4 verified interests, and 6 core tech skills.</p>
+                  <p class="text-muted small mb-0">Pre-populates an engineering student profile with academics, 4 verified interests, and 6 core tech skills for rapid demonstration.</p>
                 </div>
                 <button
                   type="button"
@@ -348,7 +352,7 @@
                   class="btn cp-btn-outline btn-sm px-3 py-2 text-nowrap d-flex align-items-center gap-2 fw-semibold shadow-sm"
                 >
                   <i class="bi bi-lightning-charge-fill text-warning"></i>
-                  <span>1-Click Fill Demo Profile</span>
+                  <span>1-Click Sample Profile Fill</span>
                 </button>
               </div>
 
@@ -471,20 +475,20 @@
             <!-- ========================================================
                  STEP 3: Skills & Proficiency
                  ======================================================== -->
-            <div class="assessment-step-panel card p-3 p-md-4" id="stepPanel3">
-              <div class="d-flex align-items-center justify-content-between gap-3 mb-4 pb-3 border-bottom flex-wrap">
-                <div class="d-flex align-items-center gap-3">
+            <div class="assessment-step-panel card p-3 p-md-3.5" id="stepPanel3">
+              <div class="d-flex align-items-center justify-content-between gap-2 mb-2.5 pb-2 border-bottom flex-wrap">
+                <div class="d-flex align-items-center gap-2.5">
                   <span class="step-badge-circle">03</span>
                   <div>
-                    <h2 class="h4 mb-0">Technical & Professional Skills <span class="text-danger">*</span></h2>
-                    <p class="text-muted small mb-0">Select skills you know and mark your self-assessed proficiency level</p>
+                    <h2 class="h5 mb-0 fw-bold text-ink">Technical &amp; Professional Skills <span class="text-danger">*</span></h2>
+                    <p class="text-muted small mb-0" style="font-size: 0.82rem;">Select skills you know &bull; take a 90s reality check quiz on any skill</p>
                   </div>
                 </div>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                   <button
                     type="button"
                     id="btnAutoDetectGitHubSkills"
-                    class="btn btn-github btn-sm px-3 py-2 d-flex align-items-center gap-2 fw-semibold shadow-sm"
+                    class="btn btn-github btn-sm px-2.5 py-1.5 d-flex align-items-center gap-1.5 fw-semibold shadow-sm"
                     title="Scan repositories from your GitHub account and automatically select skills with verified code badges"
                   >
                     <i class="bi bi-github"></i>
@@ -493,7 +497,7 @@
                   <button
                     type="button"
                     id="btnChangeGitHubAccount"
-                    class="btn btn-outline-secondary btn-sm px-2.5 py-2 d-none align-items-center gap-1 font-mono"
+                    class="btn btn-outline-secondary btn-sm px-2 py-1.5 d-none align-items-center gap-1 font-mono"
                     title="Change or link a different GitHub account"
                   >
                     <i class="bi bi-arrow-repeat"></i>
@@ -503,15 +507,15 @@
               </div>
 
               <!-- Filter & Search Toolbar -->
-              <div class="mb-3">
-                <div class="input-group mb-2">
-                  <span class="input-group-text bg-white border-end-0 text-muted">
+              <div class="mb-2">
+                <div class="input-group mb-1.5">
+                  <span class="input-group-text bg-white border-end-0 text-muted py-1">
                     <i class="bi bi-search"></i>
                   </span>
                   <input
                     type="text"
                     id="skillSearchInput"
-                    class="form-control border-start-0 ps-0"
+                    class="form-control form-control-sm border-start-0 ps-0"
                     placeholder="Search 90+ skills (e.g. HTML, Python, Figma, SQL, React, Java)..."
                     aria-label="Search available skills"
                   />
@@ -535,8 +539,8 @@
               </div>
 
               <!-- Top Selected Skills Summary Box (Visible immediately above grid) -->
-              <div class="selected-skills-box mb-3 p-3 rounded-2 stat-box-atlas border border-line" id="topSelectedSkillsBox">
-                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+              <div class="selected-skills-box mb-2 py-2 px-3 rounded-2 stat-box-atlas border border-line" id="topSelectedSkillsBox">
+                <div class="d-flex justify-content-between align-items-center mb-1.5 flex-wrap gap-2">
                   <span class="small fw-bold text-ink d-flex align-items-center gap-1.5">
                     <i class="bi bi-check2-circle text-success fs-6"></i>
                     <span>Your Selected Skills (<span id="selectedSkillsCount">0</span>/20):</span>
@@ -550,25 +554,25 @@
                     </button>
                   </div>
                 </div>
-                <div id="selectedSkillsSummary" class="d-flex flex-wrap gap-2">
+                <div id="selectedSkillsSummary" class="d-flex flex-wrap gap-1.5">
                   <span class="text-muted small fst-italic">No skills selected yet. Click any skill below to add it and take the reality check quiz.</span>
                 </div>
               </div>
 
               <!-- Skills Grid Container with Dedicated Scroll Wrapper -->
-              <div class="skills-grid-scroll-wrap mb-4">
-                <div class="skills-grid-container row g-2.5" id="skillsGrid" role="group" aria-label="Available skills" aria-live="polite">
+              <div class="skills-grid-scroll-wrap mb-2.5">
+                <div class="skills-grid-container row g-2" id="skillsGrid" role="group" aria-label="Available skills" aria-live="polite">
                   <!-- Dynamically populated via assessment.js -->
                 </div>
               </div>
 
               <!-- Custom Skill Addition Bar -->
-              <div class="custom-skill-card p-3 rounded-2 stat-box-atlas mb-4 border border-line">
-                <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
-                  <span class="small fw-semibold text-ink">
+              <div class="custom-skill-card p-2.5 rounded-2 stat-box-atlas mb-2.5 border border-line">
+                <div class="d-flex align-items-center justify-content-between mb-1.5 flex-wrap gap-2">
+                  <span class="small fw-semibold text-ink" style="font-size: 0.84rem;">
                     <i class="bi bi-plus-circle-dotted text-teal me-1"></i> Don't see your skill? Add Custom Skill
                   </span>
-                  <span class="badge badge-navy small">Universal Skill Input</span>
+                  <span class="badge badge-navy small" style="font-size: 0.68rem;">Universal Skill Input</span>
                 </div>
                 <div class="row g-2 align-items-center">
                   <div class="col-12 col-md-5">
@@ -612,12 +616,10 @@
                     </button>
                   </div>
                 </div>
-                 <div id="customSkillFeedback" class="small mt-2 d-none" role="status" aria-live="polite"></div>
+                <div id="customSkillFeedback" class="small mt-1.5 d-none" role="status" aria-live="polite"></div>
               </div>
 
-
-
-              <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+              <div class="d-flex justify-content-between mt-2 pt-2 border-top">
                 <button type="button" class="btn cp-btn-outline px-4" id="step3BackBtn">
                   <i class="bi bi-arrow-left"></i>
                   <span>Back</span>
@@ -930,11 +932,11 @@
         <div class="row align-items-center g-3">
           <div class="col-md-6 text-center text-md-start">
             <div class="footer-title fw-bold text-ink">CareerPath AI &mdash; Career Atlas</div>
-            <div class="text-muted small">ED-02 &middot; AI Career Guidance &amp; Skill Roadmap Platform</div>
+            <div class="text-muted small">Autonomous AI Career Guidance &amp; Skill Roadmap Ecosystem</div>
           </div>
           <div class="col-md-6 text-center text-md-end">
-            <span class="badge badge-teal font-monospace me-2">Hack2Ignite 2026&ndash;27</span>
-            <span class="badge badge-navy font-monospace px-3 py-1">Team: 404 Brain Not Found</span>
+            <span class="badge badge-teal font-monospace me-2">Enterprise Edition</span>
+            <span class="badge badge-navy font-monospace px-3 py-1">&copy; 2026 CareerPath AI</span>
           </div>
         </div>
       </div>

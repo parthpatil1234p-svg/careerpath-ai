@@ -1,6 +1,6 @@
 /**
  * google-auth.js — Client-Side Google Authentication Controller
- * Team 404 Brain Not Found · CareerPath AI Platform
+ * CareerPath AI · Enterprise Platform Engine
  *
  * Implements:
  * - Google Identity Services (GSI) One-Tap and Pop-up Credential verification

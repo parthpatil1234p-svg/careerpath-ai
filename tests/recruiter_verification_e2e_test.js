@@ -13,7 +13,7 @@
  *  9. Recruiter applicant radar with candidate verified skill badges
  * 10. Hiring stage update (Applied -> Shortlisted -> Interview Scheduled)
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Test Suite
  */
 const path = require('path');
 module.paths.push(path.join(__dirname, '../server/node_modules'));

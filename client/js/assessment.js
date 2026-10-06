@@ -931,16 +931,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (isSelected) {
         if (isQuizVerified) {
           verifiedBadge = `<span class="badge bg-success-subtle text-success border border-success ms-1" title="Verified by Reality Check Quiz (${capitalize(selectedObj.verifiedProficiency || selectedObj.proficiency)})" style="padding: 1px 5px; font-size: 0.62rem; white-space: nowrap;"><i class="bi bi-patch-check-fill me-0.5"></i>Verified</span>`;
-          actionBtnHtml = `<button type="button" class="btn btn-outline-success btn-sm py-0 px-2 btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz - Click to Retest" style="font-size: 0.72rem; height: 28px; line-height: 26px;"><i class="bi bi-patch-check-fill me-1"></i>Verified ✓</button>`;
+          actionBtnHtml = `<button type="button" class="btn btn-outline-success btn-sm btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Verified by Quiz - Click to Retest"><i class="bi bi-patch-check-fill me-1"></i>Verified ✓</button>`;
         } else if (isCodeVerified) {
           verifiedBadge = `<span class="badge-code-verified ms-1" title="Verified by real GitHub repo code" style="padding: 1px 4px; font-size: 0.62rem; white-space: nowrap;"><i class="bi bi-github me-0.5"></i>GitHub</span>`;
-          actionBtnHtml = `<button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Take quiz to verify with full confidence" style="font-size: 0.72rem; height: 28px; line-height: 26px;"><i class="bi bi-patch-question me-1"></i>Quiz</button>`;
+          actionBtnHtml = `<button type="button" class="btn btn-outline-primary btn-sm btn-grid-retest ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Take quiz to verify with full confidence"><i class="bi bi-lightning-charge me-1 text-primary"></i>Quiz</button>`;
         } else {
-          actionBtnHtml = `<button type="button" class="btn cp-btn-primary btn-sm py-0 px-2 btn-grid-take-quiz ms-1 text-nowrap animate-pulse-soft" data-skill="${escapeHtml(skill.name)}" title="Take 90s reality check quiz to verify this skill" style="font-size: 0.72rem; height: 28px; line-height: 26px; font-weight: 600;"><i class="bi bi-lightning-charge-fill me-1"></i>Take Quiz</button>`;
+          actionBtnHtml = `<button type="button" class="btn cp-btn-primary btn-sm btn-grid-take-quiz ms-1 text-nowrap animate-pulse-soft" data-skill="${escapeHtml(skill.name)}" title="Take 90s reality check quiz to verify this skill"><i class="bi bi-lightning-charge-fill me-1"></i>Take Quiz</button>`;
         }
       } else {
         // Universal Quiz Availability: EVERY skill card provides instant 1-click quiz access!
-        actionBtnHtml = `<button type="button" class="btn btn-grid-take-quiz-outline btn-sm py-0 px-2 btn-grid-take-quiz ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Select and verify ${escapeHtml(skill.displayName)} with 90s quiz" style="font-size: 0.72rem; height: 28px; line-height: 26px; font-weight: 600;"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Take Quiz</button>`;
+        actionBtnHtml = `<button type="button" class="btn btn-grid-take-quiz-outline btn-sm btn-grid-take-quiz ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Select and verify ${escapeHtml(skill.displayName)} with 90s quiz"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Take Quiz</button>`;
       }
 
       const col = document.createElement('div');

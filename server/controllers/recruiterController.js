@@ -13,7 +13,7 @@
  *  - getJobApplicants: Enriched candidate radar with verified skill badges & match scores
  *  - updateApplicationStatus: Moves candidate across recruitment stages
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const User = require('../models/User');

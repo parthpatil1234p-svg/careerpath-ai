@@ -1,7 +1,7 @@
 /**
  * controllers/quizController.js — Controller for Adaptive Skill Reality-Check Quiz
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026-27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const quizService = require('../services/quizService');

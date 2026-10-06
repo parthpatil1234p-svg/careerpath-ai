@@ -2,7 +2,7 @@
  * services/emailService.js — High-Reliability Email Delivery for OTP Verification
  * Uses Nodemailer with direct Gmail SMTP (Port 465 SSL with Port 587 STARTTLS Fallback).
  * Anti-Spam Optimized: Clean headers, no trigger emojis, RFC compliance.
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const nodemailer = require('nodemailer');
@@ -101,8 +101,8 @@ async function sendOtpEmail(toEmail, name, otpCode) {
       </p>
 
       <div class="footer">
-        CareerPath AI · Team 404 Brain Not Found · Hack2Ignite 2026–27<br>
-        G.H. Raisoni International Skill Tech University (GHRISTU), Pune
+        CareerPath AI · Next-Gen AI Career Guidance Platform<br>
+        Autonomous Career Atlas &amp; Verified Skill Roadmaps
       </div>
     </div>
   </body>
@@ -121,8 +121,8 @@ This code is valid for 10 minutes. Please enter it to activate your CareerPath A
 If you did not request this code, you can safely ignore this email.
 
 --
-CareerPath AI · Team 404 Brain Not Found
-Hack2Ignite 2026–27 (GHRISTU Pune)
+CareerPath AI · Next-Gen AI Career Guidance Platform
+Autonomous Career Atlas & Verified Skill Roadmaps
 `;
 
   const mailOptions = {

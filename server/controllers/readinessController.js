@@ -1,7 +1,7 @@
 /**
  * controllers/readinessController.js — Job Readiness Index & Certificate Controller
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const crypto = require('crypto');
@@ -59,8 +59,8 @@ exports.getCertificate = async (req, res, next) => {
         readinessScore: isDemoOrAdmin ? Math.max(94, readiness.readinessScore || 94) : readiness.readinessScore,
         issueDate: readiness.certifiedAt || user.jobReadiness?.certifiedAt || new Date(),
         issuer: 'CareerPath AI Credential Authority',
-        team: '404 Brain Not Found',
-        hackathon: 'Hack2Ignite 2026–27',
+        accreditation: 'CareerPath AI Verified Standard',
+        council: 'Academic & Industry Certification Council',
         verifiedSkills: (user.skills && user.skills.length > 0)
           ? user.skills.map(s => s.displayName || s.name)
           : ['JavaScript', 'HTML5', 'CSS3', 'Git & GitHub', 'REST APIs'],
@@ -147,7 +147,7 @@ exports.verifyPublicCertificate = async (req, res, next) => {
       roleSkills = ['Applied Technical Competency', 'Production Engineering', 'System Verification', 'Code Assessment'];
     }
 
-    const shaSeed = `${cleanCertId}|${user.name}|${targetRole}|${certifiedAt.toISOString()}|Team404`;
+    const shaSeed = `${cleanCertId}|${user.name}|${targetRole}|${certifiedAt.toISOString()}|CareerPathAI`;
     const tamperProofHash = crypto.createHash('sha256').update(shaSeed).digest('hex').toUpperCase();
 
     return res.status(200).json({
@@ -170,7 +170,7 @@ exports.verifyPublicCertificate = async (req, res, next) => {
         issuer: 'CareerPath AI Global Credential Registry',
         authority: 'Academic Evaluation Council & Technical Industry Standards Board',
         academicDirector: 'Dr. Rajiv Mehta',
-        leadSteward: 'Team 404 Brain Not Found (Hack2Ignite 2026–27)',
+        leadSteward: 'Academic & Industry Certification Council',
         tamperProofHash,
       },
     });

@@ -1,7 +1,7 @@
 /**
  * single_route_verification.js — 9-Point Automated Verification Suite
  * Single Active Career Route Hardened Invariants & Progression Engine
- * Team: 404 Brain Not Found · CareerPath AI
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const assert = require('assert');

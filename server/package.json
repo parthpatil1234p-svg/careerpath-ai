@@ -23,9 +23,9 @@
     "ai",
     "career-guidance",
     "edtech",
-    "hack2ignite"
+    "career-atlas"
   ],
-  "author": "Team 404 Brain Not Found",
+  "author": "CareerPath AI Team",
   "license": "ISC",
   "dependencies": {
     "adm-zip": "^0.6.1",

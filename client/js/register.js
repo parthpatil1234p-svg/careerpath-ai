@@ -2,7 +2,7 @@
  * register.js — Two-Step Registration & OTP Verification Controller
  * Supports Student Enrollment & Verified Company Recruiter Onboarding
  *
- * Team 404 Brain Not Found · CareerPath AI Platform
+ * CareerPath AI · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {

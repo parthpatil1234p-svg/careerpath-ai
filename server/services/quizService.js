@@ -1,7 +1,7 @@
 /**
  * services/quizService.js — Adaptive Skill Quiz & Reality-Check Engine
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026-27
+ * CareerPath AI · Enterprise Backend Service
  *
  * Core Logic:
  * - 6 Questions per skill session.

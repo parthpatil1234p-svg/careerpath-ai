@@ -4,7 +4,7 @@
  * Formula:
  * Readiness Index = (Verified Skills * 0.35) + (Roadmap Tasks * 0.30) + (Resume ATS * 0.15) + (Mock Interview * 0.20)
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const User = require('../models/User');

@@ -1,7 +1,7 @@
 /**
  * scroll-dissolve.js — Interactive WebGL Shader Transformation
  * Vengeance UI Scroll Dissolve Reveal Component Engine
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Platform
  */
 
 (function () {

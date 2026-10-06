@@ -7,7 +7,7 @@
  * - OpenAI-compatible endpoints / Custom User-provided API keys
  * - Built-in Domain Engine Fallback (guaranteed 100% uptime with zero failure)
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026-27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const questionCache = new Map(); // key: skill.toLowerCase(), value: { questions, timestamp }

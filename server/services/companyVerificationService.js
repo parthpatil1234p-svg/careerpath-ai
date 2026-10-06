@@ -8,7 +8,7 @@
  *  4. HTTP/HTTPS Live Probing (verifies company website responds with valid HTTP status)
  *  5. AI Corporate Intelligence (Groq Llama 3.3 / Gemini corporate analysis & legitimacy score)
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const dns = require('dns');

@@ -7,7 +7,7 @@
  * Layer 3: Deterministic Non-Resume Blacklist & Structural Whitelist Analysis (0ms, $0)
  * Layer 4: AI Pre-Flight Classifier (Groq / Gemini) for borderline edge cases
  *
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Enterprise Backend Service
  */
 
 const { PDFParse } = require('pdf-parse');

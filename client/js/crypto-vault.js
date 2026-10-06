@@ -10,7 +10,7 @@
  *
  * Works in both Modern Browser (window.crypto) and Node.js (globalThis.crypto / require('crypto').webcrypto)
  *
- * CareerPath AI · Team 404 Brain Not Found
+ * CareerPath AI · Enterprise Platform
  */
 
 (function (root, factory) {

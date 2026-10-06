@@ -1,6 +1,6 @@
 /**
  * CareerPath AI — Official Public Credential Verification Controller
- * Team 404 Brain Not Found · Hack2Ignite 2026–27
+ * CareerPath AI · Verified Talent Credential Protocol
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
           issuer: 'CareerPath AI Global Credential Registry',
           authority: 'Academic Evaluation Council & Technical Industry Standards Board',
           academicDirector: 'Dr. Rajiv Mehta',
-          leadSteward: 'Team 404 Brain Not Found (Hack2Ignite 2026–27)',
+          leadSteward: 'Academic & Industry Certification Council',
           tamperProofHash: 'CC44899A307E2F2C5061A29F4E8DB710294CAE081943892F3E768499B0182CDE'
         });
       } else {
