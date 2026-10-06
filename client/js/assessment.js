@@ -968,6 +968,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
           actionBtnHtml = `<button type="button" class="btn cp-btn-primary btn-sm py-0 px-2 btn-grid-take-quiz ms-1 text-nowrap animate-pulse-soft" data-skill="${escapeHtml(skill.name)}" title="Take 90s reality check quiz to verify this skill" style="font-size: 0.74rem; height: 28px; line-height: 26px; font-weight: 600;"><i class="bi bi-lightning-charge-fill me-1"></i>Take Quiz</button>`;
         }
+      } else {
+        // Universal Quiz Availability: EVERY skill card provides instant 1-click quiz access!
+        actionBtnHtml = `<button type="button" class="btn btn-grid-take-quiz-outline btn-sm py-0 px-2 btn-grid-take-quiz ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Select and verify ${escapeHtml(skill.displayName)} with 90s quiz" style="font-size: 0.74rem; height: 28px; line-height: 26px; font-weight: 600;"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Take Quiz</button>`;
       }
 
       const col = document.createElement('div');
@@ -1069,6 +1072,43 @@ document.addEventListener('DOMContentLoaded', async () => {
         gridTakeQuizBtn.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
+
+          // Auto-select skill if not yet selected
+          if (!selectedSkillsMap.has(sKey) && !selectedSkillsMap.has(skill.name)) {
+            if (alertContainer) alertContainer.innerHTML = '';
+            if (!isSkillAllowedInStream(skill, selectedStream)) {
+              showAlert(`This skill belongs to another stream and cannot be selected in ${STREAM_META[selectedStream]?.label || selectedStream}.`, 'warning');
+              return;
+            }
+            if (selectedSkillsMap.size >= 20) {
+              showAlert('You can select a maximum of 20 skills for assessment.', 'warning');
+              return;
+            }
+            const existingUserSkill = (currentUser?.skills || []).find(
+              (s) => (s.name || '').toLowerCase().trim() === sKey
+            );
+            const isQuizVer = Boolean(existingUserSkill?.isQuizVerified);
+            const profVal = existingUserSkill?.verifiedProficiency || existingUserSkill?.proficiency || select?.value || 'beginner';
+
+            selectedSkillsMap.set(sKey, {
+              name: sKey,
+              displayName: skill.displayName,
+              category: skill.category || 'tool',
+              proficiency: profVal,
+              selfRatedProficiency: existingUserSkill?.selfRatedProficiency || select?.value || 'beginner',
+              verifiedProficiency: existingUserSkill?.verifiedProficiency || null,
+              isQuizVerified: isQuizVer,
+              quizScore: existingUserSkill?.quizScore || 0,
+              quizGaps: existingUserSkill?.quizGaps || [],
+              isCodeVerified: Boolean(existingUserSkill?.isCodeVerified),
+              verifiedSource: existingUserSkill?.verifiedSource || 'self'
+            });
+            updateSelectedSkillsUI();
+            renderSkillsGrid();
+            renderProveSkillsPanel();
+            if (typeof saveAutoDraft === 'function') saveAutoDraft();
+          }
+
           startSkillCheck(skill.name);
         });
       }
@@ -1209,12 +1249,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       return b.score - a.score || (a.skill.displayName || a.skill.name).localeCompare(b.skill.displayName || b.skill.name);
     });
 
-    // Always include ALL verified skills that are selected, plus unverified ones up to at least 5 items total
-    const verifiedList = candidates.filter(c => c.isVerified).map(c => c.skill);
-    const unverifiedList = candidates.filter(c => !c.isVerified).map(c => c.skill);
-
-    const neededUnverified = Math.max(0, 5 - verifiedList.length);
-    return [...verifiedList, ...unverifiedList.slice(0, neededUnverified)];
+    // Return ALL selected skills in prioritized order so EVERY selected skill is available for verification
+    return candidates.map(c => c.skill);
   };
 
   const renderProveSkillsPanel = () => {
@@ -1863,9 +1899,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, true);
 
   const startSkillCheck = async (skillName) => {
-    const skill = selectedSkillsMap.get(skillName) ||
+    let skill = selectedSkillsMap.get(skillName) ||
       Array.from(selectedSkillsMap.values()).find(s => (s.name || '').toLowerCase() === (skillName || '').toLowerCase());
-    if (!skill) return;
+    if (!skill) {
+      const sKey = (skillName || '').toLowerCase().trim();
+      const stdSkill = (allAvailableSkills || FALLBACK_SKILLS).find(
+        s => (s.name || '').toLowerCase() === sKey || (s.displayName || '').toLowerCase() === sKey
+      );
+      const displayName = stdSkill?.displayName || capitalize(skillName);
+      const newSkillObj = {
+        name: sKey,
+        displayName: displayName,
+        category: stdSkill?.category || 'tool',
+        proficiency: 'beginner',
+        selfRatedProficiency: 'beginner',
+        verifiedProficiency: null,
+        isQuizVerified: false,
+        quizScore: 0,
+        quizGaps: [],
+        isCodeVerified: false,
+        verifiedSource: 'self'
+      };
+      selectedSkillsMap.set(sKey, newSkillObj);
+      skill = newSkillObj;
+      updateSelectedSkillsUI();
+      renderSkillsGrid();
+      renderProveSkillsPanel();
+      if (typeof saveAutoDraft === 'function') saveAutoDraft();
+    }
 
     // Check if skill has active cheating disqualification or cooldown
     const isFlagged = skill.verificationStatus === 'flagged_cheating';

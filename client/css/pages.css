@@ -745,6 +745,28 @@
   transform: translateY(0);
 }
 
+/* In-Card Instant Take Quiz Button (Outline variant for unselected skills) */
+.btn-grid-take-quiz-outline {
+  background: #F0F9FF;
+  color: #0284C7 !important;
+  border: 1px solid #BAE6FD;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-grid-take-quiz-outline:hover {
+  background: #0284C7;
+  color: #FFFFFF !important;
+  border-color: #0284C7;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+.btn-grid-take-quiz-outline:active {
+  transform: translateY(0);
+}
+
 @keyframes pulseSoft {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.94; transform: scale(1.02); }
