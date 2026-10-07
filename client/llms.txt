@@ -1,0 +1,32 @@
+# CareerPath AI — Navigable Career Atlas & AI Skill Roadmap Platform
+
+> Autonomous AI-powered career guidance, 3D interactive Career Universe Atlas, verified skill assessments, and weekly milestone-gated roadmaps for college students and freshers.
+
+CareerPath AI solves problem ED-02 (Hack2Ignite) by guiding students from self-assessment to verified career readiness across 24 industry roles spanning Engineering, UI/UX Design, Finance & Business, and Growth Marketing.
+
+## Core Capabilities & Features
+
+- [Career Universe 3D Atlas](https://careerpath-ai-bdbt.onrender.com/index.html): Interactive Three.js WebGL visualization mapping skills, job demand nodes, and cross-functional career paths in 3D space.
+- [Adaptive Skill Assessment](https://careerpath-ai-bdbt.onrender.com/assessment.html): 4-step multi-stream diagnostic evaluating student academics, real-time verified interests, GitHub repositories, and interactive technical quizzes.
+- [AI Career Recommendations](https://careerpath-ai-bdbt.onrender.com/recommendations.html): Cosine-similarity match engine ranking top career tracks based on matched skills, gap analysis, and real-time hiring trends.
+- [Weekly Milestone Roadmaps](https://careerpath-ai-bdbt.onrender.com/roadmap.html): 4 to 12-week structured curriculum with curated video lectures, practical labs, and strict 30-minute anti-cheat proctored milestone assessments (70% pass threshold to advance).
+- [Corporate Recruiter Portal](https://careerpath-ai-bdbt.onrender.com/recruiter-dashboard.html): Direct talent radar connecting verified students with corporate recruiters for job openings.
+- [AI Career Mentor](https://careerpath-ai-bdbt.onrender.com/index.html): Live interactive streaming chat mentor answering career questions, resume advice, and interview preparation.
+
+## Core Career Domains Covered
+
+- **Engineering & Software**: Full-Stack Developer, Front-End Developer, Backend Engineer, Mobile App Developer (Flutter/React Native), Game Developer (Unity/Unreal), AI & Machine Learning Engineer, Data Scientist, DevOps & Cloud Engineer, Cybersecurity Analyst, Blockchain Developer, QA Automation Engineer.
+- **Creative & Design**: UI/UX Designer, Brand & Visual Identity Designer, Motion Graphics & 3D Designer.
+- **Business & Finance**: Financial Analyst & Modeler, Business Operations Manager, Management Consultant, Technical Product Manager.
+- **Digital Marketing & Growth**: SEO & Organic Growth Strategist, Performance Marketer & Media Buyer, Social Media Growth Manager, B2B Technical Copywriter.
+
+## Technology Stack
+
+- **Frontend**: Vanilla JavaScript (ES6+), Bootstrap 5, Three.js, GSAP Animations, Lucide/Bootstrap Icons, PWA.
+- **Backend**: Node.js, Express.js REST API, MongoDB Atlas, Mongoose, JWT Authentication.
+- **AI Engine**: Groq Cloud (Qwen/Llama <400ms inference), Google Gemini API, and deterministic fallback domain engine.
+
+## Machine-Readable Resources
+
+- [Full Content Index (llms-full.txt)](https://careerpath-ai-bdbt.onrender.com/llms-full.txt): In-depth curriculum breakdown and API endpoints.
+- [XML Sitemap](https://careerpath-ai-bdbt.onrender.com/sitemap.xml): Complete URL index for search engines.

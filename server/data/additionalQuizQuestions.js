@@ -941,6 +941,165 @@ const ADDITIONAL_QUIZ_QUESTIONS = {
         "explanation": "ClusterIP is the default internal-only service; NodePort exposes the service on each Node's IP at a static port (typically 30000-32767)."
       }
     ]
+  },
+  "technical-seo": {
+    "easy": [
+      {
+        "id": "tseo-e1",
+        "skill": "technical-seo",
+        "difficulty": "easy",
+        "topic": "core-web-vitals",
+        "question": "Which Core Web Vital metric measures visual stability and prevents unexpected shifts during page load?",
+        "options": [
+          "Largest Contentful Paint (LCP)",
+          "Cumulative Layout Shift (CLS)",
+          "Interaction to Next Paint (INP)",
+          "First Input Delay (FID)"
+        ],
+        "correctIndex": 1,
+        "explanation": "CLS (Cumulative Layout Shift) measures visual stability by tracking sudden layout shifts of DOM elements while resources load."
+      }
+    ],
+    "medium": [
+      {
+        "id": "tseo-m1",
+        "skill": "technical-seo",
+        "difficulty": "medium",
+        "topic": "canonicalization",
+        "question": "What is the primary architectural purpose of an HTML <link rel='canonical'> tag?",
+        "options": [
+          "Accelerates DNS resolution for external third-party CDNs",
+          "Explicitly signals the authoritative master URL to search engines to consolidate duplicate page equity",
+          "Instructs search engine bots never to index the target URL",
+          "Compresses the DOM payload for mobile devices"
+        ],
+        "correctIndex": 1,
+        "explanation": "rel='canonical' specifies the master version of duplicate or near-duplicate web pages, preventing duplicate content dilution in search indexes."
+      }
+    ],
+    "hard": [
+      {
+        "id": "tseo-h1",
+        "skill": "technical-seo",
+        "difficulty": "hard",
+        "topic": "crawl-budget",
+        "question": "When managing crawl budget on large e-commerce platforms with millions of faceted filter URLs, which method is most effective?",
+        "options": [
+          "Allowing all URLs and letting search engines figure it out automatically",
+          "Restricting search bots via robots.txt Disallow on dynamic query parameters and applying canonical tags or noindex",
+          "Converting all query parameters to URL fragments (#)",
+          "Removing all sitemaps from the web root"
+        ],
+        "correctIndex": 1,
+        "explanation": "Using robots.txt rules for faceted search parameters combined with canonical tags prevents search crawlers from wasting crawl budget on infinite permutation traps."
+      }
+    ]
+  },
+  "aeo": {
+    "easy": [
+      {
+        "id": "aeo-e1",
+        "skill": "aeo",
+        "difficulty": "easy",
+        "topic": "llms-txt-standard",
+        "question": "What is the role of the emerging /llms.txt standard on modern websites?",
+        "options": [
+          "It blocks all generative AI crawlers from scraping web content",
+          "It serves a clean, token-efficient, markdown-first summary of the site designed specifically for LLMs and AI search engines",
+          "It trains a custom LLM directly in the user's browser via WebAssembly",
+          "It encrypts the website's HTML against AI scraper bots"
+        ],
+        "correctIndex": 1,
+        "explanation": "/llms.txt provides a lightweight, markdown-formatted directory and summary of high-value site documentation optimized for LLM context windows."
+      }
+    ],
+    "medium": [
+      {
+        "id": "aeo-m1",
+        "skill": "aeo",
+        "difficulty": "medium",
+        "topic": "answer-engine-vs-seo",
+        "question": "How does Answer Engine Optimization (AEO) differ fundamentally from traditional keyword SEO?",
+        "options": [
+          "AEO focuses strictly on pay-per-click ad spending",
+          "AEO optimizes content structure and entity clarity so AI systems synthesize direct answers with citations, rather than relying solely on SERP rank",
+          "AEO works exclusively on mobile voice assistants without web crawlers",
+          "AEO requires eliminating all schema markup from web pages"
+        ],
+        "correctIndex": 1,
+        "explanation": "AEO aims for entity synthesis and inclusion in AI answer generation (Perplexity, ChatGPT Search, Claude), prioritizing direct informational value over raw keyword stuffing."
+      }
+    ],
+    "hard": [
+      {
+        "id": "aeo-h1",
+        "skill": "aeo",
+        "difficulty": "hard",
+        "topic": "information-gain",
+        "question": "Which content strategy provides the highest citation frequency in generative answer engines?",
+        "options": [
+          "Regurgitating existing competitor blog articles with minor wording changes",
+          "Publishing unique primary research, structured Schema.org graphs, and high Information Gain content with verified citations",
+          "Hiding keyword lists in CSS display:none elements",
+          "Targeting only exact-match long-tail keyword strings"
+        ],
+        "correctIndex": 1,
+        "explanation": "AI models prioritize high Information Gain—novel data, verifiable empirical claims, clear entity schemas, and primary source citations—over commoditized duplicate copy."
+      }
+    ]
+  },
+  "baidu-seo": {
+    "easy": [
+      {
+        "id": "bseo-e1",
+        "skill": "baidu-seo",
+        "difficulty": "easy",
+        "topic": "icp-license",
+        "question": "What legal/administrative requirement is mandatory to host a website on servers in mainland China for optimal Baidu indexing?",
+        "options": [
+          "SSL EV Certificate",
+          "ICP License / Filing (ICP备案)",
+          "China Trademark Registration only",
+          "Baidu Paid Advertising Contract"
+        ],
+        "correctIndex": 1,
+        "explanation": "An ICP filing (ICP备案) issued by the Ministry of Industry and Information Technology (MIIT) is legally required for hosting websites within mainland China."
+      }
+    ],
+    "medium": [
+      {
+        "id": "bseo-m1",
+        "skill": "baidu-seo",
+        "difficulty": "medium",
+        "topic": "crawler-rendering",
+        "question": "How does the Baiduspider crawler historically behave when handling client-side single page applications (SPAs)?",
+        "options": [
+          "It executes complex client-side JavaScript flawlessly like a full headless Chromium browser",
+          "It struggles to execute client-side JavaScript reliably, making Server-Side Rendering (SSR) or pre-rendered HTML essential",
+          "It converts all JavaScript bundles into native WebAssembly bytecode",
+          "It only indexes pages written in Flash"
+        ],
+        "correctIndex": 1,
+        "explanation": "Baiduspider has limited JavaScript execution compared to Googlebot. Serving pre-rendered HTML or using SSR is critical for robust indexation in Baidu."
+      }
+    ],
+    "hard": [
+      {
+        "id": "bseo-h1",
+        "skill": "baidu-seo",
+        "difficulty": "hard",
+        "topic": "chinese-segmentation",
+        "question": "Why is Chinese word segmentation (分词, Fencí) essential when optimizing page copy for Baidu search?",
+        "options": [
+          "Chinese has no spaces between words; Baidu uses algorithmic dictionaries and segmentation to understand multi-character search intent",
+          "Baidu translates all queries into English before querying its index",
+          "It converts Simplified Chinese to Traditional Chinese automatically",
+          "It prevents UTF-8 encoding errors on Apache servers"
+        ],
+        "correctIndex": 0,
+        "explanation": "Because Chinese text is written continuously without spaces, Baidu relies on word segmentation (分词) algorithms. Structuring keywords to match natural compound terms is crucial."
+      }
+    ]
   }
 };
 

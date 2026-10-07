@@ -480,9 +480,12 @@ const careersData = [
     icon: 'bi-search',
     color: '#059669',
     educationPreferences: ['BBA', 'B.Com', 'B.A.', 'Marketing', 'BCA', 'Information Technology'],
-    interestTags: ['seo', 'digital marketing', 'content', 'growth', 'analytics'],
+    interestTags: ['seo', 'digital marketing', 'content', 'growth', 'analytics', 'aeo', 'ai search', 'baidu seo'],
     requiredSkills: [
       { skillName: 'seo', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'technical-seo', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'aeo', importance: 'high', requiredProficiency: 'intermediate' },
+      { skillName: 'baidu-seo', importance: 'medium', requiredProficiency: 'beginner' },
       { skillName: 'content-marketing', importance: 'high', requiredProficiency: 'intermediate' },
       { skillName: 'google-analytics', importance: 'high', requiredProficiency: 'intermediate' },
       { skillName: 'html', importance: 'low', requiredProficiency: 'beginner' },

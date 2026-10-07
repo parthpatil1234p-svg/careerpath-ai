@@ -161,18 +161,18 @@ const DEFAULT_MARKET_INSIGHTS = {
     actionableTip: 'Run a live low-budget Meta or Google Ads test campaign to document real conversion metrics and creative split testing.'
   },
   'seo-growth-strategist': {
-    salaryRange: '₹4.0 – ₹8.5 LPA (Entry-Level)',
-    hiringDemand: 'High Demand · Core organic acquisition channel for fintech, SaaS, and content-driven global enterprises',
-    whyYouFit: 'Your analytical mindset, technical curiosity, and content structuring skills match search engine ranking mechanics.',
-    keyBottleneck: 'Hands-on technical SEO audits, site speed optimization, schema markup, and programmatic content architectures.',
-    actionableTip: 'Perform a comprehensive technical SEO audit of a live website using Google Search Console and Screaming Frog, publishing an audit report.'
+    salaryRange: '₹4.5 – ₹9.5 LPA (Entry-Level)',
+    hiringDemand: 'Exponential Growth · Modern AI Answer Engine Optimization (AEO), technical indexability, and cross-border organic growth',
+    whyYouFit: 'Your analytical mindset, technical curiosity, and content structuring skills match generative AI citation algorithms and search engine ranking mechanics.',
+    keyBottleneck: 'Core Web Vitals performance, Answer Engine Optimization (AEO/llms.txt), Schema.org entity linking, and global search crawling (Google + Baidu).',
+    actionableTip: 'Deploy an AEO-ready site architecture with llms.txt, Schema.org JSON-LD graphs, and run technical crawl audits using Google Search Console and Baidu Webmaster Tools.'
   },
   'seo-organic-growth-strategist': {
-    salaryRange: '₹4.0 – ₹8.5 LPA (Entry-Level)',
-    hiringDemand: 'High Demand · Core organic acquisition channel for fintech, SaaS, and content-driven global enterprises',
-    whyYouFit: 'Your analytical mindset, technical curiosity, and content structuring skills match search engine ranking mechanics.',
-    keyBottleneck: 'Hands-on technical SEO audits, site speed optimization, schema markup, and programmatic content architectures.',
-    actionableTip: 'Perform a comprehensive technical SEO audit of a live website using Google Search Console and Screaming Frog, publishing an audit report.'
+    salaryRange: '₹4.5 – ₹9.5 LPA (Entry-Level)',
+    hiringDemand: 'Exponential Growth · Modern AI Answer Engine Optimization (AEO), technical indexability, and cross-border organic growth',
+    whyYouFit: 'Your analytical mindset, technical curiosity, and content structuring skills match generative AI citation algorithms and search engine ranking mechanics.',
+    keyBottleneck: 'Core Web Vitals performance, Answer Engine Optimization (AEO/llms.txt), Schema.org entity linking, and global search crawling (Google + Baidu).',
+    actionableTip: 'Deploy an AEO-ready site architecture with llms.txt, Schema.org JSON-LD graphs, and run technical crawl audits using Google Search Console and Baidu Webmaster Tools.'
   },
   'social-media-growth-manager': {
     salaryRange: '₹3.8 – ₹7.5 LPA (Entry-Level)',

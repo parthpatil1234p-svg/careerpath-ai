@@ -184,6 +184,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     'meta-ads': ['marketing'],
     'google-ads': ['marketing'],
     'seo': ['marketing'],
+    'aeo': ['marketing', 'engineering'],
+    'baidu-seo': ['marketing'],
+    'technical-seo': ['marketing', 'engineering'],
     'content-marketing': ['marketing', 'creative'],
     'social-media-growth': ['marketing'],
     'google-analytics': ['marketing'],
@@ -349,10 +352,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     { name: 'management-consulting', displayName: 'Management Consulting & Strategy', category: 'business', stream: 'business' },
     { name: 'market-research', displayName: 'Market Research & Intelligence', category: 'business', stream: 'business' },
 
-    // Digital Marketing & Growth (6)
+    // Digital Marketing & Growth
     { name: 'meta-ads', displayName: 'Meta Ads Manager & Paid Social', category: 'marketing', stream: 'marketing' },
     { name: 'google-ads', displayName: 'Google Ads & SEM', category: 'marketing', stream: 'marketing' },
     { name: 'seo', displayName: 'SEO & Organic Search Strategy', category: 'marketing', stream: 'marketing' },
+    { name: 'aeo', displayName: 'Answer Engine Optimization (AEO) & AI Search', category: 'marketing', stream: 'marketing' },
+    { name: 'baidu-seo', displayName: 'Baidu SEO & China Search Optimization', category: 'marketing', stream: 'marketing' },
+    { name: 'technical-seo', displayName: 'Technical SEO & Core Web Vitals', category: 'marketing', stream: 'marketing' },
     { name: 'content-marketing', displayName: 'Content Marketing & Copywriting', category: 'marketing', stream: 'marketing' },
     { name: 'social-media-growth', displayName: 'Social Media & Viral Growth', category: 'marketing', stream: 'marketing' },
     { name: 'google-analytics', displayName: 'Google Analytics 4 & Attribution', category: 'marketing', stream: 'marketing' },

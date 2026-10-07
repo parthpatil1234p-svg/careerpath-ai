@@ -1,12 +1,75 @@
-# Robots.txt for CareerPath AI — AI Career Guidance and Skill Roadmap Platform
+# ==============================================================================
+# CareerPath AI — Unified Robots & AI Crawler Discovery Policy
+# Supports: Google, Bing, Baidu (百度), and Modern AI Search (Perplexity, ChatGPT, Claude)
+# ==============================================================================
+
+# ── General Search Engine Crawlers (Google, Bing, Yahoo, DuckDuckGo) ──────────
 User-agent: *
 Allow: /
 Allow: /index.html
 Allow: /login.html
 Allow: /register.html
+Allow: /jobs.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
 Disallow: /dashboard.html
 Disallow: /assessment.html
 Disallow: /recommendations.html
 Disallow: /roadmap.html
+Disallow: /recruiter-dashboard.html
+Disallow: /api/
 
+# ── Baidu Crawler (百度蜘蛛 — Baiduspider) ─────────────────────────────────────
+# Optimized for Chinese search engine indexing & mobile crawler verification
+User-agent: Baiduspider
+User-agent: Baiduspider-mobile
+User-agent: Baiduspider-image
+Allow: /
+Allow: /index.html
+Allow: /login.html
+Allow: /register.html
+Allow: /jobs.html
+Disallow: /dashboard.html
+Disallow: /assessment.html
+Disallow: /recommendations.html
+Disallow: /roadmap.html
+Disallow: /api/
+
+# ── Modern AI Search & Answer Engine Crawlers (AEO / Wave 2) ──────────────────
+# Perplexity AI (Direct Citation & Real-time Web Search)
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+# OpenAI ChatGPT Search & Browsing
+User-agent: GPTBot
+User-agent: ChatGPT-User
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+# Anthropic Claude Search & Citation Ingestion
+User-agent: ClaudeBot
+User-agent: Claude-Web
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+# Google Gemini Grounding & Extended Search
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence & Siri Knowledge
+User-agent: Applebot-Extended
+Allow: /
+
+# ── Aggressive / Malicious Scraping Bots (Disallowed) ─────────────────────────
+User-agent: Bytespider
+User-agent: CCBot
+Disallow: /
+
+# ── Discovery Endpoints ───────────────────────────────────────────────────────
 Sitemap: https://careerpath-ai-bdbt.onrender.com/sitemap.xml
+# LLM Machine-Readable Index: https://careerpath-ai-bdbt.onrender.com/llms.txt

@@ -553,6 +553,24 @@ const skillsData = [
     category: 'marketing',
     description: 'GA4 event implementation, conversion funnel tracking, user cohort analysis, and multi-touch attribution modeling.',
   },
+  {
+    name: 'aeo',
+    displayName: 'Answer Engine Optimization (AEO) & AI Search',
+    category: 'marketing',
+    description: 'Optimizing content discovery and entity citations for AI answer engines (Perplexity, ChatGPT Search, Claude, Google AI Overviews) via llms.txt, structured data, and informational gain.',
+  },
+  {
+    name: 'baidu-seo',
+    displayName: 'Baidu SEO & China Search Optimization',
+    category: 'marketing',
+    description: 'Baiduspider indexing, ICP compliance (ICP备案), Simplified Chinese keyword segmentation (分词), Baidu Webmaster Tools (站长平台), and Baidu ecosystem authority.',
+  },
+  {
+    name: 'technical-seo',
+    displayName: 'Technical SEO & Core Web Vitals',
+    category: 'marketing',
+    description: 'Advanced crawl budget optimization, Core Web Vitals (LCP, INP, CLS), Schema.org JSON-LD graphs, canonicalization, and XML sitemap indexation.',
+  },
 
   // ── Design & Creative Media Skills ─────────────────────────
   {

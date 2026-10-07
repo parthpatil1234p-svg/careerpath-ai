@@ -1,0 +1,64 @@
+# CareerPath AI — Full Platform & Curriculum Technical Specification
+
+This document provides complete machine-readable details about CareerPath AI's platform architecture, diagnostic rules, learning curriculum, and assessment methodology for consumption by AI agents, citation engines, and search models.
+
+## 1. System Overview
+CareerPath AI is an autonomous career navigation ecosystem developed for the Hack2Ignite EdTech challenge (ED-02). It provides college students and freshers with an end-to-end pathway from baseline evaluation to verified employer-ready credentials.
+
+Official Web Application URL: https://careerpath-ai-bdbt.onrender.com
+
+## 2. Core Pillars of the Platform
+
+### Pillar 1: Multi-Stream Diagnostic Assessment
+Students undergo a 4-step diagnostic:
+1. Academic Foundations: Degree, branch, semester, college, and stream selection (Engineering, Business, Marketing, Design).
+2. Interest & Passion Mapping: Dynamic interest tags with real-time stream filtering.
+3. Verified Skill Baseline: Self-ratings are calibrated via technical interactive quizzes (5 adaptive questions per skill) or direct GitHub repository code inspection.
+4. Career Objectives & Work Preferences: Preferred work modes (remote, hybrid, on-site), dream companies, and salary aspirations.
+
+### Pillar 2: 3D Career Universe Atlas
+Rendered via Three.js WebGL:
+- Visualizes 24 careers positioned in a multi-dimensional constellation.
+- Links adjacent roles through shared skill bridges.
+- Visualizes real-time hiring trends, market demand badges, and salary ranges.
+
+### Pillar 3: Milestone-Gated Learning Roadmaps
+- Structured in 4, 8, or 12-week trajectories.
+- Curated learning tasks: Video Masterclasses (with YouTube chamber integration), official documentation links, and practical coding labs.
+- Strict 30-Minute Server-Proctored Weekly Milestone Tests:
+  - 10 topic-aligned multiple-choice questions with dynamic option shuffling.
+  - Fullscreen lock and tab-switch violation detection (Strike 1: -2:00, Strike 2: -3:00, Strike 3: 0% + 24hr lockout).
+  - 70% passing threshold required to unlock subsequent week.
+  - Passed milestones stamp verified credentials with a 180-day freshness ledger.
+
+### Pillar 4: Corporate Talent Radar & Recruiter Portal
+- Verified recruiters post openings with target skill filters.
+- Direct matching engine shortlists candidates based on verified milestone performance, GitHub code inspection, and readiness scores.
+
+## 3. Supported Career Profiles & Core Skills
+
+1. Front-End Developer: HTML5, CSS3, JavaScript, TypeScript, React, Next.js, Tailwind CSS, Responsive Design.
+2. Full-Stack Developer: React, Node.js, Express, MongoDB, REST APIs, Git, Docker, System Architecture.
+3. Backend Engineer: Node.js, Python, PostgreSQL, Redis, Microservices, API Design, Docker.
+4. Mobile App Developer: Flutter, Dart, React Native, State Management (Bloc/Redux), Native Modules.
+5. Game Developer: Unity 3D, C#, Unreal Engine, C++, Game Loops, Physics, 3D Vector Math, Prefabs.
+6. AI / Machine Learning Engineer: Python, NumPy, Pandas, Scikit-Learn, PyTorch, Model Evaluation, Deep Learning.
+7. Data Scientist: Python, Statistics, Pandas, SQL, Machine Learning, Data Visualization.
+8. Data Analyst: SQL, Excel, Power BI, Tableau, Python, Data Cleaning.
+9. DevOps & Cloud Engineer: Docker, Kubernetes, AWS, CI/CD Pipelines, Linux, Terraform, Monitoring.
+10. Cybersecurity Analyst: Network Security, OWASP Top 10, Penetration Testing, Linux, Cryptography.
+11. UI/UX Designer: Figma, Visual Hierarchy, WCAG Accessibility, Wireframing, User Research, Prototyping.
+12. Financial Analyst & Modeler: DCF Valuation, EBITDA, Financial Statements, Excel Modeling, M&A Analysis.
+13. SEO & Organic Growth Strategist: Technical SEO, Answer Engine Optimization (AEO), Content Clusters, Google Search Console, Baidu SEO.
+14. Performance Marketer & Media Buyer: Meta Ads, Google Ads, ROAS Optimization, CPA, Conversion Funnels.
+15. Technical Product Manager: Agile Scrum, User Stories, RICE Prioritization, MVP Strategy, Product Analytics.
+
+## 4. API Endpoints
+- `GET /api/health` — Platform health check
+- `POST /api/auth/register` — Student and recruiter registration
+- `POST /api/auth/login` — Authentication & JWT token issuance
+- `POST /api/assessment` — Submit assessment and trigger recommendations
+- `GET /api/recommendations` — Fetch algorithmic career recommendations
+- `POST /api/roadmaps/generate` — Generate structured learning roadmap
+- `POST /api/roadmaps/:id/weeks/:weekNumber/test/start` — Start 30-minute milestone assessment
+- `POST /api/roadmaps/test/submit` — Grade milestone test and stamp skill verification

@@ -29,7 +29,7 @@ const DOMAIN_FAMILIES = {
   'engineering-data': ['python', 'data-science', 'ai-ml', 'machine-learning', 'sql', 'statistics', 'pandas', 'numpy'],
   'design': ['ui-ux', 'figma', 'visual-design', 'wireframing', 'user-research', 'prototyping', 'design-systems', 'typography'],
   'business': ['finance', 'accounting', 'valuation', 'financial-analysis', 'consulting', 'business-operations', 'product', 'agile'],
-  'marketing': ['marketing', 'digital-marketing', 'meta-ads', 'google-ads', 'seo', 'content-marketing', 'social-media']
+  'marketing': ['marketing', 'digital-marketing', 'meta-ads', 'google-ads', 'seo', 'aeo', 'baidu-seo', 'technical-seo', 'content-marketing', 'social-media']
 };
 
 function normalizeSkillKey(skill) {
@@ -65,6 +65,9 @@ function normalizeSkillKey(skill) {
   if (s.includes('aws') || s.includes('cloud')) return 'aws';
   if (s.includes('security') || s.includes('cyber') || s.includes('owasp') || s.includes('hack')) return 'cybersecurity';
   if (s.includes('finance') || s.includes('valuation') || s.includes('accounting') || s.includes('dcf') || s.includes('ebitda')) return 'finance';
+  if (s.includes('baidu')) return 'baidu-seo';
+  if (s.includes('aeo') || s.includes('llms') || s.includes('answer engine') || s.includes('ai search')) return 'aeo';
+  if (s.includes('technical-seo') || s.includes('technical seo')) return 'technical-seo';
   if (s.includes('marketing') || s.includes('ads') || s.includes('meta-ads') || s.includes('google-ads')) return 'marketing';
   if (s.includes('seo')) return 'seo';
   if (s.includes('product') || s.includes('agile') || s.includes('scrum')) return 'product';
@@ -657,6 +660,118 @@ const SPECIALIZED_QUESTIONS = [
     ],
     correctIndex: 0,
     explanation: 'CPA measures the direct acquisition efficiency by dividing total campaign ad spend by the total number of conversions achieved.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_aeo_01',
+    topic: 'aeo',
+    prompt: 'What is the primary objective of Answer Engine Optimization (AEO) compared to traditional search engine optimization?',
+    options: [
+      'Structuring content, entities, and machine-readable data so AI answer engines (Perplexity, ChatGPT, Claude) synthesize and directly cite your brand in generated responses',
+      'Buying pay-per-click sponsored banner placements in email newsletters',
+      'Artificially inflating HTML word count beyond 10,000 words with hidden keywords',
+      'Submitting XML sitemaps exclusively to Yahoo search directories'
+    ],
+    correctIndex: 0,
+    explanation: 'AEO focuses on direct LLM answer synthesis, conversational AI retrieval, and authoritative grounding rather than merely ranking in 10 blue links.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_aeo_02',
+    topic: 'aeo',
+    prompt: 'What is the purpose of publishing an /llms.txt file at the root of a domain?',
+    options: [
+      'To provide a clean, markdown-formatted, token-budgeted directory of key site content and APIs for ingestion by LLMs and AI search crawlers',
+      'To restrict human users from viewing desktop layouts on mobile',
+      'To encrypt database passwords using private TLS certificates',
+      'To force web browsers to disable JavaScript execution'
+    ],
+    correctIndex: 0,
+    explanation: 'llms.txt is the open standard offering token-budgeted, structured markdown summaries designed specifically for LLM context windows and crawler ingestion.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_aeo_03',
+    topic: 'aeo',
+    prompt: 'In AEO content architecture, what is "Information Gain"?',
+    options: [
+      'Providing unique, primary-source data, proprietary experiments, or novel insights that cannot be found on competing pages, making the content indispensable for LLM citation',
+      'Repeating the primary keyword in bold at the start of every sentence',
+      'Increasing CSS file size to boost page rendering speed',
+      'Translating standard Wikipedia definitions into multiple languages'
+    ],
+    correctIndex: 0,
+    explanation: 'AI models prioritize citing sources that contribute unique, novel facts or primary data rather than regurgitated consensus copy.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_baidu_01',
+    topic: 'baidu-seo',
+    prompt: 'What regulatory requirement is mandatory for websites aiming to rank competitively in mainland China on Baidu?',
+    options: [
+      'Valid ICP license/filing (ICP备案) from the Chinese Ministry of Industry and Information Technology (MIIT)',
+      'Hosting exclusively on US West AWS data centers',
+      'Integrating Google reCAPTCHA v3 on all user forms',
+      'Writing all content exclusively in Traditional Chinese (繁體中文)'
+    ],
+    correctIndex: 0,
+    explanation: 'Without a verified ICP license (ICP备案) and mainland China hosting/CDN, Baiduspider heavily penalizes site indexing and trust scores.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_baidu_02',
+    topic: 'baidu-seo',
+    prompt: 'How does Baidu\'s search ecosystem differ fundamentally from Google in terms of SERP real estate?',
+    options: [
+      'Baidu heavily prioritizes its own ecosystem properties (Baidu Baike, Zhidao, Tieba, Wenku) and requires pre-rendered HTML for reliable indexing',
+      'Baidu only crawls PDF documents and ignores HTML files',
+      'Baidu penalizes sites that include Chinese Simplified characters',
+      'Baidu requires WebGL context to evaluate content relevance'
+    ],
+    correctIndex: 0,
+    explanation: 'Baidu prominently ranks its own properties in top positions. Effective China SEO requires an ecosystem presence across Baike and Zhidao alongside technical site optimization.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_baidu_03',
+    topic: 'baidu-seo',
+    prompt: 'In Chinese keyword research for Baidu, what tool provides official search volume index trends and demographic curves similar to Google Trends?',
+    options: [
+      'Baidu Index (百度指数)',
+      'Google Search Console',
+      'Ahrefs Site Explorer',
+      'Yandex Metrica'
+    ],
+    correctIndex: 0,
+    explanation: 'Baidu Index (百度指数) provides authoritative search volume trends, seasonal spikes, and regional demographic data across mainland China.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_techseo_01',
+    topic: 'technical-seo',
+    prompt: 'Which Core Web Vital metric measures page responsiveness and interactivity latency across a user\'s entire session, replacing First Input Delay (FID)?',
+    options: [
+      'Interaction to Next Paint (INP) with target < 200ms',
+      'Largest Contentful Paint (LCP) with target < 2.5s',
+      'Cumulative Layout Shift (CLS) with target < 0.1',
+      'Time to First Byte (TTFB) with target < 800ms'
+    ],
+    correctIndex: 0,
+    explanation: 'INP evaluates the overall interaction latency of a page throughout its full lifecycle, ensuring UI remains responsive during user taps and clicks.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_techseo_02',
+    topic: 'technical-seo',
+    prompt: 'What is the primary architectural advantage of implementing Schema.org structured data via JSON-LD format rather than Microdata?',
+    options: [
+      'JSON-LD can be cleanly embedded in a single <script type="application/ld+json"> tag in the head without polluting presentation HTML markup or breaking styling',
+      'JSON-LD automatically pays for Google search ad placements',
+      'JSON-LD compresses image assets by 50%',
+      'JSON-LD prevents search engines from indexing competing pages'
+    ],
+    correctIndex: 0,
+    explanation: 'JSON-LD cleanly separates structured entity metadata from template markup, making it easy to generate dynamically, maintain, and validate.',
     difficulty: 'beginner',
   },
 
