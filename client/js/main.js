@@ -450,6 +450,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initRecruiterLandingExperience();
   initCampusDemoModal();
 
+  // Initialize 3D Career Universe Constellation Scene
+  if (typeof window.initCareerUniverse === 'function') {
+    window.initCareerUniverse('careerUniverse');
+  }
+
   console.log(
     '%cCareerPath AI Technologies Inc. | Autonomous Career GPS & Verified Talent Operating System',
     'color: #167D8D; font-size: 15px; font-weight: bold;'
