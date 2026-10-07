@@ -1832,31 +1832,32 @@
 /* Passed Tile (Fresh Mint / Emerald) */
 .job-ready-tile.tile-passed {
   background: #F0FDF4 !important;
-  border: 1.5px solid #86EFAC !important;
+  border: 1.5px solid #4ADE80 !important;
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.08);
 }
 
 .job-ready-tile.tile-passed .tile-title {
-  color: #166534 !important;
-  font-weight: 600;
-  font-size: 0.86rem;
+  color: #14532D !important;
+  font-weight: 700;
+  font-size: 0.85rem;
   letter-spacing: -0.01em;
 }
 
 .job-ready-tile.tile-passed .tile-badge {
-  background: #DCFCE7 !important;
-  color: #15803D !important;
-  border: 1px solid #86EFAC !important;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  background: #15803D !important;
+  color: #FFFFFF !important;
+  border: 1px solid #166534 !important;
+  font-family: var(--font-body, inherit);
+  font-size: 0.7rem;
   font-weight: 700;
   padding: 0.2rem 0.55rem;
-  border-radius: 6px;
+  border-radius: 9999px;
   letter-spacing: 0.03em;
 }
 
 .job-ready-tile.tile-passed .tile-value {
   color: #15803D !important;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-body, inherit);
   font-weight: 800;
   font-size: 1.15rem;
   line-height: 1.2;
@@ -1865,9 +1866,9 @@
 
 .job-ready-tile.tile-passed .tile-target {
   color: #166534 !important;
-  opacity: 0.85;
+  opacity: 0.9;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Pending Tile (Warm Soft Amber / High Contrast) */

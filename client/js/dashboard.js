@@ -1795,10 +1795,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (dashJobReadyBadge) {
         if (isJobReady) {
-          dashJobReadyBadge.className = 'job-ready-status-badge-qualified font-mono';
+          dashJobReadyBadge.className = 'job-ready-status-badge-qualified';
           dashJobReadyBadge.innerHTML = '<i class="bi bi-patch-check-fill"></i><span>Job Ready: Qualified</span>';
         } else {
-          dashJobReadyBadge.className = 'job-ready-status-badge-pending font-mono';
+          dashJobReadyBadge.className = 'job-ready-status-badge-pending';
           dashJobReadyBadge.innerHTML = '<i class="bi bi-shield-lock"></i><span>Job Ready: In Progress</span>';
         }
       }
@@ -1837,7 +1837,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="job-ready-tile ${passed ? 'tile-passed' : 'tile-pending'}">
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <span class="tile-title d-flex align-items-center gap-1.5">
-                  <i class="bi ${icon}"></i>
+                  <i class="bi ${icon} ${passed ? 'text-success' : 'text-warning'} me-1 fs-6"></i>
                   <span>${escapeHtml(title)}</span>
                 </span>
                 <span class="tile-badge">
