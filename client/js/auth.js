@@ -418,30 +418,30 @@ const Auth = {
 
       if (isRecruiter) {
         roleChip = `
-          <a href="recruiter-dashboard.html" class="nav-role-chip nav-role-chip-recruiter" title="Verified Corporate Recruiter">
-            <i class="bi bi-patch-check-fill text-success"></i>
+          <a href="recruiter-dashboard.html" class="nav-role-chip nav-role-chip-recruiter" title="Verified Corporate Recruiter Portal">
+            <i class="bi bi-buildings-fill text-success"></i>
             <span>Recruiter</span>
           </a>
         `;
       } else if (isAdmin) {
         roleChip = `
-          <span class="nav-role-chip nav-role-chip-demo" title="Full Platform Access (Demo & Evaluation Mode)">
-            <i class="bi bi-shield-check text-success"></i>
-            <span>Demo ✓</span>
-          </span>
+          <a href="dashboard.html" class="nav-role-chip nav-role-chip-student" title="Student Hub & Learning Dashboard (Full Demo & Evaluation Access)">
+            <i class="bi bi-mortarboard-fill text-success"></i>
+            <span>Student · Demo</span>
+          </a>
         `;
       } else if (isVerified) {
         roleChip = `
-          <span class="nav-role-chip nav-role-chip-verified" title="Account Verified — All platform features unlocked">
-            <i class="bi bi-patch-check-fill text-primary"></i>
-            <span>Verified ✓</span>
-          </span>
+          <a href="dashboard.html" class="nav-role-chip nav-role-chip-student" title="Student Hub · Account & Skills Verified">
+            <i class="bi bi-patch-check-fill text-success"></i>
+            <span>Student ✓</span>
+          </a>
         `;
       } else {
         roleChip = `
-          <a href="assessment.html#proveSkillsPanel" class="nav-role-chip nav-role-chip-unverified" title="Prove your skills to unlock full roadmaps & badges">
-            <i class="bi bi-shield-lock-fill text-warning"></i>
-            <span>Prove Skills</span>
+          <a href="dashboard.html" class="nav-role-chip nav-role-chip-student" title="Student Hub & Learning Dashboard · 100% Free Lifetime Access">
+            <i class="bi bi-mortarboard-fill text-success"></i>
+            <span>Student</span>
           </a>
         `;
       }
@@ -451,7 +451,7 @@ const Auth = {
           ${roleChip}
           <a href="${targetDashboardUrl}"
              class="nav-user-pill ${isRecruiter ? 'nav-user-pill-recruiter' : ''} d-none d-md-inline-flex align-items-center gap-2"
-             title="Logged in as ${escapeHtml(name)} · ${isRecruiter ? 'Recruiter Portal' : 'Student Hub'}">
+             title="${isRecruiter ? 'Recruiter Account' : 'Student Account'}: ${escapeHtml(name)} · Click to open ${isRecruiter ? 'Recruiter Portal' : 'Student Dashboard'}">
             <span class="nav-avatar-circle">${escapeHtml(initials)}</span>
             <span class="nav-user-name">${escapeHtml(name)}</span>
           </a>
