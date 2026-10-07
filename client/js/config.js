@@ -40,11 +40,12 @@
 
     // App Metadata
     APP_NAME: 'CareerPath AI',
-    TAGLINE: 'Discover Your Career. Build Your Skills.',
+    TAGLINE: 'Autonomous Career GPS & Verified Talent Operating System',
     PLATFORM_NAME: 'CareerPath AI',
-    TEAM_NAME: 'CareerPath AI Team',
+    COMPANY_NAME: 'CareerPath AI Technologies Inc.',
+    TEAM_NAME: 'CareerPath AI Technologies Inc.',
     EDITION: 'Enterprise Edition 2026',
-    VERSION: '1.0.0',
+    VERSION: '2.5.0',
   };
 
     // Expose to window for vanilla JS scripts

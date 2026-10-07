@@ -1,7 +1,7 @@
 # CareerPath AI — Backend API Documentation
 
-> **Hack2Ignite 2026–27 · Team 404 Brain Not Found**  
-> *Node.js + Express.js REST API · MongoDB Atlas / Local · JWT Authentication · Deterministic Recommendation Engine*
+> **CareerPath AI Technologies Inc. — Enterprise Backend Service**  
+> *Node.js + Express.js REST API · MongoDB Atlas · JWT Authentication · Deterministic Recommendation Engine*
 
 The `server/` directory contains the core application business logic, data models, recommendation algorithms, and RESTful API endpoints for CareerPath AI.
 

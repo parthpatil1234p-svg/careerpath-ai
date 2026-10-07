@@ -3,7 +3,7 @@
 This document provides complete machine-readable details about CareerPath AI's platform architecture, diagnostic rules, learning curriculum, and assessment methodology for consumption by AI agents, citation engines, and search models.
 
 ## 1. System Overview
-CareerPath AI is an autonomous career navigation ecosystem developed for the Hack2Ignite EdTech challenge (ED-02). It provides college students and freshers with an end-to-end pathway from baseline evaluation to verified employer-ready credentials.
+CareerPath AI Technologies Inc. is an enterprise-grade autonomous career navigation ecosystem and verified talent operating system. It provides college students, academic institutions, and enterprise recruiters with an end-to-end pathway from baseline evaluation to verified employer-ready credentials.
 
 Official Web Application URL: https://careerpath-ai-bdbt.onrender.com
 

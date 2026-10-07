@@ -1,7 +1,7 @@
 # CareerPath AI — Career Atlas Frontend Documentation
 
-> **Hack2Ignite 2026–27 · Team 404 Brain Not Found**  
-> *Theme: Career Atlas (Cartographic Precision, Human-Crafted Editorial Polish)*
+> **CareerPath AI Technologies Inc. — Enterprise Career Operating System**  
+> *World's 1st Autonomous Career GPS & Verified Talent Operating System*
 
 The `client/` directory contains the complete redesigned presentation and interaction tier of CareerPath AI. It is architected as an intentional, high-performance static web application built without bulky frontend frameworks—delivering instant page loads, zero build overhead, and universal browser compatibility while replacing generic AI landing page clichés with a warm, cartographic Career Atlas aesthetic.
 

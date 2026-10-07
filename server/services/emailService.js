@@ -101,8 +101,8 @@ async function sendOtpEmail(toEmail, name, otpCode) {
       </p>
 
       <div class="footer">
-        CareerPath AI · Next-Gen AI Career Guidance Platform<br>
-        Autonomous Career Atlas &amp; Verified Skill Roadmaps
+        CareerPath AI Technologies Inc. · Next-Gen Career Navigation Platform<br>
+        Autonomous Career GPS &amp; Verified Talent Operating System
       </div>
     </div>
   </body>
@@ -121,8 +121,8 @@ This code is valid for 10 minutes. Please enter it to activate your CareerPath A
 If you did not request this code, you can safely ignore this email.
 
 --
-CareerPath AI · Next-Gen AI Career Guidance Platform
-Autonomous Career Atlas & Verified Skill Roadmaps
+CareerPath AI Technologies Inc. · Next-Gen Career Navigation Platform
+Autonomous Career GPS & Verified Talent Operating System
 `;
 
   const mailOptions = {

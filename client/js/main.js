@@ -241,11 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initRecruiterLandingExperience();
 
   console.log(
-    '%cCareerPath AI | Career Atlas',
-    'color: #167D8D; font-size: 16px; font-weight: bold;'
+    '%cCareerPath AI Technologies Inc. | Autonomous Career GPS & Verified Talent Operating System',
+    'color: #167D8D; font-size: 15px; font-weight: bold;'
   );
   console.log(
-    '%cCareerPath AI | Next-Gen AI Career Intelligence Platform',
+    '%cEnterprise Edition v2.5.0 | CareerPath AI Global Talent Protocol',
     'color: #4F46E5; font-size: 12px;'
   );
 });

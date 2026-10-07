@@ -2,7 +2,7 @@
 
 > Autonomous AI-powered career guidance, 3D interactive Career Universe Atlas, verified skill assessments, and weekly milestone-gated roadmaps for college students and freshers.
 
-CareerPath AI solves problem ED-02 (Hack2Ignite) by guiding students from self-assessment to verified career readiness across 24 industry roles spanning Engineering, UI/UX Design, Finance & Business, and Growth Marketing.
+CareerPath AI Technologies Inc. is the world's 1st autonomous career GPS and verified talent operating system. It bridges the collegiate-to-workforce readiness gap by guiding students from baseline diagnostic to verified career readiness across 24 industry roles spanning Engineering, UI/UX Design, Finance & Business, and Growth Marketing.
 
 ## Core Capabilities & Features
 

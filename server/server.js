@@ -180,8 +180,8 @@ const healthHandler = (req, res) => {
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
-    version: '1.0.0',
-    platform: 'CareerPath AI Enterprise',
+    version: '2.5.0',
+    platform: 'CareerPath AI Technologies Inc.',
     emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
   });
 };
@@ -343,7 +343,7 @@ app.listen(PORT, () => {
   console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
   console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
   console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
-  console.log('👥 Platform          : CareerPath AI Production Server');
+  console.log('👥 Platform          : CareerPath AI Production Server · CareerPath AI Technologies Inc.');
   console.log('');
 });
 
