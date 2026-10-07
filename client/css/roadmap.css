@@ -905,6 +905,7 @@
   right: 0;
   top: calc(100% + 6px);
   width: 320px;
+  max-width: min(320px, calc(100vw - 3rem));
   background: #FFFFFF;
   border: 1px solid #CBD5E1;
   border-radius: 10px;
