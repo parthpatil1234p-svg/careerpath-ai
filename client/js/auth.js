@@ -425,9 +425,9 @@ const Auth = {
         `;
       } else if (isAdmin) {
         roleChip = `
-          <a href="dashboard.html" class="nav-role-chip nav-role-chip-student" title="Student Hub & Learning Dashboard (Full Demo & Evaluation Access)">
+          <a href="dashboard.html" class="nav-role-chip nav-role-chip-student" title="Student Hub & Learning Dashboard">
             <i class="bi bi-mortarboard-fill text-success"></i>
-            <span>Student · Demo</span>
+            <span>Student</span>
           </a>
         `;
       } else if (isVerified) {

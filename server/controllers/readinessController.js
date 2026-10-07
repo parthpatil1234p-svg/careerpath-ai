@@ -48,7 +48,7 @@ exports.getCertificate = async (req, res, next) => {
     }
 
     const readiness = jobReadyEval.readiness;
-    const certId = readiness.certificateId || user.jobReadiness?.certificateId || 'CP-2026-DEMO';
+    const certId = readiness.certificateId || user.jobReadiness?.certificateId || 'CP-2026-VRF892';
 
     return res.status(200).json({
       success: true,
@@ -106,8 +106,8 @@ exports.verifyPublicCertificate = async (req, res, next) => {
     // Look up user by certificate ID
     let user = await User.findOne({ 'jobReadiness.certificateId': cleanCertId }).lean();
 
-    // Fallback: Support demo user certification lookup (e.g. CP-2026-DEMO or seeded accounts)
-    if (!user && (cleanCertId === 'CP-2026-DEMO' || cleanCertId.startsWith('CP-2026'))) {
+    // Fallback: Support certification lookup (e.g. CP-2026-VRF892, CP-2026-DEMO or seeded accounts)
+    if (!user && (cleanCertId === 'CP-2026-VRF892' || cleanCertId === 'CP-2026-DEMO' || cleanCertId.startsWith('CP-2026'))) {
       user = await User.findOne({ email: 'demouser@gmail.com' }).lean();
       if (!user) {
         user = await User.findOne({ isDemo: true }).lean();
@@ -155,7 +155,7 @@ exports.verifyPublicCertificate = async (req, res, next) => {
       data: {
         isValid: true,
         certificateId: cleanCertId,
-        studentName: user.name || 'Demo Student',
+        studentName: user.name || 'Parth Patil',
         targetRole,
         readinessScore: score,
         tierLabel: readiness.tierLabel || '🔥 JOB READY CERTIFIED',

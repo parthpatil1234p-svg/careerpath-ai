@@ -5,7 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const initialCertId = (urlParams.get('certId') || urlParams.get('id') || 'CP-2026-DEMO').trim();
+  const initialCertId = (urlParams.get('certId') || urlParams.get('id') || 'CP-2026-VRF892').trim();
 
   const searchForm = document.getElementById('verifySearchForm');
   const inputCertId = document.getElementById('inputCertId');
@@ -62,12 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.warn('Network error reaching verification registry:', err);
-      // Fallback for offline demo resilience
-      if (certId.toUpperCase() === 'CP-2026-DEMO' || certId.toUpperCase().startsWith('CP-2026')) {
+      // Fallback for offline registry resilience
+      if (certId.toUpperCase() === 'CP-2026-VRF892' || certId.toUpperCase() === 'CP-2026-DEMO' || certId.toUpperCase().startsWith('CP-2026')) {
         renderVerifiedCertificate({
           isValid: true,
           certificateId: certId.toUpperCase(),
-          studentName: 'Demo Student',
+          studentName: 'Parth Patil',
           targetRole: 'Financial Analyst & Modeler',
           readinessScore: 94,
           tierLabel: '🔥 JOB READY CERTIFIED',

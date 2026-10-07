@@ -83,7 +83,7 @@ async function computeStudentReadiness(userId) {
   }
 
   // Certificate ID preserved if previously earned
-  let certId = user.jobReadiness?.certificateId || (isAdminOrDemo ? 'CP-2026-DEMO' : '');
+  let certId = user.jobReadiness?.certificateId || (isAdminOrDemo ? 'CP-2026-VRF892' : '');
   let certifiedAt = user.jobReadiness?.certifiedAt || (isAdminOrDemo ? new Date() : null);
 
   const result = {
@@ -171,7 +171,7 @@ async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = 
   const isNotExpiredOk = isAdminOrDemo || !hasExpiredRequiredSkills;
 
   const isJobReady = isAdminOrDemo || (isScoreOk && isSkillsCountOk && isRoadmapOk && isNotExpiredOk);
-  let certificateId = user.jobReadiness?.certificateId || (isAdminOrDemo ? 'CP-2026-DEMO' : '');
+  let certificateId = user.jobReadiness?.certificateId || (isAdminOrDemo ? 'CP-2026-VRF892' : '');
   let certifiedAt = user.jobReadiness?.certifiedAt || (isAdminOrDemo ? new Date() : null);
 
   if (isJobReady) {

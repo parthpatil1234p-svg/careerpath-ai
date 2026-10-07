@@ -1907,9 +1907,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const user = dashboardData?.user || window.Auth?.getUser();
       const targetRole = data.targetRole || dashboardData?.activeRoadmap?.career?.title || 'Financial Analyst & Modeler';
       const displayScore = isAdminUser ? Math.max(score, 94) : score;
-      const certId = jobReadyEval?.certificateId || data.certificateId || (user?.email === 'demouser@gmail.com' ? 'CP-2026-DEMO' : ('CP-2026-' + (user?._id || user?.id || 'DEMO').slice(-6).toUpperCase()));
+      const certId = jobReadyEval?.certificateId || data.certificateId || ('CP-2026-' + (user?._id || user?.id || 'VRF892').slice(-6).toUpperCase());
 
-      if (certStudentName) certStudentName.textContent = user?.name || 'Demo Student';
+      if (certStudentName) certStudentName.textContent = user?.name || 'Parth Patil';
       if (certCareerTitle) certCareerTitle.textContent = targetRole;
       if (certReadinessScore) certReadinessScore.textContent = `${displayScore}% · 🔥 JOB READY CERTIFIED`;
       if (certVerificationId) certVerificationId.textContent = certId;
@@ -1978,7 +1978,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Deterministic Tamper-Proof SHA-256 Ledger Hash
-      const seedStr = `${certId}|${user?.name || 'Demo Student'}|${targetRole}|${d.toISOString()}|Team404`;
+      const seedStr = `${certId}|${user?.name || 'Parth Patil'}|${targetRole}|${d.toISOString()}|Team404`;
       let hashNum = 0;
       for (let i = 0; i < seedStr.length; i++) {
         hashNum = ((hashNum << 5) - hashNum) + seedStr.charCodeAt(i);
@@ -3311,7 +3311,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnCopy = document.getElementById('btnCopyCertLink');
     if (btnCopy) {
       btnCopy.onclick = () => {
-        const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-DEMO';
+        const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-VRF892';
         const verifyUrl = `${window.location.origin}/verify.html?certId=${encodeURIComponent(certId)}`;
         if (navigator.clipboard) {
           navigator.clipboard.writeText(verifyUrl).then(() => {
@@ -3329,7 +3329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnLinkedIn = document.getElementById('btnAddLinkedInCert');
     if (btnLinkedIn) {
       btnLinkedIn.onclick = () => {
-        const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-DEMO';
+        const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-VRF892';
         const role = document.getElementById('certCareerTitle')?.textContent?.trim() || 'Financial Analyst & Modeler';
         const verifyUrl = `${window.location.origin}/verify.html?certId=${encodeURIComponent(certId)}`;
         const issueDate = new Date();
@@ -3374,7 +3374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnShareLegacy = document.getElementById('btnShareCertificate');
     if (btnShareLegacy) {
       btnShareLegacy.onclick = () => {
-        const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-DEMO';
+        const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-VRF892';
         const role = document.getElementById('certCareerTitle')?.textContent?.trim() || 'Financial Analyst & Modeler';
         const verifyUrl = `${window.location.origin}/verify.html?certId=${encodeURIComponent(certId)}`;
         const shareText = `🎓 Verified Job Ready in ${role} on CareerPath AI! Credential ID: ${certId}. Verify at: ${verifyUrl}`;

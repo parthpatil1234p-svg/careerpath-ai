@@ -408,7 +408,7 @@ function initCampusDemoModal() {
             <div class="d-flex align-items-center gap-2">
               <i class="bi bi-check-circle-fill text-success fs-5"></i>
               <div>
-                <strong>Demo Request Confirmed!</strong>
+                <strong>Briefing Request Confirmed!</strong>
                 <div>Our Academic Partnerships Director will email <em>${email}</em> and WhatsApp <em>${phone}</em> within 24 hours to coordinate your custom NAAC gap heatmap briefing.</div>
               </div>
             </div>
@@ -422,7 +422,7 @@ function initCampusDemoModal() {
           statsEl.textContent = '42+';
         }
       } else {
-        throw new Error(result.message || 'Failed to submit demo request. Please try again.');
+        throw new Error(result.message || 'Failed to submit briefing request. Please try again.');
       }
     } catch (err) {
       if (alertBox) {
@@ -432,7 +432,7 @@ function initCampusDemoModal() {
     } finally {
       if (submitBtn) submitBtn.disabled = false;
       if (spinner) spinner.classList.add('d-none');
-      if (submitText) submitText.innerHTML = '<i class="bi bi-send-fill me-1"></i> Submit Demo Request';
+      if (submitText) submitText.innerHTML = '<i class="bi bi-send-fill me-1"></i> Submit Briefing Request';
     }
   });
 }
