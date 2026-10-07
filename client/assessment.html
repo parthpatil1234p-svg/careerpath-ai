@@ -10,6 +10,11 @@
     <meta name="theme-color" content="#FFFFFF" />
     <title>Student Skill Assessment &mdash; CareerPath AI &middot; Career Atlas</title>
 
+    <!-- Machine-Readable Context & WebMCP Discovery Declarations -->
+    <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms.txt" title="LLM Machine-Readable Context Manifest" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
+
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />
@@ -232,7 +237,7 @@
 
         <!-- Right Column: Form Step Wizard -->
         <div class="assessment-form-area">
-          <form id="assessmentForm" novalidate aria-describedby="assessmentFormHint">
+          <form id="assessmentForm" novalidate aria-describedby="assessmentFormHint" data-mcp-action="start_diagnostic" data-mcp-description="4-step comprehensive diagnostic evaluating skills, aptitude, and career alignment" data-mcp-params='{"targetUrl": "/assessment.html", "method": "POST", "apiEndpoint": "/api/assessments/submit"}'>
 
             <!-- Active Profile Saved Notification Banner -->
             <div id="profileLoadedBanner" class="alert alert-primary py-1.5 px-3 mb-2.5 d-none shadow-sm border-primary border-opacity-25" role="alert">
@@ -693,6 +698,8 @@
                   type="submit"
                   id="submitAssessmentBtn"
                   class="rg-button"
+                  data-mcp-action="submit_diagnostic"
+                  data-mcp-description="Submit candidate diagnostic inputs to calculate career matches"
                 >
                   <span class="rg-shine"><span></span></span>
                   <span class="rg-bg"></span>

@@ -234,6 +234,21 @@ app.get('/sitemap.xml', (req, res) => {
   res.status(404).send('Not Found');
 });
 
+// ── WebMCP & Agent Actions Discovery Handlers ─────────────────
+const mcpActionsHandler = (req, res) => {
+  const filePath = path.join(clientDir, 'mcp-actions.json');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(filePath);
+  }
+  res.status(404).json({ error: 'WebMCP Actions Specification Not Found' });
+};
+
+app.get('/mcp-actions.json', mcpActionsHandler);
+app.get('/.well-known/mcp-actions.json', mcpActionsHandler);
+
 // ── Rate Limiting: protect API from brute-force without choking legitimate users ────
 const isDev = process.env.NODE_ENV === 'development';
 const apiLimiter = rateLimit({

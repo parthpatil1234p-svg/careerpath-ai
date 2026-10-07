@@ -10,6 +10,11 @@
     <meta name="theme-color" content="#0B1120" />
     <title>Official Credential Verification &mdash; CareerPath AI</title>
 
+    <!-- Machine-Readable Context & WebMCP Discovery Declarations -->
+    <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms.txt" title="LLM Machine-Readable Context Manifest" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
+
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />
@@ -136,8 +141,8 @@
           </span>
         </a>
 
-        <!-- Lookup Search Form in Header -->
-        <form id="verifySearchForm" class="d-flex align-items-center gap-2 m-0" style="max-width: 380px;">
+        <!-- Lookup Search Form in Header (WebMCP Annotated) -->
+        <form id="verifySearchForm" class="d-flex align-items-center gap-2 m-0" style="max-width: 380px;" data-mcp-action="verify_credential" data-mcp-description="Cryptographically verify milestone certificate by identifier" data-mcp-params='{"certificateId": "#inputCertId", "targetUrl": "/verify.html", "method": "GET"}'>
           <div class="input-group input-group-sm">
             <span class="input-group-text bg-dark border-secondary text-secondary font-mono">ID:</span>
             <input
@@ -146,8 +151,9 @@
               class="form-control form-control-sm bg-dark text-white border-secondary font-mono"
               placeholder="e.g. CP-2026-DEMO"
               required
+              data-mcp-param="certificateId"
             />
-            <button class="btn btn-warning btn-sm fw-semibold" type="submit">
+            <button class="btn btn-warning btn-sm fw-semibold" type="submit" data-mcp-trigger="verify_credential">
               <i class="bi bi-search me-1"></i> Verify
             </button>
           </div>

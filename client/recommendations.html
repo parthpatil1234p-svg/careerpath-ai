@@ -10,6 +10,11 @@
     <meta name="theme-color" content="#FFFFFF" />
     <title>Career Recommendations &mdash; CareerPath AI &middot; Career Atlas</title>
 
+    <!-- Machine-Readable Context & WebMCP Discovery Declarations -->
+    <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms.txt" title="LLM Machine-Readable Context Manifest" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
+
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />
@@ -156,8 +161,8 @@
     <!-- Main Content -->
     <main class="container pt-5 mt-5 pb-5">
       
-      <!-- Header Banner (Results-First Layout) -->
-      <div class="row align-items-center mb-4">
+      <!-- Header Banner (Results-First Layout - WebMCP Annotated) -->
+      <div class="row align-items-center mb-4" data-mcp-action="get_recommendations" data-mcp-description="Retrieve weighted career matches and skill gap breakdown" data-mcp-params='{"targetUrl": "/recommendations.html", "method": "GET"}'>
         <div class="col-lg-8">
           <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
             <span class="atlas-badge">

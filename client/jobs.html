@@ -10,6 +10,11 @@
     <meta name="theme-color" content="#FFFFFF" />
     <title>Verified Job Board &amp; Recruiter Openings &mdash; CareerPath AI</title>
 
+    <!-- Machine-Readable Context & WebMCP Discovery Declarations -->
+    <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms.txt" title="LLM Machine-Readable Context Manifest" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
+
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />
@@ -294,10 +299,10 @@
       <div class="tab-content" id="jobsTabContent">
         <!-- TAB 1: DIRECT RECRUITER OPENINGS -->
         <div class="tab-pane fade show active" id="contentOpenings" role="tabpanel">
-          <!-- Filters Row -->
-          <div class="row g-2 mb-4">
+          <!-- Filters Row (WebMCP Search Jobs Action) -->
+          <div class="row g-2 mb-4" data-mcp-action="search_jobs" data-mcp-description="Query verified job openings by track and workplace type" data-mcp-params='{"careerSlug": "#filterCareerSlug", "workplace": "#filterWorkplace"}'>
             <div class="col-md-4">
-              <select class="form-select form-select-sm" id="filterCareerSlug">
+              <select class="form-select form-select-sm" id="filterCareerSlug" data-mcp-param="careerSlug">
                 <option value="">All Career Tracks</option>
                 <option value="front-end-developer">Front-End Developer</option>
                 <option value="back-end-developer">Back-End Developer</option>
@@ -309,7 +314,7 @@
               </select>
             </div>
             <div class="col-md-4">
-              <select class="form-select form-select-sm" id="filterWorkplace">
+              <select class="form-select form-select-sm" id="filterWorkplace" data-mcp-param="workplace">
                 <option value="">All Workplace Types (Remote &amp; On-Site)</option>
                 <option value="remote">Remote Only</option>
                 <option value="hybrid">Hybrid</option>

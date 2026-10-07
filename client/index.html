@@ -15,6 +15,9 @@
     <!-- Machine-Readable LLM Context & Citation Link Declarations -->
     <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms.txt" title="LLM Machine-Readable Context Manifest" />
     <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms-full.txt" title="Full Platform Technical Specification for AI Agents" />
+    <!-- WebMCP Autonomous Agent Actions Discovery Declarations -->
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
+    <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
 
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -234,7 +237,7 @@
           <div class="d-flex align-items-center gap-2">
             <div class="d-none d-sm-flex align-items-center gap-2" id="authNavActions">
               <a class="btn cp-btn-outline btn-sm px-3" href="login.html">Log In</a>
-              <a class="btn cp-btn-primary btn-sm px-3 text-nowrap" href="assessment.html" id="startAssessmentNavBtn">
+              <a class="btn cp-btn-primary btn-sm px-3 text-nowrap" href="assessment.html" id="startAssessmentNavBtn" data-mcp-action="start_diagnostic" data-mcp-description="Initiate 4-step comprehensive career diagnostic" data-mcp-params='{"targetUrl": "/assessment.html"}'>
                 <i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Start Free
               </a>
             </div>
@@ -303,6 +306,9 @@
                 href="assessment.html"
                 class="rg-button"
                 id="startAssessmentBtn"
+                data-mcp-action="start_diagnostic"
+                data-mcp-description="Initiate 4-step comprehensive career diagnostic across 24 streams"
+                data-mcp-params='{"targetUrl": "/assessment.html"}'
               >
                 <span class="rg-shine"><span></span></span>
                 <span class="rg-bg"></span>
@@ -311,7 +317,7 @@
                   Start Free Assessment
                 </span>
               </a>
-              <a href="#solutions" class="btn cp-btn-outline btn-lg px-4 py-3">
+              <a href="#solutions" class="btn cp-btn-outline btn-lg px-4 py-3" data-mcp-action="explore_careers" data-mcp-description="Explore 24 industry career tracks and salary benchmarks">
                 <i class="bi bi-layers me-2"></i>
                 Explore Solutions
               </a>
