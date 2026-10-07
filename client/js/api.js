@@ -51,6 +51,21 @@ const API = {
       fetchConfig.body = JSON.stringify(body);
     }
 
+    let warmupTimer = null;
+    let warmupToast = null;
+    if (!window._serverIsWarm) {
+      warmupTimer = setTimeout(() => {
+        if (!document.getElementById('cold-start-banner') && document.body) {
+          warmupToast = document.createElement('div');
+          warmupToast.id = 'cold-start-banner';
+          warmupToast.className = 'position-fixed bottom-0 start-50 translate-middle-x mb-4 px-3 py-2 rounded-pill shadow-lg border border-warning bg-dark text-white font-mono small d-flex align-items-center gap-2';
+          warmupToast.style.zIndex = '99999';
+          warmupToast.innerHTML = '<span class="spinner-border spinner-border-sm text-warning" role="status"></span><span>⚡ Cloud backend is waking up from sleep (Render cold-start)... Hang tight!</span>';
+          document.body.appendChild(warmupToast);
+        }
+      }, 2500);
+    }
+
     try {
       const response = await fetch(url, fetchConfig);
       const data = await response.json().catch(() => ({
@@ -74,6 +89,7 @@ const API = {
         throw error;
       }
 
+      window._serverIsWarm = true;
       return data;
     } catch (err) {
       // Re-throw structured error for catch blocks in UI scripts
@@ -83,7 +99,30 @@ const API = {
         throw networkErr;
       }
       throw err;
+    } finally {
+      if (warmupTimer) clearTimeout(warmupTimer);
+      const toastEl = document.getElementById('cold-start-banner');
+      if (toastEl) toastEl.remove();
     }
+  },
+
+  /**
+   * Pre-warm Render backend on initial frontend page load
+   */
+  warmup() {
+    try {
+      const baseUrl = window.CONFIG?.API_BASE_URL || 'http://localhost:5000/api';
+      const rootUrl = baseUrl.replace(/\/api\/?$/, '');
+      fetch(`${rootUrl}/health`, { method: 'GET', cache: 'no-store', mode: 'cors' })
+        .then(res => res.json())
+        .then(data => {
+          if (data?.status === 'healthy') {
+            window._serverIsWarm = true;
+            console.log('⚡ CareerPath AI backend is awake and ready.');
+          }
+        })
+        .catch(() => {});
+    } catch (_) {}
   },
 
   // Convenience verbs
@@ -109,3 +148,8 @@ const API = {
 };
 
 window.API = API;
+
+// Trigger pre-warm immediately when script loads in browser
+if (typeof window !== 'undefined') {
+  API.warmup();
+}

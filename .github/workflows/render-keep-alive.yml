@@ -1,0 +1,23 @@
+name: Render Backend Keep-Alive
+
+on:
+  schedule:
+    # Run every 10 minutes to prevent Render free-tier 15-minute inactivity spin down
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  keep-alive:
+    name: Ping Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend Health Check
+        run: |
+          echo "Pinging CareerPath AI Render backend at $(date)..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 45 "https://careerpath-ai-bdbt.onrender.com/health")
+          echo "Render Health Check HTTP status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "✅ Backend is awake, healthy, and ready for instant responses!"
+          else
+            echo "⚠️ Backend responded with HTTP status $HTTP_STATUS (may have been waking up, will retry next interval)"
+          fi

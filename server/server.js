@@ -170,6 +170,24 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
+// ── Dedicated Health Check & Keep-Alive Endpoints (No rate-limit, instant 200) ──
+// Safely responds to Render health checks, UptimeRobot, and cron pingers
+const healthHandler = (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    success: true,
+    message: 'CareerPath AI Server is running and healthy ✅',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'production',
+    version: '1.0.0',
+    platform: 'CareerPath AI Enterprise',
+    emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
+  });
+};
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
+
 // ── Rate Limiting: protect API from brute-force without choking legitimate users ────
 const isDev = process.env.NODE_ENV === 'development';
 const apiLimiter = rateLimit({
@@ -228,21 +246,6 @@ app.get('/', (req, res) => {
   });
 });
 
-/**
- * GET /api/health
- * Quick server health check — no auth required.
- */
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'CareerPath AI Server is running ✅',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    version: '1.0.0',
-    platform: 'CareerPath AI Enterprise',
-    emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
-  });
-});
 
 /**
  * GET /api/version
