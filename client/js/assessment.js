@@ -3209,7 +3209,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (selectedSkillsMap.size === 0) {
       updateStepUI(3);
-      showAlert('Please select at least 1 skill you possess.');
+      showAlert('Please select at least 1 skill you possess before submitting.');
+      return;
+    }
+
+    const unverifiedSkills = Array.from(selectedSkillsMap.values()).filter(
+      (s) => !s.isQuizVerified && !s.isCodeVerified
+    );
+    if (unverifiedSkills.length > 0) {
+      updateStepUI(3);
+      const names = unverifiedSkills.map((s) => s.displayName || s.name).join(', ');
+      showAlert(
+        `🔒 Knowledge Level Restricted: Skill levels cannot be self-selected. Please complete the reality check quiz for <strong>${escapeHtml(names)}</strong> (or remove ${unverifiedSkills.length > 1 ? 'them' : 'it'} using ✕) before submitting.`,
+        'danger'
+      );
       return;
     }
 
