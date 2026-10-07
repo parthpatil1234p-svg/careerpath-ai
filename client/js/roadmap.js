@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bsTestModal = new bootstrap.Modal(weeklyTestModalEl);
   }
 
-  const openWeeklyTestModal = async (weekNumber) => {
+  const openWeeklyTestModal = async (weekNumber, forceFresh = false) => {
     if (!currentRoadmap?._id) return;
 
     // Reset Modal UI
@@ -638,6 +638,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('testTimerText').textContent = '30:00';
     document.getElementById('testAnsweredCount').textContent = '0';
 
+    const resumedBanner = document.getElementById('testResumedBanner');
+    if (resumedBanner) resumedBanner.classList.add('d-none');
+    const btnResetHeader = document.getElementById('btnResetWeeklyTest');
+    if (btnResetHeader) btnResetHeader.classList.add('d-none');
+
     const testStrikesEl = document.getElementById('testStrikesCount');
     const testStrikesBadge = document.getElementById('testStrikesBadge');
     if (testStrikesEl) testStrikesEl.textContent = '0';
@@ -648,8 +653,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('testQuestionsContainer').innerHTML = `
       <div class="text-center py-5">
         <div class="spinner-border text-teal mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
-        <p class="text-ink fw-semibold mb-1">Generating Server Milestone Assessment...</p>
-        <p class="text-muted small mb-0">Curating 10 fresh topic-aligned questions with 30-minute server clock</p>
+        <p class="text-ink fw-semibold mb-1">${forceFresh ? 'Generating Fresh Topic-Aligned Questions...' : 'Curating Milestone Assessment...'}</p>
+        <p class="text-muted small mb-0">10 verified topic questions &middot; 30-minute server clock</p>
       </div>
     `;
     document.getElementById('btnSubmitMilestoneTest').disabled = true;
@@ -657,7 +662,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (bsTestModal) bsTestModal.show();
 
     try {
-      const res = await window.API.post(`/roadmaps/${currentRoadmap._id}/weeks/${weekNumber}/test/start`, {}, { auth: true });
+      const res = await window.API.post(`/roadmaps/${currentRoadmap._id}/weeks/${weekNumber}/test/start`, { fresh: forceFresh }, { auth: true });
 
       if (!res.success || !res.data) {
         throw new Error(res.message || 'Could not initiate weekly milestone test.');
@@ -665,6 +670,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       activeAttempt = res.data;
       testAnswersMap = {};
+
+      if (res.data.resumed && resumedBanner) {
+        resumedBanner.classList.remove('d-none');
+      }
+      if (btnResetHeader) {
+        btnResetHeader.classList.remove('d-none');
+        btnResetHeader.onclick = () => {
+          if (confirm('Regenerate 10 completely fresh questions for this milestone? Your current answers will be reset.')) {
+            openWeeklyTestModal(weekNumber, true);
+          }
+        };
+      }
+      const btnResumedReset = document.getElementById('btnResumedReset');
+      if (btnResumedReset) {
+        btnResumedReset.onclick = () => {
+          openWeeklyTestModal(weekNumber, true);
+        };
+      }
 
       renderActiveQuestions(activeAttempt.questions);
       startServerCountdown(activeAttempt.deadline);
@@ -1012,7 +1035,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnRetake) {
     btnRetake.addEventListener('click', () => {
       if (activeAttempt?.weekNumber) {
-        openWeeklyTestModal(activeAttempt.weekNumber);
+        openWeeklyTestModal(activeAttempt.weekNumber, true);
       }
     });
   }

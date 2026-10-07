@@ -25,7 +25,7 @@ const { getWeeklyTestQuestions, WEEKLY_TEST_QUESTIONS } = require('../data/weekl
  * @param {number} weekNumber
  * @returns {Promise<Object>}
  */
-async function startWeeklyTest(userId, roadmapId, weekNumber) {
+async function startWeeklyTest(userId, roadmapId, weekNumber, options = {}) {
   const roadmap = await Roadmap.findOne({ _id: roadmapId, user: userId });
   if (!roadmap) {
     const err = new Error('Roadmap not found or unauthorized');
@@ -89,6 +89,8 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
     }
   }
 
+  const forceFresh = options.forceFresh === true || options.fresh === true;
+
   // 2. Check if there's an active in-progress attempt that hasn't expired
   const activeAttempt = await Attempt.findOne({
     user: userId,
@@ -101,7 +103,25 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
 
   if (activeAttempt) {
     const deadlineTime = new Date(activeAttempt.deadline).getTime();
-    if (now < deadlineTime) {
+    const careerTitleLower = (roadmap.careerSnapshot?.title || '').toLowerCase();
+    
+    // Auto-detect legacy mismatched questions (e.g. game dev with react/finance questions)
+    const isLegacyMismatched = activeAttempt.questionsAsked.some((q) => {
+      const qTop = (q.topic || '').toLowerCase();
+      if ((careerTitleLower.includes('game') || careerTitleLower.includes('unity')) && (qTop.includes('react') || qTop.includes('finance') || qTop.includes('marketing'))) {
+        return true;
+      }
+      return false;
+    });
+
+    if (now >= deadlineTime) {
+      // Past deadline: auto-submit it before creating a new one
+      await submitWeeklyTest(userId, activeAttempt._id, false);
+    } else if (forceFresh || isLegacyMismatched) {
+      // User explicitly requested fresh questions or attempt had mismatched legacy questions
+      activeAttempt.status = 'abandoned';
+      await activeAttempt.save();
+    } else {
       // Resume existing in-progress test
       const remainingSeconds = Math.max(0, Math.floor((deadlineTime - now) / 1000));
       return {
@@ -121,14 +141,11 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
             question: q.prompt,
             topic: q.topic,
             topicTag: q.topic,
-            options: original ? original.options : (q.options || []),
+            options: (q.options && q.options.length > 0) ? q.options : (original ? original.options : []),
             selectedIndex: q.selectedIndex,
           };
         }),
       };
-    } else {
-      // Past deadline: auto-submit it before creating a new one
-      await submitWeeklyTest(userId, activeAttempt._id, false);
     }
   }
 
@@ -138,9 +155,27 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
     weekNumber: wNum,
   });
 
-  const topics = Array.from(
+  let topics = Array.from(
     new Set(weekTasks.map((t) => (t.skillName || '').toLowerCase().trim()).filter(Boolean))
   );
+
+  // Fallback if task skills are not explicitly specified
+  if (topics.length === 0) {
+    const taskText = weekTasks.map((t) => `${t.title || ''} ${t.description || ''}`).join(' ').toLowerCase();
+    if (taskText.includes('html')) topics.push('html');
+    if (taskText.includes('css')) topics.push('css');
+    if (taskText.includes('javascript') || taskText.includes('js')) topics.push('javascript');
+    if (taskText.includes('react')) topics.push('react');
+    if (taskText.includes('node')) topics.push('node.js');
+    if (taskText.includes('unity')) topics.push('unity');
+    if (taskText.includes('c#')) topics.push('csharp');
+    if (taskText.includes('python')) topics.push('python');
+    if (taskText.includes('sql')) topics.push('sql');
+  }
+
+  if (topics.length === 0 && roadmap.careerSnapshot?.title) {
+    topics.push(roadmap.careerSnapshot.title.toLowerCase());
+  }
 
   // 4. Gather previous attempt question IDs to provide fresh questions for retakes
   const previousAttempts = await Attempt.find({
@@ -156,9 +191,11 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
     });
   });
 
-  // 5. Select 10 questions
+  // 5. Select 10 questions with strict domain-scoping
   const selectedQuestions = getWeeklyTestQuestions({
     topics,
+    careerTitle: roadmap.careerSnapshot?.title || '',
+    careerSlug: roadmap.careerSnapshot?.slug || '',
     count: 10,
     excludeIds: excludedIds,
   });
@@ -184,9 +221,11 @@ async function startWeeklyTest(userId, roadmapId, weekNumber) {
       prompt: q.prompt,
       topic: q.topic,
       difficulty: q.difficulty || 'intermediate',
+      options: q.options || [],
       selectedIndex: null,
       correctIndex: q.correctIndex,
       isCorrect: false,
+      explanation: q.explanation || '',
     })),
     score: 0,
     total: selectedQuestions.length,

@@ -807,7 +807,8 @@ const linkProjectRepo = async (req, res, next) => {
 const startWeeklyTestController = async (req, res, next) => {
   try {
     const { id, weekNumber } = req.params;
-    const testData = await startWeeklyTest(req.user._id, id, weekNumber);
+    const forceFresh = req.body?.fresh === true || req.query?.fresh === 'true';
+    const testData = await startWeeklyTest(req.user._id, id, weekNumber, { forceFresh });
     res.status(200).json({
       success: true,
       message: testData.resumed

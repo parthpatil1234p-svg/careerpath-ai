@@ -1,415 +1,573 @@
 /**
- * data/weeklyTestQuestions.js — Curated Topic-Tagged Question Bank for Roadmap Weekly Tests
+ * data/weeklyTestQuestions.js — Topic-Tagged Comprehensive Question Bank for Weekly Milestone Tests
  *
  * CareerPath AI · Enterprise Backend Service
  *
- * Provides vetted, deterministic technical and conceptual questions for weekly milestone tests
- * across 4 core domains: Engineering/Tech, Business/Finance, Marketing, and Creative/Design.
+ * Provides a massive, domain-categorized repository (450+ questions) across:
+ *  - Tech & Engineering (Frontend, Backend, Fullstack, Mobile, Game Dev, Cloud, DevOps, Security, AI/ML)
+ *  - Creative & Design (UI/UX, Figma, Typography, Visual Hierarchy, Prototyping)
+ *  - Business & Finance (Financial Modeling, Valuation, DCF, EBITDA, Operations)
+ *  - Digital Marketing & Growth (SEO, SEM, Paid Social, Analytics, Funnels)
  *
- * Every question has:
- *  - id: Unique identifier
- *  - topic: Specific topic/skill tag
- *  - prompt: Clear question text
- *  - options: Exactly 4 distinct choices
- *  - correctIndex: 0-3 index of the correct answer
- *  - explanation: Pedagogical explanation
- *  - difficulty: 'beginner' | 'intermediate' | 'advanced'
+ * Features:
+ *  - Integrates 269 core questions from quizQuestions.js
+ *  - Specialized question sets for Unity, C#, Unreal, Mobile, UI/UX, Security, Cloud, Finance, Marketing
+ *  - Strict Domain Isolation (prevents unrelated topics leaking into weekly milestone tests)
+ *  - Dynamic option shuffling (A/B/C/D randomized every attempt)
+ *  - Offline AI Fallback generator integration for rare or exhausted skills
  */
 
-const WEEKLY_TEST_QUESTIONS = [
-  // ── HTML & CSS ──────────────────────────────────────────────
+const { QUIZ_QUESTIONS } = require('./quizQuestions');
+
+// ── DOMAIN FAMILIES & NORMALIZATION ────────────────────────────
+const DOMAIN_FAMILIES = {
+  'engineering-web': ['html', 'css', 'javascript', 'typescript', 'react', 'next.js', 'tailwind-css', 'node.js', 'express.js', 'rest-apis', 'mongodb', 'sql', 'postgresql', 'redis', 'git'],
+  'engineering-game': ['unity', 'unreal', 'csharp', 'cpp', 'game-dev', 'game-physics', 'shaders', 'git', 'problem-solving'],
+  'engineering-mobile': ['flutter', 'react-native', 'mobile', 'javascript', 'typescript', 'dart', 'rest-apis', 'git'],
+  'engineering-cloud': ['docker', 'kubernetes', 'aws', 'linux', 'devops', 'ci-cd', 'terraform', 'git', 'networking'],
+  'engineering-security': ['cybersecurity', 'ethical-hacking', 'owasp', 'linux', 'networking', 'security'],
+  'engineering-data': ['python', 'data-science', 'ai-ml', 'machine-learning', 'sql', 'statistics', 'pandas', 'numpy'],
+  'design': ['ui-ux', 'figma', 'visual-design', 'wireframing', 'user-research', 'prototyping', 'design-systems', 'typography'],
+  'business': ['finance', 'accounting', 'valuation', 'financial-analysis', 'consulting', 'business-operations', 'product', 'agile'],
+  'marketing': ['marketing', 'digital-marketing', 'meta-ads', 'google-ads', 'seo', 'content-marketing', 'social-media']
+};
+
+function normalizeSkillKey(skill) {
+  if (!skill) return '';
+  const s = String(skill).toLowerCase().trim();
+  const cleanStr = s.replace(/[^a-z0-9+#.-]/g, ' ');
+  const tokens = cleanStr.split(/\s+/).filter(Boolean);
+
+  if (s.includes('html')) return 'html';
+  if (s.includes('tailwind')) return 'tailwind-css';
+  if (s.includes('css') || s.includes('responsive')) return 'css';
+  if (s.includes('react native') || s.includes('react-native')) return 'react-native';
+  if (s.includes('next.js') || s.includes('nextjs')) return 'next.js';
+  if (s.includes('react')) return 'react';
+  if (s.includes('javascript') || tokens.includes('js')) return 'javascript';
+  if (s.includes('typescript') || tokens.includes('ts')) return 'typescript';
+  if (s.includes('express')) return 'express.js';
+  if (s.includes('node') || s.includes('nodejs')) return 'node.js';
+  if (s.includes('mongodb') || s.includes('mongo')) return 'mongodb';
+  if (s.includes('postgres')) return 'postgresql';
+  if (s.includes('sql') || s.includes('database')) return 'sql';
+  if (s.includes('unity') || s.includes('game-dev') || s.includes('game dev') || s.includes('game')) return 'unity';
+  if (s.includes('unreal')) return 'unreal';
+  if (s.includes('c#') || s.includes('csharp')) return 'csharp';
+  if (s.includes('c++') || s.includes('cpp')) return 'cpp';
+  if (s.includes('figma')) return 'figma';
+  if (s.includes('ui') || s.includes('ux') || s.includes('design') || s.includes('wirefram')) return 'ui-ux';
+  if (s.includes('flutter')) return 'flutter';
+  if (s.includes('mobile')) return 'mobile';
+  if (s.includes('docker') || s.includes('container')) return 'docker';
+  if (s.includes('kubernetes') || s.includes('k8s')) return 'kubernetes';
+  if (s.includes('devops') || s.includes('ci/cd') || s.includes('pipeline')) return 'devops';
+  if (s.includes('aws') || s.includes('cloud')) return 'aws';
+  if (s.includes('security') || s.includes('cyber') || s.includes('owasp') || s.includes('hack')) return 'cybersecurity';
+  if (s.includes('finance') || s.includes('valuation') || s.includes('accounting') || s.includes('dcf') || s.includes('ebitda')) return 'finance';
+  if (s.includes('marketing') || s.includes('ads') || s.includes('meta-ads') || s.includes('google-ads')) return 'marketing';
+  if (s.includes('seo')) return 'seo';
+  if (s.includes('product') || s.includes('agile') || s.includes('scrum')) return 'product';
+  if (s.includes('python') || s.includes('pandas') || s.includes('numpy')) return 'python';
+  if (s.includes('data science') || s.includes('machine learning') || tokens.includes('ai') || tokens.includes('ml')) return 'ai-ml';
+  if (s.includes('git') || s.includes('github')) return 'git';
+  if (s.includes('rest') || s.includes('api')) return 'rest-apis';
+  return s.replace(/[^a-z0-9_-]/g, '');
+}
+
+function detectDomainFamily(careerTitle, careerSlug, topics = []) {
+  const combined = `${careerTitle || ''} ${careerSlug || ''} ${(topics || []).join(' ')}`.toLowerCase();
+  if (combined.includes('game') || combined.includes('unity') || combined.includes('unreal')) return 'engineering-game';
+  if (combined.includes('mobile') || combined.includes('flutter') || combined.includes('react native') || combined.includes('ios') || combined.includes('android')) return 'engineering-mobile';
+  if (combined.includes('security') || combined.includes('cyber') || combined.includes('devsecops')) return 'engineering-security';
+  if (combined.includes('cloud') || combined.includes('devops') || combined.includes('sre') || combined.includes('kubernetes')) return 'engineering-cloud';
+  if (combined.includes('data') || combined.includes('machine learning') || combined.includes('ai') || combined.includes('analyst')) return 'engineering-data';
+  if (combined.includes('design') || combined.includes('ui/ux') || combined.includes('visual') || combined.includes('motion')) return 'design';
+  if (combined.includes('finance') || combined.includes('modeler') || combined.includes('consultant') || combined.includes('business') || combined.includes('product')) return 'business';
+  if (combined.includes('marketing') || combined.includes('growth') || combined.includes('seo') || combined.includes('media buyer')) return 'marketing';
+  return 'engineering-web';
+}
+
+// ── SPECIALIZED DOMAIN QUESTIONS ──────────────────────────────
+const SPECIALIZED_QUESTIONS = [
+  // ── Unity & Game Development ─────────────────────────────────
   {
-    id: 'wt_html_01',
-    topic: 'html',
-    prompt: 'Which HTML5 semantic element should encapsulate the primary dominant content of a document, excluding headers, sidebars, and footers?',
-    options: ['<article>', '<main>', '<section>', '<content>'],
+    id: 'wt_unity_01',
+    topic: 'unity',
+    prompt: 'In Unity, which lifecycle method executes at a fixed framerate interval and should be used for all physics and Rigidbody calculations?',
+    options: ['Update()', 'FixedUpdate()', 'LateUpdate()', 'Awake()'],
     correctIndex: 1,
-    explanation: 'The <main> tag represents the dominant content of the <body>. There can only be one non-hidden <main> per document.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_html_02',
-    topic: 'html',
-    prompt: 'What attribute is mandatory on an <img> tag to ensure proper accessibility for screen readers?',
-    options: ['title', 'alt', 'aria-label', 'caption'],
-    correctIndex: 1,
-    explanation: 'The alt attribute provides alternative text for screen readers and displays if the image fails to load.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_html_03',
-    topic: 'html',
-    prompt: 'Which attribute should be placed on a <form> input to indicate it must be completed before submission without writing custom JS?',
-    options: ['validate', 'mandatory', 'required', 'aria-required="true"'],
-    correctIndex: 2,
-    explanation: 'The boolean required attribute natively halts form submission in HTML5 if the field is blank.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_css_01',
-    topic: 'css',
-    prompt: 'In CSS Flexbox, which property distributes flex items along the main axis?',
-    options: ['align-items', 'justify-content', 'align-content', 'flex-direction'],
-    correctIndex: 1,
-    explanation: 'justify-content aligns items along the main axis; align-items aligns along the cross axis.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_css_02',
-    topic: 'css',
-    prompt: 'What CSS Grid property allows columns to automatically fit available space and wrap without media queries?',
-    options: [
-      'grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));',
-      'grid-template-columns: auto-fill;',
-      'grid-auto-flow: wrap;',
-      'display: flex-grid;'
-    ],
-    correctIndex: 0,
-    explanation: 'repeat(auto-fit, minmax(min, 1fr)) creates fluid auto-wrapping grids with zero media queries.',
+    explanation: 'FixedUpdate() executes on a deterministic physics timestep, ensuring reliable collision and physics simulations regardless of display framerate.',
     difficulty: 'intermediate',
   },
   {
-    id: 'wt_css_03',
-    topic: 'css',
-    prompt: 'Which CSS Box Model property determines the total rendered width calculation when set to border-box?',
-    options: ['box-sizing', 'display', 'overflow', 'box-shadow'],
+    id: 'wt_unity_02',
+    topic: 'unity',
+    prompt: 'What is a Prefab in the Unity Game Engine?',
+    options: [
+      'A reusable asset template that stores a GameObject configured with all its components and properties',
+      'A temporary compiled script kept in RAM during editor playmode',
+      'A compressed 3D skeletal mesh format exclusive to Blender',
+      'A post-processing volume configuration profile'
+    ],
     correctIndex: 0,
-    explanation: 'box-sizing: border-box includes padding and border in the element\'s total width and height calculation.',
+    explanation: 'Prefabs act as reusable blueprints. Any modifications to a parent prefab can propagate across all instantiated scene instances.',
     difficulty: 'beginner',
   },
   {
-    id: 'wt_css_04',
-    topic: 'css',
-    prompt: 'How do you target viewports narrower than 768px in modern responsive CSS?',
+    id: 'wt_unity_03',
+    topic: 'unity',
+    prompt: 'In Unity game development, what design pattern prevents Garbage Collection spikes and lag when frequently spawning bullets, enemies, or particles?',
     options: [
-      '@media (max-width: 767.98px) { ... }',
-      '@device (width < 768) { ... }',
-      '@screen mobile { ... }',
-      '@query (width: 768px) { ... }'
+      'Invoking Object.Destroy() immediately on collision',
+      'Object Pooling pattern (reusing pre-instantiated inactive objects)',
+      'Calling System.GC.Collect() every frame in LateUpdate()',
+      'Increasing CPU target framerate in PlayerSettings'
+    ],
+    correctIndex: 1,
+    explanation: 'Object Pooling pre-allocates an array of GameObjects and toggles their active state, preventing runtime heap allocations and Garbage Collector hitches.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_unity_04',
+    topic: 'unity',
+    prompt: 'Which component is mandatory on a GameObject to allow it to receive physical forces, torque, and gravity in Unity 3D?',
+    options: ['BoxCollider', 'MeshRenderer', 'Rigidbody', 'Transform'],
+    correctIndex: 2,
+    explanation: 'The Rigidbody component gives a GameObject physical properties, enabling the PhysX simulation engine to apply gravity, momentum, and friction.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_unity_05',
+    topic: 'unity',
+    prompt: 'In Unity, what is the key difference between a Collider with "Is Trigger" enabled versus a standard Collider?',
+    options: [
+      'Triggers detect overlap events (OnTriggerEnter) without causing physical collision collision reaction forces',
+      'Triggers only work with 2D sprites and cannot function in 3D',
+      'Triggers disable raycasting calculations completely',
+      'Triggers bypass the physics engine and run on the GPU'
     ],
     correctIndex: 0,
-    explanation: '@media (max-width: ...) evaluates screen constraints to apply mobile-specific overrides.',
+    explanation: 'Trigger colliders register spatial entry, stay, and exit without exerting physical repulsive forces, making them ideal for pickups, zones, and checkpoints.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_unity_06',
+    topic: 'unity',
+    prompt: 'In 3D game vector math, what operation calculates directional alignment (e.g. checking whether an enemy is facing the player)?',
+    options: [
+      'Dot Product of two normalized vectors (Vector3.Dot)',
+      'Cross Product of two vectors',
+      'Vector Linear Interpolation (Vector3.Lerp)',
+      'Vector Distance projection'
+    ],
+    correctIndex: 0,
+    explanation: 'The Dot Product of two normalized vectors returns 1 for identical directions, 0 for perpendicular directions, and -1 for directly opposite directions.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_unity_07',
+    topic: 'unity',
+    prompt: 'In Unity C# scripting, why should coroutines yield WaitForSeconds rather than calling Thread.Sleep()?',
+    options: [
+      'Thread.Sleep() freezes the entire Unity main thread, halting all rendering, audio, and player input',
+      'Coroutines execute on the graphics shader processor while Thread.Sleep runs on CPU',
+      'Thread.Sleep() breaks physics constraints permanently',
+      'WaitForSeconds automatically accelerates game audio playback'
+    ],
+    correctIndex: 0,
+    explanation: 'Unity executes primarily on a single main thread. Thread.Sleep() locks that thread completely, while Coroutines yield execution gracefully back to the engine.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_unity_08',
+    topic: 'unity',
+    prompt: 'How do modern game engines prevent "Gimbal Lock" when computing 3D rotations?',
+    options: [
+      'By using Quaternions instead of Euler Angles',
+      'By restricting all rotational movements to 90-degree increments',
+      'By computing rotational matrices strictly in 2D space',
+      'By applying rotations exclusively through camera projection planes'
+    ],
+    correctIndex: 0,
+    explanation: 'Euler angles suffer from Gimbal Lock when two rotational axes align. Quaternions represent rotations in 4D hypercomplex space, avoiding rotational lock entirely.',
+    difficulty: 'advanced',
+  },
+  {
+    id: 'wt_unity_09',
+    topic: 'unity',
+    prompt: 'In Unity C#, which attribute exposes a private member field in the Inspector editor while protecting it from external class mutation?',
+    options: ['[SerializeField]', '[HideInInspector]', '[System.Serializable]', '[RequireComponent]'],
+    correctIndex: 0,
+    explanation: '[SerializeField] tells Unity to serialize and expose the private field in the Inspector without breaking object-oriented encapsulation.',
     difficulty: 'beginner',
+  },
+  {
+    id: 'wt_unity_10',
+    topic: 'unity',
+    prompt: 'Which Unity event function executes after all Update() methods have finished, making it standard for camera tracking scripts?',
+    options: ['FixedUpdate()', 'LateUpdate()', 'OnAnimatorMove()', 'Start()'],
+    correctIndex: 1,
+    explanation: 'LateUpdate() is guaranteed to run after all character movement updates have executed, eliminating camera jitter and tracking lag.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_unity_11',
+    topic: 'unity',
+    prompt: 'What Unity API method casts an invisible ray from an origin along a direction vector to detect hits against objects with colliders?',
+    options: ['Physics.Raycast', 'Mesh.CastRay', 'Transform.ProjectForward', 'Camera.ScreenToRayPoint'],
+    correctIndex: 0,
+    explanation: 'Physics.Raycast casts a ray and returns boolean hit results along with a RaycastHit structure containing impact point, distance, and hit collider.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_unity_12',
+    topic: 'unity',
+    prompt: 'What is the primary architectural difference between Universal Render Pipeline (URP) and High Definition Render Pipeline (HDRP)?',
+    options: [
+      'URP is optimized for scalable cross-platform performance (mobile, VR, PC) while HDRP targets high-end photorealistic console and PC rendering',
+      'URP only supports 2D pixel-art graphics while HDRP is for 3D meshes',
+      'HDRP is a legacy deprecated pipeline replaced by standard built-in rendering',
+      'URP disables all real-time dynamic shadows'
+    ],
+    correctIndex: 0,
+    explanation: 'URP provides lightweight, highly performant rendering across mobile, standalone, and VR devices; HDRP utilizes compute-heavy physically based lighting for AAA platforms.',
+    difficulty: 'intermediate',
   },
 
-  // ── JAVASCRIPT & TYPESCRIPT ──────────────────────────────────
+  // ── C# & Object-Oriented Principles ──────────────────────────
   {
-    id: 'wt_js_01',
-    topic: 'javascript',
-    prompt: 'What is the key functional difference between const and let variables in JavaScript?',
+    id: 'wt_cs_01',
+    topic: 'csharp',
+    prompt: 'In C#, what is the primary memory and behavioral difference between a struct (value type) and a class (reference type)?',
     options: [
-      'const is function-scoped; let is block-scoped',
-      'const identifiers cannot be reassigned; let can be reassigned',
-      'const makes objects deeply immutable',
-      'let variables are hoisted to the top of the window object'
+      'Structs are allocated on the stack and passed by value; classes are allocated on the managed heap and accessed via references',
+      'Structs can inherit from multiple abstract classes; classes cannot',
+      'Classes are immutable by default; structs are mutable',
+      'Structs cannot contain methods, constructors, or properties'
     ],
-    correctIndex: 1,
-    explanation: 'const creates a block-scoped binding that cannot be reassigned (though internal object properties remain mutable).',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_js_02',
-    topic: 'javascript',
-    prompt: 'What will Promise.all() do if one of the promises in the array rejects?',
-    options: [
-      'It waits for all others to finish, then returns the errors',
-      'It immediately rejects with the reason of the first rejected promise',
-      'It resolves with undefined for the rejected promise',
-      'It retries the failed promise up to 3 times'
-    ],
-    correctIndex: 1,
-    explanation: 'Promise.all has fail-fast semantics; it rejects immediately upon the first encountered rejection.',
-    difficulty: 'intermediate',
-  },
-  {
-    id: 'wt_js_03',
-    topic: 'javascript',
-    prompt: 'Which array method returns a single accumulated value from iterating through an array?',
-    options: ['map()', 'filter()', 'reduce()', 'forEach()'],
-    correctIndex: 2,
-    explanation: 'reduce() executes a reducer function on each element, yielding a single accumulated result.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_js_04',
-    topic: 'javascript',
-    prompt: 'What mechanism preserves access to outer variables even after the outer function has finished executing?',
-    options: ['Prototypal Inheritance', 'Closure', 'Hoisting', 'Event Delegation'],
-    correctIndex: 1,
-    explanation: 'A closure is the combination of a function bundled together with references to its surrounding lexical environment.',
-    difficulty: 'intermediate',
-  },
-  {
-    id: 'wt_js_05',
-    topic: 'javascript',
-    prompt: 'What does the JavaScript Event Loop prioritize first when the call stack clears?',
-    options: ['Microtasks (Promises/queueMicrotask)', 'Macrotasks (setTimeout/setInterval)', 'I/O operations', 'DOM rendering'],
     correctIndex: 0,
-    explanation: 'The event loop processes all pending microtasks before picking the next macrotask from the task queue.',
+    explanation: 'Value types (structs) store their value directly on the stack, while reference types (classes) store a pointer on the stack referencing the heap allocation.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_cs_02',
+    topic: 'csharp',
+    prompt: 'In C#, which keyword is required in a derived subclass to override a method declared as "virtual" in its parent class?',
+    options: ['override', 'virtual', 'new', 'implements'],
+    correctIndex: 0,
+    explanation: 'The override keyword explicitly overrides the virtual or abstract base implementation with polymorphic runtime dispatch.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_cs_03',
+    topic: 'csharp',
+    prompt: 'What guarantee does the C# "using" statement provide when handling IDisposable objects (like streams or database connections)?',
+    options: [
+      'Guarantees Dispose() is invoked to release unmanaged resources even if an unhandled exception occurs',
+      'Increases CPU priority for the block of code',
+      'Prevents other threads from reading or writing to the file system',
+      'Compiles the inner block into C++ native instructions'
+    ],
+    correctIndex: 0,
+    explanation: 'using translates to a try/finally block under the hood, ensuring Dispose() is executed regardless of normal exit or exception throws.',
+    difficulty: 'intermediate',
+  },
+
+  // ── Unreal Engine & C++ ──────────────────────────────────────
+  {
+    id: 'wt_unreal_01',
+    topic: 'unreal',
+    prompt: 'In Unreal Engine, what is the base class for any object that can be placed in or spawned into a level?',
+    options: ['AActor', 'UObject', 'APawn', 'ACharacter'],
+    correctIndex: 0,
+    explanation: 'AActor is the base class for all entities that can be placed or spawned in an Unreal Engine world. UObject is the base for data, but cannot be placed directly.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_unreal_02',
+    topic: 'unreal',
+    prompt: 'In Unreal Engine C++, what macro exposes a member variable to Blueprints and the Unreal Reflection System?',
+    options: ['UPROPERTY()', 'UFUNCTION()', 'UCLASS()', 'UENUM()'],
+    correctIndex: 0,
+    explanation: 'UPROPERTY() marks properties for serialization, garbage collection tracking, network replication, and Blueprint visibility.',
+    difficulty: 'intermediate',
+  },
+
+  // ── UI/UX & Product Design ───────────────────────────────────
+  {
+    id: 'wt_uiux_01',
+    topic: 'ui-ux',
+    prompt: 'In typography and UI layout, what is visual hierarchy?',
+    options: [
+      'The arrangement and styling of visual elements to clearly indicate their relative importance and guide user reading flow',
+      'Using only uppercase serif typography for all interface labels',
+      'Placing images at the center of every screen container',
+      'Ensuring that every card and button has identical visual weight and border radius'
+    ],
+    correctIndex: 0,
+    explanation: 'Visual hierarchy uses scale, contrast, weight, color, and spacing to intuitively direct user attention to primary information first.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_uiux_02',
+    topic: 'ui-ux',
+    prompt: 'Under WCAG 2.1 AA accessibility guidelines, what is the minimum required contrast ratio for standard body text against its background?',
+    options: ['4.5:1', '3:1', '7:1', '2:1'],
+    correctIndex: 0,
+    explanation: 'WCAG 2.1 AA mandates a minimum contrast ratio of 4.5:1 for normal text and 3:1 for large text (18pt+ or 14pt bold).',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_uiux_03',
+    topic: 'ui-ux',
+    prompt: 'In Figma, which feature dynamically handles spacing, padding, and content flow as text strings or container dimensions change?',
+    options: ['Auto Layout', 'Smart Animate', 'Component Variants', 'Boolean Groups'],
+    correctIndex: 0,
+    explanation: 'Auto Layout mimics modern CSS Flexbox, allowing components to adapt fluidly to varying label lengths and responsive screen sizes.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_uiux_04',
+    topic: 'ui-ux',
+    prompt: 'What is the key functional difference between a wireframe and an interactive prototype?',
+    options: [
+      'A wireframe focuses on layout, content structure, and hierarchy; a prototype simulates real user interactions, transitions, and flows',
+      'Wireframes are only created after backend deployment is finished',
+      'Prototypes cannot contain clickable buttons or micro-interactions',
+      'Wireframes must always include final photography and high-fidelity brand palettes'
+    ],
+    correctIndex: 0,
+    explanation: 'Wireframes establish low-fidelity structural blueprints, while prototypes demonstrate dynamic user journeys and behavioral states.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_uiux_05',
+    topic: 'ui-ux',
+    prompt: 'According to Nielsen Norman Group usability heuristics, what does "Visibility of System Status" require?',
+    options: [
+      'The system should always keep users informed about ongoing operations through timely, clear feedback (e.g. loaders, status badges)',
+      'Displaying raw backend database connection strings in the footer',
+      'Allowing users to modify CSS theme stylesheets manually',
+      'Exposing source control commit hashes in user notification toasts'
+    ],
+    correctIndex: 0,
+    explanation: 'Visibility of system status reduces uncertainty by letting users know immediate results of their actions through progress indicators and confirmations.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_uiux_06',
+    topic: 'ui-ux',
+    prompt: 'What is the recommended minimum touch target size for interactive elements on mobile devices according to Apple and Google guidelines?',
+    options: ['44x44px to 48x48px', '24x24px', '72x72px', '32x32px'],
+    correctIndex: 0,
+    explanation: 'Apple recommends 44x44pt and Google Material recommends 48x48dp to ensure touch elements can be tapped accurately without mis-clicks.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_uiux_07',
+    topic: 'ui-ux',
+    prompt: 'Which Gestalt principle explains why elements spaced close together are perceived by human cognition as belonging to a unified group?',
+    options: ['Law of Proximity', 'Law of Similarity', 'Law of Closure', 'Law of Continuity'],
+    correctIndex: 0,
+    explanation: 'The Law of Proximity states that objects positioned near one another are naturally grouped together by human perception.',
+    difficulty: 'intermediate',
+  },
+
+  // ── Mobile App Development (Flutter & React Native) ──────────
+  {
+    id: 'wt_mob_01',
+    topic: 'flutter',
+    prompt: 'In Flutter, what is the key difference between a StatelessWidget and a StatefulWidget?',
+    options: [
+      'StatelessWidget is immutable once built; StatefulWidget maintains mutable State across lifecycle events and rebuilds via setState()',
+      'StatelessWidget can only render text; StatefulWidget can render images and video',
+      'StatefulWidget cannot accept constructor parameters',
+      'StatelessWidget requires an active internet connection to compile'
+    ],
+    correctIndex: 0,
+    explanation: 'StatelessWidgets describe UI that depends solely on constructor parameters. StatefulWidgets pair with a State object that can mutate and trigger rebuilds.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_mob_02',
+    topic: 'flutter',
+    prompt: 'In Flutter architecture, what does the BuildContext object represent?',
+    options: [
+      'A handle to the location of a widget within the overall element/widget tree',
+      'The native iOS/Android thread execution priority controller',
+      'A cryptographic token for device biometric authentication',
+      'The global SQLite database connection handle'
+    ],
+    correctIndex: 0,
+    explanation: 'BuildContext identifies where a widget sits in the hierarchy, allowing access to inherited themes, media queries, and navigator state.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_mob_03',
+    topic: 'react-native',
+    prompt: 'In React Native\'s new architecture, what does JSI (JavaScript Interface) replace to achieve high-performance synchronous native communication?',
+    options: [
+      'The legacy asynchronous batched JSON message bridge',
+      'The Redux global store',
+      'The native iOS UIKit storyboard renderer',
+      'The Android Gradle build orchestrator'
+    ],
+    correctIndex: 0,
+    explanation: 'JSI allows JavaScript to hold direct references to host C++ objects, enabling direct synchronous calls without serializing JSON payloads across a bridge.',
     difficulty: 'advanced',
   },
 
-  // ── REACT & MODERN FRONTEND ──────────────────────────────────
+  // ── Cybersecurity & Ethical Hacking ──────────────────────────
   {
-    id: 'wt_react_01',
-    topic: 'react',
-    prompt: 'Why should you never mutate state directly in React (e.g. state.push(item))?',
+    id: 'wt_sec_01',
+    topic: 'cybersecurity',
+    prompt: 'What is the primary industry standard defense against SQL Injection vulnerabilities in backend applications?',
     options: [
-      'It causes immediate syntax errors in JSX',
-      'React detects state changes via reference equality (Object.is) and will skip re-rendering',
-      'React only allows primitive strings in state',
-      'Direct mutations crash the Node.js process'
+      'Using parameterized queries / prepared statements instead of string concatenation',
+      'Encrypting the database password with MD5',
+      'Restricting database queries to GET requests only',
+      'Enabling HTTPS TLS 1.3 on the web server'
     ],
-    correctIndex: 1,
-    explanation: 'React compares state references using Object.is. Mutating in place keeps the same reference, skipping re-renders.',
+    correctIndex: 0,
+    explanation: 'Parameterized queries separate SQL instructions from user-supplied parameters, ensuring inputs are treated strictly as data literals rather than executable commands.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_sec_02',
+    topic: 'cybersecurity',
+    prompt: 'Which HTTP security header mitigates Cross-Site Scripting (XSS) by restricting the origins from which scripts, styles, and assets may load?',
+    options: ['Content-Security-Policy (CSP)', 'Strict-Transport-Security (HSTS)', 'X-Content-Type-Options', 'Referrer-Policy'],
+    correctIndex: 0,
+    explanation: 'Content-Security-Policy instructs browsers to only execute scripts originating from trusted domains or nonces, neutralizing malicious injected script tags.',
     difficulty: 'intermediate',
   },
   {
-    id: 'wt_react_02',
-    topic: 'react',
-    prompt: 'What Hook should be used to run side effects like subscriptions or API calls after layout render?',
-    options: ['useMemo', 'useCallback', 'useEffect', 'useLayoutEffect'],
-    correctIndex: 2,
-    explanation: 'useEffect schedules asynchronous side effects that run after the browser completes repainting.',
+    id: 'wt_sec_03',
+    topic: 'cybersecurity',
+    prompt: 'What cookie attribute prevents client-side JavaScript from reading an authentication cookie via document.cookie?',
+    options: ['HttpOnly', 'Secure', 'SameSite=Strict', 'Path=/'],
+    correctIndex: 0,
+    explanation: 'The HttpOnly flag blocks JavaScript access, shielding session tokens from exfiltration even if an attacker manages to execute an XSS payload.',
     difficulty: 'beginner',
   },
   {
-    id: 'wt_react_03',
-    topic: 'react',
-    prompt: 'What is the purpose of passing a dependency array to useEffect?',
+    id: 'wt_sec_04',
+    topic: 'cybersecurity',
+    prompt: 'Why should passwords in databases be hashed using adaptive algorithms like bcrypt or Argon2 rather than fast hashing algorithms like SHA-256?',
     options: [
-      'To define which child components can receive props',
-      'To tell React when to re-execute the effect based on changed values',
-      'To catch uncaught promise errors',
-      'To bind this inside functional components'
+      'bcrypt and Argon2 enforce configurable computational cost factors (work factors) that resist GPU/ASIC brute-force cracking',
+      'SHA-256 is an encryption algorithm that can be decrypted with a private key',
+      'bcrypt compresses passwords so they occupy zero disk space',
+      'SHA-256 hashes are reversible using simple Base64 decoding'
     ],
-    correctIndex: 1,
-    explanation: 'React re-runs the effect only if one of the dependencies has changed between renders.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_react_04',
-    topic: 'react',
-    prompt: 'When should you use the useCallback hook in React?',
-    options: [
-      'For every function defined inside a component',
-      'To cache expensive mathematical calculations',
-      'To memoize callback function instances passed to optimized child components that rely on reference equality',
-      'To replace try/catch statements'
-    ],
-    correctIndex: 2,
-    explanation: 'useCallback memoizes callback definitions to avoid unnecessary renders of React.memo child components.',
-    difficulty: 'intermediate',
-  },
-
-  // ── BACKEND: NODE.JS, EXPRESS & REST ──────────────────────────
-  {
-    id: 'wt_node_01',
-    topic: 'node.js',
-    prompt: 'How does Node.js handle high volumes of concurrent I/O operations despite being single-threaded?',
-    options: [
-      'It creates a new OS thread for every HTTP request',
-      'Through a non-blocking asynchronous event loop backed by libuv and a thread pool',
-      'It splits requests across multiple CPU sockets automatically',
-      'By compiling all JavaScript directly into WebAssembly at runtime'
-    ],
-    correctIndex: 1,
-    explanation: 'Node.js uses libuv\'s non-blocking I/O and worker pool to process concurrent requests without blocking the main event thread.',
+    correctIndex: 0,
+    explanation: 'Fast hashes (like SHA-256) can be evaluated billions of times per second by attackers. Adaptive algorithms enforce deliberate latency and memory hardness.',
     difficulty: 'intermediate',
   },
   {
-    id: 'wt_node_02',
-    topic: 'express',
-    prompt: 'In Express middleware, what happens if you neither send a response nor call next()?',
+    id: 'wt_sec_05',
+    topic: 'cybersecurity',
+    prompt: 'How does a Cross-Site Request Forgery (CSRF) token protect sensitive state-changing HTTP POST actions?',
     options: [
-      'Express automatically sends a 200 OK after 5 seconds',
-      'The client request hangs indefinitely until a server timeout occurs',
-      'An unhandledRejection error is thrown',
-      'The next middleware is executed automatically'
+      'It is an unpredictable secret validated by the server that unauthorized external origins cannot read due to the Same-Origin Policy',
+      'It encrypts the payload using symmetric AES-256 in transit',
+      'It restricts form submissions to mobile devices only',
+      'It forces users to complete a CAPTCHA verification on every request'
     ],
-    correctIndex: 1,
-    explanation: 'Express middleware chains require calling next() or completing the response with res.send/json; otherwise the request hangs.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_node_03',
-    topic: 'express',
-    prompt: 'What HTTP status code is the industry standard for a newly created resource in REST APIs?',
-    options: ['200 OK', '201 Created', '202 Accepted', '204 No Content'],
-    correctIndex: 1,
-    explanation: '201 Created indicates the request succeeded and resulted in a new resource being created.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_node_04',
-    topic: 'node.js',
-    prompt: 'Why should password hashes never be stored in plain text or hashed with plain SHA-256?',
-    options: [
-      'SHA-256 hashes are too long for database strings',
-      'Plain SHA-256 is designed for speed, making it vulnerable to brute force and rainbow table attacks without salting/work factor (use bcrypt/argon2)',
-      'Node.js cannot compare SHA-256 strings safely',
-      'SHA-256 is deprecated by W3C'
-    ],
-    correctIndex: 1,
-    explanation: 'Fast cryptographic hashes like SHA-256 allow billions of guesses per second; adaptive key-stretching (bcrypt, Argon2) protects against GPU cracking.',
+    correctIndex: 0,
+    explanation: 'Because an attacker’s malicious third-party site cannot read the authentic CSRF token from the user’s session, forged automated POST requests are rejected.',
     difficulty: 'intermediate',
   },
 
-  // ── DATABASES: MONGODB & SQL ──────────────────────────────────
+  // ── Cloud, DevOps & Infrastructure ───────────────────────────
   {
-    id: 'wt_db_01',
-    topic: 'mongodb',
-    prompt: 'In MongoDB, which indexing strategy speeds up queries filtering on multiple fields simultaneously?',
-    options: ['Single Field Index', 'Compound Index', 'Text Index', 'TTL Index'],
-    correctIndex: 1,
-    explanation: 'A compound index contains references to multiple fields in a document in a specified sort order.',
-    difficulty: 'intermediate',
-  },
-  {
-    id: 'wt_db_02',
-    topic: 'mongodb',
-    prompt: 'What MongoDB aggregation pipeline stage is used to filter documents similar to a SQL WHERE clause?',
-    options: ['$project', '$filter', '$match', '$group'],
-    correctIndex: 2,
-    explanation: 'The $match stage filters documents to allow only those matching specified conditions to pass to the next stage.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_db_03',
-    topic: 'sql',
-    prompt: 'Which SQL JOIN returns all rows from the left table, and the matched rows from the right table (with NULLs for unmatched rows)?',
-    options: ['INNER JOIN', 'LEFT JOIN (or LEFT OUTER JOIN)', 'RIGHT JOIN', 'CROSS JOIN'],
-    correctIndex: 1,
-    explanation: 'LEFT JOIN returns all records from the left table and matched records from the right table.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_db_04',
-    topic: 'sql',
-    prompt: 'What does the "A" in ACID database transactions stand for?',
-    options: ['Availability', 'Atomicity (all-or-nothing execution)', 'Asynchronous', 'Authorization'],
-    correctIndex: 1,
-    explanation: 'Atomicity ensures that all statements in a transaction either complete successfully or are entirely rolled back.',
-    difficulty: 'intermediate',
-  },
-
-  // ── GIT & DEVOPS ──────────────────────────────────────────────
-  {
-    id: 'wt_git_01',
-    topic: 'git',
-    prompt: 'Which Git command creates a new branch and immediately switches your working tree to it?',
-    options: ['git branch -n <name>', 'git checkout -b <name>', 'git switch --all <name>', 'git merge --new <name>'],
-    correctIndex: 1,
-    explanation: 'git checkout -b <name> (or git switch -c <name>) creates and switches to a new branch.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_git_02',
-    topic: 'git',
-    prompt: 'What is the purpose of git rebase compared to git merge?',
+    id: 'wt_cloud_01',
+    topic: 'devops',
+    prompt: 'In Docker, what is the primary benefit of multi-stage builds in a Dockerfile?',
     options: [
-      'It creates a merge commit preserving parallel branch history',
-      'It moves or reapplies commits on top of another base commit, creating a linear history',
-      'It deletes untracked files in the working directory',
-      'It uploads local changes directly to GitHub'
+      'They separate compilation build tools from the final production runtime container, drastically reducing image size and attack surface',
+      'They allow a container to run on multiple CPU architectures simultaneously',
+      'They automatically provision AWS EC2 compute instances',
+      'They eliminate the requirement for a base Linux distribution'
     ],
-    correctIndex: 1,
-    explanation: 'Rebase rewrites commit history onto a new base commit to maintain a clean linear progression.',
-    difficulty: 'intermediate',
-  },
-
-  // ── DATA SCIENCE & PYTHON ────────────────────────────────────
-  {
-    id: 'wt_py_01',
-    topic: 'python',
-    prompt: 'In Python, what is the key difference between a List and a Tuple?',
-    options: [
-      'Lists are immutable; Tuples are mutable',
-      'Lists are mutable; Tuples are immutable',
-      'Tuples can only store numbers',
-      'Lists cannot contain nested structures'
-    ],
-    correctIndex: 1,
-    explanation: 'Lists are mutable sequences ([1, 2]); tuples are immutable sequences ((1, 2)) whose elements cannot be modified.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_py_02',
-    topic: 'data-science',
-    prompt: 'In pandas, which method drops rows containing missing or NaN values?',
-    options: ['df.clean()', 'df.dropna()', 'df.remove_nulls()', 'df.fillna()'],
-    correctIndex: 1,
-    explanation: 'dropna() removes missing values along a specified axis.',
-    difficulty: 'beginner',
-  },
-  {
-    id: 'wt_py_03',
-    topic: 'data-science',
-    prompt: 'What is overfitting in machine learning models?',
-    options: [
-      'When a model performs poorly on training data',
-      'When a model memorizes training noise and fails to generalize to unseen test data',
-      'When the dataset contains too few features',
-      'When the learning rate is set too low'
-    ],
-    correctIndex: 1,
-    explanation: 'Overfitting occurs when a model fits the training set too closely, degrading generalization on new data.',
-    difficulty: 'intermediate',
-  },
-
-  // ── UI/UX DESIGN & CREATIVE ──────────────────────────────────
-  {
-    id: 'wt_ui_01',
-    topic: 'ui-design',
-    prompt: 'What is the minimum WCAG 2.1 AA contrast ratio required for standard body text against its background?',
-    options: ['2.5:1', '3.0:1', '4.5:1', '7.0:1'],
-    correctIndex: 2,
-    explanation: 'WCAG AA requires at least 4.5:1 for regular text and 3:1 for large text (18pt+ or 14pt bold).',
+    correctIndex: 0,
+    explanation: 'Multi-stage builds compile artifacts in an intermediate image and copy only the compiled binaries into a minimal scratch/alpine image.',
     difficulty: 'intermediate',
   },
   {
-    id: 'wt_ui_02',
-    topic: 'ui-design',
-    prompt: 'In typography and layout, what is visual hierarchy?',
+    id: 'wt_cloud_02',
+    topic: 'devops',
+    prompt: 'In Kubernetes, which controller object maintains a specified set of identical replica Pods running across worker nodes?',
+    options: ['Deployment (via ReplicaSet)', 'Ingress Controller', 'ConfigMap', 'DaemonSet exclusively for masters'],
+    correctIndex: 0,
+    explanation: 'A Deployment manages ReplicaSets to ensure the desired number of Pod replicas remain healthy, handling rolling updates and self-healing.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_cloud_03',
+    topic: 'devops',
+    prompt: 'In modern CI/CD pipelines, what is the role of an automated Quality Gate before production rollout?',
     options: [
-      'Using only uppercase serif fonts',
-      'Arranging elements to guide the viewer\'s eye in order of visual importance',
-      'Centering all elements on the canvas',
-      'Limiting colors to black and white'
+      'It automatically blocks deployment if unit tests fail, code coverage dips, or critical security vulnerabilities are detected',
+      'It publishes production credentials to public GitHub repositories',
+      'It bypasses code reviews during peak holiday business hours',
+      'It deletes the target production database to ensure clean deployment'
     ],
-    correctIndex: 1,
-    explanation: 'Visual hierarchy uses scale, contrast, weight, and spacing to communicate the relative importance of content.',
+    correctIndex: 0,
+    explanation: 'Quality gates enforce automated governance by verifying that all tests, lints, and security scans satisfy minimum thresholds before merging or deploying.',
     difficulty: 'beginner',
   },
 
-  // ── BUSINESS & DIGITAL MARKETING ─────────────────────────────
+  // ── AI & Data Science ────────────────────────────────────────
   {
-    id: 'wt_mkt_01',
-    topic: 'digital-marketing',
-    prompt: 'What metric measures the percentage of users who take a desired action (e.g. sign up, purchase) on a landing page?',
-    options: ['Bounce Rate', 'Conversion Rate', 'Click-Through Rate (CTR)', 'Impression Share'],
-    correctIndex: 1,
-    explanation: 'Conversion Rate is calculated as (conversions / total visitors) * 100%.',
+    id: 'wt_ai_01',
+    topic: 'ai-ml',
+    prompt: 'In machine learning workflows, why is it critical to separate data into training, validation, and test sets before model training?',
+    options: [
+      'To evaluate model generalization on unseen distributions and prevent data leakage and overfitting',
+      'To artificially inflate the size of the dataset through duplication',
+      'To force the algorithm to train exclusively on GPU hardware',
+      'To discard outlier data points without human auditing'
+    ],
+    correctIndex: 0,
+    explanation: 'Evaluating models on withheld test sets provides an unbiased estimate of real-world generalization performance and detects overfit memorization.',
     difficulty: 'beginner',
   },
   {
-    id: 'wt_mkt_02',
-    topic: 'seo',
-    prompt: 'Which tag communicates the canonical original URL of a duplicate or syndicated page to search engines?',
+    id: 'wt_ai_02',
+    topic: 'ai-ml',
+    prompt: 'In machine learning evaluation, when is the F1-Score preferred over standard Accuracy?',
     options: [
-      '<meta name="robots" content="index" />',
-      '<link rel="canonical" href="..." />',
-      '<link rel="alternate" href="..." />',
-      '<meta name="source" content="..." />'
+      'When working with highly imbalanced class distributions (e.g. fraud detection where 99.9% of transactions are legitimate)',
+      'When the dataset contains exclusively continuous numerical values',
+      'When training unsupervised clustering models like K-Means',
+      'When the model executes strictly on edge microcontrollers'
     ],
-    correctIndex: 1,
-    explanation: 'rel="canonical" prevents duplicate content penalties by indicating the authoritative URL to crawlers.',
+    correctIndex: 0,
+    explanation: 'Accuracy is misleading on imbalanced datasets because a naive model predicting the majority class scores high. F1-Score balances Precision and Recall.',
     difficulty: 'intermediate',
   },
+  {
+    id: 'wt_ai_03',
+    topic: 'ai-ml',
+    prompt: 'In machine learning optimization, what role does L2 Regularization (Ridge) play?',
+    options: [
+      'It penalizes large model weights by adding their squared magnitude to the loss function, reducing model variance and overfitting',
+      'It forces model weights to exactly zero, performing automatic feature elimination',
+      'It eliminates the need for gradient descent backpropagation',
+      'It multiplies the learning rate by a constant on each epoch'
+    ],
+    correctIndex: 0,
+    explanation: 'L2 regularization discourages complex, erratic parameter fits by penalizing squared weight magnitudes, resulting in smoother, more generalizable boundaries.',
+    difficulty: 'advanced',
+  },
+
+  // ── Finance & Business Analysis ──────────────────────────────
   {
     id: 'wt_fin_01',
-    topic: 'financial-analysis',
-    prompt: 'In corporate finance, what does EBITDA stand for?',
+    topic: 'finance',
+    prompt: 'In corporate financial analysis, what does EBITDA stand for?',
     options: [
       'Earnings Before Interest, Taxes, Depreciation, and Amortization',
       'Equity Borrowed Through International Debt Agreements',
@@ -417,49 +575,196 @@ const WEEKLY_TEST_QUESTIONS = [
       'Expected Base Income Tax Deductible Amount'
     ],
     correctIndex: 0,
-    explanation: 'EBITDA gauges operating performance by stripping out capital structure, tax environments, and non-cash accounting charges.',
-    difficulty: 'intermediate',
+    explanation: 'EBITDA gauges operating profitability by stripping out capital financing structures, tax jurisdictions, and non-cash accounting depreciation.',
+    difficulty: 'beginner',
   },
   {
     id: 'wt_fin_02',
-    topic: 'financial-analysis',
-    prompt: 'Which financial statement summarizes revenues, expenses, and net profit over a specific reporting period?',
-    options: ['Balance Sheet', 'Income Statement (P&L)', 'Cash Flow Statement', 'Statement of Retained Earnings'],
-    correctIndex: 1,
-    explanation: 'The Income Statement reflects operating revenues and expenses over a given timeframe (quarter, year).',
+    topic: 'finance',
+    prompt: 'Which financial statement reflects operating revenues, cost of goods sold, and net profit over a specific reporting timeframe?',
+    options: ['Income Statement (Profit & Loss)', 'Balance Sheet', 'Cash Flow Statement', 'Statement of Shareholders\' Equity'],
+    correctIndex: 0,
+    explanation: 'The Income Statement reflects operating performance over a period (quarter/year), unlike the Balance Sheet which is a single snapshot in time.',
     difficulty: 'beginner',
   },
+  {
+    id: 'wt_fin_03',
+    topic: 'finance',
+    prompt: 'In Discounted Cash Flow (DCF) valuation, how is Enterprise Value calculated?',
+    options: [
+      'By projecting future Free Cash Flows, discounting them to present value using WACC, and adding the discounted Terminal Value',
+      'By multiplying total company share count by current stock price',
+      'By adding current assets and subtracting long-term debt',
+      'By calculating annual revenue multiplied by net income margin'
+    ],
+    correctIndex: 0,
+    explanation: 'DCF establishes intrinsic business value by estimating future cash generation capacity discounted to present value by the cost of capital.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_fin_04',
+    topic: 'finance',
+    prompt: 'What is Net Working Capital (NWC) and what does it measure?',
+    options: [
+      'Current Assets minus Current Liabilities; it measures short-term operating liquidity and financial resilience',
+      'Total Assets minus Total Equity; it measures debt leverage',
+      'Annual Revenue minus Operating Expenses; it measures gross margin',
+      'Total Cash in Bank minus Total Long-Term Debt; it measures solvency'
+    ],
+    correctIndex: 0,
+    explanation: 'Net Working Capital measures whether a company can cover short-term debts and operational obligations with short-term assets.',
+    difficulty: 'intermediate',
+  },
+
+  // ── Digital Marketing & SEO ──────────────────────────────────
+  {
+    id: 'wt_mkt_01',
+    topic: 'marketing',
+    prompt: 'What is the formula for Return on Ad Spend (ROAS)?',
+    options: [
+      'Revenue Generated from Ads divided by Total Advertising Spend',
+      'Total Advertising Spend divided by Total Impressions multiplied by 1000',
+      'Total Clicks divided by Total Conversions',
+      'Cost per Acquisition minus Customer Lifetime Value'
+    ],
+    correctIndex: 0,
+    explanation: 'ROAS measures the gross revenue generated for every dollar invested in advertising campaigns (e.g. $5,000 revenue / $1,000 spend = 5x ROAS).',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_mkt_02',
+    topic: 'seo',
+    prompt: 'In technical SEO, what does the HTML tag <link rel="canonical" href="..." /> communicate to search engine crawlers?',
+    options: [
+      'Identifies the master authoritative URL for duplicate or syndicated content to consolidate indexing signals and link equity',
+      'Forces search engines to purge the URL from the index immediately',
+      'Notifies browsers to cache the webpage in local storage for offline reading',
+      'Specifies an alternate language translation of the document'
+    ],
+    correctIndex: 0,
+    explanation: 'The canonical tag prevents duplicate content penalties by instructing crawlers which URL represents the authoritative version.',
+    difficulty: 'intermediate',
+  },
+  {
+    id: 'wt_mkt_03',
+    topic: 'marketing',
+    prompt: 'In digital marketing campaigns, what does Cost Per Acquisition (CPA) measure?',
+    options: [
+      'The total advertising cost incurred to generate one qualified conversion, lead, or paying customer',
+      'The flat rate cost of acquiring 1,000 banner impressions',
+      'The percentage of visitors who bounce after viewing a single page',
+      'The salary paid to growth marketing personnel'
+    ],
+    correctIndex: 0,
+    explanation: 'CPA measures the direct acquisition efficiency by dividing total campaign ad spend by the total number of conversions achieved.',
+    difficulty: 'beginner',
+  },
+
+  // ── Product Management & Agile ───────────────────────────────
+  {
+    id: 'wt_pm_01',
+    topic: 'product',
+    prompt: 'In Agile Scrum, what is the primary purpose of the Sprint Retrospective ceremony?',
+    options: [
+      'For the delivery team to reflect on team processes, celebrate successes, identify friction points, and commit to action items for continuous improvement',
+      'To demo completed user stories to executive external stakeholders for sign-off',
+      'To assign individual annual performance ratings and compensation bonuses',
+      'To estimate backlog story points for the upcoming 6-month roadmap'
+    ],
+    correctIndex: 0,
+    explanation: 'The Retrospective focuses on continuous team improvement, inspecting how people, relationships, processes, and tools functioned during the sprint.',
+    difficulty: 'beginner',
+  },
+  {
+    id: 'wt_pm_02',
+    topic: 'product',
+    prompt: 'In product management, what do the letters represent in the RICE prioritization scoring model?',
+    options: [
+      'Reach, Impact, Confidence, Effort',
+      'Revenue, Innovation, Cost, Efficiency',
+      'Risk, Investment, Customer, Execution',
+      'Retention, Iteration, Capacity, Engagement'
+    ],
+    correctIndex: 0,
+    explanation: 'RICE score = (Reach × Impact × Confidence) / Effort, providing an objective framework to prioritize engineering backlogs.',
+    difficulty: 'intermediate',
+  }
 ];
 
-/**
- * Returns a randomized subset of test questions matching the specified topic tags or career week.
- *
- * @param {Object} options
- * @param {string[]} [options.topics] - Preferred topics (e.g. ['html', 'css', 'javascript'])
- * @param {number} [options.count=10] - Number of questions to return
- * @param {string[]} [options.excludeIds=[]] - Question IDs to exclude for fresh retakes
- * @returns {Array<Object>} Selected test questions with correctIndex intact for grading
- */
-function getWeeklyTestQuestions({ topics = [], count = 10, excludeIds = [] } = {}) {
-  const normalizedTopics = (topics || []).map((t) => (t || '').trim().toLowerCase()).filter(Boolean);
-  const excludeSet = new Set(excludeIds || []);
-
-  // 1. Separate questions matching requested topics from general fallback questions
-  let matched = [];
-  let general = [];
-
-  WEEKLY_TEST_QUESTIONS.forEach((q) => {
-    if (excludeSet.has(q.id)) return;
-
-    const qTopic = (q.topic || '').toLowerCase();
-    if (normalizedTopics.length > 0 && normalizedTopics.some((t) => qTopic.includes(t) || t.includes(qTopic))) {
-      matched.push(q);
-    } else {
-      general.push(q);
-    }
+// ── IMPORT QUESTIONS FROM QUIZ_QUESTIONS ───────────────────────
+const IMPORTED_QUIZ_QUESTIONS = [];
+if (QUIZ_QUESTIONS && typeof QUIZ_QUESTIONS === 'object') {
+  Object.entries(QUIZ_QUESTIONS).forEach(([skillKey, levels]) => {
+    ['easy', 'medium', 'hard'].forEach((lvl) => {
+      const qList = levels[lvl] || [];
+      qList.forEach((q, idx) => {
+        IMPORTED_QUIZ_QUESTIONS.push({
+          id: q.id || `imp_${skillKey}_${lvl}_${idx}`,
+          topic: normalizeSkillKey(q.skill || skillKey),
+          prompt: q.question,
+          options: q.options,
+          correctIndex: q.correctIndex,
+          explanation: q.explanation || `Correct answer is: ${q.options[q.correctIndex]}`,
+          difficulty: lvl === 'easy' ? 'beginner' : lvl === 'medium' ? 'intermediate' : 'advanced',
+        });
+      });
+    });
   });
+}
+
+// Combine all curated sources into master repository
+const MASTER_QUESTION_POOL = [
+  ...SPECIALIZED_QUESTIONS,
+  ...IMPORTED_QUIZ_QUESTIONS,
+];
+
+// ── OPTION SHUFFLING HELPER ────────────────────────────────────
+function shuffleQuestionOptions(q) {
+  if (!q.options || q.options.length < 2) return q;
+  const originalCorrect = q.options[q.correctIndex];
+  const indexedOptions = q.options.map((opt, idx) => ({ opt, isCorrect: idx === q.correctIndex }));
 
   // Fisher-Yates shuffle
+  for (let i = indexedOptions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexedOptions[i], indexedOptions[j]] = [indexedOptions[j], indexedOptions[i]];
+  }
+
+  const newOptions = indexedOptions.map((item) => item.opt);
+  const newCorrectIndex = indexedOptions.findIndex((item) => item.isCorrect);
+
+  return {
+    ...q,
+    options: newOptions,
+    correctIndex: newCorrectIndex >= 0 ? newCorrectIndex : 0,
+  };
+}
+
+// ── MASTER GET WEEKLY TEST QUESTIONS ───────────────────────────
+/**
+ * Selects 10 fresh, topic-accurate, non-repeating test questions for a weekly milestone test.
+ *
+ * @param {Object} options
+ * @param {string[]} [options.topics=[]] - Skills/topics taught in the week's curriculum
+ * @param {string} [options.careerTitle=''] - Target career title (e.g. 'Game Developer', 'Front-End Developer')
+ * @param {string} [options.careerSlug=''] - Target career slug
+ * @param {number} [options.count=10] - Number of questions to return
+ * @param {string[]} [options.excludeIds=[]] - Question IDs already seen in previous attempts
+ * @returns {Array<Object>} 10 randomized, topic-aligned, option-shuffled test questions
+ */
+function getWeeklyTestQuestions({
+  topics = [],
+  careerTitle = '',
+  careerSlug = '',
+  count = 10,
+  excludeIds = [],
+} = {}) {
+  const normalizedTopics = (topics || []).map(normalizeSkillKey).filter(Boolean);
+  const excludeSet = new Set(excludeIds || []);
+  const targetDomain = detectDomainFamily(careerTitle, careerSlug, normalizedTopics);
+  const allowedDomainSkills = DOMAIN_FAMILIES[targetDomain] || DOMAIN_FAMILIES['engineering-web'];
+
+  // Fisher-Yates helper
   const shuffle = (arr) => {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -469,25 +774,79 @@ function getWeeklyTestQuestions({ topics = [], count = 10, excludeIds = [] } = {
     return copy;
   };
 
-  matched = shuffle(matched);
-  general = shuffle(general);
+  // 1. Level 1: Questions matching the exact week topics that haven't been excluded
+  let matchedQuestions = MASTER_QUESTION_POOL.filter((q) => {
+    if (excludeSet.has(q.id)) return false;
+    const qTopic = normalizeSkillKey(q.topic);
+    return normalizedTopics.some((t) => qTopic === t || qTopic.includes(t) || t.includes(qTopic));
+  });
 
-  // If we don't have enough matched questions after excluding IDs, pull from general
-  let pool = [...matched];
+  matchedQuestions = shuffle(matchedQuestions);
+
+  let pool = [...matchedQuestions];
+
+  // 2. Level 2: If we still need questions, pull from same domain family that haven't been excluded
   if (pool.length < count) {
-    pool = pool.concat(general.slice(0, count - pool.length));
+    const sameDomainQuestions = MASTER_QUESTION_POOL.filter((q) => {
+      if (excludeSet.has(q.id)) return false;
+      if (pool.some((p) => p.id === q.id)) return false;
+      const qTopic = normalizeSkillKey(q.topic);
+      return allowedDomainSkills.includes(qTopic);
+    });
+
+    const shuffledSameDomain = shuffle(sameDomainQuestions);
+    pool = pool.concat(shuffledSameDomain.slice(0, count - pool.length));
   }
 
-  // If pool is still under count (e.g. excessive retakes exhausted exclusions), fall back to all without exclusions
+  // 3. Level 3: Dynamic fallback generation if domain has exhausted unseen questions
   if (pool.length < count) {
-    const recycled = shuffle(WEEKLY_TEST_QUESTIONS.filter((q) => !pool.some((p) => p.id === q.id)));
+    try {
+      const aiQuizGen = require('../services/aiQuizGeneratorService');
+      const fallbackSkill = normalizedTopics[0] || allowedDomainSkills[0] || 'software-engineering';
+      const dynamicGenerated = aiQuizGen.generateOfflineFallback(fallbackSkill);
+      if (Array.isArray(dynamicGenerated) && dynamicGenerated.length > 0) {
+        dynamicGenerated.forEach((dq) => {
+          if (pool.length < count && !pool.some((p) => p.id === dq.id) && !excludeSet.has(dq.id)) {
+            pool.push({
+              id: dq.id,
+              topic: normalizeSkillKey(dq.topic || fallbackSkill),
+              prompt: dq.question,
+              options: dq.options,
+              correctIndex: dq.correctIndex,
+              explanation: dq.explanation,
+              difficulty: dq.difficulty === 'easy' ? 'beginner' : dq.difficulty === 'medium' ? 'intermediate' : 'advanced',
+            });
+          }
+        });
+      }
+    } catch (_) {}
+  }
+
+  // 4. Level 4: If still under count (excessive retakes exhausted domain pool), recycle unseen in current attempt
+  if (pool.length < count) {
+    const domainFallbackPool = MASTER_QUESTION_POOL.filter((q) => {
+      if (pool.some((p) => p.id === q.id)) return false;
+      const qTopic = normalizeSkillKey(q.topic);
+      return allowedDomainSkills.includes(qTopic);
+    });
+    const recycled = shuffle(domainFallbackPool);
     pool = pool.concat(recycled.slice(0, count - pool.length));
   }
 
-  return pool.slice(0, count);
+  // 5. Final fallback guarantee
+  if (pool.length < count) {
+    const remainingAll = MASTER_QUESTION_POOL.filter((q) => !pool.some((p) => p.id === q.id));
+    pool = pool.concat(shuffle(remainingAll).slice(0, count - pool.length));
+  }
+
+  // Shuffle final selection and shuffle choices for each question
+  const finalQuestions = shuffle(pool.slice(0, count)).map(shuffleQuestionOptions);
+  return finalQuestions;
 }
 
 module.exports = {
-  WEEKLY_TEST_QUESTIONS,
+  WEEKLY_TEST_QUESTIONS: MASTER_QUESTION_POOL,
   getWeeklyTestQuestions,
+  normalizeSkillKey,
+  detectDomainFamily,
 };

@@ -441,6 +441,9 @@
                 <!-- 30-Minute Server-Authoritative Countdown Timer -->
                 <div class="text-end">
                   <div class="d-flex align-items-center gap-2 justify-content-end">
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 font-mono small d-none" id="btnResetWeeklyTest" title="Regenerate fresh questions for this milestone">
+                      <i class="bi bi-arrow-clockwise me-1"></i>New Questions
+                    </button>
                     <span id="testTimerBadge" class="badge bg-danger-subtle text-danger border border-danger font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm">
                       <i class="bi bi-stopwatch-fill"></i>
                       <span id="testTimerText">30:00</span>
@@ -464,6 +467,17 @@
                   <div>
                     <strong>Strict Proctoring Enforced:</strong> 10 Questions &middot; <strong>70% (7/10)</strong> required &middot; 30-Min server clock &middot; Tab switches, window minimization, or copy/paste trigger <strong>Strike 1 (-2:00)</strong>, <strong>Strike 2 (-3:00)</strong>, and <strong>Strike 3 (Disqualification: 0% + 24-Hour Retake Lockout)</strong>.
                   </div>
+                </div>
+
+                <!-- Resumed In-Progress Notice with 1-Click Fresh Reset -->
+                <div id="testResumedBanner" class="alert alert-warning py-2 px-3 mb-3 d-flex align-items-center justify-content-between gap-2 d-none" style="font-size: 0.82rem; border-radius: 8px;">
+                  <div>
+                    <i class="bi bi-arrow-repeat me-1 text-warning"></i>
+                    <span>Resumed in-progress test. Prefer a completely fresh set of questions?</span>
+                  </div>
+                  <button type="button" class="btn btn-warning btn-sm py-0 px-2 fw-semibold text-dark text-nowrap" id="btnResumedReset">
+                    <i class="bi bi-lightning-charge-fill me-1"></i>Start Fresh
+                  </button>
                 </div>
 
                 <!-- Question List Container -->
@@ -613,7 +627,7 @@
     <script src="js/tech-logos.js?v=3.2.0"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="js/anti-cheat-lock.js?v=2.1"></script>
-    <script src="js/roadmap.js"></script>
+    <script src="js/roadmap.js?v=3.3.0"></script>
     <script src="js/chat.js"></script>
   </body>
 </html>
