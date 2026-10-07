@@ -108,6 +108,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  // ── Deadline Preset Helper ─────────────────────────────────
+  const jobDeadlineInput = document.getElementById('jobDeadlineInput');
+  const deadlinePresetSelect = document.getElementById('deadlinePresetSelect');
+
+  const updateDeadlineFromPreset = (days = 30) => {
+    if (!jobDeadlineInput) return;
+    const d = new Date();
+    d.setDate(d.getDate() + parseInt(days, 10));
+    jobDeadlineInput.value = d.toISOString().split('T')[0];
+  };
+
+  if (deadlinePresetSelect && jobDeadlineInput) {
+    updateDeadlineFromPreset(30);
+    deadlinePresetSelect.addEventListener('change', (e) => {
+      updateDeadlineFromPreset(e.target.value);
+    });
+  }
+
   // ── 1. Fetch Recruiter Profile & Stats ───────────────────────
   const loadRecruiterProfile = async () => {
     try {
@@ -159,7 +177,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       jobsTableBody.innerHTML = '';
       jobs.forEach((job) => {
         const tr = document.createElement('tr');
-        const isActive = job.status === 'active';
+        const isClosed = job.status === 'closed';
+        const isPaused = job.status === 'paused';
+        const deadlineDate = job.deadline ? new Date(job.deadline) : null;
+        const isExpired = deadlineDate && deadlineDate < new Date();
+        const isActive = job.status === 'active' && !isExpired;
+
+        let statusBadge = '';
+        let deadlineNotice = '';
+
+        if (isClosed) {
+          statusBadge = `<span class="badge bg-secondary text-white px-2.5 py-1 text-capitalize"><i class="bi bi-x-circle-fill me-1" style="font-size:0.6rem;"></i>Closed</span>`;
+          deadlineNotice = `<div class="small text-muted font-mono mt-0.5" style="font-size:0.72rem;">Manually ended</div>`;
+        } else if (isExpired) {
+          statusBadge = `<span class="badge bg-danger-subtle text-danger px-2.5 py-1 text-capitalize"><i class="bi bi-hourglass-bottom me-1" style="font-size:0.6rem;"></i>Expired</span>`;
+          deadlineNotice = `<div class="small text-danger font-mono fw-semibold mt-0.5" style="font-size:0.72rem;"><i class="bi bi-calendar-x me-1"></i>Expired (${deadlineDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })})</div>`;
+        } else if (isPaused) {
+          statusBadge = `<span class="badge bg-warning-subtle text-warning px-2.5 py-1 text-capitalize"><i class="bi bi-pause-circle-fill me-1" style="font-size:0.6rem;"></i>Paused</span>`;
+          deadlineNotice = `<div class="small text-muted font-mono mt-0.5" style="font-size:0.72rem;">Applications paused</div>`;
+        } else {
+          statusBadge = `<span class="badge bg-success-subtle text-success px-2.5 py-1 text-capitalize"><i class="bi bi-circle-fill me-1" style="font-size:0.6rem;"></i>Active</span>`;
+          if (deadlineDate) {
+            const diffDays = Math.ceil((deadlineDate - new Date()) / (1000 * 60 * 60 * 24));
+            deadlineNotice = `<div class="small text-muted font-mono mt-0.5" style="font-size:0.72rem;"><i class="bi bi-clock-history text-primary me-1"></i>Closes in ${diffDays}d (${deadlineDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })})</div>`;
+          }
+        }
+
         const formattedSkills = (job.requiredSkills || [])
           .map((s) => `<span class="badge bg-light text-dark border me-1"><i class="bi bi-patch-check-fill text-success me-1"></i>${escapeHtml(s.skillName || s)}</span>`)
           .join('');
@@ -185,10 +228,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="d-flex flex-wrap gap-1">${formattedSkills || '<span class="text-muted small">All skills</span>'}</div>
           </td>
           <td>
-            <span class="badge ${isActive ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'} px-2.5 py-1 text-capitalize">
-              <i class="bi ${isActive ? 'bi-circle-fill' : 'bi-pause-circle-fill'} me-1" style="font-size:0.6rem;"></i>
-              ${escapeHtml(job.status)}
-            </span>
+            ${statusBadge}
+            ${deadlineNotice}
           </td>
           <td>
             <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1.5 px-2.5 py-1 btn-view-applicants" data-job-id="${job._id}" data-job-title="${escapeHtml(job.title)}">
@@ -199,9 +240,18 @@ document.addEventListener('DOMContentLoaded', async () => {
           </td>
           <td class="pe-4 text-end">
             <div class="btn-group">
-              <button class="btn btn-sm btn-light border btn-toggle-status" data-job-id="${job._id}" data-current-status="${job.status}" title="${isActive ? 'Pause Applications' : 'Activate Opening'}">
-                <i class="bi ${isActive ? 'bi-pause-fill text-warning' : 'bi-play-fill text-success'}"></i>
-              </button>
+              ${!isClosed ? `
+                <button class="btn btn-sm btn-light border btn-toggle-status" data-job-id="${job._id}" data-current-status="${job.status}" title="${isActive ? 'Pause Applications' : 'Activate Opening'}">
+                  <i class="bi ${isActive ? 'bi-pause-fill text-warning' : 'bi-play-fill text-success'}"></i>
+                </button>
+                <button class="btn btn-sm btn-light border btn-close-job text-danger" data-job-id="${job._id}" data-job-title="${escapeHtml(job.title)}" title="Permanently End / Close Opening">
+                  <i class="bi bi-x-octagon-fill"></i>
+                </button>
+              ` : `
+                <button class="btn btn-sm btn-light border btn-toggle-status" data-job-id="${job._id}" data-current-status="closed" title="Re-open Opening">
+                  <i class="bi bi-arrow-counterclockwise text-primary"></i>
+                </button>
+              `}
               <button class="btn btn-sm btn-light border btn-copy-link" data-job-id="${job._id}" title="Copy Student Share Link">
                 <i class="bi bi-link-45deg"></i>
               </button>
@@ -230,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
 
-    // Toggle Status Button (Active / Paused)
+    // Toggle Status Button (Active / Paused / Reopen)
     document.querySelectorAll('.btn-toggle-status').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const jobId = btn.getAttribute('data-job-id');
@@ -241,8 +291,29 @@ document.addEventListener('DOMContentLoaded', async () => {
           await window.API.patch(`/recruiter/jobs/${jobId}`, { status: nextStatus }, { auth: true });
           showAlert(`Opening status updated to "${nextStatus}"`, 'success');
           loadMyJobs();
+          loadRecruiterProfile();
         } catch (err) {
           showAlert(err.message || 'Could not update status');
+        }
+      });
+    });
+
+    // Close / End Job Opening Button
+    document.querySelectorAll('.btn-close-job').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const jobId = btn.getAttribute('data-job-id');
+        const jobTitle = btn.getAttribute('data-job-title') || 'this opening';
+        if (!confirm(`Are you sure you want to end & close "${jobTitle}"? Students will immediately no longer be able to submit applications.`)) {
+          return;
+        }
+
+        try {
+          await window.API.delete(`/recruiter/jobs/${jobId}`, { auth: true });
+          showAlert(`🛑 Opening "${jobTitle}" has been closed.`, 'info');
+          loadMyJobs();
+          loadRecruiterProfile();
+        } catch (err) {
+          showAlert(err.message || 'Could not close job opening.');
         }
       });
     });
@@ -440,6 +511,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
 
       try {
+        const deadline = document.getElementById('jobDeadlineInput')?.value || null;
+
         const response = await window.API.post('/recruiter/jobs', {
           title,
           careerSlug,
@@ -454,6 +527,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           },
           requiredSkills: parsedSkills,
           description,
+          deadline,
         }, { auth: true });
 
         btnSubmitJob.disabled = false;

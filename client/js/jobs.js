@@ -199,11 +199,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
           </div>
 
-          <!-- Footer: Application Button -->
+          <!-- Footer: Application Button & Deadline -->
           <div class="pt-3 border-top border-line d-flex align-items-center justify-content-between">
-            <span class="small text-muted font-mono" style="font-size:0.75rem;">
-              Posted by Authorized Recruiter
-            </span>
+            <div class="d-flex flex-column">
+              <span class="small text-muted font-mono" style="font-size:0.75rem;">
+                Posted by Authorized Recruiter
+              </span>
+              ${job.deadline ? `
+                <span class="small text-secondary font-mono d-inline-flex align-items-center gap-1 mt-0.5" style="font-size:0.72rem;">
+                  <i class="bi bi-clock-history text-primary"></i>
+                  <span>Apply by ${new Date(job.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                </span>
+              ` : ''}
+            </div>
 
             ${job.hasApplied
               ? `<button class="btn btn-outline-success btn-sm px-3 fw-semibold" disabled>

@@ -565,7 +565,7 @@
                   <th>WORKPLACE / LOCATION</th>
                   <th>SALARY RANGE</th>
                   <th>REQUIRED VERIFIED SKILLS</th>
-                  <th>STATUS</th>
+                  <th>STATUS &amp; DEADLINE</th>
                   <th>APPLICANTS</th>
                   <th class="pe-4 text-end">ACTIONS</th>
                 </tr>
@@ -669,6 +669,28 @@
                 <div class="col-md-6">
                   <label for="salaryMaxInput" class="form-label small fw-semibold">Maximum CTC (₹ / Annum)</label>
                   <input type="number" class="form-control" id="salaryMaxInput" value="900000" step="50000" />
+                </div>
+              </div>
+
+              <!-- Application Deadline & Auto-Expiry Window -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="jobDeadlineInput" class="form-label small fw-semibold">
+                    <i class="bi bi-calendar-event text-primary me-1"></i> Application Deadline <span class="text-danger">*</span>
+                  </label>
+                  <input type="date" class="form-control" id="jobDeadlineInput" required />
+                  <div class="form-text small" style="font-size: 0.72rem;">After this date, the opening automatically unpublishes from the student board.</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="deadlinePresetSelect" class="form-label small fw-semibold">
+                    <i class="bi bi-clock-history text-secondary me-1"></i> Quick Expiry Window
+                  </label>
+                  <select class="form-select" id="deadlinePresetSelect">
+                    <option value="15">Flash Hiring Drive (15 Days)</option>
+                    <option value="30" selected>Standard Window (30 Days)</option>
+                    <option value="60">Quarterly Pipeline (60 Days)</option>
+                    <option value="90">Campus Season (90 Days)</option>
+                  </select>
                 </div>
               </div>
 

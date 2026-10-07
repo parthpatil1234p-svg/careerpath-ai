@@ -297,7 +297,15 @@ router.get('/recruiter-openings', async (req, res, next) => {
     }
 
     const { careerSlug, workplace, level } = req.query;
-    const filter = { status: 'active' };
+    const now = new Date();
+    const filter = {
+      status: 'active',
+      $or: [
+        { deadline: { $exists: false } },
+        { deadline: null },
+        { deadline: { $gte: now } }
+      ]
+    };
     if (careerSlug) filter.careerSlug = careerSlug.toLowerCase();
     if (workplace) filter.workplace = workplace.toLowerCase();
     if (level) filter.experienceLevel = level.toLowerCase();
