@@ -56,10 +56,30 @@ const SKILL_TAXONOMY = {
   git:              { name: 'git',         displayName: 'Git & GitHub',     category: 'tools' },
 };
 
+// Cache of in-flight and recent code exchanges to prevent duplicate exchange races
+const inflightCodeExchanges = new Map();
+const recentCodeCache = new Map();
+
 /**
  * Exchange GitHub OAuth temporary code for an access token
  */
 const exchangeOAuthCode = async (code, redirectUri = null) => {
+  const cleanCode = String(code || '').trim();
+  if (!cleanCode) {
+    throw new Error('OAuth code is required');
+  }
+
+  // 1. Check if this code was recently exchanged successfully (within last 2 minutes)
+  const cached = recentCodeCache.get(cleanCode);
+  if (cached && (Date.now() - cached.timestamp < 120000) && cached.token) {
+    return cached.token;
+  }
+
+  // 2. Check if there is already an in-flight request exchanging this exact code
+  if (inflightCodeExchanges.has(cleanCode)) {
+    return await inflightCodeExchanges.get(cleanCode);
+  }
+
   const clientId = (process.env.GITHUB_CLIENT_ID || '').trim().replace(/^["']|["']$/g, '');
   const clientSecret = (process.env.GITHUB_CLIENT_SECRET || '').trim().replace(/^["']|["']$/g, '');
 
@@ -70,29 +90,64 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
   const payload = {
     client_id: clientId,
     client_secret: clientSecret,
-    code: String(code).trim(),
+    code: cleanCode,
   };
 
   if (redirectUri && typeof redirectUri === 'string' && redirectUri.trim()) {
     payload.redirect_uri = redirectUri.trim();
   }
 
-  const response = await fetch('https://github.com/login/oauth/access_token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'User-Agent': 'CareerPath-AI-Platform',
-    },
-    body: JSON.stringify(payload),
-  });
+  const doExchange = async () => {
+    try {
+      const response = await fetch('https://github.com/login/oauth/access_token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'User-Agent': 'CareerPath-AI-Platform',
+        },
+        body: JSON.stringify(payload),
+      });
 
-  const data = await response.json();
-  if (data.error) {
-    throw new Error(`GitHub OAuth error: ${data.error_description || data.error}`);
-  }
+      const data = await response.json();
+      if (data.error) {
+        // Fallback: If GitHub rejected with bad_verification_code and redirect_uri was set, retry once without redirect_uri
+        if (payload.redirect_uri && (data.error === 'bad_verification_code' || data.error === 'redirect_uri_mismatch')) {
+          const fallbackPayload = {
+            client_id: clientId,
+            client_secret: clientSecret,
+            code: cleanCode,
+          };
+          try {
+            const fallbackRes = await fetch('https://github.com/login/oauth/access_token', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'User-Agent': 'CareerPath-AI-Platform',
+              },
+              body: JSON.stringify(fallbackPayload),
+            });
+            const fallbackData = await fallbackRes.json();
+            if (!fallbackData.error && fallbackData.access_token) {
+              recentCodeCache.set(cleanCode, { token: fallbackData.access_token, timestamp: Date.now() });
+              return fallbackData.access_token;
+            }
+          } catch (e) {}
+        }
+        throw new Error(`GitHub OAuth error: ${data.error_description || data.error}`);
+      }
 
-  return data.access_token;
+      recentCodeCache.set(cleanCode, { token: data.access_token, timestamp: Date.now() });
+      return data.access_token;
+    } finally {
+      inflightCodeExchanges.delete(cleanCode);
+    }
+  };
+
+  const exchangePromise = doExchange();
+  inflightCodeExchanges.set(cleanCode, exchangePromise);
+  return await exchangePromise;
 };
 
 /**

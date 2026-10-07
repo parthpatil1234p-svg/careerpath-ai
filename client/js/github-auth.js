@@ -230,21 +230,37 @@ window.GitHubAuth = (function () {
           : (window.location.pathname === '/' ? '/index.html' : window.location.pathname))
       : '';
     const redirectUri = isLocal ? (window.location.origin + callbackPath) : '';
+    const oauthState = 'popup_' + Math.random().toString(36).substring(2, 9);
 
     try {
       localStorage.setItem('cp_gh_oauth_intent', JSON.stringify({
         isConnectOnly: Boolean(isConnectOnly),
         returnUrl: window.location.href,
         redirectUri,
+        state: oauthState,
         timestamp: Date.now()
       }));
     } catch (err) {}
 
     const authUrl = redirectUri
-      ? `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo&redirect_uri=${encodeURIComponent(redirectUri)}`
-      : `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo`;
+      ? `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(oauthState)}`
+      : `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(clientId)}&scope=read:user%20public_repo&state=${encodeURIComponent(oauthState)}`;
 
     if (setLoadingState) setLoadingState(true);
+
+    const btnEl = document.getElementById('btnGitHubAuth');
+    const origBtnHtml = btnEl ? btnEl.innerHTML : '';
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span><span>Waiting for GitHub...</span>';
+    }
+
+    const resetTriggerBtn = () => {
+      if (btnEl && origBtnHtml) {
+        btnEl.disabled = false;
+        btnEl.innerHTML = origBtnHtml;
+      }
+    };
 
     // Open centered OAuth popup window
     const width = 600;
@@ -278,6 +294,10 @@ window.GitHubAuth = (function () {
       dispatchedOAuthCodes.add(code);
       if (cleanupListeners) cleanupListeners();
 
+      if (btnEl) {
+        btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span><span>Signing In...</span>';
+      }
+
       try {
         if (popup && !popup.closed) popup.close();
       } catch (e) {}
@@ -303,13 +323,16 @@ window.GitHubAuth = (function () {
             }
             const ghUser = response.data.user.githubProfile?.username || 'user';
             notify(`✓ Real-time GitHub authentication successful! Connected @${ghUser} with verified skills.`, 'success');
+            resetTriggerBtn();
             if (onSuccess) onSuccess(response.data);
           } else {
+            resetTriggerBtn();
             notify(response.message || 'Could not verify GitHub account.', 'danger');
             if (onError) onError(response);
           }
         } catch (err) {
           if (setLoadingState) setLoadingState(false);
+          resetTriggerBtn();
           notify(err.message || 'GitHub connection error.', 'danger');
           if (onError) onError(err);
         }
@@ -318,7 +341,10 @@ window.GitHubAuth = (function () {
         sendGitHubAuthPayload({ code, redirectUri }, {
           showAlert: notify,
           setLoadingState,
-          onError,
+          onError: (err) => {
+            resetTriggerBtn();
+            if (onError) onError(err);
+          },
           onSuccess: (data) => {
             if (typeof onSuccess === 'function') {
               return onSuccess(data);
@@ -361,7 +387,7 @@ window.GitHubAuth = (function () {
     };
     window.addEventListener('storage', onStorage);
 
-    // Channel C: Polling interval (500ms)
+    // Channel C: Polling interval (300ms)
     const pollTimer = setInterval(() => {
       if (isHandled) {
         clearInterval(pollTimer);
@@ -384,9 +410,10 @@ window.GitHubAuth = (function () {
         if (!isHandled) {
           // User closed popup without authorizing
           if (setLoadingState) setLoadingState(false);
+          resetTriggerBtn();
         }
       }
-    }, 500);
+    }, 300);
 
     cleanupListeners = () => {
       window.removeEventListener('message', onMessage);
@@ -408,17 +435,15 @@ window.GitHubAuth = (function () {
   const checkAndHandleOAuthRedirect = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const oauthCode = urlParams.get('code');
+    const oauthState = urlParams.get('state') || '';
     if (!oauthCode) return;
 
     if (dispatchedOAuthCodes.has(oauthCode)) return;
     dispatchedOAuthCodes.add(oauthCode);
 
     // Detect if this page is inside a popup or was opened by window.open
-    const isPopup = Boolean(
-      (window.opener && window.opener !== window) ||
-      window.name === 'careerpath_github_oauth' ||
-      window.location.hash.includes('is_popup')
-    );
+    const isPopup = oauthState.startsWith('popup_') ||
+                    Boolean((window.opener && window.opener !== window) || window.name === 'careerpath_github_oauth');
 
     if (isPopup) {
       // 1. Post message to opener
@@ -439,7 +464,7 @@ window.GitHubAuth = (function () {
         }));
       } catch (e) {}
 
-      // 3. Briefly display confirmation in popup and close it
+      // 3. Briefly display confirmation in popup and close it immediately
       try {
         document.body.innerHTML = `
           <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;background:#0d1117;color:#fff;text-align:center;">
@@ -455,7 +480,7 @@ window.GitHubAuth = (function () {
         try {
           window.close();
         } catch (e) {}
-      }, 100);
+      }, 50);
       return;
     }
 
