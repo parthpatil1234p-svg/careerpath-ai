@@ -417,99 +417,48 @@
             </div>
           </div>
 
-          <!-- Right Column: Interactive 3D Career Universe Constellation -->
+          <!-- Right Column: Skills Employers Use Grid -->
           <div class="hero-canvas-col">
-            <div class="canvas-placeholder" id="careerUniverse">
-              <div id="canvas-container" class="w-100 h-100 position-relative">
-                <!-- 2D Fallback shown if WebGL is unavailable -->
-                <div class="canvas-placeholder-inner d-none p-4" id="careerUniverse-fallback">
-                  <div id="webgl-fallback" class="fallback-2d-container">
-                    <div class="atlas-badge mb-2">2D ROUTE CATALOG</div>
-                    <h3 class="fallback-2d-title">15 Career Atlas Waypoints</h3>
-                    <p class="fallback-2d-desc">
-                      Explore 15 high-demand technology career routes evaluated by our skill-matching algorithm.
-                    </p>
-                    <div class="fallback-career-grid">
-                      <div class="fallback-career-item">
-                        <strong>Front-End Developer</strong>
-                        <span>HTML, CSS, JS, React, Responsive</span>
-                      </div>
-                      <div class="fallback-career-item">
-                        <strong>Full-Stack Developer</strong>
-                        <span>Node.js, Express, MongoDB, REST APIs</span>
-                      </div>
-                      <div class="fallback-career-item">
-                        <strong>AI & ML Engineer</strong>
-                        <span>Python, PyTorch, Generative AI, LangChain</span>
-                      </div>
-                      <div class="fallback-career-item">
-                        <strong>DevOps & Cloud Engineer</strong>
-                        <span>AWS, Docker, Kubernetes, CI/CD</span>
-                      </div>
-                      <div class="fallback-career-item">
-                        <strong>Data Analyst & Scientist</strong>
-                        <span>SQL, Python, Pandas, Statistics</span>
-                      </div>
-                      <div class="fallback-career-item">
-                        <strong>UI/UX Designer</strong>
-                        <span>Figma, Wireframing, User Research</span>
-                      </div>
-                    </div>
-                    <div class="mt-3 text-center">
-                      <a href="assessment.html" class="btn cp-btn-primary btn-sm px-4">Begin Assessment</a>
-                    </div>
-                  </div>
+            <div class="skill-showcase" aria-label="Popular skills across technology careers">
+              <div class="skill-showcase-header">
+                <div>
+                  <span class="skill-showcase-eyebrow">Skills that move careers forward</span>
+                  <h2>Build with skills employers use</h2>
                 </div>
+                <span class="skill-count"><strong>76+</strong><span>mapped skills</span></span>
               </div>
+
+              <div class="skill-logo-grid">
+                <button class="skill-logo-card" type="button" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React">
+                  <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span><span class="skill-logo-name">React</span><span class="skill-logo-type">Frontend</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript">
+                  <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span><span class="skill-logo-name">JavaScript</span><span class="skill-logo-type">Language</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python">
+                  <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span><span class="skill-logo-name">Python</span><span class="skill-logo-type">Language</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js">
+                  <span class="skill-logo-mark node-mark" aria-hidden="true">N</span><span class="skill-logo-name">Node.js</span><span class="skill-logo-type">Backend</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma">
+                  <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span><span class="skill-logo-name">Figma</span><span class="skill-logo-type">Design</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL">
+                  <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span><span class="skill-logo-name">SQL</span><span class="skill-logo-type">Data</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS">
+                  <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span><span class="skill-logo-name">AWS</span><span class="skill-logo-type">Cloud</span>
+                </button>
+                <button class="skill-logo-card" type="button" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git">
+                  <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span><span class="skill-logo-name">Git</span><span class="skill-logo-type">Workflow</span>
+                </button>
+              </div>
+
+              <div class="skill-showcase-footer"><span class="skill-footer-dot"></span> Practical skills, matched to your career goals</div>
             </div>
           </div>
 
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================
-         POPULAR SKILLS STRIP (Interactive Skill Guides)
-         ============================================================ -->
-    <section class="py-5 bg-white border-top border-bottom border-line" id="popular-skills">
-      <div class="container">
-        <div class="skill-showcase" aria-label="Popular skills across technology careers">
-          <div class="skill-showcase-header">
-            <div>
-              <span class="skill-showcase-eyebrow">Skills that move careers forward</span>
-              <h2>Build with skills employers use</h2>
-            </div>
-            <span class="skill-count"><strong>76+</strong><span>mapped skills</span></span>
-          </div>
-
-          <div class="skill-logo-grid">
-            <button class="skill-logo-card" type="button" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React">
-              <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span><span class="skill-logo-name">React</span><span class="skill-logo-type">Frontend</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript">
-              <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span><span class="skill-logo-name">JavaScript</span><span class="skill-logo-type">Language</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python">
-              <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span><span class="skill-logo-name">Python</span><span class="skill-logo-type">Language</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js">
-              <span class="skill-logo-mark node-mark" aria-hidden="true">N</span><span class="skill-logo-name">Node.js</span><span class="skill-logo-type">Backend</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma">
-              <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span><span class="skill-logo-name">Figma</span><span class="skill-logo-type">Design</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL">
-              <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span><span class="skill-logo-name">SQL</span><span class="skill-logo-type">Data</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS">
-              <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span><span class="skill-logo-name">AWS</span><span class="skill-logo-type">Cloud</span>
-            </button>
-            <button class="skill-logo-card" type="button" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git">
-              <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span><span class="skill-logo-name">Git</span><span class="skill-logo-type">Workflow</span>
-            </button>
-          </div>
-
-          <div class="skill-showcase-footer"><span class="skill-footer-dot"></span> Practical skills, matched to your career goals</div>
         </div>
       </div>
     </section>
@@ -2408,9 +2357,8 @@
     <script src="js/stats-counter.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
-    <script src="js/search-engine.js?v=3.0"></script>
-    <script src="js/three-career-universe.js?v=3.0"></script>
-    <script src="js/main.js?v=3.0"></script>
+    <script src="js/search-engine.js?v=3.1"></script>
+    <script src="js/main.js?v=3.1"></script>
     <script src="js/skill-guides.js"></script>
     <script src="js/chat.js"></script>
   </body>
