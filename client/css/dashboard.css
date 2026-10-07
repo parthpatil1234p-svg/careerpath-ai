@@ -1829,11 +1829,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* Passed Tile (Fresh Mint / Emerald) */
+/* Passed Tile (Crisp White Card / Emerald Accent & Glow) */
 .job-ready-tile.tile-passed {
-  background: #F0FDF4 !important;
-  border: 1.5px solid #4ADE80 !important;
-  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.08);
+  background: #FFFFFF !important;
+  border: 1.5px solid #22C55E !important;
+  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.12) !important;
 }
 
 .job-ready-tile.tile-passed .tile-title {
@@ -1844,13 +1844,13 @@
 }
 
 .job-ready-tile.tile-passed .tile-badge {
-  background: #15803D !important;
+  background: #16A34A !important;
   color: #FFFFFF !important;
-  border: 1px solid #166534 !important;
+  border: 1px solid #15803D !important;
   font-family: var(--font-body, inherit);
   font-size: 0.7rem;
   font-weight: 700;
-  padding: 0.2rem 0.55rem;
+  padding: 0.22rem 0.55rem;
   border-radius: 9999px;
   letter-spacing: 0.03em;
 }
@@ -1859,15 +1859,15 @@
   color: #15803D !important;
   font-family: var(--font-body, inherit);
   font-weight: 800;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   line-height: 1.2;
   margin-top: 0.4rem;
 }
 
 .job-ready-tile.tile-passed .tile-target {
   color: #166534 !important;
-  opacity: 0.9;
-  font-size: 0.75rem;
+  opacity: 0.95;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
