@@ -188,6 +188,52 @@ const healthHandler = (req, res) => {
 app.get('/health', healthHandler);
 app.get('/api/health', healthHandler);
 
+// ── Machine-Readable AI Search & Bot Discovery Handlers ──────
+// Directly serves llms.txt, llms-full.txt, robots.txt, and sitemap.xml to crawlers (Perplexity, ChatGPT, Claude)
+const path = require('path');
+const fs = require('fs');
+const clientDir = path.resolve(__dirname, '..', 'client');
+
+app.get('/llms.txt', (req, res) => {
+  const filePath = path.join(clientDir, 'llms.txt');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Not Found');
+});
+
+app.get('/llms-full.txt', (req, res) => {
+  const filePath = path.join(clientDir, 'llms-full.txt');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Not Found');
+});
+
+app.get('/robots.txt', (req, res) => {
+  const filePath = path.join(clientDir, 'robots.txt');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('User-agent: *\nAllow: /');
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const filePath = path.join(clientDir, 'sitemap.xml');
+  if (fs.existsSync(filePath)) {
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(filePath);
+  }
+  res.status(404).send('Not Found');
+});
+
 // ── Rate Limiting: protect API from brute-force without choking legitimate users ────
 const isDev = process.env.NODE_ENV === 'development';
 const apiLimiter = rateLimit({
