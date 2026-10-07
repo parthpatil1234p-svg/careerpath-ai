@@ -1178,6 +1178,28 @@
 }
 
 /* Domain Badges & Tags */
+.badge-cyan {
+  background: #E0F2FE !important;
+  color: #0369A1 !important;
+  border: 1px solid #BAE6FD !important;
+}
+
+.tag-cyan {
+  background: #F0F9FF !important;
+  color: #0284C7 !important;
+  border: 1px solid #E0F2FE !important;
+}
+
+.btn-cyan-outline {
+  border-color: #0284C7 !important;
+  color: #0369A1 !important;
+}
+
+.btn-cyan-outline:hover {
+  background: #0284C7 !important;
+  color: #FFFFFF !important;
+}
+
 .badge-gold {
   background: #FEF3C7 !important;
   color: #B45309 !important;

@@ -152,6 +152,13 @@ small, .small {
   font-family: var(--font-mono) !important;
 }
 
+.font-mono i,
+.font-mono .bi,
+.font-mono [class*="bi-"] {
+  font-family: "bootstrap-icons" !important;
+  font-style: normal;
+}
+
 /* Radiant Indigo-Blue Highlight Utilities */
 .gradient-text,
 .brand-accent,
