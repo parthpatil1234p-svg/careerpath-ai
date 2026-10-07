@@ -334,6 +334,110 @@ function initRecruiterLandingExperience() {
 }
 
 // ============================================================
+// 7. Institutional Campus OS Demo Request Modal Handler
+// ============================================================
+function initCampusDemoModal() {
+  const form = document.getElementById('campusDemoForm');
+  if (!form) return;
+
+  const alertBox = document.getElementById('campusDemoAlert');
+  const submitBtn = document.getElementById('btnCampusDemoSubmit');
+  const spinner = document.getElementById('campusDemoSpinner');
+  const submitText = document.getElementById('campusDemoSubmitText');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Reset previous alert
+    if (alertBox) {
+      alertBox.className = 'd-none alert alert-dismissible fade show';
+      alertBox.textContent = '';
+    }
+
+    const collegeName = document.getElementById('campusCollegeName')?.value?.trim();
+    const cityState = document.getElementById('campusCityState')?.value?.trim() || '';
+    const contactPerson = document.getElementById('campusContactPerson')?.value?.trim();
+    const designation = document.getElementById('campusDesignation')?.value || 'TPO';
+    const email = document.getElementById('campusEmail')?.value?.trim();
+    const phone = document.getElementById('campusPhone')?.value?.trim();
+    const batchSize = document.getElementById('campusBatchSize')?.value || '300-800';
+    const preferredDemoDate = document.getElementById('campusDemoDate')?.value || null;
+    const notes = document.getElementById('campusNotes')?.value?.trim() || '';
+
+    if (!collegeName || !contactPerson || !email || !phone) {
+      if (alertBox) {
+        alertBox.className = 'alert alert-danger alert-dismissible fade show';
+        alertBox.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>Please fill in all mandatory fields (*).';
+      }
+      return;
+    }
+
+    // Set UI loading state
+    if (submitBtn) submitBtn.disabled = true;
+    if (spinner) spinner.classList.remove('d-none');
+    if (submitText) submitText.innerHTML = 'Submitting...';
+
+    try {
+      const apiBase = (window.CONFIG && window.CONFIG.API_BASE_URL) || 'http://localhost:5000/api';
+      const endpoint = `${apiBase}/campus/demo-request`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          collegeName,
+          cityState,
+          contactPerson,
+          designation,
+          email,
+          phone,
+          batchSize,
+          preferredDemoDate,
+          notes,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        if (alertBox) {
+          alertBox.className = 'alert alert-success alert-dismissible fade show';
+          alertBox.innerHTML = `
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-check-circle-fill text-success fs-5"></i>
+              <div>
+                <strong>Demo Request Confirmed!</strong>
+                <div>Our Academic Partnerships Director will email <em>${email}</em> and WhatsApp <em>${phone}</em> within 24 hours to coordinate your custom NAAC gap heatmap briefing.</div>
+              </div>
+            </div>
+          `;
+        }
+        form.reset();
+
+        // Also update the stats counter on the page if present
+        const statsEl = document.getElementById('statsPartnerColleges');
+        if (statsEl) {
+          statsEl.textContent = '42+';
+        }
+      } else {
+        throw new Error(result.message || 'Failed to submit demo request. Please try again.');
+      }
+    } catch (err) {
+      if (alertBox) {
+        alertBox.className = 'alert alert-danger alert-dismissible fade show';
+        alertBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${err.message || 'Network error connecting to campus service. Please try again or email campus@careerpathai.com'}`;
+      }
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+      if (spinner) spinner.classList.add('d-none');
+      if (submitText) submitText.innerHTML = '<i class="bi bi-send-fill me-1"></i> Submit Demo Request';
+    }
+  });
+}
+
+// ============================================================
 // Init
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -344,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDomainFilter();
   initCareerSearch();
   initRecruiterLandingExperience();
+  initCampusDemoModal();
 
   console.log(
     '%cCareerPath AI Technologies Inc. | Autonomous Career GPS & Verified Talent Operating System',
