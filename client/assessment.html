@@ -541,9 +541,12 @@
               <!-- Top Selected Skills Summary Box (Visible immediately above grid) -->
               <div class="selected-skills-box mb-2 py-2 px-3 rounded-2 stat-box-atlas border border-line" id="topSelectedSkillsBox">
                 <div class="d-flex justify-content-between align-items-center mb-1.5 flex-wrap gap-2">
-                  <span class="small fw-bold text-ink d-flex align-items-center gap-1.5">
+                  <span class="small fw-bold text-ink d-flex align-items-center gap-1.5 flex-wrap">
                     <i class="bi bi-check2-circle text-success fs-6"></i>
                     <span>Your Selected Skills (<span id="selectedSkillsCount">0</span>/20):</span>
+                    <span id="realtimeSyncIndicator" class="badge bg-success-subtle text-success border border-success font-mono px-2 py-0.5 ms-1" style="font-size: 0.75rem; transition: all 0.25s ease;">
+                      <i class="bi bi-cloud-check-fill text-success"></i> Synced in real-time
+                    </span>
                   </span>
                   <div class="d-flex align-items-center gap-2">
                     <span id="topQuizStatusHint" class="badge badge-teal small d-none">
@@ -572,7 +575,7 @@
                   <span class="small fw-semibold text-ink" style="font-size: 0.84rem;">
                     <i class="bi bi-plus-circle-dotted text-teal me-1"></i> Don't see your skill? Add Custom Skill
                   </span>
-                  <span class="badge badge-navy small" style="font-size: 0.68rem;">Universal Skill Input</span>
+                  <span class="badge badge-navy small" style="font-size: 0.75rem;">Universal Skill Input</span>
                 </div>
                 <div class="row g-2 align-items-center">
                   <div class="col-12 col-md-5">

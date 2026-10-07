@@ -1388,6 +1388,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/'/g, '&#039;');
   }
 
+  // ── Real-Time Skills Synchronization Listener ─────────────────
+  if (typeof BroadcastChannel !== 'undefined') {
+    const realTimeChannel = new BroadcastChannel('careerpath_realtime_channel');
+    realTimeChannel.onmessage = (e) => {
+      if (e.data?.type === 'SKILLS_UPDATED') {
+        loadRecommendations();
+      }
+    };
+  }
+
+  window.addEventListener('careerpath-skills-updated', () => {
+    loadRecommendations();
+  });
+
   // Load recommendations
   loadRecommendations();
 });

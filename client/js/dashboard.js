@@ -3395,6 +3395,52 @@ document.addEventListener('DOMContentLoaded', async () => {
       .replace(/'/g, '&#039;');
   }
 
+  // ── Real-Time Skills Synchronization Listener ─────────────────
+  const handleRealtimeSkillsUpdate = (updatedSkills) => {
+    if (!Array.isArray(updatedSkills)) return;
+    if (dashboardData && dashboardData.user) {
+      dashboardData.user.skills = updatedSkills;
+    }
+    const user = window.Auth?.getUser();
+    if (user) {
+      user.skills = updatedSkills;
+      window.Auth.setCurrentUser(user);
+    }
+    if (userSkillsCount) {
+      userSkillsCount.innerHTML = `<i class="bi bi-cpu-fill text-info me-1"></i> ${updatedSkills.length} Skills Logged`;
+    }
+    if (typeof loadSkillEvidenceLedger === 'function') {
+      loadSkillEvidenceLedger();
+    }
+    if (typeof loadJobReadiness === 'function') {
+      loadJobReadiness();
+    }
+  };
+
+  window.addEventListener('careerpath-skills-updated', (e) => {
+    if (e.detail?.skills) {
+      handleRealtimeSkillsUpdate(e.detail.skills);
+    }
+  });
+
+  if (typeof BroadcastChannel !== 'undefined') {
+    const realTimeChannel = new BroadcastChannel('careerpath_realtime_channel');
+    realTimeChannel.onmessage = (e) => {
+      if (e.data?.type === 'SKILLS_UPDATED' && Array.isArray(e.data.skills)) {
+        handleRealtimeSkillsUpdate(e.data.skills);
+      }
+    };
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'cp_skills_last_synced' || e.key === 'careerpath_user') {
+      const u = window.Auth?.getUser();
+      if (u?.skills) {
+        handleRealtimeSkillsUpdate(u.skills);
+      }
+    }
+  });
+
   // Initialize and load dashboard
   setupMockInterview();
   setupCertificateModal();

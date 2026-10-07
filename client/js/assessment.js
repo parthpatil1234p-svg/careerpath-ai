@@ -878,9 +878,119 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  // ── Real-Time Synchronization Engine & Indicators ────────────
+  let isPreloadingProfile = true;
+  let realtimeSyncDebounceTimer = null;
+  const realtimeBroadcastChannel = (typeof window !== 'undefined' && 'BroadcastChannel' in window)
+    ? new BroadcastChannel('careerpath_realtime_channel')
+    : null;
+
+  const setRealtimeSyncIndicator = (state, label) => {
+    const indicator = document.getElementById('realtimeSyncIndicator');
+    if (!indicator) return;
+
+    if (state === 'syncing') {
+      indicator.className = 'badge bg-primary-subtle text-primary border border-primary font-mono px-2 py-0.5 ms-1';
+      indicator.innerHTML = `<span class="spinner-border spinner-border-sm me-1" style="width: 0.65rem; height: 0.65rem;" role="status"></span> ${escapeHtml(label || 'Updating live...')}`;
+    } else if (state === 'synced') {
+      indicator.className = 'badge bg-success-subtle text-success border border-success font-mono px-2 py-0.5 ms-1';
+      indicator.innerHTML = `<i class="bi bi-cloud-check-fill text-success me-1"></i> ${escapeHtml(label || 'Synced in real-time')}`;
+    } else if (state === 'local') {
+      indicator.className = 'badge bg-secondary-subtle text-secondary border border-secondary font-mono px-2 py-0.5 ms-1';
+      indicator.innerHTML = `<i class="bi bi-hdd-fill text-secondary me-1"></i> ${escapeHtml(label || 'Saved locally')}`;
+    } else if (state === 'warning') {
+      indicator.className = 'badge bg-warning-subtle text-warning border border-warning font-mono px-2 py-0.5 ms-1';
+      indicator.innerHTML = `<i class="bi bi-exclamation-triangle-fill text-warning me-1"></i> ${escapeHtml(label || 'Offline')}`;
+    }
+  };
+
+  const syncSkillsToBackendRealTime = () => {
+    if (isPreloadingProfile) {
+      setRealtimeSyncIndicator('synced', 'Synced in real-time');
+      return;
+    }
+
+    setRealtimeSyncIndicator('syncing', 'Updating live...');
+
+    if (realtimeSyncDebounceTimer) {
+      clearTimeout(realtimeSyncDebounceTimer);
+    }
+
+    realtimeSyncDebounceTimer = setTimeout(async () => {
+      try {
+        const skillsArray = Array.from(selectedSkillsMap.values()).map((s) => {
+          const prof = String(s.proficiency || 'intermediate').toLowerCase();
+          const validProf = ['beginner', 'intermediate', 'advanced'].includes(prof) ? prof : 'intermediate';
+          return {
+            name: String(s.name || '').toLowerCase().trim(),
+            displayName: s.displayName || s.name,
+            category: s.category || 'tool',
+            proficiency: validProf,
+            selfRatedProficiency: String(s.selfRatedProficiency || validProf).toLowerCase(),
+            verifiedProficiency: s.verifiedProficiency ? String(s.verifiedProficiency).toLowerCase() : null,
+            isQuizVerified: Boolean(s.isQuizVerified),
+            quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
+            quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
+            isCodeVerified: Boolean(s.isCodeVerified),
+            verifiedSource: s.verifiedSource || 'self',
+          };
+        });
+
+        // 1. Update client Auth cached user
+        const user = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                     (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
+        if (user) {
+          user.skills = skillsArray;
+          if (typeof window.Auth?.setCurrentUser === 'function') {
+            window.Auth.setCurrentUser(user);
+          }
+        }
+
+        // 2. Save persistent local draft
+        if (typeof saveAutoDraft === 'function') {
+          saveAutoDraft();
+        }
+
+        // 3. Broadcast real-time skills event across components and tabs
+        try {
+          window.dispatchEvent(new CustomEvent('careerpath-skills-updated', { detail: { skills: skillsArray } }));
+          if (realtimeBroadcastChannel) {
+            realtimeBroadcastChannel.postMessage({ type: 'SKILLS_UPDATED', skills: skillsArray, timestamp: Date.now() });
+          }
+          localStorage.setItem('cp_skills_last_synced', Date.now().toString());
+        } catch (bcErr) {
+          console.warn('Skills broadcast warning:', bcErr);
+        }
+
+        // 4. Persist to MongoDB backend if authenticated
+        const isAuth = typeof window.Auth?.isAuthenticated === 'function' && window.Auth.isAuthenticated();
+        if (isAuth && window.API?.put) {
+          const res = await window.API.put('/users/me', { skills: skillsArray }, { auth: true });
+          if (res?.success && res.data?.user) {
+            if (typeof window.Auth?.setCurrentUser === 'function') {
+              window.Auth.setCurrentUser(res.data.user);
+            }
+          }
+          setRealtimeSyncIndicator('synced', 'Synced in real-time');
+        } else {
+          setRealtimeSyncIndicator('local', 'Saved locally');
+        }
+
+        if (typeof updateGitHubButtonState === 'function') {
+          updateGitHubButtonState();
+        }
+      } catch (err) {
+        console.warn('Real-time sync to backend warning:', err.message);
+        setRealtimeSyncIndicator('local', 'Saved locally');
+      }
+    }, 350);
+  };
+
   // 7. Render Available Skills Grid
   const renderSkillsGrid = () => {
     if (!skillsGrid) return;
+    const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                        (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null) || null;
     skillsGrid.innerHTML = '';
 
     const filtered = allAvailableSkills.filter((skill) => {
@@ -946,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const col = document.createElement('div');
       col.className = 'col-12 col-lg-6';
       col.innerHTML = `
-        <div class="skill-picker-card ${isSelected ? 'active-skill' : ''}">
+        <div class="skill-picker-card ${isSelected ? 'active-skill' : ''}" style="cursor: pointer;">
           <div class="d-flex align-items-center justify-content-between gap-2 w-100">
             <div class="form-check m-0 flex-grow-1 d-flex align-items-center gap-2" style="min-width: 0;">
               <input
@@ -976,8 +1086,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       `;
 
+      const card = col.querySelector('.skill-picker-card');
       const checkbox = col.querySelector('.skill-checkbox');
       const select = col.querySelector('.skill-proficiency-select');
+
+      // Allow clicking the card anywhere (except inside select, button, input) to toggle skill
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('select') || e.target.closest('button') || e.target.closest('input') || e.target.closest('label') || e.target.closest('a')) {
+          return;
+        }
+        checkbox.checked = !checkbox.checked;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      });
 
       checkbox.addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -1022,8 +1142,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         updateSelectedSkillsUI();
         renderSkillsGrid();
-        renderProveSkillsPanel();
-        if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
       select.addEventListener('change', (e) => {
@@ -1033,8 +1151,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           item.selfRatedProficiency = e.target.value;
         }
         updateSelectedSkillsUI();
-        renderProveSkillsPanel();
-        if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
       const gridTakeQuizBtn = col.querySelector('.btn-grid-take-quiz');
@@ -1075,8 +1191,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             updateSelectedSkillsUI();
             renderSkillsGrid();
-            renderProveSkillsPanel();
-            if (typeof saveAutoDraft === 'function') saveAutoDraft();
           }
 
           startSkillCheck(skill.name);
@@ -1111,6 +1225,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const topHint = document.getElementById('topQuizStatusHint');
       if (topHint) topHint.classList.add('d-none');
       renderProveSkillsPanel();
+      syncSkillsToBackendRealTime();
+      if (typeof updateGitHubButtonState === 'function') {
+        updateGitHubButtonState();
+      }
       return;
     }
 
@@ -1169,17 +1287,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       pill.querySelector('.bi-x').addEventListener('click', () => {
+        const sKey = (skill.name || '').toLowerCase().trim();
+        selectedSkillsMap.delete(sKey);
         selectedSkillsMap.delete(skill.name);
         updateSelectedSkillsUI();
         renderSkillsGrid();
-        renderProveSkillsPanel();
-        if (typeof saveAutoDraft === 'function') saveAutoDraft();
       });
 
       selectedSkillsSummary.appendChild(pill);
     });
 
     renderProveSkillsPanel();
+    syncSkillsToBackendRealTime();
+    if (typeof updateGitHubButtonState === 'function') {
+      updateGitHubButtonState();
+    }
   };
 
   // --- Verification Gate: Prove Your Skills Panel Logic ---
@@ -2651,11 +2773,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) || 
                  (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null) || 
                  null;
-    const connectedGhUser = user?.githubProfile?.username;
+    const connectedGhUser = user?.githubProfile?.username || user?.githubUsername;
+    const verifiedSkillsCount = Array.from(selectedSkillsMap.values()).filter(s => s.isCodeVerified || s.isQuizVerified).length;
 
     if (connectedGhUser) {
       if (btnAutoDetectGitHubText) {
-        btnAutoDetectGitHubText.textContent = `Auto-Detect from @${connectedGhUser}`;
+        btnAutoDetectGitHubText.textContent = verifiedSkillsCount > 0
+          ? `@${connectedGhUser} (${verifiedSkillsCount} Verified)`
+          : `Auto-Detect from @${connectedGhUser}`;
       }
       if (btnChangeGitHubAccount) {
         btnChangeGitHubAccount.classList.remove('d-none');
@@ -2663,7 +2788,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } else {
       if (btnAutoDetectGitHubText) {
-        btnAutoDetectGitHubText.textContent = 'Auto-Detect from GitHub Repos';
+        btnAutoDetectGitHubText.textContent = verifiedSkillsCount > 0
+          ? `Auto-Detect GitHub (${verifiedSkillsCount} Verified)`
+          : 'Auto-Detect from GitHub Repos';
       }
       if (btnChangeGitHubAccount) {
         btnChangeGitHubAccount.classList.add('d-none');
@@ -3070,6 +3197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     updateStepUI(targetStep);
+    isPreloadingProfile = false;
   };
 
   // 11. Form Submission
