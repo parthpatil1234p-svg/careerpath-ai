@@ -144,6 +144,10 @@ function initDomainFilter() {
         trackBlocks.forEach((block) => {
           block.classList.remove('d-none');
           block.style.opacity = '1';
+          block.querySelectorAll('.career-card').forEach((card) => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          });
         });
       } else {
         trackBlocks.forEach((block) => {
@@ -151,6 +155,10 @@ function initDomainFilter() {
           if (blockDomain === target) {
             block.classList.remove('d-none');
             block.style.opacity = '1';
+            block.querySelectorAll('.career-card').forEach((card) => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            });
           } else {
             block.classList.add('d-none');
           }
