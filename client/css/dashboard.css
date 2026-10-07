@@ -55,7 +55,7 @@
   background: #FFFFFF;
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 20px;
-  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
   position: relative;
   overflow: hidden;
   padding: 1.5rem 1.75rem;
@@ -68,7 +68,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #4F46E5 0%, #06B6D4 100%);
+  background: linear-gradient(90deg, #0284C7 0%, #0D9488 100%);
 }
 
 .dashboard-avatar-container {
@@ -84,8 +84,8 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
-  color: #4F46E5;
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  color: #0284C7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +101,7 @@
 
 .dashboard-avatar:hover {
   transform: scale(1.04);
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.16), 0 0 0 1px #C7D2FE;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08), 0 0 0 1px #BAE6FD;
 }
 
 .dashboard-avatar img {
@@ -119,12 +119,12 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #4F46E5;
+  background: #0284C7;
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   cursor: pointer;
   border: 2px solid #FFFFFF;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
@@ -133,15 +133,15 @@
 }
 
 .avatar-upload-trigger:hover {
-  background: #4338CA;
+  background: #0369A1;
   transform: scale(1.12);
 }
 
 /* Verified Student Badge */
 .badge-verified-student {
-  background: #EEF2FF !important;
-  border: 1px solid #C7D2FE !important;
-  color: #4338CA !important;
+  background: #F0F9FF !important;
+  border: 1px solid #BAE6FD !important;
+  color: #0369A1 !important;
   font-family: var(--font-body) !important;
   font-size: 0.76rem !important;
   font-weight: 600 !important;
@@ -202,13 +202,13 @@
 
 .status-toggle-btn.active {
   background: #FFFFFF !important;
-  color: #4338CA !important;
+  color: #0369A1 !important;
   font-weight: 700 !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04) !important;
 }
 
 .status-toggle-btn.active i {
-  color: #4F46E5 !important;
+  color: #0284C7 !important;
 }
 
 /* Profile Metadata Line */
@@ -235,13 +235,13 @@
 }
 
 .profile-resume-pill {
-  color: #4F46E5 !important;
+  color: #0369A1 !important;
   font-weight: 600;
   text-decoration: none !important;
   padding: 2px 9px;
-  background: #EEF2FF;
+  background: #F0F9FF;
   border-radius: 9999px;
-  border: 1px solid #C7D2FE;
+  border: 1px solid #BAE6FD;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -250,13 +250,13 @@
 }
 
 .profile-resume-pill:hover {
-  background: #E0E7FF;
-  color: #4338CA !important;
+  background: #E0F2FE;
+  color: #0369A1 !important;
 }
 
 /* Profile Header Action Buttons */
 .btn-profile-primary {
-  background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%) !important;
+  background: linear-gradient(135deg, #0284C7 0%, #0D9488 100%) !important;
   color: #FFFFFF !important;
   font-family: var(--font-body);
   font-size: 0.82rem !important;
@@ -264,18 +264,18 @@
   padding: 0.48rem 1.15rem !important;
   border-radius: 9999px !important;
   border: none !important;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.28) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 0.45rem !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
   white-space: nowrap !important;
 }
 
 .btn-profile-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.38) !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.16) !important;
   color: #FFFFFF !important;
 }
 
@@ -313,7 +313,7 @@
 }
 
 .avatar-upload-trigger:hover {
-  background: var(--color-indigo-700);
+  background: #0369A1;
   transform: scale(1.1);
 }
 
@@ -346,7 +346,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-indigo-600), var(--color-cyan-600));
+  background: linear-gradient(90deg, #0284C7, #0D9488);
 }
 
 /* Stat Box */
@@ -372,7 +372,7 @@
   font-weight: 800;
   font-size: 1.55rem;
   line-height: 1.1;
-  color: var(--color-indigo-700);
+  color: #0369A1;
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
@@ -398,16 +398,6 @@
   height: 100%;
 }
 
-.journey-canvas-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient-primary);
-}
-
 #progress-orb {
   cursor: default;
   margin: 0 auto;
@@ -425,6 +415,7 @@
   border: 1px solid #BAE6FD;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
+  padding: 1.25rem 1.5rem !important;
 }
 
 /* Dashboard Task List */
@@ -458,7 +449,7 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: var(--color-indigo-600);
+  accent-color: #0284C7;
   flex-shrink: 0;
 }
 
@@ -511,9 +502,9 @@
 
 /* Badge Types & Priorities */
 .badge-type-concept {
-  background: var(--color-surface-indigo);
-  color: var(--color-indigo-700);
-  border: 1px solid #C7D2FE;
+  background: #F0F9FF;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
 }
 
 .badge-type-practical {
@@ -698,7 +689,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
 }
 
 .readiness-gauge-inner {
@@ -723,7 +714,6 @@
 .readiness-meter-fill {
   height: 100%;
   border-radius: 4px;
-  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .badge-tier-foundational {
@@ -748,7 +738,7 @@
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(14, 165, 233, 0.25));
   color: #6EE7B7;
   border: 1px solid #10B981;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
 }
 
 /* 2. Resume AI Lab Card */
@@ -797,8 +787,8 @@
 
 .bullet-rewrite-card {
   background: #F8FAFC;
-  border-left: 3px solid #0EA5E9;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-sm);
   padding: 0.85rem 1rem;
   font-size: 0.85rem;
   color: #334155;
@@ -816,7 +806,7 @@
 .matched-job-card:hover {
   transform: translateY(-2px);
   border-color: #0EA5E9;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.08);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .job-match-badge {
@@ -879,7 +869,7 @@
   border-radius: 8px;
   padding: 2.5rem 2rem;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
   color: #1E293B;
   font-family: 'Inter', serif;
 }
@@ -898,11 +888,12 @@
   border-radius: 50%;
   background: radial-gradient(circle, #FDE68A 0%, #D97706 100%);
   border: 3px solid #FFFDF9;
-  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+  padding: 6px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #78350F;
+  color: #291500;
   font-size: 1.8rem;
 }
 
@@ -945,7 +936,7 @@
   background: radial-gradient(circle at 50% 0%, #111C35 0%, #080D1A 60%, #03060E 100%) !important;
   color: #F8FAFC !important;
   border: 1px solid rgba(56, 189, 248, 0.3) !important;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.18) !important;
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.75) !important;
   border-radius: 16px !important;
   overflow: hidden;
 }
@@ -976,7 +967,7 @@
   border: 1px solid rgba(239, 68, 68, 0.45) !important;
   color: #F87171 !important;
   font-family: var(--font-mono, monospace);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.8px;
   padding: 0.22rem 0.65rem;
@@ -984,7 +975,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
 .chamber-beacon-dot {
@@ -993,14 +984,6 @@
   background-color: #EF4444;
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 8px #EF4444;
-  animation: beaconPulse 1.5s infinite;
-}
-
-@keyframes beaconPulse {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.7; }
 }
 
 /* Telemetry Header Chips */
@@ -1019,7 +1002,7 @@
 .chamber-meta-label {
   color: #94A3B8;
   font-weight: 700;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   letter-spacing: 0.8px;
 }
 
@@ -1061,7 +1044,7 @@
 #mockInterviewModal .voice-select-pill:hover,
 #mockInterviewModal .voice-select-pill:focus-within {
   border-color: #38BDF8 !important;
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3) !important;
 }
 
 #mockInterviewModal .chamber-voice-select,
@@ -1124,32 +1107,22 @@
   background: rgba(6, 182, 212, 0.25) !important;
   border-color: #38BDF8 !important;
   color: #FFFFFF !important;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3) !important;
 }
 
 /* Question Prompt HUD Card */
 .interview-hud-card {
+  padding: 1.25rem 1.5rem !important;
   background: rgba(11, 17, 32, 0.9) !important;
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.08) 0%, transparent 45%),
     linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(7, 11, 22, 0.95) 100%) !important;
   border: 1px solid rgba(56, 189, 248, 0.3) !important;
   border-radius: 14px !important;
-  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.75), 0 0 25px rgba(56, 189, 248, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
   position: relative;
   overflow: hidden;
-}
-
-.interview-hud-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3.5px;
-  height: 100%;
-  background: linear-gradient(180deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
 }
 
 .chamber-category-badge {
@@ -1157,12 +1130,11 @@
   border: 1px solid rgba(56, 189, 248, 0.45) !important;
   color: #38BDF8 !important;
   font-family: var(--font-mono, monospace) !important;
-  font-size: 0.68rem !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.8px !important;
   padding: 0.26rem 0.65rem !important;
   border-radius: 6px !important;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.22) !important;
   text-transform: uppercase !important;
 }
 
@@ -1170,14 +1142,14 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(14, 165, 233, 0.25) 100%);
   border: 1.5px solid rgba(56, 189, 248, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #38BDF8;
   font-size: 1.4rem;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1188,8 +1160,8 @@
 }
 
 @keyframes avatarVoiceGlow {
-  0% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); border-color: rgba(56, 189, 248, 0.5); }
-  100% { box-shadow: 0 0 28px rgba(56, 189, 248, 0.85); border-color: #38BDF8; color: #FFFFFF; }
+  0% { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.4); border-color: rgba(56, 189, 248, 0.5); }
+  100% { box-shadow: 0 4px 16px rgba(15, 23, 42, 0.6); border-color: #38BDF8; color: #FFFFFF; }
 }
 
 #mockInterviewModal #currentQuestionText {
@@ -1207,11 +1179,15 @@
   gap: 2.5px;
   height: 20px;
   padding: 3px 8px;
+.interview-audio-spectrum {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  padding: 4px 8px;
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 9999px;
   vertical-align: middle;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
 }
 
 .interview-audio-spectrum .spectrum-bar {
@@ -1219,18 +1195,16 @@
   height: 5px;
   background: #38BDF8;
   border-radius: 2px;
-  animation: spectrumBounce 0.75s ease-in-out infinite alternate;
 }
 
 .interview-audio-spectrum.mic-active {
   border-color: rgba(239, 68, 68, 0.6);
   background: rgba(239, 68, 68, 0.18);
-  box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
 }
 
 .interview-audio-spectrum.mic-active .spectrum-bar {
   background: #EF4444;
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
+  animation: spectrumBounce 0.75s ease-in-out infinite alternate;
 }
 
 .interview-audio-spectrum .spectrum-bar:nth-child(1) { height: 4px; animation-delay: 0.1s; }
@@ -1270,8 +1244,8 @@
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3) !important;
-  font-size: 0.72rem !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2) !important;
+  font-size: 0.75rem !important;
 }
 
 /* Micro Start Voice Answer Button */
@@ -1296,7 +1270,7 @@
   background: rgba(239, 68, 68, 0.25) !important;
   border-color: #EF4444 !important;
   color: #FFFFFF !important;
-  box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25) !important;
 }
 
 #mockInterviewModal #btnToggleMic.btn-danger,
@@ -1304,14 +1278,14 @@
   background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%) !important;
   border-color: #EF4444 !important;
   color: #FFFFFF !important;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.65) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3) !important;
   animation: micPulseGlow 1.5s infinite !important;
 }
 
 @keyframes micPulseGlow {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(15, 23, 42, 0.3); }
+  70% { box-shadow: 0 0 0 10px rgba(15, 23, 42, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(15, 23, 42, 0); }
 }
 
 /* Candidate Response Textarea */
@@ -1329,7 +1303,7 @@
 
 #mockInterviewModal #interviewAnswerInput:focus {
   border-color: #38BDF8 !important;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25), inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.25), inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
   outline: none !important;
 }
 
@@ -1347,7 +1321,7 @@
 #mockInterviewModal #answerCharCount,
 #mockInterviewModal .interview-char-badge {
   font-family: var(--font-mono, monospace) !important;
-  font-size: 0.74rem !important;
+  font-size: 0.75rem !important;
   color: #38BDF8 !important;
   background: rgba(56, 189, 248, 0.1) !important;
   border: 1px solid rgba(56, 189, 248, 0.3) !important;
@@ -1363,7 +1337,7 @@
   background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.14) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
   border: 1px solid rgba(52, 211, 153, 0.35) !important;
   border-radius: 12px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.12) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
 }
 
 #mockInterviewModal #evalScoreBadge {
@@ -1375,7 +1349,7 @@
   font-weight: 700 !important;
   padding: 0.3rem 0.75rem !important;
   border-radius: 6px !important;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1) !important;
 }
 
 #mockInterviewModal .eval-score-tile {
@@ -1388,7 +1362,7 @@
 
 #mockInterviewModal .eval-score-label {
   color: #94A3B8 !important;
-  font-size: 0.65rem !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.6px !important;
 }
@@ -1441,7 +1415,7 @@
   font-weight: 700 !important;
   font-size: 0.85rem !important;
   padding: 0.48rem 1.45rem !important;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25) !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
   letter-spacing: 0.3px !important;
   display: inline-flex !important;
@@ -1451,7 +1425,7 @@
 #mockInterviewModal .chamber-submit-btn:hover,
 #mockInterviewModal #btnSubmitAnswer:hover {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35) !important;
   transform: translateY(-1px);
 }
 
@@ -1463,12 +1437,12 @@
   font-weight: 700 !important;
   font-size: 0.85rem !important;
   padding: 0.48rem 1.45rem !important;
-  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12) !important;
   transition: all 0.2s ease !important;
 }
 
 #mockInterviewModal #btnNextQuestion:hover {
-  box-shadow: 0 6px 24px rgba(14, 165, 233, 0.6) !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.16) !important;
   transform: translateY(-1px);
 }
 
@@ -1480,12 +1454,12 @@
   font-weight: 800 !important;
   font-size: 0.85rem !important;
   padding: 0.48rem 1.45rem !important;
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25) !important;
   transition: all 0.2s ease !important;
 }
 
 #mockInterviewModal #btnFinalizeInterview:hover {
-  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.65) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35) !important;
   transform: translateY(-1px);
 }
 
@@ -1517,7 +1491,7 @@
   border: 1px solid #E2E8F0 !important;
   border-radius: 8px !important;
   padding: 1.15rem !important;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s ease !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
@@ -1527,7 +1501,7 @@
 .repo-card-study:hover {
   background: #FFFFFF !important;
   border-color: #3B82F6 !important;
-  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.12), 0 8px 10px -6px rgba(37, 99, 235, 0.06) !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -1540,7 +1514,7 @@
 
 /* GitHub Public Pill Badge */
 .gh-repo-visibility-badge {
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: #57606A;
   background-color: #F6F8FA;
@@ -1570,25 +1544,23 @@
 /* AI Study Relevance Box */
 .gh-study-relevance-box {
   background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-left: 3px solid #3B82F6;
+  border: 1px solid #CBD5E1;
   border-radius: 6px;
   padding: 0.6rem 0.75rem;
   margin-bottom: 0.75rem;
-  transition: background 0.2s ease, border-color 0.2s ease, border-left-color 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .repo-card-study:hover .gh-study-relevance-box {
   background: #EFF6FF;
   border-color: #BFDBFE;
-  border-left-color: #2563EB;
 }
 
 .gh-study-relevance-header {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1630,7 +1602,7 @@
   border: 1px solid #E2E8F0;
   border-radius: 999px;
   padding: 0.22rem 0.7rem;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #334155;
   font-family: var(--font-body, system-ui);
@@ -1669,7 +1641,6 @@
 
 .gh-lang-segment {
   height: 100%;
-  transition: width 0.4s ease;
   border-radius: 1px;
 }
 
@@ -1730,7 +1701,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   padding: 2px 7px;
   border-radius: 4px;
   background: rgba(241, 245, 249, 0.7);
@@ -1810,18 +1781,8 @@
   transition: all var(--transition-normal, 0.2s ease);
 }
 
-.job-ready-status-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3.5px;
-  background: linear-gradient(90deg, #F59E0B 0%, #10B981 100%);
-}
-
-.job-ready-status-card.all-passed::before {
-  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+.job-ready-status-card.all-passed {
+  border-color: #10B981 !important;
 }
 
 .job-ready-status-badge-pending {
@@ -1835,7 +1796,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.08);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
 .job-ready-status-badge-qualified {
@@ -1849,7 +1810,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.08);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
 .job-ready-tile {
@@ -1886,7 +1847,7 @@
   color: #15803D !important;
   border: 1px solid #86EFAC !important;
   font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
@@ -1905,7 +1866,7 @@
 .job-ready-tile.tile-passed .tile-target {
   color: #166534 !important;
   opacity: 0.85;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -1927,7 +1888,7 @@
   color: #B45309 !important;
   border: 1px solid #FCD34D !important;
   font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.55rem;
   border-radius: 6px;
@@ -1946,7 +1907,7 @@
 .job-ready-tile.tile-pending .tile-target {
   color: #78350F !important;
   opacity: 0.88;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
@@ -1989,7 +1950,7 @@ body.modal-open .cp-chat-card {
   border: 3px solid #C5A059;
   outline: 1.5px solid #DFBE7A;
   outline-offset: -7px;
-  box-shadow: 0 15px 40px -10px rgba(15, 23, 42, 0.2), inset 0 0 40px rgba(197, 160, 89, 0.08);
+  box-shadow: 0 15px 40px -10px rgba(15, 23, 42, 0.2);
   border-radius: 10px;
   padding: 1.25rem 1.85rem 1.15rem;
   position: relative;
@@ -2050,7 +2011,7 @@ body.modal-open .cp-chat-card {
   position: absolute;
   top: 1px;
   left: 2px;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: #C5A059;
 }
 
@@ -2065,7 +2026,7 @@ body.modal-open .cp-chat-card {
   position: absolute;
   top: 1px;
   right: 2px;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: #C5A059;
 }
 
@@ -2080,7 +2041,7 @@ body.modal-open .cp-chat-card {
   position: absolute;
   bottom: 1px;
   left: 2px;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: #C5A059;
 }
 
@@ -2095,7 +2056,7 @@ body.modal-open .cp-chat-card {
   position: absolute;
   bottom: 1px;
   right: 2px;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: #C5A059;
 }
 
@@ -2110,7 +2071,7 @@ body.modal-open .cp-chat-card {
   justify-content: center;
   color: #FFFFFF;
   font-size: 1.15rem;
-  box-shadow: 0 4px 8px rgba(170, 124, 17, 0.3);
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.15);
   border: 2px solid #FFFFFF;
   flex-shrink: 0;
 }
@@ -2126,7 +2087,7 @@ body.modal-open .cp-chat-card {
 
 .cert-registry-sub {
   font-family: var(--font-mono, monospace);
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   letter-spacing: 0.8px;
   font-weight: 700;
   color: #855B14;
@@ -2149,7 +2110,7 @@ body.modal-open .cp-chat-card {
   height: 60px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #FFF2B2 0%, #D4AF37 38%, #AA7C11 75%, #684805 100%);
-  box-shadow: 0 6px 14px rgba(170, 124, 17, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.85), inset 0 -3px 5px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.85), inset 0 -3px 5px rgba(0, 0, 0, 0.45);
   position: relative;
   z-index: 2;
   display: flex;
@@ -2162,7 +2123,7 @@ body.modal-open .cp-chat-card {
 
 .certificate-seal:hover {
   transform: scale(1.08) rotate(3deg);
-  box-shadow: 0 10px 22px rgba(170, 124, 17, 0.55), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -3px 6px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.25), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -3px 6px rgba(0, 0, 0, 0.45);
 }
 
 .seal-inner-circle {
@@ -2187,7 +2148,7 @@ body.modal-open .cp-chat-card {
 
 .seal-text-arch {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.42rem;
+  font-size: 0.75rem;
   font-weight: 900;
   letter-spacing: 0.8px;
   color: #FFFFFF;
@@ -2222,7 +2183,7 @@ body.modal-open .cp-chat-card {
 /* Attestation Body & Typography */
 .cert-eyebrow-text {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 2px;
   color: #9A7B38;
@@ -2273,9 +2234,6 @@ body.modal-open .cp-chat-card {
   color: #0B3C5D;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  background: linear-gradient(180deg, #0B3C5D 0%, #1E40AF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 /* Executive 4-Pillar Scorecard */
@@ -2289,7 +2247,7 @@ body.modal-open .cp-chat-card {
 
 .cert-scorecard-label {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: #855B14;
   letter-spacing: 0.8px;
@@ -2306,12 +2264,12 @@ body.modal-open .cp-chat-card {
 
 .cert-metric-pill:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(170, 124, 17, 0.12);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
   border-color: #D4AF37;
 }
 
 .cert-metric-label {
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #64748B;
   margin-bottom: 1px;
@@ -2325,7 +2283,7 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-metric-sub {
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #16A34A;
   font-family: var(--font-mono, monospace);
@@ -2338,7 +2296,7 @@ body.modal-open .cp-chat-card {
   border: 1px solid #DBC493;
   color: #694C11;
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   padding: 0.16rem 0.5rem;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
@@ -2351,7 +2309,7 @@ body.modal-open .cp-chat-card {
 
 .cert-competency-status-badge {
   font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: #15803D;
   background: rgba(34, 197, 94, 0.12);
@@ -2398,13 +2356,13 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-signatory-title {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   color: #64748B;
   line-height: 1.2;
 }
 
 .cert-meta-item {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   color: #64748B;
   margin-top: 1px;
 }
@@ -2421,7 +2379,7 @@ body.modal-open .cp-chat-card {
 
 .cert-qr-frame:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 14px rgba(170, 124, 17, 0.25);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
 }
 
 .cert-qr-img {
@@ -2430,17 +2388,17 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-qr-caption {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #475569;
 }
 
 .cert-qr-subtext {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
 }
 
 .cert-sha-hash {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: #475569;
   letter-spacing: 0.5px;
 }
@@ -2454,7 +2412,7 @@ body.modal-open .cp-chat-card {
   background-image: radial-gradient(circle at 50% 50%, #151E32 0%, #0D1424 60%, #080D18 100%);
   border-color: #D4AF37;
   outline-color: #8C6D23;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(212, 175, 55, 0.1);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8);
   color: #F8FAFC;
 }
 
@@ -2476,7 +2434,6 @@ body.modal-open .cp-chat-card {
 
 .official-certificate-container.cert-theme-dark .cert-recipient-name {
   color: #FFFFFF;
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
 }
 
 .official-certificate-container.cert-theme-dark .cert-attestation-body {
@@ -2484,9 +2441,8 @@ body.modal-open .cp-chat-card {
 }
 
 .official-certificate-container.cert-theme-dark .cert-target-role {
-  background: linear-gradient(180deg, #38BDF8 0%, #818CF8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #38BDF8;
+  font-weight: 800;
 }
 
 .official-certificate-container.cert-theme-dark .cert-scorecard-box {
@@ -2523,17 +2479,17 @@ body.modal-open .cp-chat-card {
 
 .official-certificate-container.cert-theme-dark::before {
   background-image: 
-    radial-gradient(circle, transparent 32%, rgba(212, 175, 55, 0.12) 33%, transparent 34%),
-    radial-gradient(circle, transparent 48%, rgba(212, 175, 55, 0.09) 49%, transparent 50%),
-    radial-gradient(circle, transparent 64%, rgba(212, 175, 55, 0.07) 65%, transparent 66%),
-    radial-gradient(circle, transparent 78%, rgba(212, 175, 55, 0.055) 79%, transparent 80%),
-    radial-gradient(circle, transparent 90%, rgba(212, 175, 55, 0.04) 91%, transparent 92%);
+    radial-gradient(circle transparent 32%, rgba(212, 175, 55, 0.12) 33%, transparent 34%),
+    radial-gradient(circle transparent 48%, rgba(212, 175, 55, 0.09) 49%, transparent 50%),
+    radial-gradient(circle transparent 64%, rgba(212, 175, 55, 0.07) 65%, transparent 66%),
+    radial-gradient(circle transparent 78%, rgba(212, 175, 55, 0.055) 79%, transparent 80%),
+    radial-gradient(circle transparent 90%, rgba(212, 175, 55, 0.04) 91%, transparent 92%);
   opacity: 0.95;
 }
 
 .official-certificate-container.cert-theme-dark .cert-metric-pill:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
   border-color: rgba(212, 175, 55, 0.6);
 }
 
@@ -2547,13 +2503,12 @@ body.modal-open .cp-chat-card {
 
 .official-certificate-container.cert-theme-dark .cert-signature-svg {
   color: #F8FAFC;
-  text-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
 }
 
 .official-certificate-container.cert-theme-dark .cert-qr-frame {
   background: #FFFFFF;
   border-color: #D4AF37;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
 }
 
 .official-certificate-container.cert-theme-dark .cert-competency-status-badge {

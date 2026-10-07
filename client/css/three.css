@@ -23,7 +23,7 @@
 .three-canvas-wrapper:hover,
 .canvas-placeholder:hover {
   border-color: #CBD5E1;
-  box-shadow: 0 14px 36px rgba(30, 64, 175, 0.12);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
 }
 
 .three-canvas-wrapper canvas,
@@ -75,10 +75,9 @@
   margin-bottom: 0.45rem;
   color: var(--color-indigo-600);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .skill-showcase-header h2 {
@@ -96,7 +95,7 @@
   flex-direction: column;
   align-items: flex-end;
   color: var(--color-text-secondary);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   line-height: 1.25;
 }
 
@@ -124,14 +123,14 @@
   border: 1px solid #E6EAF2;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 12px rgba(25, 41, 76, 0.04);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .skill-logo-card:hover {
   transform: translateY(-3px);
   border-color: #C7D2FE;
-  box-shadow: 0 10px 22px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
 }
 
 .skill-logo-mark {
@@ -149,7 +148,7 @@
 .js-mark { color: #713F12; background: #FEF3C7; border-radius: 6px; }
 .python-mark { color: #1D4ED8; background: #DBEAFE; }
 .node-mark { color: #15803D; background: #DCFCE7; }
-.figma-mark { color: #C026D3; background: #FAE8FF; }
+.figma-mark { color: #86198F; background: #FAE8FF; }
 .sql-mark { color: #4338CA; background: #E0E7FF; font-size: 1.15rem; }
 .aws-mark { color: #B45309; background: #FEF3C7; font-size: 0.9rem; letter-spacing: -0.06em; }
 .git-mark { color: #C2410C; background: #FFEDD5; font-size: 1.15rem; }
@@ -166,7 +165,7 @@
 
 .skill-logo-type {
   color: var(--color-text-muted);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
 .skill-showcase-footer {
@@ -184,7 +183,7 @@
   flex: 0 0 auto;
   border-radius: 50%;
   background: #10B981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.06);
 }
 
 @media (max-width: 575.98px) {
@@ -222,7 +221,7 @@
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
-.career-skill-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(25, 41, 76, 0.09); }
+.career-skill-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08); }
 .career-skill-tile:focus-visible,
 .skill-logo-card:focus-visible,
 .skill-dialog-close:focus-visible,
@@ -250,7 +249,7 @@
 
 .career-skill-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 0.2rem; }
 .career-skill-copy strong { overflow: hidden; font-size: 0.88rem; text-overflow: ellipsis; white-space: nowrap; }
-.career-skill-copy > span { color: var(--color-text-muted); font-size: 0.72rem; }
+.career-skill-copy > span { color: var(--color-text-muted); font-size: 0.75rem; }
 .skill-tile-arrow { color: var(--color-text-muted); font-size: 0.8rem; }
 
 .skill-detail-dialog {
@@ -263,7 +262,7 @@
   border-radius: 20px;
   background: #FFFFFF;
   color: var(--color-text-primary);
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.18);
 }
 
 .skill-detail-dialog::backdrop { background: rgba(15, 23, 42, 0.48); backdrop-filter: blur(3px); }
@@ -284,7 +283,7 @@
 .skill-learning-steps label { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem; border: 1px solid #E8ECF3; border-radius: 11px; color: #334155; cursor: pointer; line-height: 1.45; }
 .skill-learning-steps label:has(input:checked) { border-color: #A7F3D0; background: #F0FDF4; }
 .skill-learning-steps input { flex: 0 0 auto; margin-top: 0.15rem; accent-color: #4F46E5; }
-.skill-step-number { display: grid; width: 22px; height: 22px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #EEF2FF; color: #4338CA; font-size: 0.72rem; font-weight: 800; }
+.skill-step-number { display: grid; width: 22px; height: 22px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #EEF2FF; color: #4338CA; font-size: 0.75rem; font-weight: 800; }
 .skill-practice-card { padding: 1rem; border: 1px solid #DDE5FF; border-radius: 14px; background: linear-gradient(135deg, #F5F7FF, #F8FAFC); }
 .skill-practice-card .skill-showcase-eyebrow { margin-bottom: 0.3rem; }
 .skill-practice-card p { margin: 0.4rem 0 0; color: #475569; font-size: 0.88rem; line-height: 1.5; }
@@ -339,7 +338,7 @@
 
 .atlas-coord-tag {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-indigo-700);
   background: rgba(255, 255, 255, 0.95);
@@ -389,7 +388,7 @@
   transition: opacity 0.2s ease, transform 0.2s ease;
   background: #FFFFFF;
   border: 1px solid #C7D2FE;
-  box-shadow: 0 12px 30px rgba(30, 64, 175, 0.12);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
   border-radius: var(--radius-md);
   padding: 0.9rem 1.1rem;
   z-index: 50;

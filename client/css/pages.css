@@ -54,6 +54,7 @@
 
 .hero-title {
   font-family: var(--font-heading);
+  font-size: 2.85rem;
   font-size: clamp(2.3rem, 4vw, 3.6rem);
   font-weight: 800;
   line-height: 1.2;
@@ -401,7 +402,7 @@
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 30px rgba(30, 64, 175, 0.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   overflow: hidden;
 }
 
@@ -1093,7 +1094,7 @@
   border-color: #F59E0B;
   color: #92400E !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 /* Modal Stacking & Contrast Guarantees */
@@ -1163,17 +1164,17 @@
 /* Track Card Color Accents */
 .career-card-business:hover {
   border-color: #F59E0B !important;
-  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.12) !important;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08) !important;
 }
 
 .career-card-marketing:hover {
   border-color: #10B981 !important;
-  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.12) !important;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08) !important;
 }
 
 .career-card-creative:hover {
   border-color: #8B5CF6 !important;
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12) !important;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08) !important;
 }
 
 /* Domain Badges & Tags */

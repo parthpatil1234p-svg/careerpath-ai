@@ -797,7 +797,7 @@
   background: #FFFFFF;
   border-color: #3B82F6;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.12), 0 8px 10px -6px rgba(37, 99, 235, 0.06);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
 }
 
 /* Code Verified Skill Badge */
@@ -822,7 +822,7 @@
   color: #065F46 !important;
   border: 1px solid #10B981 !important;
   font-weight: 700 !important;
-  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.15) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
 }
 
 .badge-code-verified.status-disconnected {

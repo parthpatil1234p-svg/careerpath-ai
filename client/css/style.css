@@ -43,10 +43,30 @@
   --cp-border-light:     var(--color-border);
   --cp-shadow-sm:        var(--shadow-sm);
   --cp-shadow-md:        var(--shadow-md);
-  --cp-shadow-glow:      0 4px 16px rgba(79, 70, 229, 0.12);
+  --cp-shadow-glow:      0 4px 16px rgba(15, 23, 42, 0.08);
   --cp-gradient-primary: var(--gradient-primary);
   --cp-gradient-accent:  var(--gradient-secondary);
   --cp-gradient-hero:    var(--gradient-primary);
+}
+
+/* Typography Hierarchy Scale */
+h1, .h1 {
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+}
+
+h2, .h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+h3, .h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 /* --------------------------------------------------------------------------
@@ -64,12 +84,12 @@
 
 .recommendation-card:hover {
   border-color: #CBD5E1 !important;
-  box-shadow: 0 10px 30px rgba(30, 64, 175, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
 }
 
 .recommendation-card.top-match-card {
   border: 1.5px solid var(--color-indigo-600) !important;
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
 }
 
 .match-score-badge {
@@ -78,13 +98,13 @@
   border-radius: var(--radius-md) !important;
   padding: 1rem 1.25rem !important;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
 .top-match-card .match-score-badge {
   border-color: #C7D2FE !important;
   background: var(--color-surface-indigo) !important;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.12) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
 }
 
 .match-score-badge .score-number {
@@ -310,9 +330,9 @@ main p:not(.text-center) {
 .portal-linkedin:hover { border-color: #0a66c2; color: #0a66c2; }
 .portal-naukri:hover { border-color: #e60023; color: #e60023; }
 .portal-indeed:hover { border-color: #2164f3; color: #2164f3; }
-.portal-wellfound:hover { border-color: #ea580c; color: #ea580c; }
-.portal-internshala:hover { border-color: #008bdc; color: #008bdc; }
-.portal-google:hover { border-color: #ea4335; color: #ea4335; }
+.portal-wellfound:hover { border-color: #c2410c; color: #c2410c; }
+.portal-internshala:hover { border-color: #0369a1; color: #0369a1; }
+.portal-google:hover { border-color: #c5221f; color: #c5221f; }
 
 .cross-search-btn {
   padding: 2px 8px;

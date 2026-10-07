@@ -60,6 +60,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 h1, .h1 {
+  font-size: 2.35rem;
   font-size: clamp(2.1rem, 3.2vw, 2.85rem);
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -67,15 +68,30 @@ h1, .h1 {
 }
 
 h2, .h2 {
+  font-size: 1.7rem;
   font-size: clamp(1.6rem, 2.4vw, 2.1rem);
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
 h3, .h3 {
+  font-size: 1.25rem;
   font-size: clamp(1.2rem, 1.8vw, 1.5rem);
   font-weight: 600;
   color: var(--color-text-primary);
+}
+
+.visually-hidden,
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 h4, .h4 {
@@ -186,20 +202,14 @@ small, .small {
   height: 7px;
   border-radius: 50%;
   background-color: var(--color-indigo-600);
-  box-shadow: 0 0 6px rgba(79, 70, 229, 0.5);
-  animation: pulse-glow 2s infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.85); }
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
 }
 
 /* Focus Visible Accessibility */
 :focus-visible {
   outline: 2px solid var(--color-indigo-600) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.12) !important;
 }
 
 /* Clean Modern Light Scrollbars */

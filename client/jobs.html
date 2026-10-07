@@ -45,7 +45,7 @@
         border: 1.5px solid #E2E8F0;
         border-radius: 16px;
         padding: 1.5rem;
-        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
         display: flex;
         flex-direction: column;
@@ -54,7 +54,7 @@
       .job-card-direct:hover {
         border-color: #059669;
         transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
       }
       .company-logo-box {
         width: 48px;
@@ -76,7 +76,7 @@
         background: rgba(5, 150, 105, 0.1);
         border: 1px solid rgba(5, 150, 105, 0.25);
         color: #059669;
-        font-size: 0.72rem;
+        font-size: 0.75rem;
         font-weight: 700;
         padding: 3px 8px;
         border-radius: 9999px;
@@ -243,7 +243,7 @@
               NO SPAM &middot; 1-CLICK APPLY
             </span>
           </div>
-          <h1 class="h2 fw-bold text-ink mb-1">
+          <h1 class="display-6 fw-bold text-ink mb-1" style="font-size: 2rem;">
             Verified Job Board &amp; Talent Radar
           </h1>
           <p class="text-muted small mb-0">
@@ -334,7 +334,7 @@
             <div class="p-3 bg-light rounded-circle d-inline-block text-secondary mb-3">
               <i class="bi bi-briefcase fs-1"></i>
             </div>
-            <h3 class="h5 fw-bold text-ink mb-1">No Active Openings Found</h3>
+            <h2 class="h5 fw-bold text-ink mb-1">No Active Openings Found</h2>
             <p class="text-muted small mb-3">Check back soon or broaden your career track filter.</p>
             <a href="recruiter-dashboard.html" class="btn cp-btn-primary btn-sm px-3.5 py-1.5">
               Recruiter? Post Opening Now →
@@ -356,7 +356,7 @@
 
           <div id="emptyApps" class="text-center py-5 bg-white rounded-4 border border-line shadow-xs d-none">
             <i class="bi bi-inbox fs-1 text-muted"></i>
-            <h3 class="h5 fw-bold text-ink mt-2">No Applications Submitted Yet</h3>
+            <h2 class="h5 fw-bold text-ink mt-2">No Applications Submitted Yet</h2>
             <p class="text-muted small">Explore direct openings above and submit in 1 click using your verified profile.</p>
           </div>
 
@@ -383,12 +383,12 @@
                SPONSORED PARTNER BANNER (Non-intrusive, Bottom Placement)
                ============================================================ -->
           <div class="my-5 text-center" id="jobsSponsoredBanner">
-            <div class="card border border-line shadow-xs rounded-4 p-3 mx-auto" style="max-width: 760px; background: rgba(248, 250, 252, 0.85); backdrop-filter: blur(8px);">
+            <div class="sponsored-card border border-line shadow-xs rounded-4 p-3 mx-auto" style="max-width: 760px; background: rgba(248, 250, 252, 0.85); backdrop-filter: blur(8px);">
               <div class="d-flex align-items-center justify-content-between mb-2 px-1">
-                <span class="badge bg-secondary-subtle text-secondary text-uppercase px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.05em;">
+                <span class="badge bg-secondary-subtle text-secondary text-uppercase px-2 py-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">
                   <i class="bi bi-info-circle me-1"></i>Sponsored
                 </span>
-                <span class="text-secondary small" style="font-size: 0.7rem;">Partner Network &middot; Free Student Career Resources</span>
+                <span class="text-secondary small" style="font-size: 0.75rem;">Partner Network &middot; Free Student Career Resources</span>
               </div>
               <!-- Desktop Leaderboard Banner (728x90) -->
               <div class="d-none d-md-flex justify-content-center" style="overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px;">
@@ -445,7 +445,7 @@
                 <i class="bi bi-send-check-fill fs-5"></i>
               </div>
               <div>
-                <h5 class="modal-title fw-bold text-ink" id="applyModalLabel">Apply for Position</h5>
+                <h2 class="modal-title h5 fw-bold text-ink" id="applyModalLabel">Apply for Position</h2>
                 <p class="text-muted small mb-0" id="applyModalSubtitle">Role at Company</p>
               </div>
             </div>

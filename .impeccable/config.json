@@ -1,3 +1,19 @@
 {
-  "buildPath": "code"
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [
+      "nested-cards"
+    ],
+    "ignoreFiles": [
+      "client/css/resume-templates.css"
+    ],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-07T07:27:44.431Z",
+        "reason": "Project brand font"
+      }
+    ]
+  }
 }

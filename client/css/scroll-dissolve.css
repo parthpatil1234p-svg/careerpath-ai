@@ -28,7 +28,7 @@
   border-radius: 20px;
   background: #FFFFFF;
   border: 1.5px solid #CBD5E1;
-  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12), 0 0 0 1px #F1F5F9;
+  box-shadow: 0 8px 16px -6px rgba(15, 23, 42, 0.12), 0 0 0 1px #F1F5F9;
   overflow: hidden;
 }
 
@@ -174,7 +174,7 @@
 .btn-toggle-state.active {
   background: #4F46E5;
   color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
   font-weight: 700;
 }
 
@@ -229,7 +229,7 @@
 
 .transformation-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
-  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
 }
 
 .transformation-slider::-moz-range-thumb {

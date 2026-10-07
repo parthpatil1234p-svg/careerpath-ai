@@ -38,7 +38,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css?v=2.6" />
     <link rel="stylesheet" href="css/dashboard.css?v=2.6" />
-    <link rel="stylesheet" href="css/quiz.css?v=2.6" />
   </head>
 
   <body class="dashboard-page">
@@ -54,7 +53,7 @@
               <img src="assets/logo.svg" alt="CareerPath AI Logo" class="brand-logo-img" width="40" height="40" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
-            <span class="brand-tagline-sub d-none d-xl-inline-flex align-items-center gap-1"><span class="pulse-dot-indigo"></span>Atlas</span>
+            <span class="brand-tagline-sub d-none d-xl-inline-flex align-items-center gap-1"><span class="pulse-dot-teal"></span>Atlas</span>
           </a>
 
           <!-- Desktop Center Links -->
@@ -161,9 +160,7 @@
 
       <!-- Loading State -->
       <div id="loadingState" class="dashboard-state dashboard-loading-state text-center py-5" role="status" aria-live="polite">
-        <div class="spinner-border text-teal mb-3" style="width: 3.5rem; height: 3.5rem; border-width: 3px;" role="status">
-          <span class="visually-hidden">Loading dashboard...</span>
-        </div>
+        <div class="spinner-border text-teal mb-3" style="width: 3.5rem; height: 3.5rem; border-width: 3px;" role="status" aria-label="Loading dashboard..."></div>
         <h2 class="h5 fw-medium text-ink">Assembling Your Student Profile & Analytics...</h2>
         <p class="text-muted small">Synchronizing active curriculum, task progress, and 3D journey marker telemetry</p>
       </div>
@@ -229,7 +226,7 @@
                     </button>
                   </div>
                   <span class="badge bg-secondary bg-opacity-10 text-teal font-mono small d-none" id="currentRoleBadge"></span>
-                  <button type="button" class="btn btn-link btn-sm text-teal text-decoration-none p-0 d-none" id="btnEditCurrentRole" style="font-size: 0.72rem;">
+                  <button type="button" class="btn btn-link btn-sm text-teal text-decoration-none p-0 d-none" id="btnEditCurrentRole" style="font-size: 0.75rem;">
                     <i class="bi bi-pencil me-1"></i>Set Role
                   </button>
                 </div>
@@ -245,7 +242,7 @@
                 <i class="bi bi-lightning-charge-fill"></i> <span>Manage Skills</span>
               </button>
               <a href="assessment.html" class="btn btn-profile-secondary">
-                <i class="bi bi-pencil-square text-indigo"></i> <span>Full Assessment</span>
+                <i class="bi bi-pencil-square text-primary"></i> <span>Full Assessment</span>
               </a>
             </div>
           </div>
@@ -274,25 +271,25 @@
               <div class="row g-2 mb-3" id="readinessMetricsRow">
                 <div class="col-6 col-sm-3">
                   <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
-                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-patch-check-fill text-success me-1"></i> Verified (35%)</div>
+                    <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-patch-check-fill text-success me-1"></i> Verified (35%)</div>
                     <div class="fw-bold text-white font-mono" id="metricScoreVerified">--</div>
                   </div>
                 </div>
                 <div class="col-6 col-sm-3">
                   <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
-                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-map-fill text-info me-1"></i> Roadmap (30%)</div>
+                    <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-map-fill text-info me-1"></i> Roadmap (30%)</div>
                     <div class="fw-bold text-white font-mono" id="metricScoreRoadmap">--</div>
                   </div>
                 </div>
                 <div class="col-6 col-sm-3">
                   <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
-                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-file-earmark-person-fill text-warning me-1"></i> ATS (15%)</div>
+                    <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-file-earmark-person-fill text-warning me-1"></i> ATS (15%)</div>
                     <div class="fw-bold text-white font-mono" id="metricScoreResume">--</div>
                   </div>
                 </div>
                 <div class="col-6 col-sm-3">
                   <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
-                    <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-mic-fill text-danger me-1"></i> Interview (20%)</div>
+                    <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-mic-fill text-danger me-1"></i> Interview (20%)</div>
                     <div class="fw-bold text-white font-mono" id="metricScoreInterview">--</div>
                   </div>
                 </div>
@@ -314,7 +311,7 @@
                 <div class="readiness-gauge-circle" id="readinessGaugeCircle" style="--readiness-pct: 65;">
                   <div class="readiness-gauge-inner">
                     <span class="fs-4 fw-bold font-mono text-cyan" id="readinessGaugeVal">0%</span>
-                    <span class="text-muted" style="font-size: 0.6rem; text-transform: uppercase;">Ready</span>
+                    <span class="text-muted" style="font-size: 0.75rem; text-transform: uppercase;">Ready</span>
                   </div>
                 </div>
                 <div class="small text-light text-opacity-75">
@@ -335,7 +332,7 @@
               </span>
               <span class="small font-mono text-muted" id="dashJobReadyScore">Readiness: --%</span>
             </div>
-            <span class="badge badge-navy font-mono text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.5px;">4-Criteria Standard</span>
+            <span class="badge badge-navy font-mono text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">4-Criteria Standard</span>
           </div>
           <p class="small text-secondary mb-3" id="dashJobReadySummary">
             Official Job Ready Certification requires satisfying all 4 industry hiring benchmarks:
@@ -430,7 +427,7 @@
                   <span class="badge badge-teal font-monospace small">
                     <i class="bi bi-speedometer2 me-1"></i> Journey Marker
                   </span>
-                  <span class="badge badge-navy font-monospace text-uppercase" style="font-size: 0.65rem;">
+                  <span class="badge badge-navy font-monospace text-uppercase" style="font-size: 0.75rem;">
                     ROADMAP PROGRESS
                   </span>
                 </div>
@@ -454,7 +451,7 @@
               <i class="bi bi-signpost-2"></i>
             </div>
             <div>
-              <div class="text-teal small fw-bold text-uppercase font-monospace" style="letter-spacing: 0.5px; font-size: 0.72rem;">
+              <div class="text-teal small fw-bold text-uppercase font-monospace" style="letter-spacing: 0.5px; font-size: 0.75rem;">
                 Next Waypoint
               </div>
               <h3 class="h6 fw-semibold text-ink mb-0" id="nextActionText">
@@ -547,7 +544,7 @@
                   <i class="bi bi-github me-1"></i> CODE-GROUNDED LEARNING
                 </span>
                 <span class="badge-code-verified" id="githubStatusBadge">
-                  <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Not Connected
+                  <i class="bi bi-circle-fill" style="font-size: 0.75rem;"></i> Not Connected
                 </span>
               </div>
               <h3 class="h5 fw-bold text-ink mb-0 mt-1">GitHub Study Lab & Repositories</h3>
@@ -564,12 +561,12 @@
           <div id="githubConnectedDetails" class="d-none mb-3 p-3 rounded-2 stat-box-atlas border border-line">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
               <div class="d-flex align-items-center gap-3">
-                <img id="ghUserAvatar" src="" class="rounded-circle border border-primary border-opacity-50" style="width: 44px; height: 44px;" alt="GitHub Avatar" />
+                <img id="ghUserAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='22' fill='%23e2e8f0'/%3E%3C/svg%3E" class="rounded-circle border border-primary border-opacity-50" style="width: 44px; height: 44px;" alt="GitHub Avatar" />
                 <div>
                   <div class="d-flex align-items-center gap-2">
                     <span class="fw-bold text-ink" id="ghUserName">Student Dev</span>
                     <a id="ghUserLink" href="#" target="_blank" rel="noopener noreferrer" class="badge bg-secondary bg-opacity-25 text-primary font-mono text-decoration-none">
-                      @<span id="ghUserHandle">username</span> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.65rem;"></i>
+                      @<span id="ghUserHandle">username</span> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.75rem;"></i>
                     </a>
                   </div>
                   <div class="text-muted small mt-0.5">
@@ -654,7 +651,7 @@
                   <label class="form-label small fw-bold text-ink mb-0">
                     <i class="bi bi-file-earmark-arrow-up-fill text-teal me-1"></i> Resume Document
                   </label>
-                  <span class="badge bg-success bg-opacity-10 text-success font-monospace" style="font-size: 0.65rem;">Cloudinary Synced</span>
+                  <span class="badge bg-success bg-opacity-10 text-success font-monospace" style="font-size: 0.75rem;">Cloudinary Synced</span>
                 </div>
 
                 <!-- 6-STATE DEDICATED SINGLE-RESUME CONTAINER -->
@@ -671,7 +668,7 @@
                   <div id="resumeStateLocked" class="d-none py-3 text-center">
                     <div class="mb-2"><i class="bi bi-lock-fill text-warning fs-2"></i></div>
                     <div class="fw-bold text-ink small mb-1">🔒 Resume Upload Locked</div>
-                    <div class="text-muted small mb-2" style="max-width: 320px; margin: 0 auto; font-size: 0.72rem;">
+                    <div class="text-muted small mb-2" style="max-width: 320px; margin: 0 auto; font-size: 0.75rem;">
                       Server security gate requires at least 1 verified skill through Skill Checks or Roadmaps to unlock ATS scanning.
                     </div>
                     <a href="roadmap.html" class="btn cp-btn-primary btn-sm px-3 py-1" style="font-size: 0.75rem;">
@@ -683,8 +680,8 @@
                   <div id="resumeStateNoResume" class="d-none py-2 text-center" style="cursor: pointer;">
                     <i class="bi bi-cloud-arrow-up text-teal fs-2 mb-1 d-block"></i>
                     <div class="small fw-semibold text-ink">Upload your resume (PDF or DOCX, up to 5 MB)</div>
-                    <div class="text-muted small mb-2" style="font-size: 0.72rem;">Drag & drop here, or <span class="text-teal text-decoration-underline">Browse</span></div>
-                    <div class="badge bg-secondary bg-opacity-25 text-secondary font-monospace" style="font-size: 0.65rem;">
+                    <div class="text-muted small mb-2" style="font-size: 0.75rem;">Drag & drop here, or <span class="text-teal text-decoration-underline">Browse</span></div>
+                    <div class="badge bg-secondary bg-opacity-25 text-secondary font-monospace" style="font-size: 0.75rem;">
                       <i class="bi bi-info-circle me-1"></i> Single resume account. Uploading replaces the old one.
                     </div>
                   </div>
@@ -693,7 +690,7 @@
                   <div id="resumeStateUploading" class="d-none py-3 text-center">
                     <div class="spinner-border text-teal mb-2" role="status"></div>
                     <div class="small fw-semibold text-ink" id="resumeUploadProgressText">Uploading to secure storage & parsing ATS keywords...</div>
-                    <div class="text-muted small mt-1" style="font-size: 0.7rem;">Please do not close this window.</div>
+                    <div class="text-muted small mt-1" style="font-size: 0.75rem;">Please do not close this window.</div>
                   </div>
 
                   <!-- State 5: Has Resume (Active State) -->
@@ -706,10 +703,10 @@
                           </div>
                           <div class="overflow-hidden">
                             <div class="fw-bold text-ink small text-truncate" id="resumeStateFileName">resume.pdf</div>
-                            <div class="text-muted" style="font-size: 0.72rem;" id="resumeStateMeta">-- MB · Last updated Today</div>
+                            <div class="text-muted" style="font-size: 0.75rem;" id="resumeStateMeta">-- MB · Last updated Today</div>
                           </div>
                         </div>
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-monospace" style="font-size: 0.65rem;">
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-monospace" style="font-size: 0.75rem;">
                           <i class="bi bi-shield-check me-1"></i> Active Resume
                         </span>
                       </div>
@@ -734,7 +731,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="text-muted small text-center mt-2" style="font-size: 0.68rem;">
+                    <div class="text-muted small text-center mt-2" style="font-size: 0.75rem;">
                       <i class="bi bi-shield-lock me-1"></i> Private & secure. Stored 1 active resume per account.
                     </div>
                   </div>
@@ -752,8 +749,8 @@
 
                 <!-- Textarea option toggle -->
                 <div class="mt-2 d-flex justify-content-between align-items-center">
-                  <span class="text-muted small" style="font-size: 0.72rem;">Have text instead?</span>
-                  <a class="text-teal small text-decoration-underline" data-bs-toggle="collapse" href="#collapseResumePaste" role="button" aria-expanded="false" aria-controls="collapseResumePaste" style="font-size: 0.72rem;">
+                  <span class="text-muted small" style="font-size: 0.75rem;">Have text instead?</span>
+                  <a class="text-teal small text-decoration-underline" data-bs-toggle="collapse" href="#collapseResumePaste" role="button" aria-expanded="false" aria-controls="collapseResumePaste" style="font-size: 0.75rem;">
                     <i class="bi bi-pencil-square me-1"></i> Paste plain text / markdown
                   </a>
                 </div>
@@ -829,7 +826,7 @@
           <div class="p-3 rounded-2 stat-box-atlas border border-line mb-3" id="dashboardMultiJobHub">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2 pb-2 border-bottom border-line">
               <div class="d-flex align-items-center gap-2">
-                <span class="badge badge-navy font-monospace text-uppercase" style="font-size: 0.68rem;">
+                <span class="badge badge-navy font-monospace text-uppercase" style="font-size: 0.75rem;">
                   <i class="bi bi-globe me-1"></i> MULTI-PORTAL RECRUITMENT HUB
                 </span>
                 <span class="text-secondary small fw-medium">Search live openings across major platforms</span>
@@ -975,12 +972,12 @@
              SPONSORED PARTNER BANNER (Non-intrusive, Bottom Placement)
              ============================================================ -->
         <div class="mt-5 mb-3 text-center" id="dashboardSponsoredBanner">
-          <div class="card border border-line shadow-xs rounded-4 p-3 mx-auto" style="max-width: 760px; background: rgba(248, 250, 252, 0.85); backdrop-filter: blur(8px);">
+          <div class="sponsored-card border border-line shadow-xs rounded-4 p-3 mx-auto" style="max-width: 760px; background: rgba(248, 250, 252, 0.85); backdrop-filter: blur(8px);">
             <div class="d-flex align-items-center justify-content-between mb-2 px-1">
-              <span class="badge bg-secondary-subtle text-secondary text-uppercase px-2 py-1" style="font-size: 0.65rem; letter-spacing: 0.05em;">
+              <span class="badge bg-secondary-subtle text-secondary text-uppercase px-2 py-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">
                 <i class="bi bi-info-circle me-1"></i>Sponsored
               </span>
-              <span class="text-secondary small" style="font-size: 0.7rem;">Partner Network &middot; Free Student Career Resources</span>
+              <span class="text-secondary small" style="font-size: 0.75rem;">Partner Network &middot; Free Student Career Resources</span>
             </div>
             <!-- Desktop Leaderboard Banner (728x90) -->
             <div class="d-none d-md-flex justify-content-center" style="overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px;">
@@ -1196,9 +1193,7 @@
             <div class="interview-hud-card p-3 mb-4">
               <!-- Loading state inside prompt box -->
               <div id="interviewQuestionLoading" class="text-center py-4 d-none">
-                <div class="spinner-border text-info mb-2" role="status" style="width: 2rem; height: 2rem;">
-                  <span class="visually-hidden">Loading question...</span>
-                </div>
+                <div class="spinner-border text-info mb-2" role="status" style="width: 2rem; height: 2rem;" aria-label="Loading question..."></div>
                 <div class="text-light small">AI Interviewer is formulating technical scenarios tailored to your skills...</div>
               </div>
 
@@ -1316,7 +1311,7 @@
         <div class="modal-content border-0 shadow-2xl cert-modal-content">
           <div class="modal-header border-0 px-3 py-2 bg-dark text-white d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-warning text-dark font-monospace text-uppercase fw-bold px-2 py-0.5" style="font-size: 0.68rem;">IVY-LEAGUE ACCREDITATION</span>
+              <span class="badge bg-warning text-dark font-monospace text-uppercase fw-bold px-2 py-0.5" style="font-size: 0.75rem;">IVY-LEAGUE ACCREDITATION</span>
               <h2 class="modal-title h6 fw-bold text-white mb-0" id="certificateModalLabel" style="font-size: 0.88rem;">CareerPath AI &mdash; Verified Job Ready Digital Credential</h2>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -1535,7 +1530,7 @@
               <!-- ATS Readiness pill -->
               <div class="d-flex align-items-center gap-2" id="resumeModalAtsContainer">
                 <div class="text-end">
-                  <div class="text-muted small" style="font-size: 0.72rem;">ATS ALIGNMENT SCORE</div>
+                  <div class="text-muted small" style="font-size: 0.75rem;">ATS ALIGNMENT SCORE</div>
                   <div class="fw-bold text-teal font-mono fs-5" id="resumeModalAtsScore">--</div>
                 </div>
               </div>
@@ -1545,15 +1540,13 @@
             <div class="resume-viewport-container border border-line rounded-3 position-relative overflow-hidden d-flex align-items-center justify-content-center">
               <!-- Loading Spinner -->
               <div id="resumeViewerLoading" class="text-center py-5 text-white">
-                <div class="spinner-border text-teal mb-3" role="status">
-                  <span class="visually-hidden">Loading resume...</span>
-                </div>
+                <div class="spinner-border text-teal mb-3" role="status" aria-label="Loading resume..."></div>
                 <div class="text-light text-opacity-75 small">Loading document preview from Cloudinary...</div>
               </div>
 
               <!-- High-Res Page 1 Image Preview -->
               <div id="resumeImagePreviewContainer" class="w-100 text-center p-3 d-none resume-preview-wrapper">
-                <img id="resumePreviewImage" src="" alt="Resume Preview" class="img-fluid rounded shadow-sm bg-white" style="max-width: 820px; width: 100%; height: auto;" />
+                <img id="resumePreviewImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1100'%3E%3Crect width='800' height='1100' fill='%23f8fafc'/%3E%3C/svg%3E" alt="Resume Preview" class="img-fluid rounded shadow-sm bg-white" style="max-width: 820px; width: 100%; height: auto;" />
               </div>
 
               <!-- Interactive PDF Iframe -->
@@ -1562,7 +1555,7 @@
               <!-- Fallback Error Alert -->
               <div id="resumeViewerError" class="d-none text-center p-4 text-white">
                 <i class="bi bi-exclamation-triangle text-warning fs-1 mb-2"></i>
-                <h5 class="fw-bold text-white">Preview Not Available</h5>
+                <h3 class="h5 fw-bold text-white">Preview Not Available</h3>
                 <p class="text-light text-opacity-75 small">You can still download or open the uncompressed original PDF below.</p>
               </div>
             </div>
