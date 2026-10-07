@@ -647,7 +647,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const testStrikesBadge = document.getElementById('testStrikesBadge');
     if (testStrikesEl) testStrikesEl.textContent = '0';
     if (testStrikesBadge) {
-      testStrikesBadge.className = 'badge bg-success-subtle text-success border border-success-subtle font-mono px-2.5 py-1 small';
+      testStrikesBadge.className = 'milestone-chip-strikes strikes-clean';
+      testStrikesBadge.innerHTML = `<i class="bi bi-shield-check me-1"></i>Strikes: <strong id="testStrikesCount">0</strong>/3`;
+    }
+
+    const testTimerBadgeEl = document.getElementById('testTimerBadge');
+    if (testTimerBadgeEl) {
+      testTimerBadgeEl.classList.remove('is-urgent', 'animate-pulse', 'is-penalty');
     }
 
     document.getElementById('testQuestionsContainer').innerHTML = `
@@ -670,6 +676,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       activeAttempt = res.data;
       testAnswersMap = {};
+      if (Array.isArray(activeAttempt.questions)) {
+        activeAttempt.questions.forEach((q) => {
+          if (q.selectedIndex !== undefined && q.selectedIndex !== null && q.selectedIndex >= 0) {
+            testAnswersMap[q.questionId] = q.selectedIndex;
+          }
+        });
+      }
 
       if (res.data.resumed && resumedBanner) {
         resumedBanner.classList.remove('d-none');
@@ -708,10 +721,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const badgeEl = document.getElementById('testStrikesBadge');
             if (countEl) countEl.textContent = count;
             if (badgeEl) {
+              badgeEl.classList.remove('strikes-clean', 'strikes-warning', 'strikes-danger');
               if (count === 1) {
-                badgeEl.className = 'badge bg-warning-subtle text-warning border border-warning-subtle font-mono px-2.5 py-1 small';
+                badgeEl.classList.add('strikes-warning');
+                badgeEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i>Strikes: <strong id="testStrikesCount">1</strong>/3`;
               } else if (count >= 2) {
-                badgeEl.className = 'badge bg-danger text-white font-mono px-2.5 py-1 small';
+                badgeEl.classList.add('strikes-danger');
+                badgeEl.innerHTML = `<i class="bi bi-shield-x me-1"></i>Strikes: <strong id="testStrikesCount">${count}</strong>/3`;
               }
             }
           },
@@ -719,9 +735,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentDeadlineMs -= penaltySeconds * 1000;
             const timerBadgeEl = document.getElementById('testTimerBadge');
             if (timerBadgeEl) {
-              timerBadgeEl.classList.add('bg-danger', 'text-white');
+              timerBadgeEl.classList.add('is-penalty');
               setTimeout(() => {
-                timerBadgeEl.classList.remove('bg-danger', 'text-white');
+                timerBadgeEl.classList.remove('is-penalty');
               }, 1500);
             }
           },
@@ -788,35 +804,50 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
+    const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
+
     container.innerHTML = questions
       .map((q, idx) => {
+        const isAnswered = testAnswersMap[q.questionId] !== undefined && testAnswersMap[q.questionId] !== null;
         return `
-          <div class="test-question-item" data-question-id="${escapeHtml(q.questionId)}">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-              <span class="badge cp-tag font-mono">Question ${idx + 1} of ${questions.length}</span>
-              ${q.topicTag ? `<span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.72rem;">${escapeHtml(q.topicTag)}</span>` : ''}
+          <div class="test-question-item ${isAnswered ? 'is-answered' : ''}" data-question-id="${escapeHtml(q.questionId)}">
+            <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="question-pill-index">Question ${idx + 1} of ${questions.length}</span>
+                <span class="question-answered-badge ${isAnswered ? 'is-visible' : ''}">
+                  <i class="bi bi-check-circle-fill me-1"></i>Answered
+                </span>
+              </div>
+              ${q.topicTag ? `<span class="question-pill-topic"><i class="bi bi-tag-fill me-1"></i>${escapeHtml(q.topicTag)}</span>` : ''}
             </div>
-            <div class="fw-semibold text-ink mb-3" style="font-size: 0.96rem; line-height: 1.55;">
+            <h5 class="question-prompt-text mb-3">
               ${escapeHtml(q.question)}
-            </div>
+            </h5>
             <div class="d-flex flex-column gap-2">
               ${q.options
-                .map(
-                  (opt, optIdx) => `
-                <label class="test-option-item" for="q_${escapeHtml(q.questionId)}_opt_${optIdx}">
-                  <input 
-                    type="radio" 
-                    id="q_${escapeHtml(q.questionId)}_opt_${optIdx}" 
-                    name="q_${escapeHtml(q.questionId)}" 
-                    value="${optIdx}" 
-                    data-question-id="${escapeHtml(q.questionId)}"
-                    data-option-index="${optIdx}"
-                    class="test-radio-input"
-                  />
-                  <span class="text-ink small flex-grow-1">${escapeHtml(opt)}</span>
-                </label>
-              `
-                )
+                .map((opt, optIdx) => {
+                  const isSelected = testAnswersMap[q.questionId] === optIdx;
+                  const letter = alphabet[optIdx] || String(optIdx + 1);
+                  return `
+                    <label class="test-option-item ${isSelected ? 'selected' : ''}" for="q_${escapeHtml(q.questionId)}_opt_${optIdx}">
+                      <input 
+                        type="radio" 
+                        id="q_${escapeHtml(q.questionId)}_opt_${optIdx}" 
+                        name="q_${escapeHtml(q.questionId)}" 
+                        value="${optIdx}" 
+                        data-question-id="${escapeHtml(q.questionId)}"
+                        data-option-index="${optIdx}"
+                        class="test-radio-input"
+                        ${isSelected ? 'checked' : ''}
+                      />
+                      <span class="option-letter-chip">${letter}</span>
+                      <span class="option-text flex-grow-1">${escapeHtml(opt)}</span>
+                      <span class="option-status-dot">
+                        <i class="bi bi-check-lg"></i>
+                      </span>
+                    </label>
+                  `;
+                })
                 .join('')}
             </div>
           </div>
@@ -824,7 +855,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
       .join('');
 
-    updateAnsweredCounter();
+    updateAnsweredCounter(questions.length);
 
     // Attach selection listener on options
     container.querySelectorAll('.test-radio-input').forEach((input) => {
@@ -837,17 +868,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const questionCard = e.target.closest('.test-question-item');
         if (questionCard) {
           questionCard.classList.add('is-answered');
+          const answeredBadge = questionCard.querySelector('.question-answered-badge');
+          if (answeredBadge) answeredBadge.classList.add('is-visible');
           questionCard.querySelectorAll('.test-option-item').forEach((lbl) => lbl.classList.remove('selected'));
           const activeLabel = e.target.closest('.test-option-item');
           if (activeLabel) activeLabel.classList.add('selected');
         }
 
-        updateAnsweredCounter();
+        updateAnsweredCounter(questions.length);
 
         // Server Progressive Auto-save
         const autosaveEl = document.getElementById('testAutosaveIndicator');
         if (autosaveEl) {
-          autosaveEl.innerHTML = `<span class="badge bg-warning-subtle text-warning font-mono" style="font-size: 0.68rem;"><i class="bi bi-arrow-repeat me-1 spinner-border spinner-border-sm" style="width: 8px; height: 8px;"></i> Auto-saving...</span>`;
+          autosaveEl.innerHTML = `<span class="milestone-autosave-chip"><i class="bi bi-arrow-repeat me-1 spinner-border spinner-border-sm" style="width: 8px; height: 8px;"></i> Auto-saving...</span>`;
         }
 
         try {
@@ -858,22 +891,52 @@ document.addEventListener('DOMContentLoaded', async () => {
           }, { auth: true });
 
           if (autosaveEl) {
-            autosaveEl.innerHTML = `<span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.68rem;"><i class="bi bi-cloud-check text-success"></i> Auto-saved to server</span>`;
+            autosaveEl.innerHTML = `<span class="milestone-autosave-chip"><i class="bi bi-cloud-check text-success me-1"></i> Auto-saved to server</span>`;
           }
         } catch (err) {
           if (autosaveEl) {
-            autosaveEl.innerHTML = `<span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.68rem;"><i class="bi bi-cloud-check text-success"></i> Auto-saved to server</span>`;
+            autosaveEl.innerHTML = `<span class="milestone-autosave-chip"><i class="bi bi-cloud-check text-success me-1"></i> Auto-saved to server</span>`;
           }
         }
       });
     });
   };
 
-  const updateAnsweredCounter = () => {
+  const updateAnsweredCounter = (totalCount) => {
     const countEl = document.getElementById('testAnsweredCount');
-    if (countEl) {
-      const answered = Object.keys(testAnswersMap).length;
-      countEl.textContent = answered;
+    const totalEl = document.getElementById('testTotalCount');
+    const pctEl = document.getElementById('testProgressPercentBadge');
+    const fillEl = document.getElementById('testProgressBarFill');
+    const submitBtn = document.getElementById('btnSubmitMilestoneTest');
+
+    const total = totalCount || activeAttempt?.questions?.length || 10;
+    const answered = Object.keys(testAnswersMap).length;
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+    if (countEl) countEl.textContent = answered;
+    if (totalEl) totalEl.textContent = total;
+    if (pctEl) {
+      pctEl.textContent = `${pct}%`;
+      if (pct === 100) {
+        pctEl.className = 'milestone-progress-pill completed';
+      } else {
+        pctEl.className = 'milestone-progress-pill';
+      }
+    }
+    if (fillEl) {
+      fillEl.style.width = `${pct}%`;
+      if (pct === 100) {
+        fillEl.classList.add('bg-success');
+      } else {
+        fillEl.classList.remove('bg-success');
+      }
+    }
+    if (submitBtn) {
+      if (answered === total && !submitBtn.disabled) {
+        submitBtn.classList.add('pulse-ready');
+      } else {
+        submitBtn.classList.remove('pulse-ready');
+      }
     }
   };
 
@@ -903,9 +966,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (timerBadgeEl) {
         if (minutes < 5) {
-          timerBadgeEl.className = 'badge bg-danger text-white font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm animate-pulse';
+          timerBadgeEl.classList.add('is-urgent', 'animate-pulse');
         } else {
-          timerBadgeEl.className = 'badge bg-danger-subtle text-danger border border-danger font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm';
+          timerBadgeEl.classList.remove('is-urgent', 'animate-pulse');
         }
       }
     };

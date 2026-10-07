@@ -419,44 +419,55 @@
 
       </div>
 
-      <!-- Weekly Milestone Test Modal (30-Minute Server Clock, 70% Pass Threshold) -->
+      <!-- Weekly Milestone Test Modal (Proctored Verification Command Center) -->
       <div class="modal fade" id="weeklyTestModal" tabindex="-1" aria-labelledby="weeklyTestModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-          <div class="modal-content border-line shadow-lg" style="background: #ffffff; border-radius: 16px;">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable milestone-modal-dialog">
+          <div class="modal-content milestone-modal-content">
             
-            <!-- Test Modal Header -->
-            <div class="modal-header border-bottom border-line py-3 px-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <div>
-                <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                  <span class="atlas-badge"><i class="bi bi-shield-check text-teal"></i> SERVER-VERIFIED MILESTONE</span>
-                  <span id="testWeekBadge" class="badge badge-navy font-mono">Week 1</span>
-                  <span id="testProctorBadge" class="badge bg-danger-subtle text-danger border border-danger-subtle font-mono px-2 py-1 small">
-                    <i class="bi bi-shield-lock-fill text-danger me-1"></i>STRICT PROCTOR: ACTIVE
-                  </span>
-                  <span id="testStrikesBadge" class="badge bg-success-subtle text-success border border-success-subtle font-mono px-2 py-1 small">
-                    <i class="bi bi-shield-check me-1"></i>Strikes: <span id="testStrikesCount">0</span>/3
-                  </span>
-                  <span id="testFullscreenBadge" class="badge bg-secondary-subtle text-muted font-mono px-2 py-1 small d-none d-md-inline-flex">
-                    <i class="bi bi-fullscreen me-1"></i>Fullscreen Locked
-                  </span>
-                </div>
-                <h5 class="modal-title fw-bold text-ink mb-0" id="weeklyTestModalLabel">Weekly Milestone Skill Verification</h5>
-              </div>
-              <div class="d-flex align-items-center gap-3">
-                <!-- 30-Minute Server-Authoritative Countdown Timer -->
-                <div class="text-end">
-                  <div class="d-flex align-items-center gap-2 justify-content-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm px-2 py-1 font-mono small d-none" id="btnResetWeeklyTest" title="Regenerate fresh questions for this milestone">
-                      <i class="bi bi-arrow-clockwise me-1"></i>New Questions
-                    </button>
-                    <span id="testTimerBadge" class="badge bg-danger-subtle text-danger border border-danger font-mono fs-6 px-3 py-1 d-inline-flex align-items-center gap-2 shadow-sm">
-                      <i class="bi bi-stopwatch-fill"></i>
-                      <span id="testTimerText">30:00</span>
+            <!-- Modern HUD Header -->
+            <div class="modal-header milestone-hud-header py-3 px-4">
+              <div class="milestone-hud-top w-100 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="milestone-hud-info">
+                  <div class="milestone-hud-meta d-flex align-items-center gap-2 mb-1 flex-wrap">
+                    <span class="milestone-chip-verified">
+                      <i class="bi bi-shield-check"></i> Server-Verified Milestone
+                    </span>
+                    <span id="testWeekBadge" class="milestone-chip-week">Week 1</span>
+                    <span id="testProctorBadge" class="milestone-chip-proctor">
+                      <span class="proctor-pulse-beacon"></span>
+                      <i class="bi bi-shield-lock-fill me-1"></i>Strict Proctor
+                    </span>
+                    <span id="testStrikesBadge" class="milestone-chip-strikes strikes-clean">
+                      <i class="bi bi-shield-check me-1"></i>Strikes: <strong id="testStrikesCount">0</strong>/3
+                    </span>
+                    <span id="testFullscreenBadge" class="milestone-chip-fullscreen d-none d-md-inline-flex">
+                      <i class="bi bi-fullscreen me-1"></i>Locked
                     </span>
                   </div>
-                  <div class="mt-1" id="testAutosaveIndicator">
-                    <span class="badge bg-secondary-subtle text-muted font-mono" style="font-size: 0.68rem;">
-                      <i class="bi bi-cloud-check text-success"></i> Auto-saved to server
+                  <h4 class="modal-title milestone-heading mb-0" id="weeklyTestModalLabel">
+                    Week 1 Milestone Verification
+                  </h4>
+                </div>
+
+                <!-- Right Side: Island for Timer & Actions -->
+                <div class="milestone-timer-island">
+                  <div class="d-flex align-items-center gap-2 justify-content-end">
+                    <button type="button" class="btn milestone-btn-regen btn-sm d-none" id="btnResetWeeklyTest" title="Regenerate fresh questions for this milestone">
+                      <i class="bi bi-arrow-clockwise me-1"></i>New Questions
+                    </button>
+                    <div id="testTimerBadge" class="milestone-timer-pill">
+                      <div class="timer-stopwatch-icon">
+                        <i class="bi bi-stopwatch-fill"></i>
+                      </div>
+                      <div class="timer-info">
+                        <span class="timer-sublabel">SERVER CLOCK</span>
+                        <span id="testTimerText" class="timer-digits">30:00</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-1 text-end" id="testAutosaveIndicator">
+                    <span class="milestone-autosave-chip">
+                      <i class="bi bi-cloud-check text-success me-1"></i> Auto-saved to server
                     </span>
                   </div>
                 </div>
@@ -464,29 +475,62 @@
             </div>
 
             <!-- Test Modal Body -->
-            <div class="modal-body p-4">
+            <div class="modal-body milestone-modal-body p-4">
               <!-- Active Test Questions View -->
               <div id="testActiveView">
-                <div class="alert alert-info py-2 px-3 mb-4 d-flex align-items-center gap-2" style="font-size: 0.82rem; border-radius: 8px;">
-                  <i class="bi bi-shield-lock-fill text-danger fs-5 flex-shrink-0"></i>
-                  <div>
-                    <strong>Strict Proctoring Enforced:</strong> 10 Questions &middot; <strong>70% (7/10)</strong> required &middot; 30-Min server clock &middot; Tab switches, window minimization, or copy/paste trigger <strong>Strike 1 (-2:00)</strong>, <strong>Strike 2 (-3:00)</strong>, and <strong>Strike 3 (Disqualification: 0% + 24-Hour Retake Lockout)</strong>.
+                <!-- Sleek Proctoring Security & Rules Ribbon -->
+                <div class="milestone-rules-ribbon mb-4">
+                  <div class="rules-ribbon-content d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-2 rules-pill-group flex-wrap">
+                      <span class="rules-mini-pill">
+                        <i class="bi bi-list-task text-primary"></i> 10 Questions
+                      </span>
+                      <span class="rules-mini-pill">
+                        <i class="bi bi-check-circle-fill text-success"></i> 70% (7/10) Pass Threshold
+                      </span>
+                      <span class="rules-mini-pill">
+                        <i class="bi bi-clock-history text-danger"></i> 30-Min Server Clock
+                      </span>
+                      <span class="rules-mini-pill">
+                        <i class="bi bi-shield-lock text-indigo"></i> Anti-Cheat Monitored
+                      </span>
+                    </div>
+                    <details class="rules-strike-details">
+                      <summary class="rules-summary-toggle">
+                        <i class="bi bi-info-circle me-1"></i> Strike Policy
+                      </summary>
+                      <div class="rules-dropdown-card">
+                        Tab switches, window unfocus, or clipboard copy/paste trigger:
+                        <ul class="mb-0 ps-3 mt-1">
+                          <li><strong>Strike 1:</strong> -2:00 time deduction</li>
+                          <li><strong>Strike 2:</strong> -3:00 time deduction</li>
+                          <li><strong>Strike 3:</strong> Immediate Disqualification (0%) + 24-Hour Retake Lockout</li>
+                        </ul>
+                      </div>
+                    </details>
                   </div>
                 </div>
 
                 <!-- Resumed In-Progress Notice with 1-Click Fresh Reset -->
-                <div id="testResumedBanner" class="alert alert-warning py-2 px-3 mb-3 d-flex align-items-center justify-content-between gap-2 d-none" style="font-size: 0.82rem; border-radius: 8px;">
-                  <div>
-                    <i class="bi bi-arrow-repeat me-1 text-warning"></i>
-                    <span>Resumed in-progress test. Prefer a completely fresh set of questions?</span>
+                <div id="testResumedBanner" class="milestone-resumed-card mb-4 d-none">
+                  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="resumed-icon-pulse">
+                        <i class="bi bi-arrow-repeat text-warning fs-5"></i>
+                      </div>
+                      <div>
+                        <div class="fw-semibold text-ink small">Resumed In-Progress Assessment</div>
+                        <div class="text-muted" style="font-size: 0.78rem;">Your previous answers are saved on the server. Want fresh questions?</div>
+                      </div>
+                    </div>
+                    <button type="button" class="btn milestone-btn-fresh btn-sm" id="btnResumedReset">
+                      <i class="bi bi-lightning-charge-fill me-1"></i>Start Fresh Questions
+                    </button>
                   </div>
-                  <button type="button" class="btn btn-warning btn-sm py-0 px-2 fw-semibold text-dark text-nowrap" id="btnResumedReset">
-                    <i class="bi bi-lightning-charge-fill me-1"></i>Start Fresh
-                  </button>
                 </div>
 
                 <!-- Question List Container -->
-                <div id="testQuestionsContainer" class="d-flex flex-column gap-4">
+                <div id="testQuestionsContainer" class="d-flex flex-column gap-3">
                   <!-- Dynamically rendered by roadmap.js -->
                 </div>
               </div>
@@ -500,22 +544,20 @@
                 <p class="text-muted mb-4" id="testResultSubtitle"></p>
 
                 <div class="row justify-content-center mb-4">
-                  <div class="col-md-9">
-                    <div class="card p-3 border-line" style="background: var(--color-surface-muted, #F8FAFC); border-radius: 12px;">
-                      <div class="d-flex align-items-center justify-content-around">
-                        <div>
-                          <div class="text-muted small">Score</div>
-                          <div class="h3 fw-bold text-ink mb-0" id="testResultScore">- / 10</div>
+                  <div class="col-md-10">
+                    <div class="milestone-result-score-card p-3">
+                      <div class="row text-center g-2">
+                        <div class="col-4">
+                          <div class="result-score-label">FINAL SCORE</div>
+                          <div class="result-score-val text-ink" id="testResultScore">- / 10</div>
                         </div>
-                        <div class="border-end border-line" style="height: 40px;"></div>
-                        <div>
-                          <div class="text-muted small">Percentage</div>
-                          <div class="h3 fw-bold mb-0" id="testResultPercent">-%</div>
+                        <div class="col-4 border-start border-end border-line">
+                          <div class="result-score-label">ACCURACY</div>
+                          <div class="result-score-val text-primary" id="testResultPercent">-%</div>
                         </div>
-                        <div class="border-end border-line" style="height: 40px;"></div>
-                        <div>
-                          <div class="text-muted small">Pass Threshold</div>
-                          <div class="h3 fw-bold text-muted mb-0">70%</div>
+                        <div class="col-4">
+                          <div class="result-score-label">BENCHMARK</div>
+                          <div class="result-score-val text-muted">70% Required</div>
                         </div>
                       </div>
                     </div>
@@ -543,14 +585,24 @@
               </div>
             </div>
 
-            <!-- Test Modal Footer -->
-            <div class="modal-footer border-top border-line py-3 px-4 d-flex align-items-center justify-content-between">
-              <div id="testActiveFooterLeft" class="text-muted small">
-                <span id="testAnsweredCount" class="fw-bold text-ink">0</span> of 10 answered
+            <!-- Test Modal Footer (Sticky Action Dock) -->
+            <div class="modal-footer milestone-hud-footer py-3 px-4 d-flex align-items-center justify-content-between">
+              <div id="testActiveFooterLeft" class="milestone-footer-progress-box">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="milestone-progress-label">
+                    <strong id="testAnsweredCount" class="text-ink">0</strong> of <span id="testTotalCount">10</span> Answered
+                  </span>
+                  <span id="testProgressPercentBadge" class="milestone-progress-pill">0%</span>
+                </div>
+                <div class="milestone-progress-track">
+                  <div id="testProgressBarFill" class="milestone-progress-fill" style="width: 0%;"></div>
+                </div>
               </div>
               <div class="d-flex align-items-center gap-2 ms-auto" id="testActiveButtons">
-                <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal" id="btnCancelTest">Exit Test</button>
-                <button type="button" class="btn cp-btn-primary btn-sm px-4" id="btnSubmitMilestoneTest">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-3 milestone-btn-exit" data-bs-dismiss="modal" id="btnCancelTest">
+                  <i class="bi bi-x-circle me-1"></i> Exit Test
+                </button>
+                <button type="button" class="btn cp-btn-primary btn-sm px-4 milestone-btn-submit" id="btnSubmitMilestoneTest">
                   <i class="bi bi-send-check me-1"></i> Submit & Grade
                 </button>
               </div>
@@ -563,8 +615,6 @@
                 </button>
               </div>
             </div>
-          </div>
-        </div>
       </div>
 
 

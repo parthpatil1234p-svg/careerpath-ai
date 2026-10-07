@@ -145,7 +145,7 @@ const SPECIALIZED_QUESTIONS = [
     topic: 'unity',
     prompt: 'In Unity, what is the key difference between a Collider with "Is Trigger" enabled versus a standard Collider?',
     options: [
-      'Triggers detect overlap events (OnTriggerEnter) without causing physical collision collision reaction forces',
+      'Triggers detect overlap events (OnTriggerEnter) without causing physical collision reaction forces',
       'Triggers only work with 2D sprites and cannot function in 3D',
       'Triggers disable raycasting calculations completely',
       'Triggers bypass the physics engine and run on the GPU'
