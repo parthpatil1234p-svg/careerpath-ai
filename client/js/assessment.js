@@ -2740,29 +2740,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (btnAutoDetectGitHubSkills) {
     btnAutoDetectGitHubSkills.addEventListener('click', () => {
-      const user = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) || 
-                   (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null) || 
-                   null;
-      const connectedGhUser = user?.githubProfile?.username || '';
+      const origHtml = btnAutoDetectGitHubSkills.innerHTML;
+      btnAutoDetectGitHubSkills.disabled = true;
+      btnAutoDetectGitHubSkills.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Connecting GitHub...';
 
-      if (window.GitHubAuth?.showUniversalGitHubModal) {
+      const resetBtn = () => {
+        btnAutoDetectGitHubSkills.disabled = false;
+        btnAutoDetectGitHubSkills.innerHTML = origHtml;
+      };
+
+      if (window.GitHubAuth?.startGitHubOAuth) {
+        window.GitHubAuth.startGitHubOAuth({
+          onSuccess: (data) => {
+            resetBtn();
+            applyDetectedSkills(data);
+          },
+          onError: (err) => {
+            resetBtn();
+            if (typeof showAlert === 'function') {
+              showAlert(err?.message || 'Could not verify GitHub account.', 'warning');
+            }
+          },
+          setLoadingState: (loading) => {
+            if (!loading) resetBtn();
+          }
+        }, true);
+      } else if (window.GitHubAuth?.showUniversalGitHubModal) {
         window.GitHubAuth.showUniversalGitHubModal({
           onSuccess: (data) => {
+            resetBtn();
             applyDetectedSkills(data);
-          }
-        }, true, 'Enter your personal GitHub username to scan your public repositories and auto-verify skills with code evidence:');
-
-        // Pre-fill input if there was an account previously connected
-        if (connectedGhUser) {
-          setTimeout(() => {
-            const input = document.getElementById('ghUsernameInput');
-            if (input && !input.value) {
-              input.value = connectedGhUser;
-              input.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-          }, 150);
-        }
+          },
+          onError: () => resetBtn(),
+        }, true);
       } else {
+        resetBtn();
         showAlert('GitHub integration script loading. Please refresh.', 'warning');
       }
     });
@@ -2771,12 +2783,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Switch / Change GitHub Account Button
   if (btnChangeGitHubAccount) {
     btnChangeGitHubAccount.addEventListener('click', () => {
-      if (window.GitHubAuth?.showUniversalGitHubModal) {
+      const origHtml = btnChangeGitHubAccount.innerHTML;
+      btnChangeGitHubAccount.disabled = true;
+      btnChangeGitHubAccount.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Switching...';
+
+      const resetBtn = () => {
+        btnChangeGitHubAccount.disabled = false;
+        btnChangeGitHubAccount.innerHTML = origHtml;
+      };
+
+      if (window.GitHubAuth?.startGitHubOAuth) {
+        window.GitHubAuth.startGitHubOAuth({
+          onSuccess: (data) => {
+            resetBtn();
+            applyDetectedSkills(data);
+          },
+          onError: () => resetBtn(),
+          setLoadingState: (loading) => {
+            if (!loading) resetBtn();
+          }
+        }, true);
+      } else if (window.GitHubAuth?.showUniversalGitHubModal) {
         window.GitHubAuth.showUniversalGitHubModal({
           onSuccess: (data) => {
+            resetBtn();
             applyDetectedSkills(data);
-          }
-        }, true, 'Enter any student GitHub username to scan repositories and auto-verify skills.');
+          },
+          onError: () => resetBtn(),
+        }, true);
+      } else {
+        resetBtn();
       }
     });
   }

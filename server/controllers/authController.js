@@ -832,7 +832,7 @@ const githubAuth = async (req, res, next) => {
         return res.status(400).json({
           success: false,
           isSecretMissing: true,
-          message: 'GitHub Client Secret is not configured in server/.env yet. Please use Fast-Track Sign In below, or generate a Client Secret on GitHub.',
+          message: 'GitHub Client Secret is not configured in server/.env. Please contact administrator.',
         });
       }
 
@@ -844,7 +844,7 @@ const githubAuth = async (req, res, next) => {
           return res.status(400).json({
             success: false,
             isCodeExchangeFailed: true,
-            message: `GitHub code exchange failed (${err.message}). Please enter your GitHub username.`,
+            message: `GitHub code exchange failed (${err.message}). Please try again.`,
           });
         }
       }
@@ -853,8 +853,7 @@ const githubAuth = async (req, res, next) => {
     if (!ghUsername && !accessToken) {
       return res.status(400).json({
         success: false,
-        isUsernameRequired: true,
-        message: 'Could not resolve GitHub account. Please provide a GitHub username or authenticate via OAuth.',
+        message: 'Could not resolve GitHub account. Please authenticate via GitHub OAuth.',
       });
     }
 
@@ -998,7 +997,7 @@ const connectGitHub = async (req, res, next) => {
         return res.status(400).json({
           success: false,
           isSecretMissing: true,
-          message: 'GitHub OAuth Client Secret is not set in server/.env yet. Please enter your GitHub username below for instant real-time API verification.',
+          message: 'GitHub OAuth Client Secret is not configured in server/.env. Please contact administrator.',
         });
       }
       try {
@@ -1009,7 +1008,7 @@ const connectGitHub = async (req, res, next) => {
           return res.status(400).json({
             success: false,
             isCodeExchangeFailed: true,
-            message: `GitHub code exchange failed (${err.message}). Please enter your GitHub username below.`,
+            message: `GitHub code exchange failed (${err.message}). Please try again.`,
           });
         }
       }
@@ -1037,7 +1036,7 @@ const connectGitHub = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         requireConnect: true,
-        message: 'No GitHub account linked yet. Please provide your GitHub username to scan your study repositories.',
+        message: 'No GitHub account linked yet. Please authenticate via GitHub OAuth to connect your repositories.',
       });
     }
 

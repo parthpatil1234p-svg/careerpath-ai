@@ -963,30 +963,67 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isConnected = !!(profile && (profile.username || profile.id));
 
     const handleConnectClick = async () => {
-      const originalText = btnConnectGitHubText ? btnConnectGitHubText.innerHTML : 'Sync Repos';
+      const originalText = btnConnectGitHubText ? btnConnectGitHubText.innerHTML : (isConnected ? 'Sync Repos' : 'Connect GitHub');
       if (btnConnectGitHubDashboard) btnConnectGitHubDashboard.disabled = true;
       if (btnConnectGitHubText) {
-        btnConnectGitHubText.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Syncing Repos...';
+        btnConnectGitHubText.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status"></span> ${isConnected ? 'Syncing Repos...' : 'Connecting...'}`;
       }
 
+      const resetBtn = () => {
+        if (btnConnectGitHubDashboard) btnConnectGitHubDashboard.disabled = false;
+        if (btnConnectGitHubText) {
+          btnConnectGitHubText.innerHTML = isConnected ? 'Sync Repos' : 'Connect GitHub';
+        }
+      };
+
+      // If user has not connected GitHub yet, initiate direct 1-Click OAuth flow
+      if (!isConnected && window.GitHubAuth?.startGitHubOAuth) {
+        window.GitHubAuth.startGitHubOAuth({
+          onSuccess: async (data) => {
+            resetBtn();
+            const count = data?.repositories?.length || data?.user?.githubRepos?.length || 0;
+            const skillsCount = data?.detectedSkills?.length || 0;
+            const ghUser = data?.user?.githubProfile?.username || profile?.username || 'user';
+            showAlert(`✓ GitHub account connected (@${ghUser})! Found ${count} repos and verified ${skillsCount} skills.`, 'success');
+            await loadDashboard();
+          },
+          onError: (err) => {
+            resetBtn();
+            showAlert(err?.message || 'GitHub connection failed.', 'danger');
+          },
+          setLoadingState: (loading) => {
+            if (!loading) resetBtn();
+          }
+        }, true);
+        return;
+      }
+
+      // If already connected, sync repos directly
       const syncHandler = window.GitHubAuth?.syncRepos || window.GitHubAuth?.connectGitHubAccount;
       if (syncHandler) {
         syncHandler(async (err, data) => {
-          if (btnConnectGitHubDashboard) btnConnectGitHubDashboard.disabled = false;
-          if (btnConnectGitHubText) {
-            btnConnectGitHubText.innerHTML = isConnected ? 'Sync Repos' : 'Connect GitHub';
-          }
+          resetBtn();
 
           if (err) {
-            showAlert(err.message || 'GitHub sync failed.', 'danger');
+            // If sync fails because account wasn't linked or session expired, trigger OAuth
+            if (window.GitHubAuth?.startGitHubOAuth) {
+              window.GitHubAuth.startGitHubOAuth({
+                onSuccess: async () => { await loadDashboard(); },
+                onError: (oauthErr) => showAlert(oauthErr?.message || err.message, 'danger')
+              }, true);
+            } else {
+              showAlert(err.message || 'GitHub sync failed.', 'danger');
+            }
           } else {
             const count = data?.repositories?.length || data?.user?.githubRepos?.length || 0;
             const skillsCount = data?.detectedSkills?.length || 0;
             const ghUser = data?.user?.githubProfile?.username || profile?.username || 'user';
-            showAlert(`✓ Repositories synchronized via auth system (@${ghUser})! Found ${count} repos and verified ${skillsCount} skills.`, 'success');
+            showAlert(`✓ Repositories synchronized (@${ghUser})! Found ${count} repos and verified ${skillsCount} skills.`, 'success');
             await loadDashboard();
           }
         });
+      } else {
+        resetBtn();
       }
     };
 
