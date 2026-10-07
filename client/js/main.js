@@ -169,6 +169,110 @@ function initDomainFilter() {
 }
 
 // ============================================================
+// 6b. Intelligent BM25 Career Search Bar Filter
+// ============================================================
+function initCareerSearch() {
+  const careerSearchInput = document.getElementById('careerSearchInput');
+  const btnClearCareerSearch = document.getElementById('btnClearCareerSearch');
+  const careerSearchStatusText = document.getElementById('careerSearchStatusText');
+  if (!careerSearchInput) return;
+
+  const trackBlocks = document.querySelectorAll('.domain-track-block');
+  const careerCards = Array.from(document.querySelectorAll('.career-card'));
+  if (!careerCards.length) return;
+
+  const escapeFn = window.escapeHtml || function(str) { return str || ''; };
+
+  // Pre-extract metadata for high performance
+  const cardData = careerCards.map(card => {
+    const title = card.querySelector('.career-title')?.textContent || '';
+    const desc = card.querySelector('.career-desc')?.textContent || '';
+    const tags = Array.from(card.querySelectorAll('.skill-tag, .badge')).map(t => t.textContent).join(' ');
+    const trackBlock = card.closest('.domain-track-block');
+    return {
+      element: card,
+      trackBlock,
+      title,
+      description: desc,
+      skills: tags
+    };
+  });
+
+  const searchEngine = window.SearchRelevanceEngine ? window.SearchRelevanceEngine.create() : null;
+
+  const filterCards = () => {
+    const query = (careerSearchInput.value || '').trim();
+    if (btnClearCareerSearch) {
+      btnClearCareerSearch.style.display = query ? 'block' : 'none';
+    }
+
+    if (!query || !searchEngine) {
+      if (careerSearchStatusText) {
+        careerSearchStatusText.textContent = 'Showing all 24 curated career pathways';
+      }
+      cardData.forEach(item => {
+        item.element.classList.remove('d-none');
+        item.element.style.opacity = '1';
+      });
+      trackBlocks.forEach(b => b.classList.remove('d-none'));
+      return;
+    }
+
+    // Run BM25 search
+    const results = searchEngine.search(
+      cardData,
+      query,
+      (item) => ({
+        title: item.title,
+        skills: item.skills,
+        description: item.description
+      })
+    );
+
+    const matchedElements = new Set(results.map(r => r.item.element));
+
+    cardData.forEach(item => {
+      if (matchedElements.has(item.element)) {
+        item.element.classList.remove('d-none');
+        item.element.style.opacity = '1';
+      } else {
+        item.element.classList.add('d-none');
+      }
+    });
+
+    // Check track blocks visibility
+    let visibleCount = 0;
+    trackBlocks.forEach(block => {
+      const visibleCardsInBlock = block.querySelectorAll('.career-card:not(.d-none)');
+      if (visibleCardsInBlock.length > 0) {
+        block.classList.remove('d-none');
+        visibleCount += visibleCardsInBlock.length;
+      } else {
+        block.classList.add('d-none');
+      }
+    });
+
+    if (careerSearchStatusText) {
+      careerSearchStatusText.innerHTML = `<span class="text-primary fw-semibold"><i class="bi bi-stars text-warning me-1"></i>BM25 Found ${visibleCount} pathway${visibleCount === 1 ? '' : 's'} matching "${escapeFn(query)}"</span>`;
+    }
+  };
+
+  let debounceTimer;
+  careerSearchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(filterCards, 120);
+  });
+
+  if (btnClearCareerSearch) {
+    btnClearCareerSearch.addEventListener('click', () => {
+      careerSearchInput.value = '';
+      filterCards();
+      careerSearchInput.focus();
+    });
+  }
+}
+
+// ============================================================
 // 7. Adaptive Recruiter Landing Experience (when viewing ?view=public)
 // ============================================================
 function initRecruiterLandingExperience() {
@@ -238,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCareerCards();
   initMobileNavClose();
   initDomainFilter();
+  initCareerSearch();
   initRecruiterLandingExperience();
 
   console.log(

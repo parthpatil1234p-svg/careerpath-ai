@@ -10,13 +10,14 @@ Allow: /index.html
 Allow: /login.html
 Allow: /register.html
 Allow: /jobs.html
+Allow: /verify.html
+Allow: /resume-builder.html
 Allow: /llms.txt
 Allow: /llms-full.txt
+Allow: /mcp-actions.json
+Allow: /.well-known/mcp-actions.json
 Allow: /sitemap.xml
 Disallow: /dashboard.html
-Disallow: /assessment.html
-Disallow: /recommendations.html
-Disallow: /roadmap.html
 Disallow: /recruiter-dashboard.html
 Disallow: /api/
 
@@ -30,10 +31,14 @@ Allow: /index.html
 Allow: /login.html
 Allow: /register.html
 Allow: /jobs.html
+Allow: /verify.html
+Allow: /resume-builder.html
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /mcp-actions.json
+Allow: /sitemap.xml
 Disallow: /dashboard.html
-Disallow: /assessment.html
-Disallow: /recommendations.html
-Disallow: /roadmap.html
+Disallow: /recruiter-dashboard.html
 Disallow: /api/
 
 # ── Modern AI Search & Answer Engine Crawlers (AEO / Citation Optimization) ───

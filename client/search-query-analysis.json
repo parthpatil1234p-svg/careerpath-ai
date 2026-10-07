@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "title": "CareerPath AI Search Query & Intent Architecture",
+  "description": "Comprehensive search query mining, intent classification, landing page routing matrix, and negative keywords master list for organic SEO and Google/Bing Ads campaigns.",
+  "lastAudited": "2026-10-07",
+  "clusters": [
+    {
+      "topic": "Early-Career Navigation & Degree Specialization",
+      "searchIntent": "Informational",
+      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/index.html#careers",
+      "sampleQueries": [
+        "best career options after bca 2026",
+        "which stream to choose computer science vs ai",
+        "tech careers without calculus maths",
+        "software engineer vs data scientist roadmap for freshers",
+        "high paying tech jobs for non engineering students"
+      ],
+      "ctrTarget": 8.5,
+      "pagePrimaryKeyword": "career options after bca"
+    },
+    {
+      "topic": "Autonomous Skill Diagnostic & Assessment",
+      "searchIntent": "Commercial",
+      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/assessment.html",
+      "sampleQueries": [
+        "free ai skill diagnostic test",
+        "online technical skill assessment for college students",
+        "evaluate my coding skills benchmark",
+        "student career aptitude and technical test",
+        "ai powered career path generator"
+      ],
+      "ctrTarget": 12.0,
+      "pagePrimaryKeyword": "ai career path assessment"
+    },
+    {
+      "topic": "Milestone-Paced Skill Roadmaps",
+      "searchIntent": "Informational / Commercial",
+      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/index.html#how-it-works",
+      "sampleQueries": [
+        "full stack web development roadmap 4 weeks",
+        "ai ml engineer learning roadmap step by step",
+        "cloud devops structured study plan with projects",
+        "free student skill roadmap with milestone verification"
+      ],
+      "ctrTarget": 9.2,
+      "pagePrimaryKeyword": "4 week tech skill roadmap"
+    },
+    {
+      "topic": "Anti-Cheat Proctored Milestone Tests & Certification",
+      "searchIntent": "Transactional",
+      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/verify.html",
+      "sampleQueries": [
+        "verify careerpath ai certificate",
+        "proctored student skill certification sha256",
+        "tamper proof tech certification check online",
+        "public credential verification registry"
+      ],
+      "ctrTarget": 15.4,
+      "pagePrimaryKeyword": "verify careerpath ai certificate"
+    },
+    {
+      "topic": "Verified Direct Recruiter Job Board",
+      "searchIntent": "Transactional",
+      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/jobs.html",
+      "sampleQueries": [
+        "verified frontend developer fresher jobs",
+        "direct recruiter openings without consultancy spam",
+        "tech internships for college students 1 click apply",
+        "entry level remote developer jobs 2026"
+      ],
+      "ctrTarget": 11.8,
+      "pagePrimaryKeyword": "verified tech fresher jobs"
+    },
+    {
+      "topic": "ATS Resume Builder with Skill Sync",
+      "searchIntent": "Commercial / Transactional",
+      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/resume-builder.html",
+      "sampleQueries": [
+        "ai resume builder for freshers free",
+        "ats resume builder with verified skill badges",
+        "generate tech resume from github projects",
+        "single page tech resume maker for college campus placements"
+      ],
+      "ctrTarget": 10.5,
+      "pagePrimaryKeyword": "ai resume builder for tech freshers"
+    }
+  ],
+  "negativeKeywords": {
+    "academicCheatingAndLeaks": [
+      "careerpath exam paper leak",
+      "milestone test cheating trick",
+      "telegram answers bot careerpath",
+      "bypass proctoring fullscreen strike",
+      "fake certificate generator download",
+      "buy forged degree certificate",
+      "exam proxy taker for money"
+    ],
+    "jobScamsAndSpam": [
+      "data entry typing jobs daily 1000 rupees without fees",
+      "part time sms sending job",
+      "unpaid pen packaging work from home",
+      "whatsapp earning group link",
+      "govt sarkari result admit card ssc gd",
+      "job consultancy registration fees call"
+    ],
+    "piracyAndCracks": [
+      "careerpath pro free crack apk",
+      "careerpath premium account generator",
+      "nulled script",
+      "license key activation code txt",
+      "torrent download"
+    ],
+    "unrelatedQueries": [
+      "civil service upsc syllabus hindi medium",
+      "neet medical mbbs cut off",
+      "primary school drawing competition",
+      "gaming cheat codes gta 5"
+    ]
+  },
+  "cannibalizationSafeguards": {
+    "rule": "Every primary keyword cluster has an exclusive single page owner to prevent search rank cannibalization.",
+    "pageOwnership": {
+      "https://careerpath-ai-bdbt.onrender.com/": "Autonomous Career GPS, AI early-career OS, general brand queries",
+      "https://careerpath-ai-bdbt.onrender.com/assessment.html": "Skill assessment, candidate diagnostic, aptitude test",
+      "https://careerpath-ai-bdbt.onrender.com/jobs.html": "Direct recruiter openings, tech fresher jobs, talent radar",
+      "https://careerpath-ai-bdbt.onrender.com/verify.html": "Certificate authentication, SHA-256 credential verification",
+      "https://careerpath-ai-bdbt.onrender.com/resume-builder.html": "ATS resume generator, campus placement CV maker"
+    }
+  }
+}

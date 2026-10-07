@@ -7,7 +7,7 @@
       name="description"
       content="CareerPath AI Technologies Inc. — Autonomous Career GPS & Verified Talent Operating System. Diagnostic skill benchmarking, 3D Career Universe, proctored weekly roadmaps, and SHA-256 verified credentials."
     />
-    <meta name="keywords" content="career guidance, autonomous career GPS, verified talent OS, skill assessment, proctored roadmaps, student roadmap, EdTech SaaS, campus recruitment OS" />
+    <meta name="keywords" content="career guidance, autonomous career GPS, verified talent OS, skill assessment, proctored roadmaps, student roadmap, EdTech SaaS, campus recruitment OS, 职业规划, AI职业导师, 技能学习路径, 证书在线验证" />
     <meta name="author" content="CareerPath AI Technologies Inc." />
     <meta name="theme-color" content="#FFFFFF" />
     <title>CareerPath AI — Autonomous Career GPS &amp; Verified Talent Operating System</title>
@@ -18,6 +18,14 @@
     <!-- WebMCP Autonomous Agent Actions Discovery Declarations -->
     <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
     <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
+
+    <!-- Canonical URL (Technical SEO - Single Source of Truth) -->
+    <link rel="canonical" href="https://careerpath-ai-bdbt.onrender.com/" />
+
+    <!-- Baidu (百度) Regional Search & Mobile Adaptation Meta -->
+    <meta name="applicable-device" content="pc,mobile" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="baidu-site-verification" content="code-careerpath-ai-2026" />
 
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -157,6 +165,54 @@
                 "@type": "Answer",
                 "text": "Yes. Every Job-Ready Certificate carries a unique ID and a SHA-256 cryptographic digest that employers can instantly authenticate at https://careerpath-ai-bdbt.onrender.com/verify.html."
               }
+            }
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://careerpath-ai-bdbt.onrender.com/#website",
+          "url": "https://careerpath-ai-bdbt.onrender.com/",
+          "name": "CareerPath AI",
+          "description": "The world's 1st autonomous career GPS and verified talent operating system.",
+          "publisher": {
+            "@id": "https://careerpath-ai-bdbt.onrender.com/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://careerpath-ai-bdbt.onrender.com/jobs.html?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://careerpath-ai-bdbt.onrender.com/#breadcrumbs",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://careerpath-ai-bdbt.onrender.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Career Pathways",
+              "item": "https://careerpath-ai-bdbt.onrender.com/#careers"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Solutions & Pricing",
+              "item": "https://careerpath-ai-bdbt.onrender.com/#pricing"
+            },
+            {
+              "@type": "ListItem",
+              "position": 4,
+              "name": "Verified Job Board",
+              "item": "https://careerpath-ai-bdbt.onrender.com/jobs.html"
             }
           ]
         }
@@ -675,6 +731,31 @@
           <p class="section-subtitle">
             Strict domain separation: Explore dedicated curricula for Tech & Engineering, Business & Finance, Digital Marketing, and Creative Media.
           </p>
+        </div>
+
+        <!-- Live BM25 & Typo-Tolerant Career Search Bar -->
+        <div class="row justify-content-center mb-4">
+          <div class="col-12 col-md-8 col-lg-6">
+            <div class="input-group shadow-sm" style="border-radius: 9999px; overflow: hidden; border: 1px solid rgba(0,0,0,0.12);">
+              <span class="input-group-text bg-white border-0 text-muted ps-3.5">
+                <i class="bi bi-search text-primary"></i>
+              </span>
+              <input
+                type="text"
+                id="careerSearchInput"
+                class="form-control border-0 py-2.5 px-2"
+                placeholder="Search 24 pathways by skill or title (e.g. 'React', 'Python', 'SEO', 'Figma')..."
+                autocomplete="off"
+                style="box-shadow: none;"
+              />
+              <button class="btn btn-white border-0 px-3 text-secondary" type="button" id="btnClearCareerSearch" style="display:none;" title="Clear search">
+                <i class="bi bi-x-circle-fill"></i>
+              </button>
+            </div>
+            <div class="text-center mt-2 small text-muted font-mono" id="careerSearchHint" style="font-size:0.75rem;">
+              <span id="careerSearchStatusText">Showing all 24 curated career pathways across 4 disciplines</span>
+            </div>
+          </div>
         </div>
 
         <!-- Sticky Domain Filter Bar -->
@@ -1759,6 +1840,7 @@
     <script src="js/stats-counter.js"></script>
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
+    <script src="js/search-engine.js?v=2.6"></script>
     <script src="js/main.js?v=2.7"></script>
     <script src="js/skill-guides.js"></script>
     <script src="js/chat.js"></script>

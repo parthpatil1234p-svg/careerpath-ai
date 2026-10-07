@@ -15,6 +15,42 @@
     <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/mcp-actions.json" title="WebMCP Actions Discovery Endpoint" />
     <link rel="alternate" type="application/json" href="https://careerpath-ai-bdbt.onrender.com/.well-known/mcp-actions.json" title="Well-Known WebMCP Agent Actions" />
 
+    <!-- Canonical URL (Technical SEO) -->
+    <link rel="canonical" href="https://careerpath-ai-bdbt.onrender.com/jobs.html" />
+
+    <!-- Baidu (百度) Mobile Adaptation -->
+    <meta name="applicable-device" content="pc,mobile" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://careerpath-ai-bdbt.onrender.com/jobs.html" />
+    <meta property="og:title" content="Verified Job Board &amp; Direct Recruiter Openings — CareerPath AI" />
+    <meta property="og:description" content="Explore verified direct tech, design, finance, and marketing openings matched with student skill scores and 1-click apply." />
+    <meta property="og:image" content="https://careerpath-ai-bdbt.onrender.com/favicon.svg" />
+
+    <!-- BreadcrumbList Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://careerpath-ai-bdbt.onrender.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Verified Job Board",
+          "item": "https://careerpath-ai-bdbt.onrender.com/jobs.html"
+        }
+      ]
+    }
+    </script>
+
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />
@@ -299,9 +335,24 @@
       <div class="tab-content" id="jobsTabContent">
         <!-- TAB 1: DIRECT RECRUITER OPENINGS -->
         <div class="tab-pane fade show active" id="contentOpenings" role="tabpanel">
-          <!-- Filters Row (WebMCP Search Jobs Action) -->
-          <div class="row g-2 mb-4" data-mcp-action="search_jobs" data-mcp-description="Query verified job openings by track and workplace type" data-mcp-params='{"careerSlug": "#filterCareerSlug", "workplace": "#filterWorkplace"}'>
-            <div class="col-md-4">
+          <!-- Filters & Intelligent Search Bar (BM25 Hybrid Relevance) -->
+          <div class="row g-2 mb-4 align-items-center" data-mcp-action="search_jobs" data-mcp-description="Query verified job openings by track and workplace type" data-mcp-params='{"careerSlug": "#filterCareerSlug", "workplace": "#filterWorkplace", "query": "#jobSearchInput"}'>
+            <div class="col-12 col-md-5">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search text-primary"></i></span>
+                <input
+                  type="text"
+                  id="jobSearchInput"
+                  class="form-control form-control-sm border-start-0"
+                  placeholder="Search role, skills, keywords (e.g. 'React', 'Python', 'Remote')..."
+                  autocomplete="off"
+                />
+                <button class="btn btn-outline-secondary btn-sm" type="button" id="btnClearJobSearch" style="display:none;" title="Clear search">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
               <select class="form-select form-select-sm" id="filterCareerSlug" data-mcp-param="careerSlug">
                 <option value="">All Career Tracks</option>
                 <option value="front-end-developer">Front-End Developer</option>
@@ -313,17 +364,17 @@
                 <option value="devops-engineer">DevOps Engineer</option>
               </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-2">
               <select class="form-select form-select-sm" id="filterWorkplace" data-mcp-param="workplace">
-                <option value="">All Workplace Types (Remote &amp; On-Site)</option>
+                <option value="">All Workplaces</option>
                 <option value="remote">Remote Only</option>
                 <option value="hybrid">Hybrid</option>
                 <option value="on-site">On-Site</option>
               </select>
             </div>
-            <div class="col-md-4 text-md-end">
-              <span class="text-muted small">
-                Ranked by <strong>Personal AI Match Score</strong>
+            <div class="col-12 col-md-2 text-md-end">
+              <span class="text-muted small font-mono" id="searchRelevanceBadge" style="font-size:0.75rem;">
+                <i class="bi bi-stars text-warning me-1"></i>BM25 Ranked
               </span>
             </div>
           </div>
@@ -500,6 +551,7 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js?v=2.7"></script>
     <script src="js/api.js"></script>
+    <script src="js/search-engine.js?v=2.6"></script>
     <script src="js/jobs.js"></script>
   </body>
 </html>

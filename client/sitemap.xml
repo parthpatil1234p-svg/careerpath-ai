@@ -1,35 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- Primary Landing Page -->
   <url>
     <loc>https://careerpath-ai-bdbt.onrender.com/</loc>
     <lastmod>2026-10-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://careerpath-ai-bdbt.onrender.com/index.html</loc>
     <lastmod>2026-10-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Core Diagnostic & Assessment -->
+  <url>
+    <loc>https://careerpath-ai-bdbt.onrender.com/assessment.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Verified Job Board -->
   <url>
     <loc>https://careerpath-ai-bdbt.onrender.com/jobs.html</loc>
     <lastmod>2026-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Recommendations & Career Fit Radar -->
+  <url>
+    <loc>https://careerpath-ai-bdbt.onrender.com/recommendations.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- AI Resume Builder & ATS Matcher -->
+  <url>
+    <loc>https://careerpath-ai-bdbt.onrender.com/resume-builder.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Public Credential & Certificate Verification Registry -->
+  <url>
+    <loc>https://careerpath-ai-bdbt.onrender.com/verify.html</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Authentication -->
   <url>
     <loc>https://careerpath-ai-bdbt.onrender.com/login.html</loc>
     <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://careerpath-ai-bdbt.onrender.com/register.html</loc>
     <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
+
+  <!-- Machine-Readable LLM Manifests -->
   <url>
     <loc>https://careerpath-ai-bdbt.onrender.com/llms.txt</loc>
     <lastmod>2026-10-07</lastmod>
@@ -41,5 +83,13 @@
     <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <!-- WebMCP Actions Specification -->
+  <url>
+    <loc>https://careerpath-ai-bdbt.onrender.com/mcp-actions.json</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
