@@ -51,6 +51,18 @@
     // Expose to window for vanilla JS scripts
     window.CONFIG = CONFIG;
 
+    // Vercel Web Analytics (@vercel/analytics) Universal Queue & Event Tracker
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.trackVercelEvent = function (name, data) {
+      try {
+        if (typeof window !== 'undefined' && window.va) {
+          window.va('event', { name, data: data || {} });
+        }
+      } catch (err) {
+        console.debug('[Vercel Analytics]', err);
+      }
+    };
+
     // Universal Notch Navbar Scroll Elevation
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', () => {
@@ -65,3 +77,4 @@
       }, { passive: true });
     }
   })();
+
