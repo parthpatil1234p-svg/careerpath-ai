@@ -1,0 +1,369 @@
+// ============================================================
+// CareerPath AI — Supabase (PostgreSQL) Prisma Schema
+// Enterprise Architecture · CareerPath AI Technologies Inc.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── 1. User Model ─────────────────────────────────────────────
+model User {
+  id                            String    @id
+  name                          String
+  email                         String    @unique
+  password                      String?
+  googleId                      String?
+  githubId                      String?
+  authProvider                  String    @default("local")
+  role                          String    @default("student")
+  primaryStream                 String    @default("engineering")
+  avatarUrl                     String?
+  resumeUrl                     String?
+  profileCompleted              Boolean   @default(false)
+  isVerified                    Boolean   @default(false)
+  hasCompletedSkillVerification Boolean   @default(false)
+  lastAbandonedRouteAt          DateTime?
+
+  // JSONB Document Fields
+  education                     Json?
+  interests                     Json?
+  skills                        Json?
+  careerGoals                   Json?
+  githubProfile                 Json?
+  githubRepos                   Json?
+  recruiterProfile              Json?
+  resumeRecord                  Json?
+  completedPaths                Json?
+  profileStatus                 Json?
+  resumeAnalysis                Json?
+  mockInterview                 Json?
+  jobReadiness                  Json?
+  builtResume                   Json?
+  verificationOtp               Json?
+  encryptedVault                Json?
+
+  // Relations
+  roadmaps                      Roadmap[]
+  attempts                      Attempt[]
+  resume                        Resume?
+  jobOpenings                   JobOpening[]
+  studentApplications           JobApplication[] @relation("StudentApplications")
+  recruiterApplications         JobApplication[] @relation("RecruiterApplications")
+
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@index([googleId])
+  @@index([githubId])
+}
+
+// ── 2. Roadmap Model ──────────────────────────────────────────
+model Roadmap {
+  id                 String        @id
+  userId             String
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  careerId           String
+  career             Career        @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  durationWeeks      Int           @default(4)
+  status             String        @default("active") // "active", "completed", "abandoned"
+  abandonedAt        DateTime?
+  totalTasks         Int           @default(0)
+  completedTasks     Int           @default(0)
+  progressPercentage Float         @default(0)
+  startedAt          DateTime      @default(now())
+  completedAt        DateTime?
+
+  // JSONB Document Fields
+  careerSnapshot     Json?
+  generatedFrom      Json?
+  weekProgress       Json?
+
+  // Relations
+  tasks              RoadmapTask[]
+  attempts           Attempt[]
+
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([careerId])
+  @@index([status])
+}
+
+// ── 3. RoadmapTask Model ──────────────────────────────────────
+model RoadmapTask {
+  id                     String    @id
+  roadmapId              String
+  roadmap                Roadmap   @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  weekNumber             Int
+  order                  Int
+  title                  String
+  description            String
+  type                   String    @default("learn") // "learn", "practice", "project", "quiz"
+  skillName              String?
+  priority               String    @default("medium")
+  estimatedHours         Int       @default(2)
+  completed              Boolean   @default(false)
+  completedAt            DateTime?
+  isVideoTask            Boolean   @default(false)
+  videoWatchTimeSeconds  Int       @default(0)
+  videoDurationSeconds   Int       @default(0)
+
+  // JSONB Document Fields
+  resource               Json?
+  videoVerification      Json?
+
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@index([roadmapId])
+  @@index([weekNumber])
+  @@index([completed])
+}
+
+// ── 4. Career Model ───────────────────────────────────────────
+model Career {
+  id                   String    @id
+  title                String    @unique
+  slug                 String    @unique
+  shortDescription     String
+  longDescription      String
+  category             String
+  icon                 String?
+  color                String?
+  active               Boolean   @default(true)
+
+  // JSONB Document Fields
+  educationPreferences Json?
+  interestTags         Json?
+  requiredSkills       Json?
+
+  // Relations
+  roadmaps             Roadmap[]
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([category])
+}
+
+// ── 5. Skill Model ────────────────────────────────────────────
+model Skill {
+  id          String   @id
+  name        String   @unique
+  displayName String
+  category    String
+  description String?
+  active      Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([name])
+  @@index([category])
+}
+
+// ── 6. Attempt Model ──────────────────────────────────────────
+model Attempt {
+  id                String    @id
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String    // "skill_check" or "weekly_test"
+  skill             String?
+  roadmapId         String?
+  roadmap           Roadmap?  @relation(fields: [roadmapId], references: [id], onDelete: SetNull)
+  roadmapWeek       Int?
+  score             Float
+  total             Int
+  percent           Float
+  passed            Boolean   @default(false)
+  startTime         DateTime
+  deadline          DateTime
+  submitTime        DateTime?
+
+  // JSONB Document Fields
+  topicTags         Json?
+  questionsAsked    Json?
+  missedTopics      Json?
+  integrityMetadata Json?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([skill])
+  @@index([roadmapId])
+}
+
+// ── 7. Resume Model ───────────────────────────────────────────
+model Resume {
+  id               String   @id
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originalName     String
+  fileType         String
+  sizeBytes        Int
+  fileLocation     String
+  publicId         String
+  version          Int      @default(1)
+  extractedText    String?
+  atsScore         Float?
+  firstUploadedAt  DateTime
+  lastUpdatedAt    DateTime
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// ── 8. Company Model ──────────────────────────────────────────
+model Company {
+  id                  String       @id
+  name                String
+  domain              String       @unique
+  website             String?
+  logoUrl             String?
+  industry            String?
+  headquarters        String?
+  companySize         String?
+  cinNumber           String?
+  linkedinUrl         String?
+  isVerified          Boolean      @default(false)
+  verificationScore   Float        @default(0)
+
+  // JSONB Document Fields
+  verificationDetails Json?
+
+  // Relations
+  jobOpenings         JobOpening[]
+
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  @@index([domain])
+  @@index([isVerified])
+}
+
+// ── 9. JobOpening Model ───────────────────────────────────────
+model JobOpening {
+  id                   String           @id
+  recruiterId          String
+  recruiter            User             @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  companyId            String
+  company              Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyName          String
+  companyLogo          String?
+  companyWebsite       String?
+  isCompanyVerified    Boolean          @default(true)
+  title                String
+  careerSlug           String
+  jobType              String
+  workplace            String
+  location             String?
+  experienceLevel      String?
+  salaryMin            Float?
+  salaryMax            Float?
+  salaryCurrency       String?
+  description          String
+  minimumReadinessScore Float?
+  status               String           @default("active")
+  applicationsCount    Int              @default(0)
+  deadline             DateTime?
+
+  // JSONB Document Fields
+  responsibilities     Json?
+  requiredSkills       Json?
+
+  // Relations
+  applications         JobApplication[]
+
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  @@index([recruiterId])
+  @@index([companyId])
+  @@index([careerSlug])
+  @@index([status])
+}
+
+// ── 10. JobApplication Model ──────────────────────────────────
+model JobApplication {
+  id                  String     @id
+  jobId               String
+  job                 JobOpening @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  studentId           String
+  student             User       @relation("StudentApplications", fields: [studentId], references: [id], onDelete: Cascade)
+  recruiterId         String
+  recruiter           User       @relation("RecruiterApplications", fields: [recruiterId], references: [id], onDelete: Cascade)
+  matchScore          Float
+  readinessTier       String?
+  resumeUrl           String?
+  coverNote           String?
+  status              String     @default("applied")
+  recruiterNotes      String?
+  appliedAt           DateTime   @default(now())
+
+  // JSONB Document Fields
+  matchedSkills       Json?
+  missingSkills       Json?
+  builtResumeSnapshot Json?
+
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  @@unique([jobId, studentId])
+  @@index([jobId])
+  @@index([studentId])
+  @@index([recruiterId])
+  @@index([status])
+}
+
+// ── 11. YoutubeCache Model ────────────────────────────────────
+model YoutubeCache {
+  id        String   @id
+  queryKey  String   @unique
+  skillName String?
+  source    String   @default("curated_registry")
+
+  // JSONB Document Fields
+  videos    Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([queryKey])
+}
+
+// ── 12. CampusLead Model ──────────────────────────────────────
+model CampusLead {
+  id                String    @id
+  collegeName       String
+  cityState         String?
+  contactPerson     String
+  designation       String
+  email             String
+  phone             String
+  batchSize         String
+  preferredDemoDate DateTime?
+  source            String
+  voiceAiCallId     String?
+  status            String    @default("new")
+  notes             String?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+}

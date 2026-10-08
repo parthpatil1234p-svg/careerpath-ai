@@ -17,6 +17,7 @@
     "test:hardened": "node tests/single_route_verification.js",
     "test:recruiter": "node ../tests/recruiter_verification_e2e_test.js",
     "test:rbac": "node ../tests/portal_isolation_rbac_test.js",
+    "test:supabase": "node tests/supabase_migration_verification.js",
     "migrate:roadmaps": "node scripts/migrate_roadmaps_active_index.js",
     "lint": "node --check server.js && node --check seed.js"
   },
@@ -30,6 +31,7 @@
   "author": "CareerPath AI Team",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "adm-zip": "^0.6.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.11.0",
@@ -44,6 +46,7 @@
     "morgan": "^1.12.0",
     "nodemailer": "^10.0.10",
     "pdf-parse": "^2.4.5",
+    "prisma": "^6.19.3",
     "socket.io": "^4.8.4"
   },
   "devDependencies": {

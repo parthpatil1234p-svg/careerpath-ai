@@ -47,6 +47,7 @@
 | **34** | [`college_placement_partner_portal_plan.md`](./college_placement_partner_portal_plan.md) | Standalone University & College TPO Portal (`colleges.html`) | **⏳ Ready for Execution** | Plan created for dedicated institutional partner portal. |
 | **35** | [`keep_required_remove_bloat_plan.md`](./keep_required_remove_bloat_plan.md) | Keep strictly required core pillars, purge `bicea.org` ads & hackathon bloat | **✅ Yes** | 100% completed: Purged all 6 `bicea.org` third-party ad units, hackathon bloat eliminated. |
 | **36** | [`hybrid_backend_architecture_plan.md`](./hybrid_backend_architecture_plan.md) | Hybrid Vercel REST + Render Real-Time + Shared Atlas DB + Local Integrity | **✅ Yes** | Serverless exports, Vercel proxy rewrite & Render endpoints configured. |
+| **37** | [`supabase_complete_migration_plan.md`](./supabase_complete_migration_plan.md) | Complete MongoDB to Supabase (PostgreSQL) Migration with Prisma ORM | **✅ Yes** | 100% completed: All 12 models, data migration, bcrypt hashes, and partial unique indexes verified. |
 
 ---
 

@@ -53,6 +53,7 @@ const rateLimit = require('express-rate-limit');
 
 // ── Internal imports ──────────────────────────────────────────
 const connectDB = require('./config/db');
+const { connectPrisma, prisma } = require('./config/prisma');
 const { initSocket } = require('./services/socketService');
 const { initCron } = require('./services/cronService');
 const authRoutes = require('./routes/authRoutes');
@@ -75,8 +76,9 @@ const youtubeRoutes = require('./routes/youtubeRoutes');
 const campusRoutes = require('./routes/campusRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
-// ── 2. Connect to MongoDB Atlas ───────────────────────────────
+// ── 2. Connect Databases (MongoDB Atlas + Supabase PostgreSQL) ─
 connectDB();
+connectPrisma();
 
 // ── 3. Create Express app ─────────────────────────────────────
 const app = express();
@@ -196,6 +198,8 @@ const healthHandler = (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '2.5.0',
     platform: 'CareerPath AI Technologies Inc.',
+    databases: ['MongoDB Atlas', 'Supabase PostgreSQL'],
+    supabaseConfigured: !!process.env.DATABASE_URL,
     emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
   });
 };

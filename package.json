@@ -11,6 +11,7 @@
     "test:hardened": "node server/tests/single_route_verification.js",
     "test:recruiter": "node tests/recruiter_verification_e2e_test.js",
     "test:rbac": "node tests/portal_isolation_rbac_test.js",
+    "test:supabase": "npm --prefix server run test:supabase",
     "lint": "node --check server/server.js && node --check server/seed.js",
     "server:install": "npm --prefix server install",
     "server:dev": "npm --prefix server run dev",
@@ -29,6 +30,8 @@
   "author": "CareerPath AI Team",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@supabase/server": "^1.9.1",
     "@vercel/analytics": "^2.0.1",
     "adm-zip": "^0.6.1",
     "bcryptjs": "^2.4.3",
