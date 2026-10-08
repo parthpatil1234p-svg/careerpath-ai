@@ -45,7 +45,8 @@
 | **32** | [`startup_transformation_roadmap_plan.md`](./startup_transformation_roadmap_plan.md) | Transition to commercial startup: CareerPath AI Technologies Inc. | **⏳ Ready for Execution** | Strategic roadmap created. |
 | **33** | [`b2b_monetization_and_student_free_model_plan.md`](./b2b_monetization_and_student_free_model_plan.md) | 100% Free for Students, B2B Recruiter & Campus OS Monetization | **⏳ Ready for Execution** | Business model & landing page integration designed. |
 | **34** | [`college_placement_partner_portal_plan.md`](./college_placement_partner_portal_plan.md) | Standalone University & College TPO Portal (`colleges.html`) | **⏳ Ready for Execution** | Plan created for dedicated institutional partner portal. |
-| **35** | [`keep_required_remove_bloat_plan.md`](./keep_required_remove_bloat_plan.md) | Keep strictly required core pillars, purge `bicea.org` ads & hackathon bloat | **⏳ In Progress / Current** | Plan created. Awaiting execution approval. |
+| **35** | [`keep_required_remove_bloat_plan.md`](./keep_required_remove_bloat_plan.md) | Keep strictly required core pillars, purge `bicea.org` ads & hackathon bloat | **⏳ Pending / Deferred** | Plan created (#35). Deferred by user in favor of Hybrid Architecture plan. |
+| **36** | [`hybrid_backend_architecture_plan.md`](./hybrid_backend_architecture_plan.md) | Hybrid Vercel REST + Render Real-Time + Shared Atlas DB + Local Integrity | **⏳ In Progress / Current** | Plan drafted and reviewed. Ready for execution upon user approval. |
 
 ---
 
