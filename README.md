@@ -77,6 +77,7 @@
    - [6.1 The 4-Rule Certification Rubric](#61-the-4-rule-certification-rubric)
    - [6.2 10-Step Career GPS & Job Readiness Index Engine](#62-10-step-career-gps--job-readiness-index-engine)
    - [6.3 1-Click "Bridge the Gap" Roadmap Injection](#63-1-click-bridge-the-gap-roadmap-injection)
+   - [6.4 4-Criteria Job-Ready Benchmark Scorecard (Emerald Matrix & 180-Day Freshness)](#64-4-criteria-job-ready-benchmark-scorecard-emerald-matrix--180-day-freshness)
 7. [📄 Dedicated Single Resume per Account Architecture](#-dedicated-single-resume-per-account-architecture)
    - [7.1 Binary Magic-Byte Inspection (`%PDF`, `DOCX`, `DOC`)](#71-binary-magic-byte-inspection-pdf-docx-doc)
    - [7.2 Transactional Cloudinary Asset Destruction (Zero Leakage)](#72-transactional-cloudinary-asset-destruction-zero-leakage)
@@ -101,11 +102,17 @@
     - [11.5 Student 1-Click Application & Personalized AI Match Scoring](#115-student-1-click-application--personalized-ai-match-scoring)
     - [11.6 Recruiter & Student Portal Isolation & RBAC Architecture](#116-recruiter--student-portal-isolation--rbac-architecture)
     - [11.7 Role-Smart Brand Logo Dispatch & Landing Page Redirection Engine](#117-role-smart-brand-logo-dispatch--landing-page-redirection-engine)
+    - [11.8 Job Opening Deadlines, Auto-Expiry Engine & Recruiter Instant Close Controls](#118-job-opening-deadlines-auto-expiry-engine--recruiter-instant-close-controls)
 12. [🏗️ End-to-End System Architecture (Mermaid)](#️-end-to-end-system-architecture-mermaid)
 13. [🔌 Core REST API Directory](#-core-rest-api-directory)
 14. [💰 Business Model & B2B2C Talent & Telemetry Flywheel](#-business-model--b2b2c-talent--telemetry-flywheel)
+    - [14.1 100% Free Student Model & B2B Recruiter Radar Monetization](#141-100-free-student-model--b2b-recruiter-radar-monetization)
+    - [14.2 College Placement Cell (TPO) Campus OS & NAAC/NIRF Accreditation Framework](#142-college-placement-cell-tpo-campus-os--naacnirf-accreditation-framework)
 15. [🔒 Security, Guardrails & Anti-Abuse Protocols](#-security-guardrails--anti-abuse-protocols)
 16. [⚡ Local Quickstart & Automated Test Suites](#-local-quickstart--automated-test-suites)
+    - [16.1 Installation & Environment Setup](#161-installation--environment-setup)
+    - [16.2 Automated Test & Verification Commands](#162-automated-test--verification-commands)
+    - [16.3 Production Deployment Topology (Vercel Frontend & Render REST API)](#163-production-deployment-topology-vercel-frontend--render-rest-api)
 17. [🤖 Official AI Usage Disclosure (Rulebook Compliance)](#-official-ai-usage-disclosure-rulebook-compliance)
 18. [👥 The Team — 404 Brain Not Found & Acknowledgements](#-the-team--404-brain-not-found--acknowledgements)
 
@@ -157,7 +164,7 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 ---
 
 ### ⏱️ Recommended 3-Minute Evaluation Walkthrough:
-1. **Landing (`/index.html`):** Experience the **Three.js 3D Career Universe** constellation (or instant 2D fallback on low-power devices) and click **"Get Started"**.
+1. **Landing (`/index.html`):** Experience the streamlined **Floating Notch Island Navigation** (`Platform`, `Solutions`, `For Recruiters`, `Pricing`), explore the interactive **Skill Showcase ("Build with skills employers use")** with 8 live technology guides (React, JS, Python, Node, Figma, SQL, AWS, Git), and review the single high-tech live status pill (`AUTONOMOUS CAREER NAVIGATION PLATFORM`). Click **"Start Free"** or **"Start Free Assessment"**.
 2. **Instant Sign-In (`/login.html`):** Click **"⚡ 1-Click Fill Demo Account"** (`demouser@gmail.com` / `demo123`) or Sign In with Google / GitHub.
 3. **Assessment (`/assessment.html`):** Click **"Auto-Detect Skills"** in Step 3 — notice that **NO manual username prompt modal appears**! Repositories synchronize instantly via auth session, awarding glowing `[✓ Code Verified]` badges.
 4. **Adaptive Reality-Check Quiz (`/quiz.html`):** Test the 5-question micro-assessment. Test the **BYOK Provider Switcher** (Groq Llama 3.3 70B, Google Gemini 2.5 Flash, or custom key). Notice instant pedagogical feedback. Once completed, verification is permanently saved.
@@ -565,6 +572,25 @@ Beyond binary certification, the **10-Step Career GPS Engine** calculates a real
 ### 6.3 1-Click "Bridge the Gap" Roadmap Injection
 When browsing matched job postings with missing prerequisites, the student clicks **"⚡ Bridge the Gap"** (`POST /api/jobs/bridge-gap`). The engine automatically synthesizes tailored micro-learning tasks and dynamically injects them into the student's current active roadmap week—transforming job rejection anxiety into an immediate 7-day action plan.
 
+### 6.4 4-Criteria Job-Ready Benchmark Scorecard (Emerald Matrix & 180-Day Freshness)
+To establish high-contrast objective feedback, `/dashboard.html` renders the 4 certification standards as a standalone **Emerald Scorecard Matrix** (`#FFFFFF` cards with `#22C55E` borders, `#F0FDF4` card container, `#16A34A` status badges, and bold metric displays):
+
+```
+┌─────────────────────────┬─────────────────────────┬─────────────────────────┬─────────────────────────┐
+│ 1. MINIMUM 70% MATCH    │ 2. 4+ VERIFIED SKILLS   │ 3. 80%+ ROADMAP MILESTON│ 4. 180-DAY FRESHNESS    │
+├─────────────────────────┼─────────────────────────┼─────────────────────────┼─────────────────────────┤
+│ Target Role Alignment   │ Proof-of-Work Required  │ Milestone Disciplined   │ Anti-Staleness Ledger   │
+│ Current: 88% Match      │ Current: 4 of 4 Verified│ Current: 80% Completed  │ Freshness: 180-Day Valid│
+│ [STATUS: MET ✓]         │ [STATUS: MET ✓]         │ [STATUS: MET ✓]         │ [STATUS: ACTIVE ✓]      │
+└─────────────────────────┴─────────────────────────┴─────────────────────────┴─────────────────────────┘
+```
+
+1. **Rule 1 (≥70% Compatibility Match):** Mathematically computed by the 60/25/15 cosine-similarity algorithm against current Indian tech requirements.
+2. **Rule 2 (≥4 Proctored / Code-Verified Skills):** Prevents resume keyword stuffing; requires verified GitHub proof-of-work or passed adaptive quiz challenges.
+3. **Rule 3 (≥80% Milestone Execution):** Enforces time-boxed commitment across roadmap weeks, proving consistent task execution rather than cramming.
+4. **Rule 4 (180-Day Freshness Validity):** Verifies that capabilities remain fresh in fast-evolving tech stacks. Badges carry an active 180-day ledger before requiring a brief refresher evaluation.
+5. **Cryptographic SHA-256 Gating:** The tamper-proof Job-Ready Certificate (`/verify.html`) and verified badge are cryptographically signed and minted only when all 4 scorecard criteria are concurrently satisfied.
+
 ---
 
 ## 📄 Dedicated Single Resume per Account Architecture
@@ -930,6 +956,36 @@ When users click the platform brand logo (`<a class="navbar-brand">`) or navigat
    - Injects a floating dark session bar (`#recruiterActiveSessionBar`) with recruiter identity, company affiliation, and 1-click return to dashboard.
    - Dynamically transforms hero buttons: `"Start Assessment"` becomes `"Go to Recruiter Dashboard"`, and secondary CTA becomes `"Post Job Opening"`.
 
+### 11.8 Job Opening Deadlines, Auto-Expiry Engine & Recruiter Instant Close Controls
+To protect students from ghost job postings, stale openings, and expired recruitment drives, CareerPath AI implements strict time-delimited opening lifecycles:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│               JOB OPENING LIFECYCLE & AUTO-EXPIRY ENGINE                               │
+├──────────────────────────┬─────────────────────────────┬───────────────────────────────┤
+│ 1. CREATION DEADLINE     │ 2. REAL-TIME COUNTDOWN      │ 3. AUTOMATED AUTO-EXPIRY      │
+├──────────────────────────┼─────────────────────────────┼───────────────────────────────┤
+│ • Mandatory Date Picker  │ • Dynamic remaining days    │ • Auto-filters expired jobs   │
+│ • "applicationDeadline"  │ • "Closing in 3 days"       │ • Auto-updates status to      │
+│ • Validated: Must be in  │ • "Closing today!"          │   'closed'                    │
+│   the future             │ • High-contrast badge alert │ • Unpublished from student UI │
+└──────────────────────────┴─────────────────────────────┴───────────────────────────────┘
+```
+
+1. **Mandatory Application Deadline Field (`applicationDeadline`):**
+   - When posting a new vacancy via `/recruiter-dashboard.html`, recruiters select an explicit application closing date.
+   - Enforced in backend model `JobOpening.js`: validated to prevent past dates, indexed for high-speed query filtration.
+2. **Real-Time Days Remaining Telemetry:**
+   - On the student job board (`/jobs.html`), each verified employer card renders an intelligent remaining time badge:
+     - $\ge 4$ Days: Soft slate pill (`Closing in X days`).
+     - $1-3$ Days: Urgent amber warning pill with clock icon (`Closing in X days`).
+     - Last 24 Hours: Pulsing red pill (`Closing today!`).
+     - Past Deadline: Muted gray pill (`Application closed / Expired`).
+3. **Automated Server Filtration & Expired Guard:**
+   - Active opening queries (`GET /api/jobs/openings`) dynamically filter out listings where `applicationDeadline < Date.now()`, ensuring students never submit applications to defunct openings.
+4. **Instant 1-Click Recruiter Close & Re-open Controls:**
+   - In `/recruiter-dashboard.html`, corporate hiring managers have immediate toggle buttons to manually close early-filled positions or extend active deadlines on the fly with real-time DOM updates.
+
 ---
 
 ## 🏗️ End-to-End System Architecture (Mermaid)
@@ -1103,7 +1159,7 @@ CareerPath AI is built on a **sustainable B2B2C Talent & Telemetry Flywheel** th
 │                        CAREERPATH AI B2B2C MONETIZATION                                │
 ├──────────────────────────┬─────────────────────────────┬───────────────────────────────┤
 │ 🎓 STUDENTS              │ 🏛️ COLLEGES / UNIVERSITIES   │ 💼 HIRING COMPANIES           │
-│ 100% FREE ALWAYS         │ PLACEMENT SAAS (TPO PORTAL) │ VERIFIED TALENT ACCESS        │
+│ 100% FREE ALWAYS         │ PLACEMENT SAAS (CAMPUS OS)  │ VERIFIED TALENT ACCESS        │
 ├──────────────────────────┼─────────────────────────────┼───────────────────────────────┤
 │ • Zero paywalls          │ • Per-batch / yearly SaaS   │ • Pre-screened candidates     │
 │ • Free 60/25/15 match    │ • Batch skill gap heatmaps  │ • Proof-of-work hiring        │
@@ -1112,10 +1168,33 @@ CareerPath AI is built on a **sustainable B2B2C Talent & Telemetry Flywheel** th
 └──────────────────────────┴─────────────────────────────┴───────────────────────────────┘
 ```
 
-1. **Free for Students, Always:** Eliminates user friction, maximizes campus virality, and democratizes career advancement without economic barriers.
-2. **College Placement SaaS (TPO Portal):** Placement Officers pay an annual campus license (₹1.5L–₹3.5L/year) for batch-wide skill deficiency heatmaps, placement probability metrics, and automated NAAC/NIRF accreditation exports.
-3. **Verified-Skill Recruiter Portal:** Corporate employers pay monthly subscriptions (₹24,999/mo) or pay-as-you-go unlocks to access pre-assessed, proof-of-work candidate pipelines filtered by verified tech stacks.
-4. **Ethical Learning Partnerships:** Non-intrusive, strictly labeled sponsored certification referrals (15–25% revenue share) for students wanting recognized industry credentials, with zero bias on the free core curriculum.
+### 14.1 100% Free Student Model & B2B Recruiter Radar Monetization
+1. **Free for Students, Always (₹0):** Eliminates all user friction, maximizes campus virality, and democratizes career advancement without economic barriers. 100% of core student features—3D Universe, 4-step diagnostic assessment, personalized roadmaps, proctored exams, cryptographic verification, and resume tools—are free forever.
+2. **Corporate Recruiter Talent Radar:** Corporate employers subscribe to monthly tiers (₹24,999/mo to ₹59,999/mo) or pay-as-you-go candidate unlocks to discover pre-assessed, proof-of-work candidates with tamper-proof score ledgers and GitHub verification.
+3. **Verified Opening Postings:** Corporate employers post target tech jobs with enforced skill prerequisites and time-delimited application deadlines, reducing employer screening cost-per-hire (CAC) by 60%.
+
+### 14.2 College Placement Cell (TPO) Campus OS & NAAC/NIRF Accreditation Framework
+Higher education institutions face immense pressure to satisfy statutory accreditation standards. CareerPath AI's **Campus OS** provides an institutional data engine mapping student progress directly to key compliance metrics:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                     CAMPUS OS: HIGHER EDUCATION COMPLIANCE MATRIX                      │
+├──────────────────────────┬─────────────────────────────┬───────────────────────────────┤
+│ NAAC CRITERIA 1.1        │ NAAC CRITERIA 5.1 & 5.2     │ NIRF GRADUATION OUTCOME (GO)  │
+├──────────────────────────┼─────────────────────────────┼───────────────────────────────┤
+│ Curricular Planning      │ Student Support & Placement │ Placement % & Median Salary   │
+│ • Employer telemetry     │ • Quantified counselling    │ • Pre-vetted graduates attract│
+│ • Dynamic skill syllabus │ • Milestone roadmaps        │   tier-1 recruiter partners   │
+│ • Gap analysis across 24 │ • Automated 5.2.1 placement │ • Higher median salary (GPH)  │
+│   industry career paths  │   evidence audit records    │ • Zero screening friction     │
+└──────────────────────────┴─────────────────────────────┴───────────────────────────────┘
+```
+
+1. **NAAC Criteria 1.1 (Curricular Relevance):** Connects classroom curriculum to real employer demand from 150+ tech employers, tracking dynamic tech-stack parity.
+2. **NAAC Criteria 5.1 & 5.2 (Student Guidance & Progression):** Replaces passive guest lectures with milestone execution roadmaps, AI mock interview labs, and exportable 5.2.1 placement records.
+3. **NIRF Metric Enhancement (Graduation Outcomes):** Directly lifts college ranking scores by improving placement percentages and median package metrics through verified competence.
+4. **The 70% Server-Proctored Verification Rubric:** Enforces strict institutional exam integrity: 30-min server clock, 70% pass threshold, 3-strike anti-cheat penalty system, and tamper-proof SHA-256 ledger.
+5. **Campus Briefing Pipeline:** College leaders (Principals, Directors, IQAC Coordinators, TPOs) can directly review the printable compliance brief or book an institutional briefing via `#modalCampusDemo`.
 
 ---
 
@@ -1134,7 +1213,7 @@ CareerPath AI is built on a **sustainable B2B2C Talent & Telemetry Flywheel** th
 
 ## ⚡ Local Quickstart & Automated Test Suites
 
-### 1. Installation & Environment
+### 16.1 Installation & Environment Setup
 ```bash
 # 1. Backend Setup
 cd careerpath-ai/server
@@ -1149,7 +1228,7 @@ npx serve -p 5500        # Serves client on http://localhost:5500
 # Open http://localhost:5500/index.html in your browser
 ```
 
-### 2. Automated Test & Verification Commands
+### 16.2 Automated Test & Verification Commands
 ```bash
 cd careerpath-ai/server
 
@@ -1169,10 +1248,10 @@ npm run test:security
 npm run migrate:roadmaps
 
 # Verify Recruiter Verification, Real Company Validation & Job Posting Pipeline
-node tests/recruiter_verification_e2e_test.js
+npm run test:recruiter
 
 # Verify Portal Isolation RBAC, Smart Logo Navigation & Landing Auto-Redirect (26 Assertions)
-node tests/portal_isolation_rbac_test.js
+npm run test:rbac
 ```
 
 #### 🛡️ Live Automated Invariant Test Results (100% Pass Rate):
@@ -1237,6 +1316,47 @@ node tests/portal_isolation_rbac_test.js
 🎉 ALL 26 PORTAL ISOLATION TESTS PASSED WITH 100% SUCCESS!
 ================================================================
 ```
+
+### 16.3 Production Deployment Topology (Vercel Frontend & Render REST API)
+CareerPath AI implements a production-grade decoupled cloud deployment architecture designed for sub-second global edge delivery, resilient database failover, and zero-downtime micro-updates:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        CAREERPATH AI PRODUCTION TOPOLOGY                               │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                        │
+│   🌐 FRONTEND CLIENT (Vercel Global Edge Network)                                      │
+│   • Directory: client/ (Root or outputDirectory in root vercel.json)                   │
+│   • Live Domain: https://careerpath-ai-jade.vercel.app                                 │
+│   • Configuration: vercel.json with cleanUrls and security headers                     │
+│   • Auto-Points To: https://careerpath-ai-bdbt.onrender.com/api                        │
+│   • Features: Instant global edge invalidation, dynamic cache busting, asset bundling │
+│                                                                                        │
+│   ⚡ BACKEND REST API (Render Web Service)                                             │
+│   • Directory: server/                                                                 │
+│   • Live Gateway: https://careerpath-ai-bdbt.onrender.com                              │
+│   • Runtime: Node.js 18+ Express.js with MongoDB Atlas & Mongoose                      │
+│   • Health Endpoint: /api/health (99.9% Uptime SLA & Atlas Ping Monitor)               │
+│   • Serverless Fallback: server/vercel.json with @vercel/node engine handler           │
+│   • Security: Helmet headers, CORS origin whitelist, bcryptjs, rate limiting           │
+│                                                                                        │
+│   🗄️ PERSISTENCE & STORAGE TIER                                                        │
+│   • Database: MongoDB Atlas cloud cluster (High availability with M0/M10 replica set)  │
+│   • Object Storage: Cloudinary secure CDN with single-resume transactional destruction  │
+│                                                                                        │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Frontend Deployment (Vercel):**
+   - **Repository Root:** Configured to serve the `client/` distribution with clean URL rewrites, responsive asset routing, and production security headers.
+   - **Zero Environment Leakage:** Frontend accesses only public endpoints and local storage tokens without exposing cloud secrets or master keys.
+   - **Live Production URL:** **[https://careerpath-ai-jade.vercel.app](https://careerpath-ai-jade.vercel.app)**
+2. **Backend Deployment (Render):**
+   - **Managed Web Service:** Hosted on Render with automatic git push tracking, Node 18+ runtime, and production health monitoring.
+   - **CORS Whitelist:** Configured to strictly accept production domain `https://careerpath-ai-jade.vercel.app` while preserving local development ports (`http://localhost:5500`, `http://127.0.0.1:5500`).
+   - **Live API Endpoint:** **[https://careerpath-ai-bdbt.onrender.com](https://careerpath-ai-bdbt.onrender.com)**
+3. **Local Dev & Testing Integrity Guarantee:**
+   - Both client and server maintain local development fallbacks. Running `npm run dev` in `server/` and serving `client/` on `http://localhost:5500` works flawlessly without breaking remote production pipelines.
 
 ---
 

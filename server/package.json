@@ -15,6 +15,8 @@
     "test:resume": "node test_single_resume.js",
     "test:route": "node test_single_route.js",
     "test:hardened": "node tests/single_route_verification.js",
+    "test:recruiter": "node ../tests/recruiter_verification_e2e_test.js",
+    "test:rbac": "node ../tests/portal_isolation_rbac_test.js",
     "migrate:roadmaps": "node scripts/migrate_roadmaps_active_index.js",
     "lint": "node --check server.js && node --check seed.js"
   },
