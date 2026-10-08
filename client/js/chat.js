@@ -19,6 +19,14 @@
     chatHistory = [];
   }
 
+  // Auto-load socket-client.js if not already present
+  if (typeof window !== 'undefined' && !window.CareerPathSocket && !document.getElementById('cpSocketClientScript')) {
+    const s = document.createElement('script');
+    s.id = 'cpSocketClientScript';
+    s.src = 'js/socket-client.js';
+    document.head.appendChild(s);
+  }
+
   function getApiBaseUrl() {
     if (window.CONFIG && window.CONFIG.API_BASE_URL) {
       return window.CONFIG.API_BASE_URL;
@@ -456,54 +464,122 @@
         text: m.text
       }));
 
-      const res = await fetch(`${getApiBaseUrl()}/chat/message`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
+      // ── Real-Time WebSocket Streaming with REST Fallback ─────
+      if (window.CareerPathSocket && window.CareerPathSocket.isConnected()) {
+        let streamRow = null;
+        let streamBubble = null;
+        let accumulatedText = '';
+
+        window.CareerPathSocket.streamMentorMessage({
           message: text,
-          history: historyPayload
-        })
-      });
-
-      const data = await res.json().catch(() => ({}));
-      removeTypingIndicator();
-
-      if (res.status === 401) {
-        appendBubbleToDOM(
-          'ai',
-          '🔒 **Session Expired:** Your login session has expired. Please [log in again](login.html) to chat with AI Career Mentor.',
-          formatTime()
-        );
+          history: historyPayload,
+          onChunk: (chunk) => {
+            removeTypingIndicator();
+            if (!streamRow) {
+              streamRow = document.createElement('div');
+              streamRow.className = 'cp-chat-row ai';
+              streamBubble = document.createElement('div');
+              streamBubble.className = 'cp-chat-bubble';
+              streamRow.appendChild(streamBubble);
+              const timeSpan = document.createElement('span');
+              timeSpan.className = 'cp-chat-time';
+              timeSpan.textContent = formatTime();
+              streamRow.appendChild(timeSpan);
+              const container = document.getElementById('cpChatMessages');
+              if (container) container.appendChild(streamRow);
+            }
+            accumulatedText += chunk;
+            if (streamBubble) {
+              streamBubble.innerHTML = parseMarkdown(accumulatedText);
+              scrollToBottom();
+            }
+          },
+          onDone: (data) => {
+            removeTypingIndicator();
+            const fullText = data.fullText || accumulatedText;
+            if (!streamRow) {
+              appendBubbleToDOM('ai', fullText, formatTime());
+            } else if (streamBubble) {
+              streamBubble.innerHTML = parseMarkdown(fullText);
+            }
+            chatHistory.push({ role: 'ai', text: fullText, time: formatTime() });
+            try {
+              sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory.slice(-20)));
+            } catch (e) {}
+            isSending = false;
+            const input = document.getElementById('cpChatInput');
+            if (input) input.focus();
+          },
+          onError: () => {
+            // Fallback to stateless REST endpoint
+            executeRestFetch();
+          }
+        });
         return;
       }
 
-      if (res.status === 429) {
-        const cooldownMsg = data.message || 'AI Career Mentor is currently cooling down. You have reached your 20-message limit for this 15-minute window. Please wait a few minutes before continuing.';
-        appendBubbleToDOM(
-          'ai',
-          `⏳ **Rate Limit Notice:** ${cooldownMsg}`,
-          formatTime()
-        );
-        return;
-      }
+      await executeRestFetch();
 
-      if (data.success && data.reply) {
-        const aiTime = formatTime();
-        appendBubbleToDOM('ai', data.reply, aiTime);
-        chatHistory.push({ role: 'ai', text: data.reply, time: aiTime });
+      async function executeRestFetch() {
         try {
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory.slice(-20)));
-        } catch (e) {}
-      } else {
-        const errorMsg = data.message || 'Sorry, I could not process your question right now. Please try again.';
-        appendBubbleToDOM('ai', `⚠️ ${errorMsg}`, formatTime());
+          const res = await fetch(`${getApiBaseUrl()}/chat/message`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              message: text,
+              history: historyPayload
+            })
+          });
+
+          const data = await res.json().catch(() => ({}));
+          removeTypingIndicator();
+
+          if (res.status === 401) {
+            appendBubbleToDOM(
+              'ai',
+              '🔒 **Session Expired:** Your login session has expired. Please [log in again](login.html) to chat with AI Career Mentor.',
+              formatTime()
+            );
+            return;
+          }
+
+          if (res.status === 429) {
+            const cooldownMsg = data.message || 'AI Career Mentor is currently cooling down. You have reached your 20-message limit for this 15-minute window. Please wait a few minutes before continuing.';
+            appendBubbleToDOM(
+              'ai',
+              `⏳ **Rate Limit Notice:** ${cooldownMsg}`,
+              formatTime()
+            );
+            return;
+          }
+
+          if (data.success && data.reply) {
+            const aiTime = formatTime();
+            appendBubbleToDOM('ai', data.reply, aiTime);
+            chatHistory.push({ role: 'ai', text: data.reply, time: aiTime });
+            try {
+              sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory.slice(-20)));
+            } catch (e) {}
+          } else {
+            const errorMsg = data.message || 'Sorry, I could not process your question right now. Please try again.';
+            appendBubbleToDOM('ai', `⚠️ ${errorMsg}`, formatTime());
+          }
+        } catch (fetchErr) {
+          removeTypingIndicator();
+          console.error('Chatbot fetch error:', fetchErr);
+          appendBubbleToDOM(
+            'ai',
+            '⚠️ Could not connect to CareerPath AI backend server. Please verify the server is running on port 5000.',
+            formatTime()
+          );
+        }
       }
     } catch (err) {
       removeTypingIndicator();
       console.error('Chatbot error:', err);
       appendBubbleToDOM(
         'ai',
-        '⚠️ Could not connect to CareerPath AI backend server. Please verify the server is running on port 5000.',
+        '⚠️ An unexpected error occurred. Please try again.',
         formatTime()
       );
     } finally {

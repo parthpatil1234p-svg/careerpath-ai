@@ -18,14 +18,38 @@ try {
   // Ignore in environments where setting DNS servers is restricted
 }
 
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
 const connectDB = async () => {
+  // If already connected and ready, return existing connection
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      maxPoolSize: process.env.VERCEL ? 10 : 20,
+      serverSelectionTimeoutMS: 5000,
+    };
+
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then((mongooseInstance) => {
+      console.log(`✅ MongoDB Connected [${process.env.VERCEL ? 'Serverless' : 'Persistent'}]: ${mongooseInstance.connection.host}`);
+      return mongooseInstance;
+    });
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    console.log(`📦 Database: ${conn.connection.name}`);
+    cached.conn = await cached.promise;
+    return cached.conn;
   } catch (error) {
+    cached.promise = null;
     console.error(`⚠️  MongoDB Connection Warning: ${error.message}`);
     console.error('   👉 Tip: If on a new Wi-Fi or Hackathon network, ensure "0.0.0.0/0" is added in MongoDB Atlas -> Network Access.');
+    throw error;
   }
 };
 

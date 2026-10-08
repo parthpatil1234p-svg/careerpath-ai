@@ -1,6 +1,6 @@
 # ============================================================
 # CareerPath AI — Render Blueprint Deployment Specification
-# Enterprise Production Release · CareerPath AI Platform
+# Dual-Engine Architecture: Persistent Real-Time & Worker Service
 # ============================================================
 
 services:
@@ -24,6 +24,9 @@ services:
       - key: PORT
         value: 10000
 
+      - key: SERVER_ROLE
+        value: realtime-worker
+
       - key: JWT_EXPIRES_IN
         value: 7d
 
@@ -36,4 +39,4 @@ services:
 
       # Set this to your deployed Vercel frontend URL, e.g. https://careerpath-ai.vercel.app
       - key: CLIENT_URL
-        sync: false
+        value: https://careerpath-ai.vercel.app

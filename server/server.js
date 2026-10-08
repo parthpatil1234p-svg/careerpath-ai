@@ -12,6 +12,8 @@
  */
 
 // ── 1. Environment variables must be loaded FIRST ────────────
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config();
 
 // ── Startup Environment Guard ─────────────────────────────────
@@ -42,7 +44,7 @@ function validateEnv() {
 }
 validateEnv();
 
-// ── Core imports ──────────────────────────────────────────────
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -51,6 +53,8 @@ const rateLimit = require('express-rate-limit');
 
 // ── Internal imports ──────────────────────────────────────────
 const connectDB = require('./config/db');
+const { initSocket } = require('./services/socketService');
+const { initCron } = require('./services/cronService');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const careerRoutes = require('./routes/careerRoutes');
@@ -115,6 +119,7 @@ app.use(helmet({
         "http://127.0.0.1:5000",
         "http://localhost:5500",
         "http://127.0.0.1:5500",
+        "https://careerpath-ai.vercel.app",
         "https://careerpath-ai-bdbt.onrender.com",
         "https://api.groq.com",
         "https://generativelanguage.googleapis.com"
@@ -134,8 +139,11 @@ app.use(helmet({
 const rawOrigins = [
   process.env.CLIENT_URL,
   process.env.PROD_CLIENT_URL,
+  'https://careerpath-ai.vercel.app',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
+  'http://localhost:5000',
+  'http://127.0.0.1:5000',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
 ];
@@ -152,12 +160,17 @@ const corsOptions = {
     if (allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
+    // Allow Vercel preview branch deployments (*.vercel.app)
+    if (/^https:\/\/[a-z0-9-]+(\.vercel\.app)$/i.test(normalizedOrigin)) {
+      return callback(null, true);
+    }
 
     return callback(new Error(`CORS policy violation: Origin ${origin} not permitted.`));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
@@ -191,7 +204,6 @@ app.get('/api/health', healthHandler);
 
 // ── Machine-Readable AI Search & Bot Discovery Handlers ──────
 // Directly serves llms.txt, llms-full.txt, robots.txt, and sitemap.xml to crawlers (Perplexity, ChatGPT, Claude)
-const path = require('path');
 const fs = require('fs');
 const clientDir = path.resolve(__dirname, '..', 'client');
 
@@ -392,14 +404,19 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ── Start Listening ───────────────────────────────────────────
-// ── Start Listening ───────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
+  const server = http.createServer(app);
+  initSocket(server);
+  initCron();
+
+  server.listen(PORT, () => {
     console.log('');
-    console.log('🚀 CareerPath AI Server started!');
+    console.log('🚀 CareerPath AI Unified Server started!');
     console.log(`📡 Listening on      : http://localhost:${PORT}`);
+    console.log(`⚡ REST APIs         : http://localhost:${PORT}/api`);
+    console.log(`🔌 WebSockets        : ws://localhost:${PORT}`);
     console.log(`🔍 Health check      : http://localhost:${PORT}/api/health`);
     console.log(`🔐 Auth routes       : http://localhost:${PORT}/api/auth`);
     console.log(`👤 User routes       : http://localhost:${PORT}/api/users`);
@@ -410,7 +427,7 @@ if (!process.env.VERCEL) {
     console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
     console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
     console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
-    console.log('👥 Platform          : CareerPath AI Production Server · CareerPath AI Technologies Inc.');
+    console.log('👥 Platform          : CareerPath AI Dual-Engine Hybrid Architecture');
     console.log('');
   });
 }

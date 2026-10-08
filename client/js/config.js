@@ -12,21 +12,35 @@
  */
 
 (function () {
-  // Detect local environment based on browser hostname
+  // Detect environment
   const isLocal =
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.hostname === '';
 
+  const isVercel =
+    window.location.hostname.endsWith('vercel.app') ||
+    window.location.hostname === 'careerpath-ai.vercel.app';
+
   // Local development backend URL
   const LOCAL_API_URL = 'http://localhost:5000/api';
+  const LOCAL_REALTIME_URL = 'http://localhost:5000';
 
-  // Production Render backend URL
-  const PRODUCTION_API_URL = 'https://careerpath-ai-bdbt.onrender.com/api';
+  // Production Persistent Real-Time & WebSockets (Render 24/7 worker)
+  const PRODUCTION_REALTIME_URL = 'https://careerpath-ai-bdbt.onrender.com';
+
+  // Production Stateless REST API (Vercel Serverless in Prod, Render fallback)
+  const PRODUCTION_REST_API = isVercel
+    ? `${window.location.origin}/api`
+    : 'https://careerpath-ai-bdbt.onrender.com/api';
 
   const CONFIG = {
-    // Active API Base URL
-    API_BASE_URL: isLocal ? LOCAL_API_URL : PRODUCTION_API_URL,
+    // Stateless REST API (Vercel in Prod, localhost:5000 in dev)
+    API_BASE_URL: isLocal ? LOCAL_API_URL : PRODUCTION_REST_API,
+
+    // Persistent Real-Time & WebSockets (Render in Prod, localhost:5000 in dev)
+    REALTIME_BASE_URL: isLocal ? LOCAL_REALTIME_URL : PRODUCTION_REALTIME_URL,
+    SOCKET_URL: isLocal ? LOCAL_REALTIME_URL : PRODUCTION_REALTIME_URL,
 
     // Storage keys in localStorage
     TOKEN_KEY: 'careerpath_token',
