@@ -48,6 +48,7 @@
 | **35** | [`keep_required_remove_bloat_plan.md`](./keep_required_remove_bloat_plan.md) | Keep strictly required core pillars, purge `bicea.org` ads & hackathon bloat | **✅ Yes** | 100% completed: Purged all 6 `bicea.org` third-party ad units, hackathon bloat eliminated. |
 | **36** | [`hybrid_backend_architecture_plan.md`](./hybrid_backend_architecture_plan.md) | Hybrid Vercel REST + Render Real-Time + Shared Atlas DB + Local Integrity | **✅ Yes** | Serverless exports, Vercel proxy rewrite & Render endpoints configured. |
 | **37** | [`supabase_complete_migration_plan.md`](./supabase_complete_migration_plan.md) | Complete MongoDB to Supabase (PostgreSQL) Migration with Prisma ORM | **✅ Yes** | 100% completed: All 12 models, data migration, bcrypt hashes, and partial unique indexes verified. |
+| **38** | [`zero_mongodb_100_percent_supabase_purge_plan.md`](./zero_mongodb_100_percent_supabase_purge_plan.md) | Zero-MongoDB & 100% Pure Supabase (PostgreSQL) Purge Plan | **⏳ Ready for Execution** | Plan prepared to remove 100% of Mongoose/MongoDB code across all controllers. |
 
 ---
 
