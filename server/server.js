@@ -392,25 +392,28 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // ── Start Listening ───────────────────────────────────────────
+// ── Start Listening ───────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log('');
-  console.log('🚀 CareerPath AI Server started!');
-  console.log(`📡 Listening on      : http://localhost:${PORT}`);
-  console.log(`🔍 Health check      : http://localhost:${PORT}/api/health`);
-  console.log(`🔐 Auth routes       : http://localhost:${PORT}/api/auth`);
-  console.log(`👤 User routes       : http://localhost:${PORT}/api/users`);
-  console.log(`💼 Careers routes    : http://localhost:${PORT}/api/careers`);
-  console.log(`📝 Assessment route  : http://localhost:${PORT}/api/assessment`);
-  console.log(`🎯 Recommendations   : http://localhost:${PORT}/api/recommendations/generate`);
-  console.log(`🗺️  Roadmap routes    : http://localhost:${PORT}/api/roadmaps`);
-  console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
-  console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
-  console.log('👥 Platform          : CareerPath AI Production Server · CareerPath AI Technologies Inc.');
-  console.log('');
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log('');
+    console.log('🚀 CareerPath AI Server started!');
+    console.log(`📡 Listening on      : http://localhost:${PORT}`);
+    console.log(`🔍 Health check      : http://localhost:${PORT}/api/health`);
+    console.log(`🔐 Auth routes       : http://localhost:${PORT}/api/auth`);
+    console.log(`👤 User routes       : http://localhost:${PORT}/api/users`);
+    console.log(`💼 Careers routes    : http://localhost:${PORT}/api/careers`);
+    console.log(`📝 Assessment route  : http://localhost:${PORT}/api/assessment`);
+    console.log(`🎯 Recommendations   : http://localhost:${PORT}/api/recommendations/generate`);
+    console.log(`🗺️  Roadmap routes    : http://localhost:${PORT}/api/roadmaps`);
+    console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
+    console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
+    console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
+    console.log('👥 Platform          : CareerPath AI Production Server · CareerPath AI Technologies Inc.');
+    console.log('');
+  });
+}
 
 // ── Process-Level Safety Handlers ─────────────────────────────
 process.on('unhandledRejection', (reason, promise) => {
@@ -420,3 +423,5 @@ process.on('unhandledRejection', (reason, promise) => {
 process.on('uncaughtException', (err) => {
   console.error('[UNCAUGHT EXCEPTION]', err);
 });
+
+module.exports = app;
