@@ -11,7 +11,35 @@
 const crypto = require('crypto');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const { Prisma } = require('@prisma/client');
 const { prisma } = require('../config/prisma');
+
+// Build a Set of valid scalar/json field names for each model from Prisma DMMF:
+const MODEL_ALLOWED_FIELDS = {};
+if (Prisma && Prisma.dmmf && Prisma.dmmf.datamodel) {
+  for (const model of Prisma.dmmf.datamodel.models) {
+    const validFieldNames = new Set(
+      model.fields
+        .filter((f) => f.kind !== 'object')
+        .map((f) => f.name)
+    );
+    MODEL_ALLOWED_FIELDS[model.name] = validFieldNames;
+    MODEL_ALLOWED_FIELDS[model.name.charAt(0).toLowerCase() + model.name.slice(1)] = validFieldNames;
+  }
+}
+
+function filterAllowedFields(modelName, data) {
+  if (!data || typeof data !== 'object') return data;
+  const allowed = MODEL_ALLOWED_FIELDS[modelName];
+  if (!allowed) return data;
+  const filtered = {};
+  for (const [key, val] of Object.entries(data)) {
+    if (allowed.has(key)) {
+      filtered[key] = val;
+    }
+  }
+  return filtered;
+}
 
 /**
  * Generates a valid 24-character hexadecimal ObjectId-compatible string
@@ -221,7 +249,8 @@ class PrismaDocument {
     }
 
     if (this._isNew) {
-      const created = await prisma[delegate].create({ data: dataToSave });
+      const cleanData = filterAllowedFields(this._modelName, dataToSave);
+      const created = await prisma[delegate].create({ data: cleanData });
       this._isNew = false;
       this._modifiedPaths.clear();
       Object.assign(this, created);
@@ -242,9 +271,10 @@ class PrismaDocument {
       delete updateData.studentId;
       delete updateData.roadmapId;
 
+      const cleanUpdate = filterAllowedFields(this._modelName, updateData);
       const updated = await prisma[delegate].update({
         where: { id: this.id },
-        data: updateData,
+        data: cleanUpdate,
       });
       this._modifiedPaths.clear();
       Object.assign(this, updated);
@@ -487,9 +517,10 @@ function unpackDottedUpdates(updateData, existing = {}) {
         }
       }
 
+      const cleanUpdate = filterAllowedFields(modelName, updateData);
       const updated = await prisma[delegate].update({
         where: { id: idStr },
-        data: updateData,
+        data: cleanUpdate,
       });
 
       const doc = new PrismaDocument(updated, modelName, fieldMap);
@@ -532,9 +563,10 @@ function unpackDottedUpdates(updateData, existing = {}) {
       }
     }
 
+    const cleanUpdate = filterAllowedFields(modelName, updateData);
     await prisma[delegate].update({
       where: { id: item.id },
-      data: updateData,
+      data: cleanUpdate,
     });
 
     return { matchedCount: 1, modifiedCount: 1 };
@@ -545,9 +577,10 @@ function unpackDottedUpdates(updateData, existing = {}) {
     let updateData = update.$set ? { ...update.$set } : { ...update };
     delete updateData._id;
 
+    const cleanUpdate = filterAllowedFields(modelName, updateData);
     const res = await prisma[delegate].updateMany({
       where,
-      data: updateData,
+      data: cleanUpdate,
     });
 
     return { matchedCount: res.count, modifiedCount: res.count };

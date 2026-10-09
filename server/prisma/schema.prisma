@@ -117,6 +117,15 @@ model RoadmapTask {
   isVideoTask            Boolean   @default(false)
   videoWatchTimeSeconds  Int       @default(0)
   videoDurationSeconds   Int       @default(0)
+  videoMaxWatchedTime    Int       @default(0)
+  videoMidCheckPassed    Boolean   @default(false)
+  isVideoVerified        Boolean   @default(false)
+  videoVerifiedAt        DateTime?
+  videoAiScore           Float?
+  videoAiFeedback        String?
+  videoReflectionSummary String?
+  projectVerifiedAt      DateTime?
+  projectVerification    Json?
 
   // JSONB Document Fields
   resource               Json?
