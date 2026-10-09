@@ -301,7 +301,6 @@ router.get('/recruiter-openings', async (req, res, next) => {
     const filter = {
       status: 'active',
       $or: [
-        { deadline: { $exists: false } },
         { deadline: null },
         { deadline: { $gte: now } }
       ]

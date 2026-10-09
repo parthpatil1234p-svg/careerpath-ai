@@ -40,17 +40,29 @@ function translateFilter(filter = {}, fieldMap = {}) {
 
     // Handle MongoDB operators ($or, $and, etc.)
     if (key === '$or' && Array.isArray(rawVal)) {
-      where.OR = rawVal.map((item) => translateFilter(item, fieldMap));
+      const orClauses = rawVal.map((item) => translateFilter(item, fieldMap)).filter(c => Object.keys(c).length > 0);
+      const uniqueClauses = [];
+      const seenJson = new Set();
+      for (const clause of orClauses) {
+        const json = JSON.stringify(clause);
+        if (!seenJson.has(json)) {
+          seenJson.add(json);
+          uniqueClauses.push(clause);
+        }
+      }
+      where.OR = uniqueClauses;
       continue;
     }
     if (key === '$and' && Array.isArray(rawVal)) {
-      where.AND = rawVal.map((item) => translateFilter(item, fieldMap));
+      where.AND = rawVal.map((item) => translateFilter(item, fieldMap)).filter(c => Object.keys(c).length > 0);
       continue;
     }
 
     if (rawVal !== null && typeof rawVal === 'object' && !Array.isArray(rawVal) && !(rawVal instanceof Date)) {
       // MongoDB Operator conversion
       const prismaConditions = {};
+      let isExplicitNull = false;
+
       for (const [op, opVal] of Object.entries(rawVal)) {
         if (op === '$in') prismaConditions.in = opVal;
         else if (op === '$nin') prismaConditions.notIn = opVal;
@@ -59,6 +71,13 @@ function translateFilter(filter = {}, fieldMap = {}) {
         else if (op === '$gte') prismaConditions.gte = opVal;
         else if (op === '$lt') prismaConditions.lt = opVal;
         else if (op === '$lte') prismaConditions.lte = opVal;
+        else if (op === '$exists') {
+          if (opVal === false) {
+            isExplicitNull = true;
+          } else {
+            prismaConditions.not = null;
+          }
+        }
         else if (op === '$regex') {
           prismaConditions.contains = opVal;
           if (rawVal.$options && rawVal.$options.includes('i')) {
@@ -66,10 +85,17 @@ function translateFilter(filter = {}, fieldMap = {}) {
           }
         }
       }
-      if (Object.keys(prismaConditions).length > 0) {
+      if (isExplicitNull && Object.keys(prismaConditions).length === 0) {
+        where[mappedKey] = null;
+      } else if (Object.keys(prismaConditions).length > 0) {
         where[mappedKey] = prismaConditions;
-      } else {
-        where[mappedKey] = rawVal;
+      } else if (where[mappedKey] === undefined) {
+        // Strip any unmapped $-prefixed MongoDB operators from leaking into Prisma
+        const safeVal = {};
+        for (const [k, v] of Object.entries(rawVal)) {
+          if (!k.startsWith('$')) safeVal[k] = v;
+        }
+        where[mappedKey] = Object.keys(safeVal).length > 0 ? safeVal : null;
       }
     } else {
       // Direct equality

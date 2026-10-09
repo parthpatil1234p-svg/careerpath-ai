@@ -152,6 +152,9 @@ async function runAudit() {
   const portalLinksRes = await request('/jobs/portal-links?role=Software%20Engineer');
   record('Multi-Portal Search Links', '/jobs/portal-links', portalLinksRes, portalLinksRes.data?.success === true);
 
+  const recruiterOpeningsRes = await request('/jobs/recruiter-openings', { headers: studentHeaders });
+  record('Direct Recruiter Openings', '/jobs/recruiter-openings', recruiterOpeningsRes, recruiterOpeningsRes.data?.success === true && Array.isArray(recruiterOpeningsRes.data?.data?.openings));
+
   // 5. Readiness & Resume
   console.log('\n▶ [5/6] Readiness & Resume Services...');
   const readinessRes = await request('/readiness/status', { headers: studentHeaders });
