@@ -1,104 +1,71 @@
 /**
- * models/JobApplication.js — Mongoose Job Application Schema
+ * models/JobApplication.js — Pure Prisma ORM JobApplication Model
  *
- * Defines candidate job applications on CareerPath AI.
- * Stores match score percentages, verified skill snapshots, candidate resume links,
- * and recruiter decision states.
- *
- * CareerPath AI · Enterprise Backend Service
+ * Implements Mongoose-compatible interface for student job applications.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
+const { createPrismaModel, PrismaDocument } = require('./prismaBase');
 
-const JobApplicationSchema = new mongoose.Schema(
-  {
-    job: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'JobOpening',
-      required: [true, 'Job Opening ID is required'],
-      index: true,
-    },
-
-    student: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Student User ID is required'],
-      index: true,
-    },
-
-    recruiter: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Recruiter User ID is required'],
-      index: true,
-    },
-
-    matchScore: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
-    },
-
-    matchedSkills: {
-      type: [String],
-      default: [],
-    },
-
-    missingSkills: {
-      type: [String],
-      default: [],
-    },
-
-    readinessTier: {
-      type: String,
-      default: 'Foundational Learner',
-    },
-
-    resumeUrl: {
-      type: String,
-      trim: true,
-      default: '',
-    },
-
-    builtResumeSnapshot: {
-      type: Object,
-      default: () => ({}),
-    },
-
-    coverNote: {
-      type: String,
-      trim: true,
-      default: '',
-      maxlength: [1000, 'Cover note cannot exceed 1000 characters'],
-    },
-
-    status: {
-      type: String,
-      enum: ['applied', 'reviewed', 'shortlisted', 'rejected', 'interview_scheduled'],
-      default: 'applied',
-      index: true,
-    },
-
-    recruiterNotes: {
-      type: String,
-      trim: true,
-      default: '',
-    },
-
-    appliedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
+class JobApplicationDocument extends PrismaDocument {
+  constructor(data = {}, modelName = 'JobApplication', fieldMap = { student: 'studentId', recruiter: 'recruiterId', job: 'jobId' }, isNew = false) {
+    super(data, modelName, fieldMap, isNew);
+    if (this.student && typeof this.student === 'object') {
+      this.student._id = this.student.id;
+    }
+    if (this.job && typeof this.job === 'object') {
+      this.job._id = this.job.id;
+    }
   }
-);
+}
 
-// Prevent duplicate applications by the same student for the same job opening
-JobApplicationSchema.index({ job: 1, student: 1 }, { unique: true });
-JobApplicationSchema.index({ recruiter: 1, status: 1 });
-JobApplicationSchema.index({ student: 1, createdAt: -1 });
+const JobApplicationModel = createPrismaModel('JobApplication', {
+  student: 'studentId',
+  recruiter: 'recruiterId',
+  job: 'jobId',
+});
 
-module.exports = mongoose.model('JobApplication', JobApplicationSchema);
+const JobApplication = function (data = {}) {
+  return new JobApplicationDocument(data, 'JobApplication', { student: 'studentId', recruiter: 'recruiterId', job: 'jobId' }, true);
+};
+
+Object.assign(JobApplication, JobApplicationModel);
+
+const origFindOne = JobApplicationModel.findOne;
+JobApplication.findOne = function (filter = {}) {
+  const query = origFindOne.call(JobApplicationModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new JobApplicationDocument(res, 'JobApplication', { student: 'studentId', recruiter: 'recruiterId', job: 'jobId' });
+  };
+  return query;
+};
+
+const origFindById = JobApplicationModel.findById;
+JobApplication.findById = function (id) {
+  const query = origFindById.call(JobApplicationModel, id);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new JobApplicationDocument(res, 'JobApplication', { student: 'studentId', recruiter: 'recruiterId', job: 'jobId' });
+  };
+  return query;
+};
+
+const origFind = JobApplicationModel.find;
+JobApplication.find = function (filter = {}) {
+  const query = origFind.call(JobApplicationModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const list = await origExec();
+    if (query._isLean) return list;
+    return list.map((doc) => new JobApplicationDocument(doc, 'JobApplication', { student: 'studentId', recruiter: 'recruiterId', job: 'jobId' }));
+  };
+  return query;
+};
+
+module.exports = JobApplication;

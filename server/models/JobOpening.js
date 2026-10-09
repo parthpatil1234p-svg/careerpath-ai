@@ -1,173 +1,122 @@
 /**
- * models/JobOpening.js — Mongoose Job Opening Schema
+ * models/JobOpening.js — Pure Prisma ORM JobOpening Model
  *
- * Defines recruiter-created job postings on CareerPath AI.
- * Stores role requirements, required skill verifications, salary ranges,
- * and live application metrics.
- *
- * CareerPath AI · Enterprise Backend Service
+ * Implements Mongoose-compatible interface for recruiter job postings.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
+const { createPrismaModel, PrismaDocument } = require('./prismaBase');
 
-const RequiredSkillSchema = new mongoose.Schema(
-  {
-    skillName: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-    },
-    minimumProficiency: {
-      type: String,
-      enum: ['beginner', 'intermediate', 'advanced'],
-      default: 'intermediate',
-    },
-    requiresVerification: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  { _id: false }
-);
-
-const JobOpeningSchema = new mongoose.Schema(
-  {
-    recruiter: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Recruiter ID is required'],
-      index: true,
-    },
-
-    company: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company',
-      required: [true, 'Company ID is required'],
-      index: true,
-    },
-
-    companyName: {
-      type: String,
-      required: [true, 'Company name is required'],
-      trim: true,
-    },
-
-    companyLogo: {
-      type: String,
-      trim: true,
-      default: '',
-    },
-
-    companyWebsite: {
-      type: String,
-      trim: true,
-      default: '',
-    },
-
-    isCompanyVerified: {
-      type: Boolean,
-      default: true,
-    },
-
-    title: {
-      type: String,
-      required: [true, 'Job title is required'],
-      trim: true,
-      minlength: [3, 'Job title must be at least 3 characters'],
-      maxlength: [120, 'Job title cannot exceed 120 characters'],
-    },
-
-    careerSlug: {
-      type: String,
-      trim: true,
-      default: 'front-end-developer',
-      index: true,
-    },
-
-    jobType: {
-      type: String,
-      enum: ['full-time', 'part-time', 'internship', 'contract'],
-      default: 'full-time',
-    },
-
-    workplace: {
-      type: String,
-      enum: ['remote', 'hybrid', 'on-site'],
-      default: 'remote',
-    },
-
-    location: {
-      type: String,
-      trim: true,
-      default: 'Bengaluru, India',
-    },
-
-    experienceLevel: {
-      type: String,
-      enum: ['fresher', 'entry', 'mid', 'senior'],
-      default: 'fresher',
-    },
-
-    salaryRange: {
-      min: { type: Number, default: 400000 },
-      max: { type: Number, default: 800000 },
-      currency: { type: String, default: 'INR' },
-      isDisclosed: { type: Boolean, default: true },
-    },
-
-    requiredSkills: {
-      type: [RequiredSkillSchema],
-      default: [],
-    },
-
-    description: {
-      type: String,
-      required: [true, 'Job description is required'],
-      trim: true,
-    },
-
-    responsibilities: {
-      type: [String],
-      default: [],
-    },
-
-    requirements: {
-      type: [String],
-      default: [],
-    },
-
-    status: {
-      type: String,
-      enum: ['active', 'paused', 'closed'],
-      default: 'active',
-      index: true,
-    },
-
-    applicantsCount: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-
-    viewsCount: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-
-    deadline: {
-      type: Date,
-      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days default
-    },
-  },
-  {
-    timestamps: true,
+class JobOpeningDocument extends PrismaDocument {
+  constructor(data = {}, modelName = 'JobOpening', fieldMap = { recruiter: 'recruiterId', company: 'companyId' }, isNew = false) {
+    super(data, modelName, fieldMap, isNew);
+    if (this.company && typeof this.company === 'object') {
+      this.company._id = this.company.id;
+    }
+    if (!this.salaryRange && (this.salaryMin !== undefined || this.salaryMax !== undefined)) {
+      this.salaryRange = {
+        min: this.salaryMin,
+        max: this.salaryMax,
+        currency: this.salaryCurrency || 'INR',
+        isDisclosed: this.salaryMin !== null || this.salaryMax !== null,
+      };
+    }
   }
-);
 
-// Compound index for quick active career queries
-JobOpeningSchema.index({ status: 1, careerSlug: 1 });
-JobOpeningSchema.index({ status: 1, createdAt: -1 });
+  async save() {
+    if (this.salaryRange && typeof this.salaryRange === 'object') {
+      if (this.salaryMin === undefined && this.salaryRange.min !== undefined) {
+        this.salaryMin = Number(this.salaryRange.min);
+      }
+      if (this.salaryMax === undefined && this.salaryRange.max !== undefined) {
+        this.salaryMax = Number(this.salaryRange.max);
+      }
+      if (this.salaryCurrency === undefined && this.salaryRange.currency !== undefined) {
+        this.salaryCurrency = String(this.salaryRange.currency);
+      }
+      delete this.salaryRange;
+    }
+    const saved = await super.save();
+    this.salaryRange = {
+      min: this.salaryMin,
+      max: this.salaryMax,
+      currency: this.salaryCurrency || 'INR',
+      isDisclosed: this.salaryMin !== null || this.salaryMax !== null,
+    };
+    return saved;
+  }
+}
 
-module.exports = mongoose.model('JobOpening', JobOpeningSchema);
+const JobOpeningModel = createPrismaModel('JobOpening', {
+  recruiter: 'recruiterId',
+  company: 'companyId',
+});
+
+const JobOpening = function (data = {}) {
+  return new JobOpeningDocument(data, 'JobOpening', { recruiter: 'recruiterId', company: 'companyId' }, true);
+};
+
+Object.assign(JobOpening, JobOpeningModel);
+
+const origCreate = JobOpeningModel.create;
+JobOpening.create = async function (data) {
+  if (data && data.salaryRange) {
+    if (data.salaryMin === undefined && data.salaryRange.min !== undefined) {
+      data.salaryMin = Number(data.salaryRange.min);
+    }
+    if (data.salaryMax === undefined && data.salaryRange.max !== undefined) {
+      data.salaryMax = Number(data.salaryRange.max);
+    }
+    if (data.salaryCurrency === undefined && data.salaryRange.currency !== undefined) {
+      data.salaryCurrency = String(data.salaryRange.currency);
+    }
+    delete data.salaryRange;
+  }
+  const doc = await origCreate.call(JobOpeningModel, data);
+  doc.salaryRange = {
+    min: doc.salaryMin,
+    max: doc.salaryMax,
+    currency: doc.salaryCurrency || 'INR',
+    isDisclosed: doc.salaryMin !== null || doc.salaryMax !== null,
+  };
+  return doc;
+};
+
+const origFindOne = JobOpeningModel.findOne;
+JobOpening.findOne = function (filter = {}) {
+  const query = origFindOne.call(JobOpeningModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new JobOpeningDocument(res, 'JobOpening', { recruiter: 'recruiterId', company: 'companyId' });
+  };
+  return query;
+};
+
+const origFindById = JobOpeningModel.findById;
+JobOpening.findById = function (id) {
+  const query = origFindById.call(JobOpeningModel, id);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new JobOpeningDocument(res, 'JobOpening', { recruiter: 'recruiterId', company: 'companyId' });
+  };
+  return query;
+};
+
+const origFind = JobOpeningModel.find;
+JobOpening.find = function (filter = {}) {
+  const query = origFind.call(JobOpeningModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const list = await origExec();
+    if (query._isLean) return list;
+    return list.map((doc) => new JobOpeningDocument(doc, 'JobOpening', { recruiter: 'recruiterId', company: 'companyId' }));
+  };
+  return query;
+};
+
+module.exports = JobOpening;

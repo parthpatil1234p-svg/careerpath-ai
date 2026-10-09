@@ -19,7 +19,7 @@ require('dotenv').config();
 // ── Startup Environment Guard ─────────────────────────────────
 function validateEnv() {
   const missing = [];
-  const required = ['MONGODB_URI', 'JWT_SECRET'];
+  const required = ['DATABASE_URL', 'JWT_SECRET'];
 
   for (const key of required) {
     if (!process.env[key]) missing.push(key);
@@ -52,7 +52,6 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 
 // ── Internal imports ──────────────────────────────────────────
-const connectDB = require('./config/db');
 const { connectPrisma, prisma } = require('./config/prisma');
 const { initSocket } = require('./services/socketService');
 const { initCron } = require('./services/cronService');
@@ -76,8 +75,7 @@ const youtubeRoutes = require('./routes/youtubeRoutes');
 const campusRoutes = require('./routes/campusRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
-// ── 2. Connect Databases (MongoDB Atlas + Supabase PostgreSQL) ─
-connectDB();
+// ── 2. Connect Database (100% Pure Supabase PostgreSQL via Prisma) ──
 connectPrisma();
 
 // ── 3. Create Express app ─────────────────────────────────────
@@ -198,7 +196,8 @@ const healthHandler = (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '2.5.0',
     platform: 'CareerPath AI Technologies Inc.',
-    databases: ['MongoDB Atlas', 'Supabase PostgreSQL'],
+    databases: ['Supabase PostgreSQL (100% Pure · 0% MongoDB)'],
+    databaseEngine: 'Supabase PostgreSQL (Prisma ORM)',
     supabaseConfigured: !!process.env.DATABASE_URL,
     emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
   });

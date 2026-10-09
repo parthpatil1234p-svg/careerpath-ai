@@ -18,7 +18,8 @@
  */
 
 // ── Helpers ────────────────────────────────────────────────────
-const mongoose = require('mongoose');
+/** ID format check (24-char hex or UUID) */
+const isValidId = (id) => typeof id === 'string' && (/^[0-9a-fA-F]{24}$/.test(id.trim()) || /^[0-9a-fA-F-]{36}$/.test(id.trim()));
 
 /** Basic email format check */
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -293,7 +294,7 @@ const validateRoadmapGeneration = (req, res, next) => {
 const validateTaskId = (req, res, next) => {
   const { taskId } = req.params;
 
-  if (!taskId || !mongoose.Types.ObjectId.isValid(taskId)) {
+  if (!taskId || !isValidId(taskId)) {
     return res.status(400).json({
       success: false,
       message: 'Invalid task ID format',

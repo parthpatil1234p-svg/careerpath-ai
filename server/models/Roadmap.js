@@ -1,115 +1,68 @@
 /**
- * models/Roadmap.js — Mongoose Roadmap Schema
+ * models/Roadmap.js — Pure Prisma ORM Roadmap Model
  *
- * Represents a student's personalized learning roadmap for a specific career path.
- * Tracks week duration, active status, completion metrics, and snapshot data.
+ * Implements Mongoose-compatible interface for learning roadmaps.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
+const { createPrismaModel, PrismaDocument } = require('./prismaBase');
 
-const RoadmapSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'User reference is required'],
-      index: true,
-    },
-    career: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Career',
-      required: [true, 'Career reference is required'],
-    },
-    careerSnapshot: {
-      title: { type: String, required: true },
-      slug: { type: String, required: true },
-      shortDescription: { type: String, default: '' },
-    },
-    durationWeeks: {
-      type: Number,
-      required: [true, 'Duration in weeks is required'],
-      enum: {
-        values: [4, 8, 12],
-        message: 'Duration must be 4, 8, or 12 weeks',
-      },
-      default: 4,
-    },
-    status: {
-      type: String,
-      enum: {
-        values: ['active', 'completed', 'abandoned', 'archived'],
-        message: 'Status must be active, completed, abandoned, or archived',
-      },
-      default: 'active',
-    },
-    abandonedAt: {
-      type: Date,
-      default: null,
-    },
-    generatedFrom: {
-      missingSkills: { type: [String], default: [] },
-      weakSkills: { type: [String], default: [] },
-      userInterests: { type: [String], default: [] },
-      userSkillNames: { type: [String], default: [] },
-    },
-    totalTasks: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-    completedTasks: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-    progressPercentage: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
-    },
-    startedAt: {
-      type: Date,
-      default: Date.now,
-    },
-    completedAt: {
-      type: Date,
-    },
-    // Server-authoritative weekly milestone gating & test progression
-    weekProgress: [
-      {
-        weekNumber: { type: Number, required: true },
-        title: { type: String, default: '' },
-        status: {
-          type: String,
-          enum: ['locked', 'in_progress', 'awaiting_test', 'passed'],
-          default: 'locked',
-        },
-        attemptsCount: { type: Number, default: 0 },
-        passedAt: { type: Date, default: null },
-        testScore: { type: Number, default: 0 },
-        testPercent: { type: Number, default: 0 },
-        cooldownUntil: { type: Date, default: null },
-        lastDisqualifiedAt: { type: Date, default: null },
-        disqualifiedReason: { type: String, default: '' },
-      },
-    ],
-  },
-  {
-    timestamps: true,
+class RoadmapDocument extends PrismaDocument {
+  constructor(data = {}, modelName = 'Roadmap', fieldMap = { user: 'userId', career: 'careerId' }, isNew = false) {
+    super(data, modelName, fieldMap, isNew);
+    // If career relation is included, ensure doc.career is accessible
+    if (this.career && typeof this.career === 'object') {
+      this.career._id = this.career.id;
+    }
   }
-);
+}
 
-// Database-level guarantee: at most ONE active roadmap per user PER CAREER
-RoadmapSchema.index(
-  { user: 1, career: 1 },
-  {
-    unique: true,
-    partialFilterExpression: { status: 'active' },
-  }
-);
+const RoadmapModel = createPrismaModel('Roadmap', {
+  user: 'userId',
+  career: 'careerId',
+});
 
-// Compound index for querying user's roadmaps by status efficiently
-RoadmapSchema.index({ user: 1, status: 1 });
+const Roadmap = function (data = {}) {
+  return new RoadmapDocument(data, 'Roadmap', { user: 'userId', career: 'careerId' }, true);
+};
 
-module.exports = mongoose.model('Roadmap', RoadmapSchema);
+Object.assign(Roadmap, RoadmapModel);
+
+const origFindOne = RoadmapModel.findOne;
+Roadmap.findOne = function (filter = {}) {
+  const query = origFindOne.call(RoadmapModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new RoadmapDocument(res, 'Roadmap', { user: 'userId', career: 'careerId' });
+  };
+  return query;
+};
+
+const origFindById = RoadmapModel.findById;
+Roadmap.findById = function (id) {
+  const query = origFindById.call(RoadmapModel, id);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new RoadmapDocument(res, 'Roadmap', { user: 'userId', career: 'careerId' });
+  };
+  return query;
+};
+
+const origFind = RoadmapModel.find;
+Roadmap.find = function (filter = {}) {
+  const query = origFind.call(RoadmapModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const list = await origExec();
+    if (query._isLean) return list;
+    return list.map((doc) => new RoadmapDocument(doc, 'Roadmap', { user: 'userId', career: 'careerId' }));
+  };
+  return query;
+};
+
+module.exports = Roadmap;

@@ -1,84 +1,13 @@
 /**
- * models/Skill.js — Mongoose Skill Schema
+ * models/Skill.js — Pure Prisma ORM Skill Model
  *
- * Defines industry skills referenced by Careers and assigned to Users.
- *
- * Fields:
- *  - name: String (unique identifier, e.g. "javascript", "react", "sql")
- *  - displayName: String (formatted label, e.g. "JavaScript", "React.js")
- *  - category: String (enum)
- *  - description: String (optional summary, max 300 chars)
- *  - active: Boolean (default true)
- *
- * Timestamps enabled: createdAt, updatedAt
+ * Implements Mongoose-compatible interface for skills directory & taxonomy.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
+const { createPrismaModel } = require('./prismaBase');
 
-const SkillCategoryEnum = [
-  'frontend',
-  'backend',
-  'database',
-  'data',
-  'design',
-  'security',
-  'cloud',
-  'ai',
-  'mobile',
-  'testing',
-  'gaming',
-  'web3',
-  'product',
-  'business',
-  'finance',
-  'marketing',
-  'soft-skill',
-  'tool',
-  'other',
-];
+const Skill = createPrismaModel('Skill', {});
 
-const SkillSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, 'Skill name is required'],
-      unique: true,
-      trim: true,
-      lowercase: true,
-    },
-    displayName: {
-      type: String,
-      required: [true, 'Skill display name is required'],
-      trim: true,
-    },
-    category: {
-      type: String,
-      required: [true, 'Skill category is required'],
-      enum: {
-        values: SkillCategoryEnum,
-        message: 'Invalid skill category: {VALUE}',
-      },
-      lowercase: true,
-    },
-    description: {
-      type: String,
-      trim: true,
-      maxlength: [300, 'Skill description cannot exceed 300 characters'],
-      default: '',
-    },
-    active: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Indexes for high performance querying
-SkillSchema.index({ category: 1 });
-SkillSchema.index({ active: 1 });
-SkillSchema.index({ displayName: 'text', description: 'text' });
-
-module.exports = mongoose.model('Skill', SkillSchema);
+module.exports = Skill;

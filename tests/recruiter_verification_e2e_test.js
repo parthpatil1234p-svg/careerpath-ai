@@ -18,8 +18,8 @@
 const path = require('path');
 module.paths.push(path.join(__dirname, '../server/node_modules'));
 require('dotenv').config({ path: path.join(__dirname, '../server/.env') });
-const mongoose = require('mongoose');
 const connectDB = require('../server/config/db');
+const { prisma } = require('../server/config/prisma');
 const User = require('../server/models/User');
 const Company = require('../server/models/Company');
 const JobOpening = require('../server/models/JobOpening');
@@ -30,10 +30,8 @@ const generateToken = require('../server/utils/generateToken');
 async function runEndToEndRecruiterSuite() {
   console.log('🚀 Starting Recruiter Verification & Job Posting E2E Suite...\n');
 
-  if (mongoose.connection.readyState === 0) {
-    await connectDB();
-    console.log('✅ Connected to MongoDB Atlas.');
-  }
+  await connectDB();
+  console.log('✅ Connected to Supabase PostgreSQL (0% MongoDB).\n');
 
   // ── TEST 1: Webmail Blacklist & Heuristics ───────────────────
   console.log('▶ TEST 1: Free Webmail Blacklist Validation');
@@ -216,7 +214,7 @@ async function runEndToEndRecruiterSuite() {
   console.log('  - Candidate 1-Click Apply: Passed');
   console.log('════════════════════════════════════════════════════════════════\n');
 
-  await mongoose.disconnect();
+  await prisma.$disconnect();
   process.exit(0);
 }
 

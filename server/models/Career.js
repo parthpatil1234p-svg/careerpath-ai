@@ -1,157 +1,60 @@
 /**
- * models/Career.js — Mongoose Career Schema
+ * models/Career.js — Pure Prisma ORM Career Model
  *
- * Defines target careers, required skill profiles, importance levels,
- * education preferences, and interest tags for the recommendation engine.
- *
- * Fields:
- *  - title: String (unique)
- *  - slug: String (unique URL-friendly identifier)
- *  - shortDescription: String (max 250 chars)
- *  - longDescription: String (max 1200 chars)
- *  - category: String (enum)
- *  - icon: String (optional Bootstrap icon class)
- *  - color: String (optional hex color code)
- *  - educationPreferences: [String] (e.g. ["BCA", "B.Tech", "Computer Science"])
- *  - interestTags: [String] (lowercase, e.g. ["web development", "coding"])
- *  - requiredSkills: Array of subdocuments referencing Skill with importance & requiredProficiency
- *  - active: Boolean (default true)
- *
- * Timestamps enabled: createdAt, updatedAt
+ * Implements Mongoose-compatible interface for Career directory & recommendations.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
-require('./Skill'); // Ensure Skill model is registered for populate('requiredSkills.skill')
+const { createPrismaModel, prisma } = require('./prismaBase');
 
-const CareerCategoryEnum = [
-  'development',
-  'data',
-  'design',
-  'security',
-  'cloud',
-  'ai',
-  'mobile',
-  'testing',
-  'gaming',
-  'web3',
-  'product',
-  'business',
-  'finance',
-  'marketing',
-];
+async function populateRequiredSkills(careers, populates) {
+  const needsSkillPopulate = populates.some(
+    (p) => (p.path || p) === 'requiredSkills.skill' || (p.path || p) === 'requiredSkills'
+  );
 
-const RequiredSkillSchema = new mongoose.Schema(
-  {
-    skill: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Skill',
-      required: [true, 'Skill reference is required'],
-    },
-    importance: {
-      type: String,
-      enum: {
-        values: ['high', 'medium', 'low'],
-        message: 'Importance must be high, medium, or low',
-      },
-      default: 'medium',
-      lowercase: true,
-    },
-    requiredProficiency: {
-      type: String,
-      enum: {
-        values: ['beginner', 'intermediate', 'advanced'],
-        message: 'Required proficiency must be beginner, intermediate, or advanced',
-      },
-      default: 'beginner',
-      lowercase: true,
-    },
-  },
-  { _id: false }
-);
+  if (!needsSkillPopulate) return;
 
-const CareerSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: [true, 'Career title is required'],
-      unique: true,
-      trim: true,
-    },
-    slug: {
-      type: String,
-      required: [true, 'Career slug is required'],
-      unique: true,
-      trim: true,
-      lowercase: true,
-    },
-    shortDescription: {
-      type: String,
-      required: [true, 'Short description is required'],
-      trim: true,
-      maxlength: [250, 'Short description cannot exceed 250 characters'],
-    },
-    longDescription: {
-      type: String,
-      required: [true, 'Long description is required'],
-      trim: true,
-      maxlength: [1200, 'Long description cannot exceed 1200 characters'],
-    },
-    category: {
-      type: String,
-      required: [true, 'Career category is required'],
-      enum: {
-        values: CareerCategoryEnum,
-        message: 'Invalid career category: {VALUE}',
-      },
-      lowercase: true,
-    },
-    domain: {
-      type: String,
-      enum: {
-        values: ['engineering', 'business', 'marketing', 'creative'],
-        message: 'Invalid career domain: {VALUE}',
-      },
-      default: 'engineering',
-      lowercase: true,
-    },
-    icon: {
-      type: String,
-      trim: true,
-      default: 'bi-briefcase-fill',
-    },
-    color: {
-      type: String,
-      trim: true,
-      default: '#22D3EE',
-    },
-    educationPreferences: {
-      type: [String],
-      default: [],
-    },
-    interestTags: {
-      type: [String],
-      default: [],
-      set: (tags) => (Array.isArray(tags) ? tags.map((t) => String(t).trim().toLowerCase()) : []),
-    },
-    requiredSkills: {
-      type: [RequiredSkillSchema],
-      default: [],
-    },
-    active: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  {
-    timestamps: true,
+  // Collect all skill IDs across careers
+  const skillIdSet = new Set();
+  for (const c of careers) {
+    if (Array.isArray(c.requiredSkills)) {
+      for (const item of c.requiredSkills) {
+        if (item && item.skill && typeof item.skill === 'string') {
+          skillIdSet.add(item.skill);
+        }
+      }
+    }
   }
-);
 
-// Indexes for active, category, domain, slug, and interestTags
-CareerSchema.index({ active: 1 });
-CareerSchema.index({ category: 1 });
-CareerSchema.index({ domain: 1 });
-CareerSchema.index({ interestTags: 1 });
-CareerSchema.index({ title: 'text', shortDescription: 'text' });
+  if (skillIdSet.size === 0) return;
 
-module.exports = mongoose.model('Career', CareerSchema);
+  const skills = await prisma.skill.findMany({
+    where: { id: { in: Array.from(skillIdSet) } },
+  });
+
+  const skillMap = new Map();
+  for (const s of skills) {
+    skillMap.set(s.id, { ...s, _id: s.id });
+  }
+
+  for (const c of careers) {
+    if (Array.isArray(c.requiredSkills)) {
+      c.requiredSkills = c.requiredSkills.map((item) => {
+        if (item && item.skill && typeof item.skill === 'string' && skillMap.has(item.skill)) {
+          return {
+            ...item,
+            skill: skillMap.get(item.skill),
+          };
+        }
+        return item;
+      });
+    }
+  }
+}
+
+const Career = createPrismaModel('Career', {}, {
+  postProcess: populateRequiredSkills,
+});
+
+module.exports = Career;

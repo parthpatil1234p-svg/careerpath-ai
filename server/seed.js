@@ -12,7 +12,7 @@
  */
 
 require('dotenv').config();
-const mongoose = require('mongoose');
+const { prisma } = require('./config/prisma');
 const connectDB = require('./config/db');
 const Skill = require('./models/Skill');
 const Career = require('./models/Career');
@@ -85,14 +85,12 @@ const seedDatabase = async () => {
     console.log('────────────────────────────────────────────────────────\n');
 
     // 6. Close database connection cleanly
-    await mongoose.connection.close();
+    await prisma.$disconnect();
     console.log('🔒 Database connection closed.');
     process.exit(0);
   } catch (error) {
     console.error('❌ Database seeding failed:', error.message);
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-    }
+    await prisma.$disconnect();
     process.exit(1);
   }
 };

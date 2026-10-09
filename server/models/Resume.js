@@ -1,84 +1,74 @@
 /**
- * models/Resume.js — Dedicated Single-Resume Mongoose Model
+ * models/Resume.js — Pure Prisma ORM Resume Model
  *
- * Enforces strict, database-level single-resume per user invariant:
- * { user: { type: ObjectId, ref: 'User', unique: true, index: true } }
- *
- * Guarantees zero duplicate resume documents even across concurrent requests.
+ * Implements Mongoose-compatible interface for uploaded resumes.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
+const { createPrismaModel, PrismaDocument } = require('./prismaBase');
 
-const ResumeSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'User ID is required'],
-      unique: true, // Database engine level unique index: 1 resume per user
-      index: true,
-    },
-    originalName: {
-      type: String,
-      required: [true, 'Original file name is required'],
-      trim: true,
-      maxlength: [255, 'Filename exceeds 255 characters'],
-    },
-    fileType: {
-      type: String,
-      required: true,
-      trim: true,
-      enum: [
-        'application/pdf',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/msword',
-      ],
-    },
-    sizeBytes: {
-      type: Number,
-      required: true,
-      min: [1, 'File cannot be empty'],
-      max: [5 * 1024 * 1024, 'Resume size exceeds 5MB limit'],
-    },
-    fileLocation: {
-      type: String, // Cloudinary secure_url
-      required: true,
-      trim: true,
-    },
-    publicId: {
-      type: String, // Cloudinary public_id
-      required: true,
-      trim: true,
-    },
-    version: {
-      type: Number,
-      default: 1,
-    },
-    extractedText: {
-      type: String,
-      default: '',
-    },
-    atsScore: {
-      type: Number,
-      default: null,
-      min: 0,
-      max: 100,
-    },
-    firstUploadedAt: {
-      type: Date,
-      default: Date.now,
-    },
-    lastUpdatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
+class ResumeDocument extends PrismaDocument {
+  constructor(data = {}, modelName = 'Resume', fieldMap = { user: 'userId' }, isNew = false) {
+    super(data, modelName, fieldMap, isNew);
   }
-);
+}
 
-// Explicitly ensure unique index on user
-ResumeSchema.index({ user: 1 }, { unique: true });
+const ResumeModel = createPrismaModel('Resume', {
+  user: 'userId',
+});
 
-module.exports = mongoose.model('Resume', ResumeSchema);
+const Resume = function (data = {}) {
+  return new ResumeDocument(data, 'Resume', { user: 'userId' }, true);
+};
+
+Object.assign(Resume, ResumeModel);
+
+// findOneAndUpdate helper
+Resume.findOneAndUpdate = async function (filter, update, options = {}) {
+  const where = { ...filter };
+  if (where.user) {
+    where.userId = String(where.user);
+    delete where.user;
+  }
+  if (where._id) {
+    where.id = String(where._id);
+    delete where._id;
+  }
+
+  const existing = await Resume.findOne(where);
+  if (!existing && options.upsert) {
+    const createData = { ...filter, ...update.$set, ...update };
+    delete createData.$set;
+    return Resume.create(createData);
+  }
+  if (!existing) return null;
+
+  return Resume.findByIdAndUpdate(existing.id, update, options);
+};
+
+const origFindOne = ResumeModel.findOne;
+Resume.findOne = function (filter = {}) {
+  const query = origFindOne.call(ResumeModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new ResumeDocument(res, 'Resume', { user: 'userId' });
+  };
+  return query;
+};
+
+const origFindById = ResumeModel.findById;
+Resume.findById = function (id) {
+  const query = origFindById.call(ResumeModel, id);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new ResumeDocument(res, 'Resume', { user: 'userId' });
+  };
+  return query;
+};
+
+module.exports = Resume;

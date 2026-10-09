@@ -1,130 +1,64 @@
 /**
- * models/Attempt.js — Central Ledger for Assessment & Weekly Testing Events
+ * models/Attempt.js — Pure Prisma ORM Attempt Model
  *
- * Implements server-authoritative audit records for both:
- *  1. Adaptive Skill Checks (type: 'skill_check')
- *  2. Weekly Roadmap Milestones (type: 'weekly_test')
- *
- * Records user, questions asked, answers, score, server countdown deadline,
- * passed status (>=70% for weekly tests), and missed topic tags.
+ * Implements Mongoose-compatible interface for skill quizzes & milestone tests.
+ * Powered 100% by Supabase PostgreSQL via Prisma Client.
+ * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
  */
 
-const mongoose = require('mongoose');
+const { createPrismaModel, PrismaDocument } = require('./prismaBase');
 
-const QuestionRecordSchema = new mongoose.Schema(
-  {
-    questionId: { type: String, default: '' },
-    prompt: { type: String, required: true },
-    topic: { type: String, default: '' },
-    difficulty: { type: String, default: 'intermediate' },
-    options: { type: [String], default: [] },
-    selectedIndex: { type: Number, default: null },
-    correctIndex: { type: Number, required: true },
-    isCorrect: { type: Boolean, default: false },
-    explanation: { type: String, default: '' },
-  },
-  { _id: false }
-);
-
-const AttemptSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'User reference is required'],
-      index: true,
-    },
-    type: {
-      type: String,
-      enum: ['skill_check', 'weekly_test'],
-      required: [true, 'Attempt type is required'],
-      index: true,
-    },
-    skill: {
-      type: String,
-      trim: true,
-      default: '',
-      index: true,
-    },
-    roadmap: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Roadmap',
-      default: null,
-      index: true,
-    },
-    roadmapWeek: {
-      type: Number,
-      default: null,
-    },
-    topicTags: {
-      type: [String],
-      default: [],
-    },
-    questionsAsked: {
-      type: [QuestionRecordSchema],
-      default: [],
-    },
-    score: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    total: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    percent: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    passed: {
-      type: Boolean,
-      default: false,
-    },
-    startTime: {
-      type: Date,
-      required: true,
-      default: Date.now,
-    },
-    deadline: {
-      type: Date,
-      required: true,
-    },
-    submitTime: {
-      type: Date,
-      default: null,
-    },
-    missedTopics: {
-      type: [String],
-      default: [],
-    },
-    status: {
-      type: String,
-      enum: ['in_progress', 'completed', 'timed_out', 'abandoned', 'disqualified_cheating'],
-      default: 'in_progress',
-      index: true,
-    },
-    strikesCount: {
-      type: Number,
-      default: 0,
-    },
-    violationLog: [
-      {
-        violationType: { type: String, required: true },
-        penaltySeconds: { type: Number, default: 0 },
-        timestamp: { type: Date, default: Date.now },
-        details: { type: String, default: '' },
-      },
-    ],
-  },
-  {
-    timestamps: true,
+class AttemptDocument extends PrismaDocument {
+  constructor(data = {}, modelName = 'Attempt', fieldMap = { user: 'userId', roadmap: 'roadmapId' }, isNew = false) {
+    super(data, modelName, fieldMap, isNew);
   }
-);
+}
 
-// Compound index for querying user's latest completed attempts
-AttemptSchema.index({ user: 1, type: 1, status: 1, createdAt: -1 });
+const AttemptModel = createPrismaModel('Attempt', {
+  user: 'userId',
+  roadmap: 'roadmapId',
+});
 
-module.exports = mongoose.model('Attempt', AttemptSchema);
+const Attempt = function (data = {}) {
+  return new AttemptDocument(data, 'Attempt', { user: 'userId', roadmap: 'roadmapId' }, true);
+};
+
+Object.assign(Attempt, AttemptModel);
+
+const origFindOne = AttemptModel.findOne;
+Attempt.findOne = function (filter = {}) {
+  const query = origFindOne.call(AttemptModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new AttemptDocument(res, 'Attempt', { user: 'userId', roadmap: 'roadmapId' });
+  };
+  return query;
+};
+
+const origFindById = AttemptModel.findById;
+Attempt.findById = function (id) {
+  const query = origFindById.call(AttemptModel, id);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const res = await origExec();
+    if (!res || query._isLean) return res;
+    return new AttemptDocument(res, 'Attempt', { user: 'userId', roadmap: 'roadmapId' });
+  };
+  return query;
+};
+
+const origFind = AttemptModel.find;
+Attempt.find = function (filter = {}) {
+  const query = origFind.call(AttemptModel, filter);
+  const origExec = query.exec.bind(query);
+  query.exec = async function () {
+    const list = await origExec();
+    if (query._isLean) return list;
+    return list.map((doc) => new AttemptDocument(doc, 'Attempt', { user: 'userId', roadmap: 'roadmapId' }));
+  };
+  return query;
+};
+
+module.exports = Attempt;

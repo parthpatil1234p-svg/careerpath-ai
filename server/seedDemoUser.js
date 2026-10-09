@@ -3,7 +3,7 @@
  */
 
 require('dotenv').config();
-const mongoose = require('mongoose');
+const { prisma } = require('./config/prisma');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const Career = require('./models/Career');
@@ -119,13 +119,11 @@ const seedDemoUser = async () => {
     console.log(`   Password: ${password}`);
     console.log('=============================================\n');
 
-    await mongoose.connection.close();
+    await prisma.$disconnect();
     process.exit(0);
   } catch (error) {
     console.error('❌ Error seeding demo user:', error);
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-    }
+    await prisma.$disconnect();
     process.exit(1);
   }
 };
