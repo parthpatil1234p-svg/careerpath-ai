@@ -1,12 +1,23 @@
 /**
- * chat.js — Floating AI Career Mentor Chatbot Widget
+ * chat.js — Student-Portal AI Career Mentor Chatbot Engine
+ * Features:
+ * - Dynamic Student Context & Academic Profile Integration
+ * - Structured Portal Markdown Formatting (Badges, Steps, Pro-Tips, Code Cards)
+ * - Interactive Topic Ribbon (Roadmaps, Skills, ATS Resume, Interviews, Projects)
+ * - One-Click Advice & Code Copying
+ * - Contextual Follow-Up Smart Prompts
+ * - Expandable Focus View for Roadmaps
+ * - Dual-Engine Real-Time WebSocket Streaming with REST Fallback
+ *
  * CareerPath AI · Enterprise Platform Engine
  */
 
 (function () {
-  const STORAGE_KEY = 'cp_chat_history_v1';
+  const STORAGE_KEY = 'cp_chat_history_v2';
   let chatHistory = [];
   let isSending = false;
+  let isExpanded = false;
+  let activeTopic = 'roadmap';
 
   // Initialize from sessionStorage if exists
   try {
@@ -27,6 +38,35 @@
     document.head.appendChild(s);
   }
 
+  // Curated High-Yield Student Prompts by Academic & Career Domain
+  const TOPIC_PROMPTS = {
+    roadmap: [
+      { label: '⚡ How to master Week 1 tasks fast?', prompt: 'What is the fastest and most practical way for a student to master and check off Week 1 tasks in their roadmap?' },
+      { label: '🎯 How to balance college exams & coding?', prompt: 'How should a college student manage time between semester exams and daily 2-hour roadmap coding tasks?' },
+      { label: '🗺️ Beginner to Internship in 8 weeks', prompt: 'Give me a structured week-by-week timeline to go from beginner to internship-ready in 8 weeks.' }
+    ],
+    skills: [
+      { label: '💻 Top 5 hiring skills in 2026', prompt: 'Which 5 technical skills have the highest hiring demand and starting salaries for tech freshers in 2026?' },
+      { label: '⚡ How to verify skills for recruiters?', prompt: 'How do skill verification badges and coding benchmarks help students get shortlisted by tech companies?' },
+      { label: '🔍 Frontend vs Full-Stack roadmap', prompt: 'Compare Frontend and Full-Stack development in terms of learning curve, job openings, and entry-level salaries.' }
+    ],
+    resume: [
+      { label: '📄 How to achieve 90+ ATS score?', prompt: 'What are the top 5 factors to achieve a 90+ ATS score on a student technical resume?' },
+      { label: '✍️ Action verbs for project bullet points', prompt: 'How should I write high-impact resume bullet points using the Google XYZ formula for my college projects?' },
+      { label: '🚫 Top 5 resume rejection mistakes', prompt: 'What are the top 5 resume mistakes college students make that get their application rejected instantly?' }
+    ],
+    interviews: [
+      { label: '💼 Top 5 technical interview questions', prompt: 'What are the top 5 technical interview questions tech companies ask freshers and how should I structure my answers?' },
+      { label: '🗣️ 60-Second elevator pitch for freshers', prompt: 'Give me a crisp 60-second self-introduction pitch for a student attending a software engineering interview.' },
+      { label: '🚀 How to clear live coding assessments?', prompt: 'How should I practice data structures and algorithms to clear 45-minute live online coding tests?' }
+    ],
+    projects: [
+      { label: '🛠️ 3 standout full-stack project ideas', prompt: 'Suggest 3 unique full-stack projects with modern tech stacks that will immediately impress tech recruiters.' },
+      { label: '🌐 How to deploy projects for free?', prompt: 'What is the best way to deploy full-stack apps (frontend + backend + database) completely free with public live URLs?' },
+      { label: '📦 What makes a recruiter-ready GitHub README?', prompt: 'What sections and details must be in a project GitHub README to prove real engineering competence?' }
+    ]
+  };
+
   function getApiBaseUrl() {
     if (window.CONFIG && window.CONFIG.API_BASE_URL) {
       return window.CONFIG.API_BASE_URL;
@@ -42,46 +82,160 @@
     return localStorage.getItem('careerpath_token') || localStorage.getItem('token') || null;
   }
 
+  function getStudentContext() {
+    const user = window.Auth?.getUser?.() || {};
+    return {
+      name: user.name || 'Student',
+      course: user.education?.course || user.education?.degree || 'Tech Scholar',
+      branch: user.education?.branch || '',
+      isLoggedIn: Boolean(user && (user._id || user.id || user.name)),
+    };
+  }
+
   function formatTime(date = new Date()) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  // Basic markdown-to-HTML parser for AI responses
-  function parseMarkdown(text) {
-    if (!text) return '';
-    let html = text
+  function escapeHtml(str) {
+    return (str || '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
+  }
 
-    // Bold: **text**
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    // Italic: *text*
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    // Inline code: `code`
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-    // Markdown links: [text](url)
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary fw-semibold text-decoration-underline">$1</a>');
+  /**
+   * Advanced Markdown-to-HTML parser crafted specifically for Student Portal Telemetry
+   * Converts markdown into beautiful interactive student components:
+   * - Callouts (> 💡 Pro-Tip)
+   * - Section Headers (🎯 Key Takeaway, 📌 Action Plan, etc.)
+   * - Fenced Code Cards with Copy Buttons
+   * - Numbered Step Badges
+   * - Direct Portal Action Buttons
+   */
+  function parseMarkdown(text) {
+    if (!text) return '';
 
-    // Split by double newline for paragraphs
-    const paragraphs = html.split(/\n\n+/);
-    return paragraphs.map(p => {
-      // Check for bullet lines
+    // 1. Extract Fenced Code Blocks first
+    const codeBlocks = [];
+    let processed = text.replace(/```([a-zA-Z0-9_\-\+]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+      const placeholder = `__CP_CODE_BLOCK_${codeBlocks.length}__`;
+      codeBlocks.push({ lang: lang ? lang.trim().toLowerCase() : 'code', code: code.trim() });
+      return placeholder;
+    });
+
+    // 2. Escape HTML for safety
+    processed = escapeHtml(processed);
+
+    // 3. Pro-Tip & Callout Blocks (> 💡 Pro-Tip: ... or > ...)
+    processed = processed.replace(/^&gt;\s*(?:💡\s*)?(?:\*\*([^*]+)\*\*:?)?\s*(.*)$/gm, (m, title, content) => {
+      const tipTitle = title ? title.trim() : 'Pro-Tip';
+      return `<div class="cp-portal-callout"><div class="cp-callout-icon"><i class="bi bi-lightbulb-fill"></i></div><div class="cp-callout-body"><strong>${tipTitle}:</strong> ${content}</div></div>`;
+    });
+
+    // 4. Section Headers (### 🎯 ... or ### 📌 ...)
+    processed = processed.replace(/^###\s*(🎯|📌|🛠️|🚀|💡)\s*(.*?)$/gm, (m, icon, title) => {
+      let typeClass = 'default';
+      let iconClass = 'bi-stars';
+      if (icon === '🎯') { typeClass = 'takeaway'; iconClass = 'bi-bullseye'; }
+      else if (icon === '📌') { typeClass = 'action-plan'; iconClass = 'bi-list-check'; }
+      else if (icon === '🛠️') { typeClass = 'tech-stack'; iconClass = 'bi-cpu-fill'; }
+      else if (icon === '🚀') { typeClass = 'portal-action'; iconClass = 'bi-rocket-takeoff-fill'; }
+      else if (icon === '💡') { typeClass = 'pro-tip'; iconClass = 'bi-lightbulb-fill'; }
+      return `<div class="cp-section-tag ${typeClass}"><i class="bi ${iconClass}"></i> <span>${title.replace(/\*\*/g, '').trim()}</span></div>`;
+    });
+
+    // 5. Numbered Steps (e.g. 1. **Title**: Description)
+    processed = processed.replace(/^(\d+)\.\s+\*\*(.*?)\*\*:?\s*(.*)$/gm, (m, num, stepTitle, stepBody) => {
+      return `<div class="cp-step-row"><span class="cp-step-badge">${num}</span><div class="cp-step-content"><strong>${stepTitle}:</strong> ${stepBody}</div></div>`;
+    });
+
+    // 6. Portal Internal Action Buttons ([Roadmap](roadmap.html), etc.)
+    processed = processed.replace(/\[([^\]]+)\]\((roadmap\.html|assessment\.html|resume-builder\.html|jobs\.html|recommendations\.html|quiz\.html)\)/g, (m, label, url) => {
+      let icon = 'bi-arrow-up-right-circle-fill';
+      if (url.includes('roadmap')) icon = 'bi-map-fill';
+      else if (url.includes('assessment')) icon = 'bi-patch-check-fill';
+      else if (url.includes('resume')) icon = 'bi-file-earmark-person-fill';
+      else if (url.includes('jobs')) icon = 'bi-briefcase-fill';
+      else if (url.includes('recommendations')) icon = 'bi-compass-fill';
+      return `<a href="${url}" class="cp-portal-action-pill"><i class="bi ${icon}"></i> <span>${label}</span> <i class="bi bi-chevron-right small"></i></a>`;
+    });
+
+    // 7. General Markdown External Links
+    processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="cp-portal-link">$1 <i class="bi bi-box-arrow-up-right small"></i></a>');
+
+    // 8. Bold text (**text**) & Italic (*text*)
+    processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong class="cp-highlight-text">$1</strong>');
+    processed = processed.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // 9. Inline code (`code`)
+    processed = processed.replace(/`([^`]+)`/g, '<code class="cp-inline-chip">$1</code>');
+
+    // 10. Split Paragraphs & Bullets
+    const paragraphs = processed.split(/\n\n+/);
+    processed = paragraphs.map(p => {
       if (p.trim().startsWith('* ') || p.trim().startsWith('- ')) {
         const items = p.split(/\n/).map(line => {
           const clean = line.replace(/^[\*\-]\s+/, '').trim();
           return clean ? `<li>${clean}</li>` : '';
         }).join('');
-        return `<ul>${items}</ul>`;
+        return `<ul class="cp-bullet-list">${items}</ul>`;
       }
-      return `<p>${p.replace(/\n/g, '<br/>')}</p>`;
+      return p.startsWith('<div class="cp-') ? p : `<p>${p.replace(/\n/g, '<br/>')}</p>`;
     }).join('');
+
+    // 11. Restore Fenced Code Blocks
+    codeBlocks.forEach((cb, idx) => {
+      const placeholder = `__CP_CODE_BLOCK_${idx}__`;
+      const escapedCode = escapeHtml(cb.code);
+      const codeCardHtml = `
+        <div class="cp-code-block-card">
+          <div class="cp-code-header">
+            <span class="cp-code-lang"><i class="bi bi-code-slash"></i> ${escapeHtml(cb.lang.toUpperCase())}</span>
+            <button type="button" class="cp-code-copy-btn" data-code="${escapeHtml(cb.code)}">
+              <i class="bi bi-clipboard"></i> <span>Copy</span>
+            </button>
+          </div>
+          <pre class="cp-code-pre"><code>${escapedCode}</code></pre>
+        </div>
+      `;
+      processed = processed.replace(placeholder, codeCardHtml);
+    });
+
+    return processed;
+  }
+
+  /**
+   * Generates intelligent, contextual follow-up question chips based on AI reply content
+   */
+  function generateFollowUpChips(text) {
+    const lower = text.toLowerCase();
+    const chips = [];
+
+    if (lower.includes('project') || lower.includes('portfolio') || lower.includes('github')) {
+      chips.push({ text: '🛠️ 3 projects to build next', prompt: 'Give me 3 specific portfolio project ideas with recommended tech stacks and GitHub repository structure.' });
+    }
+    if (lower.includes('roadmap') || lower.includes('week') || lower.includes('task')) {
+      chips.push({ text: '🗺️ How to complete Week 1 quickly?', prompt: 'What is the fastest way to master and check off Week 1 tasks in my roadmap?' });
+    }
+    if (lower.includes('interview') || lower.includes('recruit') || lower.includes('job') || lower.includes('hire')) {
+      chips.push({ text: '💼 Top 5 technical interview questions', prompt: 'What are the top 5 technical interview questions asked for this role and how should a student answer them?' });
+    }
+    if (lower.includes('skill') || lower.includes('learn') || lower.includes('language') || lower.includes('framework')) {
+      chips.push({ text: '⚡ Which skill has highest market salary?', prompt: 'Between the skills mentioned, which one has the highest market demand and salary for freshers in 2026?' });
+    }
+
+    if (chips.length === 0) {
+      chips.push({ text: '💡 Best project to build for this', prompt: 'What is the single best project I can build and deploy to prove this skill?' });
+      chips.push({ text: '🎯 How to test my readiness?', prompt: 'How can I test if I am ready for internships or entry-level jobs?' });
+    }
+
+    return chips.slice(0, 3);
   }
 
   function injectWidgetDOM() {
     if (document.getElementById('cpChatDrawer')) return;
 
-    // 1. Trigger button (VengeanceUI Creepy eye-tracking AI Mentor)
+    // 1. Floating Trigger Button
     const trigger = document.createElement('button');
     trigger.id = 'cpChatTrigger';
     trigger.className = 'cp-chat-trigger cp-creepy-mentor-btn';
@@ -93,7 +247,7 @@
     `;
     document.body.appendChild(trigger);
 
-    // 2. Chat drawer
+    // 2. Chat Drawer Container
     const drawer = document.createElement('div');
     drawer.id = 'cpChatDrawer';
     drawer.className = 'cp-chat-drawer';
@@ -102,61 +256,82 @@
         <div class="cp-chat-header-info">
           <div class="cp-chat-avatar">
             <i class="bi bi-robot"></i>
+            <span class="cp-avatar-status"></span>
           </div>
-          <div>
-            <h4 class="cp-chat-title">CareerPath AI Mentor</h4>
-            <div class="cp-chat-subtitle">
-              <span class="pulse-dot"></span> Online · CareerPath AI Assistant
+          <div class="cp-chat-header-text">
+            <div class="d-flex align-items-center gap-1">
+              <h4 class="cp-chat-title">CareerPath AI Mentor</h4>
+              <i class="bi bi-patch-check-fill cp-verified-icon" title="Certified Career Intelligence"></i>
+            </div>
+            <div class="cp-chat-subtitle" id="cpChatSubtitle">
+              <span class="pulse-dot"></span> <span id="cpStudentStatusText">Online · Student Guidance</span>
             </div>
           </div>
         </div>
         <div class="cp-chat-header-actions">
-          <button class="cp-chat-btn-icon" id="cpChatClearBtn" title="Clear conversation" aria-label="Clear chat">
+          <button class="cp-chat-btn-icon" id="cpChatExpandBtn" title="Expand View" aria-label="Expand height">
+            <i class="bi bi-arrows-angle-expand"></i>
+          </button>
+          <button class="cp-chat-btn-icon" id="cpChatClearBtn" title="Clear Conversation" aria-label="Clear chat">
             <i class="bi bi-trash3"></i>
           </button>
-          <button class="cp-chat-btn-icon" id="cpChatCloseBtn" title="Close chat" aria-label="Close chat">
+          <button class="cp-chat-btn-icon" id="cpChatCloseBtn" title="Close" aria-label="Close chat">
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
       </div>
 
+      <!-- Quick Topic Pill Ribbon -->
+      <div class="cp-chat-topic-ribbon" id="cpTopicRibbon">
+        <button type="button" class="cp-topic-pill active" data-topic="roadmap"><i class="bi bi-map-fill text-primary"></i> Roadmap</button>
+        <button type="button" class="cp-topic-pill" data-topic="skills"><i class="bi bi-cpu-fill text-info"></i> Skills</button>
+        <button type="button" class="cp-topic-pill" data-topic="resume"><i class="bi bi-file-earmark-person-fill text-success"></i> ATS Resume</button>
+        <button type="button" class="cp-topic-pill" data-topic="interviews"><i class="bi bi-mic-fill text-warning"></i> Interviews</button>
+        <button type="button" class="cp-topic-pill" data-topic="projects"><i class="bi bi-folder-check text-indigo"></i> Projects</button>
+      </div>
+
+      <!-- Messages Scroll Area -->
       <div class="cp-chat-messages" id="cpChatMessages">
-        <!-- Messages rendered here -->
+        <!-- Messages rendered dynamically here -->
       </div>
 
+      <!-- Quick Suggested Prompts Drawer -->
       <div class="cp-chat-suggestions" id="cpChatSuggestions">
-        <span class="cp-chat-suggestions-title">Quick Career Prompts:</span>
-        <button class="cp-chat-chip" data-prompt="Which tech role has the highest industry demand right now?">
-          ⚡ Which tech role has the highest industry demand?
-        </button>
-        <button class="cp-chat-chip" data-prompt="How should a fresher prepare for a Full-Stack Developer role in 8 weeks?">
-          🎯 How to prepare for Full-Stack Developer in 8 weeks?
-        </button>
-        <button class="cp-chat-chip" data-prompt="What portfolio projects impress hiring managers most?">
-          🛠️ What portfolio projects impress hiring managers?
-        </button>
+        <div class="cp-suggestions-header">
+          <span class="cp-chat-suggestions-title"><i class="bi bi-stars"></i> Recommended Student Prompts:</span>
+        </div>
+        <div class="cp-suggestions-chips" id="cpSuggestionsChips">
+          <!-- Populated based on activeTopic -->
+        </div>
       </div>
 
+      <!-- Chat Input Footer -->
       <div class="cp-chat-footer">
         <form class="cp-chat-form" id="cpChatForm">
+          <button type="button" class="cp-prompts-toggle-btn" id="cpTogglePromptsBtn" title="Toggle Quick Prompts" aria-label="Quick Prompts">
+            <i class="bi bi-stars"></i>
+          </button>
           <input
             type="text"
             id="cpChatInput"
             class="cp-chat-input"
-            placeholder="Ask AI Career Mentor anything..."
+            placeholder="Ask about roadmaps, coding doubts, interview prep, resumes..."
             autocomplete="off"
-            maxlength="400"
+            maxlength="600"
           />
           <button type="submit" class="cp-chat-send-btn" id="cpChatSendBtn" aria-label="Send message">
             <i class="bi bi-send-fill"></i>
           </button>
         </form>
-        <p class="cp-chat-disclaimer">CareerPath AI Career Intelligence Assistant</p>
+        <div class="cp-chat-footer-telemetry">
+          <span><i class="bi bi-lightning-charge-fill text-warning"></i> Dual-Engine AI (Groq & Gemini)</span>
+          <span>· Student Privacy Protected 🔒</span>
+        </div>
       </div>
     `;
     document.body.appendChild(drawer);
 
-    // 3. Interactive Pop-Up Nudge Tooltip & Career Question Card
+    // 3. Floating Nudge Tooltip Card
     let popupDismissed = false;
 
     function showQuestionPopup() {
@@ -171,22 +346,22 @@
       nudge.innerHTML = `
         <div class="cp-chat-question-header">
           <span class="cp-chat-question-badge">
-            <i class="bi bi-robot"></i> AI Mentor
+            <i class="bi bi-robot"></i> AI Academic Mentor
           </span>
           <button class="cp-question-close" id="cpQuestionClose" title="Dismiss" aria-label="Close popup">&times;</button>
         </div>
-        <p class="cp-chat-question-title">💬 <strong>Need advice?</strong> Ask AI Mentor!</p>
+        <p class="cp-chat-question-title">💬 <strong>Have a doubt?</strong> Ask your AI Mentor!</p>
         <div class="cp-chat-question-list">
-          <button class="cp-question-item-btn" data-q="Which tech role has the highest industry demand right now?">
-            <span>⚡ Which role has highest demand?</span>
+          <button class="cp-question-item-btn" data-q="What is the fastest way to master Week 1 tasks in my roadmap?">
+            <span>⚡ How to master Week 1 roadmap tasks?</span>
             <i class="bi bi-arrow-right-short q-arrow"></i>
           </button>
-          <button class="cp-question-item-btn" data-q="How should a fresher prepare for a Full-Stack role in 8 weeks?">
-            <span>🎯 How to prepare in 8 weeks?</span>
+          <button class="cp-question-item-btn" data-q="Which tech role has the highest industry hiring demand right now?">
+            <span>🎯 Which tech role has highest demand?</span>
             <i class="bi bi-arrow-right-short q-arrow"></i>
           </button>
-          <button class="cp-question-item-btn" data-q="What portfolio projects impress tech recruiters most?">
-            <span>🛠️ Best portfolio projects to build?</span>
+          <button class="cp-question-item-btn" data-q="How can a student get a 90+ ATS score on their tech resume?">
+            <span>📄 How to score 90+ on Resume ATS?</span>
             <i class="bi bi-arrow-right-short q-arrow"></i>
           </button>
         </div>
@@ -205,6 +380,7 @@
           const prompt = qBtn.getAttribute('data-q');
           dismissNudge();
           drawer.classList.add('open');
+          updateStudentHeader();
           scrollToBottom();
           if (prompt) {
             sendUserMessage(prompt);
@@ -214,6 +390,7 @@
 
         dismissNudge();
         drawer.classList.add('open');
+        updateStudentHeader();
         const inputEl = document.getElementById('cpChatInput');
         if (inputEl) inputEl.focus();
         scrollToBottom();
@@ -233,21 +410,49 @@
       }
     }
 
-    // Show popup tooltip after 2.5 seconds if chat hasn't been opened
-    setTimeout(showQuestionPopup, 2500);
+    setTimeout(showQuestionPopup, 3000);
 
     bindEvents(trigger, drawer, dismissNudge);
+    renderTopicSuggestions(activeTopic);
     renderMessages();
+  }
+
+  function updateStudentHeader() {
+    const ctx = getStudentContext();
+    const statusTextEl = document.getElementById('cpStudentStatusText');
+    if (!statusTextEl) return;
+
+    if (ctx.isLoggedIn) {
+      const courseStr = ctx.course ? ` (${ctx.course})` : '';
+      statusTextEl.innerHTML = `Online · 🎓 <strong>${escapeHtml(ctx.name)}</strong>${escapeHtml(courseStr)}`;
+    } else {
+      statusTextEl.textContent = 'Online · 24/7 AI Career Mentor';
+    }
+  }
+
+  function renderTopicSuggestions(topicKey = 'roadmap') {
+    const container = document.getElementById('cpSuggestionsChips');
+    if (!container) return;
+
+    const list = TOPIC_PROMPTS[topicKey] || TOPIC_PROMPTS.roadmap;
+    container.innerHTML = list.map(item => `
+      <button type="button" class="cp-chat-chip" data-prompt="${escapeHtml(item.prompt)}">
+        ${escapeHtml(item.label)}
+      </button>
+    `).join('');
   }
 
   function bindEvents(trigger, drawer, dismissNudge) {
     const closeBtn = document.getElementById('cpChatCloseBtn');
     const clearBtn = document.getElementById('cpChatClearBtn');
+    const expandBtn = document.getElementById('cpChatExpandBtn');
     const form = document.getElementById('cpChatForm');
     const input = document.getElementById('cpChatInput');
     const suggestions = document.getElementById('cpChatSuggestions');
+    const topicRibbon = document.getElementById('cpTopicRibbon');
+    const togglePromptsBtn = document.getElementById('cpTogglePromptsBtn');
 
-    // Toggle drawer
+    // Toggle drawer open/close
     trigger.addEventListener('click', () => {
       if (typeof dismissNudge === 'function') dismissNudge();
       const isOpen = drawer.classList.contains('open');
@@ -255,6 +460,7 @@
         drawer.classList.remove('open');
       } else {
         drawer.classList.add('open');
+        updateStudentHeader();
         input.focus();
         scrollToBottom();
       }
@@ -264,6 +470,14 @@
       drawer.classList.remove('open');
     });
 
+    // Expand / contract height
+    expandBtn.addEventListener('click', () => {
+      isExpanded = !isExpanded;
+      drawer.classList.toggle('expanded', isExpanded);
+      expandBtn.innerHTML = isExpanded ? '<i class="bi bi-arrows-angle-contract"></i>' : '<i class="bi bi-arrows-angle-expand"></i>';
+      expandBtn.title = isExpanded ? 'Contract View' : 'Expand View';
+    });
+
     // Clear history
     clearBtn.addEventListener('click', () => {
       chatHistory = [];
@@ -271,9 +485,34 @@
         sessionStorage.removeItem(STORAGE_KEY);
       } catch (e) {}
       renderMessages();
+      renderTopicSuggestions(activeTopic);
+      if (suggestions) suggestions.style.display = 'flex';
     });
 
-    // Handle form submit
+    // Topic Ribbon Clicks
+    topicRibbon.addEventListener('click', (e) => {
+      const pill = e.target.closest('.cp-topic-pill');
+      if (!pill) return;
+
+      topicRibbon.querySelectorAll('.cp-topic-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+
+      activeTopic = pill.dataset.topic || 'roadmap';
+      renderTopicSuggestions(activeTopic);
+      if (suggestions) suggestions.style.display = 'flex';
+    });
+
+    // Toggle Quick Prompts Drawer
+    togglePromptsBtn.addEventListener('click', () => {
+      if (!suggestions) return;
+      const isVisible = suggestions.style.display === 'flex';
+      suggestions.style.display = isVisible ? 'none' : 'flex';
+      if (!isVisible) {
+        renderTopicSuggestions(activeTopic);
+      }
+    });
+
+    // Form submit
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const text = input.value.trim();
@@ -282,7 +521,7 @@
       sendUserMessage(text);
     });
 
-    // Handle suggested chips
+    // Suggestion chips click
     suggestions.addEventListener('click', (e) => {
       const chip = e.target.closest('.cp-chat-chip');
       if (chip && !isSending) {
@@ -293,7 +532,49 @@
       }
     });
 
-    // Dynamic Eye Tracking for VengeanceUI Creepy AI Mentor Button
+    // Delegated Clicks: Copy code, Copy advice, Follow-up pills
+    document.addEventListener('click', (e) => {
+      // 1. Copy Code Block
+      const codeCopyBtn = e.target.closest('.cp-code-copy-btn');
+      if (codeCopyBtn) {
+        const codeText = codeCopyBtn.getAttribute('data-code') || codeCopyBtn.closest('.cp-code-block-card')?.querySelector('code')?.innerText;
+        if (codeText) {
+          navigator.clipboard.writeText(codeText).then(() => {
+            codeCopyBtn.innerHTML = '<i class="bi bi-check-lg text-success"></i> <span class="text-success">Copied!</span>';
+            setTimeout(() => {
+              codeCopyBtn.innerHTML = '<i class="bi bi-clipboard"></i> <span>Copy</span>';
+            }, 2000);
+          });
+        }
+        return;
+      }
+
+      // 2. Copy Full Advice Message
+      const msgCopyBtn = e.target.closest('.cp-msg-copy-btn');
+      if (msgCopyBtn) {
+        const bubble = msgCopyBtn.closest('.cp-chat-row')?.querySelector('.cp-chat-bubble');
+        if (bubble) {
+          navigator.clipboard.writeText(bubble.innerText).then(() => {
+            msgCopyBtn.innerHTML = '<i class="bi bi-check-lg text-success"></i> <span class="text-success">Copied!</span>';
+            setTimeout(() => {
+              msgCopyBtn.innerHTML = '<i class="bi bi-clipboard"></i> <span>Copy Advice</span>';
+            }, 2000);
+          });
+        }
+        return;
+      }
+
+      // 3. Contextual Follow-Up Pill
+      const followUpBtn = e.target.closest('.cp-followup-pill');
+      if (followUpBtn && !isSending) {
+        const prompt = followUpBtn.getAttribute('data-prompt');
+        if (prompt) {
+          sendUserMessage(prompt);
+        }
+      }
+    });
+
+    // Dynamic Eye Tracking for AI Mentor Trigger Button
     function updateCreepyEyes(e) {
       const pupils = trigger.querySelectorAll('.cp-creepy-pupil');
       if (!pupils.length) return;
@@ -341,21 +622,38 @@
 
     container.innerHTML = '';
 
-    // Welcome greeting
+    const ctx = getStudentContext();
+    const studentGreeting = ctx.isLoggedIn ? `Welcome back, <strong>${escapeHtml(ctx.name)}</strong>! 👋` : 'Welcome to CareerPath AI! 👋';
+
+    // Welcome Greeting Card
     const welcomeRow = document.createElement('div');
     welcomeRow.className = 'cp-chat-row ai';
     welcomeRow.innerHTML = `
-      <div class="cp-chat-bubble">
-        <p>👋 <strong>Welcome to CareerPath AI!</strong></p>
-        <p>I am your <strong>AI Career Mentor</strong>. Ask me about tech careers, roadmap doubts, skill gaps, or interview strategies!</p>
+      <div class="cp-msg-meta-header">
+        <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
+        <span class="cp-meta-name">CareerPath AI Mentor</span>
+        <span class="cp-meta-badge"><i class="bi bi-patch-check-fill text-primary"></i> Academic Advisor</span>
       </div>
-      <span class="cp-chat-time">Just now</span>
+      <div class="cp-chat-bubble">
+        <p class="mb-2">${studentGreeting}</p>
+        <p class="mb-2">I am your dedicated <strong>AI Career & Academic Mentor</strong>. I can help you with:</p>
+        <div class="cp-welcome-features">
+          <div class="cp-welcome-item"><i class="bi bi-map text-primary"></i> Weekly Roadmap milestone execution</div>
+          <div class="cp-welcome-item"><i class="bi bi-cpu text-info"></i> In-demand skill gap elimination</div>
+          <div class="cp-welcome-item"><i class="bi bi-file-earmark-person text-success"></i> 90+ ATS Resume bullet optimization</div>
+          <div class="cp-welcome-item"><i class="bi bi-mic text-warning"></i> Technical & HR Mock Interview prep</div>
+        </div>
+        <p class="mt-2 mb-0 text-muted small">💡 Tap any topic above or choose a suggested question below to begin!</p>
+      </div>
+      <div class="cp-msg-footer">
+        <span class="cp-chat-time"><i class="bi bi-clock me-1"></i>Just now</span>
+      </div>
     `;
     container.appendChild(welcomeRow);
 
-    // Render stored history
+    // Render stored chat history
     for (const msg of chatHistory) {
-      appendBubbleToDOM(msg.role, msg.text, msg.time, false);
+      appendBubbleToDOM(msg.role, msg.text, msg.time, false, msg.engine);
     }
 
     if (suggestions) {
@@ -365,21 +663,58 @@
     scrollToBottom();
   }
 
-  function appendBubbleToDOM(role, text, time = formatTime(), shouldScroll = true) {
+  function appendBubbleToDOM(role, text, time = formatTime(), shouldScroll = true, engine = null) {
     const container = document.getElementById('cpChatMessages');
     if (!container) return;
 
     const row = document.createElement('div');
     row.className = `cp-chat-row ${role}`;
 
-    const content = role === 'ai' ? parseMarkdown(text) : `<p>${escapeHtml(text)}</p>`;
+    if (role === 'ai') {
+      const parsedContent = parseMarkdown(text);
+      const engineLabel = engine ? escapeHtml(engine) : 'CareerPath AI Knowledge Engine';
 
-    row.innerHTML = `
-      <div class="cp-chat-bubble">
-        ${content}
-      </div>
-      <span class="cp-chat-time">${time}</span>
-    `;
+      row.innerHTML = `
+        <div class="cp-msg-meta-header">
+          <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
+          <span class="cp-meta-name">CareerPath AI Mentor</span>
+          <span class="cp-meta-badge"><i class="bi bi-lightning-charge-fill text-warning"></i> ${engineLabel}</span>
+        </div>
+        <div class="cp-chat-bubble">
+          ${parsedContent}
+        </div>
+        <div class="cp-msg-footer">
+          <span class="cp-chat-time"><i class="bi bi-clock me-1"></i>${time}</span>
+          <button type="button" class="cp-msg-copy-btn" title="Copy response to clipboard">
+            <i class="bi bi-clipboard"></i> <span>Copy Advice</span>
+          </button>
+        </div>
+      `;
+
+      // Contextual follow-up suggestions
+      const chips = generateFollowUpChips(text);
+      if (chips.length > 0) {
+        const chipsContainer = document.createElement('div');
+        chipsContainer.className = 'cp-followup-ribbon';
+        chipsContainer.innerHTML = `
+          <span class="cp-followup-title"><i class="bi bi-arrow-return-right"></i> Next Question:</span>
+          ${chips.map(c => `<button type="button" class="cp-followup-pill" data-prompt="${escapeHtml(c.prompt)}">${escapeHtml(c.text)}</button>`).join('')}
+        `;
+        row.appendChild(chipsContainer);
+      }
+    } else {
+      const studentCtx = getStudentContext();
+      row.innerHTML = `
+        <div class="cp-msg-meta-header user-header">
+          <span class="cp-meta-name">${escapeHtml(studentCtx.name)}</span>
+          <div class="cp-meta-avatar user-avatar"><i class="bi bi-person-fill"></i></div>
+        </div>
+        <div class="cp-chat-bubble">
+          <p class="mb-0">${escapeHtml(text)}</p>
+        </div>
+        <span class="cp-chat-time text-end"><i class="bi bi-clock me-1"></i>${time}</span>
+      `;
+    }
 
     container.appendChild(row);
     if (shouldScroll) scrollToBottom();
@@ -395,6 +730,11 @@
     indicator.id = 'cpChatTypingIndicator';
     indicator.className = 'cp-chat-row ai';
     indicator.innerHTML = `
+      <div class="cp-msg-meta-header">
+        <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
+        <span class="cp-meta-name">CareerPath AI Mentor</span>
+        <span class="cp-meta-badge"><i class="bi bi-hourglass-split"></i> Reasoning...</span>
+      </div>
       <div class="cp-chat-typing">
         <div class="cp-chat-typing-dot"></div>
         <div class="cp-chat-typing-dot"></div>
@@ -417,13 +757,6 @@
     }
   }
 
-  function escapeHtml(str) {
-    return (str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
   async function sendUserMessage(text) {
     isSending = true;
     const time = formatTime();
@@ -432,7 +765,7 @@
     appendBubbleToDOM('user', text, time);
     chatHistory.push({ role: 'user', text, time });
 
-    // Hide suggestions after first query
+    // Hide suggestions drawer after user begins active chat
     const suggestions = document.getElementById('cpChatSuggestions');
     if (suggestions) suggestions.style.display = 'none';
 
@@ -457,7 +790,7 @@
         'Authorization': `Bearer ${token}`
       };
 
-      // Format previous history for AI Mentor API (excluding current query to prevent duplication)
+      // Format previous history for AI Mentor API (last 6 messages)
       const previousHistory = chatHistory.slice(0, -1);
       const historyPayload = previousHistory.slice(-6).map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
@@ -478,13 +811,16 @@
             if (!streamRow) {
               streamRow = document.createElement('div');
               streamRow.className = 'cp-chat-row ai';
+              streamRow.innerHTML = `
+                <div class="cp-msg-meta-header">
+                  <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
+                  <span class="cp-meta-name">CareerPath AI Mentor</span>
+                  <span class="cp-meta-badge"><i class="bi bi-lightning-charge-fill text-warning"></i> Real-time Stream</span>
+                </div>
+              `;
               streamBubble = document.createElement('div');
               streamBubble.className = 'cp-chat-bubble';
               streamRow.appendChild(streamBubble);
-              const timeSpan = document.createElement('span');
-              timeSpan.className = 'cp-chat-time';
-              timeSpan.textContent = formatTime();
-              streamRow.appendChild(timeSpan);
               const container = document.getElementById('cpChatMessages');
               if (container) container.appendChild(streamRow);
             }
@@ -498,11 +834,33 @@
             removeTypingIndicator();
             const fullText = data.fullText || accumulatedText;
             if (!streamRow) {
-              appendBubbleToDOM('ai', fullText, formatTime());
+              appendBubbleToDOM('ai', fullText, formatTime(), true, 'Groq Cloud (<100ms)');
             } else if (streamBubble) {
               streamBubble.innerHTML = parseMarkdown(fullText);
+              // Add footer
+              const footer = document.createElement('div');
+              footer.className = 'cp-msg-footer';
+              footer.innerHTML = `
+                <span class="cp-chat-time"><i class="bi bi-clock me-1"></i>${formatTime()}</span>
+                <button type="button" class="cp-msg-copy-btn" title="Copy response to clipboard">
+                  <i class="bi bi-clipboard"></i> <span>Copy Advice</span>
+                </button>
+              `;
+              streamRow.appendChild(footer);
+
+              // Follow-up chips
+              const chips = generateFollowUpChips(fullText);
+              if (chips.length > 0) {
+                const chipsContainer = document.createElement('div');
+                chipsContainer.className = 'cp-followup-ribbon';
+                chipsContainer.innerHTML = `
+                  <span class="cp-followup-title"><i class="bi bi-arrow-return-right"></i> Next Question:</span>
+                  ${chips.map(c => `<button type="button" class="cp-followup-pill" data-prompt="${escapeHtml(c.prompt)}">${escapeHtml(c.text)}</button>`).join('')}
+                `;
+                streamRow.appendChild(chipsContainer);
+              }
             }
-            chatHistory.push({ role: 'ai', text: fullText, time: formatTime() });
+            chatHistory.push({ role: 'ai', text: fullText, time: formatTime(), engine: 'Groq Cloud (<100ms)' });
             try {
               sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory.slice(-20)));
             } catch (e) {}
@@ -511,7 +869,6 @@
             if (input) input.focus();
           },
           onError: () => {
-            // Fallback to stateless REST endpoint
             executeRestFetch();
           }
         });
@@ -537,14 +894,14 @@
           if (res.status === 401) {
             appendBubbleToDOM(
               'ai',
-              '🔒 **Session Expired:** Your login session has expired. Please [log in again](login.html) to chat with AI Career Mentor.',
+              '🔒 **Session Expired:** Your login session has expired. Please [log in again](login.html) to continue chatting with your AI Career Mentor.',
               formatTime()
             );
             return;
           }
 
           if (res.status === 429) {
-            const cooldownMsg = data.message || 'AI Career Mentor is currently cooling down. You have reached your 20-message limit for this 15-minute window. Please wait a few minutes before continuing.';
+            const cooldownMsg = data.message || 'AI Career Mentor is currently cooling down. You have reached your rate limit for this window. Please wait a few minutes before continuing.';
             appendBubbleToDOM(
               'ai',
               `⏳ **Rate Limit Notice:** ${cooldownMsg}`,
@@ -555,8 +912,8 @@
 
           if (data.success && data.reply) {
             const aiTime = formatTime();
-            appendBubbleToDOM('ai', data.reply, aiTime);
-            chatHistory.push({ role: 'ai', text: data.reply, time: aiTime });
+            appendBubbleToDOM('ai', data.reply, aiTime, true, data.engine || 'CareerPath AI Engine');
+            chatHistory.push({ role: 'ai', text: data.reply, time: aiTime, engine: data.engine });
             try {
               sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory.slice(-20)));
             } catch (e) {}
@@ -569,7 +926,7 @@
           console.error('Chatbot fetch error:', fetchErr);
           appendBubbleToDOM(
             'ai',
-            '⚠️ Could not connect to CareerPath AI backend server. Please verify the server is running on port 5000.',
+            '⚠️ Could not connect to CareerPath AI backend server. Please verify your connection or try again shortly.',
             formatTime()
           );
         }
@@ -597,7 +954,13 @@
   }
 
   window.CareerPathChat = {
-    open: () => document.getElementById('cpChatDrawer')?.classList.add('open'),
+    open: () => {
+      const drawer = document.getElementById('cpChatDrawer');
+      if (drawer) {
+        drawer.classList.add('open');
+        updateStudentHeader();
+      }
+    },
     close: () => document.getElementById('cpChatDrawer')?.classList.remove('open'),
     send: (prompt) => sendUserMessage(prompt)
   };

@@ -44,12 +44,15 @@ const handleChatMessage = async (req, res, next) => {
     let userContext = null;
     if (req.user) {
       try {
-        const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' });
+        const activeRoadmap = await Roadmap.findOne({ user: req.user._id, status: 'active' }).lean();
         userContext = {
           name: req.user.name,
           degree: req.user.education?.course || '',
+          branch: req.user.education?.branch || '',
+          year: req.user.education?.year || '',
           skills: Array.isArray(req.user.skills) ? req.user.skills.map(s => s.name || s) : [],
           targetCareer: activeRoadmap?.careerSnapshot?.title || '',
+          progressPercentage: activeRoadmap?.progressPercentage || 0,
         };
       } catch (ctxErr) {
         console.warn('[chatController] Context enrichment note:', ctxErr.message);
@@ -84,18 +87,26 @@ const handleChatMessage = async (req, res, next) => {
     if (!reply) {
       console.warn('[Chat] External AI engines offline or keys invalid. Using instant high-speed Mentor Fallback.');
       const name = userContext?.name || 'Student';
-      const skillsStr = userContext?.skills?.length ? ` your skills in **${userContext.skills.slice(0, 3).join(', ')}**` : ' your technical foundation';
       const targetStr = userContext?.targetCareer ? ` for **${userContext.targetCareer}**` : '';
+      const degreeStr = userContext?.degree ? ` (${userContext.degree})` : '';
 
-      reply = `Hello ${name}! 👋 
+      reply = `### 🎯 Key Takeaway
+Hello ${name}${degreeStr}! 👋 As your **CareerPath AI Mentor**, here is your personalized action strategy${targetStr}:
 
-I am your CareerPath AI Mentor. Here is my strategic advice${targetStr} based on${skillsStr}:
+### 📌 Action Plan (Next Steps)
+1. **Focus on Hands-on Building**: Build real-world projects and deploy them live (e.g., on Vercel or Render) with a clear GitHub README.
+2. **Weekly Milestone Consistency**: Follow the structured weekly curriculum in your [My Roadmap](roadmap.html) to eliminate core skill gaps step-by-step.
+3. **Verify Your Foundation**: Complete practical quizzes and coding challenges in [Skill Assessment](assessment.html) to earn verified digital badges.
 
-1. **Focus on Hands-on Projects**: Build end-to-end full-stack or data applications and deploy them publicly (e.g. Vercel, Render, or GitHub Pages).
-2. **Follow Your Milestone Roadmap**: Check off your weekly tasks in the **Roadmap** section to steadily eliminate skill gaps.
-3. **Master Modern Tech**: Employers look for practical experience with tools like TypeScript, Docker, and RESTful APIs.
+> 💡 **Pro-Tip:** Tech recruiters scan for deployed live links and clean code commits much more than passive video certificates.
 
-Keep building, and feel free to ask any questions about specific tools or career paths!`;
+### 🛠️ Recommended Tech Stack & Skills
+- **Core Languages**: JavaScript / TypeScript, Python, or Java
+- **Modern Frameworks**: React / Next.js, Node.js / Express
+- **Industry Standards**: Git, Docker, RESTful APIs, SQL (PostgreSQL)
+
+### 🚀 Portal Quick Action
+Keep your learning momentum going! Open your **[Roadmap](roadmap.html)** to check off this week's tasks, or review hiring requirements on **[Job Market](jobs.html)**.`;
       engineUsed = 'CareerPath AI Knowledge Engine';
     }
 
