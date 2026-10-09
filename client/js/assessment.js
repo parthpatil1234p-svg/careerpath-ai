@@ -772,14 +772,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         showAlert('Please select at least 1 skill you possess before proceeding.');
         return false;
       }
-      const unverified = Array.from(selectedSkillsMap.values()).filter(
-        (s) => !s.isQuizVerified && !s.isCodeVerified
+      const verified = Array.from(selectedSkillsMap.values()).filter(
+        (s) => s.isQuizVerified || s.isCodeVerified
       );
-      if (unverified.length > 0) {
-        const unverifiedNames = unverified.map((s) => s.displayName || s.name).join(', ');
+      if (verified.length === 0) {
         showAlert(
-          `🔒 Knowledge Level Restricted: Skill levels cannot be self-selected. They are strictly calibrated via 90s Reality Check Quizzes or GitHub repository code. Please complete the quiz for <strong>${escapeHtml(unverifiedNames)}</strong> (or remove ${unverified.length > 1 ? 'them' : 'it'} using ✕) before continuing.`,
-          'danger'
+          `🔒 Baseline Verification Required: Please complete at least one 90-second Reality Check Quiz below to calibrate your baseline skill level before proceeding to Goals.`,
+          'warning'
         );
         const container = document.getElementById('assessmentAlertContainer') || alertContainer;
         if (container) {
@@ -1452,29 +1451,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         step3ContinueBtn.title = 'Continue to Goals';
         step3ContinueBtn.classList.remove('disabled', 'opacity-75');
       }
-    } else {
+    } else if (verifiedCount >= 1) {
+      hasCompletedSkillVerification = true;
       const pct = Math.min(100, Math.round((verifiedCount / totalCount) * 100));
 
+      if (proveSkillsBadge) {
+        proveSkillsBadge.className = 'prove-skills-badge in-progress bg-success-subtle text-success border border-success-subtle';
+      }
+      if (proveSkillsBadgeText) {
+        proveSkillsBadgeText.textContent = `${verifiedCount} of ${totalCount} Calibrated (Ready to Continue)`;
+      }
+      if (proveSkillsProgressFill) {
+        proveSkillsProgressFill.style.width = `${pct}%`;
+        proveSkillsProgressFill.className = 'prove-skills-progress-fill bg-success';
+      }
+      if (proveSkillsSubtitle) {
+        proveSkillsSubtitle.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-patch-check-fill me-1"></i> Baseline Calibrated:</span> You have calibrated <strong>${verifiedCount} skill${verifiedCount > 1 ? 's' : ''}</strong>! You can continue to Goals now, or optionally take quick quizzes for the remaining ${unverifiedSkills.length} skill(s) below to refine your recommendations.`;
+      }
+      proveSkillsPanel.classList.remove('all-verified');
+
+      if (step3ContinueBtn) {
+        step3ContinueBtn.disabled = false;
+        step3ContinueBtn.className = 'btn cp-btn-primary px-4';
+        step3ContinueBtn.innerHTML = '<span>Continue to Goals</span> <i class="bi bi-arrow-right ms-1"></i>';
+        step3ContinueBtn.title = 'Continue to Goals';
+        step3ContinueBtn.classList.remove('disabled', 'opacity-75');
+      }
+    } else {
+      hasCompletedSkillVerification = false;
       if (proveSkillsBadge) {
         proveSkillsBadge.className = 'prove-skills-badge in-progress bg-warning text-dark';
       }
       if (proveSkillsBadgeText) {
-        proveSkillsBadgeText.textContent = `${verifiedCount} of ${totalCount} Verified (${unverifiedSkills.length} Pending Quiz)`;
+        proveSkillsBadgeText.textContent = `0 of ${totalCount} Verified (1 Required)`;
       }
       if (proveSkillsProgressFill) {
-        proveSkillsProgressFill.style.width = `${pct}%`;
+        proveSkillsProgressFill.style.width = '0%';
         proveSkillsProgressFill.className = 'prove-skills-progress-fill';
       }
       if (proveSkillsSubtitle) {
-        proveSkillsSubtitle.innerHTML = `<span class="text-warning-emphasis fw-bold"><i class="bi bi-lock-fill me-1"></i> Progression Restricted:</span> Skill knowledge levels must be calibrated via Reality Check Quizzes or GitHub code (no self-ratings). Please complete the 90s quiz for all ${unverifiedSkills.length} pending skill(s) below (or remove them using ✕) to unlock Goals.`;
+        proveSkillsSubtitle.innerHTML = `<span class="text-warning-emphasis fw-bold"><i class="bi bi-lock-fill me-1"></i> Baseline Verification Required:</span> Skill knowledge levels must be calibrated via Reality Check Quizzes or GitHub code (no self-ratings). Please complete the 90s quiz for at least 1 skill below to unlock Goals.`;
       }
       proveSkillsPanel.classList.remove('all-verified');
 
       if (step3ContinueBtn) {
         step3ContinueBtn.disabled = true;
         step3ContinueBtn.className = 'btn btn-secondary px-4 disabled opacity-75';
-        step3ContinueBtn.innerHTML = '<i class="bi bi-lock-fill me-1"></i> Complete Quiz to Continue';
-        step3ContinueBtn.title = `Locked: Complete reality check quiz for ${unverifiedSkills.map(s => s.displayName || s.name).join(', ')}`;
+        step3ContinueBtn.innerHTML = '<i class="bi bi-lock-fill me-1"></i> Verify at least 1 Skill to Continue';
+        step3ContinueBtn.title = `Locked: Complete reality check quiz for at least 1 skill to calibrate your baseline`;
       }
     }
 
@@ -1514,9 +1538,9 @@ document.addEventListener('DOMContentLoaded', async () => {
               <i class="bi bi-patch-check-fill"></i>
               <span>Calibrated (${escapeHtml(capitalize(profStr))}) \u2713</span>
             </span>
-            <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Retest this skill to recalibrate your level">
+            <button type="button" class="btn-retest-check" data-skill="${escapeHtml(skill.name)}" title="Optional: Retake anytime to improve your score or calibrate to a higher tier">
               <i class="bi bi-arrow-repeat"></i>
-              <span>Retest</span>
+              <span>Retest (Optional)</span>
             </button>
           </div>
         `;
@@ -1558,9 +1582,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
       } else if (!isVerified) {
         noteHtml = `
-          <div class="skill-adjusted-note text-warning border-warning-subtle bg-warning-subtle">
-            <i class="bi bi-shield-lock text-warning me-1"></i>
-            <span>Knowledge level is not self-rated. Take the 90-second reality-check quiz to prove proficiency.</span>
+          <div class="skill-adjusted-note ${verifiedCount >= 1 ? 'text-muted border-secondary-subtle bg-light' : 'text-warning border-warning-subtle bg-warning-subtle'}">
+            <i class="bi ${verifiedCount >= 1 ? 'bi-info-circle text-secondary' : 'bi-shield-lock text-warning'} me-1"></i>
+            <span>${verifiedCount >= 1 ? 'Optional calibration: Take the 90-second quiz anytime to prove proficiency, or proceed with baseline.' : 'Knowledge level is not self-rated. Take the 90-second reality-check quiz to prove proficiency.'}</span>
           </div>
         `;
       } else if (isQuizVer && skill.quizGaps && skill.quizGaps.length > 0) {
@@ -3228,15 +3252,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    const unverifiedSkills = Array.from(selectedSkillsMap.values()).filter(
-      (s) => !s.isQuizVerified && !s.isCodeVerified
+    const verifiedSkills = Array.from(selectedSkillsMap.values()).filter(
+      (s) => s.isQuizVerified || s.isCodeVerified
     );
-    if (unverifiedSkills.length > 0) {
+    if (verifiedSkills.length === 0) {
       updateStepUI(3);
-      const names = unverifiedSkills.map((s) => s.displayName || s.name).join(', ');
       showAlert(
-        `🔒 Knowledge Level Restricted: Skill levels cannot be self-selected. Please complete the reality check quiz for <strong>${escapeHtml(names)}</strong> (or remove ${unverifiedSkills.length > 1 ? 'them' : 'it'} using ✕) before submitting.`,
-        'danger'
+        `🔒 Baseline Verification Required: Please complete at least one 90-second Reality Check Quiz to calibrate your baseline skill level before submitting.`,
+        'warning'
       );
       return;
     }
@@ -3253,7 +3276,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       interests: Array.from(selectedInterests),
       skills: Array.from(selectedSkillsMap.values()),
       careerGoals: goalText ? [goalText] : [],
-      hasCompletedSkillVerification: Boolean(hasCompletedSkillVerification),
+      hasCompletedSkillVerification: Boolean(hasCompletedSkillVerification || verifiedSkills.length > 0),
     };
 
     if (submitBtn) {
