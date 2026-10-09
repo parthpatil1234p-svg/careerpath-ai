@@ -29,10 +29,8 @@
   // Production Persistent Real-Time & WebSockets (Render 24/7 worker)
   const PRODUCTION_REALTIME_URL = 'https://careerpath-ai-bdbt.onrender.com';
 
-  // Production Stateless REST API (Vercel Serverless in Prod, Render fallback)
-  const PRODUCTION_REST_API = isVercel
-    ? `${window.location.origin}/api`
-    : 'https://careerpath-ai-bdbt.onrender.com/api';
+  // Production REST API (Render 24/7 Unified Backend with Supabase PostgreSQL)
+  const PRODUCTION_REST_API = 'https://careerpath-ai-bdbt.onrender.com/api';
 
   const CONFIG = {
     // Stateless REST API (Vercel in Prod, localhost:5000 in dev)

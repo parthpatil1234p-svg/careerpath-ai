@@ -67,10 +67,23 @@ const API = {
     }
 
     try {
-      const response = await fetch(url, fetchConfig);
+      let response;
+      try {
+        response = await fetch(url, fetchConfig);
+      } catch (fetchErr) {
+        // If local backend is offline, gracefully failover to live Render cloud backend
+        if (url.includes('localhost:5000') || url.includes('127.0.0.1:5000')) {
+          console.warn('⚠️ Local backend at localhost:5000 is offline. Failing over to live Render cloud backend...');
+          const cloudUrl = url.replace(/https?:\/\/(localhost|127\.0\.0\.1):5000\/api/, 'https://careerpath-ai-bdbt.onrender.com/api');
+          response = await fetch(cloudUrl, fetchConfig);
+        } else {
+          throw fetchErr;
+        }
+      }
+
       const data = await response.json().catch(() => ({
         success: false,
-        message: `HTTP ${response.status} ${response.statusText}`,
+        message: `HTTP ${response.status} ${response.statusText || ''}`.trim(),
       }));
 
       // Handle 401 Unauthorized globally
@@ -82,7 +95,12 @@ const API = {
       }
 
       if (!response.ok) {
-        const error = new Error(data.message || 'API request failed');
+        const errorMsg =
+          data.message ||
+          data.error?.message ||
+          (typeof data.error === 'string' ? data.error : null) ||
+          (response.status ? `HTTP ${response.status} Error` : 'API request failed');
+        const error = new Error(errorMsg);
         error.status = response.status;
         error.errors = data.errors || [];
         error.data = data;
