@@ -576,43 +576,43 @@
                 </button>
               </div>
             </div>
-      </div>
-
-
-
-      <!-- Abandon Route Modal (Roadmap) -->
-      <div class="modal fade" id="modalAbandonRouteRoadmap" tabindex="-1" aria-labelledby="modalAbandonRouteRoadmapTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content border-line shadow-lg">
-            <div class="modal-header border-bottom border-line">
-              <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalAbandonRouteRoadmapTitle">
-                <i class="bi bi-exclamation-triangle-fill text-danger"></i> Abandon Current Career Route?
-              </h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p class="text-ink fw-semibold mb-2">
-                Are you sure you want to abandon the <span id="abandonRoadmapModalTitle" class="text-teal">Current Route</span> track?
-              </p>
-              <div class="alert alert-info py-2 px-3 small border-0 mb-3" style="background: rgba(20, 184, 166, 0.1); color: var(--color-teal, #14b8a6);">
-                <i class="bi bi-shield-check me-1"></i>
-                <strong>Your evidence is safe:</strong> All verified skills, quiz attempts, and milestone test scores remain permanently saved on your profile.
-              </div>
-              <p class="text-secondary small mb-2">
-                Abandoning frees your account to enroll in a new career route. To maintain disciplined learning focus, the server limits route resets to <strong>once every 7 days</strong>.
-              </p>
-              <div id="abandonRoadmapErrorAlert" class="alert alert-danger py-2 px-3 small d-none"></div>
-            </div>
-            <div class="modal-footer border-top border-line">
-              <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Keep Learning</button>
-              <button type="button" class="btn btn-danger btn-sm px-3" id="btnConfirmAbandonRouteRoadmap">
-                <i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route
-              </button>
-            </div>
           </div>
         </div>
       </div>
     </main>
+
+    <!-- Abandon Route Modal (Roadmap) -->
+    <div class="modal fade" id="modalAbandonRouteRoadmap" tabindex="-1" aria-labelledby="modalAbandonRouteRoadmapTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-line shadow-lg">
+          <div class="modal-header border-bottom border-line">
+            <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalAbandonRouteRoadmapTitle">
+              <i class="bi bi-exclamation-triangle-fill text-danger"></i> Abandon Current Career Route?
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-ink fw-semibold mb-2">
+              Are you sure you want to abandon the <span id="abandonRoadmapModalTitle" class="text-teal">Current Route</span> track?
+            </p>
+            <div class="alert alert-info py-2 px-3 small border-0 mb-3" style="background: rgba(20, 184, 166, 0.1); color: var(--color-teal, #14b8a6);">
+              <i class="bi bi-shield-check me-1"></i>
+              <strong>Your evidence is safe:</strong> All verified skills, quiz attempts, and milestone test scores remain permanently saved on your profile.
+            </div>
+            <p class="text-secondary small mb-2">
+              Abandoning frees your account to enroll in a new career route. To maintain disciplined learning focus, the server limits route resets to <strong>once every 7 days</strong>.
+            </p>
+            <div id="abandonRoadmapErrorAlert" class="alert alert-danger py-2 px-3 small d-none"></div>
+          </div>
+          <div class="modal-footer border-top border-line">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Keep Learning</button>
+            <button type="button" class="btn btn-danger btn-sm px-3" id="btnConfirmAbandonRouteRoadmap">
+              <i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="atlas-footer py-4 mt-5 border-top border-line">

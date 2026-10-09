@@ -1212,64 +1212,86 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // ── Wire Abandon Route Modal (Roadmap) ──────────────────────────
-  const modalAbandonRoadmapEl = document.getElementById('modalAbandonRouteRoadmap');
-  let modalAbandonRoadmap = null;
-  if (modalAbandonRoadmapEl && typeof bootstrap !== 'undefined') {
-    modalAbandonRoadmap = new bootstrap.Modal(modalAbandonRoadmapEl);
-  }
+  const getAbandonRoadmapModal = () => {
+    const el = document.getElementById('modalAbandonRouteRoadmap');
+    if (!el) return null;
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      return bootstrap.Modal.getOrCreateInstance(el);
+    }
+    return null;
+  };
 
   const btnConfirmAbandonRoadmap = document.getElementById('btnConfirmAbandonRouteRoadmap');
   const abandonRoadmapTitle = document.getElementById('abandonRoadmapModalTitle');
   const abandonRoadmapError = document.getElementById('abandonRoadmapErrorAlert');
 
+  const executeAbandonRoadmap = async () => {
+    try {
+      if (btnConfirmAbandonRoadmap) {
+        btnConfirmAbandonRoadmap.disabled = true;
+        btnConfirmAbandonRoadmap.textContent = 'Abandoning Route...';
+      }
+      if (abandonRoadmapError) abandonRoadmapError.classList.add('d-none');
+
+      const targetId = currentRoadmap?._id || currentRoadmap?.id;
+      const res = await window.API.post(
+        '/roadmaps/current/abandon',
+        { roadmapId: targetId },
+        { auth: true }
+      );
+      if (res.success) {
+        const modal = getAbandonRoadmapModal();
+        if (modal) modal.hide();
+        showAlert(res.message || 'Route abandoned. Your verified skills and quiz attempts have been saved. Redirecting...', 'info');
+        setTimeout(() => {
+          window.location.href = 'recommendations.html';
+        }, 600);
+      } else {
+        if (abandonRoadmapError) {
+          abandonRoadmapError.textContent = res.message || 'Failed to abandon route.';
+          abandonRoadmapError.classList.remove('d-none');
+        } else {
+          showAlert(res.message || 'Failed to abandon route.', 'warning');
+        }
+      }
+    } catch (err) {
+      if (abandonRoadmapError) {
+        abandonRoadmapError.textContent = err.message || 'Failed to abandon route.';
+        abandonRoadmapError.classList.remove('d-none');
+      } else {
+        showAlert(err.message || 'Failed to abandon active route.', 'danger');
+      }
+    } finally {
+      if (btnConfirmAbandonRoadmap) {
+        btnConfirmAbandonRoadmap.disabled = false;
+        btnConfirmAbandonRoadmap.innerHTML = '<i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route';
+      }
+    }
+  };
+
   if (btnAbandon) {
     btnAbandon.addEventListener('click', () => {
       if (abandonRoadmapError) abandonRoadmapError.classList.add('d-none');
-      if (abandonRoadmapTitle && currentRoadmap) {
-        abandonRoadmapTitle.textContent = currentRoadmap.careerSnapshot?.title || 'Current Track';
+      const trackTitle = currentRoadmap?.careerSnapshot?.title || 'Current Track';
+      if (abandonRoadmapTitle) {
+        abandonRoadmapTitle.textContent = trackTitle;
       }
-      if (modalAbandonRoadmap) {
-        modalAbandonRoadmap.show();
+      const modal = getAbandonRoadmapModal();
+      if (modal) {
+        modal.show();
+      } else {
+        const confirmed = confirm(
+          `Are you sure you want to abandon the "${trackTitle}" career route?\n\nAll verified skills, quiz attempts, and test scores remain permanently saved on your profile.`
+        );
+        if (confirmed) {
+          executeAbandonRoadmap();
+        }
       }
     });
   }
 
   if (btnConfirmAbandonRoadmap) {
-    btnConfirmAbandonRoadmap.addEventListener('click', async () => {
-      try {
-        btnConfirmAbandonRoadmap.disabled = true;
-        btnConfirmAbandonRoadmap.textContent = 'Abandoning Route...';
-        if (abandonRoadmapError) abandonRoadmapError.classList.add('d-none');
-
-        const res = await window.API.post(
-          '/roadmaps/current/abandon',
-          { roadmapId: currentRoadmap?._id || currentRoadmap?.id },
-          { auth: true }
-        );
-        if (res.success) {
-          if (modalAbandonRoadmap) modalAbandonRoadmap.hide();
-          showAlert(res.message || 'Route abandoned. Your verified skills and quiz attempts have been saved. Redirecting...', 'info');
-          setTimeout(() => {
-            window.location.href = 'recommendations.html';
-          }, 800);
-        } else {
-          if (abandonRoadmapError) {
-            abandonRoadmapError.textContent = res.message || 'Failed to abandon route.';
-            abandonRoadmapError.classList.remove('d-none');
-          }
-        }
-      } catch (err) {
-        if (abandonRoadmapError) {
-          abandonRoadmapError.textContent = err.message || 'Failed to abandon route.';
-          abandonRoadmapError.classList.remove('d-none');
-        } else {
-          showAlert(err.message || 'Failed to abandon active route.', 'danger');
-        }
-      } finally {
-        btnConfirmAbandonRoadmap.disabled = false;
-        btnConfirmAbandonRoadmap.innerHTML = '<i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route';
-      }
-    });
+    btnConfirmAbandonRoadmap.addEventListener('click', executeAbandonRoadmap);
   }
 
   // Safe string escaper
