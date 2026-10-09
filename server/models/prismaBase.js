@@ -86,6 +86,16 @@ function translateFilter(filter = {}, fieldMap = {}) {
       continue;
     }
 
+    // Handle ObjectId and document ID references before inspecting operator keys
+    if (rawVal && typeof rawVal === 'object' && (rawVal._bsontype === 'ObjectID' || rawVal.constructor?.name === 'ObjectId' || typeof rawVal.toHexString === 'function')) {
+      where[mappedKey] = String(rawVal);
+      continue;
+    }
+    if (rawVal && typeof rawVal === 'object' && !Array.isArray(rawVal) && (rawVal._id || rawVal.id) && !rawVal.$in && !rawVal.$nin && !rawVal.$ne && !rawVal.$exists && !rawVal.$gt && !rawVal.$lt && !rawVal.$gte && !rawVal.$lte && !rawVal.$regex) {
+      where[mappedKey] = String(rawVal.id || rawVal._id);
+      continue;
+    }
+
     if (rawVal !== null && typeof rawVal === 'object' && !Array.isArray(rawVal) && !(rawVal instanceof Date)) {
       // MongoDB Operator conversion
       const prismaConditions = {};
@@ -544,6 +554,130 @@ function unpackDottedUpdates(updateData, existing = {}) {
 
     return queryPromise;
   };
+
+  Model.findOneAndUpdate = function (filter = {}, update = {}, options = {}) {
+    let selectFields = null;
+    let populates = [];
+
+    const queryPromise = (async () => {
+      const where = translateFilter(filter, fieldMap);
+      const existing = await prisma[delegate].findFirst({ where });
+
+      if (!existing) {
+        if (options && options.upsert) {
+          let createData = {};
+          if (update.$set) {
+            createData = { ...filter, ...update.$set };
+          } else {
+            createData = { ...filter, ...update };
+          }
+          delete createData.$set;
+          delete createData.$setOnInsert;
+          delete createData.$inc;
+          delete createData.$push;
+          delete createData.$pull;
+          delete createData._id;
+
+          unpackDottedUpdates(createData);
+
+          for (const [mField, pField] of Object.entries(fieldMap)) {
+            if (createData[mField] !== undefined && createData[pField] === undefined) {
+              createData[pField] = String(createData[mField]);
+              delete createData[mField];
+            }
+          }
+
+          const cleanCreate = filterAllowedFields(modelName, createData);
+          const created = await prisma[delegate].create({ data: cleanCreate });
+          return new PrismaDocument(created, modelName, fieldMap);
+        }
+        return null;
+      }
+
+      let updateData = {};
+      if (update.$set) {
+        updateData = { ...update.$set };
+      } else {
+        updateData = { ...update };
+      }
+
+      delete updateData.$inc;
+      delete updateData.$push;
+      delete updateData.$pull;
+      delete updateData.$setOnInsert;
+      delete updateData._id;
+
+      unpackDottedUpdates(updateData, existing);
+
+      for (const [mField, pField] of Object.entries(fieldMap)) {
+        if (updateData[mField] !== undefined && updateData[pField] === undefined) {
+          updateData[pField] = String(updateData[mField]);
+          delete updateData[mField];
+        }
+      }
+
+      const cleanUpdate = filterAllowedFields(modelName, updateData);
+      const updated = await prisma[delegate].update({
+        where: { id: existing.id },
+        data: cleanUpdate,
+      });
+
+      const returnDoc = (options && options.new === false) ? existing : updated;
+      const doc = new PrismaDocument(returnDoc, modelName, fieldMap);
+      if (selectFields && selectFields.includes('-password')) {
+        delete doc.password;
+      }
+      return doc;
+    })();
+
+    queryPromise.select = function (fields) {
+      selectFields = fields;
+      return queryPromise;
+    };
+    queryPromise.populate = function (pop) {
+      populates.push(pop);
+      return queryPromise;
+    };
+    queryPromise.lean = function () {
+      return queryPromise;
+    };
+
+    return queryPromise;
+  };
+
+  Model.findOneAndDelete = function (filter = {}, options = {}) {
+    let selectFields = null;
+    let populates = [];
+
+    const queryPromise = (async () => {
+      const where = translateFilter(filter, fieldMap);
+      const existing = await prisma[delegate].findFirst({ where });
+      if (!existing) return null;
+
+      const deleted = await prisma[delegate].delete({ where: { id: existing.id } });
+      const doc = new PrismaDocument(deleted, modelName, fieldMap);
+      if (selectFields && selectFields.includes('-password')) {
+        delete doc.password;
+      }
+      return doc;
+    })();
+
+    queryPromise.select = function (fields) {
+      selectFields = fields;
+      return queryPromise;
+    };
+    queryPromise.populate = function (pop) {
+      populates.push(pop);
+      return queryPromise;
+    };
+    queryPromise.lean = function () {
+      return queryPromise;
+    };
+
+    return queryPromise;
+  };
+
+  Model.findOneAndRemove = Model.findOneAndDelete;
 
   Model.updateOne = async function (filter, update) {
     const where = translateFilter(filter, fieldMap);
