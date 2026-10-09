@@ -26,6 +26,7 @@ const {
   getVideoConceptCheckpoint,
   evaluateVideoReflection,
 } = require('../services/videoDedicationService');
+const { invalidateDashboardCache } = require('./dashboardController');
 
 // Helper to group tasks by weekNumber
 const groupTasksByWeek = (tasks, durationWeeks) => {
@@ -259,6 +260,8 @@ const generateRoadmap = async (req, res, next) => {
     // 10. Group tasks by week for response
     const weeks = groupTasksByWeek(createdTasks, weeksCount);
 
+    invalidateDashboardCache(req.user._id);
+
     res.status(201).json({
       success: true,
       message: 'Personalized roadmap generated successfully',
@@ -489,6 +492,8 @@ const toggleTask = async (req, res, next) => {
         await updatedRoadmap.save();
       }
     }
+
+    invalidateDashboardCache(req.user._id);
 
     res.status(200).json({
       success: true,

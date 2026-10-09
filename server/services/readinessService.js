@@ -21,13 +21,25 @@ function isDemoOrAdmin(user) {
 
 /**
  * Computes live job readiness index and certification state for a student.
+ * Supports passing already-fetched user and activeRoadmap objects to avoid duplicate DB reads.
  */
-async function computeStudentReadiness(userId) {
-  const user = await User.findById(userId);
+async function computeStudentReadiness(userOrUserId, activeRoadmapInput = null) {
+  let user;
+  let userId;
+  if (userOrUserId && typeof userOrUserId === 'object' && (userOrUserId._id || userOrUserId.id)) {
+    user = userOrUserId;
+    userId = user._id || user.id;
+  } else {
+    userId = userOrUserId;
+    user = await User.findById(userId).lean();
+  }
   if (!user) throw new Error('User not found');
 
   const isAdminOrDemo = isDemoOrAdmin(user);
-  const activeRoadmap = await Roadmap.findOne({ user: userId, status: 'active' }).populate('career');
+  let activeRoadmap = activeRoadmapInput;
+  if (activeRoadmap === null || activeRoadmap === undefined) {
+    activeRoadmap = await Roadmap.findOne({ user: userId, status: 'active' }).populate('career').lean();
+  }
 
   // 1. Verified Skills Score (35% weight)
   const skills = user.skills || [];
@@ -93,7 +105,7 @@ async function computeStudentReadiness(userId) {
     certificateId: certId || '',
     certifiedAt: certifiedAt || null,
     calculatedAt: new Date(),
-    targetRole: activeRoadmap?.career?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer',
+    targetRole: activeRoadmap?.career?.title || activeRoadmap?.careerSnapshot?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer',
     breakdown: {
       verifiedSkills: verifiedSkillsScore,
       roadmapProgress: roadmapProgressScore,
@@ -108,8 +120,16 @@ async function computeStudentReadiness(userId) {
     ]
   };
 
-  result.targetRole = activeRoadmap?.career?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer';
-  await User.findByIdAndUpdate(userId, { $set: { jobReadiness: result } });
+  result.targetRole = activeRoadmap?.career?.title || activeRoadmap?.careerSnapshot?.title || (user.interests && user.interests[0]) || 'Full-Stack Developer';
+
+  // Non-blocking async database update (does not delay read responses)
+  const shouldSave = !user.jobReadiness ||
+    user.jobReadiness.readinessScore !== compositeScore ||
+    user.jobReadiness.tier !== tier;
+  if (shouldSave) {
+    User.findByIdAndUpdate(userId, { $set: { jobReadiness: result } })
+      .catch((err) => console.warn('[ReadinessService] Background save:', err.message));
+  }
 
   return result;
 }
@@ -120,9 +140,19 @@ async function computeStudentReadiness(userId) {
  * 2. >= 4 role-specific verified skills
  * 3. Roadmap progress >= 80% (or completed)
  * 4. Zero expired required skills
+ *
+ * Supports passing already-fetched user and roadmap objects to eliminate duplicate DB roundtrips.
  */
-async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = null) {
-  const user = await User.findById(userId);
+async function evaluateJobReadyCertification(userOrUserId, activeOrCompletedRoadmap = null) {
+  let user;
+  let userId;
+  if (userOrUserId && typeof userOrUserId === 'object' && (userOrUserId._id || userOrUserId.id)) {
+    user = userOrUserId;
+    userId = user._id || user.id;
+  } else {
+    userId = userOrUserId;
+    user = await User.findById(userId).lean();
+  }
   if (!user) throw new Error('User not found');
 
   const isAdminOrDemo = isDemoOrAdmin(user);
@@ -132,17 +162,17 @@ async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = 
     roadmap = await Roadmap.findOne({
       user: userId,
       status: { $in: ['active', 'completed'] },
-    }).sort({ updatedAt: -1 }).populate('career');
+    }).sort({ updatedAt: -1 }).populate('career').lean();
   }
 
-  const readiness = await computeStudentReadiness(userId);
+  const readiness = await computeStudentReadiness(user, roadmap);
   const now = new Date();
 
   // Rule 1: Readiness score >= 70%
   const isScoreOk = isAdminOrDemo || (readiness.readinessScore >= 70);
 
   // Rule 2: At least 4 verified skills required for the role
-  const career = roadmap?.career;
+  const career = roadmap?.career || (roadmap?.careerSnapshot ? { ...roadmap.careerSnapshot, requiredSkills: [] } : null);
   const requiredSkillNames = (career?.requiredSkills || []).map(rs => 
     (rs.skill?.name || rs.skillName || (typeof rs.skill === 'string' ? rs.skill : '')).toLowerCase().trim()
   ).filter(Boolean);
@@ -179,14 +209,17 @@ async function evaluateJobReadyCertification(userId, activeOrCompletedRoadmap = 
       certificateId = `CP-2026-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
       certifiedAt = new Date();
     }
-    await User.findByIdAndUpdate(userId, {
-      $set: {
-        'jobReadiness.certificateId': certificateId,
-        'jobReadiness.certifiedAt': certifiedAt,
-        'jobReadiness.tier': 'job_ready',
-        'jobReadiness.tierLabel': '🔥 JOB READY CERTIFIED',
-      }
-    });
+    const needsCertSave = !user.jobReadiness?.certificateId || user.jobReadiness?.tier !== 'job_ready';
+    if (needsCertSave) {
+      User.findByIdAndUpdate(userId, {
+        $set: {
+          'jobReadiness.certificateId': certificateId,
+          'jobReadiness.certifiedAt': certifiedAt,
+          'jobReadiness.tier': 'job_ready',
+          'jobReadiness.tierLabel': '🔥 JOB READY CERTIFIED',
+        }
+      }).catch((err) => console.warn('[ReadinessService] Background cert save:', err.message));
+    }
   }
 
   const missingCriteria = [];

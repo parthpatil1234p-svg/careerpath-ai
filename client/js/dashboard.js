@@ -71,22 +71,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
   };
 
-  // 3. Load Dashboard Data
+  // 3. Load Dashboard Data (Instant SWR + Resilient Network Telemetry)
   const loadDashboard = async () => {
-    setDashboardState('loading');
+    const currentUser = window.Auth?.getUser?.() || {};
+    const cacheKey = `cp_dash_cache_${currentUser._id || currentUser.id || 'current'}`;
+    let hasRenderedFromCache = false;
+
+    // Fast-path: Instant render from cached telemetry (0ms latency, eliminates loading spinner)
+    try {
+      const cachedRaw = localStorage.getItem(cacheKey);
+      if (cachedRaw) {
+        const cachedPayload = JSON.parse(cachedRaw);
+        if (cachedPayload && cachedPayload.user) {
+          dashboardData = cachedPayload;
+          setDashboardState('ready');
+          renderDashboard();
+          hasRenderedFromCache = true;
+        }
+      }
+    } catch (_) {}
+
+    if (!hasRenderedFromCache) {
+      setDashboardState('loading');
+    }
+
     try {
       const fetchPromise = window.API.get('/dashboard', { auth: true });
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Server request timed out. Please verify your connection or click Try Again.')), 9000)
+        setTimeout(() => reject(new Error('Server request timed out. Please verify your connection or click Try Again.')), 15000)
       );
       const res = await Promise.race([fetchPromise, timeoutPromise]);
 
       if (res.success && res.data) {
         dashboardData = res.data;
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(res.data));
+        } catch (_) {}
         setDashboardState('ready');
         renderDashboard();
       } else {
-        setDashboardState('error', res.message || 'Unable to load dashboard data.');
+        if (!hasRenderedFromCache) {
+          setDashboardState('error', res.message || 'Unable to load dashboard data.');
+        }
       }
     } catch (err) {
       if (err.status === 403 || err.requiresSkillVerification) {
@@ -98,7 +124,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
         return;
       }
-      setDashboardState('error', err.message || 'Failed to fetch student dashboard telemetry.');
+      if (!hasRenderedFromCache) {
+        setDashboardState('error', err.message || 'Failed to fetch student dashboard telemetry.');
+      }
     }
   };
 

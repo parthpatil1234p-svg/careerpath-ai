@@ -11,17 +11,51 @@ const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
 const { evaluateJobReadyCertification } = require('../services/readinessService');
+const { prisma } = require('../config/prisma');
+
+// Short 15-second in-memory dashboard cache to eliminate redundant multi-second roundtrips
+const DASHBOARD_CACHE_TTL_MS = 15000;
+const dashboardCache = new Map();
+
+function invalidateDashboardCache(userId) {
+  if (userId) {
+    dashboardCache.delete(String(userId));
+  } else {
+    dashboardCache.clear();
+  }
+}
 
 /**
  * GET /api/dashboard
- * Retrieves comprehensive student dashboard telemetry
+ * Retrieves comprehensive student dashboard telemetry with sub-second performance
  */
 const getDashboard = async (req, res, next) => {
   try {
-    // 1. Fetch user and all active roadmaps concurrently with .lean() for maximum speed
+    const userId = String(req.user._id);
+    const roadmapQueryId = req.query.roadmapId ? String(req.query.roadmapId) : null;
+    const cacheKey = `${userId}:${roadmapQueryId || 'default'}`;
+
+    // Fast-path: return cached response if valid
+    const cachedEntry = dashboardCache.get(cacheKey);
+    if (cachedEntry && Date.now() - cachedEntry.timestamp < DASHBOARD_CACHE_TTL_MS) {
+      return res.status(200).json(cachedEntry.payload);
+    }
+
+    // 1. Fetch user and all active roadmaps (with upcoming tasks included) in ONE concurrent roundtrip
     const [user, allActiveRoadmaps] = await Promise.all([
       User.findById(req.user._id).select('-password').lean(),
-      Roadmap.find({ user: req.user._id, status: 'active' }).sort({ createdAt: -1 }).lean(),
+      prisma.roadmap.findMany({
+        where: { userId: req.user._id, status: 'active' },
+        orderBy: { createdAt: 'desc' },
+        include: {
+          career: true,
+          tasks: {
+            where: { completed: false },
+            orderBy: [{ weekNumber: 'asc' }, { order: 'asc' }],
+            take: 5,
+          },
+        },
+      }),
     ]);
 
     if (!user) {
@@ -33,8 +67,8 @@ const getDashboard = async (req, res, next) => {
 
     // Determine target active roadmap (either from query or primary active)
     let activeRoadmap = null;
-    if (req.query.roadmapId) {
-      activeRoadmap = allActiveRoadmaps.find(r => String(r._id) === String(req.query.roadmapId));
+    if (roadmapQueryId) {
+      activeRoadmap = allActiveRoadmaps.find(r => String(r.id || r._id) === roadmapQueryId);
     }
     if (!activeRoadmap && allActiveRoadmaps.length > 0) {
       activeRoadmap = allActiveRoadmaps[0];
@@ -64,7 +98,8 @@ const getDashboard = async (req, res, next) => {
 
       if (completedRoadmap) {
         roadmapData = {
-          id: completedRoadmap._id,
+          id: completedRoadmap._id || completedRoadmap.id,
+          _id: completedRoadmap._id || completedRoadmap.id,
           career: {
             title: completedRoadmap.careerSnapshot?.title || 'Graduated Track',
             slug: completedRoadmap.careerSnapshot?.slug || '',
@@ -90,11 +125,12 @@ const getDashboard = async (req, res, next) => {
     } else {
       // User has an active roadmap
       roadmapData = {
-        id: activeRoadmap._id,
+        id: activeRoadmap.id || activeRoadmap._id,
+        _id: activeRoadmap.id || activeRoadmap._id,
         career: {
-          title: activeRoadmap.careerSnapshot.title,
-          slug: activeRoadmap.careerSnapshot.slug,
-          shortDescription: activeRoadmap.careerSnapshot.shortDescription,
+          title: activeRoadmap.careerSnapshot?.title || activeRoadmap.career?.title || 'Active Track',
+          slug: activeRoadmap.careerSnapshot?.slug || activeRoadmap.career?.slug || '',
+          shortDescription: activeRoadmap.careerSnapshot?.shortDescription || activeRoadmap.career?.shortDescription || '',
         },
         durationWeeks: activeRoadmap.durationWeeks,
         status: activeRoadmap.status,
@@ -107,15 +143,19 @@ const getDashboard = async (req, res, next) => {
         weekProgress: activeRoadmap.weekProgress || [],
       };
 
-      // Fetch first 5 incomplete tasks for this active roadmap
-      upcomingTasks = await RoadmapTask.find({
-        roadmap: activeRoadmap._id,
-        completed: false,
-      })
-        .sort({ weekNumber: 1, order: 1 })
-        .limit(5)
-        .select('-__v')
-        .lean();
+      // Extract tasks pre-fetched in the same Prisma query (0 extra roundtrips)
+      if (Array.isArray(activeRoadmap.tasks) && activeRoadmap.tasks.length > 0) {
+        upcomingTasks = activeRoadmap.tasks.map((t) => ({ ...t, _id: t.id }));
+      } else if (activeRoadmap.progressPercentage < 100) {
+        upcomingTasks = await RoadmapTask.find({
+          roadmap: activeRoadmap.id || activeRoadmap._id,
+          completed: false,
+        })
+          .sort({ weekNumber: 1, order: 1 })
+          .limit(5)
+          .select('-__v')
+          .lean();
+      }
 
       if (upcomingTasks.length > 0) {
         const nextTask = upcomingTasks[0];
@@ -138,7 +178,8 @@ const getDashboard = async (req, res, next) => {
       actionUrl = 'recommendations.html';
     }
 
-    const jobReadyCertification = await evaluateJobReadyCertification(req.user._id).catch(() => null);
+    // In-memory instant evaluation: pass user and activeRoadmap directly (0 extra DB reads)
+    const jobReadyCertification = await evaluateJobReadyCertification(user, activeRoadmap).catch(() => null);
 
     const sanitizedRepos = (user.githubRepos || []).map((r) => ({
       ...r,
@@ -157,11 +198,11 @@ const getDashboard = async (req, res, next) => {
         }
       : null;
 
-    res.status(200).json({
+    const payload = {
       success: true,
       data: {
         user: {
-          id: user._id,
+          id: user._id || user.id,
           name: user.name,
           email: user.email,
           education: user.education || {},
@@ -177,12 +218,12 @@ const getDashboard = async (req, res, next) => {
           profileStatus: user.profileStatus || { status: 'learning', currentRole: '' },
         },
         activeRoadmaps: allActiveRoadmaps.map((r) => ({
-          id: r._id,
-          _id: r._id,
+          id: r.id || r._id,
+          _id: r.id || r._id,
           career: {
-            title: r.careerSnapshot?.title || 'Active Track',
-            slug: r.careerSnapshot?.slug || '',
-            shortDescription: r.careerSnapshot?.shortDescription || '',
+            title: r.careerSnapshot?.title || r.career?.title || 'Active Track',
+            slug: r.careerSnapshot?.slug || r.career?.slug || '',
+            shortDescription: r.careerSnapshot?.shortDescription || r.career?.shortDescription || '',
           },
           durationWeeks: r.durationWeeks,
           status: r.status,
@@ -208,7 +249,15 @@ const getDashboard = async (req, res, next) => {
           actionUrl,
         },
       },
+    };
+
+    // Cache valid payload in memory
+    dashboardCache.set(cacheKey, {
+      timestamp: Date.now(),
+      payload,
     });
+
+    res.status(200).json(payload);
   } catch (error) {
     next(error);
   }
@@ -216,4 +265,5 @@ const getDashboard = async (req, res, next) => {
 
 module.exports = {
   getDashboard,
+  invalidateDashboardCache,
 };
