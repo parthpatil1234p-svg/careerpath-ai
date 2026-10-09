@@ -1294,6 +1294,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnConfirmAbandonRoadmap.addEventListener('click', executeAbandonRoadmap);
   }
 
+  // Wire Streak Nudge Email Test Button
+  const btnTestStreakNudge = document.getElementById('btnTestStreakNudge');
+  if (btnTestStreakNudge) {
+    btnTestStreakNudge.addEventListener('click', async () => {
+      try {
+        btnTestStreakNudge.disabled = true;
+        btnTestStreakNudge.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Dispatching...';
+
+        const res = await window.API.post('/roadmaps/nudge/test', {}, { auth: true });
+        if (res.success) {
+          showAlert(res.message || '🔥 Streak alert email sent to your inbox!', 'success');
+        } else {
+          showAlert(res.message || 'Unable to dispatch streak nudge email.', 'warning');
+        }
+      } catch (err) {
+        showAlert(err.message || 'Failed to dispatch streak nudge email.', 'danger');
+      } finally {
+        btnTestStreakNudge.disabled = false;
+        btnTestStreakNudge.innerHTML = '<i class="bi bi-bell-fill me-1"></i> Streak Alert Email';
+      }
+    });
+  }
+
   // Safe string escaper
   function escapeHtml(str) {
     if (!str) return '';

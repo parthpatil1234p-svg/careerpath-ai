@@ -1166,6 +1166,36 @@ const verifyVideoLearningController = async (req, res, next) => {
   }
 };
 
+/**
+ * POST /api/roadmaps/nudge/test
+ * Triggers an immediate streak & inactivity nudge test for the currently authenticated student.
+ */
+const triggerStreakNudgeTestController = async (req, res, next) => {
+  try {
+    const { auditInactivityAndSendNudges } = require('../services/cronService');
+    const result = await auditInactivityAndSendNudges({
+      forceUserEmail: req.user.email,
+      inactivityDays: 0,
+    });
+
+    if (result.nudgesSent > 0) {
+      return res.status(200).json({
+        success: true,
+        message: `Streak nudge email successfully dispatched to ${req.user.email}!`,
+        data: result,
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: `Audit completed: no pending tasks found or email delivery skipped for ${req.user.email}.`,
+        data: result,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   generateRoadmap,
   getCurrentRoadmap,
@@ -1183,4 +1213,5 @@ module.exports = {
   completeWeekMilestoneController,
   getVideoCheckpointController,
   verifyVideoLearningController,
+  triggerStreakNudgeTestController,
 };

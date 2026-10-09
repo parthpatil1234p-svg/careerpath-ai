@@ -34,12 +34,14 @@ const {
   completeWeekMilestoneController,
   getVideoCheckpointController,
   verifyVideoLearningController,
+  triggerStreakNudgeTestController,
 } = require('../controllers/roadmapController');
 
 router.use(protect, requireStudent);
 
 router.post('/generate', requireSkillVerification, validateRoadmapGeneration, generateRoadmap);
 router.get('/current', requireSkillVerification, getCurrentRoadmap);
+router.post('/nudge/test', protect, triggerStreakNudgeTestController);
 router.patch('/tasks/:taskId/toggle', protect, validateTaskId, toggleTask);
 router.post('/tasks/:taskId/link-repo', protect, validateTaskId, linkProjectRepo);
 router.get('/tasks/:taskId/video-checkpoint', protect, validateTaskId, getVideoCheckpointController);

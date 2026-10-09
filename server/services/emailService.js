@@ -169,4 +169,175 @@ Autonomous Career GPS & Verified Talent Operating System
   }
 }
 
-module.exports = { sendOtpEmail };
+/**
+ * Sends an automated inactivity and streak nudge email to a student.
+ * Motivates them to keep their learning momentum alive with their exact current roadmap week & remaining tasks.
+ *
+ * @param {Object} params
+ * @param {string} params.toEmail - Recipient email
+ * @param {string} params.name - Recipient name
+ * @param {string} params.careerTitle - Active career roadmap title
+ * @param {number} params.currentWeek - Current week number (e.g. 1, 2)
+ * @param {number} params.remainingTasksCount - Tasks left in the current week
+ * @param {string} params.nextTaskTitle - Next task to complete
+ * @param {number} params.daysInactive - Number of days inactive (e.g. 3)
+ * @param {string} [params.clientUrl] - Base client URL
+ * @returns {Promise<{success: boolean, messageId?: string, error?: string}>}
+ */
+async function sendInactivityNudgeEmail({
+  toEmail,
+  name,
+  careerTitle = 'Software Engineer',
+  currentWeek = 1,
+  remainingTasksCount = 2,
+  nextTaskTitle = '',
+  daysInactive = 3,
+  clientUrl = process.env.CLIENT_URL || 'http://localhost:5500',
+}) {
+  const emailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.trim() : '';
+  const emailPass = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s+/g, '') : '';
+
+  if (!emailUser || !emailPass) {
+    console.warn(`[Streak Nudge] Email not sent - EMAIL_USER/EMAIL_PASS not configured for ${toEmail}`);
+    return { success: false, reason: 'unconfigured' };
+  }
+
+  const recipientName = name ? name.trim().split(' ')[0] : 'Learner';
+  const subject = `🔥 Don't break your momentum, ${recipientName}! Only ${remainingTasksCount} tasks left in Week ${currentWeek}`;
+  const roadmapUrl = `${clientUrl.replace(/\/$/, '')}/roadmap.html`;
+
+  const htmlContent = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerPath AI - Streak Alert</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 24px 16px; }
+      .container { max-width: 540px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 32px 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+      .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #F1F5F9; padding-bottom: 16px; margin-bottom: 22px; }
+      .brand { font-size: 21px; font-weight: 800; color: #3B1A6E; letter-spacing: -0.5px; }
+      .brand span { color: #0D9488; }
+      .streak-badge { background: #FEF3C7; color: #B45309; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid #FDE68A; display: inline-block; }
+      .title { font-size: 22px; font-weight: 800; color: #1E293B; margin-bottom: 12px; line-height: 1.3; }
+      .desc { font-size: 14.5px; line-height: 1.6; color: #475569; margin-bottom: 22px; }
+      .highlight-card { background: linear-gradient(135deg, #F8F7FC 0%, #EEF2FF 100%); border: 1px solid #C7D2FE; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+      .card-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13.5px; }
+      .card-row:last-child { margin-bottom: 0; }
+      .card-label { color: #64748B; font-weight: 500; }
+      .card-value { color: #1E1B4B; font-weight: 700; text-align: right; }
+      .next-task-box { background: #FFFFFF; border-left: 4px solid #0D9488; padding: 12px 14px; border-radius: 6px; margin-top: 14px; }
+      .next-task-title { font-size: 13px; font-weight: 700; color: #0F766E; margin-bottom: 2px; }
+      .next-task-desc { font-size: 12px; color: #475569; }
+      .btn-cta { display: block; text-align: center; background: #3B1A6E; color: #FFFFFF !important; text-decoration: none; font-size: 15px; font-weight: 700; padding: 14px 24px; border-radius: 10px; box-shadow: 0 4px 14px rgba(59, 26, 110, 0.3); margin: 26px 0 18px 0; }
+      .quote { font-style: italic; font-size: 12.5px; color: #64748B; text-align: center; margin-bottom: 24px; }
+      .footer { border-top: 1px solid #E2E8F0; padding-top: 18px; font-size: 11.5px; color: #94A3B8; text-align: center; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="brand">CareerPath <span>AI</span></div>
+        <div class="streak-badge">🔥 Streak Alert</div>
+      </div>
+      
+      <div class="title">Don't lose your learning momentum, ${recipientName}!</div>
+      
+      <p class="desc">
+        You've been away for ${daysInactive} days, but your goal of becoming a <strong>${careerTitle}</strong> is within reach! Consistency is the single biggest factor in mastering tech skills and cracking top placements.
+      </p>
+
+      <div class="highlight-card">
+        <div class="card-row">
+          <span class="card-label">🎯 Active Career Track:</span>
+          <span class="card-value">${careerTitle}</span>
+        </div>
+        <div class="card-row">
+          <span class="card-label">📅 Current Milestone:</span>
+          <span class="card-value">Week ${currentWeek}</span>
+        </div>
+        <div class="card-row">
+          <span class="card-label">⚡ Tasks Remaining in Week ${currentWeek}:</span>
+          <span class="card-value" style="color: #0D9488;">${remainingTasksCount} tasks to unlock test</span>
+        </div>
+        ${nextTaskTitle ? `
+        <div class="next-task-box">
+          <div class="next-task-title">👉 Next Focus Task:</div>
+          <div class="next-task-desc">${nextTaskTitle}</div>
+        </div>` : ''}
+      </div>
+
+      <a href="${roadmapUrl}" class="btn-cta">
+        Continue Week ${currentWeek} Roadmap &rarr;
+      </a>
+
+      <div class="quote">
+        "Consistent 20-minute daily progress beats 5-hour weekend marathons every time."
+      </div>
+
+      <div class="footer">
+        CareerPath AI Technologies Inc. · Automated Learning Engagement Engine<br>
+        Autonomous Career GPS &amp; Verified Talent Operating System · 
+        <a href="${clientUrl}/dashboard.html" style="color: #64748B;">Student Dashboard</a>
+      </div>
+    </div>
+  </body>
+  </html>
+  `;
+
+  const textContent = `
+CareerPath AI - Streak Alert: Don't lose your momentum!
+
+Hi ${recipientName},
+
+You've been away for ${daysInactive} days on your "${careerTitle}" roadmap.
+
+Current Milestone: Week ${currentWeek}
+Tasks Left: ${remainingTasksCount} tasks remaining to unlock your Week ${currentWeek} Milestone Test!
+${nextTaskTitle ? `Next Task: ${nextTaskTitle}\n` : ''}
+Resume your learning now: ${roadmapUrl}
+
+"Consistent 20-minute daily progress beats 5-hour weekend marathons every time."
+
+--
+CareerPath AI Technologies Inc.
+Autonomous Career GPS & Verified Talent Operating System
+`;
+
+  const mailOptions = {
+    from: `"CareerPath AI Mentor" <${emailUser}>`,
+    to: toEmail,
+    replyTo: emailUser,
+    subject,
+    html: htmlContent,
+    text: textContent,
+    headers: {
+      'X-Entity-Ref-ID': `streak-nudge-${toEmail}-${Date.now()}`,
+    },
+  };
+
+  try {
+    const transporter465 = createTransporter(465, true);
+    if (!transporter465) throw new Error('Transporter configuration failed');
+    const info = await transporter465.sendMail(mailOptions);
+    console.log(`\n📬 [STREAK NUDGE SENT - Port 465] Delivered to ${toEmail} for ${careerTitle} (ID: ${info.messageId})\n`);
+    return { success: true, messageId: info.messageId };
+  } catch (err465) {
+    try {
+      const transporter587 = createTransporter(587, false);
+      if (!transporter587) throw new Error('Port 587 configuration failed');
+      const info = await transporter587.sendMail(mailOptions);
+      console.log(`\n📬 [STREAK NUDGE SENT - Port 587] Delivered to ${toEmail} for ${careerTitle} (ID: ${info.messageId})\n`);
+      return { success: true, messageId: info.messageId };
+    } catch (err587) {
+      console.error(`\n❌ [STREAK NUDGE ERROR] Failed to send email to ${toEmail}: ${err587.message}`);
+      return { success: false, error: err587.message };
+    }
+  }
+}
+
+module.exports = {
+  sendOtpEmail,
+  sendInactivityNudgeEmail,
+};

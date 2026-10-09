@@ -12,9 +12,14 @@
 
 const Attempt = require('../models/Attempt');
 const YoutubeCache = require('../models/YoutubeCache');
+const Roadmap = require('../models/Roadmap');
+const RoadmapTask = require('../models/RoadmapTask');
+const User = require('../models/User');
+const { sendInactivityNudgeEmail } = require('./emailService');
 
 let hourlyTimer = null;
 let dailyTimer = null;
+let nudgeTimer = null;
 
 /**
  * Validates and logs skill currency for attempts older than 180 days
@@ -45,6 +50,132 @@ async function auditYouTubeCache() {
 }
 
 /**
+ * Scans all students with active roadmaps.
+ * Detects inactivity (default: 3 days since last completed task or roadmap start).
+ * Dispatches automated streak motivation emails with exact remaining tasks.
+ */
+async function auditInactivityAndSendNudges(options = {}) {
+  const {
+    inactivityDays = 3,
+    forceUserEmail = null,
+    clientUrl = process.env.CLIENT_URL || 'http://localhost:5500',
+  } = options;
+
+  const results = {
+    totalActiveRoadmaps: 0,
+    scannedStudents: 0,
+    nudgesSent: 0,
+    skippedRecentlyNudged: 0,
+    skippedActive: 0,
+    errors: [],
+  };
+
+  try {
+    const activeRoadmaps = await Roadmap.find({ status: 'active' });
+    results.totalActiveRoadmaps = activeRoadmaps.length;
+
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+    const inactivityThresholdMs = inactivityDays * ONE_DAY_MS;
+    const cooldownMs = 3 * ONE_DAY_MS; // Do not spam: 1 nudge per 3 days max
+
+    for (const roadmap of activeRoadmaps) {
+      try {
+        const user = await User.findById(roadmap.userId);
+        if (!user || user.role !== 'student' || !user.email) continue;
+
+        // If testing for a specific user email
+        if (forceUserEmail && user.email.toLowerCase() !== forceUserEmail.toLowerCase()) {
+          continue;
+        }
+
+        results.scannedStudents++;
+
+        // Check if recently nudged (unless forced)
+        const lastNudge = user.profileStatus?.lastNudgeEmailSentAt
+          ? new Date(user.profileStatus.lastNudgeEmailSentAt).getTime()
+          : 0;
+
+        if (!forceUserEmail && lastNudge && (Date.now() - lastNudge < cooldownMs)) {
+          results.skippedRecentlyNudged++;
+          continue;
+        }
+
+        // Fetch tasks on this active roadmap
+        const tasks = await RoadmapTask.find({ roadmapId: roadmap.id });
+        if (!tasks || tasks.length === 0) continue;
+
+        // Determine last activity timestamp
+        const completedTasks = tasks.filter((t) => t.completed && t.completedAt);
+        let lastActivityDate = null;
+
+        if (completedTasks.length > 0) {
+          const timestamps = completedTasks.map((t) => new Date(t.completedAt).getTime());
+          lastActivityDate = new Date(Math.max(...timestamps));
+        } else {
+          lastActivityDate = roadmap.startedAt
+            ? new Date(roadmap.startedAt)
+            : (roadmap.createdAt ? new Date(roadmap.createdAt) : new Date());
+        }
+
+        const elapsedMs = Date.now() - lastActivityDate.getTime();
+        const daysInactive = Math.max(1, Math.floor(elapsedMs / ONE_DAY_MS));
+
+        if (!forceUserEmail && elapsedMs < inactivityThresholdMs) {
+          results.skippedActive++;
+          continue;
+        }
+
+        // Determine the student's current milestone week & remaining tasks
+        const incompleteTasks = tasks.filter((t) => !t.completed);
+        if (incompleteTasks.length === 0) {
+          continue;
+        }
+
+        const currentWeek = incompleteTasks[0].weekNumber || 1;
+        const weekTasks = tasks.filter((t) => t.weekNumber === currentWeek);
+        const remainingInWeek = weekTasks.filter((t) => !t.completed);
+        const nextTask = remainingInWeek[0] || incompleteTasks[0];
+
+        const careerTitle = roadmap.careerSnapshot?.title || 'Tech Specialist';
+
+        // Send nudge email
+        const sendRes = await sendInactivityNudgeEmail({
+          toEmail: user.email,
+          name: user.name || 'Student',
+          careerTitle,
+          currentWeek,
+          remainingTasksCount: remainingInWeek.length || incompleteTasks.length,
+          nextTaskTitle: nextTask ? nextTask.title : 'Continue curriculum',
+          daysInactive: forceUserEmail ? (daysInactive || 3) : daysInactive,
+          clientUrl,
+        });
+
+        if (sendRes.success) {
+          results.nudgesSent++;
+          const currentProfileStatus = user.profileStatus && typeof user.profileStatus === 'object' ? user.profileStatus : {};
+          user.profileStatus = {
+            ...currentProfileStatus,
+            lastNudgeEmailSentAt: new Date(),
+          };
+          await user.save();
+        }
+      } catch (userErr) {
+        results.errors.push({ roadmapId: roadmap.id, error: userErr.message });
+      }
+    }
+
+    console.log(
+      `📬 [Cron] Inactivity & Streak Nudge Audit completed: ${results.nudgesSent} emails sent (${results.scannedStudents} scanned, ${results.skippedRecentlyNudged} on cooldown).`
+    );
+  } catch (err) {
+    console.warn('⚠️ [Cron] Inactivity nudge audit failed:', err.message);
+    results.errors.push({ error: err.message });
+  }
+
+  return results;
+}
+
+/**
  * Initializes background cron worker
  */
 function initCron() {
@@ -59,7 +190,8 @@ function initCron() {
   setTimeout(() => {
     auditYouTubeCache();
     validateSkillCurrency();
-  }, 5000);
+    auditInactivityAndSendNudges();
+  }, 10000);
 
   // Hourly routine: YouTube cache health & connection check
   hourlyTimer = setInterval(() => {
@@ -71,6 +203,11 @@ function initCron() {
     validateSkillCurrency();
   }, 24 * 60 * 60 * 1000);
 
+  // Twice-daily routine (every 12 hours): Inactivity & Streak Nudge audit
+  nudgeTimer = setInterval(() => {
+    auditInactivityAndSendNudges();
+  }, 12 * 60 * 60 * 1000);
+
   console.log('✅ [Cron] Background maintenance worker active.');
 }
 
@@ -80,11 +217,14 @@ function initCron() {
 function stopCron() {
   if (hourlyTimer) clearInterval(hourlyTimer);
   if (dailyTimer) clearInterval(dailyTimer);
+  if (nudgeTimer) clearInterval(nudgeTimer);
   hourlyTimer = null;
   dailyTimer = null;
+  nudgeTimer = null;
 }
 
 module.exports = {
   initCron,
   stopCron,
+  auditInactivityAndSendNudges,
 };
