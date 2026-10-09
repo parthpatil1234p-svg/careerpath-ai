@@ -761,26 +761,36 @@
           </div>
         </div>
       </div>
+    </div>
+
     <!-- Abandon Route Confirmation Modal -->
     <div class="modal fade" id="modalAbandonRoute" tabindex="-1" aria-labelledby="modalAbandonRouteTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-line shadow-lg">
           <div class="modal-header border-bottom border-line">
             <h5 class="modal-title text-danger d-flex align-items-center gap-2" id="modalAbandonRouteTitle">
-              <i class="bi bi-exclamation-triangle-fill text-danger"></i> Abandon Current Career Route?
+              <i class="bi bi-exclamation-triangle-fill text-danger"></i> Abandon Career Route?
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p class="text-ink fw-semibold mb-2">
-              Are you sure you want to abandon the <span id="abandonModalCareerTitle" class="text-teal">Current Route</span> track?
-            </p>
+            <div id="abandonSingleRouteText">
+              <p class="text-ink fw-semibold mb-2">
+                Are you sure you want to abandon the <span id="abandonModalCareerTitle" class="text-teal">Current Route</span> track?
+              </p>
+            </div>
+            <div id="abandonMultiRouteSelector" class="d-none">
+              <p class="text-ink fw-semibold mb-2">
+                You have 2 active courses in progress. Which track would you like to abandon?
+              </p>
+              <div id="abandonRoutesList" class="mb-3"></div>
+            </div>
             <div class="alert alert-info py-2 px-3 small border-0 mb-3" style="background: rgba(20, 184, 166, 0.1); color: var(--color-teal, #14b8a6);">
               <i class="bi bi-shield-check me-1"></i>
               <strong>Your evidence is safe:</strong> All verified skills, quiz attempts, and test scores remain permanently saved on your profile.
             </div>
             <p class="text-secondary small mb-2">
-              Abandoning frees your account to enroll in a new career route. To maintain disciplined learning, the server limits route resets to <strong>once every 7 days</strong>.
+              Abandoning frees your account to enroll in a new career route.
             </p>
             <div id="abandonErrorAlert" class="alert alert-danger py-2 px-3 small d-none"></div>
           </div>

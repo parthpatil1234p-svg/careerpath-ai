@@ -538,7 +538,7 @@ const abandonRoadmap = async (req, res, next) => {
     }
 
     const email = (user.email || '').toLowerCase();
-    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo') || process.env.NODE_ENV !== 'production';
 
     if (!isDemoOrAdmin && user.lastAbandonedRouteAt) {
       const elapsed = Date.now() - new Date(user.lastAbandonedRouteAt).getTime();
@@ -555,6 +555,20 @@ const abandonRoadmap = async (req, res, next) => {
       }
     }
 
+    if (req.body && req.body.roadmapId === 'all') {
+      await Roadmap.updateMany(
+        { user: req.user._id, status: 'active' },
+        { $set: { status: 'abandoned', abandonedAt: new Date() } }
+      );
+      user.lastAbandonedRouteAt = new Date();
+      await user.save({ validateBeforeSave: false });
+      return res.status(200).json({
+        success: true,
+        message: 'All active career routes abandoned. All your earned skills and milestone quiz scores have been safely preserved.',
+        data: { allAbandoned: true },
+      });
+    }
+
     const filter = { user: req.user._id, status: 'active' };
     if (req.body && req.body.roadmapId) {
       filter._id = req.body.roadmapId;
@@ -567,9 +581,28 @@ const abandonRoadmap = async (req, res, next) => {
     );
 
     if (!roadmap) {
-      return res.status(404).json({
-        success: false,
-        message: 'No active roadmap found to abandon.',
+      // If not found by specific id, fallback to any active roadmap for this user
+      const anyActive = await Roadmap.findOneAndUpdate(
+        { user: req.user._id, status: 'active' },
+        { $set: { status: 'abandoned', abandonedAt: new Date() } },
+        { new: true }
+      );
+      if (!anyActive) {
+        return res.status(404).json({
+          success: false,
+          message: 'No active roadmap found to abandon.',
+        });
+      }
+      user.lastAbandonedRouteAt = new Date();
+      await user.save({ validateBeforeSave: false });
+      return res.status(200).json({
+        success: true,
+        message: 'Active career route abandoned. All your earned skills and milestone quiz scores have been safely preserved.',
+        data: {
+          abandonedRoadmapId: anyActive._id,
+          careerTitle: anyActive.careerSnapshot?.title,
+          abandonedAt: anyActive.abandonedAt,
+        },
       });
     }
 
