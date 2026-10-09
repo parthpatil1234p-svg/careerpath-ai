@@ -662,3 +662,76 @@ window.DEFAULT_94_SKILLS = [
     "description": "Font pairing, editorial layout grids, hierarchy scaling, readability standards, and editorial publication styling."
   }
 ];
+
+/**
+ * window.SkillsCatalog — Client-side Lightcast Taxonomy Interface
+ * Provides asynchronous search with local caching & offline resilience
+ */
+window.SkillsCatalog = {
+  _cache: new Map(),
+
+  async search(query = '', options = {}) {
+    const q = (query || '').trim().toLowerCase();
+    const cacheKey = `${q}_${options.category || ''}_${options.type || ''}`;
+
+    if (this._cache.has(cacheKey)) {
+      return this._cache.get(cacheKey);
+    }
+
+    try {
+      if (window.API && typeof window.API.get === 'function') {
+        const params = new URLSearchParams();
+        if (q) params.set('q', q);
+        if (options.category) params.set('category', options.category);
+        if (options.type) params.set('type', options.type);
+        if (options.limit) params.set('limit', options.limit);
+
+        const res = await window.API.get(`/skills/search?${params.toString()}`);
+        if (res && res.success && Array.isArray(res.data?.skills)) {
+          this._cache.set(cacheKey, res.data.skills);
+          return res.data.skills;
+        }
+      }
+    } catch (err) {
+      console.warn('⚠️ [SkillsCatalog] Live search failed, using local catalog fallback:', err.message);
+    }
+
+    // Local fallback search against DEFAULT_94_SKILLS
+    const fallback = (window.DEFAULT_94_SKILLS || []).filter((s) => {
+      if (options.category && s.category.toLowerCase() !== options.category.toLowerCase()) return false;
+      if (!q) return true;
+      return (s.name || '').toLowerCase().includes(q) || (s.displayName || '').toLowerCase().includes(q);
+    });
+
+    this._cache.set(cacheKey, fallback);
+    return fallback;
+  },
+
+  async resolve(skillName) {
+    if (!skillName) return null;
+    try {
+      if (window.API && typeof window.API.get === 'function') {
+        const res = await window.API.get(`/skills/resolve?name=${encodeURIComponent(skillName)}`);
+        if (res && res.success && res.data?.skill) {
+          return res.data.skill;
+        }
+      }
+    } catch (_) {}
+
+    const clean = skillName.toLowerCase().trim();
+    return (window.DEFAULT_94_SKILLS || []).find(s => s.name.toLowerCase() === clean || s.displayName.toLowerCase() === clean) || null;
+  },
+
+  getTypeBadge(type = 'specialized') {
+    switch (String(type).toLowerCase()) {
+      case 'software':
+        return '<span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill font-mono" style="font-size: 0.62rem; padding: 2px 6px;"><i class="bi bi-tools me-1"></i>Tool</span>';
+      case 'common':
+        return '<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill font-mono" style="font-size: 0.62rem; padding: 2px 6px;"><i class="bi bi-people me-1"></i>Soft</span>';
+      case 'specialized':
+      default:
+        return '<span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill font-mono" style="font-size: 0.62rem; padding: 2px 6px;"><i class="bi bi-lightning-charge me-1"></i>Core</span>';
+    }
+  }
+};
+

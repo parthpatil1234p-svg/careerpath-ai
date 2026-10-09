@@ -8,8 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ── 1. User Model ─────────────────────────────────────────────
@@ -156,20 +157,26 @@ model Career {
   @@index([category])
 }
 
-// ── 5. Skill Model ────────────────────────────────────────────
+// ── 5. Skill Model (Enhanced with Lightcast Open Skills Taxonomy) ──
 model Skill {
-  id          String   @id
-  name        String   @unique
-  displayName String
-  category    String
-  description String?
-  active      Boolean  @default(true)
+  id            String    @id @default(uuid())
+  lightcastId   String?   @unique
+  name          String    @unique
+  displayName   String
+  type          String    @default("specialized") // specialized | software | common
+  category      String
+  subcategory   String?
+  aliases       Json?     @default("[]")
+  description   String?   @db.Text
+  active        Boolean   @default(true)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([name])
   @@index([category])
+  @@index([subcategory])
+  @@index([type])
 }
 
 // ── 6. Attempt Model ──────────────────────────────────────────

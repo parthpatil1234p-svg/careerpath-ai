@@ -2,20 +2,22 @@
  * services/resumeAnalyzerService.js — AI Resume ATS Scoring & Keyword Gap Analyzer
  *
  * Multi-model evaluation (Gemini / Groq + Heuristic Fallback) for Career GPS Step 8.
+ * Integrated with Lightcast Open Skills Taxonomy for alias-aware canonical ATS matching.
  * CareerPath AI · Enterprise Backend Service
  */
 
 const { callGemini } = require('./geminiService');
 const { callGroq } = require('./groqService');
 const Career = require('../models/Career');
+const { resolveCanonicalSkill } = require('./skillTaxonomyService');
 
 // Comprehensive technical keywords dictionary for fallback extraction
 const KNOWN_TECH_KEYWORDS = [
   'javascript', 'typescript', 'python', 'java', 'c++', 'c#', 'golang', 'rust',
-  'react', 'react.js', 'vue', 'angular', 'next.js', 'node.js', 'express.js', 'django', 'flask',
-  'spring boot', 'html5', 'css3', 'tailwind css', 'bootstrap', 'sass', 'redux', 'graphql', 'rest api',
-  'sql', 'postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch', 'prisma', 'mongoose',
-  'docker', 'kubernetes', 'aws', 'azure', 'gcp', 'ci/cd', 'git', 'github', 'linux', 'bash',
+  'react', 'react.js', 'reactjs', 'vue', 'angular', 'next.js', 'nextjs', 'node.js', 'nodejs', 'express.js', 'django', 'flask',
+  'spring boot', 'html5', 'html', 'css3', 'css', 'tailwind css', 'bootstrap', 'sass', 'redux', 'graphql', 'rest api',
+  'sql', 'postgresql', 'postgres', 'mysql', 'mongodb', 'mongo', 'redis', 'elasticsearch', 'prisma', 'supabase',
+  'docker', 'kubernetes', 'k8s', 'aws', 'azure', 'gcp', 'ci/cd', 'git', 'github', 'linux', 'bash',
   'machine learning', 'deep learning', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy',
   'data analysis', 'agile', 'scrum', 'unit testing', 'jest', 'cypress', 'system design', 'microservices'
 ];
@@ -120,32 +122,58 @@ DO NOT include markdown code blocks or text outside the JSON. Return pure JSON o
     console.warn('[resumeAnalyzerService] AI extraction note, falling back to deterministic analyzer:', aiErr.message);
   }
 
-  // 2. Deterministic Heuristic Fallback
-  return fallbackHeuristicAnalysis(text, careerTitle, expectedSkills, userSkills);
+  // 2. Deterministic Heuristic Fallback (Enhanced with Lightcast Canonical Resolution)
+  return await fallbackHeuristicAnalysis(text, careerTitle, expectedSkills, userSkills);
 }
 
 /**
  * Deterministic rule-based ATS analysis if AI is unavailable
  */
-function fallbackHeuristicAnalysis(text, careerTitle, expectedSkills = [], userSkills = []) {
+async function fallbackHeuristicAnalysis(text, careerTitle, expectedSkills = [], userSkills = []) {
   const lower = text.toLowerCase();
 
   // Extract detected keywords
-  const detected = KNOWN_TECH_KEYWORDS.filter(kw => {
-    const regex = new RegExp(`\\b${kw.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'i');
-    return regex.test(lower);
-  });
+  const detectedSlugs = new Set();
+  const detectedDisplayNames = [];
 
-  const targetList = expectedSkills.length ? expectedSkills : ['javascript', 'react', 'git', 'node.js', 'sql', 'rest api', 'docker'];
-  const matched = targetList.filter(s => detected.includes(s) || lower.includes(s));
-  const missing = targetList.filter(s => !matched.includes(s));
+  for (const kw of KNOWN_TECH_KEYWORDS) {
+    const regex = new RegExp(`\\b${kw.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`, 'i');
+    if (regex.test(lower)) {
+      const canonical = await resolveCanonicalSkill(kw);
+      if (canonical) {
+        if (!detectedSlugs.has(canonical.name)) {
+          detectedSlugs.add(canonical.name);
+          detectedDisplayNames.push(canonical.displayName);
+        }
+      } else if (!detectedSlugs.has(kw)) {
+        detectedSlugs.add(kw);
+        detectedDisplayNames.push(kw);
+      }
+    }
+  }
+
+  const rawTargetList = expectedSkills.length ? expectedSkills : ['javascript', 'react', 'git', 'node.js', 'sql', 'rest api', 'docker'];
+  const matched = [];
+  const missing = [];
+
+  for (const target of rawTargetList) {
+    const canonicalTarget = await resolveCanonicalSkill(target);
+    const targetSlug = canonicalTarget ? canonicalTarget.name : target.toLowerCase();
+    const displayName = canonicalTarget ? canonicalTarget.displayName : target;
+
+    if (detectedSlugs.has(targetSlug) || lower.includes(target.toLowerCase())) {
+      matched.push(displayName);
+    } else {
+      missing.push(displayName);
+    }
+  }
 
   // Metrics score (detecting numbers and percentages like "30%", "10x", "$50k", "500 users")
   const metricMatches = lower.match(/\b\d+(\.\d+)?(%|x|k|\+)?\b/g) || [];
   const metricDensity = Math.min(25, metricMatches.length * 3);
 
   // Keyword match ratio
-  const matchRatio = targetList.length ? (matched.length / targetList.length) : 0.6;
+  const matchRatio = rawTargetList.length ? (matched.length / rawTargetList.length) : 0.6;
   const keywordScore = Math.round(matchRatio * 40);
 
   // Structure check
@@ -167,7 +195,7 @@ function fallbackHeuristicAnalysis(text, careerTitle, expectedSkills = [], userS
   return {
     atsScore: totalAtsScore,
     targetCareer: careerTitle,
-    extractedSkills: detected.slice(0, 12),
+    extractedSkills: detectedDisplayNames.slice(0, 12),
     matchedKeywords: matched.slice(0, 8),
     missingKeywords: missing.slice(0, 6),
     bulletSuggestions,

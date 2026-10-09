@@ -1,0 +1,1943 @@
+[
+  {
+    "lightcastId": "KS003107AB68746D6CXX",
+    "name": "html",
+    "displayName": "HTML5",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "html",
+      "html5",
+      "hypertext markup language",
+      "semantic html"
+    ],
+    "description": "Standard markup language for document structure and semantic content on the World Wide Web.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS00018203637373XXXX",
+    "name": "css",
+    "displayName": "CSS3",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "css",
+      "css3",
+      "cascading style sheets",
+      "css styling"
+    ],
+    "description": "Style sheet language for visual presentation, layouts, responsive grids, and design themes.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0B43D96D6A61766173",
+    "name": "javascript",
+    "displayName": "JavaScript",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "javascript",
+      "js",
+      "javascript language",
+      "ecmascript",
+      "es6",
+      "es2022",
+      "vanilla js"
+    ],
+    "description": "High-level, interpreted scripting language powering modern interactive web applications and event-driven architectures.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS1F21737B7479706573",
+    "name": "typescript",
+    "displayName": "TypeScript",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "typescript",
+      "ts",
+      "typescript language",
+      "type script",
+      "typed javascript"
+    ],
+    "description": "Strongly typed programming language that builds on JavaScript, offering static type analysis and enterprise code maintainability.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0675D97F7265616374",
+    "name": "react",
+    "displayName": "React (JavaScript Library)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "react",
+      "reactjs",
+      "react.js",
+      "react framework",
+      "react core",
+      "react front-end"
+    ],
+    "description": "Declarative, component-based frontend library for building modern dynamic reactive user interfaces.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS6E1766246E6578742E",
+    "name": "next.js",
+    "displayName": "Next.js",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "next.js",
+      "nextjs",
+      "next.js 14",
+      "next js",
+      "nextjs framework",
+      "next react"
+    ],
+    "description": "Production React framework offering server-side rendering (SSR), static site generation (SSG), and edge API routing.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS3004C54F7675652E6A",
+    "name": "vue.js",
+    "displayName": "Vue.js",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "vue.js",
+      "vue",
+      "vuejs",
+      "vue 3",
+      "vue.js framework"
+    ],
+    "description": "Progressive JavaScript framework for building user interfaces and single-page applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS332C321E616E67756C",
+    "name": "angular",
+    "displayName": "Angular",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "angular",
+      "angularjs",
+      "angular 2+",
+      "angular framework",
+      "google angular"
+    ],
+    "description": "Component-based enterprise TypeScript framework for building scalable web applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS35144DC57376656C74",
+    "name": "svelte",
+    "displayName": "Svelte",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "svelte",
+      "sveltejs",
+      "sveltekit",
+      "svelte framework"
+    ],
+    "description": "Radical compiler-based frontend framework that converts declarative components into highly efficient vanilla JavaScript.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS638B470E7461696C77",
+    "name": "tailwind-css",
+    "displayName": "Tailwind CSS",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "tailwind-css",
+      "tailwind",
+      "tailwindcss",
+      "tailwind utility css"
+    ],
+    "description": "Utility-first CSS framework for rapid UI development and modern bespoke interface styling.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS76DA3192626F6F7473",
+    "name": "bootstrap",
+    "displayName": "Bootstrap",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "bootstrap",
+      "bootstrap 5",
+      "bootstrap css",
+      "twitter bootstrap"
+    ],
+    "description": "Responsive CSS framework featuring pre-styled UI components and grid layouts.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0035C12E73617373XX",
+    "name": "sass",
+    "displayName": "Sass / SCSS",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "sass",
+      "scss",
+      "sass css",
+      "syntactically awesome stylesheets"
+    ],
+    "description": "Preprocessed CSS extension language providing variables, nested rules, and mixins.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0675E6F47265647578",
+    "name": "redux",
+    "displayName": "Redux",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "redux",
+      "redux toolkit",
+      "rtk",
+      "redux state management"
+    ],
+    "description": "Predictable state container for JavaScript apps facilitating centralized application state management.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS370EF3F7726573706F",
+    "name": "responsive-design",
+    "displayName": "Responsive Web Design",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "responsive-design",
+      "mobile-first design",
+      "responsive design",
+      "fluid layout",
+      "media queries"
+    ],
+    "description": "Web development approach creating dynamic layouts that adapt seamlessly to all device screen viewports.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS00373C6476697465XX",
+    "name": "vite",
+    "displayName": "Vite Build Tool",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "vite",
+      "vitejs",
+      "vite bundler",
+      "vite build tool"
+    ],
+    "description": "Next-generation frontend tooling offering fast development server start and optimized Rollup production builds.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS48F8636D7765627061",
+    "name": "webpack",
+    "displayName": "Webpack",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "webpack",
+      "webpack bundler",
+      "module bundler"
+    ],
+    "description": "Static module bundler for modern JavaScript applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS57D6C7997468726565",
+    "name": "three.js",
+    "displayName": "Three.js (3D WebGL)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Frontend Development",
+    "aliases": [
+      "three.js",
+      "threejs",
+      "three.js 3d",
+      "webgl three"
+    ],
+    "description": "JavaScript 3D library using WebGL to render interactive 3D computer graphics directly in the browser.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS7E0734B56E6F64652E",
+    "name": "node.js",
+    "displayName": "Node.js",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "node.js",
+      "nodejs",
+      "node js",
+      "node-js",
+      "node runtime",
+      "node.js server"
+    ],
+    "description": "V8-powered asynchronous event-driven JavaScript runtime designed for building scalable network backends.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS6B054B796578707265",
+    "name": "express.js",
+    "displayName": "Express.js",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "express.js",
+      "expressjs",
+      "express js",
+      "express server",
+      "express framework"
+    ],
+    "description": "Fast, unopinionated, minimalist web framework for Node.js backends and RESTful API routing.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS3E859E5F6E6573746A",
+    "name": "nestjs",
+    "displayName": "NestJS",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "nestjs",
+      "nest.js",
+      "nest js",
+      "nestjs framework"
+    ],
+    "description": "Progressive Node.js framework for building efficient, reliable and scalable enterprise server-side applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS3A01CF24707974686F",
+    "name": "python",
+    "displayName": "Python",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "python",
+      "py",
+      "python 3",
+      "python programming",
+      "python language"
+    ],
+    "description": "High-level general-purpose programming language emphasizing code readability and versatile software development.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS40338BC26661737461",
+    "name": "fastapi",
+    "displayName": "FastAPI",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "fastapi",
+      "fast api",
+      "fastapi python",
+      "fastapi framework"
+    ],
+    "description": "Modern, high-performance web framework for building APIs with Python 3.8+ based on standard Python type hints.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4F57E4A5646A616E67",
+    "name": "django",
+    "displayName": "Django",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "django",
+      "django framework",
+      "django python",
+      "django orm",
+      "drf"
+    ],
+    "description": "High-level Python web framework that encourages rapid development and clean, pragmatic architectural design.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS05CFEFF3666C61736B",
+    "name": "flask",
+    "displayName": "Flask",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "flask",
+      "flask python",
+      "flask microframework"
+    ],
+    "description": "Lightweight WSGI micro web framework written in Python designed to make getting started quick and easy.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0031AA226A617661XX",
+    "name": "java",
+    "displayName": "Java",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "java",
+      "java programming",
+      "java se",
+      "java ee",
+      "jdk",
+      "jvm"
+    ],
+    "description": "Class-based, object-oriented programming language designed for cross-platform portability and enterprise backends.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS2DF4654E737072696E",
+    "name": "spring-boot",
+    "displayName": "Spring Boot",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "spring-boot",
+      "springboot",
+      "spring framework",
+      "spring boot java"
+    ],
+    "description": "Production-ready framework for building stand-alone, production-grade Spring-based Java applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS49EE152A676F6C616E",
+    "name": "golang",
+    "displayName": "Go (Golang)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "golang",
+      "go",
+      "golang programming",
+      "google go"
+    ],
+    "description": "Open source programming language designed by Google for building simple, fast, and reliable concurrent software.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS003597E472757374XX",
+    "name": "rust",
+    "displayName": "Rust",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "rust",
+      "rustlang",
+      "rust programming",
+      "rust language"
+    ],
+    "description": "Multi-paradigm general-purpose language emphasizing performance, type safety, and memory safety without a garbage collector.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS508AEA996373686172",
+    "name": "csharp",
+    "displayName": "C# (.NET)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "csharp",
+      "c#",
+      "c sharp",
+      "dotnet",
+      ".net core",
+      "asp.net"
+    ],
+    "description": "Modern, object-oriented, type-safe programming language developed by Microsoft for cross-platform applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS000181A3637070XXXX",
+    "name": "cpp",
+    "displayName": "C++",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "cpp",
+      "c plus plus",
+      "c/c++",
+      "modern c++"
+    ],
+    "description": "High-performance general-purpose programming language with low-level memory manipulation capabilities.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS71A92C0E726573742D",
+    "name": "rest-apis",
+    "displayName": "RESTful API Architecture",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "rest-apis",
+      "rest api",
+      "restful services",
+      "restful apis",
+      "rest web services",
+      "rest endpoints"
+    ],
+    "description": "Architectural style for designing networked applications and standard HTTP-based microservice communications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS10B5B3E96772617068",
+    "name": "graphql",
+    "displayName": "GraphQL",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "graphql",
+      "gql",
+      "graphql api",
+      "apollo graphql"
+    ],
+    "description": "Query language for APIs and runtime for fulfilling queries with existing data, providing complete data predictability.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS00308C1E67727063XX",
+    "name": "grpc",
+    "displayName": "gRPC Protocol",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "grpc",
+      "grpc microservices",
+      "protobuf",
+      "protocol buffers"
+    ],
+    "description": "High performance, open source universal RPC framework developed by Google for low-latency service-to-service communication.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS19A7E2786175746865",
+    "name": "authentication",
+    "displayName": "Auth Systems & JWT",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "authentication",
+      "auth",
+      "jwt",
+      "json web tokens",
+      "oauth",
+      "oauth 2.0",
+      "user authentication",
+      "session management"
+    ],
+    "description": "Methods and cryptographic mechanisms verifying digital user identity and controlling resource permissions.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS57D25D8C776562736F",
+    "name": "websockets",
+    "displayName": "WebSockets & Socket.IO",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "websockets",
+      "websocket",
+      "socket.io",
+      "realtime socket",
+      "bidirectional streaming"
+    ],
+    "description": "Computer communications protocol providing full-duplex communication channels over a single TCP connection.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5152B4DE6D6963726F",
+    "name": "microservices",
+    "displayName": "Microservices Architecture",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Backend & Distributed Systems",
+    "aliases": [
+      "microservices",
+      "microservice",
+      "distributed systems",
+      "service-oriented architecture"
+    ],
+    "description": "Software development technique structuring an application as a collection of loosely coupled services.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0001BDCE73716CXXXX",
+    "name": "sql",
+    "displayName": "SQL (Structured Query Language)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "sql",
+      "sql queries",
+      "relational database query",
+      "ansi sql"
+    ],
+    "description": "Domain-specific language used in programming and designed for managing data held in relational database systems.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS7D7F18AC706F737467",
+    "name": "postgresql",
+    "displayName": "PostgreSQL",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "postgresql",
+      "postgres",
+      "psql",
+      "postgre-sql",
+      "postgresql database"
+    ],
+    "description": "Powerful, open-source object-relational database system with strong reputation for reliability, feature robustness, and performance.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS63FC0EDC7375706162",
+    "name": "supabase",
+    "displayName": "Supabase Platform",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "supabase",
+      "supabase db",
+      "supabase postgres",
+      "supabase backend"
+    ],
+    "description": "Open source Firebase alternative providing scalable PostgreSQL, real-time subscriptions, and auto-generated REST APIs.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0638C0A26D7973716C",
+    "name": "mysql",
+    "displayName": "MySQL",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "mysql",
+      "my-sql",
+      "mysql server",
+      "mysql rdbms"
+    ],
+    "description": "Widely deployed open-source relational database management system powering web applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS49AFC0726D6F6E676F",
+    "name": "mongodb",
+    "displayName": "MongoDB",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "mongodb",
+      "mongo",
+      "mongo db",
+      "nosql mongodb",
+      "mongodb atlas"
+    ],
+    "description": "Source-available cross-platform document-oriented database program classified as a NoSQL database.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0675E57B7265646973",
+    "name": "redis",
+    "displayName": "Redis (In-Memory Data Store)",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "redis",
+      "redis cache",
+      "redis key-value",
+      "in-memory redis"
+    ],
+    "description": "In-memory data structure store used as a database, cache, message broker, and streaming engine.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS3A694AC0707269736D",
+    "name": "prisma",
+    "displayName": "Prisma ORM",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "prisma",
+      "prisma orm",
+      "prisma client",
+      "prisma schema"
+    ],
+    "description": "Next-generation Node.js and TypeScript Object-Relational Mapper offering type-safe database queries and migrations.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS30BB75B06461746162",
+    "name": "database-design",
+    "displayName": "Relational Database Schema Design",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "database-design",
+      "database normalization",
+      "db modeling",
+      "data modeling",
+      "entity relationship design",
+      "er diagram"
+    ],
+    "description": "Process of producing a detailed data model of a database including schemas, tables, relationships, and constraints.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS58316A4E766563746F",
+    "name": "vector-databases",
+    "displayName": "Vector Databases (Pinecone / Qdrant)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Database Architecture & Storage",
+    "aliases": [
+      "vector-databases",
+      "pinecone",
+      "qdrant",
+      "chromadb",
+      "vector search",
+      "vector embeddings db",
+      "pgvector"
+    ],
+    "description": "Specialized databases indexing high-dimensional vector embeddings for semantic similarity search and AI agents.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4F1091E0646F636B65",
+    "name": "docker",
+    "displayName": "Docker Containerization",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "docker",
+      "docker container",
+      "dockerfile",
+      "docker compose",
+      "containerization"
+    ],
+    "description": "Platform providing OS-level virtualization to deliver software in standardized packages called containers.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS49C7CB466B75626572",
+    "name": "kubernetes",
+    "displayName": "Kubernetes (K8s)",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "kubernetes",
+      "k8s",
+      "kube",
+      "kubernetes orchestration",
+      "container orchestration"
+    ],
+    "description": "Open-source system for automating deployment, scaling, and management of containerized applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS00017AFD617773XXXX",
+    "name": "aws",
+    "displayName": "Amazon Web Services (AWS)",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "aws",
+      "amazon aws",
+      "aws cloud",
+      "ec2",
+      "s3",
+      "lambda",
+      "aws solutions"
+    ],
+    "description": "Comprehensive cloud computing platform provided by Amazon offering IaaS, PaaS, and serverless infrastructure.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS3F4801A1676F6F676C",
+    "name": "google-cloud",
+    "displayName": "Google Cloud Platform (GCP)",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "google-cloud",
+      "gcp",
+      "google cloud",
+      "gcp compute",
+      "cloud run"
+    ],
+    "description": "Suite of cloud computing services that runs on the same infrastructure Google uses internally.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0590228F617A757265",
+    "name": "azure",
+    "displayName": "Microsoft Azure",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "azure",
+      "azure cloud",
+      "ms azure",
+      "azure devops"
+    ],
+    "description": "Cloud computing platform operated by Microsoft for application management via Microsoft-managed data centers.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS00018FD2676974XXXX",
+    "name": "git",
+    "displayName": "Git Version Control",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "git",
+      "git vcs",
+      "github",
+      "gitlab",
+      "git branch",
+      "version control system"
+    ],
+    "description": "Distributed version control system for tracking changes in source code during software development.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS05A3872863692D6364",
+    "name": "ci-cd",
+    "displayName": "CI/CD Pipelines (GitHub Actions)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "ci-cd",
+      "github actions",
+      "gitlab ci",
+      "jenkins",
+      "continuous integration",
+      "continuous deployment"
+    ],
+    "description": "Automated software delivery practice combining continuous integration and continuous deployment pipelines.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS7E91312C7465727261",
+    "name": "terraform",
+    "displayName": "Terraform (Infrastructure as Code)",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "terraform",
+      "hashicorp terraform",
+      "iac",
+      "infrastructure as code"
+    ],
+    "description": "Open-source infrastructure as code software tool providing a consistent CLI workflow to manage cloud resources.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS062350F46C696E7578",
+    "name": "linux",
+    "displayName": "Linux System Administration",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cloud Infrastructure & DevOps",
+    "aliases": [
+      "linux",
+      "linux cli",
+      "bash",
+      "ubuntu",
+      "linux sysadmin",
+      "unix shell"
+    ],
+    "description": "Management, configuration, shell scripting, and security hardening of Linux-based server operating systems.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS463591E46D61636869",
+    "name": "machine-learning",
+    "displayName": "Machine Learning Algorithms",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "machine-learning",
+      "ml",
+      "supervised learning",
+      "unsupervised learning",
+      "ml models"
+    ],
+    "description": "Study and implementation of computer algorithms that improve automatically through experience and training data.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS407CC2DF646565702D",
+    "name": "deep-learning",
+    "displayName": "Deep Learning & Neural Networks",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "deep-learning",
+      "neural networks",
+      "cnn",
+      "rnn",
+      "transformers",
+      "deep neural nets"
+    ],
+    "description": "Subset of machine learning based on artificial neural networks with representation learning.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0634DC6D7079746F72",
+    "name": "pytorch",
+    "displayName": "PyTorch",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "pytorch",
+      "torch",
+      "pytorch deep learning",
+      "pytorch framework"
+    ],
+    "description": "Machine learning framework based on the Torch library, used for applications such as computer vision and NLP.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5A55590774656E736F",
+    "name": "tensorflow",
+    "displayName": "TensorFlow",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "tensorflow",
+      "tf",
+      "keras",
+      "tensorflow 2"
+    ],
+    "description": "Free and open-source software library for machine learning and artificial intelligence developed by Google.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0001AA726E6C70XXXX",
+    "name": "nlp",
+    "displayName": "Natural Language Processing (NLP)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "nlp",
+      "text processing",
+      "natural language",
+      "linguistic ai",
+      "tokenization"
+    ],
+    "description": "Subfield of linguistics, computer science, and AI concerning the interactions between computers and human language.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5F82BBD670726F6D70",
+    "name": "prompt-engineering",
+    "displayName": "Prompt Engineering & LLMs",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "prompt-engineering",
+      "prompt design",
+      "llm prompt",
+      "system prompts",
+      "few-shot prompting",
+      "chain-of-thought"
+    ],
+    "description": "Structuring and refining natural language instructions to guide generative AI foundation models effectively.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS598549936C616E6763",
+    "name": "langchain",
+    "displayName": "LangChain & Agentic Frameworks",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "langchain",
+      "lang chain",
+      "langchain agent",
+      "llamaindex",
+      "rag pipeline",
+      "agentic ai"
+    ],
+    "description": "Framework designed to simplify the creation of applications using large language models and multi-agent systems.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS356B22DA636F6D7075",
+    "name": "computer-vision",
+    "displayName": "Computer Vision & OpenCV",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Artificial Intelligence & Machine Learning",
+    "aliases": [
+      "computer-vision",
+      "opencv",
+      "image processing",
+      "object detection",
+      "yolo"
+    ],
+    "description": "Scientific field dealing with how computers can gain high-level understanding from digital images or videos.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS10153A61646174612D",
+    "name": "data-analysis",
+    "displayName": "Data Analytics & Insights",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "data-analysis",
+      "data analytics",
+      "data exploration",
+      "exploratory data analysis",
+      "eda"
+    ],
+    "description": "Process of inspecting, cleansing, transforming, and modeling data with the goal of discovering useful information.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS3B56CE2770616E6461",
+    "name": "pandas",
+    "displayName": "Pandas & NumPy",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "pandas",
+      "pandas library",
+      "numpy",
+      "dataframes",
+      "python pandas"
+    ],
+    "description": "Core scientific Python data manipulation and numerical analysis libraries.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS332BD20F706F776572",
+    "name": "power-bi",
+    "displayName": "Microsoft Power BI",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "power-bi",
+      "powerbi",
+      "power bi desktop",
+      "dax",
+      "microsoft bi"
+    ],
+    "description": "Interactive data visualization software product developed by Microsoft with primary focus on business intelligence.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5C8F737E7461626C65",
+    "name": "tableau",
+    "displayName": "Tableau",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "tableau",
+      "tableau desktop",
+      "tableau bi",
+      "tableau visualizations"
+    ],
+    "description": "Interactive data visualization software company focused on business intelligence and executive reporting.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS05A34EDD7374617469",
+    "name": "statistics",
+    "displayName": "Applied Statistics & Probability",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "statistics",
+      "statistical modeling",
+      "hypothesis testing",
+      "a/b testing statistics",
+      "probability"
+    ],
+    "description": "Discipline concerning data collection, organization, analysis, interpretation, and statistical inference.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5C13E3BC646174612D",
+    "name": "data-cleaning",
+    "displayName": "Data Cleansing & Preprocessing",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "data-cleaning",
+      "data cleansing",
+      "data scrubbing",
+      "data preprocessing",
+      "feature engineering"
+    ],
+    "description": "Detecting and correcting or removing corrupt, inaccurate, or incomplete records from raw datasets.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS59D3CDE76170616368",
+    "name": "apache-kafka",
+    "displayName": "Apache Kafka",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "apache-kafka",
+      "kafka",
+      "event streaming",
+      "kafka broker",
+      "message queue kafka"
+    ],
+    "description": "Distributed event store and stream-processing platform for high-throughput real-time data pipelines.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5A4B499E6170616368",
+    "name": "apache-spark",
+    "displayName": "Apache Spark",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Data Science & Big Data Engineering",
+    "aliases": [
+      "apache-spark",
+      "spark",
+      "pyspark",
+      "spark streaming",
+      "big data spark"
+    ],
+    "description": "Multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS612FCC016E6574776F",
+    "name": "network-security",
+    "displayName": "Network Security & Firewalls",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cybersecurity & Information Defense",
+    "aliases": [
+      "network-security",
+      "firewall",
+      "vpn",
+      "ids/ips",
+      "network protocols",
+      "tcp/ip security"
+    ],
+    "description": "Policies and practices adopted to prevent and monitor unauthorized access, misuse, modification, or denial of computer networks.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS072F9E7270656E6574",
+    "name": "penetration-testing",
+    "displayName": "Penetration Testing & Ethical Hacking",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cybersecurity & Information Defense",
+    "aliases": [
+      "penetration-testing",
+      "pentesting",
+      "ethical hacking",
+      "red team",
+      "vulnerability assessment",
+      "burp suite",
+      "metasploit"
+    ],
+    "description": "Authorized simulated cyberattack on a computer system performed to evaluate the security of the target system.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS544504EC6372797074",
+    "name": "cryptography",
+    "displayName": "Applied Cryptography & PKI",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cybersecurity & Information Defense",
+    "aliases": [
+      "cryptography",
+      "encryption",
+      "tls/ssl",
+      "pki",
+      "public key cryptography",
+      "hashing algorithms"
+    ],
+    "description": "Practice and study of techniques for secure communication in the presence of adversarial third parties.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0653C3966F77617370",
+    "name": "owasp",
+    "displayName": "OWASP Top 10 Security Standards",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cybersecurity & Information Defense",
+    "aliases": [
+      "owasp",
+      "owasp top 10",
+      "web security",
+      "xss prevention",
+      "sql injection prevention",
+      "csrf"
+    ],
+    "description": "Standard awareness document for developers and web application security representing a broad consensus about security risks.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0035DD7E7369656DXX",
+    "name": "siem",
+    "displayName": "SIEM & SOC Operations",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Cybersecurity & Information Defense",
+    "aliases": [
+      "siem",
+      "splunk",
+      "security information and event management",
+      "soc analysis",
+      "incident response"
+    ],
+    "description": "Security Information and Event Management systems combining security event management and security information management.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0031B8DC6A657374XX",
+    "name": "jest",
+    "displayName": "Jest & Vitest Unit Testing",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Software Quality Assurance & Testing",
+    "aliases": [
+      "jest",
+      "vitest",
+      "unit testing",
+      "test runner",
+      "mocking"
+    ],
+    "description": "JavaScript testing framework with a focus on simplicity and support for large web applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS645337C7706C617977",
+    "name": "playwright",
+    "displayName": "Playwright E2E Testing",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Software Quality Assurance & Testing",
+    "aliases": [
+      "playwright",
+      "playwright testing",
+      "e2e testing",
+      "browser automation"
+    ],
+    "description": "End-to-end testing library for modern web apps across Chromium, Firefox, and WebKit with a single API.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS49E2F18D6379707265",
+    "name": "cypress",
+    "displayName": "Cypress Testing",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Software Quality Assurance & Testing",
+    "aliases": [
+      "cypress",
+      "cypress.io",
+      "cypress e2e",
+      "cypress test"
+    ],
+    "description": "Frontend testing tool built for the modern web for unit tests, integration tests, and end-to-end tests.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS17513746706F73746D",
+    "name": "postman",
+    "displayName": "Postman API Testing",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Software Quality Assurance & Testing",
+    "aliases": [
+      "postman",
+      "postman api",
+      "api testing",
+      "newman",
+      "api automation"
+    ],
+    "description": "API platform for building and using APIs, providing automated collection tests and mock environments.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS2D51C7E4666C757474",
+    "name": "flutter",
+    "displayName": "Flutter (Dart Framework)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Mobile Application Engineering",
+    "aliases": [
+      "flutter",
+      "dart flutter",
+      "flutter sdk",
+      "flutter mobile"
+    ],
+    "description": "Open-source UI software development kit created by Google used to build cross-platform applications.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS316404257265616374",
+    "name": "react-native",
+    "displayName": "React Native",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Mobile Application Engineering",
+    "aliases": [
+      "react-native",
+      "react native mobile",
+      "rn",
+      "expo react native"
+    ],
+    "description": "Open-source UI software framework created by Meta used to develop applications for Android, iOS, and Web.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS068C3E137377696674",
+    "name": "swift",
+    "displayName": "Swift & iOS SDK",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Mobile Application Engineering",
+    "aliases": [
+      "swift",
+      "swiftui",
+      "xcode",
+      "ios development",
+      "apple swift"
+    ],
+    "description": "Powerful and intuitive programming language for iOS, iPadOS, macOS, tvOS, and watchOS.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4316E6FF6B6F746C69",
+    "name": "kotlin",
+    "displayName": "Kotlin & Android SDK",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Mobile Application Engineering",
+    "aliases": [
+      "kotlin",
+      "android kotlin",
+      "jetpack compose",
+      "android development"
+    ],
+    "description": "Modern concise programming language officially endorsed by Google for Android app engineering.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS583CEE23736F6C6964",
+    "name": "solidity",
+    "displayName": "Solidity (Smart Contracts)",
+    "type": "specialized",
+    "category": "Information Technology",
+    "subcategory": "Blockchain & Decentralized Tech",
+    "aliases": [
+      "solidity",
+      "smart contracts",
+      "ethereum solidity",
+      "evm contracts"
+    ],
+    "description": "Object-oriented, high-level language for implementing smart contracts on Ethereum and EVM blockchains.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS00379F5F77656233XX",
+    "name": "web3",
+    "displayName": "Web3.js & Ethers.js",
+    "type": "software",
+    "category": "Information Technology",
+    "subcategory": "Blockchain & Decentralized Tech",
+    "aliases": [
+      "web3",
+      "ethers.js",
+      "web3 integration",
+      "metamask integration"
+    ],
+    "description": "JavaScript libraries allowing developers to interact with a local or remote Ethereum node using HTTP or WebSocket.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS7822041F70726F6475",
+    "name": "product-management",
+    "displayName": "Technical Product Management",
+    "type": "specialized",
+    "category": "Business & Management",
+    "subcategory": "Product & Project Strategy",
+    "aliases": [
+      "product-management",
+      "product strategy",
+      "prd authoring",
+      "user story mapping",
+      "feature roadmap"
+    ],
+    "description": "Organizational function that guides every step of a product’s lifecycle from development to positioning and pricing.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS76988D176167696C65",
+    "name": "agile-scrum",
+    "displayName": "Agile & Scrum Methodologies",
+    "type": "common",
+    "category": "Business & Management",
+    "subcategory": "Product & Project Strategy",
+    "aliases": [
+      "agile-scrum",
+      "agile",
+      "scrum",
+      "sprint planning",
+      "kanban",
+      "daily standup"
+    ],
+    "description": "Iterative approach to project management and software development helping teams deliver value faster and with fewer headaches.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0031C7AE6A697261XX",
+    "name": "jira",
+    "displayName": "Jira & Project Tracking",
+    "type": "software",
+    "category": "Business & Management",
+    "subcategory": "Product & Project Strategy",
+    "aliases": [
+      "jira",
+      "atlassian jira",
+      "jira board",
+      "confluence"
+    ],
+    "description": "Issue tracking and project management software developed by Atlassian for agile software development teams.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS2E12D3E7627573696E",
+    "name": "business-operations",
+    "displayName": "Business Operations & RevOps",
+    "type": "specialized",
+    "category": "Business & Management",
+    "subcategory": "Product & Project Strategy",
+    "aliases": [
+      "business-operations",
+      "bizops",
+      "revenue operations",
+      "process optimization",
+      "workflow automation"
+    ],
+    "description": "Harnessing cross-functional data and business processes to optimize organizational velocity and revenue engines.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS172FBFC06D616E6167",
+    "name": "management-consulting",
+    "displayName": "Management Consulting & Strategy",
+    "type": "specialized",
+    "category": "Business & Management",
+    "subcategory": "Product & Project Strategy",
+    "aliases": [
+      "management-consulting",
+      "corporate strategy",
+      "strategic advisory",
+      "market analysis",
+      "gap analysis"
+    ],
+    "description": "Practice of helping organizations improve their performance primarily through the analysis of existing organizational problems.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS373710DD66696E616E",
+    "name": "financial-modeling",
+    "displayName": "Financial Modeling & Forecasting",
+    "type": "specialized",
+    "category": "Finance & Accounting",
+    "subcategory": "Financial Modeling & Valuation",
+    "aliases": [
+      "financial-modeling",
+      "three-statement model",
+      "financial projections",
+      "lbo modeling"
+    ],
+    "description": "Task of building an abstract representation (a model) of a real world financial situation.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS2DCD99FF76616C7561",
+    "name": "valuation",
+    "displayName": "DCF Valuation & Investment Analysis",
+    "type": "specialized",
+    "category": "Finance & Accounting",
+    "subcategory": "Financial Modeling & Valuation",
+    "aliases": [
+      "valuation",
+      "dcf model",
+      "discounted cash flow",
+      "comparable company analysis",
+      "equity research"
+    ],
+    "description": "Analytical technique that estimates the intrinsic value of an investment based on its expected future cash flows.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS05C752B7657863656C",
+    "name": "excel",
+    "displayName": "Advanced Microsoft Excel",
+    "type": "software",
+    "category": "Finance & Accounting",
+    "subcategory": "Financial Modeling & Valuation",
+    "aliases": [
+      "excel",
+      "ms excel",
+      "spreadsheets",
+      "vlookup",
+      "xlookup",
+      "pivot tables",
+      "excel macros"
+    ],
+    "description": "Spreadsheet tool featuring calculation, graphing tools, pivot tables, and advanced business data manipulation.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS57410672636F72706F",
+    "name": "corporate-finance",
+    "displayName": "Corporate Finance & Reporting",
+    "type": "specialized",
+    "category": "Finance & Accounting",
+    "subcategory": "Financial Modeling & Valuation",
+    "aliases": [
+      "corporate-finance",
+      "financial accounting",
+      "gaap",
+      "balance sheet analysis",
+      "capital budgeting"
+    ],
+    "description": "Area of finance that deals with sources of funding, capital structuring, accounting, and investment decisions.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS59D8DCB16469676974",
+    "name": "digital-marketing",
+    "displayName": "Digital Marketing Strategy",
+    "type": "specialized",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "digital-marketing",
+      "online marketing",
+      "digital campaigns",
+      "growth marketing"
+    ],
+    "description": "Component of marketing that uses the Internet and online based digital technologies to promote products and services.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0001BC5D73656FXXXX",
+    "name": "seo",
+    "displayName": "Search Engine Optimization (SEO)",
+    "type": "specialized",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "seo",
+      "technical seo",
+      "on-page seo",
+      "keyword research",
+      "search ranking",
+      "google search console"
+    ],
+    "description": "Process of improving the quality and quantity of website traffic to a website or a web page from search engines.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS75DC3DF173656D2D70",
+    "name": "sem-ppc",
+    "displayName": "Paid Advertising (Google Ads & Meta Ads)",
+    "type": "specialized",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "sem-ppc",
+      "google ads",
+      "meta ads",
+      "ppc campaigns",
+      "paid acquisition",
+      "ad spent optimization"
+    ],
+    "description": "Managing pay-per-click sponsored listings and paid social campaigns to drive targeted conversion traffic.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4CDB9584736F636961",
+    "name": "social-media",
+    "displayName": "Social Media Strategy & Community",
+    "type": "specialized",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "social-media",
+      "social media management",
+      "community management",
+      "linkedin strategy",
+      "instagram growth"
+    ],
+    "description": "Use of social media platforms and websites to promote a product, connect with audiences, and foster community.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS7260A22E636F6E7465",
+    "name": "content-marketing",
+    "displayName": "Content Strategy & Editorial",
+    "type": "specialized",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "content-marketing",
+      "content strategy",
+      "blogging",
+      "editorial calendar",
+      "inbound marketing"
+    ],
+    "description": "Strategic marketing approach focused on creating and distributing valuable, relevant, and consistent content.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS28CC1439636F707977",
+    "name": "copywriting",
+    "displayName": "Conversion Copywriting",
+    "type": "specialized",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "copywriting",
+      "ad copy",
+      "landing page copywriting",
+      "sales copy"
+    ],
+    "description": "Writing text for the purpose of advertising or other forms of marketing to persuade a person to take an action.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS26E128F2676F6F676C",
+    "name": "google-analytics",
+    "displayName": "Google Analytics 4 (GA4)",
+    "type": "software",
+    "category": "Marketing & Communications",
+    "subcategory": "Digital Marketing & Growth",
+    "aliases": [
+      "google-analytics",
+      "ga4",
+      "google analytics",
+      "attribution modeling",
+      "web analytics"
+    ],
+    "description": "Web analytics service offered by Google that tracks and reports website traffic and conversion funnels.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS076347D175692D7578",
+    "name": "ui-ux-design",
+    "displayName": "UI / UX Design",
+    "type": "specialized",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "ui-ux-design",
+      "ui design",
+      "ux design",
+      "user interface design",
+      "user experience design",
+      "product design"
+    ],
+    "description": "Design of user interfaces for machines and software with the focus on maximizing usability and user experience.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS05CEA8986669676D61",
+    "name": "figma",
+    "displayName": "Figma Prototyping & Design Systems",
+    "type": "software",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "figma",
+      "figma design",
+      "auto-layout",
+      "design tokens",
+      "component libraries"
+    ],
+    "description": "Collaborative web-based vector graphics editor and prototyping tool used for modern digital interface design.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS074492A3757365722D",
+    "name": "user-research",
+    "displayName": "UX User Research & Usability Testing",
+    "type": "specialized",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "user-research",
+      "user interviews",
+      "usability testing",
+      "user journey mapping",
+      "personas"
+    ],
+    "description": "Systematic study of target users to add realistic contexts and insights to design processes.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS468CBEC57769726566",
+    "name": "wireframing",
+    "displayName": "Wireframing & Information Architecture",
+    "type": "specialized",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "wireframing",
+      "wireframes",
+      "low-fidelity mockups",
+      "sitemap architecture"
+    ],
+    "description": "Visual guide that represents the skeletal framework of a website and navigation structure.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS45B224BD61646F6265",
+    "name": "adobe-illustrator",
+    "displayName": "Adobe Illustrator",
+    "type": "software",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "adobe-illustrator",
+      "illustrator",
+      "vector graphics",
+      "logo design"
+    ],
+    "description": "Vector graphics editor and design program developed and marketed by Adobe Inc.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS203D3DCA61646F6265",
+    "name": "adobe-photoshop",
+    "displayName": "Adobe Photoshop",
+    "type": "software",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "adobe-photoshop",
+      "photoshop",
+      "photo editing",
+      "raster graphics"
+    ],
+    "description": "Raster graphics editor developed and published by Adobe Inc. for digital art and photo manipulation.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS01CF2342626C656E64",
+    "name": "blender",
+    "displayName": "Blender 3D Modeling",
+    "type": "software",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "blender",
+      "blender 3d",
+      "3d modeling",
+      "3d animation",
+      "texturing"
+    ],
+    "description": "Open-source 3D computer graphics software toolset used for creating animated films, visual effects, and 3D games.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS0992BAC26D6F74696F",
+    "name": "motion-graphics",
+    "displayName": "Motion Graphics & After Effects",
+    "type": "software",
+    "category": "Design & Creative",
+    "subcategory": "UI/UX & Visual Design Systems",
+    "aliases": [
+      "motion-graphics",
+      "after effects",
+      "motion design",
+      "kinetic typography",
+      "micro-animations"
+    ],
+    "description": "Pieces of animation or digital footage which create the illusion of motion or rotation in interface elements.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS5DC0480E70726F626C",
+    "name": "problem-solving",
+    "displayName": "Complex Problem Solving & Logic",
+    "type": "common",
+    "category": "Common & Professional Skills",
+    "subcategory": "Core Professional Competencies",
+    "aliases": [
+      "problem-solving",
+      "problem solving",
+      "analytical thinking",
+      "algorithmic thinking",
+      "troubleshooting"
+    ],
+    "description": "Process of finding solutions to difficult or complex problems through structured analysis and logical deduction.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS783CC41E6372697469",
+    "name": "critical-thinking",
+    "displayName": "Critical Thinking",
+    "type": "common",
+    "category": "Common & Professional Skills",
+    "subcategory": "Core Professional Competencies",
+    "aliases": [
+      "critical-thinking",
+      "objective analysis",
+      "decision making",
+      "rational evaluation"
+    ],
+    "description": "Analysis of facts, evidence, observations, and arguments to form a clear, rational judgment.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4E04269A746563686E",
+    "name": "technical-communication",
+    "displayName": "Technical Communication & Presentation",
+    "type": "common",
+    "category": "Common & Professional Skills",
+    "subcategory": "Core Professional Competencies",
+    "aliases": [
+      "technical-communication",
+      "communication",
+      "verbal communication",
+      "presentation skills",
+      "public speaking"
+    ],
+    "description": "Conveying complex technical ideas, requirements, and findings clearly and persuasively across teams.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS7000C6D57465616D2D",
+    "name": "team-collaboration",
+    "displayName": "Cross-Functional Team Collaboration",
+    "type": "common",
+    "category": "Common & Professional Skills",
+    "subcategory": "Core Professional Competencies",
+    "aliases": [
+      "team-collaboration",
+      "teamwork",
+      "cross-functional collaboration",
+      "pair programming",
+      "interpersonal skills"
+    ],
+    "description": "Working effectively and empathetically with colleagues across engineering, design, and management disciplines.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4E4EEC4A746563686E",
+    "name": "technical-documentation",
+    "displayName": "Technical Writing & Documentation",
+    "type": "common",
+    "category": "Common & Professional Skills",
+    "subcategory": "Core Professional Competencies",
+    "aliases": [
+      "technical-documentation",
+      "documentation",
+      "api docs",
+      "readme writing",
+      "spec writing"
+    ],
+    "description": "Writing high-quality engineering documentation, technical specifications, and user manuals.",
+    "active": true
+  },
+  {
+    "lightcastId": "KS4CD240BD74696D652D",
+    "name": "time-management",
+    "displayName": "Time Management & Prioritization",
+    "type": "common",
+    "category": "Common & Professional Skills",
+    "subcategory": "Core Professional Competencies",
+    "aliases": [
+      "time-management",
+      "time management",
+      "task prioritization",
+      "deep work",
+      "deadline management"
+    ],
+    "description": "Exercising conscious control of time spent on specific activities to increase efficiency and productivity.",
+    "active": true
+  }
+]

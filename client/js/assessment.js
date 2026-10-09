@@ -1080,6 +1080,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         actionBtnHtml = `<button type="button" class="btn btn-grid-take-quiz-outline btn-sm btn-grid-take-quiz ms-1 text-nowrap" data-skill="${escapeHtml(skill.name)}" title="Select and verify ${escapeHtml(skill.displayName)} with 90s quiz"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Take Quiz</button>`;
       }
 
+      const typeBadgeHtml = (window.SkillsCatalog && typeof window.SkillsCatalog.getTypeBadge === 'function')
+        ? window.SkillsCatalog.getTypeBadge(skill.type || 'specialized')
+        : '';
+
       const col = document.createElement('div');
       col.className = 'col-12 col-lg-6';
       col.innerHTML = `
@@ -1095,6 +1099,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               <label class="form-check-label fw-semibold text-ink m-0 d-inline-flex align-items-center gap-1.5" for="skill_${escapeHtml(sKey)}" title="${escapeHtml(skill.displayName)}" style="min-width: 0; cursor: pointer;">
                 ${skillLogo}
                 <span class="skill-name-text">${escapeHtml(skill.displayName)}</span>
+                ${typeBadgeHtml}
                 ${verifiedBadge}
               </label>
             </div>
@@ -2926,6 +2931,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             name: s.name,
             displayName: s.displayName,
             category: s.category,
+            subcategory: s.subcategory,
+            type: s.type || 'specialized',
+            lightcastId: s.lightcastId,
+            aliases: s.aliases || [],
             stream: existing?.stream || (SKILL_STREAM_MAP[s.name] && SKILL_STREAM_MAP[s.name].length === 1 ? SKILL_STREAM_MAP[s.name][0] : undefined),
           });
         });

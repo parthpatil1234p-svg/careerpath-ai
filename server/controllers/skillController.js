@@ -1,40 +1,68 @@
 /**
- * controllers/skillController.js — Standardized Skill Catalog & Custom Skills
+ * controllers/skillController.js — Standardized Skill Catalog & Lightcast Taxonomy Engine
  *
+ * Implements Plan #39: Lightcast Skills Taxonomy Endpoints
  * Endpoints:
- *  - GET  /api/skills        (public — list active skills, filter by category/search)
- *  - POST /api/skills/custom (protected — register custom skill to catalog)
+ *  - GET  /api/skills                 (public — list skills, filter by category/search/type)
+ *  - GET  /api/skills/search          (public — real-time autocomplete with alias matching)
+ *  - GET  /api/skills/resolve         (public — canonical alias resolver)
+ *  - GET  /api/skills/taxonomy/tree   (public — 3-level hierarchical category tree)
+ *  - GET  /api/skills/taxonomy/summary(public — taxonomy domain counts & classification summary)
+ *  - GET  /api/skills/related/:slug   (public — adjacent skills in same cluster)
+ *  - POST /api/skills/custom          (protected — register custom skill to catalog)
+ *
+ * 100% Pure Supabase PostgreSQL via Prisma Client · 0% MongoDB Footprint
+ * CareerPath AI Technologies Inc.
  */
 
 const Skill = require('../models/Skill');
 const skillsData = require('../data/skillsData');
+const {
+  resolveCanonicalSkill,
+  searchSkills,
+  getRelatedSkills,
+  getTaxonomyTree,
+  getTaxonomySummary,
+} = require('../services/skillTaxonomyService');
 
 /**
  * GET /api/skills
- * Returns all active skills.
+ * Returns active skills matching optional filters.
  * Query params:
- *   - category: filter by category (frontend, backend, database, data, design, security, cloud, soft-skill, tool, other)
- *   - search: search by name or displayName
+ *   - category: filter by category or domain
+ *   - search: search by name, displayName, or aliases
+ *   - type: filter by skill type ('specialized' | 'software' | 'common')
+ *   - limit: maximum number of records
  */
 const getSkills = async (req, res, next) => {
   try {
-    const { category, search } = req.query;
-    const query = { active: true };
+    const { category, search, type, limit } = req.query;
 
-    if (category && typeof category === 'string' && category.trim() !== '') {
-      query.category = category.trim().toLowerCase();
+    // Fast path: if search query or type filter provided, use taxonomy search engine
+    if (search || type) {
+      const results = await searchSkills(search || '', {
+        category,
+        type,
+        limit: limit ? parseInt(limit, 10) : 100,
+      });
+
+      return res.status(200).json({
+        success: true,
+        count: results.length,
+        data: { skills: results },
+      });
     }
 
-    if (search && typeof search === 'string' && search.trim() !== '') {
-      const regex = new RegExp(search.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-      query.$or = [{ name: regex }, { displayName: regex }];
+    const query = { active: true };
+    if (category && typeof category === 'string' && category.trim() !== '') {
+      query.category = category.trim().toLowerCase();
     }
 
     let skills = [];
     try {
       skills = await Skill.find(query).select('-__v').sort({ category: 1, displayName: 1 });
     } catch (dbErr) {
-      console.warn('⚠️ MongoDB Skill fetch failed, falling back to skillsData in-memory:', dbErr.message);
+      console.warn('⚠️ [SkillController] Database Skill fetch failed, falling back to static catalog:', dbErr.message);
     }
 
     // Fallback to static seed data if DB collection empty or offline
@@ -43,13 +71,11 @@ const getSkills = async (req, res, next) => {
       if (category) {
         staticList = staticList.filter((s) => s.category.toLowerCase() === category.toLowerCase());
       }
-      if (search) {
-        const term = search.toLowerCase();
-        staticList = staticList.filter(
-          (s) => s.name.toLowerCase().includes(term) || s.displayName.toLowerCase().includes(term)
-        );
-      }
       skills = staticList;
+    }
+
+    if (limit && parseInt(limit, 10) > 0) {
+      skills = skills.slice(0, parseInt(limit, 10));
     }
 
     res.status(200).json({
@@ -63,12 +89,121 @@ const getSkills = async (req, res, next) => {
 };
 
 /**
+ * GET /api/skills/search
+ * Fast autocomplete search using Lightcast aliases and taxonomy index
+ */
+const searchSkillsApi = async (req, res, next) => {
+  try {
+    const { q, category, type, limit } = req.query;
+    const results = await searchSkills(q || '', {
+      category,
+      type,
+      limit: limit ? parseInt(limit, 10) : 25,
+    });
+
+    res.status(200).json({
+      success: true,
+      count: results.length,
+      query: q || '',
+      data: { skills: results },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/skills/resolve
+ * Canonical alias resolver: maps "reactjs", "postgres", "k8s" to official Lightcast record
+ */
+const resolveSkillApi = async (req, res, next) => {
+  try {
+    const { name } = req.query;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Query parameter "name" is required',
+      });
+    }
+
+    const canonical = await resolveCanonicalSkill(name);
+    if (!canonical) {
+      return res.status(404).json({
+        success: false,
+        message: `No canonical skill resolved for "${name}"`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      rawInput: name,
+      data: { skill: canonical },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/skills/taxonomy/tree
+ * Returns 3-level hierarchical category tree (Category -> Subcategory -> Skills)
+ */
+const getTaxonomyTreeApi = async (req, res, next) => {
+  try {
+    const tree = await getTaxonomyTree();
+    res.status(200).json({
+      success: true,
+      data: { tree },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/skills/taxonomy/summary
+ * Returns overview statistics of the Lightcast taxonomy catalog
+ */
+const getTaxonomySummaryApi = async (req, res, next) => {
+  try {
+    const summary = await getTaxonomySummary();
+    res.status(200).json({
+      success: true,
+      data: summary,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/skills/related/:slug
+ * Recommends adjacent skills within the same subcategory cluster
+ */
+const getRelatedSkillsApi = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    const { limit } = req.query;
+    const related = await getRelatedSkills(slug, limit ? parseInt(limit, 10) : 6);
+
+    res.status(200).json({
+      success: true,
+      targetSkill: slug,
+      count: related.length,
+      data: { relatedSkills: related },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * POST /api/skills/custom
  * Register a student's custom skill into the skill catalog.
  */
 const addCustomSkill = async (req, res, next) => {
   try {
-    const { name, displayName, category, description } = req.body;
+    const { name, displayName, category, description, type } = req.body;
 
     if (!displayName || typeof displayName !== 'string' || displayName.trim().length === 0) {
       return res.status(400).json({
@@ -83,6 +218,12 @@ const addCustomSkill = async (req, res, next) => {
       : cleanDisplayName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
     const validCategories = [
+      'Information Technology',
+      'Business & Management',
+      'Finance & Accounting',
+      'Marketing & Communications',
+      'Design & Creative',
+      'Common & Professional Skills',
       'frontend',
       'backend',
       'database',
@@ -95,9 +236,7 @@ const addCustomSkill = async (req, res, next) => {
       'other',
     ];
 
-    const cleanCategory = validCategories.includes(String(category).toLowerCase())
-      ? String(category).toLowerCase()
-      : 'other';
+    const cleanCategory = validCategories.find(c => c.toLowerCase() === String(category).toLowerCase()) || 'other';
 
     // Check if skill already exists in DB
     let existingSkill = await Skill.findOne({ name: cleanName });
@@ -113,6 +252,9 @@ const addCustomSkill = async (req, res, next) => {
       name: cleanName,
       displayName: cleanDisplayName,
       category: cleanCategory,
+      subcategory: 'Custom User Skills',
+      type: type || 'specialized',
+      aliases: [cleanName, cleanDisplayName.toLowerCase()],
       description: (description && typeof description === 'string') ? description.slice(0, 300) : `Custom skill: ${cleanDisplayName}`,
       active: true,
     });
@@ -129,5 +271,10 @@ const addCustomSkill = async (req, res, next) => {
 
 module.exports = {
   getSkills,
+  searchSkillsApi,
+  resolveSkillApi,
+  getTaxonomyTreeApi,
+  getTaxonomySummaryApi,
+  getRelatedSkillsApi,
   addCustomSkill,
 };

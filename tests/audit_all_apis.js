@@ -134,6 +134,18 @@ async function runAudit() {
   const skillsRes = await request('/skills');
   record('Skills List', '/skills', skillsRes, skillsRes.data?.success === true && Array.isArray(skillsRes.data?.data?.skills));
 
+  const skillSearchRes = await request('/skills/search?q=react');
+  record('Lightcast Skills Search', '/skills/search', skillSearchRes, skillSearchRes.data?.success === true && Array.isArray(skillSearchRes.data?.data?.skills));
+
+  const skillResolveRes = await request('/skills/resolve?name=postgres');
+  record('Lightcast Alias Resolver', '/skills/resolve', skillResolveRes, skillResolveRes.data?.success === true && skillResolveRes.data?.data?.skill?.name === 'postgresql');
+
+  const taxonomySummaryRes = await request('/skills/taxonomy/summary');
+  record('Lightcast Taxonomy Summary', '/skills/taxonomy/summary', taxonomySummaryRes, taxonomySummaryRes.data?.success === true && typeof taxonomySummaryRes.data?.data?.totalSkills === 'number');
+
+  const relatedSkillsRes = await request('/skills/related/react');
+  record('Lightcast Related Skills', '/skills/related/react', relatedSkillsRes, relatedSkillsRes.data?.success === true && Array.isArray(relatedSkillsRes.data?.data?.relatedSkills));
+
   const jobsRes = await request('/jobs');
   record('Market Jobs Feed', '/jobs', jobsRes, jobsRes.data?.success === true);
 
