@@ -92,19 +92,24 @@ function translateSort(sortObj) {
   if (!sortObj) return undefined;
   if (typeof sortObj === 'string') {
     const parts = sortObj.trim().split(/\s+/);
-    const result = {};
+    const result = [];
     for (const p of parts) {
-      if (p.startsWith('-')) result[p.substring(1)] = 'desc';
-      else result[p] = 'asc';
+      if (p.startsWith('-')) {
+        const field = p.substring(1) === '_id' ? 'id' : p.substring(1);
+        result.push({ [field]: 'desc' });
+      } else {
+        const field = p === '_id' ? 'id' : p;
+        result.push({ [field]: 'asc' });
+      }
     }
     return result;
   }
-  const orderBy = {};
+  const result = [];
   for (const [k, v] of Object.entries(sortObj)) {
     let field = k === '_id' ? 'id' : k;
-    orderBy[field] = v === -1 || v === 'desc' ? 'desc' : 'asc';
+    result.push({ [field]: v === -1 || v === 'desc' ? 'desc' : 'asc' });
   }
-  return orderBy;
+  return result;
 }
 
 /**
@@ -401,38 +406,86 @@ function createPrismaModel(modelName, fieldMap = {}, customOptions = {}) {
 
   Model.insertMany = Model.create;
 
-  Model.findByIdAndUpdate = async function (id, update, options = {}) {
-    const idStr = String(id);
-    const existing = await prisma[delegate].findUnique({ where: { id: idStr } });
-    if (!existing) return null;
-
-    let updateData = {};
-    if (update.$set) {
-      updateData = { ...update.$set };
-    } else {
-      updateData = { ...update };
-    }
-
-    // Delete mongo operators that aren't fields
-    delete updateData.$inc;
-    delete updateData.$push;
-    delete updateData.$pull;
-    delete updateData._id;
-
-    // Map relation fields
-    for (const [mField, pField] of Object.entries(fieldMap)) {
-      if (updateData[mField] !== undefined && updateData[pField] === undefined) {
-        updateData[pField] = String(updateData[mField]);
-        delete updateData[mField];
+function unpackDottedUpdates(updateData, existing = {}) {
+  for (const [key, val] of Object.entries(updateData)) {
+    if (key.includes('.')) {
+      const parts = key.split('.');
+      const root = parts[0];
+      if (!updateData[root]) {
+        updateData[root] = existing[root] && typeof existing[root] === 'object' && !Array.isArray(existing[root])
+          ? { ...existing[root] }
+          : {};
       }
+      let curr = updateData[root];
+      for (let i = 1; i < parts.length - 1; i++) {
+        if (!curr[parts[i]] || typeof curr[parts[i]] !== 'object') curr[parts[i]] = {};
+        curr = curr[parts[i]];
+      }
+      curr[parts[parts.length - 1]] = val;
+      delete updateData[key];
     }
+  }
+  return updateData;
+}
 
-    const updated = await prisma[delegate].update({
-      where: { id: idStr },
-      data: updateData,
-    });
+  Model.findByIdAndUpdate = function (id, update, options = {}) {
+    let selectFields = null;
+    let populates = [];
 
-    return new PrismaDocument(updated, modelName, fieldMap);
+    const queryPromise = (async () => {
+      const idStr = String(id);
+      const existing = await prisma[delegate].findUnique({ where: { id: idStr } });
+      if (!existing) return null;
+
+      let updateData = {};
+      if (update.$set) {
+        updateData = { ...update.$set };
+      } else {
+        updateData = { ...update };
+      }
+
+      // Delete mongo operators that aren't fields
+      delete updateData.$inc;
+      delete updateData.$push;
+      delete updateData.$pull;
+      delete updateData._id;
+
+      // Unpack dotted mongo paths (e.g. 'jobReadiness.tier' -> jobReadiness: { ...existing.jobReadiness, tier })
+      unpackDottedUpdates(updateData, existing);
+
+      // Map relation fields
+      for (const [mField, pField] of Object.entries(fieldMap)) {
+        if (updateData[mField] !== undefined && updateData[pField] === undefined) {
+          updateData[pField] = String(updateData[mField]);
+          delete updateData[mField];
+        }
+      }
+
+      const updated = await prisma[delegate].update({
+        where: { id: idStr },
+        data: updateData,
+      });
+
+      const doc = new PrismaDocument(updated, modelName, fieldMap);
+      if (selectFields && selectFields.includes('-password')) {
+        delete doc.password;
+      }
+      return doc;
+    })();
+
+    queryPromise.select = function (fields) {
+      selectFields = fields;
+      return queryPromise;
+    };
+    queryPromise.populate = function (pop) {
+      populates.push(pop);
+      return queryPromise;
+    };
+    queryPromise.lean = function () {
+      return queryPromise;
+    };
+
+    return queryPromise;
   };
 
   Model.updateOne = async function (filter, update) {
@@ -442,6 +495,9 @@ function createPrismaModel(modelName, fieldMap = {}, customOptions = {}) {
 
     let updateData = update.$set ? { ...update.$set } : { ...update };
     delete updateData._id;
+
+    // Unpack dotted mongo paths
+    unpackDottedUpdates(updateData, item);
 
     for (const [mField, pField] of Object.entries(fieldMap)) {
       if (updateData[mField] !== undefined && updateData[pField] === undefined) {

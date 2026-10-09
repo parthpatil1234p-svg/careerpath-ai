@@ -8,9 +8,40 @@
 
 const { createPrismaModel, PrismaDocument } = require('./prismaBase');
 
+function sanitizeAttemptFilter(filter = {}) {
+  if (!filter || typeof filter !== 'object') return filter;
+  const clean = { ...filter };
+  if (clean.status !== undefined) {
+    if (clean.status === 'completed') {
+      clean.submitTime = { $ne: null };
+    } else if (clean.status === 'in_progress') {
+      clean.submitTime = null;
+    }
+    delete clean.status;
+  }
+  return clean;
+}
+
 class AttemptDocument extends PrismaDocument {
   constructor(data = {}, modelName = 'Attempt', fieldMap = { user: 'userId', roadmap: 'roadmapId' }, isNew = false) {
     super(data, modelName, fieldMap, isNew);
+  }
+
+  async save() {
+    // Preserve virtual fields into integrityMetadata if needed
+    if (this.status || this.strikesCount !== undefined || this.violationLog) {
+      if (!this.integrityMetadata || typeof this.integrityMetadata !== 'object') {
+        this.integrityMetadata = {};
+      }
+      if (this.status) this.integrityMetadata.status = this.status;
+      if (this.strikesCount !== undefined) this.integrityMetadata.strikesCount = this.strikesCount;
+      if (this.violationLog) this.integrityMetadata.violationLog = this.violationLog;
+
+      delete this.status;
+      delete this.strikesCount;
+      delete this.violationLog;
+    }
+    return super.save();
   }
 }
 
@@ -27,7 +58,7 @@ Object.assign(Attempt, AttemptModel);
 
 const origFindOne = AttemptModel.findOne;
 Attempt.findOne = function (filter = {}) {
-  const query = origFindOne.call(AttemptModel, filter);
+  const query = origFindOne.call(AttemptModel, sanitizeAttemptFilter(filter));
   const origExec = query.exec.bind(query);
   query.exec = async function () {
     const res = await origExec();
@@ -51,7 +82,7 @@ Attempt.findById = function (id) {
 
 const origFind = AttemptModel.find;
 Attempt.find = function (filter = {}) {
-  const query = origFind.call(AttemptModel, filter);
+  const query = origFind.call(AttemptModel, sanitizeAttemptFilter(filter));
   const origExec = query.exec.bind(query);
   query.exec = async function () {
     const list = await origExec();
@@ -59,6 +90,25 @@ Attempt.find = function (filter = {}) {
     return list.map((doc) => new AttemptDocument(doc, 'Attempt', { user: 'userId', roadmap: 'roadmapId' }));
   };
   return query;
+};
+
+Attempt.countDocuments = function (filter = {}) {
+  return AttemptModel.countDocuments(sanitizeAttemptFilter(filter));
+};
+
+Attempt.create = async function (data = {}) {
+  if (Array.isArray(data)) {
+    const results = [];
+    for (const item of data) {
+      const doc = new AttemptDocument(item, 'Attempt', { user: 'userId', roadmap: 'roadmapId' }, true);
+      await doc.save();
+      results.push(doc);
+    }
+    return results;
+  }
+  const doc = new AttemptDocument(data, 'Attempt', { user: 'userId', roadmap: 'roadmapId' }, true);
+  await doc.save();
+  return doc;
 };
 
 module.exports = Attempt;
