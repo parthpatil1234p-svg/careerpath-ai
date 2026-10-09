@@ -65,9 +65,12 @@ async function runMigration() {
     console.log('🔒 Verifying PostgreSQL Partial Unique Indexes...');
     try {
       await prisma.$executeRawUnsafe(
-        'CREATE UNIQUE INDEX IF NOT EXISTS idx_single_active_route ON "Roadmap"("userId") WHERE status = \'active\';'
+        'DROP INDEX IF EXISTS idx_single_active_route;'
       );
-      console.log('✅ Partial unique index `idx_single_active_route` verified.\n');
+      await prisma.$executeRawUnsafe(
+        'CREATE UNIQUE INDEX IF NOT EXISTS idx_user_career_active_route ON "Roadmap"("userId", "careerId") WHERE status = \'active\';'
+      );
+      console.log('✅ Partial unique index `idx_user_career_active_route` verified.\n');
     } catch (idxErr) {
       console.warn('⚠️  Notice on partial unique index:', idxErr.message);
     }

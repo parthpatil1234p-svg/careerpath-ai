@@ -228,20 +228,20 @@ const generateRoadmap = async (req, res, next) => {
         weekProgress: initialWeekProgress,
       });
     } catch (createErr) {
-      if (createErr.code === 11000) {
-        // Race condition caught by MongoDB partial unique index
-        const currentActive = await Roadmap.findOne({ user: user._id, status: 'active' });
+      if (createErr.code === 11000 || createErr.code === 'P2002' || String(createErr.message || '').includes('Unique constraint failed')) {
+        // Race condition caught by compound partial unique index (already enrolled in this career)
+        const currentActive = await Roadmap.findOne({ user: user._id, status: 'active', career: selectedCareer._id });
         return res.status(409).json({
           success: false,
           code: 'ACTIVE_ROUTE_IN_PROGRESS',
-          message: `You already have an active career route in progress (${currentActive?.careerSnapshot?.title || 'Current Route'}). You must complete or abandon your current route before starting another.`,
+          message: `You already have an active career route for "${selectedCareer.title}". You are already enrolled in this track.`,
           data: {
             activeRoadmap: {
               id: currentActive?._id,
-              careerTitle: currentActive?.careerSnapshot?.title,
-              slug: currentActive?.careerSnapshot?.slug,
-              progressPercentage: currentActive?.progressPercentage,
-              durationWeeks: currentActive?.durationWeeks,
+              careerTitle: currentActive?.careerSnapshot?.title || selectedCareer.title,
+              slug: currentActive?.careerSnapshot?.slug || selectedCareer.slug,
+              progressPercentage: currentActive?.progressPercentage || 0,
+              durationWeeks: currentActive?.durationWeeks || weeksCount,
             },
           },
         });
