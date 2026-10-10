@@ -826,9 +826,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnRefreshCredentials = document.getElementById('btnRefreshCredentials');
   if (btnRefreshCredentials) {
     btnRefreshCredentials.addEventListener('click', () => {
+      const u = window.Auth?.getUser();
+      const cKey = `dashboard_cache_${u?.id || u?._id || 'guest'}`;
+      try { localStorage.removeItem(cKey); } catch (_) {}
       loadDashboard();
-      loadSkillEvidenceLedger();
-      showAlert('Credentials refreshed from server.', 'info');
+      if (typeof loadSkillEvidenceLedger === 'function') loadSkillEvidenceLedger();
+      showAlert('Refreshing verified credentials from server...', 'info');
     });
   }
 
