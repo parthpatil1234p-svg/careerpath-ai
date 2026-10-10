@@ -10,7 +10,7 @@ services:
     plan: free
     region: oregon
     rootDir: server
-    buildCommand: npm install
+    buildCommand: npm install && npx prisma generate
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
@@ -27,14 +27,24 @@ services:
       - key: SERVER_ROLE
         value: realtime-worker
 
+      - key: UV_THREADPOOL_SIZE
+        value: 64
+
       - key: JWT_EXPIRES_IN
         value: 7d
 
-      # Sensitive credentials must be configured securely in the Render dashboard:
-      - key: MONGODB_URI
+      # Supabase PostgreSQL Database (Transaction Pooler & Direct)
+      - key: DATABASE_URL
+        sync: false
+
+      - key: DIRECT_URL
         sync: false
 
       - key: JWT_SECRET
+        sync: false
+
+      # Optional Media Storage & API Keys
+      - key: CLOUDINARY_URL
         sync: false
 
       # Set this to your deployed Vercel frontend URL, e.g. https://careerpath-ai.vercel.app

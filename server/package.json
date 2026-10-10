@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "postinstall": "prisma generate",
     "dev": "nodemon server.js",
     "seed": "node seed.js",
     "test": "node --check server.js && node --check seed.js",
