@@ -693,6 +693,56 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ── 4.54 Render Completed Paths & Credentials Showcase ──────────
+  window.viewPathCredential = (index) => {
+    const completed = Array.isArray(dashboardData?.user?.completedPaths) ? dashboardData.user.completedPaths : [];
+    const cp = completed[index];
+    if (!cp) return;
+
+    const certStudentName = document.getElementById('certStudentName');
+    const certCareerTitle = document.getElementById('certCareerTitle');
+    const certReadinessScore = document.getElementById('certReadinessScore');
+    const certVerificationId = document.getElementById('certVerificationId');
+    const certIssueDate = document.getElementById('certIssueDate');
+    const certSkillsContainer = document.getElementById('certSkillsContainer');
+    const certMetricSkills = document.getElementById('certMetricSkills');
+    const certMetricRoadmap = document.getElementById('certMetricRoadmap');
+    const certMetricResume = document.getElementById('certMetricResume');
+    const certMetricInterview = document.getElementById('certMetricInterview');
+
+    const user = dashboardData?.user || window.Auth?.getUser();
+    if (certStudentName) certStudentName.textContent = user?.name || 'Verified Scholar';
+    if (certCareerTitle) certCareerTitle.textContent = cp.role || cp.careerTitle || 'Graduated Track';
+    if (certReadinessScore) certReadinessScore.textContent = '100% · 🔥 GRADUATED SPECIALIST';
+    if (certVerificationId) certVerificationId.textContent = cp.credentialId || `CP-CERT-${String(cp.roadmap || 'VRF892').slice(-8).toUpperCase()}`;
+
+    const dateVal = cp.completionDate ? new Date(cp.completionDate) : new Date();
+    if (certIssueDate) {
+      certIssueDate.textContent = dateVal.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    if (certMetricSkills) certMetricSkills.textContent = '100%';
+    if (certMetricRoadmap) certMetricRoadmap.textContent = '100%';
+    if (certMetricResume) certMetricResume.textContent = '95%';
+    if (certMetricInterview) certMetricInterview.textContent = '92%';
+
+    if (certSkillsContainer) {
+      const skills = Array.isArray(cp.skillsGained) && cp.skillsGained.length > 0
+        ? cp.skillsGained
+        : ['Full-Stack Implementation', 'Architecture & System Design', 'Automated Testing', 'Production Deployment'];
+      certSkillsContainer.innerHTML = skills.map((s) => `
+        <span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1 font-mono">
+          <i class="bi bi-patch-check-fill text-success me-1"></i>${escapeHtml(typeof s === 'string' ? s : s.name || 'Skill')}
+        </span>
+      `).join(' ');
+    }
+
+    const modalEl = document.getElementById('certificateModal');
+    if (modalEl && window.bootstrap?.Modal) {
+      const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  };
+
   const renderCompletedPaths = (user) => {
     const container = document.getElementById('completedPathsListContainer');
     const badge = document.getElementById('completedPathsCountBadge');
@@ -715,10 +765,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    container.innerHTML = completed.map((cp) => {
+    container.innerHTML = completed.map((cp, idx) => {
       const dateStr = cp.completionDate ? new Date(cp.completionDate).toLocaleDateString() : 'Completed';
       const skillsHtml = (cp.skillsGained || [])
-        .map((s) => `<span class="badge bg-light text-secondary border border-line font-mono" style="font-size:0.7rem;">${escapeHtml(s)}</span>`)
+        .map((s) => `<span class="badge bg-light text-secondary border border-line font-mono" style="font-size:0.7rem;">${escapeHtml(typeof s === 'string' ? s : s.name)}</span>`)
         .join('');
 
       return `
@@ -726,7 +776,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div>
             <div class="d-flex align-items-center gap-2 flex-wrap">
               <span class="badge badge-leaf font-mono"><i class="bi bi-mortarboard-fill me-1"></i> Graduated</span>
-              <strong class="text-ink">${escapeHtml(cp.role)}</strong>
+              <strong class="text-ink">${escapeHtml(cp.role || cp.careerTitle || 'Graduated Track')}</strong>
               <span class="text-muted small">· Completed on ${dateStr}</span>
             </div>
             <div class="d-flex align-items-center gap-1 mt-2 flex-wrap">
@@ -735,7 +785,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
           </div>
           <div>
-            <button type="button" class="btn btn-outline-success btn-sm px-3 py-1.5 fw-semibold" onclick="document.getElementById('btnViewCertificate')?.click()">
+            <button type="button" class="btn btn-outline-success btn-sm px-3 py-1.5 fw-semibold" onclick="window.viewPathCredential ? window.viewPathCredential(${idx}) : document.getElementById('btnViewCertificate')?.click()">
               <i class="bi bi-award-fill me-1"></i> View Credential
             </button>
           </div>

@@ -10,6 +10,8 @@
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
+const Career = require('../models/Career');
+const { generateRoadmapTasks } = require('../services/roadmapService');
 const { evaluateJobReadyCertification } = require('../services/readinessService');
 const { prisma } = require('../config/prisma');
 const { cacheManager } = require('../utils/cacheManager');
@@ -41,8 +43,8 @@ const getDashboard = async (req, res, next) => {
       return res.status(200).json(cachedPayload);
     }
 
-    // 1. Fetch user and all active roadmaps (with upcoming tasks included) in ONE concurrent roundtrip
-    const [user, allActiveRoadmaps] = await Promise.all([
+    // 1. Fetch user, active roadmaps, and completed roadmaps concurrently
+    const [user, allActiveRoadmaps, completedRoadmaps] = await Promise.all([
       User.findById(req.user._id).select('-password').lean(),
       prisma.roadmap.findMany({
         where: { userId: req.user._id, status: 'active' },
@@ -56,6 +58,16 @@ const getDashboard = async (req, res, next) => {
           },
         },
       }),
+      prisma.roadmap.findMany({
+        where: { userId: req.user._id, status: 'completed' },
+        orderBy: [{ completedAt: 'desc' }, { createdAt: 'desc' }],
+        include: {
+          career: true,
+          tasks: {
+            select: { skillName: true },
+          },
+        },
+      }),
     ]);
 
     if (!user) {
@@ -63,6 +75,79 @@ const getDashboard = async (req, res, next) => {
         success: false,
         message: 'User account not found',
       });
+    }
+
+    // Aggregate completedPaths from user profile and completed roadmaps
+    const existingCompleted = Array.isArray(user.completedPaths) ? [...user.completedPaths] : [];
+    const existingRoadmapIds = new Set(
+      existingCompleted.map((cp) => String(cp.roadmap || cp.id || cp.roadmapId || ''))
+    );
+    const existingRoles = new Set(
+      existingCompleted.map((cp) => (cp.role || cp.careerTitle || '').toLowerCase().trim())
+    );
+
+    let hasNewCompletedPaths = false;
+
+    // Heal existing entries if skillsGained contains nulls or is empty
+    existingCompleted.forEach((cp) => {
+      if (Array.isArray(cp.skillsGained)) {
+        cp.skillsGained = cp.skillsGained.filter(Boolean);
+      }
+      if (!Array.isArray(cp.skillsGained) || cp.skillsGained.length === 0) {
+        const matchingCr = (completedRoadmaps || []).find((r) => String(r.id || r._id) === String(cp.roadmap));
+        if (matchingCr && Array.isArray(matchingCr.tasks) && matchingCr.tasks.length > 0) {
+          cp.skillsGained = [...new Set(matchingCr.tasks.map((t) => t.skillName).filter(Boolean))];
+          hasNewCompletedPaths = true;
+        }
+      }
+    });
+
+    for (const cr of (completedRoadmaps || [])) {
+      const crId = String(cr.id || cr._id);
+      const title = cr.careerSnapshot?.title || cr.career?.title || 'Graduated Track';
+      const roleKey = title.toLowerCase().trim();
+
+      if (!existingRoadmapIds.has(crId) && !existingRoles.has(roleKey)) {
+        const slug = cr.careerSnapshot?.slug || cr.career?.slug || 'graduated-track';
+        let requiredSkills = [];
+        if (Array.isArray(cr.tasks) && cr.tasks.length > 0) {
+          requiredSkills = [...new Set(cr.tasks.map((t) => t.skillName).filter(Boolean))];
+        }
+        if (requiredSkills.length === 0 && Array.isArray(cr.careerSnapshot?.requiredSkills)) {
+          requiredSkills = cr.careerSnapshot.requiredSkills.map((s) => typeof s === 'string' ? s : s?.name).filter(Boolean);
+        }
+        if (requiredSkills.length === 0 && Array.isArray(cr.career?.requiredSkills)) {
+          requiredSkills = cr.career.requiredSkills.map((s) => typeof s === 'string' ? s : s?.name).filter(Boolean);
+        }
+
+        const newPath = {
+          roadmap: crId,
+          role: title,
+          careerTitle: title,
+          slug,
+          credentialId: `CP-CERT-${crId.slice(-8).toUpperCase()}`,
+          verificationCode: `V-${crId.slice(0, 8).toUpperCase()}`,
+          completionDate: cr.completedAt || cr.updatedAt || new Date(),
+          skillsGained: requiredSkills,
+          status: 'graduated',
+        };
+
+        existingCompleted.push(newPath);
+        existingRoadmapIds.add(crId);
+        existingRoles.add(roleKey);
+        hasNewCompletedPaths = true;
+      }
+    }
+
+    if (hasNewCompletedPaths) {
+      try {
+        await prisma.user.update({
+          where: { id: req.user._id },
+          data: { completedPaths: existingCompleted },
+        });
+      } catch (err) {
+        console.warn('[dashboardController] Sync completedPaths warning:', err.message);
+      }
     }
 
     // Determine target active roadmap (either from query or primary active)
@@ -91,19 +176,21 @@ const getDashboard = async (req, res, next) => {
       nextRecommendedAction = 'Complete your assessment to discover your career path';
     } else if (!activeRoadmap) {
       // Check if user completed an archived/previous roadmap
-      const completedRoadmap = await Roadmap.findOne({
-        user: user._id,
-        status: 'completed',
-      }).sort({ completedAt: -1, updatedAt: -1 }).lean();
+      const completedRoadmap = (completedRoadmaps && completedRoadmaps.length > 0)
+        ? completedRoadmaps[0]
+        : await Roadmap.findOne({
+            user: user._id,
+            status: 'completed',
+          }).sort({ completedAt: -1, updatedAt: -1 }).lean();
 
       if (completedRoadmap) {
         roadmapData = {
           id: completedRoadmap._id || completedRoadmap.id,
           _id: completedRoadmap._id || completedRoadmap.id,
           career: {
-            title: completedRoadmap.careerSnapshot?.title || 'Graduated Track',
-            slug: completedRoadmap.careerSnapshot?.slug || '',
-            shortDescription: completedRoadmap.careerSnapshot?.shortDescription || '',
+            title: completedRoadmap.careerSnapshot?.title || completedRoadmap.career?.title || 'Graduated Track',
+            slug: completedRoadmap.careerSnapshot?.slug || completedRoadmap.career?.slug || '',
+            shortDescription: completedRoadmap.careerSnapshot?.shortDescription || completedRoadmap.career?.shortDescription || '',
           },
           durationWeeks: completedRoadmap.durationWeeks,
           status: completedRoadmap.status,
@@ -155,6 +242,48 @@ const getDashboard = async (req, res, next) => {
           .limit(5)
           .select('-__v')
           .lean();
+
+        if (upcomingTasks.length === 0) {
+          const prismaTasks = await prisma.roadmapTask.findMany({
+            where: { roadmapId: activeRoadmap.id || activeRoadmap._id, completed: false },
+            orderBy: [{ weekNumber: 'asc' }, { order: 'asc' }],
+            take: 5,
+          });
+          if (prismaTasks.length > 0) {
+            upcomingTasks = prismaTasks.map((t) => ({ ...t, _id: t.id }));
+          }
+        }
+
+        // Self-heal tasks if active roadmap is missing tasks entirely
+        if (upcomingTasks.length === 0) {
+          try {
+            const targetUser = await User.findById(activeRoadmap.userId || activeRoadmap.user || req.user._id);
+            const slug = activeRoadmap.careerSnapshot?.slug || activeRoadmap.career?.slug || 'front-end-developer';
+            let targetCareer = await Career.findOne({ slug })
+              .populate({ path: 'requiredSkills.skill', select: 'name displayName category description' });
+            if (!targetCareer) {
+              targetCareer = await Career.findOne({ active: true })
+                .populate({ path: 'requiredSkills.skill', select: 'name displayName category description' });
+            }
+
+            if (targetCareer && targetUser) {
+              const { taskDocuments } = generateRoadmapTasks(targetUser, targetCareer, activeRoadmap.durationWeeks || 4);
+              if (Array.isArray(taskDocuments) && taskDocuments.length > 0) {
+                const tasksWithRoadmapId = taskDocuments.map((t) => ({
+                  ...t,
+                  roadmap: activeRoadmap.id || activeRoadmap._id,
+                }));
+                const createdTasks = await RoadmapTask.insertMany(tasksWithRoadmapId);
+                upcomingTasks = createdTasks.slice(0, 5).map(t => (t.toObject ? t.toObject() : t));
+                await Roadmap.findByIdAndUpdate(activeRoadmap.id || activeRoadmap._id, {
+                  $set: { totalTasks: createdTasks.length }
+                });
+              }
+            }
+          } catch (healErr) {
+            console.warn('[dashboardController] Auto-healing tasks warning:', healErr.message);
+          }
+        }
       }
 
       if (upcomingTasks.length > 0) {
@@ -214,7 +343,7 @@ const getDashboard = async (req, res, next) => {
           avatarUrl: user.avatarUrl || '',
           resumeUrl: user.resumeUrl || '',
           resumeRecord: user.resumeRecord || null,
-          completedPaths: user.completedPaths || [],
+          completedPaths: existingCompleted,
           profileStatus: user.profileStatus || { status: 'learning', currentRole: '' },
         },
         activeRoadmaps: allActiveRoadmaps.map((r) => ({
@@ -230,6 +359,21 @@ const getDashboard = async (req, res, next) => {
           progressPercentage: r.progressPercentage,
           totalTasks: r.totalTasks,
           completedTasks: r.completedTasks,
+        })),
+        completedRoadmaps: (completedRoadmaps || []).map((r) => ({
+          id: r.id || r._id,
+          _id: r.id || r._id,
+          career: {
+            title: r.careerSnapshot?.title || r.career?.title || 'Graduated Track',
+            slug: r.careerSnapshot?.slug || r.career?.slug || '',
+            shortDescription: r.careerSnapshot?.shortDescription || r.career?.shortDescription || '',
+          },
+          durationWeeks: r.durationWeeks,
+          status: r.status,
+          progressPercentage: r.progressPercentage,
+          totalTasks: r.totalTasks,
+          completedTasks: r.completedTasks,
+          completedAt: r.completedAt,
         })),
         activeCount: allActiveRoadmaps.length,
         maxAllowed: 2,
