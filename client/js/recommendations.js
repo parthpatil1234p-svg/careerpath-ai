@@ -735,57 +735,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const openAbandonModal = (targetRoadmapId = null, targetTitle = null) => {
+    if (abandonErrorAlert) abandonErrorAlert.classList.add('d-none');
+
+    const singleBox = document.getElementById('abandonSingleRouteText');
+    const multiBox = document.getElementById('abandonMultiRouteSelector');
+    const routesList = document.getElementById('abandonRoutesList');
+
+    if (userActiveRoadmaps.length > 1 && multiBox && routesList) {
+      if (singleBox) singleBox.classList.add('d-none');
+      multiBox.classList.remove('d-none');
+      routesList.innerHTML = `
+        ${userActiveRoadmaps.map((r, idx) => {
+          const rId = r._id || r.id;
+          const title = r.career?.title || r.careerSnapshot?.title || 'Active Track';
+          const pct = Math.round(r.progressPercentage || 0);
+          const isSelected = targetRoadmapId ? (String(rId) === String(targetRoadmapId)) : (idx === 0);
+          return `
+            <div class="form-check p-2.5 rounded border border-line mb-2 bg-light d-flex align-items-center gap-2">
+              <input class="form-check-input ms-1 me-2" type="radio" name="abandonTargetChoice" id="abandonTarget_${escapeHtml(rId)}" value="${escapeHtml(rId)}" ${isSelected ? 'checked' : ''}>
+              <label class="form-check-label fw-semibold text-ink m-0 cursor-pointer flex-grow-1" for="abandonTarget_${escapeHtml(rId)}">
+                ${escapeHtml(title)} <span class="badge bg-secondary font-mono ms-1">${pct}% Complete</span>
+              </label>
+            </div>
+          `;
+        }).join('')}
+        <div class="form-check p-2.5 rounded border border-danger-subtle mb-2 bg-danger-subtle d-flex align-items-center gap-2">
+          <input class="form-check-input ms-1 me-2" type="radio" name="abandonTargetChoice" id="abandonTarget_all" value="all">
+          <label class="form-check-label fw-semibold text-danger m-0 cursor-pointer flex-grow-1" for="abandonTarget_all">
+            <i class="bi bi-trash3-fill me-1"></i> Abandon Both Tracks (Reset all active routes)
+          </label>
+        </div>
+      `;
+    } else {
+      if (singleBox) singleBox.classList.remove('d-none');
+      if (multiBox) multiBox.classList.add('d-none');
+      if (abandonCareerTitle) {
+        const r0 = userActiveRoadmaps[0] || userActiveRoadmap;
+        abandonCareerTitle.textContent = targetTitle || r0?.career?.title || r0?.careerSnapshot?.title || 'Current Route';
+      }
+    }
+
+    const modal = getAbandonModal();
+    if (modal) {
+      modal.show();
+    } else {
+      // Fallback prompt if modal element is unavailable
+      const title = targetTitle || (userActiveRoadmaps[0] || userActiveRoadmap)?.career?.title || 'current';
+      if (confirm(`Are you sure you want to abandon the "${title}" route? Your verified skills and quiz attempts will be saved.`)) {
+        executeAbandonRoute(targetRoadmapId);
+      }
+    }
+  };
+
   if (btnAbandonBanner) {
     btnAbandonBanner.addEventListener('click', (e) => {
       e.preventDefault();
-      if (abandonErrorAlert) abandonErrorAlert.classList.add('d-none');
+      openAbandonModal();
+    });
+  }
 
-      const singleBox = document.getElementById('abandonSingleRouteText');
-      const multiBox = document.getElementById('abandonMultiRouteSelector');
-      const routesList = document.getElementById('abandonRoutesList');
-
-      if (userActiveRoadmaps.length > 1 && multiBox && routesList) {
-        if (singleBox) singleBox.classList.add('d-none');
-        multiBox.classList.remove('d-none');
-        routesList.innerHTML = `
-          ${userActiveRoadmaps.map((r, idx) => {
-            const rId = r._id || r.id;
-            const title = r.career?.title || r.careerSnapshot?.title || 'Active Track';
-            const pct = Math.round(r.progressPercentage || 0);
-            return `
-              <div class="form-check p-2.5 rounded border border-line mb-2 bg-light d-flex align-items-center gap-2">
-                <input class="form-check-input ms-1 me-2" type="radio" name="abandonTargetChoice" id="abandonTarget_${escapeHtml(rId)}" value="${escapeHtml(rId)}" ${idx === 0 ? 'checked' : ''}>
-                <label class="form-check-label fw-semibold text-ink m-0 cursor-pointer flex-grow-1" for="abandonTarget_${escapeHtml(rId)}">
-                  ${escapeHtml(title)} <span class="badge bg-secondary font-mono ms-1">${pct}% Complete</span>
-                </label>
-              </div>
-            `;
-          }).join('')}
-          <div class="form-check p-2.5 rounded border border-danger-subtle mb-2 bg-danger-subtle d-flex align-items-center gap-2">
-            <input class="form-check-input ms-1 me-2" type="radio" name="abandonTargetChoice" id="abandonTarget_all" value="all">
-            <label class="form-check-label fw-semibold text-danger m-0 cursor-pointer flex-grow-1" for="abandonTarget_all">
-              <i class="bi bi-trash3-fill me-1"></i> Abandon Both Tracks (Reset all active routes)
-            </label>
-          </div>
-        `;
-      } else {
-        if (singleBox) singleBox.classList.remove('d-none');
-        if (multiBox) multiBox.classList.add('d-none');
-        if (abandonCareerTitle) {
-          const r0 = userActiveRoadmaps[0] || userActiveRoadmap;
-          abandonCareerTitle.textContent = r0?.career?.title || r0?.careerSnapshot?.title || 'Current Route';
-        }
-      }
-
-      const modal = getAbandonModal();
-      if (modal) {
-        modal.show();
-      } else {
-        // Fallback prompt if modal element is unavailable
-        const trackTitle = (userActiveRoadmaps[0] || userActiveRoadmap)?.career?.title || 'current';
-        if (confirm(`Are you sure you want to abandon the ${trackTitle} route? Your verified skills will be saved.`)) {
-          executeAbandonRoute();
-        }
+  // Delegated click handler on container for card-level Abandon Track buttons
+  if (container) {
+    container.addEventListener('click', (e) => {
+      const abandonBtn = e.target.closest('.btn-card-abandon-track');
+      if (abandonBtn) {
+        e.preventDefault();
+        const rId = abandonBtn.dataset.roadmapId;
+        const cTitle = abandonBtn.dataset.careerTitle;
+        openAbandonModal(rId, cTitle);
       }
     });
   }
@@ -1197,9 +1215,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             </a>
             ${
               isActiveThisCareer
-                ? `<a href="roadmap.html?id=${activeMatch._id || activeMatch.id}" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">
-                     <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(activeMatch.progressPercentage || 0)}%)
-                   </a>`
+                ? `<div class="d-inline-flex align-items-center gap-2 flex-wrap">
+                     <a href="roadmap.html?id=${activeMatch._id || activeMatch.id}" class="btn cp-btn-primary btn-sm px-4 py-2 fw-semibold">
+                       <i class="bi bi-arrow-right-circle-fill me-1"></i> Continue Roadmap (${Math.round(activeMatch.progressPercentage || 0)}%)
+                     </a>
+                     <button type="button" class="btn btn-outline-danger btn-sm px-3 py-2 fw-semibold btn-card-abandon-track" data-roadmap-id="${activeMatch._id || activeMatch.id}" data-career-title="${escapeHtml(career.title)}" data-bs-toggle="modal" data-bs-target="#modalAbandonRoute" title="Abandon this course to pick a new career track">
+                       <i class="bi bi-x-circle me-1"></i> Abandon Route
+                     </button>
+                   </div>`
                 : (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin())
                 ? (isRelatedForSecondTrack
                     ? `<button
