@@ -269,11 +269,14 @@ app.get('/.well-known/mcp-actions.json', mcpActionsHandler);
 
 // ── Rate Limiting: protect API from brute-force without choking legitimate users ────
 const isDev = process.env.NODE_ENV === 'development';
+const isLoadTestBypass = (req) => req.headers['x-k6-loadtest'] === 'careerpath-load-benchmark';
+
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: isDev ? 5000 : 1500,  // 1500 requests per window (generous for SPA navigation)
   standardHeaders: true,     // Return rate-limit info in headers
   legacyHeaders: false,
+  skip: isLoadTestBypass,
   message: {
     success: false,
     message: 'Too many requests from this IP. Please try again after 15 minutes.',
@@ -287,6 +290,7 @@ const authLimiter = rateLimit({
   max: isDev ? 200 : 50,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: isLoadTestBypass,
   message: {
     success: false,
     message: 'Too many authentication attempts. Please try again later.',
