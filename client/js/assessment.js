@@ -1478,27 +1478,60 @@ document.addEventListener('DOMContentLoaded', async () => {
         step3ContinueBtn.classList.remove('disabled', 'opacity-75');
       }
     } else {
-      hasCompletedSkillVerification = false;
-      if (proveSkillsBadge) {
-        proveSkillsBadge.className = 'prove-skills-badge in-progress bg-warning text-dark';
-      }
-      if (proveSkillsBadgeText) {
-        proveSkillsBadgeText.textContent = `0 of ${totalCount} Verified (1 Required)`;
-      }
-      if (proveSkillsProgressFill) {
-        proveSkillsProgressFill.style.width = '0%';
-        proveSkillsProgressFill.className = 'prove-skills-progress-fill';
-      }
-      if (proveSkillsSubtitle) {
-        proveSkillsSubtitle.innerHTML = `<span class="text-warning-emphasis fw-bold"><i class="bi bi-lock-fill me-1"></i> Baseline Verification Required:</span> Skill knowledge levels must be calibrated via Reality Check Quizzes or GitHub code (no self-ratings). Please complete the 90s quiz for at least 1 skill below to unlock Goals.`;
-      }
-      proveSkillsPanel.classList.remove('all-verified');
+      const currentUser = (typeof window.Auth?.getUser === 'function' ? window.Auth.getUser() : null) ||
+                          (typeof window.Auth?.getCurrentUser === 'function' ? window.Auth.getCurrentUser() : null);
+      const isAccountAlreadyVerified = Boolean(
+        hasCompletedSkillVerification ||
+        (currentUser && currentUser.hasCompletedSkillVerification)
+      );
 
-      if (step3ContinueBtn) {
-        step3ContinueBtn.disabled = true;
-        step3ContinueBtn.className = 'btn btn-secondary px-4 disabled opacity-75';
-        step3ContinueBtn.innerHTML = '<i class="bi bi-lock-fill me-1"></i> Verify at least 1 Skill to Continue';
-        step3ContinueBtn.title = `Locked: Complete reality check quiz for at least 1 skill to calibrate your baseline`;
+      if (isAccountAlreadyVerified) {
+        hasCompletedSkillVerification = true;
+        if (proveSkillsBadge) {
+          proveSkillsBadge.className = 'prove-skills-badge in-progress bg-success-subtle text-success border border-success-subtle';
+        }
+        if (proveSkillsBadgeText) {
+          proveSkillsBadgeText.textContent = `Account Verified \u2713 (Ready to Continue)`;
+        }
+        if (proveSkillsProgressFill) {
+          proveSkillsProgressFill.style.width = '100%';
+          proveSkillsProgressFill.className = 'prove-skills-progress-fill bg-success';
+        }
+        if (proveSkillsSubtitle) {
+          proveSkillsSubtitle.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-patch-check-fill me-1"></i> Baseline Calibrated:</span> Your account skill verification is already verified! You can proceed to Goals now, or optionally take 90s quizzes below for newly added skills.`;
+        }
+        proveSkillsPanel.classList.remove('all-verified');
+
+        if (step3ContinueBtn) {
+          step3ContinueBtn.disabled = false;
+          step3ContinueBtn.className = 'btn cp-btn-primary px-4';
+          step3ContinueBtn.innerHTML = '<span>Continue to Goals</span> <i class="bi bi-arrow-right ms-1"></i>';
+          step3ContinueBtn.title = 'Continue to Goals';
+          step3ContinueBtn.classList.remove('disabled', 'opacity-75');
+        }
+      } else {
+        hasCompletedSkillVerification = false;
+        if (proveSkillsBadge) {
+          proveSkillsBadge.className = 'prove-skills-badge in-progress bg-warning text-dark';
+        }
+        if (proveSkillsBadgeText) {
+          proveSkillsBadgeText.textContent = `0 of ${totalCount} Verified (1 Required)`;
+        }
+        if (proveSkillsProgressFill) {
+          proveSkillsProgressFill.style.width = '0%';
+          proveSkillsProgressFill.className = 'prove-skills-progress-fill';
+        }
+        if (proveSkillsSubtitle) {
+          proveSkillsSubtitle.innerHTML = `<span class="text-warning-emphasis fw-bold"><i class="bi bi-lock-fill me-1"></i> Baseline Verification Required:</span> Skill knowledge levels must be calibrated via Reality Check Quizzes or GitHub code (no self-ratings). Please complete the 90s quiz for at least 1 skill below to unlock Goals.`;
+        }
+        proveSkillsPanel.classList.remove('all-verified');
+
+        if (step3ContinueBtn) {
+          step3ContinueBtn.disabled = true;
+          step3ContinueBtn.className = 'btn btn-secondary px-4 disabled opacity-75';
+          step3ContinueBtn.innerHTML = '<i class="bi bi-lock-fill me-1"></i> Verify at least 1 Skill to Continue';
+          step3ContinueBtn.title = `Locked: Complete reality check quiz for at least 1 skill to calibrate your baseline`;
+        }
       }
     }
 
@@ -3057,22 +3090,35 @@ document.addEventListener('DOMContentLoaded', async () => {
           });
         }
 
+        // Skill persistence guard: Stale drafts or caches must NEVER downgrade an already verified skill!
+        const existing = selectedSkillsMap.get(key);
+        const isQuizVerified = Boolean(s.isQuizVerified || existing?.isQuizVerified);
+        const isCodeVerified = Boolean(s.isCodeVerified || existing?.isCodeVerified);
+        const verifiedProficiency = s.verifiedProficiency || existing?.verifiedProficiency || null;
+        const quizScore = Math.max(Number(s.quizScore) || 0, Number(existing?.quizScore) || 0);
+        const quizGaps = (Array.isArray(s.quizGaps) && s.quizGaps.length) ? s.quizGaps : (existing?.quizGaps || []);
+        const quizVerifiedAt = s.quizVerifiedAt || existing?.quizVerifiedAt || null;
+        const verificationTier = isCodeVerified ? 'project_verified' : (isQuizVerified ? 'quiz_verified' : (s.verificationTier || existing?.verificationTier || 'self_rated'));
+        const verificationStatus = (isQuizVerified || isCodeVerified) ? 'verified' : (s.verificationStatus || existing?.verificationStatus || 'unverified');
+        const integrityScore = (typeof s.integrityScore === 'number' && s.integrityScore !== 100) ? s.integrityScore : (existing?.integrityScore ?? (s.integrityScore ?? 100));
+        const verifiedSource = s.verifiedSource || existing?.verifiedSource || (isQuizVerified ? 'quiz' : (isCodeVerified ? 'github' : 'self'));
+
         selectedSkillsMap.set(key, {
           name: key,
-          displayName: s.displayName || s.name || key,
-          category: s.category || 'tool',
-          proficiency: s.verifiedProficiency || s.proficiency || 'beginner',
-          isCodeVerified: Boolean(s.isCodeVerified),
-          verifiedSource: s.verifiedSource || 'self',
-          isQuizVerified: Boolean(s.isQuizVerified),
-          selfRatedProficiency: s.selfRatedProficiency || s.proficiency || 'beginner',
-          verifiedProficiency: s.verifiedProficiency || null,
-          quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
-          quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
-          quizVerifiedAt: s.quizVerifiedAt || null,
-          verificationTier: s.verificationTier || (s.isCodeVerified ? 'project_verified' : (s.isQuizVerified ? 'quiz_verified' : 'self_rated')),
-          verificationStatus: s.verificationStatus || (s.isQuizVerified || s.isCodeVerified ? 'verified' : 'unverified'),
-          integrityScore: typeof s.integrityScore === 'number' ? s.integrityScore : 100,
+          displayName: s.displayName || existing?.displayName || s.name || key,
+          category: s.category || existing?.category || 'tool',
+          proficiency: verifiedProficiency || s.proficiency || existing?.proficiency || 'beginner',
+          isCodeVerified,
+          verifiedSource,
+          isQuizVerified,
+          selfRatedProficiency: s.selfRatedProficiency || existing?.selfRatedProficiency || s.proficiency || 'beginner',
+          verifiedProficiency,
+          quizScore,
+          quizGaps,
+          quizVerifiedAt,
+          verificationTier,
+          verificationStatus,
+          integrityScore,
         });
       });
     }
@@ -3089,7 +3135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (gEl) gEl.value = data.careerGoals.trim();
     }
 
-    if (data.hasCompletedSkillVerification || (Array.isArray(data.skills) && data.skills.some((s) => s.isQuizVerified || s.isCodeVerified))) {
+    if (data.hasCompletedSkillVerification || hasCompletedSkillVerification || (Array.isArray(data.skills) && data.skills.some((s) => s.isQuizVerified || s.isCodeVerified))) {
       hasCompletedSkillVerification = true;
     }
   };
@@ -3132,9 +3178,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         const merged = Object.assign({}, cachedUser || {}, authoritativeData);
         window.Auth.setCurrentUser(merged);
       }
+
+      // Reconcile and fix any stale local drafts in localStorage so they never conflict
+      if (authoritativeData.hasCompletedSkillVerification || (Array.isArray(authoritativeData.skills) && authoritativeData.skills.some(s => s.isQuizVerified || s.isCodeVerified))) {
+        hasCompletedSkillVerification = true;
+        try {
+          const draftKey = getDraftStorageKey();
+          const draftRaw = localStorage.getItem(draftKey);
+          if (draftRaw) {
+            const draft = JSON.parse(draftRaw);
+            if (Array.isArray(draft.skills)) {
+              draft.skills = draft.skills.map((ds) => {
+                const matchedDb = (authoritativeData.skills || []).find((dbs) => (dbs.name || '').toLowerCase().trim() === (ds.name || '').toLowerCase().trim());
+                if (matchedDb && (matchedDb.isQuizVerified || matchedDb.isCodeVerified)) {
+                  return { ...ds, ...matchedDb };
+                }
+                return ds;
+              });
+              draft.hasCompletedSkillVerification = true;
+              localStorage.setItem(draftKey, JSON.stringify(draft));
+            }
+          }
+        } catch (dErr) {}
+      }
     }
 
-    // Step 3: Restore any local draft edits
+    // Step 3: Restore any local draft edits (with merge preservation guaranteed)
     try {
       const draftRaw = localStorage.getItem(getDraftStorageKey());
       if (draftRaw) {

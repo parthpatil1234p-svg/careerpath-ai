@@ -247,6 +247,15 @@ const updateAssessment = async (req, res, next) => {
 
     const activeStream = updates.primaryStream || (req.user && req.user.primaryStream) || 'cross';
 
+    // Fetch authoritative existing user from DB to preserve verified skill credentials
+    const existingUser = await User.findById(req.user._id);
+    const existingDbSkills = Array.isArray(existingUser?.skills) ? existingUser.skills : [];
+    const existingDbMap = new Map();
+    existingDbSkills.forEach((s) => {
+      const k = normalizeSkillKey(s.name || '');
+      if (k) existingDbMap.set(k, s);
+    });
+
     // Standardize skills casing and preserve verification status with canonical deduplication
     if (Array.isArray(updates.skills)) {
       const skillsMap = new Map();
@@ -255,26 +264,30 @@ const updateAssessment = async (req, res, next) => {
         if (!rawName || rawName.includes('@') || rawName.includes('.com') || rawName.length > 30) return;
         const canonicalKey = normalizeSkillKey(rawName);
 
+        const existingDb = existingDbMap.get(canonicalKey);
+        const isQuizVerified = Boolean(s.isQuizVerified || existingDb?.isQuizVerified);
+        const isCodeVerified = Boolean(s.isCodeVerified || existingDb?.isCodeVerified);
+
         const formatted = {
           name: canonicalKey,
-          displayName: typeof s.displayName === 'string' && s.displayName.trim() ? s.displayName.trim() : (s.name || '').trim(),
-          proficiency: typeof s.proficiency === 'string' ? s.proficiency.trim().toLowerCase() : 'beginner',
-          isCodeVerified: Boolean(s.isCodeVerified),
-          verifiedSource: typeof s.verifiedSource === 'string' ? s.verifiedSource : '',
-          selfRatedProficiency: s.selfRatedProficiency || null,
-          isQuizVerified: Boolean(s.isQuizVerified),
-          verifiedProficiency: s.verifiedProficiency || null,
-          quizScore: typeof s.quizScore === 'number' ? s.quizScore : 0,
-          quizGaps: Array.isArray(s.quizGaps) ? s.quizGaps : [],
-          quizVerifiedAt: s.quizVerifiedAt ? new Date(s.quizVerifiedAt) : (s.isQuizVerified ? new Date() : null),
-          verificationTier: s.verificationTier || (s.isCodeVerified ? 'project_verified' : s.isQuizVerified ? 'quiz_verified' : 'self_rated'),
-          verificationStatus: s.verificationStatus || (s.isQuizVerified || s.isCodeVerified ? 'verified' : 'unverified'),
-          integrityScore: typeof s.integrityScore === 'number' ? s.integrityScore : 100,
-          nextRetakeAvailableAt: s.nextRetakeAvailableAt ? new Date(s.nextRetakeAvailableAt) : null,
-          quizAttemptsCount: typeof s.quizAttemptsCount === 'number' ? s.quizAttemptsCount : 0,
-          lastQuizAttemptAt: s.lastQuizAttemptAt ? new Date(s.lastQuizAttemptAt) : null,
-          tabSwitchCount: typeof s.tabSwitchCount === 'number' ? s.tabSwitchCount : 0,
-          velocityAnomalyCount: typeof s.velocityAnomalyCount === 'number' ? s.velocityAnomalyCount : 0,
+          displayName: typeof s.displayName === 'string' && s.displayName.trim() ? s.displayName.trim() : (existingDb?.displayName || s.name || '').trim(),
+          proficiency: typeof s.proficiency === 'string' ? s.proficiency.trim().toLowerCase() : (existingDb?.proficiency || 'beginner'),
+          isCodeVerified,
+          verifiedSource: s.verifiedSource || existingDb?.verifiedSource || (isQuizVerified ? 'quiz' : (isCodeVerified ? 'github' : '')),
+          selfRatedProficiency: s.selfRatedProficiency || existingDb?.selfRatedProficiency || null,
+          isQuizVerified,
+          verifiedProficiency: s.verifiedProficiency || existingDb?.verifiedProficiency || null,
+          quizScore: Math.max(Number(s.quizScore) || 0, Number(existingDb?.quizScore) || 0),
+          quizGaps: Array.isArray(s.quizGaps) && s.quizGaps.length ? s.quizGaps : (existingDb?.quizGaps || []),
+          quizVerifiedAt: s.quizVerifiedAt ? new Date(s.quizVerifiedAt) : (existingDb?.quizVerifiedAt ? new Date(existingDb.quizVerifiedAt) : (isQuizVerified ? new Date() : null)),
+          verificationTier: s.verificationTier || existingDb?.verificationTier || (isCodeVerified ? 'project_verified' : isQuizVerified ? 'quiz_verified' : 'self_rated'),
+          verificationStatus: s.verificationStatus || existingDb?.verificationStatus || (isQuizVerified || isCodeVerified ? 'verified' : 'unverified'),
+          integrityScore: typeof s.integrityScore === 'number' ? s.integrityScore : (existingDb?.integrityScore ?? 100),
+          nextRetakeAvailableAt: s.nextRetakeAvailableAt ? new Date(s.nextRetakeAvailableAt) : (existingDb?.nextRetakeAvailableAt ? new Date(existingDb.nextRetakeAvailableAt) : null),
+          quizAttemptsCount: typeof s.quizAttemptsCount === 'number' ? s.quizAttemptsCount : (existingDb?.quizAttemptsCount || 0),
+          lastQuizAttemptAt: s.lastQuizAttemptAt ? new Date(s.lastQuizAttemptAt) : (existingDb?.lastQuizAttemptAt ? new Date(existingDb.lastQuizAttemptAt) : null),
+          tabSwitchCount: typeof s.tabSwitchCount === 'number' ? s.tabSwitchCount : (existingDb?.tabSwitchCount || 0),
+          velocityAnomalyCount: typeof s.velocityAnomalyCount === 'number' ? s.velocityAnomalyCount : (existingDb?.velocityAnomalyCount || 0),
         };
 
         if (!skillsMap.has(canonicalKey)) {
@@ -340,7 +353,7 @@ const updateAssessment = async (req, res, next) => {
     updates.profileCompleted = Boolean(hasEducation && hasInterest && hasSkill);
 
     // Persist one-time skill verification completion for account
-    if (req.body.hasCompletedSkillVerification || (Array.isArray(updates.skills) && updates.skills.some((s) => s.isQuizVerified || s.isCodeVerified))) {
+    if (req.body.hasCompletedSkillVerification || existingUser?.hasCompletedSkillVerification || (Array.isArray(updates.skills) && updates.skills.some((s) => s.isQuizVerified || s.isCodeVerified))) {
       updates.hasCompletedSkillVerification = true;
     }
 

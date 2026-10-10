@@ -14,6 +14,7 @@
 
 const User = require('../models/User');
 const Resume = require('../models/Resume');
+const { cacheManager } = require('../utils/cacheManager');
 
 // ── Permitted update fields whitelist ─────────────────────────
 // Only these fields can be changed via PUT /api/users/me.
@@ -25,6 +26,7 @@ const ALLOWED_UPDATE_FIELDS = [
   'careerGoals',
   'avatarUrl',
   'resumeUrl',
+  'hasCompletedSkillVerification',
 ];
 
 // ── getMyProfile ───────────────────────────────────────────────
@@ -79,7 +81,57 @@ const updateMyProfile = async (req, res, next) => {
       });
     }
 
-    // 2. Apply updates using findByIdAndUpdate
+    // 2. Fetch authoritative user record to protect verified skill credentials
+    const existingUser = await User.findById(req.user._id);
+    if (!existingUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    // 3. Skills merge guard: NEVER allow draft/client sync to downgrade or wipe verified skills
+    if (Array.isArray(updates.skills)) {
+      const existingSkills = Array.isArray(existingUser.skills) ? existingUser.skills : [];
+      const existingMap = new Map();
+      existingSkills.forEach((s) => {
+        const k = (s.name || '').trim().toLowerCase();
+        if (k) existingMap.set(k, s);
+      });
+
+      updates.skills = updates.skills.map((incoming) => {
+        const key = (incoming.name || '').trim().toLowerCase();
+        const existing = existingMap.get(key);
+        if (existing && (existing.isQuizVerified || existing.isCodeVerified)) {
+          const isQuizVerified = existing.isQuizVerified || Boolean(incoming.isQuizVerified);
+          const isCodeVerified = existing.isCodeVerified || Boolean(incoming.isCodeVerified);
+          return {
+            ...incoming,
+            displayName: incoming.displayName || existing.displayName || incoming.name,
+            proficiency: incoming.verifiedProficiency || existing.verifiedProficiency || incoming.proficiency || existing.proficiency || 'intermediate',
+            isQuizVerified,
+            isCodeVerified,
+            verifiedProficiency: incoming.verifiedProficiency || existing.verifiedProficiency || null,
+            quizScore: Math.max(Number(incoming.quizScore) || 0, Number(existing.quizScore) || 0),
+            quizGaps: (Array.isArray(incoming.quizGaps) && incoming.quizGaps.length) ? incoming.quizGaps : (existing.quizGaps || []),
+            quizVerifiedAt: incoming.quizVerifiedAt || existing.quizVerifiedAt || new Date(),
+            verificationTier: isCodeVerified ? 'project_verified' : (isQuizVerified ? 'quiz_verified' : (existing.verificationTier || incoming.verificationTier || 'self_rated')),
+            verificationStatus: (isQuizVerified || isCodeVerified) ? 'verified' : (existing.verificationStatus || incoming.verificationStatus || 'unverified'),
+            integrityScore: (typeof incoming.integrityScore === 'number' && incoming.integrityScore !== 100) ? incoming.integrityScore : (existing.integrityScore ?? 100),
+            verifiedSource: incoming.verifiedSource || existing.verifiedSource || (isQuizVerified ? 'quiz' : 'self'),
+          };
+        }
+        return incoming;
+      });
+
+      if (existingUser.hasCompletedSkillVerification || updates.skills.some((s) => s.isQuizVerified || s.isCodeVerified)) {
+        updates.hasCompletedSkillVerification = true;
+      }
+    } else if (existingUser.hasCompletedSkillVerification) {
+      updates.hasCompletedSkillVerification = true;
+    }
+
+    // 4. Apply updates using findByIdAndUpdate
     //    { new: true }        → returns the updated document
     //    { runValidators: true } → runs Mongoose schema validators on updated fields
     const updatedUser = await User.findByIdAndUpdate(
@@ -95,7 +147,7 @@ const updateMyProfile = async (req, res, next) => {
       });
     }
 
-    // 3. Auto-calculate profileCompleted
+    // 5. Auto-calculate profileCompleted
     //    Requirements: education.course filled + at least 1 interest + at least 1 skill
     const hasEducation = updatedUser.education && updatedUser.education.course &&
                          updatedUser.education.course.trim() !== '';
@@ -109,6 +161,9 @@ const updateMyProfile = async (req, res, next) => {
       updatedUser.profileCompleted = shouldBeCompleted;
       await updatedUser.save({ validateBeforeSave: false });
     }
+
+    // 6. Invalidate server cache
+    cacheManager.invalidateUser(req.user._id);
 
     res.status(200).json({
       success: true,
