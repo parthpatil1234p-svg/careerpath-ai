@@ -10,8 +10,10 @@
 const User = require('../models/User');
 const Career = require('../models/Career');
 const Skill = require('../models/Skill');
+const Roadmap = require('../models/Roadmap');
 const { cacheManager } = require('../utils/cacheManager');
 const { generateRecommendations } = require('../services/recommendationService');
+const { syncUserGraduation } = require('../services/roadmapService');
 const { enrichRecommendationsWithAI } = require('../services/careerInsightService');
 
 async function getCachedActiveCareers() {
@@ -71,24 +73,67 @@ const getRecommendations = async (req, res, next) => {
       });
     }
 
-    // 4. Generate Top recommendations using our deterministic mathematical engine (default 5, up to 15)
+    // 4. Auto-sync any completed roadmaps into user profile to ensure verified credentials and skills are elevated
+    const completedRoadmaps = await Roadmap.find({
+      user: req.user._id,
+      status: 'completed',
+    });
+
+    const userCompletedSlugs = new Set();
+    const completedRoadmapsMap = {};
+    let userUpdated = false;
+
+    for (const cr of completedRoadmaps) {
+      const slug = (cr.careerSnapshot?.slug || '').toLowerCase().trim();
+      const rId = cr._id || cr.id;
+      if (slug) {
+        userCompletedSlugs.add(slug);
+        completedRoadmapsMap[slug] = rId;
+      }
+      const hasCompletedPath = Array.isArray(user.completedPaths) && user.completedPaths.some(
+        cp => String(cp.roadmap || '') === String(rId) || (cp.slug || '').toLowerCase().trim() === slug
+      );
+      if (!hasCompletedPath) {
+        await syncUserGraduation(req.user._id, cr);
+        userUpdated = true;
+      }
+    }
+
+    if (Array.isArray(user.completedPaths)) {
+      user.completedPaths.forEach(cp => {
+        const s = (cp.slug || cp.role || cp.careerTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').trim();
+        if (s) {
+          userCompletedSlugs.add(s);
+          if (cp.roadmap && !completedRoadmapsMap[s]) {
+            completedRoadmapsMap[s] = cp.roadmap;
+          }
+        }
+      });
+    }
+
+    const targetUser = userUpdated ? await User.findById(req.user._id).select('-password').lean() : user;
+
+    // 5. Generate Top recommendations using our deterministic mathematical engine (default 5, up to 15)
     const limit = Math.min(Math.max(parseInt(req.body.limit || req.query.limit || 5, 10), 1), 15);
-    const baseRecommendations = generateRecommendations(user, careers, limit);
+    const baseRecommendations = generateRecommendations(targetUser, careers, limit, {
+      completedSlugs: userCompletedSlugs,
+      completedRoadmapsMap,
+    });
     const crossTrackDiscovery = baseRecommendations.crossTrackDiscovery || null;
 
-    // 4b. Enrich with AI-Powered Career Fit Brief & Market Insights
-    const recommendations = await enrichRecommendationsWithAI(baseRecommendations, user);
+    // 5b. Enrich with AI-Powered Career Fit Brief & Market Insights
+    const recommendations = await enrichRecommendationsWithAI(baseRecommendations, targetUser);
 
-    // 5. Structure profile summary for response
+    // 6. Structure profile summary for response
     const profileSummary = {
       education: {
-        course: user.education?.course || '',
-        branch: user.education?.branch || '',
-        year: user.education?.year || '',
-        college: user.education?.college || '',
+        course: targetUser.education?.course || '',
+        branch: targetUser.education?.branch || '',
+        year: targetUser.education?.year || '',
+        college: targetUser.education?.college || '',
       },
-      interests: user.interests || [],
-      skills: (user.skills || []).map((s) => ({
+      interests: targetUser.interests || [],
+      skills: (targetUser.skills || []).map((s) => ({
         name: s.name,
         displayName: s.displayName || s.name,
         proficiency: s.proficiency,

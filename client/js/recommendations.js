@@ -557,6 +557,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let userActiveRoadmaps = [];
   let userActiveRoadmap = null;
   let userCompletedSlugs = new Set();
+  let userCompletedRoadmapsMap = {};
   let userVerifiedSkillNames = new Set();
 
   const checkCourseSynergy = (activeCareer, targetCareer) => {
@@ -603,6 +604,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bannerProgress = document.getElementById('bannerActiveProgress');
     const bannerSubtitle = document.getElementById('bannerActiveSubtitle');
 
+    const gradBanner = document.getElementById('graduatedTracksBanner');
+    const gradTitles = document.getElementById('bannerGraduatedTitles');
+    const gradBadge = document.getElementById('bannerGraduatedBadge');
+
+    if (userCompletedSlugs.size > 0 && gradBanner) {
+      const titles = Array.from(userCompletedSlugs).map(s => {
+        return s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      }).join(', ');
+      if (gradTitles) gradTitles.textContent = titles;
+      if (gradBadge) gradBadge.textContent = `${userCompletedSlugs.size} Completed Pathway${userCompletedSlugs.size > 1 ? 's' : ''}`;
+      gradBanner.classList.remove('d-none');
+    } else if (gradBanner) {
+      gradBanner.classList.add('d-none');
+    }
+
     if (userActiveRoadmaps.length > 0 && activeLockBanner) {
       if (userActiveRoadmaps.length === 1) {
         const r1 = userActiveRoadmaps[0];
@@ -629,6 +645,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const fetchUserRouteState = async () => {
+    userCompletedSlugs = new Set();
+    userCompletedRoadmapsMap = {};
+
     try {
       const rmRes = await window.API.get('/roadmaps/current', { auth: true });
       if (rmRes.success && rmRes.data) {
@@ -637,6 +656,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           userActiveRoadmaps = [rmRes.data.roadmap];
         }
         userActiveRoadmap = userActiveRoadmaps[0] || null;
+
+        if (Array.isArray(rmRes.data.completedRoadmaps)) {
+          rmRes.data.completedRoadmaps.forEach((cr) => {
+            const slug = (cr.career?.slug || cr.slug || '').toLowerCase().trim();
+            if (slug) {
+              userCompletedSlugs.add(slug);
+              userCompletedRoadmapsMap[slug] = cr.id || cr._id;
+            }
+          });
+        }
       } else {
         userActiveRoadmaps = [];
         userActiveRoadmap = null;
@@ -650,12 +679,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       const userRes = await window.API.get('/users/me', { auth: true });
       if (userRes.success && userRes.data?.user) {
         const u = userRes.data.user;
-        if (u.completedPaths) {
-          userCompletedSlugs = new Set(
-            u.completedPaths
-              .map((cp) => (cp.slug || '').toLowerCase().trim())
-              .filter(Boolean)
-          );
+        if (Array.isArray(u.completedPaths)) {
+          u.completedPaths.forEach((cp) => {
+            const slug = (cp.slug || cp.role || cp.careerTitle || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').trim();
+            if (slug) {
+              userCompletedSlugs.add(slug);
+              if (cp.roadmap && !userCompletedRoadmapsMap[slug]) {
+                userCompletedRoadmapsMap[slug] = cp.roadmap;
+              }
+            }
+          });
         }
         if (Array.isArray(u.skills)) {
           userVerifiedSkillNames = new Set(
@@ -666,8 +699,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
     } catch (e) {
-      userCompletedSlugs = new Set();
-      userVerifiedSkillNames = new Set();
+      // Keep completed slugs from rmRes if any
     }
 
     renderActiveRouteBanner();
@@ -892,10 +924,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         (r) => (r.career?.slug || '').toLowerCase().trim() === careerSlugNorm
       );
       const isActiveThisCareer = Boolean(activeMatch);
-      const isGraduated = userCompletedSlugs.has(careerSlugNorm);
+      const isGraduated = Boolean(item.isGraduated || item.isCompleted || userCompletedSlugs.has(careerSlugNorm));
+      const completedRoadmapId = item.completedRoadmapId || userCompletedRoadmapsMap[careerSlugNorm] || '';
 
       let isRelatedForSecondTrack = false;
-      if (!isActiveThisCareer && userActiveRoadmaps.length === 1) {
+      if (!isActiveThisCareer && !isGraduated && userActiveRoadmaps.length === 1) {
         isRelatedForSecondTrack = checkCourseSynergy(userActiveRoadmaps[0].career, career);
       }
 
@@ -904,6 +937,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const weekStr = activeMatch.currentWeekString || `Week ${activeMatch.currentWeekNumber || 1} of ${activeMatch.durationWeeks || 4}`;
         const pct = Math.round(activeMatch.progressPercentage || 0);
         routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-lightning-charge-fill me-1"></i> ACTIVE COURSE · ${escapeHtml(weekStr)} (${pct}% Tasks)</span>`;
+      } else if (isGraduated) {
+        routeStatusBadge = `<span class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-50 font-mono"><i class="bi bi-patch-check-fill me-1"></i> CREDENTIAL VERIFIED · 100% MASTERED</span>`;
       } else if (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin()) {
         if (isRelatedForSecondTrack) {
           routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-link-45deg me-1"></i> RELATED TRACK (2nd Slot Open)</span>`;
@@ -912,21 +947,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       } else if (userActiveRoadmaps.length >= 2 && !window.Auth?.isAdmin()) {
         routeStatusBadge = `<span class="badge bg-secondary text-light font-mono"><i class="bi bi-lock-fill me-1"></i> LOCKED (Max 2 Active)</span>`;
-      } else if (isGraduated) {
-        routeStatusBadge = `<span class="badge bg-success-subtle text-success border border-success font-mono"><i class="bi bi-patch-check-fill me-1"></i> GRADUATED</span>`;
       }
 
       const card = document.createElement('div');
-      card.className = `recommendation-card card p-4 p-md-5 mb-4 ${isTopRank ? 'top-match-card' : 'secondary-match-card'} ${isActiveThisCareer ? 'border-teal shadow-sm' : ''}`;
+      card.className = `recommendation-card card p-4 p-md-5 mb-4 ${isTopRank && !isGraduated ? 'top-match-card' : 'secondary-match-card'} ${isActiveThisCareer ? 'border-teal shadow-sm' : ''} ${isGraduated ? 'border-success-subtle' : ''}`;
 
       card.innerHTML = `
         <!-- Header: Top Match Badge / Rank & Title -->
         <div class="row align-items-center mb-4 g-3">
           <div class="col-md-8">
             <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-              <span class="badge ${isTopRank ? 'badge-navy' : 'cp-tag'} px-3 py-1 fw-bold">
-                ${isTopRank ? '★ BEST ROUTE FOR NOW' : `ROUTE #${rank}`}
-              </span>
+              ${
+                isGraduated
+                  ? `<span class="badge bg-success text-white px-3 py-1 fw-bold font-mono shadow-sm"><i class="bi bi-mortarboard-fill me-1 text-warning"></i> 🎓 GRADUATED CAREER ROUTE</span>`
+                  : isTopRank
+                  ? `<span class="badge badge-navy px-3 py-1 fw-bold">★ BEST ROUTE FOR NOW</span>`
+                  : `<span class="badge cp-tag px-3 py-1 fw-bold">ROUTE #${rank}</span>`
+              }
               ${routeStatusBadge}
               ${domainBadgeHtml}
               <span class="atlas-badge text-capitalize">
@@ -1183,8 +1220,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         <!-- Action Footer -->
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 pt-3 border-top">
-          <div class="text-muted small">
-            <i class="bi bi-compass me-1 text-teal"></i> ${missingSkills.length + weakSkills.length} skills to strengthen for this career trajectory
+          <div class="small ${isGraduated ? 'text-success fw-semibold' : 'text-muted'}">
+            ${
+              isGraduated
+                ? `<i class="bi bi-check-circle-fill me-1"></i> Completed & Verified Curriculum · All Milestones Passed`
+                : `<i class="bi bi-compass me-1 text-teal"></i> ${missingSkills.length + weakSkills.length} skills to strengthen for this career trajectory`
+            }
           </div>
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <button
@@ -1223,6 +1264,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                        <i class="bi bi-x-circle me-1"></i> Abandon Route
                      </button>
                    </div>`
+                : isGraduated
+                ? `<div class="d-inline-flex align-items-center gap-2 flex-wrap">
+                     <a href="${completedRoadmapId ? `roadmap.html?id=${completedRoadmapId}` : 'roadmap.html'}" class="btn btn-success btn-sm px-3 py-2 fw-semibold text-white shadow-sm">
+                       <i class="bi bi-mortarboard-fill me-1 text-warning"></i> View Graduated Curriculum
+                     </a>
+                     <a href="profile.html" class="btn btn-outline-success btn-sm px-3 py-2 fw-semibold">
+                       <i class="bi bi-award-fill me-1 text-warning"></i> View Certificate
+                     </a>
+                     <button
+                       type="button"
+                       class="btn btn-outline-secondary btn-sm px-2 py-2 fw-semibold choose-career-btn text-muted"
+                       data-career-title="${escapeHtml(career.title)}"
+                       data-career-slug="${escapeHtml(career.slug)}"
+                       title="Retake or generate a fresh roadmap for this completed career path"
+                     >
+                       <i class="bi bi-arrow-repeat me-1"></i> Re-enroll
+                     </button>
+                   </div>`
                 : (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin())
                 ? (isRelatedForSecondTrack
                     ? `<button
@@ -1243,15 +1302,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? `<button type="button" class="btn cp-btn-locked btn-sm px-3 py-2 fw-semibold" disabled title="You already have 2 active courses in progress. Complete or abandon one before starting another.">
                      <i class="bi bi-lock-fill me-1"></i>
                      <span>Locked (Max 2 Courses Active)</span>
-                   </button>`
-                : isGraduated
-                ? `<button
-                     type="button"
-                     class="btn cp-btn-outline btn-sm px-4 py-2 fw-semibold choose-career-btn"
-                     data-career-title="${escapeHtml(career.title)}"
-                     data-career-slug="${escapeHtml(career.slug)}"
-                   >
-                     <i class="bi bi-arrow-repeat me-1"></i> Re-enroll Roadmap
                    </button>`
                 : `<button
                      type="button"

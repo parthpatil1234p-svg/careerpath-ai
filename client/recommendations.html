@@ -286,6 +286,31 @@
         <div class="skill-dialog-content" id="skillDialogContent"></div>
       </dialog>
 
+      <!-- Graduated Tracks & Verified Credentials Banner (Shown when user has graduated career pathways) -->
+      <div id="graduatedTracksBanner" class="d-none card p-3 mb-4 shadow-sm border-success-subtle" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(20, 184, 166, 0.08)); border-left: 4px solid var(--color-leaf, #22c55e);">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-circle bg-success bg-opacity-10 text-success border border-success border-opacity-25 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+              <i class="bi bi-mortarboard-fill fs-5 text-success"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-ink small d-flex align-items-center gap-2 flex-wrap">
+                <span>Graduated Pathways: <strong id="bannerGraduatedTitles" class="text-success"></strong></span>
+                <span class="badge bg-success text-white font-mono" id="bannerGraduatedBadge">Verified Credentials</span>
+              </div>
+              <p class="text-secondary small mb-0" id="bannerGraduatedSubtitle" style="font-size: 0.8rem;">
+                You have successfully completed and graduated from these career curricula. Your skills and project verifications are securely stamped into your Talent Passport. Uncompleted tracks below represent your next career horizons.
+              </p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <a href="profile.html" class="btn btn-success btn-sm px-3 text-nowrap text-white">
+              <i class="bi bi-award-fill me-1 text-warning"></i> View Credentials & Certificates
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- Active Route Lock Banner (Shown when user has an active incomplete route) -->
       <div id="activeRouteLockBanner" class="d-none card p-3 mb-4 shadow-sm" style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(99, 102, 241, 0.08)); border-left: 4px solid var(--color-teal, #14b8a6);">
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
@@ -829,7 +854,7 @@
     <script src="js/typing-character-fx.js?v=2.2"></script>
     <script src="js/skill-guides.js?v=2.2"></script>
     <script src="js/tech-logos.js?v=3.2.0"></script>
-    <script src="js/recommendations.js?v=2.2"></script>
+    <script src="js/recommendations.js?v=2.4.0"></script>
     <script src="js/chat.js?v=2.2"></script>
   </body>
 </html>

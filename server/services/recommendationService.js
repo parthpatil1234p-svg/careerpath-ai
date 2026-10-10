@@ -241,7 +241,10 @@ const generateExplanation = (careerTitle, finalScore, matchedSkills, missingSkil
  * @param {Number} [limit=3] - Maximum number of recommendations to return
  * @returns {Array} Ranked recommendations with score breakdowns and skill gaps
  */
-const generateRecommendations = (user, careers, limit = 3) => {
+const generateRecommendations = (user, careers, limit = 3, meta = {}) => {
+  const completedSlugs = meta.completedSlugs || new Set();
+  const completedRoadmapsMap = meta.completedRoadmapsMap || {};
+
   // 1. Prepare User Data Lookups
   const userSkillsMap = new Map();
   if (Array.isArray(user.skills)) {
@@ -372,6 +375,10 @@ const generateRecommendations = (user, careers, limit = 3) => {
     }
 
     const estimatedWeeks = Math.max(2, missingSkills.length * 2);
+    const careerSlugNorm = normalizeText(career.slug);
+    const careerTitleNorm = normalizeText(career.title);
+    const isGraduated = completedSlugs.has(careerSlugNorm) || completedSlugs.has(careerTitleNorm);
+    const completedRoadmapId = completedRoadmapsMap[careerSlugNorm] || null;
 
     return {
       career: {
@@ -386,7 +393,10 @@ const generateRecommendations = (user, careers, limit = 3) => {
       },
       finalScore,
       coverageRatio,
-      sectionHeading,
+      sectionHeading: isGraduated ? 'Graduated Pathway' : sectionHeading,
+      isGraduated: Boolean(isGraduated),
+      isCompleted: Boolean(isGraduated),
+      completedRoadmapId,
       estimatedWeeks,
       verifiedSkillsCount: verifiedMatchingCount,
       totalRequiredSkillsCount: totalRequired,
@@ -398,8 +408,13 @@ const generateRecommendations = (user, careers, limit = 3) => {
     };
   });
 
-  // 5. Sort by finalScore desc (tie-break by skillMatch desc)
+  // 5. Sort by recommendation priority:
+  // Non-graduated active learning targets are prioritized at the top of recommendations!
+  // Completed/graduated tracks are achievements, not new courses to enroll in.
   scoredCareers.sort((a, b) => {
+    if (a.isGraduated !== b.isGraduated) {
+      return a.isGraduated ? 1 : -1;
+    }
     if (b.finalScore !== a.finalScore) {
       return b.finalScore - a.finalScore;
     }
