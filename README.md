@@ -19,12 +19,6 @@
   <a href="https://careerpath-ai-bdbt.onrender.com/api/health">
     <img src="https://img.shields.io/badge/🩺_System_Health-99.9%25_Uptime-brightgreen?style=for-the-badge&logo=statuspage&logoColor=white" alt="Health Status" />
   </a>
-  <a href="https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing">
-    <img src="https://img.shields.io/badge/🎬_Product_Tour-Demo_Video-FF0000?style=for-the-badge&logo=googledrive&logoColor=white" alt="Product Tour" />
-  </a>
-  <a href="https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing">
-    <img src="https://img.shields.io/badge/📊_Executive_Deck-Investor_Brief-orange?style=for-the-badge&logo=googleslides&logoColor=white" alt="Executive Pitch Deck" />
-  </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/📄_Open_Core_License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT" />
   </a>
@@ -151,12 +145,6 @@ CareerPath AI is an enterprise-grade Autonomous Career Guidance & Talent Intelli
 | 🏆 **4-Rule Job Ready Engine** | **[`docs/ROADMAP-ENGINE.md#4-rule-industry-job-ready-certification`](docs/ROADMAP-ENGINE.md)** | Objective industry certification requiring Score ≥70%, ≥4 verified skills, progress ≥80% |
 | 📄 **Single Resume per Account** | **[`docs/RESUME-ENGINE.md`](docs/RESUME-ENGINE.md)** | Dedicated 1:1 schema, magic-byte inspection (`%PDF`, `DOCX`, `DOC`), transactional Cloudinary lifecycle |
 | 📊 **2D SVG Percentage Gauge** | **Accessible Progress Meter** | Replaced confusing 3D degree gauges (90/180) with high-contrast 0% to 100% SVG circular meter |
-| 🎥 **Official Product Tour Video** | **[Watch Tour on Google Drive](https://drive.google.com/file/d/1LHcJTmf49UlEPERd0aUREjI87JX77K5f/view?usp=sharing)** | Official platform walkthrough & full prototype demonstration |
-| 📊 **Executive Pitch Deck (Drive)** | **[View Deck on Google Drive](https://drive.google.com/file/d/1MXabwhn7zB3OFJbjGDYu0fqdR46KCM7m/view?usp=sharing)** | Executive pitch presentation deck & product vision |
-| 📽️ **Enterprise Strategy PPTX** | **[`CareerPath_AI_Executive_Presentation.pptx`](../HACK2IGNITE_2026_CareerPath_AI_Official.pptx)** | Complete 16:9 presentation deck with speaker notes & institutional roadmap |
-| 🎤 **Interactive Product Defense Guide** | **[`../FullStack_Developer_Pitch_Guide.html`](../FullStack_Developer_Pitch_Guide.html)** | Interactive slide-by-slide product defense & stakeholder deep-dive |
-| 📝 **Master Business Strategy Brief** | **[`docs/PPT-CONTENT.md`](docs/PPT-CONTENT.md)** | Full transcript of strategic slides, unit economics & technical metrics |
-| 🎬 **Interactive Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute stakeholder flow script |
 | 🏛️ **System Architecture Spec** | **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** | Comprehensive system architecture & threat model specification |
 | 🔌 **Complete API Specification** | **[`docs/API-SPECIFICATION.md`](docs/API-SPECIFICATION.md)** | Full REST API specification across all 15 modules (including ATS & Video Telemetry) |
 | 🗄️ **Backend Schema & Models** | **[`docs/BACKEND-SCHEMA.md`](docs/BACKEND-SCHEMA.md)** | Prisma ORM schemas & models for User, Company, JobOpening, Application, Resume, Roadmap |
