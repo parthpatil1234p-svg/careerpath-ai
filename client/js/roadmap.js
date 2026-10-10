@@ -1278,6 +1278,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  // Wire Job Ready Collapsible Chevron icon state
+  const collapseJobReadyEl = document.getElementById('roadmapJobReadyCollapse');
+  const chevronJobReadyIcon = document.getElementById('jobReadyChevronIcon');
+  if (collapseJobReadyEl && chevronJobReadyIcon) {
+    collapseJobReadyEl.addEventListener('show.bs.collapse', () => {
+      chevronJobReadyIcon.className = 'bi bi-chevron-up ms-1';
+    });
+    collapseJobReadyEl.addEventListener('hide.bs.collapse', () => {
+      chevronJobReadyIcon.className = 'bi bi-chevron-down ms-1';
+    });
+  }
+
   // ── Wire Abandon Route Modal (Roadmap) ──────────────────────────
   const getAbandonRoadmapModal = () => {
     const el = document.getElementById('modalAbandonRouteRoadmap');
