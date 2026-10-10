@@ -8,6 +8,7 @@
 const AIDEVBOARD_API_URL = 'https://aidevboard.com/api/v1';
 const ADZUNA_APP_ID = process.env.ADZUNA_APP_ID || '3ce0ab33';
 const ADZUNA_APP_KEY = process.env.ADZUNA_APP_KEY || 'c0782ff2d5bbc68748b2a7d193ef9d5a';
+const { cacheManager } = require('../utils/cacheManager');
 
 // Career slug to search query & relevant tags mapping
 const CAREER_SEARCH_MAP = {
@@ -225,45 +226,49 @@ function normalizeJob(job) {
  * Search jobs with query parameters
  */
 async function searchLiveJobs({ query = '', tags = '', workplace = '', globalRemote = false, level = '', limit = 10 } = {}) {
-  try {
-    const params = new URLSearchParams();
-    if (query) params.append('q', query);
-    if (tags) params.append('tags', tags);
-    if (workplace) params.append('workplace', workplace);
-    if (globalRemote) params.append('global_remote', 'true');
-    if (level) params.append('level', level);
-    params.append('limit', String(Math.min(limit, 30)));
+  const cacheKey = `jobs:live:${query}:${tags}:${workplace}:${globalRemote}:${level}:${limit}`;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout for instant responsiveness
+  return await cacheManager.wrap(cacheKey, 900, async () => {
+    try {
+      const params = new URLSearchParams();
+      if (query) params.append('q', query);
+      if (tags) params.append('tags', tags);
+      if (workplace) params.append('workplace', workplace);
+      if (globalRemote) params.append('global_remote', 'true');
+      if (level) params.append('level', level);
+      params.append('limit', String(Math.min(limit, 30)));
 
-    const res = await fetch(`${AIDEVBOARD_API_URL}/jobs?${params.toString()}`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout for instant responsiveness
 
-    if (!res.ok) {
-      throw new Error(`AIDevBoard API error: HTTP ${res.status}`);
+      const res = await fetch(`${AIDEVBOARD_API_URL}/jobs?${params.toString()}`, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        throw new Error(`AIDevBoard API error: HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const rawJobs = Array.isArray(data.jobs) ? data.jobs : [];
+      
+      if (rawJobs.length > 0) {
+        return {
+          success: true,
+          source: 'live',
+          total: data.total || rawJobs.length,
+          jobs: rawJobs.map(normalizeJob)
+        };
+      }
+    } catch (err) {
+      console.warn(`[jobBoardService] Live query failed (${err.message}) - activating fallback.`);
     }
 
-    const data = await res.json();
-    const rawJobs = Array.isArray(data.jobs) ? data.jobs : [];
-    
-    if (rawJobs.length > 0) {
-      return {
-        success: true,
-        source: 'live',
-        total: data.total || rawJobs.length,
-        jobs: rawJobs.map(normalizeJob)
-      };
-    }
-  } catch (err) {
-    console.warn(`[jobBoardService] Live query failed (${err.message}) - activating fallback.`);
-  }
-
-  return null;
+    return null;
+  });
 }
 
 /**
@@ -272,101 +277,109 @@ async function searchLiveJobs({ query = '', tags = '', workplace = '', globalRem
 async function searchAdzunaJobs({ query = 'developer', country = 'in', limit = 8 } = {}) {
   if (!ADZUNA_APP_ID || !ADZUNA_APP_KEY) return null;
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+  const cacheKey = `jobs:adzuna:${String(query).toLowerCase()}:${country}:${limit}`;
 
-    const endpoint = `https://api.adzuna.com/v1/api/jobs/${country}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&what=${encodeURIComponent(query)}&results_per_page=${limit}&content-type=application/json`;
-    const res = await fetch(endpoint, { signal: controller.signal });
-    clearTimeout(timeoutId);
+  return await cacheManager.wrap(cacheKey, 900, async () => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
 
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data.results) && data.results.length > 0) {
-        return data.results.map(r => {
-          const jobTitle = r.title ? r.title.replace(/<\/?[^>]+(>|$)/g, '').trim() : query;
-          const company = r.company?.display_name || 'Top Tech Employer';
-          return {
-            id: `adzuna-${r.id}`,
-            title: jobTitle,
-            companyName: company,
-            workplace: (r.title && r.title.toLowerCase().includes('remote')) ? 'remote' : 'hybrid',
-            globalRemote: false,
-            location: r.location?.display_name || 'India (Metro Hubs)',
-            level: 'entry-to-mid',
-            salaryText: r.salary_min
-              ? `₹${(r.salary_min / 100000).toFixed(1)} – ₹${(r.salary_max / 100000).toFixed(1)} LPA`
-              : '₹5.5 – ₹14.0 LPA (Market Est.)',
-            tags: [r.category?.tag || 'technology', 'india', 'tech-hiring'].filter(Boolean),
-            url: r.redirect_url,
-            portalLinks: generateMultiPortalLinks(jobTitle, 'India', company),
-            source: 'Adzuna India'
-          };
-        });
+      const endpoint = `https://api.adzuna.com/v1/api/jobs/${country}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&what=${encodeURIComponent(query)}&results_per_page=${limit}&content-type=application/json`;
+      const res = await fetch(endpoint, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.results) && data.results.length > 0) {
+          return data.results.map(r => {
+            const jobTitle = r.title ? r.title.replace(/<\/?[^>]+(>|$)/g, '').trim() : query;
+            const company = r.company?.display_name || 'Top Tech Employer';
+            return {
+              id: `adzuna-${r.id}`,
+              title: jobTitle,
+              companyName: company,
+              workplace: (r.title && r.title.toLowerCase().includes('remote')) ? 'remote' : 'hybrid',
+              globalRemote: false,
+              location: r.location?.display_name || 'India (Metro Hubs)',
+              level: 'entry-to-mid',
+              salaryText: r.salary_min
+                ? `₹${(r.salary_min / 100000).toFixed(1)} – ₹${(r.salary_max / 100000).toFixed(1)} LPA`
+                : '₹5.5 – ₹14.0 LPA (Market Est.)',
+              tags: [r.category?.tag || 'technology', 'india', 'tech-hiring'].filter(Boolean),
+              url: r.redirect_url,
+              portalLinks: generateMultiPortalLinks(jobTitle, 'India', company),
+              source: 'Adzuna India'
+            };
+          });
+        }
       }
+    } catch (err) {
+      console.warn(`[jobBoardService] Adzuna query failed (${err.message}) - checking failover.`);
     }
-  } catch (err) {
-    console.warn(`[jobBoardService] Adzuna query failed (${err.message}) - checking failover.`);
-  }
-  return null;
+    return null;
+  });
 }
 
 /**
  * Fetch top live market jobs specifically mapped to a Career Slug
  */
 async function getJobsForCareer(careerSlug, { globalRemote = false, limit = 8 } = {}) {
-  const mapping = CAREER_SEARCH_MAP[careerSlug] || { q: 'developer', tags: '', defaultTitle: 'Software Engineer' };
-  
-  // 1. If globalRemote is false, prioritize real Indian tech jobs from Adzuna
-  if (!globalRemote) {
-    const adzunaJobs = await searchAdzunaJobs({
-      query: mapping.defaultTitle || mapping.q,
-      country: 'in',
+  const cacheKey = `jobs:career:${careerSlug}:${Boolean(globalRemote)}:${limit}`;
+
+  return await cacheManager.wrap(cacheKey, 900, async () => {
+    const mapping = CAREER_SEARCH_MAP[careerSlug] || { q: 'developer', tags: '', defaultTitle: 'Software Engineer' };
+    
+    // 1. If globalRemote is false, prioritize real Indian tech jobs from Adzuna
+    if (!globalRemote) {
+      const adzunaJobs = await searchAdzunaJobs({
+        query: mapping.defaultTitle || mapping.q,
+        country: 'in',
+        limit
+      });
+      if (adzunaJobs && adzunaJobs.length > 0) {
+        return {
+          success: true,
+          source: 'Adzuna India',
+          careerSlug,
+          total: adzunaJobs.length,
+          jobs: adzunaJobs
+        };
+      }
+    }
+
+    // 2. Attempt AIDevBoard live query next
+    const liveResult = await searchLiveJobs({
+      query: mapping.q,
+      tags: mapping.tags,
+      globalRemote,
       limit
     });
-    if (adzunaJobs && adzunaJobs.length > 0) {
+
+    if (liveResult && liveResult.jobs.length > 0) {
       return {
         success: true,
-        source: 'Adzuna India',
+        source: 'live',
         careerSlug,
-        total: adzunaJobs.length,
-        jobs: adzunaJobs
+        total: liveResult.total,
+        jobs: liveResult.jobs
       };
     }
-  }
 
-  // 2. Attempt AIDevBoard live query next
-  const liveResult = await searchLiveJobs({
-    query: mapping.q,
-    tags: mapping.tags,
-    globalRemote,
-    limit
-  });
+    // 3. Graceful fallback from curated cache
+    const fallbacks = FALLBACK_JOBS[careerSlug] || FALLBACK_JOBS['front-end-developer'];
+    const filtered = (globalRemote ? fallbacks.filter(j => j.globalRemote) : fallbacks).map(j => ({
+      ...j,
+      portalLinks: j.portalLinks || generateMultiPortalLinks(j.title, 'India', j.companyName)
+    }));
 
-  if (liveResult && liveResult.jobs.length > 0) {
     return {
       success: true,
-      source: 'live',
+      source: 'verified-cache',
       careerSlug,
-      total: liveResult.total,
-      jobs: liveResult.jobs
+      total: filtered.length,
+      jobs: filtered
     };
-  }
-
-  // 3. Graceful fallback from curated cache
-  const fallbacks = FALLBACK_JOBS[careerSlug] || FALLBACK_JOBS['front-end-developer'];
-  const filtered = (globalRemote ? fallbacks.filter(j => j.globalRemote) : fallbacks).map(j => ({
-    ...j,
-    portalLinks: j.portalLinks || generateMultiPortalLinks(j.title, 'India', j.companyName)
-  }));
-
-  return {
-    success: true,
-    source: 'verified-cache',
-    careerSlug,
-    total: filtered.length,
-    jobs: filtered
-  };
+  });
 }
 
 /**

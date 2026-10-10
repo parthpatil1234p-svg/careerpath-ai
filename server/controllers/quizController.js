@@ -8,6 +8,7 @@ const quizService = require('../services/quizService');
 const aiQuizGeneratorService = require('../services/aiQuizGeneratorService');
 const User = require('../models/User');
 const { AVAILABLE_QUIZ_SKILLS } = require('../data/quizQuestions');
+const { cacheManager } = require('../utils/cacheManager');
 
 // In-memory IP rate limiter for quiz starts (Pillar 4: Sybil Defense)
 const quizStartRateLimiter = new Map();
@@ -121,6 +122,9 @@ exports.submitAnswer = async (req, res) => {
       choice,
       telemetry
     );
+    if (result && result.isComplete) {
+      cacheManager.invalidateUser(req.user.id);
+    }
     return res.status(200).json({ success: true, data: result });
   } catch (err) {
     console.error('[QuizController.submitAnswer] Error:', err.message);

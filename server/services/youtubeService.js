@@ -10,6 +10,7 @@
  */
 
 const YoutubeCache = require('../models/YoutubeCache');
+const { cacheManager } = require('../utils/cacheManager');
 
 /**
  * Curated Fallback Registry
@@ -481,118 +482,120 @@ async function searchYouTubeVideos(query, options = {}) {
   const maxResults = Math.min(Math.max(parseInt(options.maxResults, 10) || 5, 1), 10);
   const cacheKey = skillName ? `skill:${skillName}` : `q:${String(query).trim().toLowerCase()}`;
 
-  // 1. Try to read from MongoDB cache
-  try {
-    const cached = await YoutubeCache.findOne({ queryKey: cacheKey });
-    if (cached && cached.videos && cached.videos.length > 0) {
-      return {
-        videos: cached.videos.slice(0, maxResults),
-        source: cached.source || 'cache',
-        isCached: true,
-      };
-    }
-  } catch (dbErr) {
-    console.warn('[YouTubeService] Cache lookup error:', dbErr.message);
-  }
-
-  // 2. Query YouTube Data API v3 if API key is configured
-  const apiKey = process.env.YOUTUBE_API_KEY;
-  if (apiKey && apiKey.trim()) {
+  return await cacheManager.wrap(`yt:${cacheKey}:${maxResults}`, 3600, async () => {
+    // 1. Try to read from MongoDB cache
     try {
-      const searchTerm = `${query || skillName} full course tutorial`.trim();
-      const params = new URLSearchParams({
-        part: 'snippet',
-        q: searchTerm,
-        type: 'video',
-        videoEmbeddable: 'true',
-        videoSyndicated: 'true',
-        videoDuration: 'medium', // avoids shorts
-        order: 'relevance',
-        safeSearch: 'strict',
-        maxResults: String(maxResults),
-        key: apiKey.trim(),
-      });
+      const cached = await YoutubeCache.findOne({ queryKey: cacheKey });
+      if (cached && cached.videos && cached.videos.length > 0) {
+        return {
+          videos: cached.videos.slice(0, maxResults),
+          source: cached.source || 'cache',
+          isCached: true,
+        };
+      }
+    } catch (dbErr) {
+      console.warn('[YouTubeService] Cache lookup error:', dbErr.message);
+    }
 
-      const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${params.toString()}`);
-      if (response.ok) {
-        const json = await response.json();
-        const items = json.items || [];
+    // 2. Query YouTube Data API v3 if API key is configured
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (apiKey && apiKey.trim()) {
+      try {
+        const searchTerm = `${query || skillName} full course tutorial`.trim();
+        const params = new URLSearchParams({
+          part: 'snippet',
+          q: searchTerm,
+          type: 'video',
+          videoEmbeddable: 'true',
+          videoSyndicated: 'true',
+          videoDuration: 'medium', // avoids shorts
+          order: 'relevance',
+          safeSearch: 'strict',
+          maxResults: String(maxResults),
+          key: apiKey.trim(),
+        });
 
-        const videos = items
-          .filter((item) => item.id && item.id.videoId)
-          .map((item) => {
-            const vid = item.id.videoId;
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${params.toString()}`);
+        if (response.ok) {
+          const json = await response.json();
+          const items = json.items || [];
+
+          const videos = items
+            .filter((item) => item.id && item.id.videoId)
+            .map((item) => {
+              const vid = item.id.videoId;
+              return {
+                videoId: vid,
+                title: item.snippet.title,
+                channelTitle: item.snippet.channelTitle || 'Verified Educator',
+                channelId: item.snippet.channelId || '',
+                thumbnailUrl:
+                  item.snippet.thumbnails?.high?.url ||
+                  item.snippet.thumbnails?.medium?.url ||
+                  `https://i.ytimg.com/vi/${vid}/hqdefault.jpg`,
+                durationCategory: 'medium',
+                embedUrl: `https://www.youtube.com/embed/${vid}`,
+                watchUrl: `https://www.youtube.com/watch?v=${vid}`,
+                publishedAt: item.snippet.publishedAt ? new Date(item.snippet.publishedAt) : null,
+              };
+            });
+
+          if (videos.length > 0) {
+            // Asynchronously persist to cache
+            YoutubeCache.findOneAndUpdate(
+              { queryKey: cacheKey },
+              {
+                queryKey: cacheKey,
+                skillName,
+                videos,
+                source: 'youtube_api_v3',
+                createdAt: new Date(),
+              },
+              { upsert: true, new: true }
+            ).catch((saveErr) => console.warn('[YouTubeService] Failed to cache API results:', saveErr.message));
+
             return {
-              videoId: vid,
-              title: item.snippet.title,
-              channelTitle: item.snippet.channelTitle || 'Verified Educator',
-              channelId: item.snippet.channelId || '',
-              thumbnailUrl:
-                item.snippet.thumbnails?.high?.url ||
-                item.snippet.thumbnails?.medium?.url ||
-                `https://i.ytimg.com/vi/${vid}/hqdefault.jpg`,
-              durationCategory: 'medium',
-              embedUrl: `https://www.youtube.com/embed/${vid}`,
-              watchUrl: `https://www.youtube.com/watch?v=${vid}`,
-              publishedAt: item.snippet.publishedAt ? new Date(item.snippet.publishedAt) : null,
-            };
-          });
-
-        if (videos.length > 0) {
-          // Asynchronously persist to cache
-          YoutubeCache.findOneAndUpdate(
-            { queryKey: cacheKey },
-            {
-              queryKey: cacheKey,
-              skillName,
               videos,
               source: 'youtube_api_v3',
-              createdAt: new Date(),
-            },
-            { upsert: true, new: true }
-          ).catch((saveErr) => console.warn('[YouTubeService] Failed to cache API results:', saveErr.message));
-
-          return {
-            videos,
-            source: 'youtube_api_v3',
-            isCached: false,
-          };
+              isCached: false,
+            };
+          }
+        } else {
+          const errText = await response.text();
+          console.warn(`[YouTubeService] YouTube API responded ${response.status}: ${errText.slice(0, 150)}`);
         }
-      } else {
-        const errText = await response.text();
-        console.warn(`[YouTubeService] YouTube API responded ${response.status}: ${errText.slice(0, 150)}`);
+      } catch (apiErr) {
+        console.warn('[YouTubeService] YouTube Data API request failed:', apiErr.message);
       }
-    } catch (apiErr) {
-      console.warn('[YouTubeService] YouTube Data API request failed:', apiErr.message);
     }
-  }
 
-  // 3. Fallback to Curated Registry
-  const curated = resolveCuratedSync(skillName || query);
-  const curatedVideos = curated.all.slice(0, maxResults);
+    // 3. Fallback to Curated Registry
+    const curated = resolveCuratedSync(skillName || query);
+    const curatedVideos = curated.all.slice(0, maxResults);
 
-  // Cache curated results in DB so subsequent reads are immediate
-  try {
-    await YoutubeCache.findOneAndUpdate(
-      { queryKey: cacheKey },
-      {
-        queryKey: cacheKey,
-        skillName,
-        videos: curatedVideos,
-        source: 'curated_registry',
-        createdAt: new Date(),
-      },
-      { upsert: true, new: true }
-    );
-  } catch (saveCuratedErr) {
-    // Non-blocking
-  }
+    // Cache curated results in DB so subsequent reads are immediate
+    try {
+      await YoutubeCache.findOneAndUpdate(
+        { queryKey: cacheKey },
+        {
+          queryKey: cacheKey,
+          skillName,
+          videos: curatedVideos,
+          source: 'curated_registry',
+          createdAt: new Date(),
+        },
+        { upsert: true, new: true }
+      );
+    } catch (saveCuratedErr) {
+      // Non-blocking
+    }
 
-  return {
-    videos: curatedVideos,
-    source: 'curated_registry',
-    isCached: false,
-  };
+    return {
+      videos: curatedVideos,
+      source: 'curated_registry',
+      isCached: false,
+    };
+  });
 }
 
 /**

@@ -12,16 +12,13 @@ const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
 const { evaluateJobReadyCertification } = require('../services/readinessService');
 const { prisma } = require('../config/prisma');
-
-// Short 15-second in-memory dashboard cache to eliminate redundant multi-second roundtrips
-const DASHBOARD_CACHE_TTL_MS = 15000;
-const dashboardCache = new Map();
+const { cacheManager } = require('../utils/cacheManager');
 
 function invalidateDashboardCache(userId) {
   if (userId) {
-    dashboardCache.delete(String(userId));
+    cacheManager.invalidateUser(userId);
   } else {
-    dashboardCache.clear();
+    cacheManager.delPrefix('dashboard:');
   }
 }
 
@@ -33,12 +30,15 @@ const getDashboard = async (req, res, next) => {
   try {
     const userId = String(req.user._id);
     const roadmapQueryId = req.query.roadmapId ? String(req.query.roadmapId) : null;
-    const cacheKey = `${userId}:${roadmapQueryId || 'default'}`;
+    const cacheKey = `dashboard:${userId}:${roadmapQueryId || 'default'}`;
+
+    // Security & privacy: dashboard data is user-private and must not be cached by shared CDN proxies
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
 
     // Fast-path: return cached response if valid
-    const cachedEntry = dashboardCache.get(cacheKey);
-    if (cachedEntry && Date.now() - cachedEntry.timestamp < DASHBOARD_CACHE_TTL_MS) {
-      return res.status(200).json(cachedEntry.payload);
+    const cachedPayload = cacheManager.get(cacheKey);
+    if (cachedPayload) {
+      return res.status(200).json(cachedPayload);
     }
 
     // 1. Fetch user and all active roadmaps (with upcoming tasks included) in ONE concurrent roundtrip
@@ -251,11 +251,8 @@ const getDashboard = async (req, res, next) => {
       },
     };
 
-    // Cache valid payload in memory
-    dashboardCache.set(cacheKey, {
-      timestamp: Date.now(),
-      payload,
-    });
+    // Cache valid payload in memory for 15 seconds
+    cacheManager.set(cacheKey, payload, 15);
 
     res.status(200).json(payload);
   } catch (error) {

@@ -562,6 +562,7 @@ const abandonRoadmap = async (req, res, next) => {
       );
       user.lastAbandonedRouteAt = new Date();
       await user.save({ validateBeforeSave: false });
+      invalidateDashboardCache(req.user._id);
       return res.status(200).json({
         success: true,
         message: 'All active career routes abandoned. All your earned skills and milestone quiz scores have been safely preserved.',
@@ -595,6 +596,7 @@ const abandonRoadmap = async (req, res, next) => {
       }
       user.lastAbandonedRouteAt = new Date();
       await user.save({ validateBeforeSave: false });
+      invalidateDashboardCache(req.user._id);
       return res.status(200).json({
         success: true,
         message: 'Active career route abandoned. All your earned skills and milestone quiz scores have been safely preserved.',
@@ -608,6 +610,7 @@ const abandonRoadmap = async (req, res, next) => {
 
     user.lastAbandonedRouteAt = new Date();
     await user.save({ validateBeforeSave: false });
+    invalidateDashboardCache(req.user._id);
 
     res.status(200).json({
       success: true,
@@ -904,6 +907,7 @@ const submitWeeklyTestController = async (req, res, next) => {
       });
     }
     const result = await submitWeeklyTest(req.user._id, attemptId, true, answers || []);
+    invalidateDashboardCache(req.user._id);
     res.status(200).json({
       success: true,
       message: result.passed

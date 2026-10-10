@@ -17,6 +17,7 @@
 
 const Skill = require('../models/Skill');
 const skillsData = require('../data/skillsData');
+const { cacheManager } = require('../utils/cacheManager');
 const {
   resolveCanonicalSkill,
   searchSkills,
@@ -46,6 +47,7 @@ const getSkills = async (req, res, next) => {
         limit: limit ? parseInt(limit, 10) : 100,
       });
 
+      res.setHeader('Cache-Control', 'public, max-age=120, s-maxage=600, stale-while-revalidate=3600');
       return res.status(200).json({
         success: true,
         count: results.length,
@@ -53,31 +55,40 @@ const getSkills = async (req, res, next) => {
       });
     }
 
-    const query = { active: true };
-    if (category && typeof category === 'string' && category.trim() !== '') {
-      query.category = category.trim().toLowerCase();
-    }
+    const normCategory = (category && typeof category === 'string') ? category.trim().toLowerCase() : '';
+    const normLimit = limit ? parseInt(limit, 10) : 0;
+    const cacheKey = `skills:list:${normCategory}:${normLimit}`;
 
-    let skills = [];
-    try {
-      skills = await Skill.find(query).select('-__v').sort({ category: 1, displayName: 1 });
-    } catch (dbErr) {
-      console.warn('⚠️ [SkillController] Database Skill fetch failed, falling back to static catalog:', dbErr.message);
-    }
-
-    // Fallback to static seed data if DB collection empty or offline
-    if (!skills || skills.length === 0) {
-      let staticList = [...skillsData];
-      if (category) {
-        staticList = staticList.filter((s) => s.category.toLowerCase() === category.toLowerCase());
+    const skills = await cacheManager.wrap(cacheKey, 3600, async () => {
+      const query = { active: true };
+      if (normCategory) {
+        query.category = normCategory;
       }
-      skills = staticList;
-    }
 
-    if (limit && parseInt(limit, 10) > 0) {
-      skills = skills.slice(0, parseInt(limit, 10));
-    }
+      let dbSkills = [];
+      try {
+        dbSkills = await Skill.find(query).select('-__v').sort({ category: 1, displayName: 1 }).lean();
+      } catch (dbErr) {
+        console.warn('⚠️ [SkillController] Database Skill fetch failed, falling back to static catalog:', dbErr.message);
+      }
 
+      // Fallback to static seed data if DB collection empty or offline
+      if (!dbSkills || dbSkills.length === 0) {
+        let staticList = [...skillsData];
+        if (normCategory) {
+          staticList = staticList.filter((s) => s.category.toLowerCase() === normCategory);
+        }
+        dbSkills = staticList;
+      }
+
+      if (normLimit > 0) {
+        dbSkills = dbSkills.slice(0, normLimit);
+      }
+
+      return dbSkills;
+    });
+
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
     res.status(200).json({
       success: true,
       count: skills.length,
@@ -150,7 +161,8 @@ const resolveSkillApi = async (req, res, next) => {
  */
 const getTaxonomyTreeApi = async (req, res, next) => {
   try {
-    const tree = await getTaxonomyTree();
+    const tree = await cacheManager.wrap('taxonomy:tree', 3600, () => getTaxonomyTree());
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
     res.status(200).json({
       success: true,
       data: { tree },
@@ -166,7 +178,8 @@ const getTaxonomyTreeApi = async (req, res, next) => {
  */
 const getTaxonomySummaryApi = async (req, res, next) => {
   try {
-    const summary = await getTaxonomySummary();
+    const summary = await cacheManager.wrap('taxonomy:summary', 3600, () => getTaxonomySummary());
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
     res.status(200).json({
       success: true,
       data: summary,
@@ -184,8 +197,12 @@ const getRelatedSkillsApi = async (req, res, next) => {
   try {
     const { slug } = req.params;
     const { limit } = req.query;
-    const related = await getRelatedSkills(slug, limit ? parseInt(limit, 10) : 6);
+    const cacheKey = `skills:related:${String(slug).toLowerCase()}:${limit || 6}`;
+    const related = await cacheManager.wrap(cacheKey, 3600, () =>
+      getRelatedSkills(slug, limit ? parseInt(limit, 10) : 6)
+    );
 
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
     res.status(200).json({
       success: true,
       targetSkill: slug,
@@ -258,6 +275,12 @@ const addCustomSkill = async (req, res, next) => {
       description: (description && typeof description === 'string') ? description.slice(0, 300) : `Custom skill: ${cleanDisplayName}`,
       active: true,
     });
+
+    // Invalidate taxonomy and catalog caches
+    cacheManager.del('taxonomy:tree');
+    cacheManager.del('taxonomy:summary');
+    cacheManager.delPrefix('skills:list:');
+    cacheManager.delPrefix('skills:related:');
 
     res.status(201).json({
       success: true,

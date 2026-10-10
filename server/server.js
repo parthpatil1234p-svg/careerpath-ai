@@ -53,6 +53,7 @@ const rateLimit = require('express-rate-limit');
 
 // ── Internal imports ──────────────────────────────────────────
 const { connectPrisma, prisma } = require('./config/prisma');
+const { cacheManager } = require('./utils/cacheManager');
 const { initSocket } = require('./services/socketService');
 const { initCron } = require('./services/cronService');
 const authRoutes = require('./routes/authRoutes');
@@ -200,6 +201,7 @@ const healthHandler = (req, res) => {
     databaseEngine: 'Supabase PostgreSQL (Prisma ORM)',
     supabaseConfigured: !!process.env.DATABASE_URL,
     emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
+    cache: cacheManager.getStats(),
   });
 };
 app.get('/health', healthHandler);

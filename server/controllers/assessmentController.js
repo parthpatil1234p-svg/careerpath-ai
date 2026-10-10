@@ -10,6 +10,7 @@
 
 const User = require('../models/User');
 const { normalizeSkillKey } = require('../data/quizQuestions');
+const { cacheManager } = require('../utils/cacheManager');
 
 const ALLOWED_ASSESSMENT_FIELDS = [
   'name',
@@ -355,6 +356,8 @@ const updateAssessment = async (req, res, next) => {
         message: 'User profile not found',
       });
     }
+
+    cacheManager.invalidateUser(req.user._id);
 
     res.status(200).json({
       success: true,

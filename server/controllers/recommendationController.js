@@ -10,29 +10,20 @@
 const User = require('../models/User');
 const Career = require('../models/Career');
 const Skill = require('../models/Skill');
+const { cacheManager } = require('../utils/cacheManager');
 const { generateRecommendations } = require('../services/recommendationService');
 const { enrichRecommendationsWithAI } = require('../services/careerInsightService');
 
-let cachedCareers = null;
-let cachedCareersExpiry = 0;
-
 async function getCachedActiveCareers() {
-  if (cachedCareers && Date.now() < cachedCareersExpiry) {
-    return cachedCareers;
-  }
-  const careers = await Career.find({ active: true })
-    .select('-__v')
-    .populate({
-      path: 'requiredSkills.skill',
-      select: 'name displayName category description',
-    })
-    .lean();
-
-  if (careers && careers.length > 0) {
-    cachedCareers = careers;
-    cachedCareersExpiry = Date.now() + 5 * 60 * 1000; // Cache for 5 minutes
-  }
-  return careers;
+  return await cacheManager.wrap('careers:active:all', 3600, async () => {
+    return await Career.find({ active: true })
+      .select('-__v')
+      .populate({
+        path: 'requiredSkills.skill',
+        select: 'name displayName category description',
+      })
+      .lean();
+  });
 }
 
 // ── generateRecommendations ────────────────────────────────────

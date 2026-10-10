@@ -7,6 +7,7 @@
 const crypto = require('crypto');
 const User = require('../models/User');
 const { computeStudentReadiness } = require('../services/readinessService');
+const { cacheManager } = require('../utils/cacheManager');
 
 /**
  * GET /api/readiness/status
@@ -14,7 +15,15 @@ const { computeStudentReadiness } = require('../services/readinessService');
  */
 exports.getReadinessStatus = async (req, res, next) => {
   try {
-    const readiness = await computeStudentReadiness(req.user._id);
+    const userId = String(req.user._id);
+    const cacheKey = `readiness:${userId}`;
+
+    res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+
+    const readiness = await cacheManager.wrap(cacheKey, 30, async () => {
+      return await computeStudentReadiness(req.user._id);
+    });
+
     return res.status(200).json({
       success: true,
       data: readiness

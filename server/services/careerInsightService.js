@@ -6,6 +6,7 @@
 
 const { callGroq } = require('./groqService');
 const { callGemini } = require('./geminiService');
+const { cacheManager } = require('../utils/cacheManager');
 
 // High-fidelity fallback market telemetry for verified roles (India 2026-27 tech landscape)
 const DEFAULT_MARKET_INSIGHTS = {
@@ -262,10 +263,14 @@ async function generateCareerBrief(recommendation, user) {
   const missingNames = (recommendation.missingSkills || []).map(s => s.displayName || s.name).join(', ') || 'Advanced specialization';
   const educationText = user.education?.course ? `${user.education.course} ${user.education.branch || ''}`.trim() : 'College Student';
 
-  const promptMessages = [
-    {
-      role: 'system',
-      content: `You are an expert Career & Industry Talent Analyst for CareerPath AI.
+  const skillSignature = (recommendation.matchedSkills || []).map(s => s.name || s.displayName).sort().join(',');
+  const cacheKey = `ai_brief:${slug}:${educationText.toLowerCase()}:${skillSignature}`;
+
+  return await cacheManager.wrap(cacheKey, 86400, async () => {
+    const promptMessages = [
+      {
+        role: 'system',
+        content: `You are an expert Career & Industry Talent Analyst for CareerPath AI.
 Generate an executive Career Fit & Market Brief for this college student.
 Return strictly a raw, valid JSON object (no markdown code fences, no extra text) with these 5 keys:
 {
@@ -275,84 +280,85 @@ Return strictly a raw, valid JSON object (no markdown code fences, no extra text
   "keyBottleneck": "1 concise sentence stating the exact primary missing skill or concept they must master first to become hireable.",
   "actionableTip": "1 practical, actionable tip for building a standout portfolio project or proof of work for this role."
 }`
-    },
-    {
-      role: 'user',
-      content: `Target Role: ${career?.title || 'Unknown Role'}
+      },
+      {
+        role: 'user',
+        content: `Target Role: ${career?.title || 'Unknown Role'}
 Student Education: ${educationText}
 Student Matched Skills: ${matchedNames}
 Missing Skills to build: ${missingNames}
 Match Score: ${recommendation.finalScore || 'N/A'}%`
+      }
+    ];
+
+    // 1. Try Groq for ultra-fast generation (<100ms) if circuit is closed
+    if (process.env.GROQ_API_KEY && Date.now() > groqCircuitOpenUntil) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const raw = await callGroq(promptMessages, controller.signal);
+        clearTimeout(timeoutId);
+
+        const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleaned);
+        if (parsed.salaryRange && parsed.whyYouFit) {
+          return {
+            ...fallback,
+            ...parsed,
+            generatedByAI: true,
+            engine: 'Groq Cloud',
+          };
+        }
+      } catch (groqErr) {
+        if (groqErr.message?.includes('Invalid API Key') || groqErr.message?.includes('401')) {
+          groqCircuitOpenUntil = Date.now() + 10 * 60 * 1000; // Trip circuit for 10 minutes
+          console.warn('⚠️  [FastPath] Groq API key invalid; circuit opened for 10 minutes.');
+        }
+        // Continue to Gemini fallback
+      }
     }
-  ];
 
-  // 1. Try Groq for ultra-fast generation (<100ms) if circuit is closed
-  if (process.env.GROQ_API_KEY && Date.now() > groqCircuitOpenUntil) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
-      const raw = await callGroq(promptMessages, controller.signal);
-      clearTimeout(timeoutId);
+    // 2. Fallback to Gemini if Groq failed or not configured and circuit is closed
+    if (process.env.GEMINI_API_KEY && Date.now() > geminiCircuitOpenUntil) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const systemContent = promptMessages[0].content;
+        const userContent = promptMessages[1].content;
+        const raw = await callGemini(
+          [{ role: 'user', parts: [{ text: userContent }] }],
+          null,
+          controller.signal,
+          systemContent
+        );
+        clearTimeout(timeoutId);
 
-      const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-      const parsed = JSON.parse(cleaned);
-      if (parsed.salaryRange && parsed.whyYouFit) {
-        return {
-          ...fallback,
-          ...parsed,
-          generatedByAI: true,
-          engine: 'Groq Cloud',
-        };
+        const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleaned);
+        if (parsed.salaryRange && parsed.whyYouFit) {
+          return {
+            ...fallback,
+            ...parsed,
+            generatedByAI: true,
+            engine: 'Google Gemini',
+          };
+        }
+      } catch (geminiErr) {
+        if (geminiErr.message?.includes('API key not valid') || geminiErr.message?.includes('400')) {
+          geminiCircuitOpenUntil = Date.now() + 10 * 60 * 1000; // Trip circuit for 10 minutes
+          console.warn('⚠️  [FastPath] Gemini API key invalid; circuit opened for 10 minutes.');
+        }
+        // Continue to static fallback
       }
-    } catch (groqErr) {
-      if (groqErr.message?.includes('Invalid API Key') || groqErr.message?.includes('401')) {
-        groqCircuitOpenUntil = Date.now() + 10 * 60 * 1000; // Trip circuit for 10 minutes
-        console.warn('⚠️  [FastPath] Groq API key invalid; circuit opened for 10 minutes.');
-      }
-      // Continue to Gemini fallback
     }
-  }
 
-  // 2. Fallback to Gemini if Groq failed or not configured and circuit is closed
-  if (process.env.GEMINI_API_KEY && Date.now() > geminiCircuitOpenUntil) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
-      const systemContent = promptMessages[0].content;
-      const userContent = promptMessages[1].content;
-      const raw = await callGemini(
-        [{ role: 'user', parts: [{ text: userContent }] }],
-        null,
-        controller.signal,
-        systemContent
-      );
-      clearTimeout(timeoutId);
-
-      const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-      const parsed = JSON.parse(cleaned);
-      if (parsed.salaryRange && parsed.whyYouFit) {
-        return {
-          ...fallback,
-          ...parsed,
-          generatedByAI: true,
-          engine: 'Google Gemini',
-        };
-      }
-    } catch (geminiErr) {
-      if (geminiErr.message?.includes('API key not valid') || geminiErr.message?.includes('400')) {
-        geminiCircuitOpenUntil = Date.now() + 10 * 60 * 1000; // Trip circuit for 10 minutes
-        console.warn('⚠️  [FastPath] Gemini API key invalid; circuit opened for 10 minutes.');
-      }
-      // Continue to static fallback
-    }
-  }
-
-  // 3. Guaranteed High-Fidelity Static Fallback (Instant 0ms)
-  return {
-    ...fallback,
-    generatedByAI: false,
-    engine: 'CareerPath Telemetry Engine',
-  };
+    // 3. Guaranteed High-Fidelity Static Fallback (Instant 0ms)
+    return {
+      ...fallback,
+      generatedByAI: false,
+      engine: 'CareerPath Telemetry Engine',
+    };
+  });
 }
 
 /**

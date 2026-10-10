@@ -21,6 +21,7 @@ const {
 router.get('/portal-links', (req, res) => {
   const { role, location, company } = req.query;
   const links = generateMultiPortalLinks(role || 'Software Engineer', location || 'India', company || null);
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800');
   return res.status(200).json({
     success: true,
     data: {

@@ -7,6 +7,7 @@
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const { analyzeResumeText } = require('../services/resumeAnalyzerService');
+const { cacheManager } = require('../utils/cacheManager');
 
 /**
  * POST /api/resume/analyze
@@ -83,6 +84,7 @@ Target Objective: Passionate software engineer seeking roles in ${selectedCareer
     // Persist to user record
     user.resumeAnalysis = analysisResult;
     await user.save();
+    cacheManager.invalidateUser(user._id);
 
     return res.status(200).json({
       success: true,
@@ -128,6 +130,7 @@ Objective: Aspiring ${targetCareer}
     const baseline = await analyzeResumeText(baselineText, targetCareer, user.skills || []);
     user.resumeAnalysis = baseline;
     await user.save();
+    cacheManager.invalidateUser(user._id);
 
     return res.status(200).json({
       success: true,
@@ -398,6 +401,7 @@ exports.saveBuiltResume = async (req, res, next) => {
     resumeData.updatedAt = new Date();
     user.builtResume = resumeData;
     await user.save();
+    cacheManager.invalidateUser(user._id);
 
     return res.status(200).json({
       success: true,
