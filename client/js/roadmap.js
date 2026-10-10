@@ -63,24 +63,57 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   let allActiveRoadmaps = [];
+  let allCompletedRoadmaps = [];
 
   const renderTrackSwitcher = () => {
     const switcher = document.getElementById('roadmapTrackSwitcher');
     const container = document.getElementById('roadmapTrackTabsContainer');
     const btnEnroll = document.getElementById('btnRoadmapEnrollSecondTrack');
+    const modeBadge = document.getElementById('roadmapTrackModeBadge');
     if (!switcher || !container) return;
 
-    if (allActiveRoadmaps && allActiveRoadmaps.length > 0) {
+    const hasActive = Array.isArray(allActiveRoadmaps) && allActiveRoadmaps.length > 0;
+    const hasCompleted = Array.isArray(allCompletedRoadmaps) && allCompletedRoadmaps.length > 0;
+
+    if (hasActive || hasCompleted) {
       switcher.classList.remove('d-none');
-      container.innerHTML = allActiveRoadmaps.map((r, idx) => {
-        const isActiveThis = (currentRoadmap && (currentRoadmap.id === r.id || currentRoadmap._id === r.id || currentRoadmap._id === r._id));
+
+      if (modeBadge) {
+        if (hasActive && hasCompleted) {
+          modeBadge.textContent = 'ACTIVE & GRADUATED TRACKS';
+        } else if (hasCompleted) {
+          modeBadge.textContent = 'GRADUATED TRACKS';
+        } else {
+          modeBadge.textContent = 'PARALLEL TRACK LEARNING';
+        }
+      }
+
+      const activeTabsHtml = (allActiveRoadmaps || []).map((r, idx) => {
+        const isActiveThis = Boolean(currentRoadmap && (
+          String(currentRoadmap.id || currentRoadmap._id) === String(r.id || r._id)
+        ));
         const pct = Math.round(r.progressPercentage || 0);
         return `
-          <button type="button" class="btn btn-sm ${isActiveThis ? 'cp-btn-primary' : 'cp-btn-outline'} roadmap-track-tab-btn" data-roadmap-id="${r.id || r._id}">
+          <button type="button" class="btn btn-sm ${isActiveThis ? 'cp-btn-primary shadow-sm' : 'cp-btn-outline'} roadmap-track-tab-btn" data-roadmap-id="${r.id || r._id}" title="Active learning track">
             <i class="bi bi-compass me-1"></i> Track ${idx + 1}: ${escapeHtml(r.career?.title || 'Active Track')} (${pct}%)
           </button>
         `;
       }).join('');
+
+      const completedTabsHtml = (allCompletedRoadmaps || []).map((r) => {
+        const isActiveThis = Boolean(currentRoadmap && (
+          String(currentRoadmap.id || currentRoadmap._id) === String(r.id || r._id)
+        ));
+        return `
+          <button type="button" class="btn btn-sm ${isActiveThis ? 'btn-success text-white shadow-sm' : 'btn-outline-success'} roadmap-track-tab-btn d-inline-flex align-items-center gap-1" data-roadmap-id="${r.id || r._id}" title="Click to view graduated milestones & verified curriculum">
+            <i class="bi bi-mortarboard-fill text-warning"></i>
+            <span>Graduated: ${escapeHtml(r.career?.title || 'Completed Track')}</span>
+            <span class="badge ${isActiveThis ? 'bg-white text-success' : 'bg-success-subtle text-success border border-success-subtle'} font-mono ms-1" style="font-size: 0.7rem;">100% ✓</span>
+          </button>
+        `;
+      }).join('');
+
+      container.innerHTML = activeTabsHtml + completedTabsHtml;
 
       container.querySelectorAll('.roadmap-track-tab-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -94,6 +127,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (btnEnroll) {
         if (allActiveRoadmaps.length === 1) {
+          btnEnroll.innerHTML = '<i class="bi bi-plus-circle me-1"></i> + Add 2nd Related Course';
+          btnEnroll.classList.remove('d-none');
+        } else if (allActiveRoadmaps.length === 0) {
+          btnEnroll.innerHTML = '<i class="bi bi-compass me-1"></i> + Start New Career Route';
           btnEnroll.classList.remove('d-none');
         } else {
           btnEnroll.classList.add('d-none');
@@ -119,6 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentRoadmap = res.data.roadmap;
         currentTasks = res.data.tasks || [];
         allActiveRoadmaps = res.data.activeRoadmaps || [];
+        allCompletedRoadmaps = res.data.completedRoadmaps || [];
         renderTrackSwitcher();
         renderRoadmap();
       } else {
@@ -278,13 +316,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
       }
 
+      const isGraduated = currentRoadmap.status === 'completed' || currentRoadmap.progressPercentage >= 100;
       const isAdminUser = Boolean(window.Auth?.isAdmin());
-      const rawStatus = wp.status || (weekNumber === 1 ? 'in_progress' : 'locked');
+      const rawStatus = wp.status || (isGraduated ? 'passed' : (weekNumber === 1 ? 'in_progress' : 'locked'));
       const status = isAdminUser ? (rawStatus === 'locked' ? 'in_progress' : rawStatus) : rawStatus;
-      const isLocked = isAdminUser ? false : (status === 'locked');
-      const isPassed = status === 'passed';
-      const isAwaitingTest = status === 'awaiting_test';
-      const isInProgress = status === 'in_progress' || (isAdminUser && !isPassed && !isAwaitingTest);
+      const isLocked = isAdminUser ? false : (!isGraduated && status === 'locked');
+      const isPassed = status === 'passed' || isGraduated;
+      const isAwaitingTest = !isGraduated && status === 'awaiting_test';
+      const isInProgress = !isGraduated && (status === 'in_progress' || (isAdminUser && !isPassed && !isAwaitingTest));
 
       let statusCardClass = '';
       if (isLocked) statusCardClass = 'locked-week';
@@ -468,14 +507,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
               }
 
+              const isTaskDone = task.completed || isGraduated;
+              const isCheckboxDisabled = isLocked || isGraduated;
               return `
-                <div class="task-item d-flex align-items-start gap-3 ${task.completed ? 'is-completed' : ''}" data-task-id="${task._id}">
+                <div class="task-item d-flex align-items-start gap-3 ${isTaskDone ? 'is-completed' : ''}" data-task-id="${task._id}">
                   <div class="task-checkbox-wrap pt-1">
                     <input
                       type="checkbox"
                       class="form-check-input task-checkbox-input"
-                      ${task.completed ? 'checked' : ''}
-                      ${isLocked ? 'disabled' : ''}
+                      ${isTaskDone ? 'checked' : ''}
+                      ${isCheckboxDisabled ? 'disabled' : ''}
                       data-task-id="${task._id}"
                     />
                   </div>

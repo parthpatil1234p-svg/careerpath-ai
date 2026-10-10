@@ -303,6 +303,22 @@ const getCurrentRoadmap = async (req, res, next) => {
       status: 'active',
     }).sort({ createdAt: -1 });
 
+    const allCompletedRoadmaps = await Roadmap.find({
+      user: req.user._id,
+      status: 'completed',
+    }).sort({ completedAt: -1, updatedAt: -1 });
+
+    // Deduplicate completed roadmaps by career slug (keep newest instance)
+    const uniqueCompletedRoadmaps = [];
+    const seenCompletedSlugs = new Set();
+    for (const cr of allCompletedRoadmaps) {
+      const slug = (cr.careerSnapshot?.slug || String(cr.career?._id || cr.career || '')).toLowerCase().trim();
+      if (!seenCompletedSlugs.has(slug)) {
+        seenCompletedSlugs.add(slug);
+        uniqueCompletedRoadmaps.push(cr);
+      }
+    }
+
     let roadmap = null;
     let isCompleted = false;
 
@@ -321,15 +337,9 @@ const getCurrentRoadmap = async (req, res, next) => {
     }
 
     // If no active roadmap, check for the most recently completed roadmap
-    if (!roadmap) {
-      roadmap = await Roadmap.findOne({
-        user: req.user._id,
-        status: 'completed',
-      }).sort({ completedAt: -1, updatedAt: -1 });
-
-      if (roadmap) {
-        isCompleted = true;
-      }
+    if (!roadmap && uniqueCompletedRoadmaps.length > 0) {
+      roadmap = uniqueCompletedRoadmaps[0];
+      isCompleted = true;
     }
 
     if (!roadmap) {
@@ -338,9 +348,11 @@ const getCurrentRoadmap = async (req, res, next) => {
         hasRoadmap: false,
         canStartNewRoute: true,
         activeCount: 0,
+        completedCount: 0,
         maxAllowed: 2,
         canEnrollSecondCourse: false,
         activeRoadmaps: [],
+        completedRoadmaps: [],
         message: 'No active or completed roadmap found. Generate a roadmap first.',
       });
     }
@@ -352,11 +364,11 @@ const getCurrentRoadmap = async (req, res, next) => {
         roadmap.weekProgress.push({
           weekNumber: w,
           title: `Week ${w} Milestone`,
-          status: w === 1 ? 'in_progress' : 'locked',
-          attemptsCount: 0,
-          passedAt: null,
-          testScore: 0,
-          testPercent: 0,
+          status: isCompleted ? 'passed' : (w === 1 ? 'in_progress' : 'locked'),
+          attemptsCount: isCompleted ? 1 : 0,
+          passedAt: isCompleted ? (roadmap.completedAt || new Date()) : null,
+          testScore: isCompleted ? 10 : 0,
+          testPercent: isCompleted ? 100 : 0,
         });
       }
       await roadmap.save();
@@ -366,8 +378,8 @@ const getCurrentRoadmap = async (req, res, next) => {
       .sort({ weekNumber: 1, order: 1 })
       .select('-__v');
 
-    // Self-healing guard: If an active roadmap has 0 tasks, automatically synthesize and attach curriculum tasks
-    if ((!tasks || tasks.length === 0) && roadmap.status === 'active') {
+    // Self-healing guard: If an active or completed roadmap has 0 tasks, automatically synthesize and attach curriculum tasks
+    if (!tasks || tasks.length === 0) {
       try {
         const targetUser = await User.findById(roadmap.user || req.user._id);
         const slug = roadmap.careerSnapshot?.slug || 'front-end-developer';
@@ -381,12 +393,16 @@ const getCurrentRoadmap = async (req, res, next) => {
         if (targetCareer && targetUser) {
           const { taskDocuments } = generateRoadmapTasks(targetUser, targetCareer, roadmap.durationWeeks || 4);
           if (Array.isArray(taskDocuments) && taskDocuments.length > 0) {
+            const isDone = roadmap.status === 'completed';
             const tasksWithRoadmapId = taskDocuments.map((t) => ({
               ...t,
               roadmap: roadmap._id,
+              completed: isDone ? true : !!t.completed,
+              completedAt: isDone ? (roadmap.completedAt || new Date()) : null,
             }));
             tasks = await RoadmapTask.insertMany(tasksWithRoadmapId);
             roadmap.totalTasks = tasks.length;
+            if (isDone) roadmap.completedTasks = tasks.length;
             await roadmap.save();
           }
         }
@@ -410,7 +426,9 @@ const getCurrentRoadmap = async (req, res, next) => {
         currentWeekNumber = roadmap.durationWeeks;
       }
     }
-    const currentWeekString = `Week ${currentWeekNumber} of ${roadmap.durationWeeks}`;
+    const currentWeekString = isCompleted
+      ? `All ${roadmap.durationWeeks} Weeks Completed`
+      : `Week ${currentWeekNumber} of ${roadmap.durationWeeks}`;
     const canEnroll = isCompleted || roadmap.status !== 'active';
 
     res.status(200).json({
@@ -421,6 +439,7 @@ const getCurrentRoadmap = async (req, res, next) => {
         canStartNewRoute: canEnroll,
         canEnrollNewRoute: canEnroll,
         activeCount: allActiveRoadmaps.length,
+        completedCount: uniqueCompletedRoadmaps.length,
         maxAllowed: 2,
         canEnrollSecondCourse: allActiveRoadmaps.length === 1,
         activeRoadmaps: allActiveRoadmaps.map((r) => ({
@@ -435,6 +454,22 @@ const getCurrentRoadmap = async (req, res, next) => {
           progressPercentage: r.progressPercentage,
           totalTasks: r.totalTasks,
           completedTasks: r.completedTasks,
+          status: r.status,
+        })),
+        completedRoadmaps: uniqueCompletedRoadmaps.map((r) => ({
+          id: r._id,
+          _id: r._id,
+          career: {
+            title: r.careerSnapshot?.title || 'Completed Track',
+            slug: r.careerSnapshot?.slug || '',
+            shortDescription: r.careerSnapshot?.shortDescription || '',
+          },
+          durationWeeks: r.durationWeeks,
+          progressPercentage: r.progressPercentage || 100,
+          totalTasks: r.totalTasks,
+          completedTasks: r.completedTasks,
+          completedAt: r.completedAt,
+          status: r.status,
         })),
         currentWeekNumber,
         currentWeekString,
@@ -442,7 +477,7 @@ const getCurrentRoadmap = async (req, res, next) => {
           id: roadmap._id,
           _id: roadmap._id,
           career: {
-            title: roadmap.careerSnapshot?.title || 'Active Track',
+            title: roadmap.careerSnapshot?.title || (isCompleted ? 'Graduated Track' : 'Active Track'),
             slug: roadmap.careerSnapshot?.slug || '',
             shortDescription: roadmap.careerSnapshot?.shortDescription || '',
           },
