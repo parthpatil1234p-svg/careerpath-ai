@@ -14,6 +14,8 @@
 
 const User = require('../models/User');
 const Resume = require('../models/Resume');
+const Roadmap = require('../models/Roadmap');
+const RoadmapTask = require('../models/RoadmapTask');
 const { cacheManager } = require('../utils/cacheManager');
 
 // ── Permitted update fields whitelist ─────────────────────────
@@ -45,6 +47,57 @@ const getMyProfile = async (req, res, next) => {
         success: false,
         message: 'User not found',
       });
+    }
+
+    // Auto-sync: Ensure any completed roadmaps are represented in user.completedPaths
+    const completedRoadmaps = await Roadmap.find({
+      user: user._id,
+      status: 'completed',
+    });
+
+    if (completedRoadmaps.length > 0) {
+      const existingCompleted = Array.isArray(user.completedPaths) ? [...user.completedPaths] : [];
+      const existingIds = new Set(existingCompleted.map((cp) => String(cp.roadmap || cp.id || '')));
+      const existingRoles = new Set(existingCompleted.map((cp) => (cp.role || '').toLowerCase().trim()));
+      let hasNew = false;
+
+      for (const cr of completedRoadmaps) {
+        const crId = String(cr._id || cr.id);
+        const title = cr.careerSnapshot?.title || 'Graduated Track';
+        const roleKey = title.toLowerCase().trim();
+
+        if (!existingIds.has(crId) && !existingRoles.has(roleKey)) {
+          const tasks = await RoadmapTask.find({ roadmap: cr._id });
+          let skillsGained = [...new Set(tasks.map((t) => t.skillName).filter(Boolean))];
+          if (skillsGained.length === 0 && Array.isArray(cr.careerSnapshot?.requiredSkills)) {
+            skillsGained = cr.careerSnapshot.requiredSkills
+              .map((s) => (typeof s === 'string' ? s : s?.name))
+              .filter(Boolean);
+          }
+
+          existingCompleted.push({
+            roadmap: crId,
+            role: title,
+            careerTitle: title,
+            slug: cr.careerSnapshot?.slug || 'graduated-track',
+            credentialId: `CP-CERT-${crId.slice(-8).toUpperCase()}`,
+            verificationCode: `V-${crId.slice(0, 8).toUpperCase()}`,
+            completionDate: cr.completedAt || new Date(),
+            skillsGained,
+            status: 'graduated',
+            totalTasks: cr.totalTasks,
+            durationWeeks: cr.durationWeeks,
+          });
+          existingIds.add(crId);
+          existingRoles.add(roleKey);
+          hasNew = true;
+        }
+      }
+
+      if (hasNew) {
+        user.completedPaths = existingCompleted;
+        await user.save();
+      }
     }
 
     res.status(200).json({

@@ -12,7 +12,7 @@ const RoadmapTask = require('../models/RoadmapTask');
 const Career = require('../models/Career');
 const User = require('../models/User');
 const { generateRecommendations } = require('../services/recommendationService');
-const { generateRoadmapTasks, calculateRoadmapProgress } = require('../services/roadmapService');
+const { generateRoadmapTasks, calculateRoadmapProgress, syncUserGraduation } = require('../services/roadmapService');
 const {
   startWeeklyTest,
   saveWeeklyTestAnswer,
@@ -849,8 +849,13 @@ const linkProjectRepo = async (req, res, next) => {
       : 0;
     if (roadmap.progressPercentage === 100) {
       roadmap.status = 'completed';
+      roadmap.completedAt = new Date();
     }
     await roadmap.save();
+
+    if (roadmap.status === 'completed') {
+      await syncUserGraduation(roadmap.user, roadmap);
+    }
 
     return res.status(200).json({
       success: true,

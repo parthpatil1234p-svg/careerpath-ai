@@ -104,6 +104,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (res.success && res.data) {
         dashboardData = res.data;
+        if (res.data.user && window.Auth?.setCurrentUser) {
+          window.Auth.setCurrentUser(res.data.user);
+        }
         try {
           localStorage.setItem(cacheKey, JSON.stringify(res.data));
         } catch (_) {}
@@ -155,6 +158,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const skillCount = user?.skills?.length || 0;
     userSkillsCount.innerHTML = `<i class="bi bi-cpu-fill text-info me-1"></i> ${skillCount} Skills Logged`;
+
+    // Render Credentials in Profile Meta Line
+    const completedPaths = Array.isArray(user?.completedPaths) ? user.completedPaths : [];
+    const userCredentialsEl = document.getElementById('userCredentialsCount');
+    const userCredentialsDot = document.getElementById('userCredentialsDot');
+    const userCredentialsText = document.getElementById('userCredentialsText');
+    if (userCredentialsEl && userCredentialsDot) {
+      if (completedPaths.length > 0) {
+        userCredentialsEl.classList.remove('d-none');
+        userCredentialsDot.classList.remove('d-none');
+        if (userCredentialsText) {
+          userCredentialsText.textContent = `${completedPaths.length} Credential${completedPaths.length === 1 ? '' : 's'} Earned`;
+        }
+      } else {
+        userCredentialsEl.classList.add('d-none');
+        userCredentialsDot.classList.add('d-none');
+      }
+    }
 
     // Render Resume Status
     const viewResumeLink = document.getElementById('viewResumeLink');
@@ -625,12 +646,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
+    const completedPaths = Array.isArray(user?.completedPaths) ? user.completedPaths : [];
     if (status === 'working') {
       if (currentRoleBadge) {
         currentRoleBadge.textContent = currentRole ? `Role: ${currentRole}` : 'Role: Employed Specialist';
         currentRoleBadge.classList.remove('d-none');
       }
       if (btnEditCurrentRole) btnEditCurrentRole.classList.remove('d-none');
+    } else if (completedPaths.length > 0) {
+      if (currentRoleBadge) {
+        const topGradRole = completedPaths[0].role || completedPaths[0].careerTitle || 'Graduated Track';
+        currentRoleBadge.innerHTML = `<i class="bi bi-mortarboard-fill me-1 text-teal"></i> Graduated: ${escapeHtml(topGradRole)}`;
+        currentRoleBadge.classList.remove('d-none');
+      }
+      if (btnEditCurrentRole) btnEditCurrentRole.classList.add('d-none');
     } else {
       if (currentRoleBadge) currentRoleBadge.classList.add('d-none');
       if (btnEditCurrentRole) btnEditCurrentRole.classList.add('d-none');

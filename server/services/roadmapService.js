@@ -12,6 +12,8 @@
 
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
+const User = require('../models/User');
+const { cacheManager } = require('../utils/cacheManager');
 const roadmapTemplates = require('../data/roadmapTemplates');
 const { calculateSkillScore } = require('./recommendationService');
 
@@ -231,6 +233,93 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
 };
 
 /**
+ * Automatically saves completed roadmap to user's profile and permanently elevates profile skills
+ *
+ * @param {string} userId
+ * @param {Object} roadmap
+ */
+const syncUserGraduation = async (userId, roadmap) => {
+  if (!userId || !roadmap) return;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return;
+
+    const rId = String(roadmap._id || roadmap.id);
+    const title = roadmap.careerSnapshot?.title || 'Graduated Track';
+    const roleKey = title.toLowerCase().trim();
+    const slug = roadmap.careerSnapshot?.slug || 'graduated-track';
+
+    // Fetch all tasks for this roadmap to extract skills gained
+    const tasks = await RoadmapTask.find({ roadmap: roadmap._id || roadmap.id });
+    let skillsGained = [...new Set(tasks.map((t) => t.skillName).filter(Boolean))];
+    if (skillsGained.length === 0 && Array.isArray(roadmap.careerSnapshot?.requiredSkills)) {
+      skillsGained = roadmap.careerSnapshot.requiredSkills
+        .map((s) => (typeof s === 'string' ? s : s?.name))
+        .filter(Boolean);
+    }
+
+    const completedPaths = Array.isArray(user.completedPaths) ? [...user.completedPaths] : [];
+    const existingIdx = completedPaths.findIndex(
+      (cp) => String(cp.roadmap || cp.id || '') === rId || (cp.role || '').toLowerCase().trim() === roleKey
+    );
+
+    const credentialRecord = {
+      roadmap: rId,
+      role: title,
+      careerTitle: title,
+      slug,
+      credentialId: `CP-CERT-${rId.slice(-8).toUpperCase()}`,
+      verificationCode: `V-${rId.slice(0, 8).toUpperCase()}`,
+      completionDate: roadmap.completedAt || new Date(),
+      skillsGained,
+      status: 'graduated',
+      totalTasks: roadmap.totalTasks,
+      durationWeeks: roadmap.durationWeeks,
+    };
+
+    if (existingIdx >= 0) {
+      completedPaths[existingIdx] = { ...completedPaths[existingIdx], ...credentialRecord };
+    } else {
+      completedPaths.push(credentialRecord);
+    }
+
+    user.completedPaths = completedPaths;
+
+    // Permanently elevate user's profile skills
+    const existingSkills = Array.isArray(user.skills) ? [...user.skills] : [];
+    const skillMap = new Map();
+    existingSkills.forEach((s) => {
+      if (s.name) skillMap.set(s.name.toLowerCase().trim(), s);
+    });
+
+    skillsGained.forEach((sName) => {
+      const k = sName.toLowerCase().trim();
+      if (skillMap.has(k)) {
+        const s = skillMap.get(k);
+        s.proficiency = s.proficiency === 'beginner' ? 'intermediate' : 'advanced';
+        s.isQuizVerified = true;
+      } else {
+        skillMap.set(k, {
+          name: k,
+          displayName: sName.charAt(0).toUpperCase() + sName.slice(1),
+          proficiency: 'intermediate',
+          isQuizVerified: true,
+        });
+      }
+    });
+
+    user.skills = Array.from(skillMap.values());
+    user.profileStatus = { status: 'graduated', currentRole: title };
+    user.hasCompletedSkillVerification = true;
+
+    await user.save();
+    cacheManager.invalidateUser(userId);
+  } catch (err) {
+    console.warn('[syncUserGraduation] Failed to sync graduation to user profile:', err.message);
+  }
+};
+
+/**
  * Recalculates roadmap progress and updates Roadmap document
  *
  * @param {ObjectId|string} roadmapId
@@ -270,10 +359,16 @@ const calculateRoadmapProgress = async (roadmapId) => {
     { new: true }
   );
 
+  // Automatically save completed roadmap into user profile and elevate verified skills
+  if (isFullyCompleted && updatedRoadmap) {
+    await syncUserGraduation(currentRoadmapDoc.user || currentRoadmapDoc.userId, updatedRoadmap);
+  }
+
   return updatedRoadmap;
 };
 
 module.exports = {
   generateRoadmapTasks,
   calculateRoadmapProgress,
+  syncUserGraduation,
 };
