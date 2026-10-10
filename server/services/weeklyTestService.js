@@ -433,7 +433,13 @@ async function submitWeeklyTest(userId, attemptId, manual = true, submittedAnswe
         if (allPassed) {
           roadmap.status = 'completed';
           roadmap.completedAt = new Date();
+          roadmap.progressPercentage = 100;
+          roadmap.completedTasks = roadmap.totalTasks;
           roadmapGraduated = true;
+          await RoadmapTask.updateMany(
+            { roadmap: roadmap._id },
+            { $set: { completed: true, completedAt: new Date() } }
+          );
         }
       } else {
         // Did not pass: keep as awaiting_test for retake

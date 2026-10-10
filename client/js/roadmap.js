@@ -580,13 +580,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             currentRoadmap.completedTasksCount = roadmap.completedTasksCount;
             currentRoadmap.progressPercentage = roadmap.progressPercentage;
+            if (roadmap.status) {
+              currentRoadmap.status = roadmap.status;
+            }
             if (roadmap.weekProgress) {
               currentRoadmap.weekProgress = roadmap.weekProgress;
             }
 
-            updateProgressUI(roadmap.progressPercentage, roadmap.completedTasksCount, roadmap.totalTasksCount);
+            // Real-time track switcher arrays update
+            const currentId = String(currentRoadmap.id || currentRoadmap._id);
+            if (roadmap.status === 'completed' || roadmap.progressPercentage >= 100) {
+              // Move from active list to completed list in memory in real time
+              allActiveRoadmaps = (allActiveRoadmaps || []).filter(r => String(r.id || r._id) !== currentId);
+              const existsInComp = (allCompletedRoadmaps || []).some(r => String(r.id || r._id) === currentId);
+              if (!existsInComp) {
+                allCompletedRoadmaps.unshift({
+                  ...currentRoadmap,
+                  status: 'completed',
+                  progressPercentage: 100,
+                });
+              }
+            } else {
+              const activeItem = (allActiveRoadmaps || []).find(r => String(r.id || r._id) === currentId);
+              if (activeItem) {
+                activeItem.progressPercentage = roadmap.progressPercentage;
+                activeItem.completedTasks = roadmap.completedTasksCount;
+              }
+            }
 
-            // Re-render roadmap so any milestone status transition (e.g. awaiting_test) is instantly reflected
+            updateProgressUI(roadmap.progressPercentage, roadmap.completedTasksCount, roadmap.totalTasksCount);
+            renderTrackSwitcher();
             renderRoadmap();
             showAlert(`Task marked ${task.completed ? 'complete' : 'incomplete'}.`, 'success');
           } else {
@@ -1102,8 +1125,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (passed) {
       percentEl.className = 'h3 fw-bold text-success mb-0';
       iconEl.innerHTML = '<i class="bi bi-patch-check-fill text-success" style="font-size: 3.5rem;"></i>';
-      titleEl.textContent = 'Milestone Test Passed!';
-      subtitleEl.textContent = 'You exceeded the 70% threshold. Verified skill evidence has been stamped to your ledger and the next week is now unlocked.';
+      titleEl.innerHTML = result.roadmapGraduated ? '<span class="text-warning">🎓</span> Official Career Route Graduated!' : 'Milestone Test Passed!';
+      subtitleEl.innerHTML = result.roadmapGraduated
+        ? 'Congratulations! You have passed all weekly milestones and graduated from this career track! Your verified credentials have been stamped to your profile.'
+        : 'You exceeded the 70% threshold. Verified skill evidence has been stamped to your ledger and the next week is now unlocked.';
       passedBox.classList.remove('d-none');
       missedBox.classList.add('d-none');
       retakeBtn.classList.add('d-none');
@@ -1158,6 +1183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         antiCheatLock.disarm();
         antiCheatLock.exitFullscreen().catch(() => {});
       }
+      loadRoadmap();
     });
   }
 
