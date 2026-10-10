@@ -36,6 +36,11 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Database-Pure_Supabase_PostgreSQL_(Prisma_ORM)-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase PostgreSQL" />
+  <img src="https://img.shields.io/badge/Architecture-0%25_MongoDB_(100%25_Relational_Postgres)-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="Pure PostgreSQL" />
+  <img src="https://img.shields.io/badge/Skills_Taxonomy-Lightcast_Open_Skills_Engine-6366F1?style=flat-square" alt="Lightcast Taxonomy" />
+  <img src="https://img.shields.io/badge/Automation-Inactivity_%26_Streak_Nudge_Cron-EA580C?style=flat-square" alt="Streak Nudge Engine" />
+  <img src="https://img.shields.io/badge/API_Audit-26%2F26_Endpoints_Passing_(100%25)-10B981?style=flat-square" alt="26/26 API Audit" />
   <img src="https://img.shields.io/badge/Explainable_AI-Deterministic_60%2F25%2F15_Formula-0ea5e9?style=flat-square" alt="Explainable AI" />
   <img src="https://img.shields.io/badge/Roadmaps-Dual_Concurrent_Tracks_(Synergy_Gated)-0284c7?style=flat-square" alt="Dual Routes" />
   <img src="https://img.shields.io/badge/Job_Hub-6_Portal_Live_Launcher-2563eb?style=flat-square" alt="6-Portal Job Hub" />
@@ -68,9 +73,9 @@
 4. [🛡️ Two-Factor Skill Verification Moat (Defeating Resume Inflation)](#️-two-factor-skill-verification-moat-defeating-resume-inflation)
 5. [🗺️ Dual Concurrent Career Roadmaps & Course Synergy Architecture](#️-dual-concurrent-career-roadmaps--course-synergy-architecture)
    - [5.1 The Parallel Learning Dilemma & DB Invariant](#51-the-parallel-learning-dilemma--db-invariant)
-   - [5.2 MongoDB Compound Partial Unique Index (`{ user: 1, career: 1 }`)](#52-mongodb-compound-partial-unique-index-user-1-career-1)
+   - [5.2 PostgreSQL Compound Partial Unique Index (`idx_user_career_active_route`) & Prisma ORM](#52-postgresql-compound-partial-unique-index-idx_user_career_active_route--prisma-orm)
    - [5.3 Course Synergy Rules Engine (3-Level Validation)](#53-course-synergy-rules-engine-3-level-validation)
-   - [5.4 Non-Destructive 7-Day Rate-Limited Abandonment](#54-non-destructive-7-day-rate-limited-abandonment)
+   - [5.4 Non-Destructive Route Abandonment (Multi-Track Selector & 7-Day Cooldown)](#54-non-destructive-route-abandonment-multi-track-selector--7-day-cooldown)
    - [5.5 Dynamic Track Switcher & "Lock Enrolling, Never Browsing" UI](#55-dynamic-track-switcher--lock-enrolling-never-browsing-ui)
    - [5.6 AI-Monitored Video Dedication & Anti-Slacking Learning Chamber](#56-ai-monitored-video-dedication--anti-slacking-learning-chamber)
 6. [🏆 4-Rule Industry Job Ready Certification & Readiness Index Engine](#-4-rule-industry-job-ready-certification--readiness-index-engine)
@@ -83,7 +88,10 @@
    - [7.2 Transactional Cloudinary Asset Destruction (Zero Leakage)](#72-transactional-cloudinary-asset-destruction-zero-leakage)
    - [7.3 6-State Interactive Dashboard Experience](#73-6-state-interactive-dashboard-experience)
    - [7.4 Modernized Student Profile Header Card (Apple/Linear Aesthetic Overhaul)](#74-modernized-student-profile-header-card-applelinear-aesthetic-overhaul)
-8. [💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem](#-supported-tech-roles--76-standardized-skills-ecosystem)
+8. [🏷️ Lightcast Open Skills Taxonomy & 76+ Standardized Competencies](#-lightcast-open-skills-taxonomy--76-standardized-competencies)
+   - [8.1 Core, Tool & Soft Skills Tri-Categorization](#81-core-tool--soft-skills-tri-categorization)
+   - [8.2 Dynamic Skill Alias Resolution & ATS Keyword Normalization](#82-dynamic-skill-alias-resolution--ats-keyword-normalization)
+   - [8.3 Automated Background Maintenance & Streak Nudge Engine](#83-automated-background-maintenance--streak-nudge-engine)
 9. [💼 Multi-Site Job Market Hub & Direct Portal Launchers](#-multi-site-job-market-hub--direct-portal-launchers)
    - [9.1 6-Portal Deep-Link URL Resolution Engine](#91-6-portal-deep-link-url-resolution-engine)
    - [9.2 ⚡ "Launch All Major Portals" Multi-Tab Orchestration](#92--launch-all-major-portals-multi-tab-orchestration)
@@ -137,7 +145,11 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 🌐 **Google Authentication** | **1-Click Google Sign-In & Sign-Up** | Animated Google logo with multi-chromatic micro-interactions & Google Identity Services |
 | 🐙 **GitHub Auth Sync** | **Zero-Prompt Repository Sync** | `POST /api/auth/github/sync` uses JWT session token; eliminates manual username prompt |
 | 🎯 **Skill Reality-Check Quiz** | **[`/quiz.html`](https://careerpath-ai-jade.vercel.app/quiz.html)** | 5-question dynamic micro-quiz powered by **Groq Llama 3.3 70B** (<300ms) with BYOK modal |
-| 🗺️ **Dual Active Roadmaps & Synergy** | **[`docs/ROADMAP-ENGINE.md`](docs/ROADMAP-ENGINE.md)** | Enrolls up to 2 parallel tracks ($\le 2$) with domain/skill synergy checks; compound partial unique index `{ user: 1, career: 1 }` (`status: 'active'`); dynamic track switcher |
+| 🗄️ **Database Engine** | **Pure Supabase PostgreSQL (Prisma ORM)** | 12 Relational Models, PgBouncer pooling, zero MongoDB, strict schema validation |
+| 🏷️ **Lightcast Skills Taxonomy** | **Core (⚡), Tool (🛠️), Soft (👥)** | 76+ industry skills, dynamic alias resolver (`/api/skills/resolve`), related skills graph |
+| 📬 **Streak Nudge & Maintenance** | **Automated Cron & Email Service** | 3-day inactivity threshold, dynamic milestone week/remaining tasks computation, on-demand test API & UI button |
+| 🧪 **Comprehensive API Verification** | **26/26 Endpoints Passing (100%)** | `node tests/audit_all_apis.js` audit suite executed across all 6 core subsystem phases |
+| 🗺️ **Dual Active Roadmaps & Synergy** | **[`docs/ROADMAP-ENGINE.md`](docs/ROADMAP-ENGINE.md)** | Enrolls up to 2 parallel tracks ($\le 2$) with domain/skill synergy checks; PostgreSQL partial unique index `idx_user_career_active_route` on `"Roadmap"("userId", "careerId") WHERE (status = 'active')` catching Prisma `P2002`; dynamic track switcher |
 | 💼 **Multi-Site Job Market Hub** | **6 Live Portals & ⚡ Master Launcher** | 1-click direct search deep-links for LinkedIn Jobs, Naukri.com, Indeed India, Wellfound, Internshala, and Google for Jobs + per-card cross-platform search buttons |
 | 🎙️ **AI Voice Mock Interview** | **[`/interview.html`](https://careerpath-ai-jade.vercel.app/interview.html)** | Real-time mic recording, natural voice synthesis (Joanna, Matthew, Amy, Brian), 3-pillar evaluation (Depth, Clarity, Practicality), and model answers |
 | 🧭 **Career GPS & Readiness Index** | **Real-Time 0-100% Metric** | Live composite readiness index, 1-click "Bridge the Gap" roadmap task injection, 3-state resume gate, canonical skill ledger, profile status selector |
@@ -152,7 +164,7 @@ Welcome, Hack2Ignite Evaluators! We have eliminated all testing friction so you 
 | 🎬 **Demo Walkthrough Script** | **[`docs/DEMO-SCRIPT.md`](docs/DEMO-SCRIPT.md)** | Step-by-step 3–4 minute evaluator flow script |
 | 🏛️ **System Architecture Spec** | **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** | Comprehensive system architecture & threat model specification |
 | 🔌 **Complete API Specification** | **[`docs/API-SPECIFICATION.md`](docs/API-SPECIFICATION.md)** | Full REST API specification across all 15 modules (including ATS & Video Telemetry) |
-| 🗄️ **Backend Schema & Models** | **[`docs/BACKEND-SCHEMA.md`](docs/BACKEND-SCHEMA.md)** | Mongoose data models for User, Company, JobOpening, Application, Resume, Roadmap |
+| 🗄️ **Backend Schema & Models** | **[`docs/BACKEND-SCHEMA.md`](docs/BACKEND-SCHEMA.md)** | Prisma ORM schemas & models for User, Company, JobOpening, Application, Resume, Roadmap |
 | 🌐 **External API Ecosystem** | **[`docs/API-ECOSYSTEM.md`](docs/API-ECOSYSTEM.md)** | Multi-model Groq/Gemini AI, Adzuna, GitHub, Cloudinary, YouTube IFrame API mesh |
 | 📋 **Requirements Matrix (RTM)** | **[`docs/REQUIREMENTS-MATRIX.md`](docs/REQUIREMENTS-MATRIX.md)** | 100% verified traceability matrix mapped to official hackathon rules & ED-02 |
 | 🎨 **UI/UX Design Systems** | **[`docs/UI-UX-DESIGN.md`](docs/UI-UX-DESIGN.md)** | Apple/Linear-grade profile card, 90% Bento Grid, 2D percentage gauge, glassmorphic design |
@@ -404,22 +416,40 @@ Online learners frequently drop out when they enroll in 5+ disparate tracks simu
 
 To balance focus with multidisciplinary synergy, CareerPath AI transitioned from a single rigid route to a **Dual Concurrent Active Roadmaps Architecture** ($\le 2$ parallel tracks), rigorously enforced at both the database engine and service layer.
 
-### 5.2 MongoDB Compound Partial Unique Index (`{ user: 1, career: 1 }`)
-To prevent duplicate enrollments in the same career track while strictly allowing up to 2 distinct active tracks:
+### 5.2 PostgreSQL Compound Partial Unique Index (`idx_user_career_active_route`) & Prisma ORM
+To prevent duplicate enrollments in the same career track while strictly allowing up to 2 distinct active tracks, CareerPath AI utilizes a native PostgreSQL partial unique index managed via Prisma ORM:
+
+```sql
+-- PostgreSQL Compound Partial Unique Index (Applied via Supabase DDL Migration)
+CREATE UNIQUE INDEX idx_user_career_active_route 
+ON "Roadmap"("userId", "careerId") 
+WHERE (status = 'active');
+```
 
 ```javascript
-// server/models/Roadmap.js
-RoadmapSchema.index(
-  { user: 1, career: 1 },
-  { 
-    unique: true, 
-    partialFilterExpression: { status: 'active' } 
+// server/controllers/roadmapController.js
+// Prisma P2002 Unique Constraint Exception Handler
+try {
+  const newRoadmap = await prisma.roadmap.create({
+    data: {
+      userId: req.user.id,
+      careerId: career.id,
+      status: 'active',
+      // ...
+    }
+  });
+} catch (error) {
+  if (error.code === 'P2002') {
+    return res.status(409).json({
+      error: 'ALREADY_ENROLLED_IN_COURSE',
+      message: 'You already have an active roadmap for this career track.'
+    });
   }
-);
+}
 ```
-- **Zero Duplicate Tracks:** A student can never have two active roadmaps for the *same* career track (`E11000 duplicate key error`).
+- **Zero Duplicate Tracks:** A student can never have two active roadmaps for the *same* career track (Prisma `P2002` uniqueness violation caught safely as HTTP 409).
 - **Bounded Concurrency:** The service layer restricts total active roadmaps to at most **2 tracks** (`status: 'active'`).
-- **Historical Flexibility:** Unlimited completed, abandoned, or archived roadmaps can coexist in the student's career history.
+- **Historical Flexibility:** Unlimited completed, abandoned, or archived roadmaps can coexist in the student's career history without index conflicts.
 
 ### 5.3 Course Synergy Rules Engine (3-Level Validation)
 When a student attempts to enroll in a second active course via `POST /api/roadmaps/generate`, `server/services/courseSynergyService.js` executes three sequential runtime checks:
@@ -453,7 +483,7 @@ When a student attempts to enroll in a second active course via `POST /api/roadm
 ```
 
 1. **Check A (`HTTP 409 ALREADY_ENROLLED_IN_COURSE`):** Verifies the student is not already actively pursuing this exact role.
-2. **Check B (`HTTP 409 MAX_ACTIVE_ROUTES_REACHED`):** Checks `Roadmap.countDocuments({ user, status: 'active' })`. If $\ge 2$, blocks further active enrollments.
+2. **Check B (`HTTP 409 MAX_ACTIVE_ROUTES_REACHED`):** Checks `prisma.roadmap.count({ where: { userId, status: 'active' } })`. If $\ge 2$, blocks further active enrollments.
 3. **Check C (`HTTP 400 UNRELATED_COURSE_RESTRICTION`):** Evaluates relationship between the new candidate track and the currently active track across 3 deterministic criteria:
    - **Level 1 (Domain Match):** Both careers share the same primary industry category (e.g., both `Development`, both `Data`, or both `Security`).
    - **Level 2 (Cross-Domain Synergy Pairs):** Recognized industry crossover pairings:
@@ -467,11 +497,15 @@ When a student attempts to enroll in a second active course via `POST /api/roadm
 
 If all three levels fail (e.g., attempting to enroll in *Game Developer* while pursuing *Healthcare Analytics*), the system returns a descriptive error explaining why learning divergence impairs skill retention.
 
-### 5.4 Non-Destructive 7-Day Rate-Limited Abandonment
+### 5.4 Non-Destructive Route Abandonment (Multi-Track Selector & 7-Day Cooldown)
 Students are not locked into a career indefinitely, but abandonment is treated with intentional discipline:
-1. **7-Day Rate-Limiting Cooldown:** `User.lastAbandonedRouteAt` tracks abandonment. If a student attempts to abandon again within 7 days, the request returns `HTTP 429 ABANDON_COOLDOWN_ACTIVE`.
-2. **Zero Progress Loss Guarantee:** Abandoning updates roadmap status to `'abandoned'`. All weekly milestone test scores, task checkboxes, and verified skill badges are **100% preserved**.
-3. **Resumption:** An abandoned roadmap can be resumed anytime via `POST /api/roadmaps/:id/resume`, provided the student has $< 2$ active routes and passes course synergy criteria.
+1. **Interactive Multi-Route Modal (`#abandonRoadmapModal`):**
+   - Available on both `/recommendations.html` and `/roadmap.html`.
+   - In dual-track enrollment, presents an intuitive selector allowing students to selectively abandon **Track 1**, **Track 2**, or **Both routes** simultaneously.
+   - Built as unnested Bootstrap 5 modal components with automatic DOM teleportation and native `confirm()` fallback to prevent modal freezing.
+2. **7-Day Rate-Limiting Cooldown:** `User.lastAbandonedRouteAt` tracks abandonment timestamps. If a student attempts to abandon again within 7 days, the request returns `HTTP 429 ABANDON_COOLDOWN_ACTIVE`.
+3. **Zero Progress Loss Guarantee:** Abandoning updates roadmap status to `'abandoned'`. All weekly milestone test scores, task checkboxes, and verified skill badges are **100% preserved**.
+4. **Resumption:** An abandoned roadmap can be resumed anytime via `POST /api/roadmaps/:id/resume`, provided the student has $< 2$ active routes and passes course synergy criteria.
 
 ### 5.5 Dynamic Track Switcher & "Lock Enrolling, Never Browsing" UI
 - **Pill Tab Switchers:** Both `/dashboard.html` and `/roadmap.html` feature dynamic dual-track switchers:
@@ -612,7 +646,7 @@ To prevent orphaned cloud files from inflating storage quotas:
 2. Upload new buffer to Cloudinary CDN (`resource_type: 'raw'`).
 3. If an existing resume exists:
    - Transactionally destroy the previous asset on Cloudinary (`cloudinary.uploader.destroy`).
-   - Update MongoDB `Resume` document with the new URL and metadata.
+   - Update Supabase PostgreSQL `Resume` record via Prisma ORM with the new URL and metadata.
 4. If upload fails, previous assets and records remain completely untouched.
 
 ### 7.3 6-State Interactive Dashboard Experience
@@ -659,27 +693,98 @@ The primary Student Identity & Status card on `/dashboard.html` features an exec
 
 ---
 
-## 💼 Supported Tech Roles & 76+ Standardized Skills Ecosystem
+## 🏷️ Lightcast Open Skills Taxonomy & 76+ Standardized Competencies
 
-CareerPath AI dynamically evaluates, visualizes, and roadmaps **15 high-demand tech roles** mapped across **76 standardized industry skills**:
+CareerPath AI dynamically evaluates, visualizes, and roadmaps **15 high-demand tech roles** mapped across **76 standardized industry skills** normalized against the **Lightcast Open Skills Taxonomy** standards:
 
 | # | Role Title | Category | Slug | Primary Key Skills |
 | :---: | :--- | :---: | :--- | :--- |
 | 1 | 💻 **Front-End Developer** | Development | `front-end-developer` | HTML, CSS, JavaScript, React, Tailwind CSS, Responsive Design, TypeScript |
-| 2 | ⚡ **Full-Stack Developer** | Development | `full-stack-developer` | JavaScript, React, Node.js, Express, MongoDB, REST APIs, Next.js, Docker |
+| 2 | ⚡ **Full-Stack Developer** | Development | `full-stack-developer` | JavaScript, React, Node.js, Express, PostgreSQL, REST APIs, Next.js, Docker |
 | 3 | 📊 **Data Analyst** | Data | `data-analyst` | SQL, Python, Excel, Statistics, Power BI, Data Visualization, Data Cleaning |
 | 4 | 🎨 **UI/UX Designer** | Design | `ui-ux-designer` | Figma, Wireframing, Prototyping, Visual Design, User Research, Design Systems |
 | 5 | 🛡️ **Cybersecurity Analyst** | Security | `cybersecurity-analyst` | Networking, Linux, Cybersecurity Fundamentals, OWASP Basics, Ethical Hacking |
 | 6 | 🤖 **AI / Machine Learning Engineer** | AI & Data | `ai-ml-engineer` | Python, PyTorch, TensorFlow, Scikit-Learn, Generative AI, LangChain, Deep Learning |
 | 7 | ☁️ **DevOps & Cloud Engineer** | Cloud | `devops-cloud-engineer` | AWS, Docker, Kubernetes, Linux, Terraform, CI/CD GitHub Actions, Networking |
 | 8 | 📱 **Mobile App Developer** | Mobile | `mobile-app-developer` | Flutter, Dart, React Native, JavaScript, Firebase, REST APIs, UI/UX |
-| 9 | ⚙️ **Backend Engineer** | Development | `backend-engineer` | Java, Spring Boot, Node.js, PostgreSQL, MongoDB, Redis, REST APIs, Kafka |
+| 9 | ⚙️ **Backend Engineer** | Development | `backend-engineer` | Java, Spring Boot, Node.js, PostgreSQL, Redis, REST APIs, Kafka |
 | 10 | 🧠 **Data Scientist** | Data | `data-scientist` | Python, SQL, Statistics, Scikit-Learn, Pandas, Deep Learning, Data Visualization |
 | 11 | 🧪 **QA Automation Engineer** | Testing | `qa-automation-engineer` | Cypress, Playwright, Selenium, Postman, JavaScript, CI/CD, Python |
 | 12 | 🎮 **Game Developer** | Gaming | `game-developer` | Unity, C#, Unreal Engine 5, C++, Visual Design, 3D Mathematics |
 | 13 | 🔗 **Blockchain & Web3 Developer** | Web3 | `blockchain-web3-developer` | Solidity, Smart Contracts, Web3.js, JavaScript, Node.js, REST APIs |
 | 14 | 🚨 **Cloud Security & DevSecOps** | Security | `cloud-security-engineer` | Cybersecurity Fundamentals, Linux, Networking, AWS, Docker, OWASP, CI/CD |
 | 15 | 📋 **Technical Product Manager** | Product | `technical-product-manager` | Product Management, Agile & Scrum, User Stories, User Research, Communication |
+
+### 8.1 Core, Tool & Soft Skills Tri-Categorization
+Following the global **Lightcast Open Skills Taxonomy standard**, every competency in CareerPath AI is classified into one of three structural archetypes:
+1. **⚡ Core Specialized Skills (`type: "core"`):** Foundational conceptual competencies (e.g., *Data Structures*, *Distributed Systems*, *Algorithms*, *Relational Database Design*, *RESTful Architecture*).
+2. **🛠️ Tool & Technology Skills (`type: "tool"`):** Specific languages, frameworks, runtime environments, and vendor platforms (e.g., *React*, *PostgreSQL*, *Docker*, *AWS*, *TypeScript*, *Figma*).
+3. **👥 Soft & Workplace Competencies (`type: "soft"`):** Professional execution skills (e.g., *Agile & Scrum*, *User Stories*, *Cross-Functional Communication*, *Technical Documentation*).
+
+In the frontend student portal (`recommendations.html`, `dashboard.html`, `assessment.html`), skills are visually tagged with Lightcast badges:
+- ⚡ **Core Competency** (Amber / Indigo badge)
+- 🛠️ **Tool / Framework** (Cyan / Slate badge)
+- 👥 **Soft Skill** (Emerald / Teal badge)
+
+### 8.2 Dynamic Skill Alias Resolution & ATS Keyword Normalization
+Students and resume parsers express the same engineering competency using disparate aliases (e.g., *"React.js"*, *"ReactJS"*, *"React Native"*, *"Postgres"*, *"PSQL"*, *"PostgreSQL"*).
+To eliminate fragmentation and compute exact ATS match scores, `server/services/skillTaxonomyService.js` provides $O(1)$ in-memory canonical alias mapping:
+
+- **Canonical Alias Resolution (`GET /api/skills/resolve?name=postgres`):**
+  ```json
+  {
+    "query": "postgres",
+    "matched": true,
+    "canonical": {
+      "slug": "postgresql",
+      "displayName": "PostgreSQL",
+      "type": "tool",
+      "category": "Database",
+      "subcategory": "Relational Databases",
+      "lightcastId": "KS120P86G9F916X8D6H3"
+    }
+  }
+  ```
+- **Related Skills Knowledge Graph (`GET /api/skills/related/react`):**
+  Identifies adjacent skills within the same Lightcast subcategory (e.g., `React` yields `JavaScript`, `TypeScript`, `Next.js`, `Redux`).
+- **Full Taxonomy Tree & Summary (`GET /api/skills/taxonomy/summary`):**
+  Streams active distribution of Core, Tool, and Soft competencies across all 76+ curriculum anchors.
+
+### 8.3 Automated Background Maintenance & Streak Nudge Engine
+To drive long-term habit formation, prevent student abandonment, and ensure database health, CareerPath AI runs a persistent background maintenance engine (`server/services/cronService.js`):
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│               AUTOMATED BACKGROUND MAINTENANCE WORKER                  │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│   1. 180-Day Skill Currency Ledger Validation                          │
+│      • Automatically flags skill proof-of-work older than 180 days     │
+│      • Enforces fresh verification before Job Ready certification      │
+│                                                                        │
+│   2. YouTube Data API v3 Cache Health Sweep                            │
+│      • Prunes stale video metadata and maintains optimal latency       │
+│                                                                        │
+│   3. 📬 Inactivity & Streak Motivation Nudge Email Engine               │
+│      • Monitors student roadmap progress every 24 hours                │
+│      • Detects 3+ days of inactivity since last completed task         │
+│      • Computes remaining tasks in current week dynamically            │
+│      • Dispatches personalized, mobile-responsive HTML motivational    │
+│        email via Nodemailer (Gmail SSL Port 465 / TLS 587)             │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **Intelligent Inactivity Trigger (3-Day Inactivity Threshold):**
+   - Scans all enrolled students with active roadmaps (`status: 'active'`).
+   - If the student has not completed any task for $\ge 3$ days, the engine triggers an automated motivational streak alert:
+   - *"Don't break your momentum! Week 2 complete karne me sirf 2 tasks bache hain."*
+2. **On-Demand Test & Evaluator Trigger (`POST /api/roadmaps/nudge/test`):**
+   - Allows evaluators and administrators to test the streak nudge delivery on-demand with zero waiting.
+   - Live in the UI: On `roadmap.html`, clicking **`[Streak Alert Email]`** immediately calculates remaining tasks and dispatches a live test email directly to the student's registered inbox.
+3. **Execution Guardrails:**
+   - Runs as an active background worker on persistent servers (Render / Local).
+   - In serverless environments (Vercel Edge), automatically defaults to graceful on-demand invocation to prevent serverless hanging.
 
 ---
 
@@ -861,7 +966,7 @@ Students explore direct company openings on `/jobs.html` and `/dashboard.html`:
   For every open listing, the platform calculates a real-time match score based on the student's assessed and verified skill passport:
   $$\text{Match Score} = \left(\frac{\sum \text{Matched Skills (weighted by verification)}}{\text{Total Required Skills}}\right) \times 100$$
 - **1-Click Instant Apply:** Students apply instantly using their verified profile. Their dedicated ATS-formatted resume and verified skill credentials are automatically bundled into the application (`POST /api/jobs/:id/apply`).
-- **Compound Unique Protection:** MongoDB compound index `{ job: 1, student: 1 }` prevents duplicate applications, ensuring a clean pipeline.
+- **Compound Unique Protection:** PostgreSQL compound unique constraint `@@unique([jobId, studentId])` in Prisma schema prevents duplicate applications, ensuring a clean pipeline.
 - **Application Tracking:** Students monitor their application review status and recruiter notes live under the "My Submitted Applications" tab.
 
 ### 11.6 Recruiter & Student Portal Isolation & RBAC Architecture
@@ -1048,16 +1153,16 @@ flowchart TD
         SecurityMW --> CompanyValidation
     end
 
-    subgraph DatabaseLayer ["3. Persistence Layer (MongoDB Atlas Cloud · TLS Encryption)"]
-        UserCollection[("Users Collection\n- Profile, Stream, ProfileStatus, recruiterProfile")]
-        ResumeCollection[("Resumes Collection\n- Dedicated 1:1 Schema\n- Unique Index: { user: 1 }")]
-        RoadmapCollection[("Roadmaps Collection\n- Compound Partial Unique Index:\n  { user: 1, career: 1 } (status: 'active')")]
-        CompanyCollection[("Companies Collection\n- Domain Unique Index, DNS & HTTP Flags, Verification Score")]
-        JobOpeningCollection[("JobOpenings Collection\n- Title, Skills, Workplace, Applicants Count")]
-        JobApplicationCollection[("JobApplications Collection\n- Compound Unique: { job: 1, student: 1 }\n- Match Score, Hiring Stages, Notes")]
-        SkillCollection[("Skills Collection\n- 76+ Standardized Skills & Categories")]
-        CareerCollection[("Careers Collection\n- 15 Tech Curricula & Salary Benchmarks")]
-        InterviewCollection[("Interviews Collection\n- Mock Sessions, Transcripts & 3-Pillar Scores")]
+    subgraph DatabaseLayer ["3. Persistence Layer (Supabase PostgreSQL · Prisma ORM & PgBouncer)"]
+        UserModel[("User Model\n- Profile, Stream, ProfileStatus, recruiterProfile")]
+        ResumeModel[("Resume Model\n- Dedicated 1:1 Schema\n- Unique Index: userId")]
+        RoadmapModel[("Roadmap Model\n- Compound Partial Unique Index:\n  idx_user_career_active_route WHERE (status = 'active')")]
+        CompanyModel[("Company Model\n- Domain Unique Index, DNS & HTTP Flags, Verification Score")]
+        JobOpeningModel[("JobOpening Model\n- Title, Skills, Workplace, Applicants Count")]
+        JobApplicationModel[("JobApplication Model\n- Compound Unique: (jobId, studentId)\n- Match Score, Hiring Stages, Notes")]
+        SkillModel[("Skill Model (Lightcast Taxonomy)\n- 76+ Standardized Skills, Core/Tool/Soft Types")]
+        CareerModel[("Career Model\n- 15 Tech Curricula & Salary Benchmarks")]
+        InterviewModel[("Interview Model\n- Mock Sessions, Transcripts & 3-Pillar Scores")]
     end
 
     subgraph ExternalCloud ["4. External Cloud Services & Real-Time APIs"]
@@ -1084,16 +1189,16 @@ flowchart TD
     RecEngine <--> AdzunaAPI
     JobPortalService --> JobBoards
 
-    RoadmapController -- "Enforce Compound Partial Index" --> RoadmapCollection
-    SynergyEngine <--> RoadmapCollection
-    InterviewController <--> InterviewCollection
-    MagicValidator -- "Enforce 1:1 Schema" --> ResumeCollection
-    ReadinessEngine <--> UserCollection
-    ReadinessEngine <--> SkillCollection
-    RecEngine <--> CareerCollection
-    RecruiterController <--> CompanyCollection
-    RecruiterController <--> JobOpeningCollection
-    RecruiterController <--> JobApplicationCollection
+    RoadmapController -- "Enforce Compound Partial Index" --> RoadmapModel
+    SynergyEngine <--> RoadmapModel
+    InterviewController <--> InterviewModel
+    MagicValidator -- "Enforce 1:1 Schema" --> ResumeModel
+    ReadinessEngine <--> UserModel
+    ReadinessEngine <--> SkillModel
+    RecEngine <--> CareerModel
+    RecruiterController <--> CompanyModel
+    RecruiterController <--> JobOpeningModel
+    RecruiterController <--> JobApplicationModel
 ```
 
 ---
@@ -1120,6 +1225,11 @@ flowchart TD
 | `PATCH`| `/api/roadmaps/tasks/:id` | Protected (JWT) | Atomic server-side task checkbox completion & real-time % recalculation |
 | `POST` | `/api/roadmaps/tasks/:taskId/verify-video` | Protected (JWT) | **Video Dedication AI Guard:** Evaluates takeaway synthesis via Groq/Gemini, enforces watch time |
 | `GET`  | `/api/roadmaps/tasks/:taskId/video-checkpoint` | Protected (JWT) | Delivers interactive mid-video 50% comprehension questions |
+| `POST` | `/api/roadmaps/nudge/test` | Protected (JWT) | **Streak Alert Nudge Engine:** Evaluates student inactivity, computes remaining milestone tasks & triggers instant motivation email |
+| `GET`  | `/api/skills/search` | Public | **Lightcast Skill Search:** Fuzzy and prefix query with type (`core`, `tool`, `soft`) and category filtering |
+| `GET`  | `/api/skills/resolve` | Public | **Canonical Alias Resolver:** Normalizes variations (e.g. `postgres` -> `postgresql`) with $O(1)$ in-memory taxonomy lookup |
+| `GET`  | `/api/skills/taxonomy/summary` | Public | **Lightcast Taxonomy Summary:** Delivers real-time distribution across Core, Tool, and Soft skills |
+| `GET`  | `/api/skills/related/:skill` | Public | **Related Skills Graph:** Retrieves adjacent cluster competencies within the same Lightcast subcategory |
 | `GET`  | `/api/readiness/job-ready-check`| Protected (JWT) | Evaluates the 4-Rule Industry Job Ready certification rubric |
 | `GET`  | `/api/readiness/composite` | Protected (JWT) | Returns continuous **Career GPS Job Readiness Index ($0-100\%$)** with evidence weights |
 | `POST` | `/api/quiz/start` | Optional / Demo | Generates 5 calibrated questions via Groq Llama 3.3 70B / Gemini Flash / Fallback |
@@ -1218,8 +1328,10 @@ Higher education institutions face immense pressure to satisfy statutory accredi
 # 1. Backend Setup
 cd careerpath-ai/server
 npm install
-cp .env.example .env     # Pre-configured with demo defaults
-npm run seed             # Seeds 76+ skills, 15 careers & quiz questions
+cp .env.example .env     # Pre-configured with Supabase PostgreSQL connection
+npx prisma generate      # Generates Prisma client
+npx prisma db push       # Syncs database schema with Supabase PostgreSQL
+npm run seed             # Seeds 76+ Lightcast skills, 15 careers & quiz questions
 npm run dev              # Starts Express server on http://localhost:5000
 
 # 2. Frontend Client (in a separate terminal)
@@ -1230,91 +1342,100 @@ npx serve -p 5500        # Serves client on http://localhost:5500
 
 ### 16.2 Automated Test & Verification Commands
 ```bash
-cd careerpath-ai/server
+cd careerpath-ai
+
+# Run Comprehensive 26-Endpoint API Audit on Supabase PostgreSQL (100% Pass)
+node tests/audit_all_apis.js
 
 # Verify Single Active Career Route & Job Ready Engine (9 Assertions)
-npm run test:hardened
+npm --prefix server run test:hardened
 
-# Verify Single Resume per Account & Magic Byte Integrity
-npm run test:resume
-
-# Verify Primary Stream Isolation & Scoping
-npm run test:stream
-
-# Verify Security Guardrails (Helmet, Rate Limiting, Sanitization)
-npm run test:security
-
-# Run Database Migration for Partial Unique Indexes
-npm run migrate:roadmaps
+# Verify Supabase PostgreSQL Migration Integrity & Schema Models
+npm --prefix server run test:supabase
 
 # Verify Recruiter Verification, Real Company Validation & Job Posting Pipeline
-npm run test:recruiter
+node tests/recruiter_verification_e2e_test.js
 
 # Verify Portal Isolation RBAC, Smart Logo Navigation & Landing Auto-Redirect (26 Assertions)
-npm run test:rbac
+node tests/portal_isolation_rbac_test.js
 ```
 
 #### 🛡️ Live Automated Invariant Test Results (100% Pass Rate):
 ```text
-================================================================
-🚀 9-POINT HARDENED SINGLE ACTIVE ROUTE VERIFICATION SUITE
-================================================================
-✔ Test 1: Start a 2nd route while one is active...
-  -> PASSED: Server rejects with HTTP 409 (ACTIVE_ROUTE_IN_PROGRESS)
-✔ Test 2: Two simultaneous generation requests (Partial Unique Index)...
-  -> PASSED: MongoDB 11000 race condition safely caught and returned as HTTP 409
-✔ Test 3: Pass final week test >= 70% (Graduation unlock)...
-  -> PASSED: Roadmap completed and 1 unique credential added to completedPaths
-✔ Test 4: Re-submit final week test (Idempotency Invariant)...
-  -> PASSED: Re-submission is completely idempotent, zero duplicate paths created
-✔ Test 5: Decoupled Job Ready evaluation (Requires all 4 strict criteria)...
-  -> PASSED: Graduation alone does NOT grant Job Ready; structured missing criteria returned
-✔ Test 6: Non-destructive route abandonment & 7-day cooldown...
-  -> PASSED: Route abandoned with 100% data retention and enforced 7-day rate-limit
-✔ Test 7: Browse locked career cards (Lock enrolling, not browsing)...
-  -> PASSED: Discovery and browsing remains 100% open; only enrollment is gated
-✔ Test 8: Pre-flight migration reconciliation logic...
-  -> PASSED: Migration cleans duplicates safely leaving exactly 1 active route
-✔ Test 9: Session-only User Identity (Immune to userId injection)...
-  -> PASSED: Injected userId in payload/query completely ignored in favor of JWT identity
-================================================================
-🎉 ALL 9 HARDENED VERIFICATION TESTS PASSED WITH 100% COMPLIANCE!
-================================================================
+============================================================
+🔍 COMPREHENSIVE API AUDIT ON SUPABASE POSTGRESQL (http://localhost:5099/api)
+============================================================
 
-================================================================
-🚀 RECRUITER VERIFICATION & JOB POSTING E2E TEST SUITE
-================================================================
-✔ Test 1: Free Webmail Blacklist Validation
-  -> PASSED: Blocks @gmail.com, @yahoo.com, @outlook.com, @mailinator.com; permits corporate
-✔ Test 2: Corporate Domain Cross-Match & Precheck
-  -> PASSED: Mismatched domain rejected; Razorpay corporate domain verified (Score: 99/100)
-✔ Test 3: Recruiter Corporate Onboarding & OTP Activation
-  -> PASSED: Pending credentials saved; OTP verified: role=recruiter, canPostJobs=true
-✔ Test 4: Job Opening Creation
-  -> PASSED: Job posted with mandatory verification skills and requireVerifiedRecruiter guard
-✔ Test 5: Candidate 1-Click Application & AI Match Scoring
-  -> PASSED: 1-Click application created; Match Score: 96% with verified skills
-✔ Test 6: Recruiter Applicant Radar & Hiring Stage Updates
-  -> PASSED: Candidate retrieved with verified badges; stage updated to SHORTLISTED and INTERVIEW
-================================================================
-🎉 ALL 6 SUITE TESTS PASSED WITH 100% SUCCESS!
-================================================================
+▶ [1/6] System Health & Meta Endpoints...
+GET /api/health 200
+✅ [200] Health Check (/health)
+GET /api/version 200
+✅ [200] API Version (/version)
 
-================================================================
-🚀 PORTAL ISOLATION RBAC & SMART NAVIGATION VERIFICATION SUITE
-================================================================
-✔ Test 1: requireStudent blocks recruiter role (HTTP 403, RECRUITER_ACCESS_DENIED)
-✔ Test 2: requireStudent allows student role (HTTP 200 OK)
-✔ Test 3: requireStudent allows demo/admin account (demouser@gmail.com bypass)
-✔ Test 4: requireRecruiter blocks student role (HTTP 403, STUDENT_ACCESS_DENIED)
-✔ Test 5: requireRecruiter allows recruiter role (HTTP 200 OK)
-✔ Test 6: requireRecruiter allows demo/admin account (dual evaluation bypass)
-✔ Test 7: Client-side Isolation Routing Rules (zero catalog overlap)
-✔ Test 8: Smart Brand Logo Dispatch Logic (Recruiter, Recruiter Page, Student, Guest)
-✔ Test 9: Landing Page Auto-Redirect & ?view=public Logic (Auto-redirect vs Preview Mode)
-================================================================
-🎉 ALL 26 PORTAL ISOLATION TESTS PASSED WITH 100% SUCCESS!
-================================================================
+▶ [2/6] Authentication Endpoints...
+✅ Supabase PostgreSQL Connected [Prisma ORM]: db.naefjieafxfdzliphaxb.supabase.co
+POST /api/auth/login 200
+✅ [200] Student Login (/auth/login)
+POST /api/auth/login 200
+✅ [200] Recruiter Login (/auth/login)
+GET /api/auth/google/config 200
+✅ [200] Google Auth Config (/auth/google/config)
+GET /api/auth/github/config 200
+✅ [200] GitHub Auth Config (/auth/github/config)
+
+▶ [3/6] User, Assessment, Dashboard & Roadmaps...
+GET /api/users/me 200
+✅ [200] User Profile (/users/me)
+GET /api/assessment 200
+✅ [200] Get Assessment (/assessment)
+PUT /api/assessment 200
+✅ [200] Update Assessment (/assessment)
+POST /api/recommendations/generate 200
+✅ [200] Generate Recommendations (/recommendations/generate)
+GET /api/dashboard 200
+✅ [200] Student Dashboard (/dashboard)
+GET /api/roadmaps/current 200
+✅ [200] Current Active Roadmap (/roadmaps/current)
+
+▶ [4/6] Careers, Skills & Job Market Endpoints...
+GET /api/careers 200
+✅ [200] Careers Catalog (/careers)
+GET /api/careers/full-stack-developer 200
+✅ [200] Career Details (Slug) (/careers/full-stack-developer)
+GET /api/skills 200
+✅ [200] Skills List (/skills)
+GET /api/skills/search?q=react 200
+✅ [200] Lightcast Skills Search (/skills/search)
+GET /api/skills/resolve?name=postgres 200
+✅ [200] Lightcast Alias Resolver (/skills/resolve)
+GET /api/skills/taxonomy/summary 200
+✅ [200] Lightcast Taxonomy Summary (/skills/taxonomy/summary)
+GET /api/skills/related/react 200
+✅ [200] Lightcast Related Skills (/skills/related/react)
+GET /api/jobs 200
+✅ [200] Market Jobs Feed (/jobs)
+GET /api/jobs/portal-links?role=Software%20Engineer 200
+✅ [200] Multi-Portal Search Links (/jobs/portal-links)
+GET /api/jobs/recruiter-openings 200
+✅ [200] Direct Recruiter Openings (/jobs/recruiter-openings)
+
+▶ [5/6] Readiness & Resume Services...
+GET /api/readiness/status 200
+✅ [200] Job Readiness Index Status (/readiness/status)
+GET /api/users/resume 200
+✅ [200] User Resume Status (/users/resume)
+
+▶ [6/6] Recruiter Enterprise Portal Endpoints...
+GET /api/recruiter/profile 200
+✅ [200] Recruiter Profile (/recruiter/profile)
+GET /api/recruiter/jobs 200
+✅ [200] Recruiter Job Openings (/recruiter/jobs)
+
+============================================================
+📊 TOTAL AUDIT: 26 PASSED / 0 FAILED (26 Total)
+============================================================
+
+🎉 ALL 26 AUDITED API ENDPOINTS FUNCTIONING 100% CORRECTLY ON SUPABASE POSTGRESQL!
 ```
 
 ### 16.3 Production Deployment Topology (Vercel Frontend & Render REST API)
@@ -1335,13 +1456,13 @@ CareerPath AI implements a production-grade decoupled cloud deployment architect
 │   ⚡ BACKEND REST API (Render Web Service)                                             │
 │   • Directory: server/                                                                 │
 │   • Live Gateway: https://careerpath-ai-bdbt.onrender.com                              │
-│   • Runtime: Node.js 18+ Express.js with MongoDB Atlas & Mongoose                      │
-│   • Health Endpoint: /api/health (99.9% Uptime SLA & Atlas Ping Monitor)               │
+│   • Runtime: Node.js 18+ Express.js with Supabase PostgreSQL & Prisma ORM             │
+│   • Health Endpoint: /api/health (99.9% Uptime SLA & Supabase Ping Monitor)            │
 │   • Serverless Fallback: server/vercel.json with @vercel/node engine handler           │
 │   • Security: Helmet headers, CORS origin whitelist, bcryptjs, rate limiting           │
 │                                                                                        │
 │   🗄️ PERSISTENCE & STORAGE TIER                                                        │
-│   • Database: MongoDB Atlas cloud cluster (High availability with M0/M10 replica set)  │
+│   • Database: Supabase PostgreSQL Cloud (Prisma ORM, connection pooling via PgBouncer) │
 │   • Object Storage: Cloudinary secure CDN with single-resume transactional destruction  │
 │                                                                                        │
 └────────────────────────────────────────────────────────────────────────────────────────┘
@@ -1369,7 +1490,7 @@ In strict accordance with the **Hack2Ignite 2026–27 Official Rulebook** (*Rule
    - **Google Gemini API (`gemini-2.5-flash`):** Utilized at runtime as an automated secondary failover inference engine.
 2. **Development Assistance AI:**
    - LLMs were utilized for generating seed industry curriculum descriptions and Three.js particle buffer shader boilerplate.
-   - **Original Work Guarantee:** All core system architecture, deterministic mathematical scoring algorithms (60/25/15), partial unique indexing, single resume lifecycle, Express REST API controllers, Mongoose schemas, and DOM controllers were originally engineered, tested, and implemented by **Team 404 Brain Not Found**.
+   - **Original Work Guarantee:** All core system architecture, deterministic mathematical scoring algorithms (60/25/15), partial unique indexing, single resume lifecycle, Express REST API controllers, Prisma ORM schemas, and DOM controllers were originally engineered, tested, and implemented by **Team 404 Brain Not Found**.
 
 ---
 
