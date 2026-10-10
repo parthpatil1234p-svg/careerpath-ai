@@ -362,9 +362,38 @@ const getCurrentRoadmap = async (req, res, next) => {
       await roadmap.save();
     }
 
-    const tasks = await RoadmapTask.find({ roadmap: roadmap._id })
+    let tasks = await RoadmapTask.find({ roadmap: roadmap._id })
       .sort({ weekNumber: 1, order: 1 })
       .select('-__v');
+
+    // Self-healing guard: If an active roadmap has 0 tasks, automatically synthesize and attach curriculum tasks
+    if ((!tasks || tasks.length === 0) && roadmap.status === 'active') {
+      try {
+        const targetUser = await User.findById(roadmap.user || req.user._id);
+        const slug = roadmap.careerSnapshot?.slug || 'front-end-developer';
+        let targetCareer = await Career.findOne({ slug })
+          .populate({ path: 'requiredSkills.skill', select: 'name displayName category description' });
+        if (!targetCareer) {
+          targetCareer = await Career.findOne({ active: true })
+            .populate({ path: 'requiredSkills.skill', select: 'name displayName category description' });
+        }
+
+        if (targetCareer && targetUser) {
+          const { taskDocuments } = generateRoadmapTasks(targetUser, targetCareer, roadmap.durationWeeks || 4);
+          if (Array.isArray(taskDocuments) && taskDocuments.length > 0) {
+            const tasksWithRoadmapId = taskDocuments.map((t) => ({
+              ...t,
+              roadmap: roadmap._id,
+            }));
+            tasks = await RoadmapTask.insertMany(tasksWithRoadmapId);
+            roadmap.totalTasks = tasks.length;
+            await roadmap.save();
+          }
+        }
+      } catch (healErr) {
+        console.warn('[RoadmapController] Auto-healing tasks warning:', healErr.message);
+      }
+    }
 
     const weeks = groupTasksByWeek(tasks, roadmap.durationWeeks);
 
