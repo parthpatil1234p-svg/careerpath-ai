@@ -60,7 +60,6 @@ model User {
   createdAt                     DateTime  @default(now())
   updatedAt                     DateTime  @updatedAt
 
-  @@index([email])
   @@index([role])
   @@index([googleId])
   @@index([githubId])
@@ -97,6 +96,7 @@ model Roadmap {
   @@index([userId])
   @@index([careerId])
   @@index([status])
+  @@index([userId, status, createdAt(sort: Desc)], map: "idx_roadmap_user_status_created")
 }
 
 // ── 3. RoadmapTask Model ──────────────────────────────────────
@@ -137,6 +137,8 @@ model RoadmapTask {
   @@index([roadmapId])
   @@index([weekNumber])
   @@index([completed])
+  @@index([roadmapId, weekNumber, order], map: "idx_roadmaptask_roadmap_week_order")
+  @@index([roadmapId, completed, weekNumber, order], map: "idx_roadmaptask_roadmap_completed_week_order")
 }
 
 // ── 4. Career Model ───────────────────────────────────────────
@@ -162,7 +164,6 @@ model Career {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 
-  @@index([slug])
   @@index([category])
 }
 
@@ -182,10 +183,10 @@ model Skill {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  @@index([name])
   @@index([category])
   @@index([subcategory])
   @@index([type])
+  @@index([active, category, displayName], map: "idx_skill_active_category_displayname")
 }
 
 // ── 6. Attempt Model ──────────────────────────────────────────
@@ -219,6 +220,8 @@ model Attempt {
   @@index([type])
   @@index([skill])
   @@index([roadmapId])
+  @@index([userId, roadmapId, roadmapWeek, createdAt(sort: Desc)], map: "idx_attempt_user_roadmap_week_created")
+  @@index([createdAt(sort: Desc)], map: "idx_attempt_created_at")
 }
 
 // ── 7. Resume Model ───────────────────────────────────────────
@@ -239,8 +242,6 @@ model Resume {
 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-
-  @@index([userId])
 }
 
 // ── 8. Company Model ──────────────────────────────────────────
@@ -267,7 +268,6 @@ model Company {
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
 
-  @@index([domain])
   @@index([isVerified])
 }
 
@@ -311,6 +311,7 @@ model JobOpening {
   @@index([companyId])
   @@index([careerSlug])
   @@index([status])
+  @@index([recruiterId, createdAt(sort: Desc)], map: "idx_jobopening_recruiter_created")
 }
 
 // ── 10. JobApplication Model ──────────────────────────────────
@@ -343,6 +344,8 @@ model JobApplication {
   @@index([studentId])
   @@index([recruiterId])
   @@index([status])
+  @@index([jobId, matchScore(sort: Desc), createdAt(sort: Desc)], map: "idx_jobapplication_job_matchscore_created")
+  @@index([studentId, createdAt(sort: Desc)], map: "idx_jobapplication_student_created")
 }
 
 // ── 11. YoutubeCache Model ────────────────────────────────────
@@ -357,8 +360,6 @@ model YoutubeCache {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([queryKey])
 }
 
 // ── 12. CampusLead Model ──────────────────────────────────────
