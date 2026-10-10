@@ -411,6 +411,23 @@ const getCurrentRoadmap = async (req, res, next) => {
       }
     }
 
+    // Reconcile and synchronize task completion metrics
+    if (Array.isArray(tasks) && tasks.length > 0) {
+      const actualCompleted = tasks.filter((t) => t.completed).length;
+      const actualTotal = tasks.length;
+      const actualPct = Math.min(Math.max(Math.round((actualCompleted / actualTotal) * 100), 0), 100);
+      if (
+        roadmap.completedTasks !== actualCompleted ||
+        roadmap.totalTasks !== actualTotal ||
+        roadmap.progressPercentage !== actualPct
+      ) {
+        roadmap.completedTasks = actualCompleted;
+        roadmap.totalTasks = actualTotal;
+        roadmap.progressPercentage = actualPct;
+        await roadmap.save();
+      }
+    }
+
     const weeks = groupTasksByWeek(tasks, roadmap.durationWeeks);
 
     // Compute active week number & descriptive string (e.g. "Week 2 of 4")
@@ -442,20 +459,26 @@ const getCurrentRoadmap = async (req, res, next) => {
         completedCount: uniqueCompletedRoadmaps.length,
         maxAllowed: 2,
         canEnrollSecondCourse: allActiveRoadmaps.length === 1,
-        activeRoadmaps: allActiveRoadmaps.map((r) => ({
-          id: r._id,
-          _id: r._id,
-          career: {
-            title: r.careerSnapshot?.title || 'Active Track',
-            slug: r.careerSnapshot?.slug || '',
-            shortDescription: r.careerSnapshot?.shortDescription || '',
-          },
-          durationWeeks: r.durationWeeks,
-          progressPercentage: r.progressPercentage,
-          totalTasks: r.totalTasks,
-          completedTasks: r.completedTasks,
-          status: r.status,
-        })),
+        activeRoadmaps: allActiveRoadmaps.map((r) => {
+          const isMatch = String(r._id || r.id) === String(roadmap._id || roadmap.id);
+          const pct = isMatch ? roadmap.progressPercentage : (r.progressPercentage || 0);
+          const comp = isMatch ? roadmap.completedTasks : (r.completedTasks || 0);
+          const tot = isMatch ? roadmap.totalTasks : (r.totalTasks || 0);
+          return {
+            id: r._id,
+            _id: r._id,
+            career: {
+              title: r.careerSnapshot?.title || 'Active Track',
+              slug: r.careerSnapshot?.slug || '',
+              shortDescription: r.careerSnapshot?.shortDescription || '',
+            },
+            durationWeeks: r.durationWeeks,
+            progressPercentage: pct,
+            totalTasks: tot,
+            completedTasks: comp,
+            status: r.status,
+          };
+        }),
         completedRoadmaps: uniqueCompletedRoadmaps.map((r) => ({
           id: r._id,
           _id: r._id,

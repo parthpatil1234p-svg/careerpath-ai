@@ -89,12 +89,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const activeTabsHtml = (allActiveRoadmaps || []).map((r, idx) => {
-        const isActiveThis = Boolean(currentRoadmap && (
-          String(currentRoadmap.id || currentRoadmap._id) === String(r.id || r._id)
-        ));
-        const pct = Math.round(r.progressPercentage || 0);
+        const rId = String(r.id || r._id || '');
+        const currId = String(currentRoadmap?.id || currentRoadmap?._id || '');
+        const isCurrentActive = Boolean(currId && rId && currId === rId) || (allActiveRoadmaps.length === 1 && currentRoadmap?.status !== 'completed');
+        const pct = isCurrentActive
+          ? Math.round(currentRoadmap?.progressPercentage ?? r.progressPercentage ?? 0)
+          : Math.round(r.progressPercentage ?? 0);
         return `
-          <button type="button" class="btn btn-sm ${isActiveThis ? 'cp-btn-primary shadow-sm' : 'cp-btn-outline'} roadmap-track-tab-btn" data-roadmap-id="${r.id || r._id}" title="Active learning track">
+          <button type="button" class="btn btn-sm ${isCurrentActive ? 'cp-btn-primary shadow-sm' : 'cp-btn-outline'} roadmap-track-tab-btn" data-roadmap-id="${rId}" title="Active learning track">
             <i class="bi bi-compass me-1"></i> Track ${idx + 1}: ${escapeHtml(r.career?.title || 'Active Track')} (${pct}%)
           </button>
         `;
@@ -251,6 +253,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     updateProgressUI(currentRoadmap.progressPercentage, currentRoadmap.completedTasksCount, currentRoadmap.totalTasksCount);
+    renderTrackSwitcher();
 
     // Group tasks by week
     const weekMap = {};
@@ -573,7 +576,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (res.success && res.data) {
             const { task, roadmap } = res.data;
 
-            const localTask = currentTasks.find((t) => t._id === taskId);
+            const localTask = currentTasks.find((t) => String(t._id || t.id) === String(taskId));
             if (localTask) {
               localTask.completed = task.completed;
             }
@@ -588,11 +591,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Real-time track switcher arrays update
-            const currentId = String(currentRoadmap.id || currentRoadmap._id);
+            const currentId = String(currentRoadmap.id || currentRoadmap._id || '');
             if (roadmap.status === 'completed' || roadmap.progressPercentage >= 100) {
               // Move from active list to completed list in memory in real time
-              allActiveRoadmaps = (allActiveRoadmaps || []).filter(r => String(r.id || r._id) !== currentId);
-              const existsInComp = (allCompletedRoadmaps || []).some(r => String(r.id || r._id) === currentId);
+              allActiveRoadmaps = (allActiveRoadmaps || []).filter(r => {
+                const rId = String(r.id || r._id || '');
+                return rId && rId !== currentId;
+              });
+              const existsInComp = (allCompletedRoadmaps || []).some(r => {
+                const rId = String(r.id || r._id || '');
+                return rId && rId === currentId;
+              });
               if (!existsInComp) {
                 allCompletedRoadmaps.unshift({
                   ...currentRoadmap,
@@ -601,10 +610,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
               }
             } else {
-              const activeItem = (allActiveRoadmaps || []).find(r => String(r.id || r._id) === currentId);
-              if (activeItem) {
-                activeItem.progressPercentage = roadmap.progressPercentage;
-                activeItem.completedTasks = roadmap.completedTasksCount;
+              if (Array.isArray(allActiveRoadmaps)) {
+                allActiveRoadmaps.forEach((r) => {
+                  const rId = String(r.id || r._id || '');
+                  if (rId === currentId || allActiveRoadmaps.length === 1) {
+                    r.progressPercentage = roadmap.progressPercentage;
+                    r.completedTasks = roadmap.completedTasksCount;
+                    if (roadmap.totalTasksCount) r.totalTasks = roadmap.totalTasksCount;
+                  }
+                });
               }
             }
 
