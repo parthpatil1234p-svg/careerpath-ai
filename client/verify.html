@@ -285,143 +285,219 @@
         <!-- The Elevated Ivy-League Certificate Presentation -->
         <div class="verify-card-cert mb-5">
           <div class="official-certificate-container" id="printableCertificate">
-            <!-- Guilloche Corners -->
-            <div class="cert-corner cert-corner-tl"></div>
-            <div class="cert-corner cert-corner-tr"></div>
-            <div class="cert-corner cert-corner-bl"></div>
-            <div class="cert-corner cert-corner-br"></div>
+            <!-- Outer & Inner Framed Borders -->
+            <div class="cert-frame-outer"></div>
+            <div class="cert-frame-inner"></div>
 
-            <!-- Top Header -->
-            <div class="cert-header-bar d-flex justify-content-between align-items-center mb-3">
-              <div class="d-flex align-items-center gap-2.5 text-start">
-                <div class="cert-crest-monogram">
-                  <i class="bi bi-bank2"></i>
-                </div>
-                <div>
-                  <div class="cert-registry-title">CAREERPATH AI GLOBAL ACCREDITATION REGISTRY</div>
-                  <div class="cert-registry-sub">VERIFIED TALENT CREDENTIAL DIRECTORY &middot; CAREERPATH AI GLOBAL REGISTRY</div>
-                </div>
-              </div>
-
-              <!-- 3D Seal -->
-              <div class="certificate-seal-wrapper">
-                <div class="certificate-seal" title="Authentic Cryptographic Seal">
-                  <div class="seal-inner-circle">
-                    <i class="bi bi-award-fill"></i>
-                    <div class="seal-text-arch">JOB READY</div>
-                  </div>
-                </div>
-                <div class="seal-ribbon seal-ribbon-red"></div>
-                <div class="seal-ribbon seal-ribbon-gold"></div>
-              </div>
+            <!-- Top-Right Luxury Navy & Gold Corner Waves -->
+            <div class="cert-corner-wave cert-wave-tr" aria-hidden="true">
+              <svg viewBox="0 0 380 280" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                <defs>
+                  <linearGradient id="certNavyGradTR" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#081A32" />
+                    <stop offset="55%" stop-color="#0D2E55" />
+                    <stop offset="100%" stop-color="#040D1A" />
+                  </linearGradient>
+                  <linearGradient id="certGoldGradTR" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FDE68A" />
+                    <stop offset="30%" stop-color="#D4AF37" />
+                    <stop offset="70%" stop-color="#B48C36" />
+                    <stop offset="100%" stop-color="#F59E0B" />
+                  </linearGradient>
+                  <linearGradient id="certAccentBlueTR" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1E3A8A" />
+                    <stop offset="100%" stop-color="#0F172A" />
+                  </linearGradient>
+                </defs>
+                <path d="M40 0 C170 30 280 110 355 210 Q372 245 380 280 L380 0 Z" fill="#020617" opacity="0.4" />
+                <path d="M75 0 C195 32 295 115 365 215 Q375 248 380 275 L380 0 Z" fill="url(#certAccentBlueTR)" opacity="0.9" />
+                <path d="M110 0 C220 38 312 122 372 222 Q377 245 380 262 L380 245 Q375 225 368 205 C305 108 215 26 100 0 Z" fill="url(#certGoldGradTR)" />
+                <path d="M130 0 C235 42 322 128 376 228 Q379 242 380 252 L380 0 Z" fill="url(#certNavyGradTR)" />
+                <path d="M130 0 C235 42 322 128 376 228 Q379 242 380 252" stroke="url(#certGoldGradTR)" stroke-width="2.5" fill="none" />
+              </svg>
             </div>
 
-            <!-- Attestation Body -->
-            <div class="cert-center-body my-4 text-center">
-              <div class="cert-eyebrow-text">
-                OFFICIAL DIGITAL CREDENTIAL OF MERIT &amp; JOB READINESS
-              </div>
-              <div class="cert-attestation-sub mt-2 mb-1">
-                This is to certify that
-              </div>
-              <h1 class="cert-recipient-name my-2" id="verifiedStudentName">Parth Patil</h1>
-              <div class="cert-ornament-divider">
-                <span>✦</span> &nbsp; <span class="ornament-gem">❖</span> &nbsp; <span>✦</span>
-              </div>
-              <p class="cert-attestation-body mx-auto">
+            <!-- Bottom-Left Luxury Navy & Gold Corner Waves -->
+            <div class="cert-corner-wave cert-wave-bl" aria-hidden="true">
+              <svg viewBox="0 0 380 280" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                <defs>
+                  <linearGradient id="certNavyGradBL" x1="100%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" stop-color="#081A32" />
+                    <stop offset="55%" stop-color="#0D2E55" />
+                    <stop offset="100%" stop-color="#040D1A" />
+                  </linearGradient>
+                  <linearGradient id="certGoldGradBL" x1="100%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" stop-color="#FDE68A" />
+                    <stop offset="30%" stop-color="#D4AF37" />
+                    <stop offset="70%" stop-color="#B48C36" />
+                    <stop offset="100%" stop-color="#F59E0B" />
+                  </linearGradient>
+                  <linearGradient id="certAccentBlueBL" x1="100%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" stop-color="#1E3A8A" />
+                    <stop offset="100%" stop-color="#0F172A" />
+                  </linearGradient>
+                </defs>
+                <path d="M0 40 C30 170 110 280 210 355 Q245 372 280 380 L0 380 Z" fill="#020617" opacity="0.4" />
+                <path d="M0 75 C32 195 115 295 215 365 Q248 375 275 380 L0 380 Z" fill="url(#certAccentBlueBL)" opacity="0.9" />
+                <path d="M0 110 C38 220 122 312 222 372 Q245 377 262 380 L245 380 Q225 375 205 368 C108 305 26 215 0 100 Z" fill="url(#certGoldGradBL)" />
+                <path d="M0 130 C42 235 128 322 228 376 Q242 379 252 380 L0 380 Z" fill="url(#certNavyGradBL)" />
+                <path d="M0 130 C42 235 128 322 228 376 Q242 379 252 380" stroke="url(#certGoldGradBL)" stroke-width="2.5" fill="none" />
+              </svg>
+            </div>
+
+            <!-- Vintage Filigree Corner Ornaments -->
+            <svg class="cert-filigree-corner cert-fc-tl" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6 C24 6 28 22 18 30 C12 36 6 26 18 20 C30 14 42 28 30 42 C20 52 10 38 24 30" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <path d="M6 6 C6 24 22 28 30 18 C36 12 26 6 20 18 C14 30 28 42 42 30 C52 20 38 10 30 24" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <circle cx="6" cy="6" r="3" fill="#D4AF37" />
+              <circle cx="28" cy="14" r="2" fill="#D4AF37" />
+              <circle cx="14" cy="28" r="2" fill="#D4AF37" />
+              <path d="M3 3 L65 3 M3 3 L3 65" stroke="#C79848" stroke-width="1.5" />
+            </svg>
+            <svg class="cert-filigree-corner cert-fc-tr" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6 C24 6 28 22 18 30 C12 36 6 26 18 20 C30 14 42 28 30 42 C20 52 10 38 24 30" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <path d="M6 6 C6 24 22 28 30 18 C36 12 26 6 20 18 C14 30 28 42 42 30 C52 20 38 10 30 24" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <circle cx="6" cy="6" r="3" fill="#D4AF37" />
+              <circle cx="28" cy="14" r="2" fill="#D4AF37" />
+              <circle cx="14" cy="28" r="2" fill="#D4AF37" />
+              <path d="M3 3 L65 3 M3 3 L3 65" stroke="#C79848" stroke-width="1.5" />
+            </svg>
+            <svg class="cert-filigree-corner cert-fc-bl" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6 C24 6 28 22 18 30 C12 36 6 26 18 20 C30 14 42 28 30 42 C20 52 10 38 24 30" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <path d="M6 6 C6 24 22 28 30 18 C36 12 26 6 20 18 C14 30 28 42 42 30 C52 20 38 10 30 24" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <circle cx="6" cy="6" r="3" fill="#D4AF37" />
+              <circle cx="28" cy="14" r="2" fill="#D4AF37" />
+              <circle cx="14" cy="28" r="2" fill="#D4AF37" />
+              <path d="M3 3 L65 3 M3 3 L3 65" stroke="#C79848" stroke-width="1.5" />
+            </svg>
+            <svg class="cert-filigree-corner cert-fc-br" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6 C24 6 28 22 18 30 C12 36 6 26 18 20 C30 14 42 28 30 42 C20 52 10 38 24 30" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <path d="M6 6 C6 24 22 28 30 18 C36 12 26 6 20 18 C14 30 28 42 42 30 C52 20 38 10 30 24" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <circle cx="6" cy="6" r="3" fill="#D4AF37" />
+              <circle cx="28" cy="14" r="2" fill="#D4AF37" />
+              <circle cx="14" cy="28" r="2" fill="#D4AF37" />
+              <path d="M3 3 L65 3 M3 3 L3 65" stroke="#C79848" stroke-width="1.5" />
+            </svg>
+
+            <!-- Center Symmetrical Ornaments -->
+            <svg class="cert-ornament-center cert-ornament-top" viewBox="0 0 170 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 11 C35 11 48 3 70 11 C76 13 81 13 85 6 C89 13 94 13 100 11 C122 3 135 11 160 11" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <circle cx="85" cy="6" r="2.5" fill="#D4AF37" />
+            </svg>
+
+            <svg class="cert-ornament-center cert-ornament-bottom" viewBox="0 0 170 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 11 C35 11 48 19 70 11 C76 9 81 9 85 16 C89 9 94 9 100 11 C122 19 135 11 160 11" stroke="#C79848" stroke-width="1.3" fill="none" />
+              <circle cx="85" cy="16" r="2.5" fill="#D4AF37" />
+            </svg>
+
+            <!-- Main Content Body -->
+            <div class="cert-content">
+              <h1 class="cert-main-title">CERTIFICATE</h1>
+              <div class="cert-main-subtitle">of Appreciation</div>
+              <div class="cert-presented-to">Presented to:</div>
+              <h2 class="cert-recipient-name my-1" id="verifiedStudentName">Parth Patil</h2>
+              <p class="cert-attestation-body mx-auto my-1">
                 has successfully demonstrated code-grounded proficiency, passed weekly proctored technical milestones, and satisfied all four verified hiring benchmarks for the professional designation of:
               </p>
               <div class="cert-target-role my-2" id="verifiedRoleTitle">Financial Analyst &amp; Modeler</div>
-            </div>
 
-            <!-- Executive 4-Pillar Scorecard -->
-            <div class="cert-scorecard-box p-3 my-3 text-start">
-              <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom border-amber-subtle">
-                <span class="cert-scorecard-label">
-                  <i class="bi bi-shield-check text-success me-1"></i> VERIFIED HIRING BENCHMARK SCORECARD
-                </span>
-                <span class="font-mono text-dark fw-bold small" id="verifiedScoreBadge">94% &middot; 🔥 JOB READY CERTIFIED</span>
-              </div>
+              <!-- Executive 4-Pillar Scorecard -->
+              <div class="cert-scorecard-box p-2.5 my-2 text-start">
+                <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom border-amber-subtle">
+                  <span class="cert-scorecard-label">
+                    <i class="bi bi-shield-check text-success me-1"></i> VERIFIED HIRING BENCHMARK SCORECARD
+                  </span>
+                  <span class="font-mono text-dark fw-bold small" id="verifiedScoreBadge">94% &middot; 🔥 JOB READY CERTIFIED</span>
+                </div>
 
-              <div class="row g-2 text-center my-2">
-                <div class="col-6 col-md-3">
-                  <div class="cert-metric-pill">
-                    <div class="cert-metric-label">🎯 Skills Mastered</div>
-                    <div class="cert-metric-val" id="metricSkills">100%</div>
-                    <div class="cert-metric-sub">Code Verified ✓</div>
+                <!-- 4 Micro Benchmark Progress Columns -->
+                <div class="row g-1.5 text-center my-1">
+                  <div class="col-6 col-md-3">
+                    <div class="cert-metric-pill">
+                      <div class="cert-metric-label">🎯 Skills Mastered</div>
+                      <div class="cert-metric-val" id="metricSkills">100%</div>
+                      <div class="cert-metric-sub">Code Verified ✓</div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="cert-metric-pill">
+                      <div class="cert-metric-label">🗺️ Roadmap Progress</div>
+                      <div class="cert-metric-val" id="metricRoadmap">100%</div>
+                      <div class="cert-metric-sub">Milestones Passed ✓</div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="cert-metric-pill">
+                      <div class="cert-metric-label">📄 ATS Resume Fit</div>
+                      <div class="cert-metric-val" id="metricResume">92%</div>
+                      <div class="cert-metric-sub">Strict Structure ✓</div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="cert-metric-pill">
+                      <div class="cert-metric-label">🎙️ Technical Interview</div>
+                      <div class="cert-metric-val" id="metricInterview">90%</div>
+                      <div class="cert-metric-sub">Voice / Q&amp;A Passed ✓</div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-6 col-md-3">
-                  <div class="cert-metric-pill">
-                    <div class="cert-metric-label">🗺️ Roadmap Progress</div>
-                    <div class="cert-metric-val" id="metricRoadmap">100%</div>
-                    <div class="cert-metric-sub">Milestones Passed ✓</div>
-                  </div>
-                </div>
-                <div class="col-6 col-md-3">
-                  <div class="cert-metric-pill">
-                    <div class="cert-metric-label">📄 ATS Resume Fit</div>
-                    <div class="cert-metric-val" id="metricResume">92%</div>
-                    <div class="cert-metric-sub">Strict Structure ✓</div>
-                  </div>
-                </div>
-                <div class="col-6 col-md-3">
-                  <div class="cert-metric-pill">
-                    <div class="cert-metric-label">🎙️ Technical Interview</div>
-                    <div class="cert-metric-val" id="metricInterview">90%</div>
-                    <div class="cert-metric-sub">Voice / Q&amp;A Passed ✓</div>
-                  </div>
-                </div>
-              </div>
 
-              <div class="mt-2.5 pt-2 border-top border-amber-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <div class="d-flex align-items-center flex-wrap gap-1.5">
-                  <span class="cert-scorecard-label me-1">VERIFIED ROLE COMPETENCIES:</span>
-                  <div class="d-inline-flex flex-wrap gap-1.5 align-items-center" id="verifiedSkillsContainer">
-                    <!-- Injected dynamically -->
+                <!-- Role-Specific Verified Competency Badges -->
+                <div class="mt-1.5 pt-1.5 border-top border-amber-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div class="d-flex align-items-center flex-wrap gap-1">
+                    <span class="cert-scorecard-label me-1">VERIFIED ROLE COMPETENCIES:</span>
+                    <div class="d-inline-flex flex-wrap gap-1 align-items-center" id="verifiedSkillsContainer">
+                      <!-- Injected dynamically -->
+                    </div>
                   </div>
-                </div>
-                <span class="cert-competency-status-badge">
-                  <i class="bi bi-shield-check text-success me-1"></i> 5/5 Validated
-                </span>
-              </div>
-            </div>
-
-            <!-- Footer Signatures -->
-            <div class="cert-footer-row row align-items-end mt-4 pt-2 text-start g-3">
-              <div class="col-12 col-md-4 text-center text-md-start">
-                <div class="cert-signature-line">
-                  <div class="cert-signature-svg" id="signatoryName1">Dr. Rajiv Mehta</div>
-                </div>
-                <div class="cert-signatory-name">Dr. Rajiv Mehta</div>
-                <div class="cert-signatory-title">Dean of Academic Standards &middot; Evaluation Council</div>
-                <div class="cert-meta-item mt-1">Date: <strong id="verifiedIssueDate">October 1, 2026</strong></div>
-                <div class="cert-meta-item">ID: <strong class="font-mono" id="verifiedIdText">CP-2026-VRF892</strong></div>
-              </div>
-
-              <div class="col-12 col-md-4 text-center">
-                <div class="cert-qr-frame mx-auto">
-                  <img id="verifiedQrImg" src="" alt="Verification QR" width="84" height="84" class="cert-qr-img" />
-                </div>
-                <div class="cert-qr-caption mt-1">
-                  <i class="bi bi-qr-code-scan me-1 text-primary"></i> Scan with mobile camera
-                </div>
-                <div class="cert-qr-subtext text-muted small">
-                  Official Verification Portal
+                  <span class="cert-competency-status-badge">
+                    <i class="bi bi-shield-check text-success me-1"></i> 5/5 Validated
+                  </span>
                 </div>
               </div>
 
-              <div class="col-12 col-md-4 text-center text-md-end">
-                <div class="cert-signature-line ms-auto">
-                  <div class="cert-signature-svg" id="signatoryName2">CareerPath AI Council</div>
+              <!-- Footer Signatures & Medal Centerpiece -->
+              <div class="cert-footer-row row align-items-end mt-2 pt-1 text-start g-2">
+                <div class="col-12 col-md-4 text-center text-md-start">
+                  <div class="cert-footer-label">Authorized By:</div>
+                  <div class="cert-footer-val">CareerPath AI Accreditation Board</div>
+                  <div class="cert-signature-line">
+                    <div class="cert-signature-svg" id="signatoryName1">Dr. Rajiv Mehta</div>
+                  </div>
+                  <div class="cert-signatory-name">Dr. Rajiv Mehta</div>
+                  <div class="cert-signatory-title">Dean of Academic Standards &middot; Evaluation Council</div>
                 </div>
-                <div class="cert-signatory-name">Academic &amp; Industry Council</div>
-                <div class="cert-signatory-title">Accreditation Board &middot; CareerPath AI Global Registry</div>
-                <div class="cert-meta-item mt-1">
-                  SHA-256: <span id="verifiedShaHash" class="cert-sha-hash font-mono">CC44899A307E...</span>
+
+                <div class="col-12 col-md-4 text-center">
+                  <div class="cert-rosette-medal-wrapper" title="Authentic Job-Ready Gold Medallion">
+                    <div class="cert-rosette-medal" title="Authentic Cryptographic Seal">
+                      <div class="medal-inner-ring">
+                        <i class="bi bi-patch-check-fill"></i>
+                        <span class="medal-inner-text">VERIFIED</span>
+                      </div>
+                    </div>
+                    <div class="cert-rosette-ribbon cert-rosette-ribbon-left"></div>
+                    <div class="cert-rosette-ribbon cert-rosette-ribbon-right"></div>
+                  </div>
+
+                  <div class="cert-qr-frame mx-auto mt-2">
+                    <img id="verifiedQrImg" src="" alt="Verification QR" width="56" height="56" class="cert-qr-img" />
+                  </div>
+                  <div class="cert-qr-caption mt-0.5">
+                    <i class="bi bi-qr-code-scan me-1 text-primary"></i> Scan with mobile camera
+                  </div>
                 </div>
-                <div class="cert-meta-item text-success fw-semibold">
-                  <i class="bi bi-patch-check-fill me-1"></i> Cryptographically Grounded
+
+                <div class="col-12 col-md-4 text-center text-md-end">
+                  <div class="cert-footer-label">Date:</div>
+                  <div class="cert-footer-val" id="verifiedIssueDate">October 1, 2026</div>
+                  <div class="cert-meta-item mt-1">ID: <strong class="font-mono" id="verifiedIdText">CP-2026-VRF892</strong></div>
+                  <div class="cert-meta-item">
+                    SHA-256: <span id="verifiedShaHash" class="cert-sha-hash font-mono">CC44899A307E...</span>
+                  </div>
+                  <div class="cert-meta-item text-success fw-semibold mt-1">
+                    <i class="bi bi-patch-check-fill me-1"></i> Cryptographically Grounded
+                  </div>
                 </div>
               </div>
             </div>

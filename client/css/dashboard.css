@@ -1946,306 +1946,180 @@ body.modal-open .cp-chat-card {
   pointer-events: none !important;
 }
 
-/* Parchment Canvas Container (Proportioned for Landscape Diploma View) */
+/* ==========================================================================
+   LUXURY NAVY-WAVE & GOLD CERTIFICATE OF APPRECIATION SPECIFICATION
+   ========================================================================== */
+
 .official-certificate-container {
-  background: #FAF8F2;
-  background-image: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #FAF6EE 55%, #F4ECE0 100%);
-  border: 3px solid #C5A059;
-  outline: 1.5px solid #DFBE7A;
-  outline-offset: -7px;
-  box-shadow: 0 15px 40px -10px rgba(15, 23, 42, 0.2);
-  border-radius: 10px;
-  padding: 1.25rem 1.85rem 1.15rem;
+  background: #FFFFFF;
   position: relative;
+  border-radius: 6px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  color: #1E293B;
+  padding: 2.25rem 2.85rem 1.85rem;
+  box-sizing: border-box;
+  color: #0F172A;
   transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 @media (min-width: 992px) {
   .official-certificate-container {
-    padding: 1.35rem 2.1rem 1.25rem;
+    padding: 2.5rem 3.25rem 2.1rem;
   }
 }
 
-/* Sovereign Guilloche Security Watermark */
-.official-certificate-container::before {
-  content: '';
+/* Outer & Inner Framed Borders */
+.cert-frame-outer {
   position: absolute;
-  top: 48%;
+  inset: 14px;
+  border: 1px solid rgba(199, 152, 72, 0.45);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cert-frame-inner {
+  position: absolute;
+  inset: 20px;
+  border: 2px solid #C79848;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Geometric Luxury Navy & Gold Corner Waves */
+.cert-corner-wave {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cert-wave-tr {
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 270px;
+  max-width: 44%;
+  max-height: 48%;
+}
+
+.cert-wave-bl {
+  bottom: 0;
+  left: 0;
+  width: 360px;
+  height: 270px;
+  max-width: 44%;
+  max-height: 48%;
+}
+
+/* Vintage Filigree Corner Ornaments */
+.cert-filigree-corner {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.cert-fc-tl { top: 22px; left: 22px; }
+.cert-fc-tr { top: 22px; right: 22px; transform: scaleX(-1); }
+.cert-fc-bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
+.cert-fc-br { bottom: 22px; right: 22px; transform: scale(-1); }
+
+/* Center Symmetrical Ornaments */
+.cert-ornament-center {
+  position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 380px;
-  height: 380px;
-  background-image: 
-    radial-gradient(circle, transparent 32%, rgba(197, 160, 89, 0.08) 33%, transparent 34%),
-    radial-gradient(circle, transparent 48%, rgba(197, 160, 89, 0.065) 49%, transparent 50%),
-    radial-gradient(circle, transparent 64%, rgba(197, 160, 89, 0.055) 65%, transparent 66%),
-    radial-gradient(circle, transparent 78%, rgba(197, 160, 89, 0.045) 79%, transparent 80%),
-    radial-gradient(circle, transparent 90%, rgba(197, 160, 89, 0.035) 91%, transparent 92%);
-  border-radius: 50%;
+  transform: translateX(-50%);
+  width: 170px;
+  height: 22px;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0.9;
+  z-index: 3;
 }
 
-.official-certificate-container > * {
+.cert-ornament-top { top: 22px; }
+.cert-ornament-bottom { bottom: 22px; }
+
+/* Certificate Main Content Container */
+.cert-content {
   position: relative;
-  z-index: 1;
+  z-index: 4;
+  text-align: center;
 }
 
-/* Guilloche Corner Ornaments */
-.cert-corner {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.cert-corner-tl {
-  top: 10px;
-  left: 10px;
-  border-top: 2px solid #C5A059;
-  border-left: 2px solid #C5A059;
-}
-.cert-corner-tl::after {
-  content: '✦';
-  position: absolute;
-  top: 1px;
-  left: 2px;
-  font-size: 0.75rem;
-  color: #C5A059;
-}
-
-.cert-corner-tr {
-  top: 10px;
-  right: 10px;
-  border-top: 2px solid #C5A059;
-  border-right: 2px solid #C5A059;
-}
-.cert-corner-tr::after {
-  content: '✦';
-  position: absolute;
-  top: 1px;
-  right: 2px;
-  font-size: 0.75rem;
-  color: #C5A059;
-}
-
-.cert-corner-bl {
-  bottom: 10px;
-  left: 10px;
-  border-bottom: 2px solid #C5A059;
-  border-left: 2px solid #C5A059;
-}
-.cert-corner-bl::after {
-  content: '✦';
-  position: absolute;
-  bottom: 1px;
-  left: 2px;
-  font-size: 0.75rem;
-  color: #C5A059;
-}
-
-.cert-corner-br {
-  bottom: 10px;
-  right: 10px;
-  border-bottom: 2px solid #C5A059;
-  border-right: 2px solid #C5A059;
-}
-.cert-corner-br::after {
-  content: '✦';
-  position: absolute;
-  bottom: 1px;
-  right: 2px;
-  font-size: 0.75rem;
-  color: #C5A059;
-}
-
-/* Registry Header Bar */
-.cert-crest-monogram {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #DFBE7A 0%, #AA7C11 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-  font-size: 1.15rem;
-  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.15);
-  border: 2px solid #FFFFFF;
-  flex-shrink: 0;
-}
-
-.cert-registry-title {
-  font-family: 'Cinzel', Georgia, serif;
-  font-weight: 800;
-  font-size: 0.86rem;
-  letter-spacing: 1.2px;
-  color: #1E293B;
-  line-height: 1.2;
-}
-
-.cert-registry-sub {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
-  letter-spacing: 0.8px;
-  font-weight: 700;
-  color: #855B14;
-  margin-top: 1px;
-}
-
-/* 3D Metallic Gold Seal with Ribbons */
-.certificate-seal-wrapper {
-  position: relative;
-  width: 66px;
-  height: 66px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.certificate-seal {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #FFF2B2 0%, #D4AF37 38%, #AA7C11 75%, #684805 100%);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.85), inset 0 -3px 5px rgba(0, 0, 0, 0.45);
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid #FFF8DC;
-  cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-}
-
-.certificate-seal:hover {
-  transform: scale(1.08) rotate(3deg);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.25), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -3px 6px rgba(0, 0, 0, 0.45);
-}
-
-.seal-inner-circle {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1px dashed rgba(255, 255, 255, 0.85);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-.seal-inner-circle i {
-  font-size: 1rem;
-  line-height: 1;
-  color: #FFFFFF;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
-}
-
-.seal-text-arch {
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.75rem;
+/* Typographic Hierarchy matching Certificate of Appreciation */
+.cert-main-title {
+  font-family: 'Outfit', 'Cinzel', sans-serif;
+  font-size: 3.25rem;
   font-weight: 900;
-  letter-spacing: 0.8px;
-  color: #FFFFFF;
-  margin-top: 1px;
+  color: #0A2240;
+  letter-spacing: 5px;
   text-transform: uppercase;
+  line-height: 1;
+  margin: 0.15rem 0 0.15rem 0;
 }
 
-.seal-ribbon {
-  position: absolute;
-  top: 40px;
-  width: 14px;
-  height: 30px;
-  z-index: 1;
-}
-
-.seal-ribbon-red {
-  left: 17px;
-  background: linear-gradient(180deg, #991B1B, #7F1D1D);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
-  transform: rotate(14deg);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-}
-
-.seal-ribbon-gold {
-  right: 17px;
-  background: linear-gradient(180deg, #D97706, #B45309);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
-  transform: rotate(-14deg);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-}
-
-/* Attestation Body & Typography */
-.cert-eyebrow-text {
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #9A7B38;
-  text-transform: uppercase;
-}
-
-.cert-attestation-sub {
+.cert-main-subtitle {
   font-family: 'Playfair Display', Georgia, serif;
-  font-style: italic;
-  font-size: 0.92rem;
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: #C5A059;
+  letter-spacing: 1px;
+  line-height: 1.15;
+  margin: 0 0 0.75rem 0;
+}
+
+.cert-presented-to {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
   color: #475569;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.15rem;
 }
 
 .cert-recipient-name {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #0F172A;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  letter-spacing: 0.4px;
-  line-height: 1.15;
-}
-
-.cert-ornament-divider {
+  font-family: 'Great Vibes', cursive, 'Playfair Display', serif;
+  font-size: 3.8rem;
+  font-weight: 400;
   color: #C5A059;
-  font-size: 0.75rem;
-  letter-spacing: 3px;
-  opacity: 0.85;
-  margin: 0.2rem 0;
-}
-
-.cert-ornament-divider .ornament-gem {
-  color: #9A7B38;
-  font-size: 0.85rem;
+  text-shadow: 0 1px 2px rgba(197, 160, 89, 0.15);
+  line-height: 1.1;
+  margin: 0.15rem 0 0.65rem 0;
+  letter-spacing: 0.5px;
 }
 
 .cert-attestation-body {
-  font-size: 0.8rem;
-  line-height: 1.45;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.55;
   color: #334155;
-  max-width: 640px;
+  max-width: 680px;
+  margin: 0 auto 0.65rem;
 }
 
 .cert-target-role {
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 1.2rem;
+  font-family: 'Cinzel', 'Outfit', serif;
+  font-size: 1.25rem;
   font-weight: 800;
-  color: #0B3C5D;
-  letter-spacing: 1.2px;
+  color: #0A2240;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
+  display: inline-block;
+  padding: 0.2rem 0.9rem;
+  background: rgba(197, 160, 89, 0.08);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 9999px;
+  margin-bottom: 0.85rem;
 }
 
 /* Executive 4-Pillar Scorecard */
 .cert-scorecard-box {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(4px);
-  border: 1.5px solid #E6D7BA;
+  background: #FDFBF7;
+  border: 1px solid #E6D7BA;
   border-radius: 8px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: 0.55rem 0.85rem;
+  max-width: 760px;
+  margin: 0 auto 0.95rem;
+  text-align: left;
 }
 
 .cert-scorecard-label {
@@ -2260,7 +2134,7 @@ body.modal-open .cp-chat-card {
   background: #FFFFFF;
   border: 1px solid #EAE0CB;
   border-radius: 6px;
-  padding: 0.35rem 0.25rem;
+  padding: 0.3rem 0.25rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
@@ -2272,7 +2146,7 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-metric-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #64748B;
   margin-bottom: 1px;
@@ -2280,16 +2154,19 @@ body.modal-open .cp-chat-card {
 
 .cert-metric-val {
   font-family: var(--font-mono, monospace);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "zero" 0;
   font-size: 1.05rem;
   font-weight: 800;
-  color: #0B3C5D;
+  color: #0A2240;
 }
 
 .cert-metric-sub {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #16A34A;
   font-family: var(--font-mono, monospace);
+  font-feature-settings: "zero" 0;
 }
 
 .cert-skill-pill {
@@ -2299,8 +2176,8 @@ body.modal-open .cp-chat-card {
   border: 1px solid #DBC493;
   color: #694C11;
   font-weight: 600;
-  font-size: 0.75rem;
-  padding: 0.16rem 0.5rem;
+  font-size: 0.72rem;
+  padding: 0.14rem 0.48rem;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: transform 0.15s ease;
@@ -2312,33 +2189,69 @@ body.modal-open .cp-chat-card {
 
 .cert-competency-status-badge {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "zero" 0;
+  font-size: 0.72rem;
   font-weight: 700;
   color: #15803D;
   background: rgba(34, 197, 94, 0.12);
   border: 1px solid rgba(34, 197, 94, 0.35);
-  padding: 0.2rem 0.55rem;
+  padding: 0.18rem 0.5rem;
   border-radius: 9999px;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
 }
 
-/* Trust & Signatures Footer */
+/* Footer Row & Signatures */
+.cert-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 0.65rem;
+  padding: 0 0.5rem;
+  gap: 1rem;
+}
+
+.cert-footer-col {
+  flex: 1;
+}
+
+.cert-footer-left {
+  text-align: left;
+}
+
+.cert-footer-right {
+  text-align: right;
+}
+
+.cert-footer-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0A2240;
+  margin-bottom: 2px;
+}
+
+.cert-footer-val {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #334155;
+}
+
 .cert-signature-line {
   border-bottom: 1.5px solid #94A3B8;
   padding-bottom: 2px;
-  margin-bottom: 2px;
+  margin: 3px 0 2px;
   display: inline-block;
-  min-width: 150px;
+  min-width: 140px;
 }
 
 .cert-signature-svg {
   font-family: 'Great Vibes', cursive, 'Playfair Display', serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 1.85rem;
-  color: #0F172A;
+  font-size: 1.95rem;
+  color: #0A2240;
   letter-spacing: 0.5px;
   line-height: 1;
   display: inline-block;
@@ -2359,15 +2272,98 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-signatory-title {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: #64748B;
   line-height: 1.2;
 }
 
 .cert-meta-item {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   color: #64748B;
-  margin-top: 1px;
+  margin-top: 2px;
+  font-feature-settings: "zero" 0;
+}
+
+/* Center 3D Gold Rosette Medallion with Blue Ribbons */
+.cert-rosette-medal-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  height: 92px;
+  margin: 0 auto;
+}
+
+.cert-rosette-medal {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFF8E7 0%, #FDE08E 28%, #D4AF37 55%, #AA7C11 80%, #684805 100%);
+  box-shadow: 0 6px 16px rgba(10, 34, 64, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.9), inset 0 -3px 5px rgba(0, 0, 0, 0.45);
+  border: 2px solid #FFF8DC;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.cert-rosette-medal:hover {
+  transform: scale(1.08) rotate(4deg);
+  box-shadow: 0 8px 20px rgba(10, 34, 64, 0.32), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -3px 6px rgba(0, 0, 0, 0.45);
+}
+
+.medal-inner-ring {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.medal-inner-ring i {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #FFFFFF;
+}
+
+.medal-inner-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.cert-rosette-ribbon {
+  position: absolute;
+  top: 48px;
+  width: 20px;
+  height: 42px;
+  z-index: 1;
+  background: linear-gradient(180deg, #0A2240 0%, #153A6B 50%, #1E3A8A 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  border-top: 1px solid #D4AF37;
+}
+
+.cert-rosette-ribbon-left {
+  left: 24px;
+  transform: rotate(15deg);
+}
+
+.cert-rosette-ribbon-right {
+  right: 24px;
+  transform: rotate(-15deg);
 }
 
 .cert-qr-frame {
@@ -2391,19 +2387,16 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-qr-caption {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #475569;
 }
 
-.cert-qr-subtext {
-  font-size: 0.75rem;
-}
-
 .cert-sha-hash {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: #475569;
   letter-spacing: 0.5px;
+  font-feature-settings: "zero" 0;
 }
 
 /* ==========================================================================
@@ -2419,24 +2412,20 @@ body.modal-open .cp-chat-card {
   color: #F8FAFC;
 }
 
-.official-certificate-container.cert-theme-dark .cert-registry-title {
+.official-certificate-container.cert-theme-dark .cert-main-title {
   color: #F8FAFC;
 }
 
-.official-certificate-container.cert-theme-dark .cert-registry-sub {
-  color: #F59E0B;
-}
-
-.official-certificate-container.cert-theme-dark .cert-eyebrow-text {
+.official-certificate-container.cert-theme-dark .cert-main-subtitle {
   color: #FBBF24;
 }
 
-.official-certificate-container.cert-theme-dark .cert-attestation-sub {
+.official-certificate-container.cert-theme-dark .cert-presented-to {
   color: #94A3B8;
 }
 
 .official-certificate-container.cert-theme-dark .cert-recipient-name {
-  color: #FFFFFF;
+  color: #FDE68A;
 }
 
 .official-certificate-container.cert-theme-dark .cert-attestation-body {
@@ -2445,7 +2434,8 @@ body.modal-open .cp-chat-card {
 
 .official-certificate-container.cert-theme-dark .cert-target-role {
   color: #38BDF8;
-  font-weight: 800;
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.35);
 }
 
 .official-certificate-container.cert-theme-dark .cert-scorecard-box {
@@ -2480,20 +2470,12 @@ body.modal-open .cp-chat-card {
   color: #FCD34D;
 }
 
-.official-certificate-container.cert-theme-dark::before {
-  background-image: 
-    radial-gradient(circle transparent 32%, rgba(212, 175, 55, 0.12) 33%, transparent 34%),
-    radial-gradient(circle transparent 48%, rgba(212, 175, 55, 0.09) 49%, transparent 50%),
-    radial-gradient(circle transparent 64%, rgba(212, 175, 55, 0.07) 65%, transparent 66%),
-    radial-gradient(circle transparent 78%, rgba(212, 175, 55, 0.055) 79%, transparent 80%),
-    radial-gradient(circle transparent 90%, rgba(212, 175, 55, 0.04) 91%, transparent 92%);
-  opacity: 0.95;
+.official-certificate-container.cert-theme-dark .cert-footer-label {
+  color: #FBBF24;
 }
 
-.official-certificate-container.cert-theme-dark .cert-metric-pill:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
-  border-color: rgba(212, 175, 55, 0.6);
+.official-certificate-container.cert-theme-dark .cert-footer-val {
+  color: #F8FAFC;
 }
 
 .official-certificate-container.cert-theme-dark .cert-signature-line {
@@ -2505,7 +2487,7 @@ body.modal-open .cp-chat-card {
 }
 
 .official-certificate-container.cert-theme-dark .cert-signature-svg {
-  color: #F8FAFC;
+  color: #FDE68A;
 }
 
 .official-certificate-container.cert-theme-dark .cert-qr-frame {
@@ -2526,6 +2508,40 @@ body.modal-open .cp-chat-card {
 
 .official-certificate-container.cert-theme-dark .cert-sha-hash {
   color: #94A3B8;
+}
+
+/* Responsive Scaling for Mobile Screens */
+@media (max-width: 768px) {
+  .official-certificate-container {
+    padding: 1.5rem 1.2rem 1.2rem;
+  }
+  .cert-main-title {
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+  }
+  .cert-main-subtitle {
+    font-size: 1.5rem;
+  }
+  .cert-recipient-name {
+    font-size: 2.6rem;
+  }
+  .cert-wave-tr, .cert-wave-bl {
+    width: 220px;
+    height: 170px;
+  }
+  .cert-filigree-corner {
+    width: 48px;
+    height: 48px;
+  }
+  .cert-footer-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .cert-footer-left, .cert-footer-right {
+    text-align: center;
+  }
 }
 
 /* ==========================================================================
