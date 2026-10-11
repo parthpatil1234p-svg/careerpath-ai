@@ -36,8 +36,8 @@
     />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css?v=3.0" />
-    <link rel="stylesheet" href="css/dashboard.css?v=3.0" />
+    <link rel="stylesheet" href="css/style.css?v=3.5" />
+    <link rel="stylesheet" href="css/dashboard.css?v=3.5" />
 
     <!-- Vercel Web Analytics (@vercel/analytics) -->
     <script>
@@ -1516,7 +1516,7 @@
               <button type="button" class="btn btn-outline-info btn-sm px-3 text-white" id="btnAddLinkedInCert" title="Add directly to your LinkedIn Licenses & Certifications">
                 <i class="bi bi-linkedin text-info me-1"></i> Add to LinkedIn
               </button>
-              <button type="button" class="btn btn-warning btn-sm px-3 fw-semibold text-dark" id="btnPrintCertPdf" onclick="window.print()">
+              <button type="button" class="btn btn-warning btn-sm px-3 fw-semibold text-dark" id="btnPrintCertPdf" onclick="window.printCertificateModal ? window.printCertificateModal() : window.print()">
                 <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
               </button>
             </div>
@@ -1648,7 +1648,7 @@
     <script src="js/animated-icons.js"></script>
     <script src="js/typing-character-fx.js"></script>
     <script src="js/tech-logos.js?v=3.2.0"></script>
-    <script src="js/dashboard.js?v=3.0"></script>
+    <script src="js/dashboard.js?v=3.5"></script>
     <script src="js/chat.js?v=3.0"></script>
   </body>
 </html>

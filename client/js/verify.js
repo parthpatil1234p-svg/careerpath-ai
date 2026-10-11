@@ -207,6 +207,116 @@ document.addEventListener('DOMContentLoaded', () => {
           : '<i class="bi bi-moon-stars-fill me-1"></i> Dark Obsidian';
       };
     }
+
+    // Helper function for isolated single-page certificate printing in verify portal
+    window.printCertificate = () => {
+      const certCanvas = document.getElementById('printableCertificate');
+      if (!certCanvas) {
+        window.print();
+        return;
+      }
+
+      const oldFrame = document.getElementById('certVerifyPrintIframe');
+      if (oldFrame) oldFrame.remove();
+
+      const printFrame = document.createElement('iframe');
+      printFrame.id = 'certVerifyPrintIframe';
+      printFrame.style.position = 'fixed';
+      printFrame.style.right = '0';
+      printFrame.style.bottom = '0';
+      printFrame.style.width = '0';
+      printFrame.style.height = '0';
+      printFrame.style.border = '0';
+      printFrame.style.opacity = '0';
+      printFrame.style.pointerEvents = 'none';
+      document.body.appendChild(printFrame);
+
+      const isDark = certCanvas.classList.contains('cert-theme-dark');
+      const studentName = document.getElementById('verifiedStudentName')?.textContent?.trim() || 'Verified Student';
+      const roleName = document.getElementById('verifiedRoleTitle')?.textContent?.trim() || 'Professional';
+
+      const frameDoc = printFrame.contentWindow.document;
+      frameDoc.open();
+      frameDoc.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CareerPath AI Certificate &mdash; ${studentName} &mdash; ${roleName}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css?v=3.5">
+  <link rel="stylesheet" href="css/dashboard.css?v=3.5">
+  <style>
+    @page {
+      size: landscape;
+      margin: 0;
+    }
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      box-sizing: border-box !important;
+    }
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: ${isDark ? '#0A0F1D' : '#FAF8F5'} !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .official-certificate-container {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      min-height: 100vh !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      page-break-inside: avoid !important;
+      page-break-after: avoid !important;
+      page-break-before: avoid !important;
+      break-inside: avoid !important;
+      padding: 2.2rem 3.5rem 1.8rem !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  </style>
+</head>
+<body class="${isDark ? 'cert-theme-dark' : ''}">
+  ${certCanvas.outerHTML}
+</body>
+</html>`);
+      frameDoc.close();
+
+      setTimeout(() => {
+        try {
+          printFrame.contentWindow.focus();
+          printFrame.contentWindow.print();
+        } catch (err) {
+          console.warn('Iframe print fallback to window.print', err);
+          window.print();
+        }
+      }, 350);
+    };
+
+    const btnPrintVerify = document.getElementById('btnPrintVerifyCertPdf');
+    if (btnPrintVerify) {
+      btnPrintVerify.onclick = (e) => {
+        if (e) e.preventDefault();
+        window.printCertificate();
+      };
+    }
   }
 
   function renderError(message) {
