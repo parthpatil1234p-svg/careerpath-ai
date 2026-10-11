@@ -136,11 +136,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
+  font-family: 'Outfit', 'Inter', var(--font-heading);
   font-weight: 800;
   font-size: 0.95rem;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(79, 70, 229, 0.25);
+  font-feature-settings: "zero" 0;
 }
 
 .week-card.completed-week .week-badge-pill {
@@ -795,12 +796,13 @@
 }
 
 .timer-digits {
-  font-family: var(--font-mono, ui-monospace, SFMono-Regular, monospace);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #F87171;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "zero" 0, "tnum" 1;
 }
 
 .milestone-timer-pill.is-urgent {

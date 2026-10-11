@@ -84,7 +84,8 @@
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
+  font-feature-settings: "zero" 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: all 0.2s ease;
@@ -259,7 +260,8 @@
 }
 
 .quiz-code-block {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code, monospace);
+  font-feature-settings: "zero" 0;
   font-size: 0.875rem;
   line-height: 1.5;
   background: #0F172A;
@@ -720,7 +722,8 @@
 }
 
 .prove-skills-badge {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
+  font-feature-settings: "zero" 0;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.35rem 0.85rem;
@@ -805,7 +808,8 @@
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
   text-transform: capitalize;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
+  font-feature-settings: "zero" 0;
 }
 
 .prove-skill-level.advanced {
@@ -950,7 +954,9 @@
   gap: 0.4rem;
   padding: 0.35rem 0.85rem;
   border-radius: 9999px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "zero" 0, "tnum" 1;
   font-size: 0.82rem;
   font-weight: 700;
   background: #F1F5F9;

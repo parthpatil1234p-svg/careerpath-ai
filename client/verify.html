@@ -56,11 +56,11 @@
     <link rel="apple-touch-icon" href="favicon.svg" />
     <link rel="manifest" href="site.webmanifest" />
 
-    <!-- Google Fonts: Cinzel, Playfair Display, Outfit, Inter, JetBrains Mono -->
+    <!-- Google Fonts: Cinzel, Playfair Display, Outfit, Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -114,7 +114,8 @@
         background: rgba(16, 185, 129, 0.15);
         border: 1.5px solid #10B981;
         color: #34D399;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-mono);
+        font-feature-settings: "zero" 0;
         font-weight: 700;
         letter-spacing: 0.5px;
         font-size: 0.82rem;
@@ -126,7 +127,8 @@
         background: rgba(239, 68, 68, 0.15);
         border: 1.5px solid #EF4444;
         color: #F87171;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-mono);
+        font-feature-settings: "zero" 0;
         font-weight: 700;
         font-size: 0.82rem;
         padding: 0.35rem 0.85rem;
@@ -138,7 +140,8 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         color: #94A3B8;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-mono);
+        font-feature-settings: "zero" 0;
       }
 
       .verify-meta-val {
@@ -153,7 +156,8 @@
       }
 
       .hash-block {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-code, monospace);
+        font-feature-settings: "zero" 0;
         font-size: 0.72rem;
         background: rgba(0, 0, 0, 0.4);
         border: 1px dashed rgba(212, 175, 55, 0.4);

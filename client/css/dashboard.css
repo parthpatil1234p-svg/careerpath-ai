@@ -368,11 +368,13 @@
 }
 
 .stat-box-atlas .stat-value {
-  font-family: var(--font-mono);
+  font-family: 'Outfit', 'Inter', var(--font-heading);
   font-weight: 800;
   font-size: 1.55rem;
   line-height: 1.1;
   color: #0369A1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "zero" 0;
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
