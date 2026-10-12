@@ -5,6 +5,7 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://careerpath-ai-bdbt.onrender.com/api/$1" },
+    { "source": "/.well-known/(.*)", "destination": "/client/.well-known/$1" },
     { "source": "/(.*)", "destination": "/client/$1" }
   ],
   "headers": [
