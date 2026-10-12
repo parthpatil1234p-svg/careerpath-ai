@@ -51,21 +51,6 @@ const API = {
       fetchConfig.body = JSON.stringify(body);
     }
 
-    let warmupTimer = null;
-    let warmupToast = null;
-    if (!window._serverIsWarm) {
-      warmupTimer = setTimeout(() => {
-        if (!document.getElementById('cold-start-banner') && document.body) {
-          warmupToast = document.createElement('div');
-          warmupToast.id = 'cold-start-banner';
-          warmupToast.className = 'position-fixed bottom-0 start-50 translate-middle-x mb-4 px-3 py-2 rounded-pill shadow-lg border border-warning bg-dark text-white font-mono small d-flex align-items-center gap-2';
-          warmupToast.style.zIndex = '99999';
-          warmupToast.innerHTML = '<span class="spinner-border spinner-border-sm text-warning" role="status"></span><span>⚡ Cloud backend is waking up from sleep (Render cold-start)... Hang tight!</span>';
-          document.body.appendChild(warmupToast);
-        }
-      }, 2500);
-    }
-
     try {
       let response;
       try {
@@ -112,15 +97,11 @@ const API = {
     } catch (err) {
       // Re-throw structured error for catch blocks in UI scripts
       if (err.name === 'TypeError' && err.message.includes('fetch')) {
-        const networkErr = new Error(`Cannot connect to backend (${baseUrl}). If using free tier Render, it may take ~30 seconds to wake up from cold sleep.`);
+        const networkErr = new Error('Unable to connect to server. Please check your connection and try again.');
         networkErr.isNetworkError = true;
         throw networkErr;
       }
       throw err;
-    } finally {
-      if (warmupTimer) clearTimeout(warmupTimer);
-      const toastEl = document.getElementById('cold-start-banner');
-      if (toastEl) toastEl.remove();
     }
   },
 
