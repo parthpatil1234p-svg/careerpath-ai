@@ -96,7 +96,8 @@ app.use(helmet({
         "'unsafe-eval'",
         "https://cdn.jsdelivr.net",
         "https://cdnjs.cloudflare.com",
-        "https://unpkg.com"
+        "https://unpkg.com",
+        "https://analytics.open-domains.com"
       ],
       styleSrc: [
         "'self'",
@@ -123,7 +124,8 @@ app.use(helmet({
         "https://careerpath-ai.vercel.app",
         "https://careerpath-ai-bdbt.onrender.com",
         "https://api.groq.com",
-        "https://generativelanguage.googleapis.com"
+        "https://generativelanguage.googleapis.com",
+        "https://analytics.open-domains.com"
       ],
     }
   },
