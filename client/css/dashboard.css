@@ -854,25 +854,6 @@
   100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
-/* 5. Official Certificate Modal */
-.official-certificate-container {
-  background: #FFFDF9;
-  border: 8px double #C79848;
-  border-radius: 8px;
-  padding: 2.5rem 2rem;
-  position: relative;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-  color: #1E293B;
-  font-family: 'Inter', serif;
-}
-
-.official-certificate-container::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border: 1px solid rgba(199, 152, 72, 0.4);
-  pointer-events: none;
-}
 
 .certificate-seal {
   width: 76px;
@@ -1903,9 +1884,9 @@
    ========================================================================== */
 
 #certificateModal .modal-dialog {
-  max-width: 1040px;
-  width: 95vw;
-  margin: 1.25rem auto;
+  max-width: 1200px;
+  width: 96vw;
+  margin: 1rem auto;
 }
 
 #certificateModal .modal-content {
@@ -1914,12 +1895,12 @@
   border-radius: 14px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
   overflow: hidden;
-  max-height: 94vh;
+  max-height: 96vh;
 }
 
 #certificateModal .modal-body {
   overflow-y: auto;
-  padding: 1.1rem 1.35rem 1.35rem !important;
+  padding: 1rem 1.25rem 1.25rem !important;
 }
 
 /* Hide floating AI mentor prompt and triggers when any modal is open */
@@ -1931,7 +1912,7 @@ body.modal-open .cp-chat-card {
 }
 
 /* ==========================================================================
-   LUXURY NAVY-WAVE & GOLD CERTIFICATE OF APPRECIATION SPECIFICATION
+   LUXURY NAVY-WAVE & GOLD CERTIFICATE OF APPRECIATION SPECIFICATION (16:9 RATIO)
    ========================================================================== */
 
 .official-certificate-container {
@@ -1940,24 +1921,29 @@ body.modal-open .cp-chat-card {
   border-radius: 6px;
   box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
   overflow: hidden !important;
-  padding: 2.25rem 2.85rem 1.85rem;
+  width: 100%;
+  max-width: 1120px;
+  aspect-ratio: 16 / 9;
   box-sizing: border-box;
   color: #0F172A;
   transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-  max-width: 1040px;
   margin: 0 auto;
+  padding: 1.25rem 2.75rem 2.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 @media (min-width: 992px) {
   .official-certificate-container {
-    padding: 2.5rem 3.25rem 2.1rem;
+    padding: 1.35rem 3rem 2.25rem;
   }
 }
 
 /* Outer & Inner Framed Borders */
 .cert-frame-outer {
   position: absolute !important;
-  inset: 12px !important;
+  inset: 10px !important;
   border: 1px solid rgba(199, 152, 72, 0.5) !important;
   pointer-events: none !important;
   z-index: 2 !important;
@@ -1965,7 +1951,7 @@ body.modal-open .cp-chat-card {
 
 .cert-frame-inner {
   position: absolute !important;
-  inset: 18px !important;
+  inset: 16px !important;
   border: 2px solid #C79848 !important;
   pointer-events: none !important;
   z-index: 2 !important;
@@ -1982,108 +1968,120 @@ body.modal-open .cp-chat-card {
 .cert-wave-tr {
   top: 0 !important;
   right: 0 !important;
-  width: 340px !important;
-  height: 250px !important;
-  max-width: 42% !important;
-  max-height: 46% !important;
+  width: 240px !important;
+  height: 160px !important;
+  max-width: 22% !important;
+  max-height: 26% !important;
 }
 
 .cert-wave-bl {
   bottom: 0 !important;
   left: 0 !important;
-  width: 340px !important;
-  height: 250px !important;
-  max-width: 42% !important;
-  max-height: 46% !important;
+  width: 230px !important;
+  height: 150px !important;
+  max-width: 22% !important;
+  max-height: 25% !important;
 }
 
 /* Vintage Filigree Corner Ornaments (Sized strictly to prevent overflow) */
 .cert-filigree-corner {
   position: absolute !important;
-  width: 64px !important;
-  height: 64px !important;
-  max-width: 64px !important;
-  max-height: 64px !important;
+  width: 50px !important;
+  height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
   pointer-events: none !important;
   z-index: 3 !important;
 }
 
-.cert-fc-tl { top: 20px !important; left: 20px !important; }
-.cert-fc-tr { top: 20px !important; right: 20px !important; transform: scaleX(-1) !important; }
-.cert-fc-bl { bottom: 20px !important; left: 20px !important; transform: scaleY(-1) !important; }
-.cert-fc-br { bottom: 20px !important; right: 20px !important; transform: scale(-1) !important; }
+.cert-fc-tl { top: 18px !important; left: 18px !important; }
+.cert-fc-tr { top: 18px !important; right: 18px !important; transform: scaleX(-1) !important; }
+.cert-fc-bl { bottom: 18px !important; left: 18px !important; transform: scaleY(-1) !important; }
+.cert-fc-br { bottom: 18px !important; right: 18px !important; transform: scale(-1) !important; }
 
-/* Certificate Main Content Container */
+/* Certificate Main Content Container (Structured 3-Part 16:9 Flex Hierarchy) */
 .cert-content {
   position: relative;
   z-index: 4;
   text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cert-header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Typographic Hierarchy matching Certificate of Appreciation */
 .cert-main-title {
   font-family: 'Outfit', 'Cinzel', sans-serif;
-  font-size: 3.25rem;
+  font-size: 2.65rem;
   font-weight: 900;
   color: #0A2240;
   letter-spacing: 5px;
   text-transform: uppercase;
   line-height: 1;
-  margin: 0.15rem 0 0.15rem 0;
+  margin: 0 0 0.1rem 0;
 }
 
 .cert-main-subtitle {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #C5A059;
-  letter-spacing: 1px;
-  line-height: 1.15;
-  margin: 0 0 0.75rem 0;
+  letter-spacing: 1.2px;
+  line-height: 1.1;
+  margin: 0 0 0.15rem 0;
 }
 
 .cert-presented-to {
   font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
   color: #475569;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.15rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 0.04rem;
 }
 
 .cert-recipient-name {
   font-family: 'Great Vibes', cursive, 'Playfair Display', serif;
-  font-size: 3.8rem;
+  font-size: 2.95rem;
   font-weight: 400;
   color: #C5A059;
   text-shadow: 0 1px 2px rgba(197, 160, 89, 0.15);
-  line-height: 1.1;
-  margin: 0.15rem 0 0.65rem 0;
+  line-height: 1.02;
+  margin: 0.02rem 0 0.18rem 0;
   letter-spacing: 0.5px;
 }
 
 .cert-attestation-body {
   font-family: 'Inter', sans-serif;
-  font-size: 0.88rem;
-  line-height: 1.55;
+  font-size: 0.78rem;
+  line-height: 1.35;
   color: #334155;
-  max-width: 680px;
-  margin: 0 auto 0.65rem;
+  max-width: 700px;
+  margin: 0 auto 0.22rem;
 }
 
 .cert-target-role {
   font-family: 'Cinzel', 'Outfit', serif;
-  font-size: 1.25rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #0A2240;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   display: inline-block;
-  padding: 0.2rem 0.9rem;
+  padding: 0.12rem 0.8rem;
   background: rgba(197, 160, 89, 0.08);
   border: 1px solid rgba(197, 160, 89, 0.35);
   border-radius: 9999px;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.25rem;
 }
 
 /* Executive 4-Pillar Scorecard */
@@ -2091,15 +2089,15 @@ body.modal-open .cp-chat-card {
   background: #FDFBF7;
   border: 1px solid #E6D7BA;
   border-radius: 8px;
-  padding: 0.55rem 0.85rem;
-  max-width: 760px;
-  margin: 0 auto 0.95rem;
+  padding: 0.28rem 0.75rem;
+  max-width: 820px;
+  margin: 0 auto 0.22rem;
   text-align: left;
 }
 
 .cert-scorecard-label {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #855B14;
   letter-spacing: 0.8px;
@@ -2109,7 +2107,7 @@ body.modal-open .cp-chat-card {
   background: #FFFFFF;
   border: 1px solid #EAE0CB;
   border-radius: 6px;
-  padding: 0.3rem 0.25rem;
+  padding: 0.2rem 0.15rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
@@ -2121,7 +2119,7 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-metric-label {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #64748B;
   margin-bottom: 1px;
@@ -2131,13 +2129,13 @@ body.modal-open .cp-chat-card {
   font-family: var(--font-mono, monospace);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "zero" 0;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #0A2240;
 }
 
 .cert-metric-sub {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 600;
   color: #16A34A;
   font-family: var(--font-mono, monospace);
@@ -2151,11 +2149,12 @@ body.modal-open .cp-chat-card {
   border: 1px solid #DBC493;
   color: #694C11;
   font-weight: 600;
-  font-size: 0.72rem;
-  padding: 0.14rem 0.48rem;
+  font-size: 0.64rem;
+  padding: 0.08rem 0.38rem;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: transform 0.15s ease;
+  line-height: 1.2;
 }
 
 .cert-skill-pill:hover {
@@ -2166,12 +2165,12 @@ body.modal-open .cp-chat-card {
   font-family: var(--font-mono, monospace);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "zero" 0;
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-weight: 700;
   color: #15803D;
   background: rgba(34, 197, 94, 0.12);
   border: 1px solid rgba(34, 197, 94, 0.35);
-  padding: 0.18rem 0.5rem;
+  padding: 0.08rem 0.4rem;
   border-radius: 9999px;
   display: inline-flex;
   align-items: center;
@@ -2180,52 +2179,66 @@ body.modal-open .cp-chat-card {
 
 /* Footer Row & Signatures */
 .cert-footer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 0.65rem;
-  padding: 0 0.5rem;
-  gap: 1rem;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
+  align-items: flex-end !important;
+  margin-top: 0.1rem !important;
+  margin-bottom: 0.3rem !important;
+  padding: 0 0.5rem !important;
+  position: relative !important;
+  z-index: 5 !important;
+  width: 100% !important;
 }
 
 .cert-footer-col {
-  flex: 1;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .cert-footer-left {
-  text-align: left;
+  text-align: left !important;
+}
+
+.cert-footer-center {
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .cert-footer-right {
-  text-align: right;
+  text-align: right !important;
 }
 
 .cert-footer-label {
-  font-size: 0.86rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: #0A2240;
   margin-bottom: 2px;
 }
 
 .cert-footer-val {
-  font-size: 0.86rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #334155;
 }
 
 .cert-signature-line {
   border-bottom: 1.5px solid #94A3B8;
-  padding-bottom: 2px;
-  margin: 3px 0 2px;
+  padding-bottom: 1px;
+  margin: 1px 0 1px;
   display: inline-block;
-  min-width: 140px;
+  min-width: 120px;
 }
 
 .cert-signature-svg {
   font-family: 'Great Vibes', cursive, 'Playfair Display', serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 1.95rem;
+  font-size: 1.7rem;
   color: #0A2240;
   letter-spacing: 0.5px;
   line-height: 1;
@@ -2241,21 +2254,21 @@ body.modal-open .cp-chat-card {
 
 .cert-signatory-name {
   font-weight: 700;
-  font-size: 0.76rem;
+  font-size: 0.7rem;
   color: #0F172A;
   margin-top: 1px;
 }
 
 .cert-signatory-title {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: #64748B;
   line-height: 1.2;
 }
 
 .cert-meta-item {
-  font-size: 0.74rem;
+  font-size: 0.68rem;
   color: #64748B;
-  margin-top: 2px;
+  margin-top: 1px;
   font-feature-settings: "zero" 0;
 }
 
@@ -2266,17 +2279,17 @@ body.modal-open .cp-chat-card {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 86px;
-  height: 92px;
+  width: 70px;
+  height: 72px;
   margin: 0 auto;
 }
 
 .cert-rosette-medal {
-  width: 66px;
-  height: 66px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #FFF8E7 0%, #FDE08E 28%, #D4AF37 55%, #AA7C11 80%, #684805 100%);
-  box-shadow: 0 6px 16px rgba(10, 34, 64, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.9), inset 0 -3px 5px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 12px rgba(10, 34, 64, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.9), inset 0 -3px 5px rgba(0, 0, 0, 0.45);
   border: 2px solid #FFF8DC;
   position: relative;
   z-index: 2;
@@ -2293,8 +2306,8 @@ body.modal-open .cp-chat-card {
 }
 
 .medal-inner-ring {
-  width: 50px;
-  height: 50px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: 1.5px dashed rgba(255, 255, 255, 0.85);
   display: flex;
@@ -2306,24 +2319,24 @@ body.modal-open .cp-chat-card {
 }
 
 .medal-inner-ring i {
-  font-size: 1.2rem;
+  font-size: 0.95rem;
   line-height: 1;
   color: #FFFFFF;
 }
 
 .medal-inner-text {
   font-family: 'Outfit', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
   font-weight: 900;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 
 .cert-rosette-ribbon {
   position: absolute;
-  top: 48px;
-  width: 20px;
-  height: 42px;
+  top: 36px;
+  width: 16px;
+  height: 34px;
   z-index: 1;
   background: linear-gradient(180deg, #0A2240 0%, #153A6B 50%, #1E3A8A 100%);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
@@ -2332,20 +2345,20 @@ body.modal-open .cp-chat-card {
 }
 
 .cert-rosette-ribbon-left {
-  left: 24px;
+  left: 20px;
   transform: rotate(15deg);
 }
 
 .cert-rosette-ribbon-right {
-  right: 24px;
+  right: 20px;
   transform: rotate(-15deg);
 }
 
 .cert-qr-frame {
   background: #FFFFFF;
   border: 1.5px solid #DFBE7A;
-  border-radius: 6px;
-  padding: 3px;
+  border-radius: 5px;
+  padding: 2px;
   display: inline-block;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -2358,17 +2371,17 @@ body.modal-open .cp-chat-card {
 
 .cert-qr-img {
   display: block;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .cert-qr-caption {
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-weight: 600;
   color: #475569;
 }
 
 .cert-sha-hash {
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   color: #475569;
   letter-spacing: 0.5px;
   font-feature-settings: "zero" 0;
@@ -2488,7 +2501,9 @@ body.modal-open .cp-chat-card {
 /* Responsive Scaling for Mobile Screens */
 @media (max-width: 768px) {
   .official-certificate-container {
-    padding: 1.5rem 1.2rem 1.2rem;
+    aspect-ratio: auto !important;
+    min-height: auto !important;
+    padding: 1.25rem 1rem 1rem;
   }
   .cert-main-title {
     font-size: 2.2rem;
@@ -2501,12 +2516,12 @@ body.modal-open .cp-chat-card {
     font-size: 2.6rem;
   }
   .cert-wave-tr, .cert-wave-bl {
-    width: 220px;
-    height: 170px;
+    width: 200px;
+    height: 150px;
   }
   .cert-filigree-corner {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
   .cert-footer-row {
     flex-direction: column;
@@ -2516,6 +2531,12 @@ body.modal-open .cp-chat-card {
   }
   .cert-footer-left, .cert-footer-right {
     text-align: center;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .official-certificate-container {
+    aspect-ratio: 16 / 9 !important;
   }
 }
 
@@ -2634,15 +2655,15 @@ body.modal-open .cp-chat-card {
     box-shadow: none !important;
   }
 
-  /* Strict single-page landscape certificate formatting */
+  /* Strict single-page landscape certificate formatting (16:9) */
   .official-certificate-container {
     width: 100vw !important;
     height: 100vh !important;
     max-width: 100vw !important;
     max-height: 100vh !important;
-    min-height: 100vh !important;
+    aspect-ratio: 16 / 9 !important;
     margin: 0 !important;
-    padding: 2.2rem 3.5rem 1.8rem !important;
+    padding: 1.6rem 3.25rem 1.35rem !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     box-sizing: border-box !important;

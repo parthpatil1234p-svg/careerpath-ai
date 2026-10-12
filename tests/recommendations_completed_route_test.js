@@ -29,7 +29,7 @@ async function runTest() {
   console.log('✅ Generated JWT token for demouser@gmail.com');
 
   // 1. Fetch Recommendations
-  const recRes = await fetch('http://localhost:5000/api/recommendations/generate', {
+  const recRes = await fetch('http://127.0.0.1:5000/api/recommendations/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

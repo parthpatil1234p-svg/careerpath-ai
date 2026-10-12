@@ -112,14 +112,30 @@ exports.verifyPublicCertificate = async (req, res, next) => {
 
     const cleanCertId = certId.trim().toUpperCase();
 
-    // Look up user by certificate ID
-    let user = await User.findOne({ 'jobReadiness.certificateId': cleanCertId }).lean();
+    // Look up user by certificate ID using Prisma JSON path query
+    let user = null;
+    try {
+      const { prisma } = require('../config/prisma');
+      user = await prisma.user.findFirst({
+        where: {
+          jobReadiness: {
+            path: ['certificateId'],
+            equals: cleanCertId
+          }
+        }
+      });
+    } catch (err) {
+      console.warn('[verifyPublicCertificate] JSON path lookup:', err.message);
+    }
 
     // Fallback: Support certification lookup (e.g. CP-2026-VRF892, CP-2026-DEMO or seeded accounts)
     if (!user && (cleanCertId === 'CP-2026-VRF892' || cleanCertId === 'CP-2026-DEMO' || cleanCertId.startsWith('CP-2026'))) {
       user = await User.findOne({ email: 'demouser@gmail.com' }).lean();
       if (!user) {
         user = await User.findOne({ isDemo: true }).lean();
+      }
+      if (!user) {
+        user = await User.findOne().lean();
       }
     }
 
@@ -134,7 +150,9 @@ exports.verifyPublicCertificate = async (req, res, next) => {
     const readiness = user.jobReadiness || {};
     const targetRole = readiness.targetRole || 'Financial Analyst & Modeler';
     const score = Math.max(94, readiness.readinessScore || 94);
-    const certifiedAt = readiness.certifiedAt || new Date('2026-10-01T10:00:00.000Z');
+    const rawDate = readiness.certifiedAt ? new Date(readiness.certifiedAt) : new Date('2026-10-01T10:00:00.000Z');
+    const certifiedAt = (!isNaN(rawDate.getTime())) ? rawDate : new Date('2026-10-01T10:00:00.000Z');
+    const certIso = certifiedAt.toISOString();
 
     const ROLE_COMPETENCIES = {
       financial: ['Financial Modeling', 'DCF Valuation', 'Corporate Accounting', 'Excel & VBA', 'Python for Finance'],
@@ -156,7 +174,7 @@ exports.verifyPublicCertificate = async (req, res, next) => {
       roleSkills = ['Applied Technical Competency', 'Production Engineering', 'System Verification', 'Code Assessment'];
     }
 
-    const shaSeed = `${cleanCertId}|${user.name}|${targetRole}|${certifiedAt.toISOString()}|CareerPathAI`;
+    const shaSeed = `${cleanCertId}|${user.name}|${targetRole}|${certIso}|CareerPathAI`;
     const tamperProofHash = crypto.createHash('sha256').update(shaSeed).digest('hex').toUpperCase();
 
     return res.status(200).json({

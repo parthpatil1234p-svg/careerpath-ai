@@ -759,8 +759,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         ? cp.skillsGained
         : ['Full-Stack Implementation', 'Architecture & System Design', 'Automated Testing', 'Production Deployment'];
       certSkillsContainer.innerHTML = skills.map((s) => `
-        <span class="badge bg-light text-dark border border-secondary border-opacity-25 px-2 py-1 font-mono">
-          <i class="bi bi-patch-check-fill text-success me-1"></i>${escapeHtml(typeof s === 'string' ? s : s.name || 'Skill')}
+        <span class="cert-skill-pill">
+          <i class="bi bi-patch-check-fill text-warning me-1"></i>${escapeHtml(typeof s === 'string' ? s : s.name || 'Skill')}
         </span>
       `).join(' ');
     }
@@ -3564,8 +3564,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="css/style.css?v=3.5">
-  <link rel="stylesheet" href="css/dashboard.css?v=3.5">
+  <link rel="stylesheet" href="css/style.css?v=3.9">
+  <link rel="stylesheet" href="css/dashboard.css?v=3.9">
   <style>
     @page {
       size: landscape;
@@ -3592,7 +3592,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       height: 100vh !important;
       max-width: 100vw !important;
       max-height: 100vh !important;
-      min-height: 100vh !important;
+      aspect-ratio: 16 / 9 !important;
       margin: 0 !important;
       border-radius: 0 !important;
       box-shadow: none !important;
@@ -3600,7 +3600,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       page-break-after: avoid !important;
       page-break-before: avoid !important;
       break-inside: avoid !important;
-      padding: 2.2rem 3.5rem 1.8rem !important;
+      padding: 1.35rem 3rem 2.25rem !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;

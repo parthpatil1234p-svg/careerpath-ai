@@ -65,6 +65,16 @@ function translateFilter(filter = {}, fieldMap = {}) {
       continue;
     }
     else if (fieldMap[key]) mappedKey = fieldMap[key];
+    else if (key.includes('.')) {
+      const parts = key.split('.');
+      const topField = parts[0];
+      const path = parts.slice(1);
+      where[topField] = {
+        path,
+        equals: rawVal
+      };
+      continue;
+    }
 
     // Handle MongoDB operators ($or, $and, etc.)
     if (key === '$or' && Array.isArray(rawVal)) {

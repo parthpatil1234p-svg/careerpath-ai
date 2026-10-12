@@ -76,9 +76,8 @@
       rel="stylesheet"
     />
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/style.css?v=3.8" />
-    <link rel="stylesheet" href="css/dashboard.css?v=3.8" />
+    <link rel="stylesheet" href="css/style.css?v=4.0" />
+    <link rel="stylesheet" href="css/dashboard.css?v=4.0" />
 
     <style>
       body.verify-page {
@@ -151,7 +150,8 @@
       }
 
       .verify-card-cert {
-        max-width: 900px;
+        max-width: 1120px;
+        width: 100%;
         margin: 0 auto;
       }
 
@@ -381,17 +381,19 @@
 
             <!-- Main Content Body -->
             <div class="cert-content">
-              <h1 class="cert-main-title">CERTIFICATE</h1>
-              <div class="cert-main-subtitle">of Appreciation</div>
-              <div class="cert-presented-to">Presented to:</div>
-              <h2 class="cert-recipient-name my-1" id="verifiedStudentName">Parth Patil</h2>
-              <p class="cert-attestation-body mx-auto my-1">
-                In recognition of exceptional dedication, technical mastery, and invaluable contributions. Your efforts have made a lasting impact and satisfied all verified hiring benchmarks for the professional designation of:
-              </p>
-              <div class="cert-target-role my-2" id="verifiedRoleTitle">Financial Analyst &amp; Modeler</div>
+              <div class="cert-header-section">
+                <h1 class="cert-main-title">CERTIFICATE</h1>
+                <div class="cert-main-subtitle">of Appreciation</div>
+                <div class="cert-presented-to">Presented to:</div>
+                <h2 class="cert-recipient-name" id="verifiedStudentName">Parth Patil</h2>
+                <p class="cert-attestation-body mx-auto">
+                  In recognition of exceptional dedication, technical mastery, and invaluable contributions. Your efforts have made a lasting impact and satisfied all verified hiring benchmarks for the professional designation of:
+                </p>
+                <div class="cert-target-role" id="verifiedRoleTitle">Financial Analyst &amp; Modeler</div>
+              </div>
 
               <!-- Executive 4-Pillar Scorecard -->
-              <div class="cert-scorecard-box p-2.5 my-2 text-start">
+              <div class="cert-scorecard-box p-2 text-start">
                 <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom border-amber-subtle">
                   <span class="cert-scorecard-label">
                     <i class="bi bi-shield-check text-success me-1"></i> VERIFIED HIRING BENCHMARK SCORECARD
@@ -446,8 +448,8 @@
               </div>
 
               <!-- Footer Signatures & Medal Centerpiece -->
-              <div class="cert-footer-row row align-items-end mt-2 pt-1 text-start g-2">
-                <div class="col-12 col-md-4 text-center text-md-start">
+              <div class="cert-footer-row">
+                <div class="cert-footer-col cert-footer-left">
                   <div class="cert-footer-label">Authorized By:</div>
                   <div class="cert-footer-val">CareerPath AI Accreditation Board</div>
                   <div class="cert-signature-line">
@@ -457,27 +459,31 @@
                   <div class="cert-signatory-title">Dean of Academic Standards &middot; Evaluation Council</div>
                 </div>
 
-                <div class="col-12 col-md-4 text-center">
-                  <div class="cert-rosette-medal-wrapper" title="Authentic Job-Ready Gold Medallion">
-                    <div class="cert-rosette-medal" title="Authentic Cryptographic Seal">
-                      <div class="medal-inner-ring">
-                        <i class="bi bi-patch-check-fill"></i>
-                        <span class="medal-inner-text">VERIFIED</span>
+                <div class="cert-footer-col cert-footer-center">
+                  <div class="d-flex align-items-center justify-content-center gap-3">
+                    <div class="cert-rosette-medal-wrapper" title="Authentic Job-Ready Gold Medallion">
+                      <div class="cert-rosette-medal" title="Authentic Cryptographic Seal">
+                        <div class="medal-inner-ring">
+                          <i class="bi bi-patch-check-fill"></i>
+                          <span class="medal-inner-text">VERIFIED</span>
+                        </div>
+                      </div>
+                      <div class="cert-rosette-ribbon cert-rosette-ribbon-left"></div>
+                      <div class="cert-rosette-ribbon cert-rosette-ribbon-right"></div>
+                    </div>
+
+                    <div class="text-center">
+                      <div class="cert-qr-frame">
+                        <img id="verifiedQrImg" src="" alt="Verification QR" width="50" height="50" class="cert-qr-img" />
+                      </div>
+                      <div class="cert-qr-caption mt-0.5">
+                        <i class="bi bi-qr-code-scan me-1 text-primary"></i> Scan with mobile camera
                       </div>
                     </div>
-                    <div class="cert-rosette-ribbon cert-rosette-ribbon-left"></div>
-                    <div class="cert-rosette-ribbon cert-rosette-ribbon-right"></div>
-                  </div>
-
-                  <div class="cert-qr-frame mx-auto mt-2">
-                    <img id="verifiedQrImg" src="" alt="Verification QR" width="56" height="56" class="cert-qr-img" />
-                  </div>
-                  <div class="cert-qr-caption mt-0.5">
-                    <i class="bi bi-qr-code-scan me-1 text-primary"></i> Scan with mobile camera
                   </div>
                 </div>
 
-                <div class="col-12 col-md-4 text-center text-md-end">
+                <div class="cert-footer-col cert-footer-right">
                   <div class="cert-footer-label">Date:</div>
                   <div class="cert-footer-val" id="verifiedIssueDate">October 1, 2026</div>
                   <div class="cert-meta-item mt-1">ID: <strong class="font-mono" id="verifiedIdText">CP-2026-VRF892</strong></div>
@@ -545,6 +551,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Verification Controller -->
-    <script src="js/verify.js?v=3.8"></script>
+    <script src="js/verify.js?v=3.9"></script>
   </body>
 </html>
