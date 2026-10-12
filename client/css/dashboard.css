@@ -1939,11 +1939,13 @@ body.modal-open .cp-chat-card {
   position: relative;
   border-radius: 6px;
   box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  overflow: hidden !important;
   padding: 2.25rem 2.85rem 1.85rem;
   box-sizing: border-box;
   color: #0F172A;
   transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  max-width: 1040px;
+  margin: 0 auto;
 }
 
 @media (min-width: 992px) {
@@ -1954,73 +1956,62 @@ body.modal-open .cp-chat-card {
 
 /* Outer & Inner Framed Borders */
 .cert-frame-outer {
-  position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(199, 152, 72, 0.45);
-  pointer-events: none;
-  z-index: 2;
+  position: absolute !important;
+  inset: 12px !important;
+  border: 1px solid rgba(199, 152, 72, 0.5) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
 }
 
 .cert-frame-inner {
-  position: absolute;
-  inset: 20px;
-  border: 2px solid #C79848;
-  pointer-events: none;
-  z-index: 2;
+  position: absolute !important;
+  inset: 18px !important;
+  border: 2px solid #C79848 !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
 }
 
 /* Geometric Luxury Navy & Gold Corner Waves */
 .cert-corner-wave {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1;
+  position: absolute !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
 }
 
 .cert-wave-tr {
-  top: 0;
-  right: 0;
-  width: 360px;
-  height: 270px;
-  max-width: 44%;
-  max-height: 48%;
+  top: 0 !important;
+  right: 0 !important;
+  width: 340px !important;
+  height: 250px !important;
+  max-width: 42% !important;
+  max-height: 46% !important;
 }
 
 .cert-wave-bl {
-  bottom: 0;
-  left: 0;
-  width: 360px;
-  height: 270px;
-  max-width: 44%;
-  max-height: 48%;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 340px !important;
+  height: 250px !important;
+  max-width: 42% !important;
+  max-height: 46% !important;
 }
 
-/* Vintage Filigree Corner Ornaments */
+/* Vintage Filigree Corner Ornaments (Sized strictly to prevent overflow) */
 .cert-filigree-corner {
-  position: absolute;
-  width: 72px;
-  height: 72px;
-  pointer-events: none;
-  z-index: 3;
+  position: absolute !important;
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
 }
 
-.cert-fc-tl { top: 22px; left: 22px; }
-.cert-fc-tr { top: 22px; right: 22px; transform: scaleX(-1); }
-.cert-fc-bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
-.cert-fc-br { bottom: 22px; right: 22px; transform: scale(-1); }
-
-/* Center Symmetrical Ornaments */
-.cert-ornament-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 170px;
-  height: 22px;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.cert-ornament-top { top: 22px; }
-.cert-ornament-bottom { bottom: 22px; }
+.cert-fc-tl { top: 20px !important; left: 20px !important; }
+.cert-fc-tr { top: 20px !important; right: 20px !important; transform: scaleX(-1) !important; }
+.cert-fc-bl { bottom: 20px !important; left: 20px !important; transform: scaleY(-1) !important; }
+.cert-fc-br { bottom: 20px !important; right: 20px !important; transform: scale(-1) !important; }
 
 /* Certificate Main Content Container */
 .cert-content {
