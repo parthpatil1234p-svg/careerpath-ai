@@ -267,6 +267,13 @@ const mcpActionsHandler = (req, res) => {
 app.get('/mcp-actions.json', mcpActionsHandler);
 app.get('/.well-known/mcp-actions.json', mcpActionsHandler);
 
+// ── Strix Cloud Domain Verification Handlers ──────────────────────────────
+app.get(['/.well-known/strix-verify.txt', '/strix-verify.txt'], (req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.status(200).send('strix-verify-207226fbbc1334839ba479158f608386');
+});
+
 // ── Rate Limiting: protect API from brute-force without choking legitimate users ────
 const isDev = process.env.NODE_ENV === 'development';
 const isLoadTestBypass = (req) => req.headers['x-k6-loadtest'] === 'careerpath-load-benchmark';
