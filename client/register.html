@@ -119,16 +119,24 @@
         left: -9999px !important;
       }
 
-      /* Explicitly guarantee email input and all form controls remain 100% visible */
-      .form-control,
-      #email,
-      input#email {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: static !important;
+      /* Ensure Bootstrap input-group layout stays strictly unified and horizontal */
+      .input-group {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
         width: 100% !important;
+      }
+      .input-group > .input-group-text {
+        display: flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+      }
+      .input-group > .form-control {
+        position: relative !important;
         flex: 1 1 auto !important;
+        width: 1% !important;
+        min-width: 0 !important;
       }
     </style>
 
