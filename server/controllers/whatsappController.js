@@ -52,19 +52,30 @@ const handleIncomingWebhook = async (req, res) => {
     // 1. Extract message & sender phone from Meta or OpenWA payload
     let rawSender = '';
     let incomingText = '';
+    let pushSenderName = '';
 
-    // Meta WhatsApp Cloud API structure
-    if (body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
+    // A. OpenWA standard webhook envelope: { event: "message.received", data: { from, body, fromMe, senderPhone, chatId, senderName } }
+    if (body.event === 'message.received' && body.data) {
+      if (body.data.fromMe === true) {
+        return; // Ignore outbound echoes to prevent infinite reply loops
+      }
+      rawSender = body.data.senderPhone || body.data.from || body.data.chatId || '';
+      incomingText = body.data.body || body.data.text || '';
+      pushSenderName = body.data.senderName || '';
+    }
+    // B. Meta WhatsApp Cloud API structure
+    else if (body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
       const msg = body.entry[0].changes[0].value.messages[0];
       rawSender = msg.from; // e.g. "919876543210"
       if (msg.type === 'text') {
         incomingText = msg.text?.body || '';
       }
     } 
-    // OpenWA / Baileys bridge structure
+    // C. OpenWA / Baileys bridge flat structure
     else if (body.from || body.phone) {
       rawSender = body.from || body.phone;
       incomingText = body.text || body.body || body.message || '';
+      pushSenderName = body.senderName || body.name || '';
     }
 
     if (!rawSender || !incomingText.trim()) {
@@ -89,7 +100,7 @@ const handleIncomingWebhook = async (req, res) => {
 
     // 3. Construct AI Mentor Context
     const userContext = {
-      name: student ? student.name : 'Ambitious Candidate',
+      name: student ? student.name : (pushSenderName || 'Ambitious Candidate'),
       isRegistered: Boolean(student),
       degree: student?.education?.degree || student?.education?.course || 'Student',
       targetCareer: 'Full Stack Engineer',

@@ -105,11 +105,43 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
   }
 
   const digits = getPhoneDigits(formattedPhone);
+  const openwaUrl = process.env.OPENWA_API_URL || '';
+  const openwaApiKey = process.env.OPENWA_API_KEY || '';
+  const openwaSessionId = process.env.OPENWA_SESSION_ID || '7947d4c9-0297-4396-be07-330534d6c58a';
   const bridgeUrl = process.env.WHATSAPP_BRIDGE_URL || '';
   const token = process.env.WHATSAPP_TOKEN || '';
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
 
-  // 1. Meta WhatsApp Cloud API (if public URL provided)
+  // 1. OpenWA Live Gateway (High-priority live session runner)
+  if (openwaUrl && openwaApiKey && openwaSessionId) {
+    try {
+      const isBuffer = Buffer.isBuffer(documentBufferOrUrl);
+      const docPayload = {
+        chatId: `${digits}@c.us`,
+        filename,
+        caption: caption || `📄 ${filename} — CareerPath AI Study Material`
+      };
+
+      if (isBuffer) {
+        docPayload.base64 = documentBufferOrUrl.toString('base64');
+        docPayload.mimetype = 'application/pdf';
+      } else if (typeof documentBufferOrUrl === 'string') {
+        docPayload.url = documentBufferOrUrl;
+      }
+
+      const res = await openwaApiRequest(
+        `/api/sessions/${openwaSessionId}/messages/send-document`,
+        JSON.stringify(docPayload)
+      );
+      console.log(`[WhatsApp] OpenWA Live Gateway Document sent to ${formattedPhone} (${filename}) [id: ${res.messageId || 'sent'}]`);
+      return { success: true, provider: 'openwa_gateway', messageId: res.messageId };
+    } catch (err) {
+      console.error('[WhatsApp] OpenWA Live Gateway Document dispatch failed:', err.message);
+      // Fall through to remaining providers
+    }
+  }
+
+  // 2. Meta WhatsApp Cloud API (if public URL provided)
   if (token && phoneNumberId && typeof documentBufferOrUrl === 'string' && documentBufferOrUrl.startsWith('http')) {
     try {
       const payload = JSON.stringify({
@@ -132,7 +164,7 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
     }
   }
 
-  // 2. OpenWA / Baileys HTTP Bridge
+  // 3. OpenWA / Baileys HTTP Bridge
   if (bridgeUrl) {
     try {
       const isBuffer = Buffer.isBuffer(documentBufferOrUrl);
@@ -155,7 +187,7 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
     }
   }
 
-  // 3. High-Fidelity Console Fallback Driver
+  // 4. High-Fidelity Console Fallback Driver
   const sizeKb = Buffer.isBuffer(documentBufferOrUrl) 
     ? (documentBufferOrUrl.length / 1024).toFixed(1) + ' KB'
     : 'URL Attachment';
@@ -192,11 +224,34 @@ async function sendTextMessage(phone, messageText, meta = {}) {
   }
 
   const digits = getPhoneDigits(formattedPhone);
+  const openwaUrl = process.env.OPENWA_API_URL || '';
+  const openwaApiKey = process.env.OPENWA_API_KEY || '';
+  const openwaSessionId = process.env.OPENWA_SESSION_ID || '7947d4c9-0297-4396-be07-330534d6c58a';
   const token = process.env.WHATSAPP_TOKEN || '';
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
   const bridgeUrl = process.env.WHATSAPP_BRIDGE_URL || '';
 
-  // 1. Meta WhatsApp Cloud API
+  // 1. OpenWA Live Gateway (High-priority live session runner)
+  if (openwaUrl && openwaApiKey && openwaSessionId) {
+    try {
+      const payload = JSON.stringify({
+        chatId: `${digits}@c.us`,
+        text: messageText
+      });
+
+      const res = await openwaApiRequest(
+        `/api/sessions/${openwaSessionId}/messages/send-text`,
+        payload
+      );
+      console.log(`[WhatsApp] OpenWA Live Gateway Message dispatched to ${formattedPhone} (id: ${res.messageId || 'sent'})`);
+      return { success: true, provider: 'openwa_gateway', messageId: res.messageId };
+    } catch (err) {
+      console.error('[WhatsApp] OpenWA Live Gateway Message failed:', err.message);
+      // Fall through to remaining providers
+    }
+  }
+
+  // 2. Meta WhatsApp Cloud API
   if (token && phoneNumberId) {
     try {
       const payload = JSON.stringify({
@@ -218,7 +273,7 @@ async function sendTextMessage(phone, messageText, meta = {}) {
     }
   }
 
-  // 2. OpenWA / Baileys HTTP Bridge
+  // 3. OpenWA / Baileys HTTP Bridge
   if (bridgeUrl) {
     try {
       const payload = JSON.stringify({
@@ -235,7 +290,7 @@ async function sendTextMessage(phone, messageText, meta = {}) {
     }
   }
 
-  // 3. High-Fidelity Console Fallback Driver
+  // 4. High-Fidelity Console Fallback Driver
   console.log('\n============================================================');
   console.log('📱 [WHATSAPP MESSAGE DISPATCH] (Console Fallback Driver)');
   console.log(`To:        ${formattedPhone} (digits: ${digits})`);
@@ -344,10 +399,69 @@ function bridgeApiRequest(endpointUrl, bodyString) {
   });
 }
 
+/**
+ * Helper to dispatch HTTP/HTTPS request to OpenWA Live Gateway (rmyndharis/OpenWA)
+ */
+function openwaApiRequest(endpointPath, bodyString) {
+  return new Promise((resolve, reject) => {
+    const rawUrl = process.env.OPENWA_API_URL || 'https://openwa-phe1.onrender.com';
+    const apiKey = process.env.OPENWA_API_KEY || '';
+    const url = new URL(rawUrl);
+    const isHttps = url.protocol === 'https:';
+    const client = isHttps ? https : http;
+
+    const formattedPath = endpointPath.startsWith('/api') ? endpointPath : `/api${endpointPath}`;
+
+    const options = {
+      hostname: url.hostname,
+      port: url.port || (isHttps ? 443 : 80),
+      path: formattedPath,
+      method: 'POST',
+      headers: {
+        'X-API-Key': apiKey,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(bodyString)
+      },
+      timeout: 12000
+    };
+
+    const req = client.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(parsed);
+          } else {
+            reject(new Error(parsed.message || parsed.error || `HTTP ${res.statusCode}: ${data}`));
+          }
+        } catch {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve({ raw: data, statusCode: res.statusCode });
+          } else {
+            reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+          }
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('OpenWA Gateway request timed out (12s)'));
+    });
+
+    req.write(bodyString);
+    req.end();
+  });
+}
+
 module.exports = {
   formatPhoneNumber,
   getPhoneDigits,
   sendOtp,
   sendDocument,
-  sendTextMessage
+  sendTextMessage,
+  openwaApiRequest
 };

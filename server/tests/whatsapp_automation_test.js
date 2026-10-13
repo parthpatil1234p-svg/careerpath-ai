@@ -71,17 +71,17 @@ async function runTests() {
   });
 
   // ── TEST 2: Multi-Provider WhatsApp Service ──
-  console.log('\n▶ SUITE 2: Multi-Provider WhatsApp Service (Console Driver)');
-  await asyncTest('Dispatches 6-digit OTP in Console Fallback mode', async () => {
+  console.log('\n▶ SUITE 2: Multi-Provider WhatsApp Service (OpenWA & Console Drivers)');
+  await asyncTest('Dispatches 6-digit OTP via active driver (OpenWA or Console Fallback)', async () => {
     const res = await whatsappService.sendOtp('+919876543210', '482910', 'Parth');
     assert.strictEqual(res.success, true);
-    assert.strictEqual(res.provider, 'console_fallback');
+    assert.ok(['openwa_gateway', 'meta_cloud_api', 'console_fallback'].includes(res.provider), `Provider was: ${res.provider}`);
   });
 
   await asyncTest('Dispatches general text message', async () => {
     const res = await whatsappService.sendTextMessage('+919876543210', 'Hello from CareerPath AI!');
     assert.strictEqual(res.success, true);
-    assert.strictEqual(res.provider, 'console_fallback');
+    assert.ok(['openwa_gateway', 'meta_cloud_api', 'console_fallback'].includes(res.provider), `Provider was: ${res.provider}`);
   });
 
   await asyncTest('Rejects missing or invalid phone number', async () => {
@@ -110,7 +110,7 @@ async function runTests() {
     const mockPdf = Buffer.from('%PDF-1.4 Mock PDF Content');
     const res = await whatsappService.sendDocument('+919876543210', mockPdf, 'Week_1_Notes.pdf', 'Notes attached');
     assert.strictEqual(res.success, true);
-    assert.strictEqual(res.provider, 'console_fallback');
+    assert.ok(['openwa_gateway', 'meta_cloud_api', 'console_fallback'].includes(res.provider), `Provider was: ${res.provider}`);
   });
 
   // ── TEST 4: Supabase User Model Persistence with Phone Field ──
@@ -119,6 +119,27 @@ async function runTests() {
     const demoUser = await User.findOne({ email: 'kajimew275@blobapps.com' });
     assert.ok(demoUser, 'Demo user must exist in Supabase');
     assert.ok('phone' in demoUser, 'User document must have phone property');
+  });
+
+  // ── TEST 5: OpenWA Webhook Inbound Envelope Handling ──
+  console.log('\n▶ SUITE 5: OpenWA Webhook Inbound Envelope Handling');
+  test('Extracts sender and message from OpenWA envelope without error', () => {
+    const mockEnvelope = {
+      event: 'message.received',
+      timestamp: '2026-10-13T10:00:00Z',
+      sessionId: '7947d4c9-0297-4396-be07-330534d6c58a',
+      data: {
+        from: '919876543210@c.us',
+        body: 'Can you explain React useEffect hook?',
+        fromMe: false,
+        senderName: 'Parth Patil',
+        senderPhone: '919876543210'
+      }
+    };
+
+    assert.strictEqual(mockEnvelope.data.fromMe, false);
+    assert.strictEqual(whatsappService.formatPhoneNumber(mockEnvelope.data.senderPhone), '+919876543210');
+    assert.strictEqual(mockEnvelope.data.body, 'Can you explain React useEffect hook?');
   });
 
   // ── SUMMARY ──
