@@ -30,6 +30,7 @@ build/
 # Code Coverage & Testing Cache
 coverage/
 .nyc_output/
+strix_runs/
 
 # IDE & Editor Configuration
 .vscode/

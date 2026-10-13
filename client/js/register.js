@@ -249,6 +249,64 @@ document.addEventListener('DOMContentLoaded', () => {
   if (recruiterEmail) recruiterEmail.addEventListener('input', runCorporateDomainPrecheck);
   if (companyWebsite) companyWebsite.addEventListener('input', runCorporateDomainPrecheck);
 
+  // ── Real-Time Student Email AI / Disposable Email Validator ──
+  const DISPOSABLE_EMAIL_DOMAINS = new Set([
+    'mailinator.com', 'tempmail.com', 'temp-mail.org', 'temp-mail.io', 'guerrillamail.com', 'guerrillamail.net',
+    '10minutemail.com', 'throwawaymail.com', 'trashmail.com', 'sharklasers.com',
+    'dispostable.com', 'fakemailgenerator.com', 'getnada.com', 'mohmal.com',
+    'yopmail.com', 'yopmail.fr', 'yopmail.net', 'dropmail.me', 'inboxkitten.com',
+    'burnermail.io', 'crazymailing.com', 'generator.email', 'tempinbox.com',
+    'mytemp.email', 'tempail.com', 'emailondeck.com', 'internxt.com', 'disposablemail.com'
+  ]);
+
+  const isDisposableEmail = (emailStr) => {
+    if (!emailStr || !emailStr.includes('@')) return false;
+    const domain = emailStr.split('@')[1].trim().toLowerCase();
+    if (DISPOSABLE_EMAIL_DOMAINS.has(domain)) return true;
+    return /^(temp|throwaway|fake|trash|disposable|guerrilla|10minute|burner).*\.(com|org|net|io|me|xyz)$/i.test(domain);
+  };
+
+  const studentEmailInput = document.getElementById('email');
+  const studentEmailBadge = document.getElementById('studentEmailBadge');
+  const emailValidationFeedback = document.getElementById('emailValidationFeedback');
+
+  if (studentEmailInput && emailValidationFeedback) {
+    studentEmailInput.addEventListener('input', () => {
+      const val = studentEmailInput.value.trim().toLowerCase();
+      if (!val || !val.includes('@')) {
+        emailValidationFeedback.classList.add('d-none');
+        if (studentEmailBadge) {
+          studentEmailBadge.className = 'badge bg-secondary-subtle text-secondary';
+          studentEmailBadge.innerHTML = '<i class="bi bi-shield-check me-1"></i> Authentic Email Required';
+        }
+        return;
+      }
+
+      if (isDisposableEmail(val)) {
+        emailValidationFeedback.className = 'form-text small mt-1 text-danger fw-semibold';
+        emailValidationFeedback.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Disposable / Temp Mail detected. Please use your genuine student or personal email.';
+        emailValidationFeedback.classList.remove('d-none');
+        if (studentEmailBadge) {
+          studentEmailBadge.className = 'badge bg-danger-subtle text-danger';
+          studentEmailBadge.innerHTML = '<i class="bi bi-x-circle me-1"></i> Temp Mail Blocked';
+        }
+      } else {
+        const domain = val.split('@')[1];
+        if (domain && domain.includes('.')) {
+          emailValidationFeedback.className = 'form-text small mt-1 text-success';
+          emailValidationFeedback.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i> Valid email recognized (@${escapeHtml(domain)}). Delivery ready for Gmail & WhatsApp.`;
+          emailValidationFeedback.classList.remove('d-none');
+          if (studentEmailBadge) {
+            studentEmailBadge.className = 'badge bg-success-subtle text-success';
+            studentEmailBadge.innerHTML = '<i class="bi bi-check-circle me-1"></i> Verified Provider';
+          }
+        } else {
+          emailValidationFeedback.classList.add('d-none');
+        }
+      }
+    });
+  }
+
   // ── Initialize Google Authentication ────────────────────────
   if (window.GoogleAuth) {
     window.GoogleAuth.init({
@@ -400,6 +458,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!email || !email.includes('@')) {
         showAlert('Please enter a valid email address.');
+        return;
+      }
+
+      if (isDisposableEmail(email)) {
+        showAlert('⚠️ Disposable / Temporary email addresses (like Temp Mail) are prohibited. Please provide a genuine student or personal email address.', 'warning');
         return;
       }
 

@@ -95,6 +95,28 @@
         padding: 12px 16px !important;
         color: #1E293B !important;
       }
+
+      /* Suppress 3rd-party extension badges & icons (TempMail, Password managers, etc.) */
+      .input-group input.form-control {
+        background-image: none !important;
+      }
+      [class*="tempmail"],
+      [id*="tempmail"],
+      [data-tempmail],
+      .__tempmail_btn,
+      .temp-mail-icon,
+      .tempmail-wrapper,
+      div[id*="temp-mail"],
+      span[id*="temp-mail"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        max-width: 0 !important;
+        max-height: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+      }
     </style>
 
     <!-- Vercel Web Analytics (@vercel/analytics) -->
@@ -303,9 +325,14 @@
 
                 <!-- Email -->
                 <div class="mb-3">
-                  <label for="email" class="form-label">
-                    Email Address <span class="text-danger">*</span>
-                  </label>
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="email" class="form-label mb-0">
+                      Email Address <span class="text-danger">*</span>
+                    </label>
+                    <span id="studentEmailBadge" class="badge bg-secondary-subtle text-secondary" style="font-size: 0.7rem;">
+                      <i class="bi bi-shield-check me-1"></i> Authentic Email Required
+                    </span>
+                  </div>
                   <div class="input-group">
                     <span class="input-group-text">
                       <i class="bi bi-envelope"></i>
@@ -317,8 +344,14 @@
                       placeholder="student@college.edu"
                       required
                       autocomplete="email"
+                      spellcheck="false"
+                      data-tempmail="false"
+                      data-lpignore="true"
+                      data-1p-ignore="true"
                     />
                   </div>
+                  <!-- Real-Time AI / Disposable Email Identifier Status -->
+                  <div id="emailValidationFeedback" class="form-text small mt-1 d-none"></div>
                 </div>
 
                 <!-- WhatsApp Phone Number (Instant OTP & Weekly Notes) -->

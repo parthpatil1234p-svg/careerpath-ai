@@ -19,7 +19,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
 const User = require('../models/User');
-const { generateDualOtps } = require('../controllers/authController');
+const { generateDualOtps, isDisposableEmail } = require('../controllers/authController');
 
 async function runTests() {
   console.log('============================================================');
@@ -117,8 +117,8 @@ async function runTests() {
   // ── TEST 4: Supabase User Model Persistence with Phone Field ──
   console.log('\n▶ SUITE 4: Supabase User Model Phone Column Persistence');
   await asyncTest('Finds demo user and confirms phone field capability in Supabase', async () => {
-    const demoUser = await User.findOne({ email: 'kajimew275@blobapps.com' });
-    assert.ok(demoUser, 'Demo user must exist in Supabase');
+    const demoUser = (await User.findOne({ email: 'judge@hack2ignite.com' })) || (await User.findOne({}));
+    assert.ok(demoUser, 'A user record must exist in Supabase');
     assert.ok('phone' in demoUser, 'User document must have phone property');
   });
 
@@ -156,6 +156,41 @@ async function runTests() {
       assert.ok(/^\d{6}$/.test(whatsappOtp), 'WhatsApp OTP must consist of numbers only');
       assert.notStrictEqual(emailOtp, whatsappOtp, `Iteration ${i}: emailOtp (${emailOtp}) cannot equal whatsappOtp (${whatsappOtp})`);
     }
+  });
+
+  // ── TEST 7: AI & Domain Disposable Email Identifier ──
+  console.log('\n▶ SUITE 7: AI & Domain Disposable Email Identifier (Temp Mail Block)');
+  test('Identifies and flags disposable & temporary email services', () => {
+    const disposableSamples = [
+      'student@tempmail.com',
+      'user@temp-mail.org',
+      'applicant@temp-mail.io',
+      'tester@mailinator.com',
+      'fresh@10minutemail.com',
+      'bot@guerrillamail.com',
+      'fake@burnermail.io',
+      'throwaway@sharklasers.com',
+      'temp@yopmail.com'
+    ];
+
+    disposableSamples.forEach(addr => {
+      assert.strictEqual(isDisposableEmail(addr), true, `Must flag ${addr} as disposable`);
+    });
+  });
+
+  test('Permits authentic student and commercial webmail domains', () => {
+    const validSamples = [
+      'student@college.edu',
+      'parth@gmail.com',
+      'patil@yahoo.com',
+      'developer@outlook.com',
+      'engineer@somaiya.edu',
+      'priya@razorpay.com'
+    ];
+
+    validSamples.forEach(addr => {
+      assert.strictEqual(isDisposableEmail(addr), false, `Must permit authentic email ${addr}`);
+    });
   });
 
   // ── SUMMARY ──

@@ -37,6 +37,23 @@ const generateDualOtps = () => {
   return { emailOtp, whatsappOtp };
 };
 
+// ── Helper: AI & Domain Disposable Email Identifier ──────────
+const DISPOSABLE_EMAIL_DOMAINS = new Set([
+  'mailinator.com', 'tempmail.com', 'temp-mail.org', 'temp-mail.io', 'guerrillamail.com', 'guerrillamail.net',
+  '10minutemail.com', 'throwawaymail.com', 'trashmail.com', 'sharklasers.com',
+  'dispostable.com', 'fakemailgenerator.com', 'getnada.com', 'mohmal.com',
+  'yopmail.com', 'yopmail.fr', 'yopmail.net', 'dropmail.me', 'inboxkitten.com',
+  'burnermail.io', 'crazymailing.com', 'generator.email', 'tempinbox.com',
+  'mytemp.email', 'tempail.com', 'emailondeck.com', 'internxt.com', 'disposablemail.com'
+]);
+
+const isDisposableEmail = (emailStr) => {
+  if (!emailStr || typeof emailStr !== 'string' || !emailStr.includes('@')) return false;
+  const domain = emailStr.split('@')[1].trim().toLowerCase();
+  if (DISPOSABLE_EMAIL_DOMAINS.has(domain)) return true;
+  return /^(temp|throwaway|fake|trash|disposable|guerrilla|10minute|burner).*\.(com|org|net|io|me|xyz)$/i.test(domain);
+};
+
 // ── Helper: shape the user object returned in responses ───────
 const formatUser = (user) => {
   const email = (user.email || '').toLowerCase();
@@ -109,6 +126,15 @@ const registerUser = async (req, res, next) => {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
+
+    // AI & Disposable Email Identifier: reject temporary and burner emails
+    if (isDisposableEmail(normalizedEmail)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Temporary / disposable emails (such as Temp Mail) are prohibited. Please provide a genuine student or personal email address.',
+      });
+    }
+
     const formattedPhone = phone ? whatsappService.formatPhoneNumber(phone) : '';
 
     // Check if user already exists
@@ -1231,4 +1257,5 @@ module.exports = {
   connectGitHub,
   getGitHubConfig,
   generateDualOtps,
+  isDisposableEmail,
 };
