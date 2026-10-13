@@ -50,39 +50,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const precheckIcon = document.getElementById('precheckIcon');
   const precheckText = document.getElementById('precheckText');
 
-  // DOM Elements - Step 2 (OTP)
+  // DOM Elements - Step 2 (Dual OTP)
   const step2 = document.getElementById('registerStep2');
+  const verificationBadge = document.getElementById('verificationBadge');
+  const verificationHeading = document.getElementById('verificationHeading');
+  const verificationSubheading = document.getElementById('verificationSubheading');
+  const emailCardTitle = document.getElementById('emailCardTitle');
   const displayEmail = document.getElementById('displayTargetEmail');
+  const displayTargetPhone = document.getElementById('displayTargetPhone');
+  const noticeEmailText = document.getElementById('noticeEmailText');
+  const noticePhoneText = document.getElementById('noticePhoneText');
+  const whatsappOtpCard = document.getElementById('whatsappOtpCard');
   const otpForm = document.getElementById('otpForm');
   const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+  const verifyBtnText = document.getElementById('verifyBtnText');
   const btnBackToForm = document.getElementById('btnBackToForm');
   const btnResendOtp = document.getElementById('btnResendOtp');
   const resendCountdown = document.getElementById('resendCountdown');
-  const digitInputs = document.querySelectorAll('.otp-digit-field');
+  const emailDigitInputs = document.querySelectorAll('.email-otp-digit');
+  const waDigitInputs = document.querySelectorAll('.wa-otp-digit');
   const backupOtpBanner = document.getElementById('backupOtpBanner');
   const backupOtpValue = document.getElementById('backupOtpValue');
   const btnAutoFillBackupOtp = document.getElementById('btnAutoFillBackupOtp');
-  const noticeEmailText = document.getElementById('noticeEmailText');
 
   let currentEmail = '';
   let currentPhone = '';
+  let activeBackupEmailOtp = '';
+  let activeBackupWaOtp = '';
   let activeRole = 'student'; // 'student' or 'recruiter'
   let countdownTimer = null;
   let precheckDebounceTimer = null;
 
-  const fillOtpDigits = (code) => {
-    if (!code) return;
+  const fillDigits = (inputs, code) => {
+    if (!code || !inputs) return;
     const digits = String(code).trim().slice(0, 6).split('');
-    digitInputs.forEach((input, i) => {
+    inputs.forEach((input, i) => {
       if (digits[i]) input.value = digits[i];
     });
-    if (digitInputs[5]) digitInputs[5].focus();
+    if (inputs[5]) inputs[5].focus();
   };
 
   if (btnAutoFillBackupOtp) {
     btnAutoFillBackupOtp.addEventListener('click', () => {
-      const code = backupOtpValue ? backupOtpValue.textContent.trim() : '';
-      if (code) fillOtpDigits(code);
+      if (activeBackupEmailOtp) fillDigits(emailDigitInputs, activeBackupEmailOtp);
+      if (activeBackupWaOtp && currentPhone) fillDigits(waDigitInputs, activeBackupWaOtp);
     });
   }
 
@@ -348,34 +359,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── OTP Digit Input Auto-Focus Navigation ───────────────────
-  digitInputs.forEach((input, index) => {
-    input.addEventListener('input', (e) => {
-      const val = e.target.value.replace(/\D/g, '');
-      e.target.value = val;
+  // ── OTP Digit Input Auto-Focus Navigation (Dual Channel Independent Groups) ──
+  const bindDigitGroup = (inputs) => {
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
 
-      if (val && index < digitInputs.length - 1) {
-        digitInputs[index + 1].focus();
-      }
-    });
+        if (val && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
 
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace' && !e.target.value && index > 0) {
-        digitInputs[index - 1].focus();
-      }
-    });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
 
-    input.addEventListener('paste', (e) => {
-      e.preventDefault();
-      const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-      if (pasteData.length >= 6) {
-        pasteData.slice(0, 6).split('').forEach((char, i) => {
-          if (digitInputs[i]) digitInputs[i].value = char;
-        });
-        digitInputs[5].focus();
-      }
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        if (pasteData.length >= 6) {
+          pasteData.slice(0, 6).split('').forEach((char, i) => {
+            if (inputs[i]) inputs[i].value = char;
+          });
+          if (inputs[5]) inputs[5].focus();
+        }
+      });
     });
-  });
+  };
+
+  bindDigitGroup(emailDigitInputs);
+  bindDigitGroup(waDigitInputs);
 
   // ── Countdown Timer for Resend OTP ──────────────────────────
   const startResendCountdown = (seconds = 60) => {
@@ -400,16 +416,77 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Transition to Step 2 (OTP) ──────────────────────────────
   const showOtpStep = (email, backupOtp = null, extra = {}) => {
     currentEmail = email;
-    if (extra.phone) currentPhone = extra.phone;
+    currentPhone = extra.phone || '';
+    activeBackupEmailOtp = extra.backupEmailOtp || backupOtp || '';
+    activeBackupWaOtp = extra.backupWhatsappOtp || '';
+
     if (displayEmail) displayEmail.textContent = email;
     if (noticeEmailText) noticeEmailText.textContent = email;
 
-    if (backupOtpBanner && backupOtpValue) {
-      if (backupOtp && !extra.whatsappSent && !extra.mailSent) {
-        backupOtpValue.textContent = backupOtp;
-        backupOtpBanner.classList.remove('d-none');
-      } else {
-        backupOtpBanner.classList.add('d-none');
+    // Reset all digits
+    emailDigitInputs.forEach(i => i.value = '');
+    waDigitInputs.forEach(i => i.value = '');
+
+    if (currentPhone) {
+      // Dual verification mode (Both Gmail & WhatsApp required simultaneously)
+      if (whatsappOtpCard) whatsappOtpCard.classList.remove('d-none');
+      if (displayTargetPhone) displayTargetPhone.textContent = currentPhone;
+      if (noticePhoneText) noticePhoneText.textContent = currentPhone;
+
+      if (verificationBadge) {
+        verificationBadge.innerHTML = '<span class="pulse-dot"></span> DUAL-CHANNEL VERIFICATION';
+      }
+      if (verificationHeading) {
+        verificationHeading.textContent = 'Verify Gmail & WhatsApp';
+      }
+      if (verificationSubheading) {
+        verificationSubheading.textContent = 'Both verification codes are required simultaneously to activate your account.';
+      }
+      if (emailCardTitle) {
+        emailCardTitle.textContent = '1. Gmail Verification Code';
+      }
+      if (verifyBtnText) {
+        verifyBtnText.textContent = 'Verify Both Codes & Activate Account';
+      }
+
+      if (backupOtpBanner && backupOtpValue) {
+        if (activeBackupEmailOtp || activeBackupWaOtp) {
+          const parts = [];
+          if (activeBackupEmailOtp) parts.push(`Gmail: ${activeBackupEmailOtp}`);
+          if (activeBackupWaOtp) parts.push(`WhatsApp: ${activeBackupWaOtp}`);
+          backupOtpValue.textContent = parts.join(' | ');
+          backupOtpBanner.classList.remove('d-none');
+        } else {
+          backupOtpBanner.classList.add('d-none');
+        }
+      }
+    } else {
+      // Single verification mode (Email only, e.g. corporate recruiter)
+      if (whatsappOtpCard) whatsappOtpCard.classList.add('d-none');
+
+      if (verificationBadge) {
+        verificationBadge.innerHTML = '<span class="pulse-dot"></span> EMAIL VERIFICATION';
+      }
+      if (verificationHeading) {
+        verificationHeading.textContent = 'Verify Your Email';
+      }
+      if (verificationSubheading) {
+        verificationSubheading.textContent = 'Enter the 6-digit verification code sent to your email.';
+      }
+      if (emailCardTitle) {
+        emailCardTitle.textContent = 'Email Verification Code';
+      }
+      if (verifyBtnText) {
+        verifyBtnText.textContent = 'Verify Code & Activate Account';
+      }
+
+      if (backupOtpBanner && backupOtpValue) {
+        if (activeBackupEmailOtp) {
+          backupOtpValue.textContent = activeBackupEmailOtp;
+          backupOtpBanner.classList.remove('d-none');
+        } else {
+          backupOtpBanner.classList.add('d-none');
+        }
       }
     }
 
@@ -417,12 +494,12 @@ document.addEventListener('DOMContentLoaded', () => {
     step2.classList.remove('d-none');
     alertContainer.innerHTML = '';
 
-    digitInputs.forEach(input => input.value = '');
-    if (digitInputs[0]) digitInputs[0].focus();
+    if (emailDigitInputs[0]) emailDigitInputs[0].focus();
 
     startResendCountdown(60);
-    if (extra.whatsappSent) {
-      showAlert(`⚡ Separate 6-digit verification codes sent to your WhatsApp (${extra.phone || ''}) and email! Enter either code to verify.`, 'success');
+
+    if (currentPhone) {
+      showAlert(`⚡ Separate 6-digit verification codes sent to your WhatsApp (${currentPhone}) and Gmail! Enter both codes below to activate your account.`, 'success');
     } else {
       showAlert('A 6-digit verification code has been dispatched. Enter the code below to activate your account.', 'info');
     }
@@ -492,6 +569,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.success && (response.requiresOtp || !response.data?.token)) {
           showOtpStep(response.email || email, response.backupOtp, {
             phone: response.phone || phone,
+            backupEmailOtp: response.backupEmailOtp,
+            backupWhatsappOtp: response.backupWhatsappOtp,
             whatsappSent: Boolean(response.whatsappSent),
             mailSent: Boolean(response.mailSent)
           });
@@ -619,6 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.success && response.requiresOtp) {
           showOtpStep(response.email || email, response.backupOtp, {
+            backupEmailOtp: response.backupEmailOtp,
             mailSent: Boolean(response.mailSent)
           });
         } else {
@@ -633,15 +713,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Step 2: Submit OTP Verification ─────────────────────────
+  // ── Step 2: Submit OTP Verification (Dual-Channel or Single) ─────────
   otpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     alertContainer.innerHTML = '';
 
-    const enteredOtp = Array.from(digitInputs).map(i => i.value.trim()).join('');
+    const emailOtp = Array.from(emailDigitInputs).map(i => i.value.trim()).join('');
+    const waOtp = currentPhone ? Array.from(waDigitInputs).map(i => i.value.trim()).join('') : '';
 
-    if (enteredOtp.length !== 6) {
-      showAlert('Please enter the 6-digit verification code sent to your email or WhatsApp.');
+    if (emailOtp.length !== 6) {
+      showAlert('Please enter the complete 6-digit Gmail verification code.');
+      const emptyEmailInput = Array.from(emailDigitInputs).find(i => !i.value.trim());
+      if (emptyEmailInput) emptyEmailInput.focus();
+      return;
+    }
+
+    if (currentPhone && waOtp.length !== 6) {
+      showAlert('Please enter the complete 6-digit WhatsApp verification code.');
+      const emptyWaInput = Array.from(waDigitInputs).find(i => !i.value.trim());
+      if (emptyWaInput) emptyWaInput.focus();
       return;
     }
 
@@ -649,14 +739,18 @@ document.addEventListener('DOMContentLoaded', () => {
     verifyOtpBtn.disabled = true;
     verifyOtpBtn.innerHTML = `
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span>Verifying Code...</span>
+      <span>Verifying Codes...</span>
     `;
 
     try {
-      const response = await window.API.post('/auth/verify-otp', {
+      const payload = {
         email: currentEmail,
-        otp: enteredOtp,
-      });
+        emailOtp,
+        ...(currentPhone ? { whatsappOtp: waOtp } : {}),
+        otp: emailOtp, // backward compatibility
+      };
+
+      const response = await window.API.post('/auth/verify-otp', payload);
 
       if (response.success && response.data?.token) {
         window.Auth.setToken(response.data.token);
@@ -666,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showAlert(
           isRecruiter
             ? 'Corporate Recruiter Account Verified! Opening Recruiter Portal...'
-            : 'Account verified successfully! Taking you to assessment...',
+            : 'Account verified successfully! Both Gmail & WhatsApp validated. Taking you to assessment...',
           'success'
         );
 
@@ -685,7 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       verifyOtpBtn.disabled = false;
       verifyOtpBtn.innerHTML = originalBtn;
-      showAlert(err.message || 'Verification failed. Please check code or request a new one.');
+      showAlert(err.message || 'Verification failed. Please check both codes or request new ones.');
     }
   });
 
@@ -698,13 +792,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await window.API.post('/auth/resend-otp', { email: currentEmail, phone: currentPhone });
       if (response.success) {
         startResendCountdown(60);
-        if (response.backupOtp && !response.whatsappSent && !response.mailSent && backupOtpBanner && backupOtpValue) {
-          backupOtpValue.textContent = response.backupOtp;
-          backupOtpBanner.classList.remove('d-none');
-        } else if (backupOtpBanner) {
-          backupOtpBanner.classList.add('d-none');
+        activeBackupEmailOtp = response.backupEmailOtp || response.backupOtp || '';
+        activeBackupWaOtp = response.backupWhatsappOtp || '';
+
+        if (backupOtpBanner && backupOtpValue) {
+          if (activeBackupEmailOtp || activeBackupWaOtp) {
+            const parts = [];
+            if (activeBackupEmailOtp) parts.push(`Gmail: ${activeBackupEmailOtp}`);
+            if (activeBackupWaOtp) parts.push(`WhatsApp: ${activeBackupWaOtp}`);
+            backupOtpValue.textContent = parts.join(' | ');
+            backupOtpBanner.classList.remove('d-none');
+          } else {
+            backupOtpBanner.classList.add('d-none');
+          }
         }
-        showAlert(response.message || (response.whatsappSent ? '⚡ Fresh verification code sent to your WhatsApp and email!' : 'A fresh 6-digit verification code has been sent to your email inbox!'), 'success');
+        showAlert(response.message || (response.whatsappSent ? '⚡ Fresh distinct verification codes sent to your WhatsApp and email!' : 'A fresh 6-digit verification code has been sent to your email inbox!'), 'success');
       } else {
         showAlert(response.message || 'Could not resend OTP. Please try again.');
         btnResendOtp.disabled = false;

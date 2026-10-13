@@ -208,6 +208,8 @@ const registerUser = async (req, res, next) => {
           mailSent,
           whatsappSent,
           backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
+          backupEmailOtp: (!mailSent) ? emailOtp : undefined,
+          backupWhatsappOtp: (targetPhone && !whatsappSent) ? whatsappOtp : undefined,
           message: whatsappSent
             ? 'Account pending verification. Distinct 6-digit verification codes have been sent to your WhatsApp and email!'
             : (mailSent
@@ -262,6 +264,8 @@ const registerUser = async (req, res, next) => {
       mailSent,
       whatsappSent,
       backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
+      backupEmailOtp: (!mailSent) ? emailOtp : undefined,
+      backupWhatsappOtp: (formattedPhone && !whatsappSent) ? whatsappOtp : undefined,
       message: whatsappSent
         ? 'Account created! Distinct 6-digit verification codes have been sent to your WhatsApp and email.'
         : (mailSent
@@ -497,6 +501,8 @@ const resendOtp = async (req, res, next) => {
       mailSent,
       whatsappSent,
       backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
+      backupEmailOtp: (!mailSent) ? emailOtp : undefined,
+      backupWhatsappOtp: (targetPhone && !whatsappSent) ? whatsappOtp : undefined,
       message: whatsappSent
         ? 'Distinct fresh 6-digit verification codes have been sent to your WhatsApp and email!'
         : (mailSent

@@ -19,7 +19,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
 const User = require('../models/User');
-const { generateDualOtps, isDisposableEmail } = require('../controllers/authController');
+const { generateDualOtps, isDisposableEmail, verifyOtp } = require('../controllers/authController');
 
 async function runTests() {
   console.log('============================================================');
@@ -191,6 +191,97 @@ async function runTests() {
     validSamples.forEach(addr => {
       assert.strictEqual(isDisposableEmail(addr), false, `Must permit authentic email ${addr}`);
     });
+  });
+
+  // ── TEST 8: Simultaneous Dual Verification Enforcement (Gmail & WhatsApp) ──
+  console.log('\n▶ SUITE 8: Simultaneous Dual Verification Enforcement (Gmail & WhatsApp)');
+
+  function mockReqRes(body) {
+    let statusCode = 200;
+    let responseData = null;
+    const req = { body };
+    const res = {
+      status(code) {
+        statusCode = code;
+        return this;
+      },
+      json(data) {
+        responseData = data;
+        return this;
+      }
+    };
+    return { req, res, getStatus: () => statusCode, getData: () => responseData };
+  }
+
+  await asyncTest('Enforces BOTH Gmail and WhatsApp OTPs simultaneously when phone is present', async () => {
+    const testEmail = `dualtest_${Date.now()}@college.edu`;
+    const { emailOtp, whatsappOtp } = generateDualOtps();
+
+    const user = new User({
+      name: 'Dual Test Student',
+      email: testEmail,
+      password: 'password123',
+      phone: '+919876543210',
+      isVerified: false,
+      verificationOtp: {
+        code: emailOtp,
+        emailCode: emailOtp,
+        whatsappCode: whatsappOtp,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      }
+    });
+    await user.save();
+
+    // 1. Entering valid whatsappOtp but wrong/empty emailOtp -> Rejected!
+    const mock1 = mockReqRes({ email: testEmail, emailOtp: '000000', whatsappOtp });
+    await verifyOtp(mock1.req, mock1.res, () => {});
+    assert.strictEqual(mock1.getStatus(), 400);
+    assert.ok(mock1.getData().message.includes('Invalid Gmail verification code'), 'Must reject invalid Gmail OTP');
+
+    // 2. Entering valid emailOtp but wrong whatsappOtp -> Rejected!
+    const mock2 = mockReqRes({ email: testEmail, emailOtp, whatsappOtp: '999999' });
+    await verifyOtp(mock2.req, mock2.res, () => {});
+    assert.strictEqual(mock2.getStatus(), 400);
+    assert.ok(mock2.getData().message.includes('Invalid WhatsApp verification code'), 'Must reject invalid WhatsApp OTP');
+
+    // 3. Entering BOTH valid emailOtp AND whatsappOtp -> Approved & verified!
+    const mock3 = mockReqRes({ email: testEmail, emailOtp, whatsappOtp });
+    await verifyOtp(mock3.req, mock3.res, () => {});
+    assert.strictEqual(mock3.getStatus(), 200);
+    assert.strictEqual(mock3.getData().success, true);
+    assert.ok(mock3.getData().data?.token, 'Must return active session JWT token');
+    assert.strictEqual(mock3.getData().data?.user?.isVerified, true, 'User must be marked verified');
+
+    // Clean up
+    await User.deleteOne({ email: testEmail });
+  });
+
+  await asyncTest('Single email verification succeeds for users without phone (recruiter mode)', async () => {
+    const recruiterEmail = `recruiter_${Date.now()}@company.com`;
+    const { emailOtp } = generateDualOtps();
+
+    const recruiterUser = new User({
+      name: 'Recruiter User',
+      email: recruiterEmail,
+      password: 'password123',
+      role: 'recruiter',
+      isVerified: false,
+      verificationOtp: {
+        code: emailOtp,
+        emailCode: emailOtp,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+      }
+    });
+    await recruiterUser.save();
+
+    const mock = mockReqRes({ email: recruiterEmail, emailOtp });
+    await verifyOtp(mock.req, mock.res, () => {});
+    assert.strictEqual(mock.getStatus(), 200);
+    assert.strictEqual(mock.getData().success, true);
+    assert.ok(mock.getData().data?.token, 'Must return active session token');
+
+    // Clean up
+    await User.deleteOne({ email: recruiterEmail });
   });
 
   // ── SUMMARY ──
