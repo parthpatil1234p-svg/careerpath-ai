@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (noticeEmailText) noticeEmailText.textContent = email;
 
     if (backupOtpBanner && backupOtpValue) {
-      if (backupOtp) {
+      if (backupOtp && !extra.whatsappSent && !extra.mailSent) {
         backupOtpValue.textContent = backupOtp;
         backupOtpBanner.classList.remove('d-none');
       } else {
@@ -429,7 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.success && (response.requiresOtp || !response.data?.token)) {
           showOtpStep(response.email || email, response.backupOtp, {
             phone: response.phone || phone,
-            whatsappSent: response.whatsappSent
+            whatsappSent: Boolean(response.whatsappSent),
+            mailSent: Boolean(response.mailSent)
           });
         } else if (response.success && response.data?.token) {
           window.Auth.setToken(response.data.token);
@@ -554,7 +555,9 @@ document.addEventListener('DOMContentLoaded', () => {
         recruiterSubmitBtn.innerHTML = originalBtnContent;
 
         if (response.success && response.requiresOtp) {
-          showOtpStep(response.email || email, response.backupOtp);
+          showOtpStep(response.email || email, response.backupOtp, {
+            mailSent: Boolean(response.mailSent)
+          });
         } else {
           showAlert(response.message || 'Corporate registration failed. Please try again.');
         }
@@ -632,9 +635,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await window.API.post('/auth/resend-otp', { email: currentEmail, phone: currentPhone });
       if (response.success) {
         startResendCountdown(60);
-        if (response.backupOtp && backupOtpBanner && backupOtpValue) {
+        if (response.backupOtp && !response.whatsappSent && !response.mailSent && backupOtpBanner && backupOtpValue) {
           backupOtpValue.textContent = response.backupOtp;
           backupOtpBanner.classList.remove('d-none');
+        } else if (backupOtpBanner) {
+          backupOtpBanner.classList.add('d-none');
         }
         showAlert(response.message || (response.whatsappSent ? '⚡ Fresh verification code sent to your WhatsApp and email!' : 'A fresh 6-digit verification code has been sent to your email inbox!'), 'success');
       } else {

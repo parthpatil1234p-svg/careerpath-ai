@@ -166,7 +166,7 @@ const registerUser = async (req, res, next) => {
           phone: targetPhone || undefined,
           mailSent,
           whatsappSent,
-          backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+          backupOtp: (!mailSent && !whatsappSent) ? otpCode : undefined,
           message: whatsappSent
             ? 'Account pending verification. A fresh 6-digit verification code has been sent instantly to your WhatsApp and email!'
             : (mailSent
@@ -218,7 +218,7 @@ const registerUser = async (req, res, next) => {
       phone: formattedPhone || undefined,
       mailSent,
       whatsappSent,
-      backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+      backupOtp: (!mailSent && !whatsappSent) ? otpCode : undefined,
       message: whatsappSent
         ? 'Account created! A 6-digit verification code has been sent instantly to your WhatsApp and email.'
         : (mailSent
@@ -413,7 +413,7 @@ const resendOtp = async (req, res, next) => {
       success: true,
       mailSent,
       whatsappSent,
-      backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? newCode : undefined,
+      backupOtp: (!mailSent && !whatsappSent) ? newCode : undefined,
       message: whatsappSent
         ? 'A fresh 6-digit verification code has been sent instantly to your WhatsApp and email!'
         : (mailSent
@@ -675,7 +675,7 @@ const loginUser = async (req, res, next) => {
           phone: user.phone || undefined,
           mailSent,
           whatsappSent,
-          backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? newCode : undefined,
+          backupOtp: (!mailSent && !whatsappSent) ? newCode : undefined,
           message: whatsappSent
             ? 'Your account is not verified yet. A fresh 6-digit OTP code has been sent instantly to your WhatsApp and email!'
             : (mailSent

@@ -213,7 +213,7 @@ const registerRecruiter = async (req, res, next) => {
       email: normalizedEmail,
       companyName: company.name,
       mailSent,
-      backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+      backupOtp: !mailSent ? otpCode : undefined,
       message: mailSent
         ? `Corporate verification code sent to ${normalizedEmail}. Please check your Inbox and Spam/Junk folder.`
         : `Corporate registration initiated. Your verification code is: ${otpCode}`,
