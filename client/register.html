@@ -96,13 +96,14 @@
         color: #1E293B !important;
       }
 
-      /* Suppress 3rd-party extension badges & icons (TempMail, Password managers, etc.) */
+      /* Suppress 3rd-party extension injected overlays without affecting form fields */
       .input-group input.form-control {
         background-image: none !important;
       }
-      [class*="tempmail"],
-      [id*="tempmail"],
-      [data-tempmail],
+      button[class*="tempmail"],
+      div[class*="tempmail"],
+      span[class*="tempmail"],
+      img[class*="tempmail"],
       .__tempmail_btn,
       .temp-mail-icon,
       .tempmail-wrapper,
@@ -116,6 +117,18 @@
         max-height: 0 !important;
         position: absolute !important;
         left: -9999px !important;
+      }
+
+      /* Explicitly guarantee email input and all form controls remain 100% visible */
+      .form-control,
+      #email,
+      input#email {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: static !important;
+        width: 100% !important;
+        flex: 1 1 auto !important;
       }
     </style>
 
@@ -345,9 +358,6 @@
                       required
                       autocomplete="email"
                       spellcheck="false"
-                      data-tempmail="false"
-                      data-lpignore="true"
-                      data-1p-ignore="true"
                     />
                   </div>
                   <!-- Real-Time AI / Disposable Email Identifier Status -->
