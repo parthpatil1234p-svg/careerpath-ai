@@ -19,6 +19,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
 const User = require('../models/User');
+const { generateDualOtps } = require('../controllers/authController');
 
 async function runTests() {
   console.log('============================================================');
@@ -140,6 +141,21 @@ async function runTests() {
     assert.strictEqual(mockEnvelope.data.fromMe, false);
     assert.strictEqual(whatsappService.formatPhoneNumber(mockEnvelope.data.senderPhone), '+919876543210');
     assert.strictEqual(mockEnvelope.data.body, 'Can you explain React useEffect hook?');
+  });
+
+  // ── TEST 6: Dual Distinct OTP Guarantee (Gmail vs WhatsApp) ──
+  console.log('\n▶ SUITE 6: Dual Distinct OTP Guarantee (Gmail !== WhatsApp)');
+  test('Guarantees emailOtp and whatsappOtp are never identical across 1000 generations', () => {
+    for (let i = 0; i < 1000; i++) {
+      const { emailOtp, whatsappOtp } = generateDualOtps();
+      assert.strictEqual(typeof emailOtp, 'string');
+      assert.strictEqual(typeof whatsappOtp, 'string');
+      assert.strictEqual(emailOtp.length, 6, 'Email OTP must be 6 digits');
+      assert.strictEqual(whatsappOtp.length, 6, 'WhatsApp OTP must be 6 digits');
+      assert.ok(/^\d{6}$/.test(emailOtp), 'Email OTP must consist of numbers only');
+      assert.ok(/^\d{6}$/.test(whatsappOtp), 'WhatsApp OTP must consist of numbers only');
+      assert.notStrictEqual(emailOtp, whatsappOtp, `Iteration ${i}: emailOtp (${emailOtp}) cannot equal whatsappOtp (${whatsappOtp})`);
+    }
   });
 
   // ── SUMMARY ──

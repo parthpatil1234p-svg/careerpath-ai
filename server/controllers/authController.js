@@ -24,6 +24,19 @@ const generateOtp = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+/**
+ * Helper: Generates two distinct 6-Digit Secure OTPs (one for Email, one for WhatsApp)
+ * Guarantees that emailOtp and whatsappOtp will NEVER be identical!
+ */
+const generateDualOtps = () => {
+  const emailOtp = Math.floor(100000 + Math.random() * 900000).toString();
+  let whatsappOtp = Math.floor(100000 + Math.random() * 900000).toString();
+  while (whatsappOtp === emailOtp) {
+    whatsappOtp = Math.floor(100000 + Math.random() * 900000).toString();
+  }
+  return { emailOtp, whatsappOtp };
+};
+
 // ── Helper: shape the user object returned in responses ───────
 const formatUser = (user) => {
   const email = (user.email || '').toLowerCase();
@@ -100,7 +113,7 @@ const registerUser = async (req, res, next) => {
 
     // Check if user already exists
     let existingUser = await User.findOne({ email: normalizedEmail });
-    const otpCode = generateOtp();
+    const { emailOtp, whatsappOtp } = generateDualOtps();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
     if (existingUser) {
@@ -127,22 +140,24 @@ const registerUser = async (req, res, next) => {
           });
         }
 
-        // Account exists but is unverified: update details, assign fresh OTP and resend
+        // Account exists but is unverified: update details, assign fresh separate OTPs and resend
         existingUser.name = name.trim();
         existingUser.password = password; // Pre-save hook will hash it
         if (formattedPhone) existingUser.phone = formattedPhone;
         recentHistory.push(new Date(now));
         existingUser.verificationOtp = {
-          code: otpCode,
+          code: emailOtp, // backward compatibility
+          emailCode: emailOtp,
+          whatsappCode: whatsappOtp,
           expiresAt,
           sendHistory: recentHistory,
         };
         await existingUser.save();
 
-        console.log(`\n🔑 [REGISTRATION UNVERIFIED OTP] Code for ${normalizedEmail}: ${otpCode}\n`);
+        console.log(`\n🔑 [REGISTRATION UNVERIFIED DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
         let mailSent = false;
         try {
-          const mailRes = await sendOtpEmail(normalizedEmail, existingUser.name, otpCode);
+          const mailRes = await sendOtpEmail(normalizedEmail, existingUser.name, emailOtp);
           mailSent = Boolean(mailRes && mailRes.success);
         } catch (mailErr) {
           console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
@@ -152,7 +167,7 @@ const registerUser = async (req, res, next) => {
         const targetPhone = formattedPhone || existingUser.phone;
         if (targetPhone) {
           try {
-            const waRes = await whatsappService.sendOtp(targetPhone, otpCode, existingUser.name);
+            const waRes = await whatsappService.sendOtp(targetPhone, whatsappOtp, existingUser.name);
             whatsappSent = Boolean(waRes && waRes.success);
           } catch (waErr) {
             console.error('[authController.registerUser] Failed to send WhatsApp OTP:', waErr.message);
@@ -166,12 +181,12 @@ const registerUser = async (req, res, next) => {
           phone: targetPhone || undefined,
           mailSent,
           whatsappSent,
-          backupOtp: (!mailSent && !whatsappSent) ? otpCode : undefined,
+          backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
           message: whatsappSent
-            ? 'Account pending verification. A fresh 6-digit verification code has been sent instantly to your WhatsApp and email!'
+            ? 'Account pending verification. Distinct 6-digit verification codes have been sent to your WhatsApp and email!'
             : (mailSent
                 ? 'Account pending verification. A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
-                : `Email delivery delayed by provider. Your verification code is: ${otpCode}`),
+                : `Email delivery delayed by provider. Your verification code is: ${emailOtp}`),
         });
       }
     }
@@ -184,7 +199,9 @@ const registerUser = async (req, res, next) => {
       phone: formattedPhone || undefined,
       isVerified: false,
       verificationOtp: {
-        code: otpCode,
+        code: emailOtp, // backward compatibility
+        emailCode: emailOtp,
+        whatsappCode: whatsappOtp,
         expiresAt,
         sendHistory: [new Date()],
       },
@@ -192,10 +209,10 @@ const registerUser = async (req, res, next) => {
 
     await user.save();
 
-    console.log(`\n🔑 [NEW REGISTRATION OTP] 6-digit code for ${normalizedEmail}: ${otpCode}\n`);
+    console.log(`\n🔑 [NEW REGISTRATION DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
     let mailSent = false;
     try {
-      const mailRes = await sendOtpEmail(normalizedEmail, user.name, otpCode);
+      const mailRes = await sendOtpEmail(normalizedEmail, user.name, emailOtp);
       mailSent = Boolean(mailRes && mailRes.success);
     } catch (mailErr) {
       console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
@@ -204,7 +221,7 @@ const registerUser = async (req, res, next) => {
     let whatsappSent = false;
     if (formattedPhone) {
       try {
-        const waRes = await whatsappService.sendOtp(formattedPhone, otpCode, user.name);
+        const waRes = await whatsappService.sendOtp(formattedPhone, whatsappOtp, user.name);
         whatsappSent = Boolean(waRes && waRes.success);
       } catch (waErr) {
         console.error('[authController.registerUser] Failed to send WhatsApp OTP:', waErr.message);
@@ -218,12 +235,12 @@ const registerUser = async (req, res, next) => {
       phone: formattedPhone || undefined,
       mailSent,
       whatsappSent,
-      backupOtp: (!mailSent && !whatsappSent) ? otpCode : undefined,
+      backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
       message: whatsappSent
-        ? 'Account created! A 6-digit verification code has been sent instantly to your WhatsApp and email.'
+        ? 'Account created! Distinct 6-digit verification codes have been sent to your WhatsApp and email.'
         : (mailSent
             ? 'Account created! A 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
-            : `Account created! Email delivery delayed by provider. Your verification code is: ${otpCode}`),
+            : `Account created! Email delivery delayed by provider. Your verification code is: ${emailOtp}`),
     });
   } catch (error) {
     next(error);
@@ -251,7 +268,7 @@ const verifyOtp = async (req, res, next) => {
 
     // Query user including hidden OTP fields
     const user = await User.findOne({ email: normalizedEmail })
-      .select('+verificationOtp.code +verificationOtp.expiresAt');
+      .select('+verificationOtp.code +verificationOtp.emailCode +verificationOtp.whatsappCode +verificationOtp.expiresAt');
 
     if (!user) {
       return res.status(404).json({
@@ -272,10 +289,17 @@ const verifyOtp = async (req, res, next) => {
       });
     }
 
+    const cleanInput = String(otp).trim();
     const storedCode = user.verificationOtp?.code;
+    const emailCode = user.verificationOtp?.emailCode;
+    const whatsappCode = user.verificationOtp?.whatsappCode;
     const expiresAt = user.verificationOtp?.expiresAt;
 
-    if (!storedCode || storedCode !== String(otp).trim()) {
+    const isMatch = (storedCode && storedCode === cleanInput) ||
+                    (emailCode && emailCode === cleanInput) ||
+                    (whatsappCode && whatsappCode === cleanInput);
+
+    if (!isMatch) {
       return res.status(400).json({
         success: false,
         message: 'Invalid verification code. Please check and re-enter.',
@@ -380,19 +404,21 @@ const resendOtp = async (req, res, next) => {
       });
     }
 
-    const newCode = generateOtp();
+    const { emailOtp, whatsappOtp } = generateDualOtps();
     recentHistory.push(new Date(now));
     user.verificationOtp = {
-      code: newCode,
+      code: emailOtp, // backward compatibility
+      emailCode: emailOtp,
+      whatsappCode: whatsappOtp,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       sendHistory: recentHistory,
     };
     await user.save();
 
-    console.log(`\n🔄 [OTP RESENT] New Verification Code for ${normalizedEmail}: ${newCode}\n`);
+    console.log(`\n🔄 [OTP RESENT DUAL] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
     let mailSent = false;
     try {
-      const mailRes = await sendOtpEmail(normalizedEmail, user.name, newCode);
+      const mailRes = await sendOtpEmail(normalizedEmail, user.name, emailOtp);
       mailSent = Boolean(mailRes && mailRes.success);
     } catch (mailErr) {
       console.error('[authController.resendOtp] Failed to send OTP email:', mailErr.message);
@@ -402,7 +428,7 @@ const resendOtp = async (req, res, next) => {
     const targetPhone = req.body.phone || user.phone;
     if (targetPhone) {
       try {
-        const waRes = await whatsappService.sendOtp(targetPhone, newCode, user.name);
+        const waRes = await whatsappService.sendOtp(targetPhone, whatsappOtp, user.name);
         whatsappSent = Boolean(waRes && waRes.success);
       } catch (waErr) {
         console.error('[authController.resendOtp] Failed to send WhatsApp OTP:', waErr.message);
@@ -413,12 +439,12 @@ const resendOtp = async (req, res, next) => {
       success: true,
       mailSent,
       whatsappSent,
-      backupOtp: (!mailSent && !whatsappSent) ? newCode : undefined,
+      backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
       message: whatsappSent
-        ? 'A fresh 6-digit verification code has been sent instantly to your WhatsApp and email!'
+        ? 'Distinct fresh 6-digit verification codes have been sent to your WhatsApp and email!'
         : (mailSent
             ? 'A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
-            : `Email delivery delayed by provider. Your fresh verification code is: ${newCode}`),
+            : `Email delivery delayed by provider. Your fresh verification code is: ${emailOtp}`),
       data: {
         email: normalizedEmail,
         phone: targetPhone || undefined,
@@ -642,17 +668,19 @@ const loginUser = async (req, res, next) => {
         user.isVerified = true;
         await user.save();
       } else {
-        const newCode = generateOtp();
+        const { emailOtp, whatsappOtp } = generateDualOtps();
         user.verificationOtp = {
-          code: newCode,
+          code: emailOtp, // backward compatibility
+          emailCode: emailOtp,
+          whatsappCode: whatsappOtp,
           expiresAt: new Date(Date.now() + 10 * 60 * 1000),
         };
         await user.save();
 
-        console.log(`\n🔑 [LOGIN UNVERIFIED OTP] Fresh code for ${normalizedEmail}: ${newCode}\n`);
+        console.log(`\n🔑 [LOGIN UNVERIFIED DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
         let mailSent = false;
         try {
-          const mailRes = await sendOtpEmail(normalizedEmail, user.name, newCode);
+          const mailRes = await sendOtpEmail(normalizedEmail, user.name, emailOtp);
           mailSent = Boolean(mailRes && mailRes.success);
         } catch (mailErr) {
           console.error('[authController.loginUser] Failed to send OTP email:', mailErr.message);
@@ -661,7 +689,7 @@ const loginUser = async (req, res, next) => {
         let whatsappSent = false;
         if (user.phone) {
           try {
-            const waRes = await whatsappService.sendOtp(user.phone, newCode, user.name);
+            const waRes = await whatsappService.sendOtp(user.phone, whatsappOtp, user.name);
             whatsappSent = Boolean(waRes && waRes.success);
           } catch (waErr) {
             console.error('[authController.loginUser] Failed to send WhatsApp OTP:', waErr.message);
@@ -675,12 +703,12 @@ const loginUser = async (req, res, next) => {
           phone: user.phone || undefined,
           mailSent,
           whatsappSent,
-          backupOtp: (!mailSent && !whatsappSent) ? newCode : undefined,
+          backupOtp: (!mailSent && !whatsappSent) ? emailOtp : undefined,
           message: whatsappSent
-            ? 'Your account is not verified yet. A fresh 6-digit OTP code has been sent instantly to your WhatsApp and email!'
+            ? 'Your account is not verified yet. Distinct 6-digit OTP codes have been sent to your WhatsApp and email!'
             : (mailSent
                 ? 'Your email address is not verified yet. A fresh 6-digit OTP code has been sent to your email. Please check your Inbox and Spam/Junk folder!'
-                : `Your email address is not verified yet. Backup code: ${newCode}. Please enter it to verify.`),
+                : `Your email address is not verified yet. Backup code: ${emailOtp}. Please enter it to verify.`),
         });
       }
     }
@@ -1202,4 +1230,5 @@ module.exports = {
   githubAuth,
   connectGitHub,
   getGitHubConfig,
+  generateDualOtps,
 };

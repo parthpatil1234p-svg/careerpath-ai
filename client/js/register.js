@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startResendCountdown(60);
     if (extra.whatsappSent) {
-      showAlert(`⚡ 6-digit verification code sent instantly to your WhatsApp (${extra.phone || ''}) and email inbox!`, 'success');
+      showAlert(`⚡ Separate 6-digit verification codes sent to your WhatsApp (${extra.phone || ''}) and email! Enter either code to verify.`, 'success');
     } else {
       showAlert('A 6-digit verification code has been dispatched. Enter the code below to activate your account.', 'info');
     }
@@ -578,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enteredOtp = Array.from(digitInputs).map(i => i.value.trim()).join('');
 
     if (enteredOtp.length !== 6) {
-      showAlert('Please enter the complete 6-digit verification code sent to your email.');
+      showAlert('Please enter the 6-digit verification code sent to your email or WhatsApp.');
       return;
     }
 

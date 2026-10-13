@@ -71,12 +71,14 @@ async function sendOtp(phone, otpCode, studentName = 'Student') {
 
   const name = (studentName || 'Student').trim().split(' ')[0];
   const messageText = 
-`🔐 *CareerPath AI — Verification Code*
+`🔐 *CareerPath AI — WhatsApp Verification Code*
 
 Namaste ${name}! 👋 
-Aapka CareerPath AI student account verification code hai:
+Aapka CareerPath AI student account WhatsApp verification code hai:
 
 👉 *${otpCode}*
+
+(Note: Aapka email OTP code alag hai. Aap dono me se koi bhi code website par enter karke account verify kar sakte hain).
 
 Ye code agle 10 minute tak valid hai. Kripya ise kisi ke sath share na karein.
 
