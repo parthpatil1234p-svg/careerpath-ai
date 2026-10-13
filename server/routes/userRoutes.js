@@ -23,6 +23,8 @@ const {
   downloadResume,
   getResumePreview,
   updateProfileStatus,
+  sendLinkPhoneOtp,
+  verifyLinkPhoneOtp,
 } = require('../controllers/userController');
 const { protect }                        = require('../middleware/authMiddleware');
 const { validateProfileUpdate }          = require('../middleware/validateRequest');
@@ -40,6 +42,12 @@ router.put('/me', validateProfileUpdate, updateMyProfile);
 
 // PUT /api/users/profile-status (Update Learning / Job Seeking / Working Status)
 router.put('/profile-status', updateProfileStatus);
+
+// POST /api/users/link-phone/send-otp (Send WhatsApp OTP to link phone)
+router.post('/link-phone/send-otp', sendLinkPhoneOtp);
+
+// POST /api/users/link-phone/verify-otp (Verify WhatsApp OTP and link phone)
+router.post('/link-phone/verify-otp', verifyLinkPhoneOtp);
 
 // POST /api/users/avatar (Cloudinary Media Upload)
 router.post('/avatar', uploadAvatar);

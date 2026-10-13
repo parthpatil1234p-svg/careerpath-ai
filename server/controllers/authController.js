@@ -84,6 +84,7 @@ const formatUser = (user) => {
     id:                            user._id,
     name:                          user.name,
     email:                         user.email,
+    phone:                         user.phone || '',
     role:                          resolvedRole,
     isAdmin:                       isDemoOrAdmin && !isRecruiter,
     isDemo:                        isDemoOrAdmin,
@@ -1284,6 +1285,7 @@ const getGitHubConfig = (req, res) => {
 };
 
 module.exports = {
+  formatUser,
   registerUser,
   verifyOtp,
   resendOtp,

@@ -17,6 +17,8 @@ const Resume = require('../models/Resume');
 const Roadmap = require('../models/Roadmap');
 const RoadmapTask = require('../models/RoadmapTask');
 const { cacheManager } = require('../utils/cacheManager');
+const whatsappService = require('../services/whatsappService');
+const { formatUser } = require('./authController');
 
 // ── Permitted update fields whitelist ─────────────────────────
 // Only these fields can be changed via PUT /api/users/me.
@@ -805,6 +807,191 @@ const updateProfileStatus = async (req, res, next) => {
   }
 };
 
+// ── sendLinkPhoneOtp ───────────────────────────────────────────
+/**
+ * POST /api/users/link-phone/send-otp
+ * Body: { phone }
+ * Initiates linking/verification of WhatsApp mobile number for an authenticated user.
+ */
+const sendLinkPhoneOtp = async (req, res, next) => {
+  try {
+    const { phone } = req.body;
+    if (!phone || typeof phone !== 'string' || !phone.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Phone number is required',
+      });
+    }
+
+    const formattedPhone = whatsappService.formatPhoneNumber(phone);
+    const digits = whatsappService.getPhoneDigits(formattedPhone);
+
+    if (!formattedPhone || !digits || digits.length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid 10-digit mobile number',
+      });
+    }
+
+    // Check if another user already owns this phone number
+    const existingUserWithPhone = await User.findOne({ phone: formattedPhone });
+    if (existingUserWithPhone && String(existingUserWithPhone._id) !== String(req.user._id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'This WhatsApp phone number is already linked to another account',
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User account not found',
+      });
+    }
+
+    // If phone is already linked and verified on this account
+    if (user.phone === formattedPhone) {
+      return res.status(400).json({
+        success: false,
+        message: 'This WhatsApp number is already linked and verified on your account',
+      });
+    }
+
+    // Generate distinct 6-digit WhatsApp OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    const existingOtpObj = (user.verificationOtp && typeof user.verificationOtp === 'object') ? user.verificationOtp : {};
+    user.verificationOtp = {
+      ...existingOtpObj,
+      whatsappCode: otp,
+      phonePending: formattedPhone,
+      expiresAt: expiresAt.toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await user.save();
+
+    console.log(`\n📱 [LINK PHONE WHATSAPP OTP] Sent OTP: ${otp} to ${formattedPhone} for user: ${user.name} (${user.email})\n`);
+
+    let whatsappSent = false;
+    try {
+      const waRes = await whatsappService.sendOtp(formattedPhone, otp, user.name);
+      whatsappSent = Boolean(waRes && waRes.success);
+    } catch (waErr) {
+      console.error('[userController.sendLinkPhoneOtp] WhatsApp send error:', waErr.message);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: whatsappSent
+        ? 'A 6-digit verification code has been sent to your WhatsApp number'
+        : `WhatsApp delivery simulated/pending. Your OTP is: ${otp}`,
+      phone: formattedPhone,
+      whatsappSent,
+      backupOtp: !whatsappSent ? otp : undefined,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── verifyLinkPhoneOtp ─────────────────────────────────────────
+/**
+ * POST /api/users/link-phone/verify-otp
+ * Body: { otp, phone }
+ * Validates WhatsApp OTP, sets user.phone, clears OTP, and returns updated user profile.
+ */
+const verifyLinkPhoneOtp = async (req, res, next) => {
+  try {
+    const { otp, phone } = req.body;
+
+    if (!otp) {
+      return res.status(400).json({
+        success: false,
+        message: '6-digit WhatsApp verification code is required',
+      });
+    }
+
+    const enteredOtp = String(otp).trim();
+    if (!/^\d{6}$/.test(enteredOtp)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Verification code must be exactly 6 digits',
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User account not found',
+      });
+    }
+
+    const otpData = (user.verificationOtp && typeof user.verificationOtp === 'object') ? user.verificationOtp : {};
+    if (!otpData.whatsappCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'No pending phone verification found. Please request a new OTP code.',
+      });
+    }
+
+    if (otpData.expiresAt && new Date() > new Date(otpData.expiresAt)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Verification code has expired. Please request a fresh OTP.',
+      });
+    }
+
+    if (String(otpData.whatsappCode).trim() !== enteredOtp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid WhatsApp verification code. Please check your WhatsApp and try again.',
+      });
+    }
+
+    const targetPhone = otpData.phonePending || (phone ? whatsappService.formatPhoneNumber(phone) : null);
+    if (!targetPhone) {
+      return res.status(400).json({
+        success: false,
+        message: 'Pending phone number missing. Please request a new OTP.',
+      });
+    }
+
+    // Double-check uniqueness
+    const existingWithPhone = await User.findOne({ phone: targetPhone });
+    if (existingWithPhone && String(existingWithPhone._id) !== String(user._id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'This WhatsApp phone number is already linked to another account',
+      });
+    }
+
+    user.phone = targetPhone;
+    user.verificationOtp = {
+      ...otpData,
+      whatsappCode: null,
+      phonePending: null,
+    };
+
+    await user.save();
+
+    console.log(`\n✅ [PHONE LINK VERIFIED] User ${user.email} successfully linked WhatsApp phone: ${targetPhone}\n`);
+
+    res.status(200).json({
+      success: true,
+      message: 'WhatsApp mobile number verified and linked successfully!',
+      data: {
+        user: formatUser(user),
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getMyProfile,
   updateMyProfile,
@@ -816,6 +1003,8 @@ module.exports = {
   downloadResume,
   getResumePreview,
   updateProfileStatus,
+  sendLinkPhoneOtp,
+  verifyLinkPhoneOtp,
 };
 
 
