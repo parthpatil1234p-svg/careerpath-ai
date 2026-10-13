@@ -664,7 +664,9 @@
   font-family: var(--font-mono);
   font-size: 1.5rem;
   font-weight: 700;
-  background: #FFFFFF;
+  background: #FFFFFF !important;
+  background-image: none !important;
+  background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1;
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);

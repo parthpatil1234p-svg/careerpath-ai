@@ -97,8 +97,11 @@
       }
 
       /* Suppress 3rd-party extension injected overlays without affecting form fields */
-      .input-group input.form-control {
+      .input-group input.form-control,
+      .otp-digit-field {
         background-image: none !important;
+        background: #FFFFFF !important;
+        background-color: #FFFFFF !important;
       }
       button[class*="tempmail"],
       div[class*="tempmail"],
@@ -108,7 +111,8 @@
       .temp-mail-icon,
       .tempmail-wrapper,
       div[id*="temp-mail"],
-      span[id*="temp-mail"] {
+      span[id*="temp-mail"],
+      .otp-input-wrapper > :not(input) {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
@@ -694,12 +698,12 @@
                     Enter the 6-digit code sent to <strong class="text-ink font-mono" id="displayTargetEmail">student@example.com</strong>
                   </div>
                   <div class="otp-input-wrapper mb-1" id="emailOtpInputs">
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field email-otp-digit" id="emailDigit0" name="emailDigit0" aria-label="Gmail OTP Digit 1" data-index="0" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field email-otp-digit" id="emailDigit1" name="emailDigit1" aria-label="Gmail OTP Digit 2" data-index="1" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field email-otp-digit" id="emailDigit2" name="emailDigit2" aria-label="Gmail OTP Digit 3" data-index="2" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field email-otp-digit" id="emailDigit3" name="emailDigit3" aria-label="Gmail OTP Digit 4" data-index="3" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field email-otp-digit" id="emailDigit4" name="emailDigit4" aria-label="Gmail OTP Digit 5" data-index="4" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field email-otp-digit" id="emailDigit5" name="emailDigit5" aria-label="Gmail OTP Digit 6" data-index="5" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field gmail-otp-digit" id="c1Digit0" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Verification Code Digit 1" data-index="0" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field gmail-otp-digit" id="c1Digit1" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Verification Code Digit 2" data-index="1" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field gmail-otp-digit" id="c1Digit2" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Verification Code Digit 3" data-index="2" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field gmail-otp-digit" id="c1Digit3" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Verification Code Digit 4" data-index="3" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field gmail-otp-digit" id="c1Digit4" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Verification Code Digit 5" data-index="4" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field gmail-otp-digit" id="c1Digit5" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Verification Code Digit 6" data-index="5" />
                   </div>
                 </div>
 
@@ -718,12 +722,12 @@
                     Enter the distinct 6-digit code sent to WhatsApp <strong class="text-ink font-mono" id="displayTargetPhone">+91 ...</strong>
                   </div>
                   <div class="otp-input-wrapper mb-1" id="whatsappOtpInputs">
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit0" name="waDigit0" aria-label="WhatsApp OTP Digit 1" data-index="0" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit1" name="waDigit1" aria-label="WhatsApp OTP Digit 2" data-index="1" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit2" name="waDigit2" aria-label="WhatsApp OTP Digit 3" data-index="2" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit3" name="waDigit3" aria-label="WhatsApp OTP Digit 4" data-index="3" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit4" name="waDigit4" aria-label="WhatsApp OTP Digit 5" data-index="4" />
-                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit5" name="waDigit5" aria-label="WhatsApp OTP Digit 6" data-index="5" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit0" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="WhatsApp Code Digit 1" data-index="0" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit1" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="WhatsApp Code Digit 2" data-index="1" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit2" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="WhatsApp Code Digit 3" data-index="2" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit3" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="WhatsApp Code Digit 4" data-index="3" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit4" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="WhatsApp Code Digit 5" data-index="4" />
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit-field wa-otp-digit" id="waDigit5" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="WhatsApp Code Digit 6" data-index="5" />
                   </div>
                 </div>
 
