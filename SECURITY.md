@@ -50,6 +50,22 @@ For the Hack2Ignite Round 1 MVP, the following baseline security controls are ac
 
 ---
 
+## 🔍 Independent Penetration Testing (Strix AI Audit — Oct 2026)
+
+An automated offensive security penetration test was executed against CareerPath AI's live deployments (`https://careerpath-ai-jade.vercel.app` & `https://careerpath-ai-bdbt.onrender.com`) using the **Strix Multi-Agent Cybersecurity Platform (v1.7.0)** conforming to the **OWASP Web Security Testing Guide (WSTG)**:
+
+- **Overall Risk Rating:** **Low to Moderate (Production Grade)**
+- **Exploitable Vulnerabilities:** **0 Detected (VERIFIED PASS)**
+- **Verified Protections:**
+  - ✅ **Authentication:** Unsigned, tampered, and `alg:none` JWT bypass attempts rejected.
+  - ✅ **Injection & SSRF:** Zero SQLi, SSRF, or system prompt extraction on `/api/chat` and `/api/interview`.
+  - ✅ **File Upload:** Secure PDF processing on `/api/resume/upload` without path traversal or execution bugs.
+  - ✅ **Boundary Isolation:** Strict routing defenses, zero unauthorized directory exposures.
+
+For full technical analysis and methodology, see [`docs/STRIX_SECURITY_AUDIT_REPORT.md`](docs/STRIX_SECURITY_AUDIT_REPORT.md).
+
+---
+
 ## ⚠️ MVP Architecture Notice & Future Production Hardening
 
 > **Educational Hackathon Context:** For this 48-hour prototype, JWT tokens are stored in browser `localStorage` to facilitate multi-page client-side authentication without an active domain cookie policy.

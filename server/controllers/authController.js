@@ -281,12 +281,12 @@ const registerUser = async (req, res, next) => {
  */
 const verifyOtp = async (req, res, next) => {
   try {
-    const { email, otp } = req.body;
+    const { email, otp, emailOtp, whatsappOtp } = req.body;
 
-    if (!email || !otp) {
+    if (!email || (!otp && !emailOtp && !whatsappOtp)) {
       return res.status(400).json({
         success: false,
-        message: 'Email and 6-digit OTP code are required',
+        message: 'Email and verification code(s) are required',
       });
     }
 
@@ -315,28 +315,59 @@ const verifyOtp = async (req, res, next) => {
       });
     }
 
-    const cleanInput = String(otp).trim();
     const storedCode = user.verificationOtp?.code;
     const emailCode = user.verificationOtp?.emailCode;
     const whatsappCode = user.verificationOtp?.whatsappCode;
     const expiresAt = user.verificationOtp?.expiresAt;
 
-    const isMatch = (storedCode && storedCode === cleanInput) ||
-                    (emailCode && emailCode === cleanInput) ||
-                    (whatsappCode && whatsappCode === cleanInput);
-
-    if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid verification code. Please check and re-enter.',
-      });
-    }
-
-    if (new Date() > new Date(expiresAt)) {
+    if (expiresAt && new Date() > new Date(expiresAt)) {
       return res.status(400).json({
         success: false,
         message: 'Verification code has expired. Please click Resend Code.',
       });
+    }
+
+    // ── Dual Verification Mode (when dual OTPs are submitted) ──
+    if (emailOtp || whatsappOtp) {
+      const cleanEmailOtp = String(emailOtp || '').trim();
+      const cleanWaOtp = String(whatsappOtp || '').trim();
+
+      // If user has WhatsApp phone number attached, enforce dual verification!
+      if (user.phone && whatsappCode) {
+        if (!cleanEmailOtp || cleanEmailOtp !== emailCode) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid Gmail verification code. Please check your Gmail inbox or spam folder.',
+          });
+        }
+        if (!cleanWaOtp || cleanWaOtp !== whatsappCode) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid WhatsApp verification code. Please check your WhatsApp messages.',
+          });
+        }
+      } else {
+        // User only has email attached
+        if (!cleanEmailOtp || cleanEmailOtp !== (emailCode || storedCode)) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid Gmail verification code. Please check your Gmail inbox or spam folder.',
+          });
+        }
+      }
+    } else {
+      // Single OTP fallback mode (for automated scripts or single-code input)
+      const cleanInput = String(otp).trim();
+      const isMatch = (storedCode && storedCode === cleanInput) ||
+                      (emailCode && emailCode === cleanInput) ||
+                      (whatsappCode && whatsappCode === cleanInput);
+
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid verification code. Please check and re-enter.',
+        });
+      }
     }
 
     // Mark verified and clear OTP

@@ -317,6 +317,23 @@ const authLimiter = rateLimit({
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
+// ── Dedicated Protection for High-Compute AI & File Upload Endpoints ───
+const aiLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: isDev ? 150 : 40,   // 40 requests per 5 minutes in production
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: isLoadTestBypass,
+  message: {
+    success: false,
+    message: 'AI/Upload rate limit reached. Please wait a moment before trying again.',
+  },
+});
+app.use('/api/chat', aiLimiter);
+app.use('/api/interview', aiLimiter);
+app.use('/api/resume/upload', aiLimiter);
+app.use('/api/recommendations', aiLimiter);
+
 // ── Routes ────────────────────────────────────────────────────
 
 // ── Root route ────────────────────────────────────────────────
