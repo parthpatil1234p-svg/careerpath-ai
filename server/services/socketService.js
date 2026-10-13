@@ -24,12 +24,18 @@ function isAllowedOrigin(origin) {
     origin === 'http://127.0.0.1:5000' ||
     origin === 'http://localhost:5500' ||
     origin === 'http://127.0.0.1:5500' ||
+    origin === 'https://careerpath.is-local.org' ||
+    origin === 'https://www.careerpath.is-local.org' ||
     origin === 'https://careerpath-ai.vercel.app' ||
-    (process.env.CLIENT_URL && origin === process.env.CLIENT_URL)
+    (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) ||
+    (process.env.PROD_CLIENT_URL && origin === process.env.PROD_CLIENT_URL)
   ) {
     return true;
   }
-  // Allow any *.vercel.app deployment URL
+  // Allow any *.is-local.org or *.vercel.app deployment URL
+  if (/^https:\/\/([a-z0-9-]+\.)?is-local\.org$/i.test(origin)) {
+    return true;
+  }
   if (/^https:\/\/[a-z0-9-]+(\.vercel\.app)$/i.test(origin)) {
     return true;
   }

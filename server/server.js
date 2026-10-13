@@ -123,6 +123,8 @@ app.use(helmet({
         "http://localhost:5500",
         "http://127.0.0.1:5500",
         "https://careerpath-ai.vercel.app",
+        "https://careerpath.is-local.org",
+        "https://www.careerpath.is-local.org",
         "https://careerpath-ai-bdbt.onrender.com",
         "https://api.groq.com",
         "https://generativelanguage.googleapis.com",
@@ -143,6 +145,8 @@ app.use(helmet({
 const rawOrigins = [
   process.env.CLIENT_URL,
   process.env.PROD_CLIENT_URL,
+  'https://careerpath.is-local.org',
+  'https://www.careerpath.is-local.org',
   'https://careerpath-ai.vercel.app',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
@@ -162,6 +166,10 @@ const corsOptions = {
 
     const normalizedOrigin = origin.trim().replace(/\/+$/, '');
     if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+    // Allow is-local.org subdomains (e.g. careerpath.is-local.org, www.careerpath.is-local.org)
+    if (/^https:\/\/([a-z0-9-]+\.)?is-local\.org$/i.test(normalizedOrigin)) {
       return callback(null, true);
     }
     // Allow Vercel preview branch deployments (*.vercel.app)

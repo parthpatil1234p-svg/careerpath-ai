@@ -47,6 +47,8 @@ services:
       - key: CLOUDINARY_URL
         sync: false
 
-      # Set this to your deployed Vercel frontend URL, e.g. https://careerpath-ai.vercel.app
+      # Set this to your deployed Vercel frontend URL, e.g. https://careerpath.is-local.org
       - key: CLIENT_URL
-        value: https://careerpath-ai.vercel.app
+        value: https://careerpath.is-local.org
+      - key: PROD_CLIENT_URL
+        value: https://careerpath.is-local.org
