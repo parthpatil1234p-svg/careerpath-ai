@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const noticeEmailText = document.getElementById('noticeEmailText');
 
   let currentEmail = '';
+  let currentPhone = '';
   let activeRole = 'student'; // 'student' or 'recruiter'
   let countdownTimer = null;
   let precheckDebounceTimer = null;
@@ -339,8 +340,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ── Transition to Step 2 (OTP) ──────────────────────────────
-  const showOtpStep = (email, backupOtp = null) => {
+  const showOtpStep = (email, backupOtp = null, extra = {}) => {
     currentEmail = email;
+    if (extra.phone) currentPhone = extra.phone;
     if (displayEmail) displayEmail.textContent = email;
     if (noticeEmailText) noticeEmailText.textContent = email;
 
@@ -361,7 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (digitInputs[0]) digitInputs[0].focus();
 
     startResendCountdown(60);
-    showAlert('A 6-digit verification code has been dispatched to your corporate inbox. Enter the code below to activate your account.', 'info');
+    if (extra.whatsappSent) {
+      showAlert(`⚡ 6-digit verification code sent instantly to your WhatsApp (${extra.phone || ''}) and email inbox!`, 'success');
+    } else {
+      showAlert('A 6-digit verification code has been dispatched. Enter the code below to activate your account.', 'info');
+    }
   };
 
   // Back to registration form
@@ -382,6 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
+      const phoneInput = document.getElementById('phone');
+      const phone = phoneInput ? phoneInput.value.trim() : '';
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -413,13 +421,16 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       try {
-        const response = await window.API.post('/auth/register', { name, email, password });
+        const response = await window.API.post('/auth/register', { name, email, password, phone });
 
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnContent;
 
         if (response.success && (response.requiresOtp || !response.data?.token)) {
-          showOtpStep(response.email || email, response.backupOtp);
+          showOtpStep(response.email || email, response.backupOtp, {
+            phone: response.phone || phone,
+            whatsappSent: response.whatsappSent
+          });
         } else if (response.success && response.data?.token) {
           window.Auth.setToken(response.data.token);
           window.Auth.setCurrentUser(response.data.user);
@@ -618,14 +629,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnResendOtp.disabled = true;
 
     try {
-      const response = await window.API.post('/auth/resend-otp', { email: currentEmail });
+      const response = await window.API.post('/auth/resend-otp', { email: currentEmail, phone: currentPhone });
       if (response.success) {
         startResendCountdown(60);
         if (response.backupOtp && backupOtpBanner && backupOtpValue) {
           backupOtpValue.textContent = response.backupOtp;
           backupOtpBanner.classList.remove('d-none');
         }
-        showAlert(response.message || 'A fresh 6-digit verification code has been sent to your email inbox!', 'success');
+        showAlert(response.message || (response.whatsappSent ? '⚡ Fresh verification code sent to your WhatsApp and email!' : 'A fresh 6-digit verification code has been sent to your email inbox!'), 'success');
       } else {
         showAlert(response.message || 'Could not resend OTP. Please try again.');
         btnResendOtp.disabled = false;

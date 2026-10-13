@@ -16,6 +16,7 @@
 const User          = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const { sendOtpEmail } = require('../services/emailService');
+const whatsappService = require('../services/whatsappService');
 const { exchangeOAuthCode, fetchGitHubData, analyzeGitHubRepos } = require('../services/githubService');
 
 // ── Helper: 6-Digit Secure OTP Generator ─────────────────────
@@ -85,7 +86,7 @@ const formatUser = (user) => {
  */
 const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -95,6 +96,7 @@ const registerUser = async (req, res, next) => {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
+    const formattedPhone = phone ? whatsappService.formatPhoneNumber(phone) : '';
 
     // Check if user already exists
     let existingUser = await User.findOne({ email: normalizedEmail });
@@ -128,6 +130,7 @@ const registerUser = async (req, res, next) => {
         // Account exists but is unverified: update details, assign fresh OTP and resend
         existingUser.name = name.trim();
         existingUser.password = password; // Pre-save hook will hash it
+        if (formattedPhone) existingUser.phone = formattedPhone;
         recentHistory.push(new Date(now));
         existingUser.verificationOtp = {
           code: otpCode,
@@ -145,15 +148,30 @@ const registerUser = async (req, res, next) => {
           console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
         }
 
+        let whatsappSent = false;
+        const targetPhone = formattedPhone || existingUser.phone;
+        if (targetPhone) {
+          try {
+            const waRes = await whatsappService.sendOtp(targetPhone, otpCode, existingUser.name);
+            whatsappSent = Boolean(waRes && waRes.success);
+          } catch (waErr) {
+            console.error('[authController.registerUser] Failed to send WhatsApp OTP:', waErr.message);
+          }
+        }
+
         return res.status(200).json({
           success: true,
           requiresOtp: true,
           email: normalizedEmail,
+          phone: targetPhone || undefined,
           mailSent,
-          backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
-          message: mailSent
-            ? 'Account pending verification. A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
-            : `Email delivery delayed by provider. Your verification code is: ${otpCode}`,
+          whatsappSent,
+          backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+          message: whatsappSent
+            ? 'Account pending verification. A fresh 6-digit verification code has been sent instantly to your WhatsApp and email!'
+            : (mailSent
+                ? 'Account pending verification. A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
+                : `Email delivery delayed by provider. Your verification code is: ${otpCode}`),
         });
       }
     }
@@ -163,6 +181,7 @@ const registerUser = async (req, res, next) => {
       name: name.trim(),
       email: normalizedEmail,
       password, // hashed by pre-save hook
+      phone: formattedPhone || undefined,
       isVerified: false,
       verificationOtp: {
         code: otpCode,
@@ -182,15 +201,29 @@ const registerUser = async (req, res, next) => {
       console.error('[authController.registerUser] Failed to send OTP email:', mailErr.message);
     }
 
+    let whatsappSent = false;
+    if (formattedPhone) {
+      try {
+        const waRes = await whatsappService.sendOtp(formattedPhone, otpCode, user.name);
+        whatsappSent = Boolean(waRes && waRes.success);
+      } catch (waErr) {
+        console.error('[authController.registerUser] Failed to send WhatsApp OTP:', waErr.message);
+      }
+    }
+
     res.status(201).json({
       success: true,
       requiresOtp: true,
       email: normalizedEmail,
+      phone: formattedPhone || undefined,
       mailSent,
-      backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
-      message: mailSent
-        ? 'Account created! A 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
-        : `Account created! Email delivery delayed by provider. Your verification code is: ${otpCode}`,
+      whatsappSent,
+      backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? otpCode : undefined,
+      message: whatsappSent
+        ? 'Account created! A 6-digit verification code has been sent instantly to your WhatsApp and email.'
+        : (mailSent
+            ? 'Account created! A 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
+            : `Account created! Email delivery delayed by provider. Your verification code is: ${otpCode}`),
     });
   } catch (error) {
     next(error);
@@ -365,15 +398,30 @@ const resendOtp = async (req, res, next) => {
       console.error('[authController.resendOtp] Failed to send OTP email:', mailErr.message);
     }
 
+    let whatsappSent = false;
+    const targetPhone = req.body.phone || user.phone;
+    if (targetPhone) {
+      try {
+        const waRes = await whatsappService.sendOtp(targetPhone, newCode, user.name);
+        whatsappSent = Boolean(waRes && waRes.success);
+      } catch (waErr) {
+        console.error('[authController.resendOtp] Failed to send WhatsApp OTP:', waErr.message);
+      }
+    }
+
     return res.status(200).json({
       success: true,
       mailSent,
-      backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? newCode : undefined,
-      message: mailSent
-        ? 'A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
-        : `Email delivery delayed by provider. Your fresh verification code is: ${newCode}`,
+      whatsappSent,
+      backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? newCode : undefined,
+      message: whatsappSent
+        ? 'A fresh 6-digit verification code has been sent instantly to your WhatsApp and email!'
+        : (mailSent
+            ? 'A fresh 6-digit verification code has been sent to your email. Please also check your Spam/Junk folder!'
+            : `Email delivery delayed by provider. Your fresh verification code is: ${newCode}`),
       data: {
         email: normalizedEmail,
+        phone: targetPhone || undefined,
       },
     });
   } catch (error) {
@@ -610,15 +658,29 @@ const loginUser = async (req, res, next) => {
           console.error('[authController.loginUser] Failed to send OTP email:', mailErr.message);
         }
 
+        let whatsappSent = false;
+        if (user.phone) {
+          try {
+            const waRes = await whatsappService.sendOtp(user.phone, newCode, user.name);
+            whatsappSent = Boolean(waRes && waRes.success);
+          } catch (waErr) {
+            console.error('[authController.loginUser] Failed to send WhatsApp OTP:', waErr.message);
+          }
+        }
+
         return res.status(403).json({
           success: false,
           requiresVerification: true,
           email: normalizedEmail,
+          phone: user.phone || undefined,
           mailSent,
-          backupOtp: !mailSent || process.env.NODE_ENV !== 'production' ? newCode : undefined,
-          message: mailSent
-            ? 'Your email address is not verified yet. A fresh 6-digit OTP code has been sent to your email. Please check your Inbox and Spam/Junk folder!'
-            : `Your email address is not verified yet. Backup code: ${newCode}. Please enter it to verify.`,
+          whatsappSent,
+          backupOtp: (!mailSent && !whatsappSent) || process.env.NODE_ENV !== 'production' ? newCode : undefined,
+          message: whatsappSent
+            ? 'Your account is not verified yet. A fresh 6-digit OTP code has been sent instantly to your WhatsApp and email!'
+            : (mailSent
+                ? 'Your email address is not verified yet. A fresh 6-digit OTP code has been sent to your email. Please check your Inbox and Spam/Junk folder!'
+                : `Your email address is not verified yet. Backup code: ${newCode}. Please enter it to verify.`),
         });
       }
     }

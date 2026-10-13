@@ -1410,6 +1410,85 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Wire WhatsApp Weekly Notes PDF Dispatch Button
+  const btnSendWhatsAppNotes = document.getElementById('btnSendWhatsAppNotes');
+  if (btnSendWhatsAppNotes) {
+    btnSendWhatsAppNotes.addEventListener('click', async () => {
+      try {
+        const user = window.Auth?.getCurrentUser();
+        const activeWeek = currentRoadmap?.currentWeek || 1;
+        let phone = user?.phone || '';
+
+        if (!phone) {
+          phone = prompt('Enter your WhatsApp phone number with country code (e.g. +91 9876543210):');
+          if (!phone) return;
+        }
+
+        btnSendWhatsAppNotes.disabled = true;
+        btnSendWhatsAppNotes.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Sending to WhatsApp...';
+
+        const res = await window.API.post('/whatsapp/send-roadmap-pdf', {
+          weekNumber: activeWeek,
+          phone
+        }, { auth: true });
+
+        if (res.success) {
+          showAlert(`📱 ${res.message || 'Weekly notes PDF sent directly to your WhatsApp!'}`, 'success');
+        } else {
+          showAlert(res.message || 'Could not dispatch WhatsApp notes.', 'warning');
+        }
+      } catch (err) {
+        showAlert(err.message || 'Failed to dispatch WhatsApp notes.', 'danger');
+      } finally {
+        btnSendWhatsAppNotes.disabled = false;
+        btnSendWhatsAppNotes.innerHTML = '<i class="bi bi-whatsapp me-1"></i> Get Week Notes on WhatsApp';
+      }
+    });
+  }
+
+  // Wire Direct PDF Cheatsheet Download Button
+  const btnDownloadNotesPdf = document.getElementById('btnDownloadNotesPdf');
+  if (btnDownloadNotesPdf) {
+    btnDownloadNotesPdf.addEventListener('click', async () => {
+      try {
+        const activeWeek = currentRoadmap?.currentWeek || 1;
+        btnDownloadNotesPdf.disabled = true;
+        btnDownloadNotesPdf.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Compiling PDF...';
+
+        const token = window.Auth?.getToken();
+        const baseUrl = window.CONFIG?.API_BASE_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${baseUrl}/whatsapp/send-roadmap-pdf?download=true&week=${activeWeek}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ weekNumber: activeWeek, downloadOnly: true })
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to compile PDF (HTTP ${res.status})`);
+        }
+
+        const blob = await res.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `CareerPath_Week_${activeWeek}_Study_Notes.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+        showAlert('📄 Week study notes PDF downloaded successfully!', 'success');
+      } catch (err) {
+        showAlert(err.message || 'Could not download notes PDF.', 'danger');
+      } finally {
+        btnDownloadNotesPdf.disabled = false;
+        btnDownloadNotesPdf.innerHTML = '<i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i> Download Week Notes PDF';
+      }
+    });
+  }
+
   // Safe string escaper
   function escapeHtml(str) {
     if (!str) return '';

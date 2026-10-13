@@ -29,6 +29,8 @@ model User {
   profileCompleted              Boolean   @default(false)
   isVerified                    Boolean   @default(false)
   hasCompletedSkillVerification Boolean   @default(false)
+  phone                         String?   @default("")
+  whatsappNotificationsEnabled  Boolean   @default(true)
   lastAbandonedRouteAt          DateTime?
 
   // JSONB Document Fields

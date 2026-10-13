@@ -18,6 +18,7 @@
     "server:dev": "npm --prefix server run dev",
     "server:start": "npm --prefix server start",
     "server:seed": "npm --prefix server run seed",
+    "whatsapp:bot": "npm --prefix server run whatsapp:bot",
     "client:serve": "echo Serving client on http://localhost:5500... && npx --yes serve client -p 5500"
   },
   "keywords": [

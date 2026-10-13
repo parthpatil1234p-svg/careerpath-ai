@@ -74,6 +74,7 @@ const readinessRoutes = require('./routes/readinessRoutes');
 const recruiterRoutes = require('./routes/recruiterRoutes');
 const youtubeRoutes = require('./routes/youtubeRoutes');
 const campusRoutes = require('./routes/campusRoutes');
+const whatsappRoutes = require('./routes/whatsappRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect Database (100% Pure Supabase PostgreSQL via Prisma) ──
@@ -408,6 +409,9 @@ app.use('/api/youtube', youtubeRoutes);
 
 // College Placement Cell (TPO) Partnerships & Campus Placement OS
 app.use('/api/campus', campusRoutes);
+
+// WhatsApp Automation Suite: Instant OTP + Weekly PDF Delivery + 24x7 AI Mentor
+app.use('/api/whatsapp', whatsappRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {
