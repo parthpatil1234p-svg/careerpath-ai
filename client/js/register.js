@@ -97,6 +97,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ── Neutralize 3rd-Party Extension Injected Backgrounds & Overlays ──
+  const purgeExtensionInjections = () => {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach((inp) => {
+      const clean = () => {
+        if (inp.style.backgroundImage && inp.style.backgroundImage !== 'none') {
+          inp.style.removeProperty('background-image');
+          inp.style.setProperty('background-image', 'none', 'important');
+        }
+        if (inp.style.background && inp.style.background.includes('url')) {
+          inp.style.removeProperty('background');
+          inp.style.setProperty('background', '#FFFFFF', 'important');
+          inp.style.setProperty('background-color', '#FFFFFF', 'important');
+        }
+        inp.style.setProperty('background-size', '0px 0px', 'important');
+        inp.style.setProperty('background-repeat', 'no-repeat', 'important');
+      };
+
+      clean();
+
+      const observer = new MutationObserver(clean);
+      observer.observe(inp, { attributes: true, attributeFilter: ['style', 'class'] });
+    });
+  };
+
+  purgeExtensionInjections();
+
   const showAlert = (message, type = 'danger') => {
     alertContainer.innerHTML = `
       <div class="alert alert-${type} alert-dismissible fade show d-flex align-items-center gap-2 py-2 px-3 small mb-3" role="alert">

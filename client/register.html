@@ -98,11 +98,16 @@
 
       /* Suppress 3rd-party extension injected overlays without affecting form fields */
       .input-group input.form-control,
-      .otp-digit-field {
+      .otp-digit-field,
+      input.form-control {
         background-image: none !important;
         background: #FFFFFF !important;
         background-color: #FFFFFF !important;
+        background-repeat: no-repeat !important;
+        background-size: 0px 0px !important;
       }
+      .input-group > :not(input):not(.input-group-text),
+      .otp-input-wrapper > :not(input),
       button[class*="tempmail"],
       div[class*="tempmail"],
       span[class*="tempmail"],
@@ -111,8 +116,7 @@
       .temp-mail-icon,
       .tempmail-wrapper,
       div[id*="temp-mail"],
-      span[id*="temp-mail"],
-      .otp-input-wrapper > :not(input) {
+      span[id*="temp-mail"] {
         display: none !important;
         visibility: hidden !important;
         opacity: 0 !important;
@@ -363,13 +367,20 @@
                       <i class="bi bi-envelope"></i>
                     </span>
                     <input
-                      type="email"
+                      type="text"
+                      inputmode="email"
                       class="form-control"
                       id="email"
                       placeholder="student@college.edu"
                       required
-                      autocomplete="email"
+                      autocomplete="off"
+                      autocorrect="off"
+                      autocapitalize="off"
                       spellcheck="false"
+                      data-lpignore="true"
+                      data-1p-ignore="true"
+                      data-form-type="other"
+                      data-tempmail="ignore"
                     />
                   </div>
                   <!-- Real-Time AI / Disposable Email Identifier Status -->
@@ -507,11 +518,20 @@
                   <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
                     <input
-                      type="email"
+                      type="text"
+                      inputmode="email"
                       class="form-control font-monospace"
                       id="recruiterEmail"
                       placeholder="e.g. priya@razorpay.com"
                       required
+                      autocomplete="off"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      data-lpignore="true"
+                      data-1p-ignore="true"
+                      data-form-type="other"
+                      data-tempmail="ignore"
                     />
                   </div>
                   <div id="emailDomainNotice" class="form-text small text-muted mt-1">

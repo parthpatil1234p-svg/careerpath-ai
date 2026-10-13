@@ -318,7 +318,11 @@
 }
 
 .form-control {
+  background: #FFFFFF !important;
   background-color: #FFFFFF !important;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-size: 0px 0px !important;
   border: 1px solid #CBD5E1 !important;
   color: var(--color-text-primary) !important;
   border-radius: var(--radius-sm) !important;
