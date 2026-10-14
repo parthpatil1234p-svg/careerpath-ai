@@ -35,7 +35,7 @@ const DEFAULT_GROQ_MODELS = [
 
 let isGroqDisabled = false;
 
-async function callGroq(messages, signal) {
+async function callGroq(messages, signal, maxTokens = 1024) {
   if (isGroqDisabled) {
     throw new Error('Groq engine is disabled due to invalid API key.');
   }
@@ -68,7 +68,7 @@ async function callGroq(messages, signal) {
           model,
           messages,
           temperature: 0.7,
-          max_tokens: 1024,
+          max_tokens: maxTokens,
         }),
       });
 
@@ -108,10 +108,22 @@ async function callGroq(messages, signal) {
 /**
  * Generates an AI mentor response using Groq
  * @param {string} userMessage
- * @param {Array<{role: string, text: string}>} history
- * @param {Object} [userContext]
+ * @param {Object|Array} [userContextOrHistory]
+ * @param {Array|Object} [historyOrContext]
+ * @param {Object} [options]
  */
-async function getGroqMentorReply(userMessage, history = [], userContext = null) {
+async function getGroqMentorReply(userMessage, userContextOrHistory = null, historyOrContext = [], options = {}) {
+  let userContext = null;
+  let history = [];
+
+  if (Array.isArray(userContextOrHistory)) {
+    history = userContextOrHistory;
+    userContext = historyOrContext && !Array.isArray(historyOrContext) ? historyOrContext : null;
+  } else {
+    userContext = userContextOrHistory;
+    history = Array.isArray(historyOrContext) ? historyOrContext : [];
+  }
+
   const messages = [
     { role: 'system', content: SYSTEM_PROMPT },
   ];
@@ -153,11 +165,12 @@ async function getGroqMentorReply(userMessage, history = [], userContext = null)
     content: userMessage,
   });
 
+  const maxTokens = options.maxTokens || 1024;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout for Groq fast path
+  const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s fast timeout
 
   try {
-    return await callGroq(messages, controller.signal);
+    return await callGroq(messages, controller.signal, maxTokens);
   } finally {
     clearTimeout(timeoutId);
   }

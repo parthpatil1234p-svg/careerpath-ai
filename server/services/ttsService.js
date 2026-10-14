@@ -21,13 +21,13 @@ const DEFAULT_PITCH = process.env.WHATSAPP_TTS_PITCH || '+2Hz';
 
 /**
  * Prepares text for optimal spoken audio clarity.
- * Strips markdown symbols, links, and excessive punctuation.
+ * Strips markdown symbols, links, and extracts a crisp 1-2 sentence mentor punchline.
  * 
  * @param {string} rawText - Input text (markdown or plain)
- * @param {number} [maxLength=400] - Max character length for spoken voice note
+ * @param {number} [maxLength=150] - Max character length for snappy voice memo
  * @returns {string} - Clean spoken text
  */
-function cleanTextForSpeech(rawText, maxLength = 400) {
+function cleanTextForSpeech(rawText, maxLength = 150) {
   if (!rawText || typeof rawText !== 'string') return '';
 
   let clean = rawText
@@ -42,29 +42,37 @@ function cleanTextForSpeech(rawText, maxLength = 400) {
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Trim to sensible sentence boundary within maxLength
-  if (clean.length > maxLength) {
-    const truncated = clean.slice(0, maxLength);
-    const lastPeriod = Math.max(truncated.lastIndexOf('.'), truncated.lastIndexOf('!'), truncated.lastIndexOf('?'));
-    if (lastPeriod > maxLength * 0.6) {
-      clean = truncated.slice(0, lastPeriod + 1);
+  // Extract first 1-2 clean sentences that fit within maxLength
+  const sentences = clean.split(/(?<=[.!?])\s+/);
+  let summary = '';
+  for (const s of sentences) {
+    if ((summary + ' ' + s).trim().length <= maxLength) {
+      summary = (summary + ' ' + s).trim();
     } else {
-      clean = truncated.trim() + '...';
+      break;
     }
   }
 
-  return clean;
+  if (!summary || summary.length < 20) {
+    summary = clean.slice(0, maxLength).trim();
+    if (summary.length >= maxLength) {
+      summary = summary.replace(/\s+\S*$/, '') + '...';
+    }
+  }
+
+  return summary;
 }
 
 /**
- * Synthesizes high-energy, natural neural audio for WhatsApp voice notes.
+ * Synthesizes high-energy, natural neural audio for WhatsApp voice notes
+ * using 100% in-memory streaming (zero disk I/O latency).
  * 
  * @param {string} text - Text to speak
  * @param {object} [options] - Custom voice options
- * @returns {Promise<{base64: string, buffer: Buffer, provider: string}>}
+ * @returns {Promise<{base64?: string, url?: string, buffer?: Buffer, provider: string}>}
  */
 async function generateNeuralVoiceNote(text, options = {}) {
-  const spokenText = cleanTextForSpeech(text, options.maxLength || 400);
+  const spokenText = cleanTextForSpeech(text, options.maxLength || 150);
   if (!spokenText) {
     throw new Error('Empty text provided for speech synthesis');
   }
@@ -73,11 +81,6 @@ async function generateNeuralVoiceNote(text, options = {}) {
   const rate = options.rate || DEFAULT_RATE;
   const pitch = options.pitch || DEFAULT_PITCH;
 
-  const tempFile = path.join(
-    os.tmpdir(),
-    `cp_voice_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.mp3`
-  );
-
   try {
     const tts = new EdgeTTS({
       voice,
@@ -85,14 +88,25 @@ async function generateNeuralVoiceNote(text, options = {}) {
       rate,
       pitch,
       outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
-      timeout: 10000
+      timeout: 6000
     });
 
-    await tts.ttsPromise(spokenText, tempFile);
-    const buffer = await fs.promises.readFile(tempFile);
+    // 100% In-Memory Streaming — Zero Disk I/O Overhead
+    const chunks = [];
+    for await (const chunk of tts.streamAudio(spokenText)) {
+      if (Buffer.isBuffer(chunk)) {
+        chunks.push(chunk);
+      }
+    }
+
+    if (chunks.length === 0) {
+      throw new Error('EdgeTTS stream yielded 0 audio chunks');
+    }
+
+    const buffer = Buffer.concat(chunks);
     const base64 = `data:audio/mp3;base64,${buffer.toString('base64')}`;
 
-    console.log(`[Neural TTS] Synthesized ${buffer.length} bytes using ${voice} at ${rate} speed`);
+    console.log(`[Neural TTS] In-Memory Audio: ${buffer.length} bytes synthesized via ${voice} at ${rate}`);
     return {
       base64,
       buffer,
@@ -100,9 +114,9 @@ async function generateNeuralVoiceNote(text, options = {}) {
       provider: 'edge_neural_tts'
     };
   } catch (edgeErr) {
-    console.warn('[Neural TTS] EdgeTTS synthesis failed, falling back to Google TTS:', edgeErr.message);
+    console.warn('[Neural TTS] EdgeTTS stream failed, falling back to Google TTS:', edgeErr.message);
     
-    // Fallback: Google Translate TTS audio URL
+    // Fast Fallback: Google Translate TTS audio URL
     const shortChunk = spokenText.slice(0, 190);
     const fallbackUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(shortChunk)}&tl=hi&client=tw-ob`;
     return {
@@ -110,8 +124,6 @@ async function generateNeuralVoiceNote(text, options = {}) {
       spokenText: shortChunk,
       provider: 'google_tts_fallback'
     };
-  } finally {
-    fs.promises.unlink(tempFile).catch(() => {});
   }
 }
 

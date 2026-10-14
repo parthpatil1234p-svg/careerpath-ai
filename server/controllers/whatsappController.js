@@ -18,6 +18,10 @@ const { getGroqMentorReply } = require('../services/groqService');
 const { getGeminiMentorReply } = require('../services/geminiService');
 const { generateNeuralVoiceNote } = require('../services/ttsService');
 
+// In-Memory Student Context Cache (15 min TTL) to eliminate repetitive DB queries
+const userContextCache = new Map();
+const USER_CACHE_TTL_MS = 15 * 60 * 1000;
+
 /**
  * GET /api/whatsapp/webhook
  * Meta WhatsApp Cloud API verification handshake.
@@ -184,46 +188,59 @@ const handleIncomingWebhook = async (req, res) => {
 
     console.log(`[WhatsApp Incoming] From: ${senderPhone} | Voice Note: ${isVoiceInput} | Query: "${incomingText}"`);
 
-    // 2. Locate student in database by phone number
-    let student = null;
-    try {
-      student = await User.findOne({
-        phone: { $in: [senderPhone, `+91${last10Digits}`, last10Digits] }
-      });
-    } catch (dbErr) {
-      console.warn('[WhatsApp Controller] User phone lookup warning:', dbErr.message);
-    }
-
-    // 3. Construct AI Mentor Context
-    const userContext = {
-      name: student ? student.name : (pushSenderName || 'Ambitious Candidate'),
-      isRegistered: Boolean(student),
-      degree: student?.education?.degree || student?.education?.course || 'Student',
-      targetCareer: 'Full Stack Engineer',
-      activeWeek: 1,
-      skills: student?.skills?.map(s => s.name || s) || []
-    };
-
-    // If student exists, fetch their active roadmap for rich contextual grounding
-    if (student) {
+    // 2. Locate student in database (with in-memory cache to eliminate repetitive DB latency)
+    let userContext = null;
+    const cachedContext = userContextCache.get(senderPhone);
+    if (cachedContext && (Date.now() - cachedContext.timestamp < USER_CACHE_TTL_MS)) {
+      userContext = cachedContext.data;
+      console.log(`[WhatsApp Context] Cache HIT for ${senderPhone} (0ms DB latency)`);
+    } else {
+      let student = null;
       try {
-        const activeRoadmap = await Roadmap.findOne({
-          user: student._id || student.id,
-          status: 'active'
+        student = await User.findOne({
+          phone: { $in: [senderPhone, `+91${last10Digits}`, last10Digits] }
         });
+      } catch (dbErr) {
+        console.warn('[WhatsApp Controller] User phone lookup warning:', dbErr.message);
+      }
 
-        if (activeRoadmap) {
-          userContext.activeWeek = activeRoadmap.currentWeek || 1;
-          if (activeRoadmap.career) {
-            const careerDoc = await Career.findById(activeRoadmap.career);
-            if (careerDoc) {
-              userContext.targetCareer = careerDoc.title;
+      // 3. Construct AI Mentor Context
+      userContext = {
+        name: student ? student.name : (pushSenderName || 'Ambitious Candidate'),
+        isRegistered: Boolean(student),
+        degree: student?.education?.degree || student?.education?.course || 'Student',
+        targetCareer: 'Full Stack Engineer',
+        activeWeek: 1,
+        skills: student?.skills?.map(s => s.name || s) || []
+      };
+
+      // If student exists, fetch their active roadmap for rich contextual grounding
+      if (student) {
+        try {
+          const activeRoadmap = await Roadmap.findOne({
+            user: student._id || student.id,
+            status: 'active'
+          });
+
+          if (activeRoadmap) {
+            userContext.activeWeek = activeRoadmap.currentWeek || 1;
+            if (activeRoadmap.career) {
+              const careerDoc = await Career.findById(activeRoadmap.career);
+              if (careerDoc) {
+                userContext.targetCareer = careerDoc.title;
+              }
             }
           }
+        } catch (rmErr) {
+          console.warn('[WhatsApp Controller] Roadmap context lookup warning:', rmErr.message);
         }
-      } catch (rmErr) {
-        console.warn('[WhatsApp Controller] Roadmap context lookup warning:', rmErr.message);
       }
+
+      // Store in memory cache
+      userContextCache.set(senderPhone, {
+        data: userContext,
+        timestamp: Date.now()
+      });
     }
 
     // 4. Generate Context-Aware AI Guidance (Groq Llama 3.3 / Qwen with Gemini fallback)
@@ -248,7 +265,8 @@ WHATSAPP FORMATTING GUIDELINES:
       aiReply = await getGroqMentorReply(
         `${promptSystemPrefix}\n\nStudent Query: "${incomingText}"`,
         userContext,
-        []
+        [],
+        { maxTokens: 350 }
       );
     } catch (groqError) {
       console.warn('[WhatsApp AI] Groq fallback to Gemini:', groqError.message);
@@ -271,29 +289,37 @@ Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web
       }
     }
 
-        // 5. Dispatch text reply back to student's WhatsApp
-    await whatsappService.sendTextMessage(senderPhone, aiReply, {
+    // 5 & 6. Concurrent Zero-Latency Dispatch: Text Message + Neural Voice Note in Parallel
+    console.log(`[WhatsApp Mentor] Initiating concurrent text & voice note dispatch to ${senderPhone}...`);
+
+    const textDispatchPromise = whatsappService.sendTextMessage(senderPhone, aiReply, {
       context: 'AI_CAREER_MENTOR',
       studentName: userContext.name
+    }).catch(err => {
+      console.warn('[WhatsApp Mentor] Text dispatch warning:', err.message);
     });
 
-    // 6. Voice Mail AI: Dispatch spoken Voice Note (PTT audio) with energetic neural voice
-    try {
-      const { base64, url } = await generateNeuralVoiceNote(aiReply, {
-        voice: 'hi-IN-MadhurNeural',
-        rate: '+22%',
-        pitch: '+2Hz',
-        maxLength: 350
-      });
+    const voiceDispatchPromise = (async () => {
+      try {
+        const { base64, url } = await generateNeuralVoiceNote(aiReply, {
+          voice: 'hi-IN-MadhurNeural',
+          rate: '+25%',
+          pitch: '+2Hz',
+          maxLength: 150
+        });
 
-      const audioPayload = base64 || url;
-      if (audioPayload) {
-        await whatsappService.sendVoiceNote(senderPhone, audioPayload);
-        console.log(`[WhatsApp Voice Mail] Energetic neural voice note dispatched to ${senderPhone}`);
+        const audioPayload = base64 || url;
+        if (audioPayload) {
+          await whatsappService.sendVoiceNote(senderPhone, audioPayload);
+          console.log(`[WhatsApp Voice Mail] Lightning-fast neural voice note dispatched to ${senderPhone}`);
+        }
+      } catch (voiceErr) {
+        console.warn('[WhatsApp Voice Mail] Neural voice dispatch warning:', voiceErr.message);
       }
-    } catch (voiceErr) {
-      console.warn('[WhatsApp Voice Mail] Neural voice dispatch warning:', voiceErr.message);
-    }
+    })();
+
+    // Await both dispatches concurrently for minimum roundtrip latency
+    await Promise.all([textDispatchPromise, voiceDispatchPromise]);
 
   } catch (err) {
     console.error('[WhatsApp Controller] Error processing incoming webhook:', err);
