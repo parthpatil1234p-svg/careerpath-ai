@@ -222,9 +222,7 @@
     }
     </script>
 
-    <!-- High-Speed CDN & Font Preconnects (Sub-50ms Connection Handshake) -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <!-- High-Speed Font Preconnects (Sub-50ms Connection Handshake) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -247,21 +245,19 @@
       />
     </noscript>
 
-    <!-- Bootstrap 5 CSS (Critical Layout Foundation) -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <!-- Local Bootstrap 5 CSS (Same-Origin High Performance) -->
+    <link rel="preload" as="style" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
 
-    <!-- Bootstrap Icons (Non-Render-Blocking Asynchronous Load) -->
+    <!-- Local Bootstrap Icons (Non-Render-Blocking Asynchronous Load) -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      href="css/bootstrap-icons.min.css"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+      <link rel="stylesheet" href="css/bootstrap-icons.min.css" />
     </noscript>
 
     <!-- Bundled Production Stylesheet (Zero @import Chains) -->
@@ -2340,8 +2336,8 @@
       </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle (Deferred) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle (Deferred, Same-Origin Local Asset) -->
+    <script defer src="js/bootstrap.bundle.min.js"></script>
 
     <!-- Core Application Logic (Deferred for optimal FCP / LCP) -->
     <script defer src="js/config.js"></script>
