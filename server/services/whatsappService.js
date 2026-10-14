@@ -459,11 +459,53 @@ function openwaApiRequest(endpointPath, bodyString) {
   });
 }
 
+/**
+ * Sends a native WhatsApp Voice Note (PTT) to student.
+ * 
+ * @param {string} phone - Recipient phone number
+ * @param {string} audioUrl - Public or generated TTS audio URL
+ * @returns {Promise<{success: boolean, provider: string, messageId?: string, error?: string}>}
+ */
+async function sendVoiceNote(phone, audioUrl) {
+  const formattedPhone = formatPhoneNumber(phone);
+  if (!formattedPhone) {
+    return { success: false, error: 'Invalid or missing phone number' };
+  }
+
+  const digits = getPhoneDigits(formattedPhone);
+  const openwaUrl = process.env.OPENWA_API_URL || '';
+  const openwaApiKey = process.env.OPENWA_API_KEY || '';
+  const openwaSessionId = process.env.OPENWA_SESSION_ID || '7947d4c9-0297-4396-be07-330534d6c58a';
+
+  if (openwaUrl && openwaApiKey && openwaSessionId) {
+    try {
+      const payload = JSON.stringify({
+        chatId: `${digits}@c.us`,
+        url: audioUrl,
+        ptt: true
+      });
+
+      const res = await openwaApiRequest(
+        `/api/sessions/${openwaSessionId}/messages/send-audio`,
+        payload
+      );
+      console.log(`[WhatsApp Voice Note] OpenWA Voice Note dispatched to ${formattedPhone} (id: ${res.messageId || 'sent'})`);
+      return { success: true, provider: 'openwa_gateway', messageId: res.messageId };
+    } catch (err) {
+      console.error('[WhatsApp Voice Note] OpenWA Voice Note failed:', err.message);
+    }
+  }
+
+  console.log(`🎙️ [WHATSAPP VOICE NOTE FALLBACK] To: ${formattedPhone} | Audio URL: ${audioUrl}`);
+  return { success: true, provider: 'console_fallback', messageId: `mock-voice-${Date.now()}` };
+}
+
 module.exports = {
   formatPhoneNumber,
   getPhoneDigits,
   sendOtp,
   sendDocument,
   sendTextMessage,
+  sendVoiceNote,
   openwaApiRequest
 };
