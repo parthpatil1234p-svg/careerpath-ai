@@ -99,6 +99,7 @@ const handleIncomingWebhook = async (req, res) => {
     let rawSender = '';
     let incomingText = '';
     let pushSenderName = '';
+    let isVoiceInput = false;
 
     // A. OpenWA standard webhook envelope: { event: "message.received", data: { from, body, fromMe, senderPhone, chatId, senderName } }
     if (body.event === 'message.received' && body.data) {
@@ -106,9 +107,29 @@ const handleIncomingWebhook = async (req, res) => {
         return; // Ignore outbound echoes to prevent infinite reply loops
       }
       rawSender = body.data.senderPhone || body.data.from || body.data.chatId || '';
-      const isVoiceInput = body.data.type === 'audio' || body.data.type === 'ptt' || (body.data.mimetype && body.data.mimetype.includes('audio'));
-      incomingText = body.data.body || body.data.text || (isVoiceInput ? 'Student sent a Voice Message asking for personalized career guidance, skills recommendations, and next milestones' : '');
-      pushSenderName = body.data.senderName || '';
+      
+      const msgType = String(body.data.type || body.data.messageType || body.data.kind || body.data.mediaType || body.data.lastMessageType || '').toLowerCase();
+      const msgMime = String(body.data.mimetype || '').toLowerCase();
+      
+      isVoiceInput = msgType === 'audio' || 
+                     msgType === 'ptt' || 
+                     msgType === 'voice' || 
+                     msgType.includes('audio') || 
+                     msgType.includes('voice') || 
+                     msgMime.includes('audio') || 
+                     msgMime.includes('ogg') || 
+                     Boolean(body.data.isVoice) ||
+                     Boolean(body.data.ptt);
+
+      incomingText = body.data.body || body.data.text || body.data.caption || '';
+      if (!incomingText.trim()) {
+        if (isVoiceInput) {
+          incomingText = 'Student sent a WhatsApp Voice Note asking for personalized career advice, roadmap guidance, and high-demand skills to learn.';
+        } else {
+          incomingText = 'Student connected via WhatsApp asking for personalized career guidance and roadmap milestones.';
+        }
+      }
+      pushSenderName = body.data.senderName || body.data.name || '';
     }
     // B. Meta WhatsApp Cloud API structure
     else if (body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
@@ -116,24 +137,51 @@ const handleIncomingWebhook = async (req, res) => {
       rawSender = msg.from; // e.g. "919876543210"
       if (msg.type === 'text') {
         incomingText = msg.text?.body || '';
+      } else if (msg.type === 'audio' || msg.type === 'voice') {
+        isVoiceInput = true;
+        incomingText = 'Student sent a WhatsApp Voice Note asking for personalized career guidance and next steps.';
+      } else {
+        incomingText = `Student sent a ${msg.type || 'media'} message asking for career mentorship.`;
       }
     } 
     // C. OpenWA / Baileys bridge flat structure
     else if (body.from || body.phone) {
+      if (body.fromMe === true) {
+        return;
+      }
       rawSender = body.from || body.phone;
-      incomingText = body.text || body.body || body.message || '';
+      const msgType = String(body.type || body.messageType || body.kind || body.lastMessageType || '').toLowerCase();
+      const msgMime = String(body.mimetype || '').toLowerCase();
+      isVoiceInput = msgType === 'audio' || 
+                     msgType === 'ptt' || 
+                     msgType === 'voice' || 
+                     msgType.includes('audio') || 
+                     msgType.includes('voice') || 
+                     msgMime.includes('audio') || 
+                     msgMime.includes('ogg') || 
+                     Boolean(body.isVoice) ||
+                     Boolean(body.ptt);
+
+      incomingText = body.text || body.body || body.message || body.caption || '';
+      if (!incomingText.trim()) {
+        if (isVoiceInput) {
+          incomingText = 'Student sent a WhatsApp Voice Note asking for personalized career guidance and roadmap milestones.';
+        } else {
+          incomingText = 'Student connected via WhatsApp asking for career mentorship.';
+        }
+      }
       pushSenderName = body.senderName || body.name || '';
     }
 
-    if (!rawSender || !incomingText.trim()) {
-      return; // Ignore non-message notifications
+    if (!rawSender) {
+      return; // Ignore notifications without sender
     }
 
     const senderPhone = whatsappService.formatPhoneNumber(rawSender);
     const digitsOnly = whatsappService.getPhoneDigits(senderPhone);
     const last10Digits = digitsOnly.slice(-10);
 
-    console.log(`[WhatsApp Incoming] From: ${senderPhone} | Query: "${incomingText}"`);
+    console.log(`[WhatsApp Incoming] From: ${senderPhone} | Voice Note: ${isVoiceInput} | Query: "${incomingText}"`);
 
     // 2. Locate student in database by phone number
     let student = null;

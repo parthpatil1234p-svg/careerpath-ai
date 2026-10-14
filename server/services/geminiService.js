@@ -166,7 +166,24 @@ async function getChatMentorReply(userMessage, history = [], userContext = null)
   }
 }
 
+/**
+  * Alias / Wrapper for getChatMentorReply with flexible parameter ordering
+  * @param {string} userMessage
+  * @param {Object} [userContext]
+  * @param {Array} [history]
+  */
+async function getGeminiMentorReply(userMessage, userContext = null, history = []) {
+  if (Array.isArray(userContext) && !Array.isArray(history)) {
+    const temp = userContext;
+    userContext = history;
+    history = temp;
+  }
+  return getChatMentorReply(userMessage, history, userContext);
+}
+
 module.exports = {
   getChatMentorReply,
+  getGeminiMentorReply,
   callGemini
 };
+

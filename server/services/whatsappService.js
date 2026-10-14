@@ -17,6 +17,18 @@
 const https = require('https');
 const http = require('http');
 
+const DEFAULT_OPENWA_URL = 'https://openwa-phe1.onrender.com';
+const DEFAULT_OPENWA_KEY = 'owa_k1_eb90989c53ba616e1d53ce272fb683a62b08c455f2a7d0dc8964ff2ce4283000';
+const DEFAULT_OPENWA_SESSION = '7947d4c9-0297-4396-be07-330534d6c58a';
+
+function getOpenwaConfig() {
+  return {
+    url: process.env.OPENWA_API_URL || DEFAULT_OPENWA_URL,
+    apiKey: process.env.OPENWA_API_KEY || DEFAULT_OPENWA_KEY,
+    sessionId: process.env.OPENWA_SESSION_ID || DEFAULT_OPENWA_SESSION
+  };
+}
+
 /**
  * Sanitizes and formats phone numbers to E.164 standard.
  * Default country code fallback: +91 (India)
@@ -107,9 +119,7 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
   }
 
   const digits = getPhoneDigits(formattedPhone);
-  const openwaUrl = process.env.OPENWA_API_URL || '';
-  const openwaApiKey = process.env.OPENWA_API_KEY || '';
-  const openwaSessionId = process.env.OPENWA_SESSION_ID || '7947d4c9-0297-4396-be07-330534d6c58a';
+  const { url: openwaUrl, apiKey: openwaApiKey, sessionId: openwaSessionId } = getOpenwaConfig();
   const bridgeUrl = process.env.WHATSAPP_BRIDGE_URL || '';
   const token = process.env.WHATSAPP_TOKEN || '';
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
@@ -226,9 +236,7 @@ async function sendTextMessage(phone, messageText, meta = {}) {
   }
 
   const digits = getPhoneDigits(formattedPhone);
-  const openwaUrl = process.env.OPENWA_API_URL || '';
-  const openwaApiKey = process.env.OPENWA_API_KEY || '';
-  const openwaSessionId = process.env.OPENWA_SESSION_ID || '7947d4c9-0297-4396-be07-330534d6c58a';
+  const { url: openwaUrl, apiKey: openwaApiKey, sessionId: openwaSessionId } = getOpenwaConfig();
   const token = process.env.WHATSAPP_TOKEN || '';
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
   const bridgeUrl = process.env.WHATSAPP_BRIDGE_URL || '';
@@ -406,9 +414,8 @@ function bridgeApiRequest(endpointUrl, bodyString) {
  */
 function openwaApiRequest(endpointPath, bodyString) {
   return new Promise((resolve, reject) => {
-    const rawUrl = process.env.OPENWA_API_URL || 'https://openwa-phe1.onrender.com';
-    const apiKey = process.env.OPENWA_API_KEY || '';
-    const url = new URL(rawUrl);
+    const { url: openwaUrl, apiKey } = getOpenwaConfig();
+    const url = new URL(openwaUrl);
     const isHttps = url.protocol === 'https:';
     const client = isHttps ? https : http;
 
@@ -473,9 +480,7 @@ async function sendVoiceNote(phone, audioUrl) {
   }
 
   const digits = getPhoneDigits(formattedPhone);
-  const openwaUrl = process.env.OPENWA_API_URL || '';
-  const openwaApiKey = process.env.OPENWA_API_KEY || '';
-  const openwaSessionId = process.env.OPENWA_SESSION_ID || '7947d4c9-0297-4396-be07-330534d6c58a';
+  const { url: openwaUrl, apiKey: openwaApiKey, sessionId: openwaSessionId } = getOpenwaConfig();
 
   if (openwaUrl && openwaApiKey && openwaSessionId) {
     try {
