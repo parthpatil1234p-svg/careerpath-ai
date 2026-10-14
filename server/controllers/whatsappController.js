@@ -48,6 +48,52 @@ const handleIncomingWebhook = async (req, res) => {
 
   try {
     const body = req.body || {};
+    const event = body.event || 'message.received';
+
+    // ── EVENT HANDLER 1: Voice Call Auto-Responder (call.received / call.missed) ──
+    if (event === 'call.received' || event === 'call.missed') {
+      const caller = body.data?.senderPhone || body.data?.from || body.from || body.phone;
+      if (caller) {
+        const formattedCaller = whatsappService.formatPhoneNumber(caller);
+        console.log(`[WhatsApp Webhook] Incoming call event (${event}) from ${formattedCaller}. Dispatching automated guidance notice.`);
+        try {
+          await whatsappService.sendTextMessage(
+            formattedCaller,
+            `📞 *CareerPath AI — Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://careerpath.is-local.org\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
+          );
+        } catch (callReplyErr) {
+          console.warn('[WhatsApp Webhook] Failed to dispatch call auto-response:', callReplyErr.message);
+        }
+      }
+      return;
+    }
+
+    // ── EVENT HANDLER 2: Delivery Failure Alert & Fallback Hook (message.failed) ──
+    if (event === 'message.failed') {
+      console.warn('⚠️ [WhatsApp Webhook] Outbound message delivery failed:', {
+        to: body.data?.to || body.to,
+        error: body.data?.error || body.error,
+        messageId: body.data?.messageId || body.messageId,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    // ── EVENT HANDLER 3: Session Disconnection Monitor (session.disconnected) ──
+    if (event === 'session.disconnected') {
+      console.error('🚨 [CRITICAL ALERT] WhatsApp Gateway Session Disconnected:', {
+        sessionId: body.sessionId,
+        reason: body.data?.reason || body.reason || 'Unknown',
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    // ── EVENT HANDLER 4: Delivery Receipts & Read Ticks (message.ack) ──
+    if (event === 'message.ack') {
+      console.log(`[WhatsApp Webhook] Delivery receipt ACK: ${body.data?.messageId || body.messageId} | Status: ${body.data?.ack || body.ack}`);
+      return;
+    }
 
     // 1. Extract message & sender phone from Meta or OpenWA payload
     let rawSender = '';
@@ -79,7 +125,7 @@ const handleIncomingWebhook = async (req, res) => {
     }
 
     if (!rawSender || !incomingText.trim()) {
-      return; // Ignore non-message notifications (e.g. read receipts or status updates)
+      return; // Ignore non-message notifications
     }
 
     const senderPhone = whatsappService.formatPhoneNumber(rawSender);
