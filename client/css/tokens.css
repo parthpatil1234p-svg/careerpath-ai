@@ -83,8 +83,8 @@
      ------------------------------------------------------------------------ */
   --color-text-primary: #0F172A;      /* Clean Dark Slate for headings */
   --color-text-secondary: #334155;    /* Clear Slate for body text */
-  --color-text-muted: #64748B;        /* Muted slate for captions */
-  --color-text-disabled: #94A3B8;     /* Disabled text */
+  --color-text-muted: #475569;        /* High-contrast WCAG AAA slate for captions (7.07:1 ratio) */
+  --color-text-disabled: #64748B;     /* Disabled text */
   --color-border: #E2E8F0;            /* Clean light border */
 
   /* Legacy Typography Aliases */

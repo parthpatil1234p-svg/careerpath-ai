@@ -1,0 +1,357 @@
+/* ==========================================================================
+   CareerPath AI — Master Stylesheet (style.css)
+   Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
+   CareerPath AI · Enterprise Edition
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Modular Imports
+   -------------------------------------------------------------------------- */
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './pages.css';
+@import './three.css';
+@import './roadmap.css';
+@import './dashboard.css';
+@import './chat.css';
+@import './radial-glow-button.css';
+@import './notch-navbar.css';
+@import './animated-icons.css';
+@import './typing-character-fx.css';
+@import './quiz.css';
+
+/* --------------------------------------------------------------------------
+   2. Token Compatibility Bridge (Light EduTech Foundation)
+   -------------------------------------------------------------------------- */
+:root {
+  --cp-primary:          var(--color-indigo-600);
+  --cp-secondary:        var(--color-primary-600);
+  --cp-accent:           var(--color-cyan-600);
+  --cp-success:          var(--color-success);
+  --cp-warning:          var(--color-warning);
+  --cp-danger:           var(--color-danger);
+  --cp-bg-dark:          var(--color-surface-muted);
+  --cp-bg-light:         var(--color-background);
+  --cp-bg-card:          var(--color-surface);
+  --cp-bg-card-light:    var(--color-surface);
+  --cp-text-primary:     var(--color-text-primary);
+  --cp-text-light:       var(--color-text-primary);
+  --cp-text-muted:       var(--color-text-muted);
+  --cp-border:           var(--color-border);
+  --cp-border-light:     var(--color-border);
+  --cp-shadow-sm:        var(--shadow-sm);
+  --cp-shadow-md:        var(--shadow-md);
+  --cp-shadow-glow:      0 4px 16px rgba(15, 23, 42, 0.08);
+  --cp-gradient-primary: var(--gradient-primary);
+  --cp-gradient-accent:  var(--gradient-secondary);
+  --cp-gradient-hero:    var(--gradient-primary);
+}
+
+/* Typography Hierarchy Scale */
+h1, .h1 {
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+}
+
+h2, .h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+h3, .h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   3. Recommendations Compatibility (Rendered by recommendations.js)
+   -------------------------------------------------------------------------- */
+.recommendation-card {
+  background: #FFFFFF !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-md) !important;
+  position: relative;
+  transition: all var(--transition-normal);
+  color: var(--color-text-secondary);
+}
+
+.recommendation-card:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+.recommendation-card.top-match-card {
+  border: 1.5px solid var(--color-indigo-600) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+.match-score-badge {
+  background: var(--color-surface-blue) !important;
+  border: 1px solid #BFDBFE !important;
+  border-radius: var(--radius-md) !important;
+  padding: 1rem 1.25rem !important;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.top-match-card .match-score-badge {
+  border-color: #C7D2FE !important;
+  background: var(--color-surface-indigo) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+}
+
+.match-score-badge .score-number {
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--color-indigo-700) !important;
+  line-height: 1;
+}
+
+.score-factor {
+  background: var(--color-surface-muted) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.5rem 0.75rem !important;
+  text-align: center;
+}
+
+.score-factor .factor-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.score-factor .factor-value {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text-primary) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. High-Contrast Accessible Color Harmony
+   -------------------------------------------------------------------------- */
+.text-navy {
+  color: var(--color-primary-800) !important;
+}
+
+.text-ink {
+  color: var(--color-text-primary) !important;
+}
+
+.text-teal {
+  color: var(--color-cyan-600) !important;
+}
+
+.text-gold {
+  color: var(--color-warning) !important;
+}
+
+.text-leaf {
+  color: var(--color-success) !important;
+}
+
+.text-coral {
+  color: var(--color-danger) !important;
+}
+
+.border-line {
+  border-color: var(--color-border) !important;
+}
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+  color: var(--color-indigo-600) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Consistent Reading Alignment Across Project Pages
+   -------------------------------------------------------------------------- */
+main {
+  text-align: start;
+}
+
+main p:not(.text-center) {
+  line-height: 1.6;
+}
+
+.recommendations-page main .text-center p {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.recommendations-page .recommendation-card .row > * {
+  min-width: 0;
+}
+
+.recommendations-page .recommendation-card h2 {
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .recommendation-card h2 > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .recommendation-card :where(.ai-brief-text, .ai-brief-tip, .ai-bottleneck-box, .why-recommended-banner) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.recommendations-page .skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  padding: 0.32rem 0.72rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: start;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: all 0.15s ease;
+}
+
+.recommendations-page .skill-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+}
+
+.recommendations-page .skill-pill.matched-pill {
+  color: #065F46 !important;
+  background-color: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+}
+
+.recommendations-page .skill-pill.weak-pill {
+  color: #92400E !important;
+  background-color: #FFFBEB !important;
+  border: 1px solid #FDE68A !important;
+}
+
+.recommendations-page .skill-pill.missing-pill {
+  color: #991B1B !important;
+  background-color: #FEF2F2 !important;
+  border: 1px solid #FECACA !important;
+}
+
+.recommendations-page .skill-pill .tech-brand-logo {
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Mobile & Tablet Touch Target & Accessibility Polish (WCAG 2.5.5)
+   -------------------------------------------------------------------------- */
+@media (max-width: 767.98px) {
+  /* Expand interactive touch targets to min 44px */
+  .btn,
+  .cp-btn-primary,
+  .cp-btn-outline {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-check-label {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .form-check-input {
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  /* Safe bottom padding for floating chat FAB */
+  body {
+    padding-bottom: 64px;
+  }
+
+  /* Keep profile details aligned with other page content on small screens */
+  .dashboard-profile-card {
+    text-align: start;
+  }
+
+  .dashboard-profile-card .dashboard-avatar-container {
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Multi-Portal Job Market Hub & Launcher Badges
+   -------------------------------------------------------------------------- */
+.portal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid var(--border-line, #e2e8f0);
+  color: var(--ink, #0f172a);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.portal-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-teal, #0d9488);
+  color: var(--color-teal, #0d9488);
+}
+.portal-badge i {
+  font-size: 0.95rem;
+  transition: transform 0.2s ease;
+}
+.portal-badge:hover i {
+  transform: scale(1.15);
+}
+.portal-linkedin:hover { border-color: #0a66c2; color: #0a66c2; }
+.portal-naukri:hover { border-color: #e60023; color: #e60023; }
+.portal-indeed:hover { border-color: #2164f3; color: #2164f3; }
+.portal-wellfound:hover { border-color: #c2410c; color: #c2410c; }
+.portal-internshala:hover { border-color: #0369a1; color: #0369a1; }
+.portal-google:hover { border-color: #c5221f; color: #c5221f; }
+
+.cross-search-btn {
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid var(--border-line, #e2e8f0);
+  background: #f8fafc;
+  color: var(--secondary, #475569);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s ease;
+}
+.cross-search-btn:hover {
+  background: #ffffff;
+  color: var(--ink, #0f172a);
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+

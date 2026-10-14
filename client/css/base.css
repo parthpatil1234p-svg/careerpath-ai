@@ -4,9 +4,6 @@
    CareerPath AI · Enterprise Edition
    ========================================================================== */
 
-/* Google Fonts Import: Inter (Clean UI & Headings), Outfit (Geometric Display) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
-
 *, *::before, *::after {
   box-sizing: border-box;
   font-feature-settings: "zero" 0, "ss19" 0;

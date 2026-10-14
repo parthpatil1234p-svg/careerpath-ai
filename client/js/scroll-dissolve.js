@@ -308,7 +308,11 @@
     }
   }
 
+  let controlsBound = false;
   function bindControls(container) {
+    if (controlsBound) return;
+    controlsBound = true;
+
     const slider = document.getElementById('dissolveScrubber');
     const btnBefore = document.getElementById('btnDissolveBefore');
     const btnAfter = document.getElementById('btnDissolveAfter');
@@ -389,10 +393,59 @@
     });
   }
 
+  let threeLibrariesLoading = false;
+  function loadThreeLibraries(callback) {
+    if (typeof THREE !== 'undefined') {
+      if (callback) callback();
+      return;
+    }
+    if (threeLibrariesLoading) return;
+    threeLibrariesLoading = true;
+
+    const sThree = document.createElement('script');
+    sThree.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    sThree.async = true;
+    sThree.onload = function () {
+      const sGsap = document.createElement('script');
+      sGsap.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
+      sGsap.async = true;
+      sGsap.onload = function () {
+        if (callback) callback();
+      };
+      document.head.appendChild(sGsap);
+    };
+    document.head.appendChild(sThree);
+  }
+
+  function startScrollDissolve() {
+    const container = document.getElementById('scrollDissolveContainer');
+    if (!container) return;
+
+    // Immediately bind controls for instant CSS fallback interaction
+    bindControls(container);
+
+    // Lazy load Three.js & GSAP only when container is near viewport
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(function (entries) {
+        if (entries[0] && entries[0].isIntersecting) {
+          observer.disconnect();
+          loadThreeLibraries(function () {
+            initDissolveShader();
+          });
+        }
+      }, { rootMargin: '350px' });
+      observer.observe(container);
+    } else {
+      loadThreeLibraries(function () {
+        initDissolveShader();
+      });
+    }
+  }
+
   // Initialize on DOM load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDissolveShader);
+    document.addEventListener('DOMContentLoaded', startScrollDissolve);
   } else {
-    initDissolveShader();
+    startScrollDissolve();
   }
 })();

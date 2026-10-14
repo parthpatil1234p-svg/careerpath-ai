@@ -222,30 +222,56 @@
     }
     </script>
 
-    <!-- Google Fonts: Outfit, Inter (Clean Modern Typography) -->
+    <!-- High-Speed CDN & Font Preconnects (Sub-50ms Connection Handshake) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
 
-    <!-- Bootstrap 5 CSS -->
+    <!-- Google Fonts: Inter & Outfit (Non-blocking Asynchronous CSS with display=swap) -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+      />
+    </noscript>
+
+    <!-- Bootstrap 5 CSS (Critical Layout Foundation) -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
 
-    <!-- Bootstrap Icons -->
+    <!-- Bootstrap Icons (Non-Render-Blocking Asynchronous Load) -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    </noscript>
 
-    <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="css/style.css?v=3.0" />
-    <link rel="stylesheet" href="css/three.css?v=3.0" />
-    <link rel="stylesheet" href="css/scroll-dissolve.css?v=3.0" />
+    <!-- Bundled Production Stylesheet (Zero @import Chains) -->
+    <link rel="preload" as="style" href="css/style.css?v=4.0" />
+    <link rel="stylesheet" href="css/style.css?v=4.0" />
+
+    <!-- Non-Critical Below-the-fold Stylesheets -->
+    <link rel="stylesheet" href="css/scroll-dissolve.css?v=3.2" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="css/scroll-dissolve.css?v=3.2" /></noscript>
+
     <!-- Immediate Recruiter Auto-Redirect Protection -->
     <script>
       (function () {
@@ -271,8 +297,16 @@
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
-    <!-- Open Domains Analytics -->
-    <script defer src="https://analytics.open-domains.com/script.js" data-website-id="3896a469-edf4-4b58-b379-209d5b3c9e1f"></script>
+    <!-- Open Domains Analytics (Idle-Loaded to Protect Core Web Vitals) -->
+    <script>
+      window.addEventListener('load', function () {
+        var s = document.createElement('script');
+        s.defer = true;
+        s.src = 'https://analytics.open-domains.com/script.js';
+        s.setAttribute('data-website-id', '3896a469-edf4-4b58-b379-209d5b3c9e1f');
+        document.head.appendChild(s);
+      });
+    </script>
   </head>
 
   <body class="landing-page">
@@ -285,7 +319,7 @@
           <!-- Brand / Logo -->
           <a class="navbar-brand d-flex align-items-center" href="index.html">
             <div class="brand-icon">
-              <img src="assets/logo.svg" alt="CareerPath AI Logo" class="brand-logo-img" width="40" height="40" />
+              <img src="assets/logo.svg" alt="CareerPath AI Logo" class="brand-logo-img" width="40" height="40" fetchpriority="high" />
             </div>
             <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
           </a>
@@ -565,8 +599,8 @@
               <span class="w-dot w-green"></span>
             </div>
             <!-- Fallback Layers (Shown until WebGL loads) -->
-            <img src="assets/state-before-skills.svg" alt="Student Current Skills and Gaps" class="dissolve-fallback-layer front" />
-            <img src="assets/state-after-roadmap.svg" alt="Target Career Roadmap" class="dissolve-fallback-layer back" />
+            <img src="assets/state-before-skills.svg" alt="Student Current Skills and Gaps" class="dissolve-fallback-layer front" width="1200" height="800" loading="lazy" decoding="async" />
+            <img src="assets/state-after-roadmap.svg" alt="Target Career Roadmap" class="dissolve-fallback-layer back" width="1200" height="800" loading="lazy" decoding="async" />
 
             <!-- Three.js WebGL Shader Canvas -->
             <canvas id="scrollDissolveCanvas"></canvas>
@@ -751,9 +785,10 @@
                 class="form-control border-0 py-2.5 px-2"
                 placeholder="Search 24 pathways by skill or title (e.g. 'React', 'Python', 'SEO', 'Figma')..."
                 autocomplete="off"
+                aria-label="Search 24 career pathways by skill or title"
                 style="box-shadow: none;"
               />
-              <button class="btn btn-white border-0 px-3 text-secondary" type="button" id="btnClearCareerSearch" style="display:none;" title="Clear search">
+              <button class="btn btn-white border-0 px-3 text-secondary" type="button" id="btnClearCareerSearch" style="display:none;" title="Clear search" aria-label="Clear search">
                 <i class="bi bi-x-circle-fill"></i>
               </button>
             </div>
@@ -2205,7 +2240,7 @@
                     <i class="bi bi-journal-bookmark-fill fs-5"></i>
                     <span>NAAC Criteria 1.1</span>
                   </div>
-                  <h6 class="fw-bold text-ink mb-1">Curricular Planning &amp; Industry Relevance</h6>
+                  <h5 class="fw-bold text-ink mb-1 fs-6">Curricular Planning &amp; Industry Relevance</h5>
                   <p class="small text-secondary mb-2">
                     Measures curriculum alignment with real market demands. CareerPath AI maps student milestones across 24 industry paths with active market telemetry from 150+ tech employers.
                   </p>
@@ -2224,7 +2259,7 @@
                     <i class="bi bi-mortarboard-fill fs-5"></i>
                     <span>NAAC Criteria 5.1 &amp; 5.2</span>
                   </div>
-                  <h6 class="fw-bold text-ink mb-1">Student Support, Guidance &amp; Placement</h6>
+                  <h5 class="fw-bold text-ink mb-1 fs-6">Student Support, Guidance &amp; Placement</h5>
                   <p class="small text-secondary mb-2">
                     Quantifies career counselling and placement readiness. Replaces passive lectures with interactive AI mentoring, weekly proctored tests, and AI mock interviews.
                   </p>
@@ -2243,7 +2278,7 @@
                     <i class="bi bi-graph-up-arrow fs-5"></i>
                     <span>NIRF Graduation Outcome (GO)</span>
                   </div>
-                  <h6 class="fw-bold text-ink mb-1">Placement Percentage &amp; Median Salary</h6>
+                  <h5 class="fw-bold text-ink mb-1 fs-6">Placement Percentage &amp; Median Salary</h5>
                   <p class="small text-secondary mb-2">
                     Directly enhances Median Salary (GPH) and Percentage of Placed Students. Pre-vetted graduates attract higher-tier recruiters with zero screening friction.
                   </p>
@@ -2305,24 +2340,21 @@
       </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle (Deferred) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Three.js & GSAP 3D libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-    <script src="js/config.js"></script>
-    <script src="js/auth.js?v=3.0"></script>
-    <script src="js/api.js"></script>
-    <script src="js/github-auth.js"></script>
-    <script src="js/scroll-dissolve.js?v=3.0"></script>
-    <script src="js/stats-counter.js"></script>
-    <script src="js/animated-icons.js"></script>
-    <script src="js/typing-character-fx.js"></script>
-    <script src="js/search-engine.js?v=3.1"></script>
-    <script src="js/main.js?v=3.1"></script>
-    <script src="js/skill-guides.js"></script>
-    <script src="js/chat.js"></script>
+    <!-- Core Application Logic (Deferred for optimal FCP / LCP) -->
+    <script defer src="js/config.js"></script>
+    <script defer src="js/auth.js?v=3.0"></script>
+    <script defer src="js/api.js"></script>
+    <script defer src="js/github-auth.js"></script>
+    <script defer src="js/scroll-dissolve.js?v=3.2"></script>
+    <script defer src="js/stats-counter.js"></script>
+    <script defer src="js/animated-icons.js"></script>
+    <script defer src="js/typing-character-fx.js"></script>
+    <script defer src="js/search-engine.js?v=3.1"></script>
+    <script defer src="js/main.js?v=3.1"></script>
+    <script defer src="js/skill-guides.js"></script>
+    <script defer src="js/chat.js"></script>
   </body>
 </html>
