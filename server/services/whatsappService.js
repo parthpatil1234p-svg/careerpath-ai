@@ -473,7 +473,7 @@ function openwaApiRequest(endpointPath, bodyString) {
  * @param {string} audioUrl - Public or generated TTS audio URL
  * @returns {Promise<{success: boolean, provider: string, messageId?: string, error?: string}>}
  */
-async function sendVoiceNote(phone, audioUrl) {
+async function sendVoiceNote(phone, audioSource) {
   const formattedPhone = formatPhoneNumber(phone);
   if (!formattedPhone) {
     return { success: false, error: 'Invalid or missing phone number' };
@@ -484,15 +484,24 @@ async function sendVoiceNote(phone, audioUrl) {
 
   if (openwaUrl && openwaApiKey && openwaSessionId) {
     try {
-      const payload = JSON.stringify({
+      const payloadObj = {
         chatId: `${digits}@c.us`,
-        url: audioUrl,
         ptt: true
-      });
+      };
+
+      if (typeof audioSource === 'string' && audioSource.startsWith('http')) {
+        payloadObj.url = audioSource;
+      } else if (typeof audioSource === 'string' && audioSource.startsWith('data:')) {
+        payloadObj.base64 = audioSource;
+      } else if (Buffer.isBuffer(audioSource)) {
+        payloadObj.base64 = `data:audio/mp3;base64,${audioSource.toString('base64')}`;
+      } else if (typeof audioSource === 'string') {
+        payloadObj.base64 = `data:audio/mp3;base64,${audioSource}`;
+      }
 
       const res = await openwaApiRequest(
         `/api/sessions/${openwaSessionId}/messages/send-audio`,
-        payload
+        JSON.stringify(payloadObj)
       );
       console.log(`[WhatsApp Voice Note] OpenWA Voice Note dispatched to ${formattedPhone} (id: ${res.messageId || 'sent'})`);
       return { success: true, provider: 'openwa_gateway', messageId: res.messageId };
@@ -501,7 +510,7 @@ async function sendVoiceNote(phone, audioUrl) {
     }
   }
 
-  console.log(`🎙️ [WHATSAPP VOICE NOTE FALLBACK] To: ${formattedPhone} | Audio URL: ${audioUrl}`);
+  console.log(`🎙️ [WHATSAPP VOICE NOTE FALLBACK] To: ${formattedPhone} | Audio Source: ${typeof audioSource === 'string' ? audioSource.slice(0, 40) + '...' : 'Buffer'}`);
   return { success: true, provider: 'console_fallback', messageId: `mock-voice-${Date.now()}` };
 }
 

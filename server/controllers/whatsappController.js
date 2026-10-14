@@ -16,6 +16,7 @@ const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
 const { getGroqMentorReply } = require('../services/groqService');
 const { getGeminiMentorReply } = require('../services/geminiService');
+const { generateNeuralVoiceNote } = require('../services/ttsService');
 
 /**
  * GET /api/whatsapp/webhook
@@ -276,22 +277,22 @@ Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web
       studentName: userContext.name
     });
 
-    // 6. Voice Mail AI: Dispatch spoken Voice Note (PTT audio) in natural voice
+    // 6. Voice Mail AI: Dispatch spoken Voice Note (PTT audio) with energetic neural voice
     try {
-      const cleanSpoken = aiReply
-        .replace(/[*#_~`>]/g, '')
-        .replace(/https?:\/\/\S+/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
+      const { base64, url } = await generateNeuralVoiceNote(aiReply, {
+        voice: 'hi-IN-MadhurNeural',
+        rate: '+22%',
+        pitch: '+2Hz',
+        maxLength: 350
+      });
 
-      const spokenChunk = cleanSpoken.slice(0, 190);
-      if (spokenChunk) {
-        const ttsAudioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(spokenChunk)}&tl=hi&client=tw-ob`;
-        await whatsappService.sendVoiceNote(senderPhone, ttsAudioUrl);
-        console.log(`[WhatsApp Voice Mail] Spoken voice note dispatched to ${senderPhone}`);
+      const audioPayload = base64 || url;
+      if (audioPayload) {
+        await whatsappService.sendVoiceNote(senderPhone, audioPayload);
+        console.log(`[WhatsApp Voice Mail] Energetic neural voice note dispatched to ${senderPhone}`);
       }
     } catch (voiceErr) {
-      console.warn('[WhatsApp Voice Mail] Voice dispatch warning:', voiceErr.message);
+      console.warn('[WhatsApp Voice Mail] Neural voice dispatch warning:', voiceErr.message);
     }
 
   } catch (err) {
