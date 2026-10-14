@@ -753,7 +753,9 @@
   function scrollToBottom() {
     const container = document.getElementById('cpChatMessages');
     if (container) {
-      container.scrollTop = container.scrollHeight;
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+      });
     }
   }
 
@@ -946,15 +948,31 @@
     }
   }
 
-  // Mount on DOM Ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectWidgetDOM);
-  } else {
+  // Mount lazily after page load & idle to eliminate render blocking & forced reflows
+  let widgetInjected = false;
+  function safeInjectWidgetDOM() {
+    if (widgetInjected) return;
+    widgetInjected = true;
     injectWidgetDOM();
+  }
+
+  function scheduleWidgetInit() {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(safeInjectWidgetDOM, { timeout: 2000 });
+    } else {
+      setTimeout(safeInjectWidgetDOM, 1200);
+    }
+  }
+
+  if (document.readyState === 'complete') {
+    scheduleWidgetInit();
+  } else {
+    window.addEventListener('load', scheduleWidgetInit, { once: true });
   }
 
   window.CareerPathChat = {
     open: () => {
+      safeInjectWidgetDOM();
       const drawer = document.getElementById('cpChatDrawer');
       if (drawer) {
         drawer.classList.add('open');
@@ -962,6 +980,9 @@
       }
     },
     close: () => document.getElementById('cpChatDrawer')?.classList.remove('open'),
-    send: (prompt) => sendUserMessage(prompt)
+    send: (prompt) => {
+      safeInjectWidgetDOM();
+      sendUserMessage(prompt);
+    }
   };
 })();
