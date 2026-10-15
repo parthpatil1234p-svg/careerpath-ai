@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Privacy Policy for CareerPath AI: DPDP Act 2023 compliant data protection, GitHub AST telemetry disclosure, and BYOK security standards."
+    />
+    <meta name="theme-color" content="#2563EB" />
+    <title>Privacy Policy &bull; CareerPath AI</title>
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="css/bootstrap-icons.min.css" />
+    <!-- Custom Theme Stylesheet -->
+    <link rel="stylesheet" href="css/style.min.css?v=4.2" />
+
+    <style>
+      .legal-hero {
+        padding: 7rem 0 3rem;
+        background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 60%);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .legal-sidebar {
+        position: sticky;
+        top: 90px;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+      }
+      .legal-nav-link {
+        display: block;
+        padding: 0.5rem 0.85rem;
+        color: var(--color-text-secondary);
+        font-size: 0.88rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: var(--radius-xs);
+        border-left: 2px solid transparent;
+        transition: all var(--transition-fast);
+      }
+      .legal-nav-link:hover {
+        color: var(--color-indigo-600);
+        background: var(--color-surface-muted);
+        border-left-color: var(--color-indigo-500);
+      }
+      .legal-section-card {
+        background: #FFFFFF;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: 2.25rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-sm);
+        scroll-margin-top: 100px;
+      }
+      .legal-highlight-box {
+        background: var(--color-surface-indigo);
+        border: 1px solid #C7D2FE;
+        border-radius: var(--radius-sm);
+        padding: 1.25rem 1.5rem;
+      }
+      .legal-table {
+        font-size: 0.88rem;
+      }
+      .legal-table th {
+        background: var(--color-surface-muted);
+        color: var(--color-text-primary);
+        font-weight: 600;
+      }
+      .grievance-card {
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        color: #FFFFFF;
+        border-radius: var(--radius-md);
+        padding: 2rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Floating Notch Navigation Island -->
+    <nav class="notch-nav-container fixed-top" id="mainNotchNav">
+      <div class="notch-island-wrapper">
+        <div class="notch-island">
+          <a class="notch-brand" href="index.html">
+            <div class="brand-compass p-1">
+              <img src="assets/logo.svg" alt="CareerPath AI" class="brand-logo-img" width="38" height="38" />
+            </div>
+            <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+          </a>
+
+          <ul class="notch-nav-links d-none d-lg-flex">
+            <li><a class="notch-nav-link" href="index.html#how-it-works">Platform</a></li>
+            <li><a class="notch-nav-link" href="index.html#solutions">Solutions</a></li>
+            <li><a class="notch-nav-link text-primary fw-semibold" href="recruiter-dashboard.html"><i class="bi bi-buildings-fill me-1"></i>For Recruiters</a></li>
+            <li><a class="notch-nav-link active" href="privacy.html">Privacy</a></li>
+            <li><a class="notch-nav-link" href="terms.html">Terms</a></li>
+            <li><a class="notch-nav-link" href="security.html">Security</a></li>
+          </ul>
+
+          <div class="d-flex align-items-center gap-2">
+            <div class="d-none d-sm-flex align-items-center gap-2" id="authNavActions">
+              <a class="btn cp-btn-outline btn-sm px-3" href="login.html">Log In</a>
+              <a class="btn cp-btn-primary btn-sm px-3 text-nowrap" href="assessment.html">
+                <i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Start Free
+              </a>
+            </div>
+            <button
+              class="notch-mobile-toggle d-lg-none"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#notchMobileMenu"
+              aria-controls="notchMobileMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <i class="bi bi-list fs-5"></i>
+            </button>
+          </div>
+
+          <div class="collapse notch-mobile-collapse" id="notchMobileMenu">
+            <ul class="notch-mobile-links">
+              <li><a href="index.html"><i class="bi bi-house text-teal"></i> Home</a></li>
+              <li><a href="index.html#how-it-works"><i class="bi bi-gear-wide-connected text-teal"></i> Platform</a></li>
+              <li><a href="recruiter-dashboard.html"><i class="bi bi-buildings-fill text-primary"></i> For Recruiters</a></li>
+              <li><a href="privacy.html" class="active"><i class="bi bi-file-earmark-lock text-primary"></i> Privacy Policy</a></li>
+              <li><a href="terms.html"><i class="bi bi-file-earmark-text text-warning"></i> Terms of Service</a></li>
+              <li><a href="security.html"><i class="bi bi-shield-lock text-success"></i> Security Architecture</a></li>
+              <li class="pt-2 border-top border-line d-flex gap-2" id="notchMobileAuthActions">
+                <a class="btn cp-btn-outline btn-sm flex-grow-1 text-center" href="login.html">Log In</a>
+                <a class="btn cp-btn-primary btn-sm flex-grow-1 text-center" href="assessment.html">Start Free</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header Section with Breadcrumbs -->
+    <header class="legal-hero">
+      <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-3">
+          <ol class="breadcrumb small mb-0">
+            <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-muted"><i class="bi bi-house me-1"></i>Home</a></li>
+            <li class="breadcrumb-item text-muted">Legal &amp; Governance</li>
+            <li class="breadcrumb-item active text-primary fw-semibold" aria-current="page">Privacy Policy</li>
+          </ol>
+        </nav>
+
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+          <span class="atlas-kicker">
+            <span class="pulse-dot"></span> LEGAL COMPLIANCE CHARTER
+          </span>
+          <span class="badge badge-leaf font-mono">
+            <i class="bi bi-shield-check me-1"></i> DPDP Act 2023 Compliant
+          </span>
+          <span class="badge bg-light text-muted border font-mono">
+            Version 2.4 &bull; Effective October 2026
+          </span>
+        </div>
+
+        <h1 class="hero-title mb-2">
+          Privacy Policy &amp; Data Governance
+        </h1>
+        <p class="hero-subtitle mb-3" style="max-width: 780px;">
+          How CareerPath AI collects, verifies, protects, and governs student academic telemetry, GitHub proof-of-work, and recruiter data under Indian and global data privacy standards.
+        </p>
+
+        <!-- Executive Summary Banner -->
+        <div class="legal-highlight-box d-flex align-items-start gap-3">
+          <i class="bi bi-shield-lock-fill text-primary fs-3 flex-shrink-0 mt-1"></i>
+          <div>
+            <div class="fw-bold text-ink mb-1">Our Core Privacy Commitment</div>
+            <p class="small text-secondary mb-0">
+              CareerPath AI is <strong>100% free for students</strong>. We do <strong>not</strong> sell student records, resumes, or code to third-party advertisers. Public GitHub scans inspect only public syntax trees. Bring-Your-Own-Key (BYOK) AI tokens remain isolated in your browser, and you retain absolute rights to one-click data erasure under the Digital Personal Data Protection Act 2023.
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Layout with Sidebar -->
+    <main class="container py-5">
+      <div class="row g-4 g-xl-5">
+
+        <!-- Sticky Table of Contents Sidebar -->
+        <aside class="col-lg-3 d-none d-lg-block">
+          <div class="legal-sidebar p-3 border rounded-3 bg-white shadow-sm">
+            <div class="fw-bold text-ink small text-uppercase font-mono mb-3 pb-2 border-bottom">
+              <i class="bi bi-list-nested me-1 text-primary"></i> Contents
+            </div>
+            <nav class="d-flex flex-column gap-1">
+              <a class="legal-nav-link" href="#sec-controller">1. Data Controller &amp; Origin</a>
+              <a class="legal-nav-link" href="#sec-collected">2. Information We Collect</a>
+              <a class="legal-nav-link" href="#sec-github">3. GitHub AST Telemetry Scope</a>
+              <a class="legal-nav-link" href="#sec-resume">4. Resume &amp; Document Engine</a>
+              <a class="legal-nav-link" href="#sec-byok">5. BYOK Client Key Policy</a>
+              <a class="legal-nav-link" href="#sec-ai">6. AI Processing &amp; Zero Training</a>
+              <a class="legal-nav-link" href="#sec-recruiter">7. Recruiter Radar Sharing</a>
+              <a class="legal-nav-link" href="#sec-whatsapp">8. WhatsApp &amp; SMS Protocol</a>
+              <a class="legal-nav-link" href="#sec-rights">9. User Rights &amp; Data Erasure</a>
+              <a class="legal-nav-link" href="#sec-retention">10. Data Retention &amp; Security</a>
+              <a class="legal-nav-link" href="#sec-grievance">11. Grievance Officer Details</a>
+            </nav>
+
+            <div class="mt-4 pt-3 border-top">
+              <div class="small text-muted mb-2">Need legal clarification?</div>
+              <a href="mailto:parthpatil1234p@gmail.com" class="btn btn-outline-primary btn-sm w-100">
+                <i class="bi bi-envelope me-1"></i> Contact Grievance Desk
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Primary Legal Text Area -->
+        <div class="col-lg-9">
+
+          <!-- Section 1: Controller & Jurisdiction -->
+          <section class="legal-section-card" id="sec-controller">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 1</span>
+              <h2 class="h4 fw-bold text-ink mb-0">Data Controller &amp; Academic Origin</h2>
+            </div>
+            <p>
+              This Privacy Policy governs the collection, processing, transfer, and protection of personal data by <strong>CareerPath AI Technologies Inc.</strong> (&ldquo;CareerPath AI&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;).
+            </p>
+            <p>
+              CareerPath AI was conceived and engineered at <strong>G.H. Raisoni College of Engineering and Management (GHRCEM), Jalgaon, Maharashtra, India</strong>. The platform operates as an Autonomous Career GPS and Skill-Verified Talent Operating System, bridging university students, academic placement cells (TPOs), and corporate enterprise employers.
+            </p>
+            <div class="p-3 rounded-2 bg-light border small text-secondary">
+              <div class="fw-semibold text-ink mb-1"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Statutory Jurisdiction &amp; Legal Framework:</div>
+              This policy is formulated in strict accordance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>, the <strong>Information Technology Act, 2000 (IT Act)</strong>, the <strong>Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011</strong>, and the <strong>IT Intermediary Guidelines Rules, 2021</strong>.
+            </div>
+          </section>
+
+          <!-- Section 2: Information We Collect -->
+          <section class="legal-section-card" id="sec-collected">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 2</span>
+              <h2 class="h4 fw-bold text-ink mb-0">Information We Collect</h2>
+            </div>
+            <p>We collect information necessary to compute career recommendations, verify technical skills, and connect verified candidates with corporate employers:</p>
+
+            <div class="table-responsive mb-3">
+              <table class="table table-bordered legal-table align-middle">
+                <thead>
+                  <tr>
+                    <th style="width: 25%;">Data Category</th>
+                    <th style="width: 45%;">Data Points Collected</th>
+                    <th style="width: 30%;">Purpose &amp; Legal Basis</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="fw-semibold text-ink">Student Academic Profile</td>
+                    <td>Degree/Course (e.g. BCA, B.Tech, MCA, B.Sc), academic department/branch, college name, year of study, self-declared technical interests, and self-rated skill proficiencies.</td>
+                    <td>Calculation of the transparent 60/25/15 Career Match Score and personalized roadmap generation.</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-ink">Account Authentication</td>
+                    <td>Full name, personal or institutional email address, hashed passwords (salted bcrypt, 10 rounds), and optional Google OAuth 2.0 identifiers.</td>
+                    <td>Account creation, multi-device session authorization, and access control.</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-ink">Communication Telemetry</td>
+                    <td>E.164 normalized mobile phone number (+91), WhatsApp message delivery tokens, and 6-digit OTP verification records.</td>
+                    <td>Simultaneous dual verification (Option A gate), fraud prevention, and automated delivery of weekly roadmap study PDFs.</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-ink">Recruiter Credentials</td>
+                    <td>Work email address (`@company.com`), full corporate name, job title, official company website, and LinkedIn professional profile URL.</td>
+                    <td>4-tier corporate legitimacy verification (DNS MX check, HTTP domain probe, webmail blacklist filtering).</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold text-ink">Assessment &amp; Milestone Telemetry</td>
+                    <td>Groq/Gemini micro-quiz responses, weekly 30-minute proctored exam answers, tab-focus visibility switch counts, and mock interview speech audio recordings.</td>
+                    <td>Issuance of tamper-proof `[✓ Quiz-Verified]` badges and SHA-256 cryptographic certificates.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Section 3: GitHub AST & Telemetry Scope -->
+          <section class="legal-section-card" id="sec-github">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 3</span>
+              <h2 class="h4 fw-bold text-ink mb-0">GitHub AST &amp; Code Telemetry Scope</h2>
+            </div>
+            <p>
+              CareerPath AI features a specialized <strong>Two-Factor Skill Verification Moat</strong>. When students link their GitHub profile or click &ldquo;Auto-Detect Skills&rdquo;, our backend inspects code repositories to substantiate claimed proficiencies.
+            </p>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="border border-success rounded-3 p-3 bg-success bg-opacity-10 h-100">
+                  <div class="fw-bold text-success mb-2"><i class="bi bi-check-circle-fill me-1"></i> What We DO Scan:</div>
+                  <ul class="small mb-0 ps-3 text-secondary">
+                    <li>Public repository metadata (names, primary language tags, stars, forks).</li>
+                    <li>Public commit timestamps and commit frequency to verify continuous learning.</li>
+                    <li>Abstract Syntax Tree (AST) structure of public code to verify framework usage (e.g. React components, Express routes, SQL queries).</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border border-danger rounded-3 p-3 bg-danger bg-opacity-10 h-100">
+                  <div class="fw-bold text-danger mb-2"><i class="bi bi-x-octagon-fill me-1"></i> Strict Negative Covenant:</div>
+                  <ul class="small mb-0 ps-3 text-secondary">
+                    <li><strong>NO access to private repositories</strong> or organization memberships.</li>
+                    <li><strong>NO reading or logging of sensitive files</strong> (`.env`, private keys, secrets, credentials).</li>
+                    <li><strong>NO source code cloning</strong> or persistent retention of repository source files on our servers.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <p class="small text-muted mb-0">
+              GitHub authentication uses scoped OAuth tokens or public REST API endpoints with the minimum necessary read-only permissions. You can disconnect your GitHub sync at any time from the Student Dashboard.
+            </p>
+          </section>
+
+          <!-- Section 4: Resume & Document Engine -->
+          <section class="legal-section-card" id="sec-resume">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 4</span>
+              <h2 class="h4 fw-bold text-ink mb-0">Single Resume &amp; Document Storage</h2>
+            </div>
+            <p>
+              CareerPath AI maintains an architectural principle of <strong>One Dedicated Resume per Student Account</strong> to prevent resume duplication, stale document versions, and cloud storage leakage.
+            </p>
+            <ul>
+              <li><strong>Binary Magic-Byte Inspection:</strong> Uploaded files are inspected in-memory for signature bytes (`%PDF-`, `PK\x03\x04` for DOCX) to reject disguised binary executables or malicious payloads.</li>
+              <li><strong>Cloud Storage &amp; Asset Destruction:</strong> Resume files are stored in an encrypted Cloudinary container. When you upload a replacement resume, our server issues a transactional destruction call (`cloudinary.uploader.destroy`), permanently wiping the previous document from the cloud.</li>
+              <li><strong>Strict Non-Sale Covenant:</strong> Your resume, contact details, and academic transcripts are <strong>never sold, leased, or monetized</strong> with data brokers, marketing agencies, or unauthenticated aggregators.</li>
+            </ul>
+          </section>
+
+          <!-- Section 5: BYOK Policy -->
+          <section class="legal-section-card" id="sec-byok">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 5</span>
+              <h2 class="h4 fw-bold text-ink mb-0">BYOK (Bring Your Own Key) Isolation Guarantee</h2>
+            </div>
+            <p>
+              For advanced users who prefer to use their personal API keys (such as custom Groq, OpenAI, or Google Gemini credentials) in the AI Career Mentor Drawer or Mock Interview Chamber:
+            </p>
+            <div class="alert alert-info border-info d-flex align-items-start gap-3">
+              <i class="bi bi-key-fill text-primary fs-3 mt-1 flex-shrink-0"></i>
+              <div>
+                <h3 class="h6 fw-bold text-ink mb-1">Client-Side Isolation Guarantee</h3>
+                <p class="small text-secondary mb-0">
+                  User-supplied API keys are stored <strong>strictly within your local browser storage (`window.localStorage`)</strong>. They are <strong>NEVER transmitted to, received by, stored in, or logged on CareerPath AI backend servers</strong>. When in BYOK mode, requests dispatch directly from your client browser to the respective LLM provider endpoint.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 6: AI Processing & Zero Training -->
+          <section class="legal-section-card" id="sec-ai">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 6</span>
+              <h2 class="h4 fw-bold text-ink mb-0">AI Data Processing &amp; Zero Model Training</h2>
+            </div>
+            <p>
+              CareerPath AI harnesses enterprise artificial intelligence to deliver sub-300ms skill evaluations and realistic voice mock interviews. We uphold strict AI ethics and data boundaries:
+            </p>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 bg-light h-100">
+                  <div class="fw-bold text-ink mb-1"><i class="bi bi-cpu text-primary me-1"></i> AI Providers in Use:</div>
+                  <p class="small text-muted mb-0">
+                    We utilize the <strong>Groq Cloud API</strong> (running Meta Llama 3.3 70B Versatile on high-speed LPUs) and <strong>Google Gemini API</strong> (Gemini 2.5 Flash as multi-cloud failover) for ephemeral inference.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 bg-light h-100">
+                  <div class="fw-bold text-ink mb-1"><i class="bi bi-slash-circle text-danger me-1"></i> Zero Model Training:</div>
+                  <p class="small text-muted mb-0">
+                    Under enterprise API terms, your prompts, interview speech transcripts, and skill inputs are <strong>never used to train, retrain, or improve</strong> third-party AI models.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <p class="small text-secondary mb-0">
+              Furthermore, career matching and score calculations are <strong>100% deterministic</strong>. We do not use LLMs to guess career matches; all scoring is computed via the transparent, mathematical 60/25/15 formula.
+            </p>
+          </section>
+
+          <!-- Section 7: Recruiter Radar Sharing -->
+          <section class="legal-section-card" id="sec-recruiter">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 7</span>
+              <h2 class="h4 fw-bold text-ink mb-0">Recruiter Talent Radar &amp; Candidate Consent</h2>
+            </div>
+            <p>
+              The <strong>Recruiter Talent Radar</strong> is an enterprise feature allowing corporate employers to discover pre-assessed, proof-of-work engineering candidates:
+            </p>
+            <ul>
+              <li><strong>Explicit Consent Required:</strong> Your profile and verified skill badges are visible to recruiters <strong>only</strong> if you have opted in via your Dashboard posture selector or submitted a 1-click application to an active job opening.</li>
+              <li><strong>Search Posture Controls:</strong> You can modify your visibility at any time between:
+                <ul>
+                  <li><code>actively_seeking</code>: Full profile and resume visible to verified recruiters.</li>
+                  <li><code>open_to_learning</code>: Anonymized skills visible; contact details withheld until you approve outreach.</li>
+                  <li><code>interviewing</code>: Highlighted as in active discussion with recruiters.</li>
+                </ul>
+              </li>
+              <li><strong>Verified Recruiters Only:</strong> Recruiters must pass our 4-tier validation pipeline (corporate domain check, MX record probe, live website validation, and OTP verification) before accessing candidate radars.</li>
+            </ul>
+          </section>
+
+          <!-- Section 8: WhatsApp Protocol -->
+          <section class="legal-section-card" id="sec-whatsapp">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 8</span>
+              <h2 class="h4 fw-bold text-ink mb-0">WhatsApp Automation &amp; Mobile Communications</h2>
+            </div>
+            <p>
+              To ensure mobile accessibility across Indian technical colleges, CareerPath AI integrates official WhatsApp automation:
+            </p>
+            <ul>
+              <li><strong>Service Drivers:</strong> Messages are dispatched via the Meta WhatsApp Cloud API (Graph API v21.0) or authorized gateway runners.</li>
+              <li><strong>Transactional Use Only:</strong> We send only requested authentication OTPs, weekly milestone PDF study notes, and critical inactivity streak alerts. We do not send marketing spam or unsolicited broadcast ads.</li>
+              <li><strong>E.164 Normalization:</strong> Phone numbers are sanitized to standard international format (e.g. `+919876543210`) and stored with cryptographic hash indexing.</li>
+            </ul>
+          </section>
+
+          <!-- Section 9: User Rights & Erasure -->
+          <section class="legal-section-card" id="sec-rights">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 9</span>
+              <h2 class="h4 fw-bold text-ink mb-0">User Rights &amp; Data Erasure (DPDP Act 2023)</h2>
+            </div>
+            <p>
+              Under Chapter III of the Digital Personal Data Protection Act 2023, you possess explicit rights regarding your personal data:
+            </p>
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <div class="fw-bold text-ink small mb-1"><i class="bi bi-file-earmark-arrow-down text-primary me-1"></i> Right to Access:</div>
+                  <div class="small text-muted">Request a complete summary of all personal data, skill matrices, and assessment records held by CareerPath AI.</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <div class="fw-bold text-ink small mb-1"><i class="bi bi-pencil-square text-warning me-1"></i> Right to Correction:</div>
+                  <div class="small text-muted">Update inaccurate academic details, refresh GitHub synchronization, or amend contact phone numbers.</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <div class="fw-bold text-ink small mb-1"><i class="bi bi-trash3-fill text-danger me-1"></i> Right to Erasure:</div>
+                  <div class="small text-muted">Trigger a complete cascade purge of your account, deleting database records, cloud resumes, and assessment logs.</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <div class="fw-bold text-ink small mb-1"><i class="bi bi-person-x text-secondary me-1"></i> Right of Grievance Redressal:</div>
+                  <div class="small text-muted">File a formal complaint with our designated Grievance Officer if any privacy request is unfulfilled.</div>
+                </div>
+              </div>
+            </div>
+            <p class="small text-muted mb-0">
+              To exercise your right to data erasure or export, navigate to Account Settings in the Dashboard or email the Grievance Desk at `parthpatil1234p@gmail.com`. Requests are fulfilled within 7 business days.
+            </p>
+          </section>
+
+          <!-- Section 10: Retention & Security -->
+          <section class="legal-section-card" id="sec-retention">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge badge-navy font-mono">Section 10</span>
+              <h2 class="h4 fw-bold text-ink mb-0">Data Retention &amp; Storage Boundaries</h2>
+            </div>
+            <p>
+              Your data is stored in secure, SOC 2 compliant cloud facilities provided by <strong>Supabase PostgreSQL</strong> (hosted on AWS Mumbai / Frankfurt with SSL/TLS encryption enforced) and <strong>Render Cloud</strong>.
+            </p>
+            <ul>
+              <li><strong>Active Accounts:</strong> Maintained for the duration of your academic and job search lifecycle.</li>
+              <li><strong>Inactive Account Policy:</strong> Accounts inactive for $>365$ consecutive days receive automated streak notices before being scheduled for anonymization.</li>
+              <li><strong>Skill Evidence Expiry (180-Day Rule):</strong> To prevent skill staleness, verified badges must be refreshed through quarterly milestone check-ins.</li>
+            </ul>
+          </section>
+
+          <!-- Section 11: Grievance Redressal Officer -->
+          <section class="legal-section-card p-0 overflow-hidden border-0 shadow-md" id="sec-grievance">
+            <div class="grievance-card">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-warning text-dark font-mono"><i class="bi bi-person-badge-fill me-1"></i> STATUTORY DESIGNATION</span>
+                <span class="badge bg-success bg-opacity-25 text-white font-mono">Rule 3(2) IT Rules 2021</span>
+              </div>
+              <h3 class="h3 fw-bold text-white mb-2">Grievance Redressal Officer</h3>
+              <p class="text-white-50 small mb-4">
+                In compliance with the Information Technology Act 2000, IT Rules 2021, and the Digital Personal Data Protection Act 2023, the details of our designated Grievance Redressal Officer are published below:
+              </p>
+
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <div class="text-white-50 small">Officer Name:</div>
+                  <div class="fw-bold text-white">Parth Patil</div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-white-50 small">Designation:</div>
+                  <div class="fw-bold text-white">Chief Technology Officer &amp; Grievance Officer</div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-white-50 small">Academic Institution:</div>
+                  <div class="fw-bold text-white">G.H. Raisoni College of Engineering and Management (GHRCEM)</div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-white-50 small">Physical Address:</div>
+                  <div class="fw-bold text-white">Gat No. 57/1, Shirsoli Road, Mohadi, Jalgaon, Maharashtra 425002, India</div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-white-50 small">Official Grievance Email:</div>
+                  <div><a href="mailto:parthpatil1234p@gmail.com" class="text-warning text-decoration-none fw-bold font-mono">parthpatil1234p@gmail.com</a></div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="text-white-50 small">Alternate Domain Inquiries:</div>
+                  <div><a href="mailto:parthpatil@careerpath.is-local.org" class="text-warning text-decoration-none fw-bold font-mono">parthpatil@careerpath.is-local.org</a></div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 small text-white-50">
+                <i class="bi bi-clock-history me-1 text-warning"></i> <strong>Statutory Redressal SLA:</strong> Grievance communications are acknowledged within <strong>24 hours</strong> of receipt and resolved within <strong>15 calendar days</strong> as mandated by Indian law.
+              </div>
+            </div>
+          </section>
+
+          <!-- Bottom Document Switcher -->
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-3">
+            <a href="index.html" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i> Back to Homepage
+            </a>
+            <div class="d-flex gap-2">
+              <a href="terms.html" class="btn btn-outline-primary btn-sm">
+                Next: Terms of Service <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+              <a href="security.html" class="btn cp-btn-primary btn-sm">
+                Security Architecture <i class="bi bi-shield-lock ms-1"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Standard Footer -->
+    <footer class="cp-footer atlas-footer">
+      <div class="container">
+        <div class="row g-4 justify-content-between">
+          <div class="col-lg-4">
+            <div class="footer-brand">
+              <div class="brand-compass p-1">
+                <img src="assets/logo.svg" alt="CareerPath AI" class="brand-logo-img" width="38" height="38" />
+              </div>
+              <span class="brand-name">CareerPath <span class="brand-accent">AI</span></span>
+            </div>
+            <p class="small text-muted mb-2">
+              The world's 1st autonomous career GPS and two-factor skill-verified talent operating system. Originating from G.H. Raisoni College of Engineering and Management (GHRCEM), Jalgaon.
+            </p>
+            <div class="d-flex flex-wrap gap-1 mt-2">
+              <span class="badge bg-white border border-secondary border-opacity-25 text-secondary small">CareerPath AI Technologies Inc.</span>
+              <span class="badge bg-white border border-secondary border-opacity-25 text-secondary small">DPDP Act 2023 Aligned</span>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3 col-lg-2 offset-lg-1">
+            <div class="footer-heading">Platform</div>
+            <ul class="footer-links">
+              <li><a href="index.html#how-it-works">Career Universe</a></li>
+              <li><a href="assessment.html">Skill Assessment</a></li>
+              <li><a href="roadmap.html">Proctored Roadmaps</a></li>
+              <li><a href="resume-builder.html">AI Resume Builder</a></li>
+              <li><a href="verify.html">SHA-256 Ledger</a></li>
+            </ul>
+          </div>
+
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="footer-heading">Solutions</div>
+            <ul class="footer-links">
+              <li><a href="index.html#solutions">For Students (Free)</a></li>
+              <li><a href="recruiter-dashboard.html">For Recruiters</a></li>
+              <li><a href="jobs.html">Verified Job Board</a></li>
+              <li><a href="index.html#pricing">Pricing &amp; Plans</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="footer-heading">Trust &amp; Governance</div>
+            <ul class="footer-links">
+              <li><a href="verify.html"><i class="bi bi-shield-check text-success me-1"></i>Public Registry</a></li>
+              <li><a href="privacy.html" class="fw-bold text-primary"><i class="bi bi-file-earmark-lock me-1"></i>Privacy Policy</a></li>
+              <li><a href="terms.html"><i class="bi bi-file-earmark-text me-1"></i>Terms of Service</a></li>
+              <li><a href="security.html"><i class="bi bi-shield-lock me-1"></i>Security Architecture</a></li>
+              <li><a href="mailto:parthpatil1234p@gmail.com"><i class="bi bi-envelope me-1"></i>Contact &amp; Grievance</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 mt-4 pt-3 border-top border-line">
+          <div>
+            <p class="mb-1 small text-muted">
+              &copy; 2026 CareerPath AI Technologies Inc. All rights reserved.
+            </p>
+            <p class="mb-0 small text-muted" style="font-size: 0.78rem;">
+              <span class="badge bg-success-subtle text-success me-1"><i class="bi bi-gift-fill me-1"></i>100% Free For Students</span>
+              Originated at GHRCEM, Jalgaon, Maharashtra, India.
+            </p>
+          </div>
+          <p class="mb-0 small text-muted text-md-end">
+            Autonomous Career GPS &middot; Verified Talent Operating System
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Authentication & Smart Logo State -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js?v=3.0"></script>
+  </body>
+</html>
