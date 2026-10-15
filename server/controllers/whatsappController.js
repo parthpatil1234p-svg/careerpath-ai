@@ -1,5 +1,5 @@
 /**
- * controllers/whatsappController.js — Unified WhatsApp Automation Controller
+ * controllers/whatsappController.js  -  Unified WhatsApp Automation Controller
  * 
  * Capabilities:
  * 1. Meta & OpenWA Webhook Receiver (24x7 Context-Aware AI Career Mentor)
@@ -16,11 +16,13 @@ const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
 const { getGroqMentorReply } = require('../services/groqService');
 const { getGeminiMentorReply } = require('../services/geminiService');
-const { generateNeuralVoiceNote } = require('../services/ttsService');
 
 // In-Memory Student Context Cache (15 min TTL) to eliminate repetitive DB queries
 const userContextCache = new Map();
 const USER_CACHE_TTL_MS = 15 * 60 * 1000;
+
+// In-Memory Support Tickets Registry for instant tracking & Grievance SLA
+const supportTicketsCache = new Map();
 
 /**
  * GET /api/whatsapp/webhook
@@ -64,7 +66,7 @@ const handleIncomingWebhook = async (req, res) => {
         try {
           await whatsappService.sendTextMessage(
             formattedCaller,
-            `📞 *CareerPath AI — Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://careerpath.is-local.org\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
+            `📞 *CareerPath AI  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://careerpath.is-local.org\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
           );
         } catch (callReplyErr) {
           console.warn('[WhatsApp Webhook] Failed to dispatch call auto-response:', callReplyErr.message);
@@ -243,6 +245,236 @@ const handleIncomingWebhook = async (req, res) => {
       });
     }
 
+    // ── VOICE FEATURE REMOVAL: Graceful Text Notice for Audio/Voice Messages ──
+    if (isVoiceInput) {
+      console.log(`[WhatsApp Incoming] Audio message received from ${senderPhone}. Dispatching text support notice.`);
+      const voiceNotice = 
+`🎙️ *Audio Message Received*
+
+Namaste ${userContext.name}! 👋
+Yeh automated WhatsApp service voice notes ya audio messages process nahi karti.
+
+Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
+• Type *SUPPORT* ➔ Grievance Desk & Ticket Reference
+• Type *ROADMAP* ➔ Current Week ${userContext.activeWeek} Milestones
+• Type *NOTES* ➔ Download Weekly Study Notes PDF
+
+📞 Official WhatsApp Support: +91 74990 85045 (Chat Only)
+✉️ Official Grievance: parthpatil@careerpath.is-local.org
+🌐 Portal: https://careerpath.is-local.org
+
+🚀 CareerPath AI · Your 24x7 Career GPS`;
+
+      await whatsappService.sendTextMessage(senderPhone, voiceNotice, {
+        context: 'AUDIO_INPUT_NOTICE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    const trimmed = (incomingText || '').trim();
+    const cleanLower = trimmed.toLowerCase();
+
+    // ── SUPPORT SYSTEM ROUTER: Instant Human & Grievance Support Desk ──
+    const isSupportKeyword = /^(support|help|madad|contact|grievance|complaint|issue|problem|human|agent|officer|admin|customercare|customer\s*care|ticket|helpline|desk)\b/i.test(cleanLower) ||
+                             cleanLower.startsWith('/support') ||
+                             cleanLower.startsWith('!support') ||
+                             cleanLower.includes('contact support') ||
+                             cleanLower.includes('help desk') ||
+                             cleanLower.includes('parth patil') ||
+                             cleanLower.includes('support chahiye');
+
+    const isTicketCreation = cleanLower.startsWith('ticket:') || 
+                             cleanLower.startsWith('issue:') || 
+                             cleanLower.startsWith('problem:') || 
+                             cleanLower.startsWith('complaint:') ||
+                             cleanLower === '5';
+
+    // 1. Support Ticket Registration
+    if (isTicketCreation) {
+      const issueDetails = trimmed.replace(/^(ticket|issue|problem|complaint):\s*/i, '').trim();
+      const ticketId = 'CP-TKT-' + Math.floor(100000 + Math.random() * 900000);
+      
+      const ticketRecord = {
+        ticketId,
+        studentName: userContext.name,
+        phone: senderPhone,
+        issue: issueDetails || 'General Support & Grievance Request',
+        targetCareer: userContext.targetCareer,
+        activeWeek: userContext.activeWeek,
+        createdAt: new Date().toISOString(),
+        status: 'OPEN_ESCALATED'
+      };
+
+      supportTicketsCache.set(ticketId, ticketRecord);
+      console.log(`[Support Desk] New Ticket Registered: ${ticketId} for ${senderPhone}: "${issueDetails}"`);
+
+      const ticketReply = 
+`🎫 *CareerPath AI  -  Support Ticket Registered*
+
+• *Ticket ID:* #${ticketId}
+• *Student:* ${userContext.name} (${senderPhone})
+• *Status:* Priority Open · Dispatched to Grievance Desk
+• *Assigned Officer:* Parth Patil (Technical & Grievance Lead)
+• *Official WhatsApp:* +91 74990 85045 (Chat Only)
+• *Grievance Email:* parthpatil@careerpath.is-local.org
+• *Statutory SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
+• *Campus Location:* GHRCEM, Jalgaon, Maharashtra, India
+
+${issueDetails ? `📝 *Logged Issue:* "${issueDetails}"\n\n` : ''}Aapka ticket confirm ho gaya hai. Grievance Officer review karke jald hi revert karenge!
+
+🌐 *Web Portal:* https://careerpath.is-local.org
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, ticketReply, {
+        context: 'SUPPORT_TICKET_CONFIRMATION',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // 2. Instant Category Quick Responders (Option 1, 2, 3, 4)
+    if (cleanLower === '1' || cleanLower === 'otp' || cleanLower === 'login') {
+      const otpHelpReply = 
+`🔐 *CareerPath AI  -  Login & Dual-OTP Support*
+
+Namaste ${userContext.name}! Agar aapko OTP ya login me issue aa raha hai:
+
+1. *Dual Verification Check:*
+   • Platform par Gmail aur WhatsApp *dono* par alag 6-digit codes aate hain.
+   • Dono codes enter karna required hai.
+
+2. *WhatsApp OTP Delivery:*
+   • Kripya 10-digit number bina leading 0 ke enter karein.
+   • WhatsApp par code instantly (< 2 seconds) deliver hota hai.
+
+3. *Gmail OTP Delivery:*
+   • Apne Gmail ke *Spam* ya *Promotions* folder check karein.
+   • Agar 60 seconds me na mile, toh "Resend OTP" click karein.
+
+💬 *Still stuck?*
+Bas reply karein: *TICKET: [Aapka issue]* (e.g. *TICKET: OTP nahi mila*)
+Hum priority review shuru kar denge!
+
+📞 Support WhatsApp: +91 74990 85045
+✉️ Email: parthpatil@careerpath.is-local.org`;
+
+      await whatsappService.sendTextMessage(senderPhone, otpHelpReply, {
+        context: 'SUPPORT_OTP_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    if (cleanLower === '2' || cleanLower === 'test' || cleanLower === 'proctor' || cleanLower === 'strike') {
+      const testHelpReply = 
+`⏱️ *CareerPath AI  -  Milestone Test & Anti-Cheat Support*
+
+Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke saath aate hain:
+
+1. *Pass Threshold:* 70% passing score is required to unlock subsequent weeks.
+2. *Proctoring Rules:*
+   • Fullscreen mode is mandatory.
+   • Strike 1: -2 min penalty.
+   • Strike 2: -3 min penalty.
+   • Strike 3: Test termination & 24-hour lockout.
+3. *Emergency Reset Request:*
+   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@careerpath.is-local.org* par bhejiye with subject "Milestone Test Reset".
+
+💬 *Raise Ticket:* Reply with *TICKET: Milestone reset request*
+📞 WhatsApp: +91 74990 85045`;
+
+      await whatsappService.sendTextMessage(senderPhone, testHelpReply, {
+        context: 'SUPPORT_TEST_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    if (cleanLower === '3' || cleanLower === 'certificate' || cleanLower === 'cert') {
+      const certHelpReply = 
+`📜 *CareerPath AI  -  Certificate & Verification Support*
+
+Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
+
+1. *Unlock Criteria:* Complete all weekly milestone roadmaps with passing scores.
+2. *Tamper-Proof Verification:* Every certificate carries an immutable SHA-256 hash.
+3. *Verify Online:* Anyone can verify credentials at:
+   👉 https://careerpath.is-local.org/verify.html
+4. *Corrections:* Name ya degree details update karne ke liye reply karein:
+   *TICKET: Certificate name correction [Aapka name]*
+
+📞 Grievance Desk WhatsApp: +91 74990 85045
+✉️ parthpatil@careerpath.is-local.org`;
+
+      await whatsappService.sendTextMessage(senderPhone, certHelpReply, {
+        context: 'SUPPORT_CERT_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    if (cleanLower === '4' || cleanLower === 'recruiter' || cleanLower === 'hiring') {
+      const recruiterHelpReply = 
+`🏢 *CareerPath AI  -  Corporate Recruiter & Job Radar Support*
+
+Namaste ${userContext.name}!
+Corporate hiring & talent radar support:
+
+1. *Recruiter Verification:* Free webmail (Gmail/Yahoo) is blocked; corporate work email is mandatory.
+2. *4-Tier Anti-Fraud Gate:* DNS MX resolution, HTTP live probe, and OTP verification.
+3. *Direct Talent Radar:* Recruiters search students based on real, verified skill badges.
+4. *Campus / TPO Partnerships:* placement@careerpath.is-local.org
+
+💬 *Support Escalation:*
+Reply *TICKET: Recruiter onboarding assistance*
+📞 WhatsApp: +91 74990 85045`;
+
+      await whatsappService.sendTextMessage(senderPhone, recruiterHelpReply, {
+        context: 'SUPPORT_RECRUITER_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // 3. General Support Protocol Menu
+    if (isSupportKeyword) {
+      const supportMenuReply = 
+`🛠️ *CareerPath AI  -  Official Support & Grievance Desk*
+
+Namaste ${userContext.name}! 👋
+CareerPath AI Support System me aapka swagat hai:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 *OFFICIAL SUPPORT CHANNELS:*
+• *WhatsApp Support:* +91 74990 85045
+  _(Chat Only · 24x7 Active Ticket Logging · No Voice Calls)_
+• *Grievance Email:* parthpatil@careerpath.is-local.org
+• *Grievance Officer:* Parth Patil
+• *Location:* GHRCEM, Jalgaon, Maharashtra, India
+• *Response SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 *REPLY WITH A NUMBER FOR INSTANT HELP:*
+
+*1* ➔ *Login & Dual-OTP Help* (Gmail / WhatsApp verification)
+*2* ➔ *Milestone Test & Anti-Cheat* (Strikes, retakes & lockout)
+*3* ➔ *Certificate & SHA-256 Ledger* (Verification & corrections)
+*4* ➔ *Recruiter Portal & Hiring Radar* (Company verification)
+*5* ➔ *Raise Priority Support Ticket* (Direct escalation to Parth Patil)
+
+💬 _Or simply send a message starting with *TICKET: [your issue]* and we will register your request immediately._
+
+🌐 *Web Portal:* https://careerpath.is-local.org
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, supportMenuReply, {
+        context: 'SUPPORT_MENU',
+        studentName: userContext.name
+      });
+      return;
+    }
+
     // 4. Generate Context-Aware AI Guidance (Groq Llama 3.3 / Qwen with Gemini fallback)
     const promptSystemPrefix = 
 `You are CareerPath AI's official 24x7 WhatsApp Career Mentor.
@@ -256,9 +488,11 @@ Student Context:
 WHATSAPP FORMATTING GUIDELINES:
 - Greet warmly by name in Hinglish or English (e.g., "Namaste ${userContext.name}! 👋").
 - Use WhatsApp markdown syntax: *bold* for emphasis, • for bullet points.
-- Keep response under 150 words — concise, actionable, and encouraging.
+- Keep response under 150 words  -  concise, actionable, and encouraging.
 - If asking for next steps, specifically guide them on their Week ${userContext.activeWeek} milestones.
-- Sign off with: "🚀 CareerPath AI · Your 24x7 Career GPS"`;
+- Sign off with:
+"🚀 CareerPath AI · Your 24x7 Career GPS
+💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_"`;
 
     let aiReply = '';
     try {
@@ -285,41 +519,18 @@ Aapka sawal mil gaya hai! CareerPath AI Mentor abhi heavy load handle kar raha h
 Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web portal par access kar sakte hain:
 👉 https://careerpath-ai-bdbt.onrender.com/roadmap.html
 
+💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_
 🚀 CareerPath AI · 24x7 Autonomous Career GPS`;
       }
     }
 
-    // 5 & 6. Concurrent Zero-Latency Dispatch: Text Message + Neural Voice Note in Parallel
-    console.log(`[WhatsApp Mentor] Initiating concurrent text & voice note dispatch to ${senderPhone}...`);
+    // 5. Clean, Fast Text-Only Dispatch (Zero Voice Notes)
+    console.log(`[WhatsApp Mentor] Dispatching text mentorship reply to ${senderPhone}...`);
 
-    const textDispatchPromise = whatsappService.sendTextMessage(senderPhone, aiReply, {
+    await whatsappService.sendTextMessage(senderPhone, aiReply, {
       context: 'AI_CAREER_MENTOR',
       studentName: userContext.name
-    }).catch(err => {
-      console.warn('[WhatsApp Mentor] Text dispatch warning:', err.message);
     });
-
-    const voiceDispatchPromise = (async () => {
-      try {
-        const { base64, url } = await generateNeuralVoiceNote(aiReply, {
-          voice: 'hi-IN-MadhurNeural',
-          rate: '+25%',
-          pitch: '+2Hz',
-          maxLength: 150
-        });
-
-        const audioPayload = base64 || url;
-        if (audioPayload) {
-          await whatsappService.sendVoiceNote(senderPhone, audioPayload);
-          console.log(`[WhatsApp Voice Mail] Lightning-fast neural voice note dispatched to ${senderPhone}`);
-        }
-      } catch (voiceErr) {
-        console.warn('[WhatsApp Voice Mail] Neural voice dispatch warning:', voiceErr.message);
-      }
-    })();
-
-    // Await both dispatches concurrently for minimum roundtrip latency
-    await Promise.all([textDispatchPromise, voiceDispatchPromise]);
 
   } catch (err) {
     console.error('[WhatsApp Controller] Error processing incoming webhook:', err);
@@ -393,7 +604,7 @@ const sendRoadmapPdf = async (req, res, next) => {
     }
 
     const caption = 
-`🗺️ *CareerPath AI — Week ${weekNumber} Study Notes*
+`🗺️ *CareerPath AI  -  Week ${weekNumber} Study Notes*
 Career: *${careerTitle}*
 Student: *${user.name}*
 
@@ -453,5 +664,6 @@ module.exports = {
   verifyWebhook,
   handleIncomingWebhook,
   sendRoadmapPdf,
-  testWhatsAppOtp
+  testWhatsAppOtp,
+  supportTicketsCache
 };

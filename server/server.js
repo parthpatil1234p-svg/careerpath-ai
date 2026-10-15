@@ -75,6 +75,7 @@ const recruiterRoutes = require('./routes/recruiterRoutes');
 const youtubeRoutes = require('./routes/youtubeRoutes');
 const campusRoutes = require('./routes/campusRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
+const supportRoutes = require('./routes/supportRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect Database (100% Pure Supabase PostgreSQL via Prisma) ──
@@ -437,6 +438,9 @@ app.use('/api/campus', campusRoutes);
 
 // WhatsApp Automation Suite: Instant OTP + Weekly PDF Delivery + 24x7 AI Mentor
 app.use('/api/whatsapp', whatsappRoutes);
+
+// Official Support Desk & Grievance Redressal (DPDP Act 2023 & IT Rules 2021)
+app.use('/api/support', supportRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

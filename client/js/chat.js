@@ -1,5 +1,5 @@
 /**
- * chat.js — Student-Portal AI Career Mentor Chatbot Engine
+ * chat.js  -  Student-Portal AI Career Mentor Chatbot Engine
  * Features:
  * - Dynamic Student Context & Academic Profile Integration
  * - Structured Portal Markdown Formatting (Badges, Steps, Pro-Tips, Code Cards)
@@ -64,6 +64,12 @@
       { label: '🛠️ 3 standout full-stack project ideas', prompt: 'Suggest 3 unique full-stack projects with modern tech stacks that will immediately impress tech recruiters.' },
       { label: '🌐 How to deploy projects for free?', prompt: 'What is the best way to deploy full-stack apps (frontend + backend + database) completely free with public live URLs?' },
       { label: '📦 What makes a recruiter-ready GitHub README?', prompt: 'What sections and details must be in a project GitHub README to prove real engineering competence?' }
+    ],
+    support: [
+      { label: '📞 Official Support Desk (+91 74990 85045)', prompt: 'How do I contact official student support on WhatsApp (+91 74990 85045) or raise a ticket?' },
+      { label: '🔐 Login & Dual OTP help', prompt: 'I am facing issues with my login or email and WhatsApp dual OTP verification. How can I resolve it?' },
+      { label: '📜 Certificate verification assistance', prompt: 'How do I verify my milestone certificate or resolve certificate credential issues?' },
+      { label: '🛡️ Grievance Officer details', prompt: 'Who is the official Grievance Redressal Officer under the DPDP Act 2023 and what is the turnaround SLA?' }
     ]
   };
 
@@ -288,6 +294,7 @@
         <button type="button" class="cp-topic-pill" data-topic="resume"><i class="bi bi-file-earmark-person-fill text-success"></i> ATS Resume</button>
         <button type="button" class="cp-topic-pill" data-topic="interviews"><i class="bi bi-mic-fill text-warning"></i> Interviews</button>
         <button type="button" class="cp-topic-pill" data-topic="projects"><i class="bi bi-folder-check text-indigo"></i> Projects</button>
+        <button type="button" class="cp-topic-pill" data-topic="support"><i class="bi bi-headset text-danger"></i> Support</button>
       </div>
 
       <!-- Messages Scroll Area -->
