@@ -48,7 +48,7 @@ Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI cha
 - Working local and production deployments:
   - Frontend: `https://careerpath-ai-jade.vercel.app` (and `http://localhost:5500`)
   - Backend API: `https://careerpath-ai-bdbt.onrender.com` (and `http://localhost:5000`)
-- Demo Evaluator Credentials: `demouser@gmail.com` / `demo123` and recruiter demo access.
+- Demo Evaluator Credentials: 1-Click Sandbox on `/login.html` and recruiter demo access.
 - Test suites: E2E and unit test scripts under `tests/` and root `test_*.js`.
 
 ## Product Principles
