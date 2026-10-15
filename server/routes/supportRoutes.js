@@ -16,11 +16,13 @@ const router = express.Router();
 const {
   createTicket,
   getGrievanceDetails,
-  getTicketStatus
+  getTicketStatus,
+  handleVoiceCallAgent
 } = require('../controllers/supportController');
 
 router.post('/ticket', createTicket);
 router.get('/officer', getGrievanceDetails);
 router.get('/ticket/:ticketId', getTicketStatus);
+router.post('/voice-agent', handleVoiceCallAgent);
 
 module.exports = router;

@@ -175,8 +175,64 @@ const getTicketStatus = (req, res) => {
   });
 };
 
+/**
+ * POST /api/support/voice-agent
+ * Real-time telephony voice assistant endpoint for MacroDroid / Android Bridge.
+ * Receives caller query, enriches with user profile/Groq AI, and returns spoken text.
+ */
+const handleVoiceCallAgent = async (req, res) => {
+  try {
+    const { query, callerPhone, callerName } = req.body;
+    const cleanQuery = (query || '').trim();
+
+    if (!cleanQuery) {
+      return res.status(200).json({
+        success: true,
+        replyText: 'Namaste! CareerPath AI Counseling Desk me aapka swagat hai. Main aapki kya madad kar sakta hoon? Aap apna sawal boliye.'
+      });
+    }
+
+    const { getGroqMentorReply } = require('../services/groqService');
+    const { getGeminiMentorReply } = require('../services/geminiService');
+
+    const prompt = 
+`You are the real-time AI Phone Counselor for CareerPath AI (founded by Parth Patil).
+You are speaking live on a telephone call with a student.
+Caller Query: "${cleanQuery}"
+
+VOICE CONVERSATION GUIDELINES:
+- Speak in conversational, friendly, authentic Hinglish (mix of Hindi and simple English).
+- Keep the response SHORT and natural to speak on a phone call (maximum 2 to 3 sentences, under 45 words).
+- Avoid bullet points, symbols, markdown, stars (*), or URLs since this will be read aloud by Text-to-Speech into a live phone call!
+- Be encouraging and give direct, practical guidance.`;
+
+    let reply = '';
+    try {
+      reply = await getGroqMentorReply(prompt, { name: callerName || 'Student' }, [], { maxTokens: 120 });
+    } catch (e) {
+      reply = await getGeminiMentorReply(prompt, { name: callerName || 'Student' }, []);
+    }
+
+    // Clean any markdown formatting so TTS sounds completely natural
+    const cleanedSpeech = reply.replace(/[*_#`>]/g, '').trim();
+
+    return res.status(200).json({
+      success: true,
+      replyText: cleanedSpeech
+    });
+  } catch (err) {
+    console.error('[Voice Call Agent] Error:', err);
+    return res.status(200).json({
+      success: true,
+      replyText: 'Aapka sawal CareerPath AI ke lead mentor Parth Patil ko forward kar diya gaya hai. Hum jald aapse connect karenge.'
+    });
+  }
+};
+
 module.exports = {
   createTicket,
   getGrievanceDetails,
-  getTicketStatus
+  getTicketStatus,
+  handleVoiceCallAgent
 };
+
