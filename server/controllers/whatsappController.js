@@ -24,6 +24,289 @@ const USER_CACHE_TTL_MS = 15 * 60 * 1000;
 // In-Memory Support Tickets Registry for instant tracking & Grievance SLA
 const supportTicketsCache = new Map();
 
+// Founder & Lead Counselor Contact for Anonymous Two-Way Relay
+const FOUNDER_PHONE_RAW = process.env.FOUNDER_PERSONAL_PHONE || process.env.FOUNDER_PHONE || '+919923092340';
+const FOUNDER_PHONE = whatsappService.formatPhoneNumber(FOUNDER_PHONE_RAW);
+const FOUNDER_PHONE_DIGITS_10 = whatsappService.getPhoneDigits(FOUNDER_PHONE).slice(-10);
+
+/**
+ * Searches the support tickets registry for a given ticket ID, short code, or 'LAST'.
+ */
+function findTicket(queryId) {
+  if (!queryId) return null;
+  const clean = String(queryId).trim().replace(/^#/, '');
+
+  if (clean.toUpperCase() === 'LAST') {
+    const all = Array.from(supportTicketsCache.values());
+    return all.length ? all[all.length - 1] : null;
+  }
+
+  // Exact match
+  if (supportTicketsCache.has(clean)) {
+    return supportTicketsCache.get(clean);
+  }
+
+  // Suffix/partial match (e.g. "374033" matches "CP-COUNSEL-374033" or "CP-TKT-374033")
+  const upper = clean.toUpperCase();
+  for (const [id, record] of supportTicketsCache.entries()) {
+    const idUpper = id.toUpperCase();
+    if (idUpper === upper || idUpper.endsWith(upper) || idUpper.includes(upper)) {
+      return record;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Dispatches an anonymous escalation alert to the Founder's personal WhatsApp.
+ * The student's identity and query are sent to the founder, along with instructions
+ * on how to reply secretly via the official bot without exposing their personal number.
+ */
+async function forwardAlertToFounder({ studentName, studentPhone, ticketId, type, issue, userContext }) {
+  try {
+    const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const shortCode = ticketId.replace(/^CP-[A-Z]+-/, '');
+
+    const alertMessage = 
+`🚨 *CareerPath AI — Student Escalation Alert*
+
+👤 *Student:* ${studentName}
+📞 *Phone:* ${studentPhone}
+🎫 *Docket ID:* #${ticketId} (Code: *#${shortCode}*)
+🏷️ *Type:* ${type || 'SUPPORT'}
+🎯 *Track:* ${userContext?.targetCareer || 'Engineering Track'} (Week ${userContext?.activeWeek || 1})
+💬 *Query:* "${issue}"
+🕒 *Time:* ${timeStr}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👉 *Student ko secretly reply karne ke liye:*
+Is format me WhatsApp par reply karein:
+*REPLY #${shortCode}: [Aapka message]*
+
+_Example:_
+*REPLY #${shortCode}: Hello ${studentName.split(' ')[0]}, maine aapka ticket review kar liya hai. Sham ko call pe connect karte hain.*
+
+👉 *Or quick reply to latest ticket:*
+*REPLY LAST: [Aapka message]*
+
+🔒 *Privacy Guaranteed:* Student ko sirf Bot (+91 7499085045) dikhega. Aapka personal number (+91 9923092340) 100% hidden rahega!`;
+
+    await whatsappService.sendTextMessage(FOUNDER_PHONE, alertMessage, {
+      context: 'FOUNDER_ESCALATION_ALERT',
+      ticketId
+    });
+    console.log(`[Founder Relay] Escalation alert dispatched to Founder (${FOUNDER_PHONE}) for ticket #${ticketId}`);
+  } catch (err) {
+    console.warn('[Founder Relay] Warning dispatching alert to founder:', err.message);
+  }
+}
+
+/**
+ * Processes incoming WhatsApp messages from the Founder's personal phone (+91 9923092340).
+ * Powers two-way anonymous student messaging, ticket triage, and admin controls.
+ */
+async function handleFounderInbound({ senderPhone, incomingText, trimmed, cleanLower, quotedText }) {
+  console.log(`[Founder Relay] Inbound action from Founder (${senderPhone}): "${trimmed}"`);
+
+  // 1. Quoted Message Ticket Detection (Swipe-to-reply in WhatsApp)
+  let quoteTicketMatch = null;
+  if (quotedText) {
+    const m = quotedText.match(/(?:CP-[A-Z]+-[0-9]{6}|#[0-9]{6}|[0-9]{6})/i);
+    if (m) {
+      quoteTicketMatch = m[0].replace(/^#/, '');
+    }
+  }
+
+  // 2. Resolve / Close Ticket Command (RESOLVE #123456 or CLOSE 123456 or RESOLVE LAST)
+  const resolveMatch = trimmed.match(/^(?:resolve|close|done)\b\s*(?:#|no\s*|ticket\s*)?([a-z0-9-]+)?/i);
+  if (resolveMatch) {
+    const targetCode = resolveMatch[1] || 'LAST';
+    const ticket = findTicket(targetCode);
+    if (!ticket) {
+      await whatsappService.sendTextMessage(senderPhone, `❌ Ticket nahi mila: #${targetCode}. Type *TICKETS* to view active queue.`, { context: 'FOUNDER_RESOLVE_NOT_FOUND' });
+      return true;
+    }
+
+    ticket.status = 'RESOLVED';
+    ticket.resolvedAt = new Date().toISOString();
+
+    // Friendly notice to student
+    if (ticket.phone) {
+      const studentResolvedMsg = 
+`✨ *CareerPath AI  -  Ticket Resolved*
+
+Namaste ${ticket.studentName}! 👋
+Aapka support request (#${ticket.ticketId}) successfully resolve ho gaya hai.
+
+Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas WhatsApp par *ROADMAP*, *NOTES*, ya *SUPPORT* type karein.
+
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+      await whatsappService.sendTextMessage(ticket.phone, studentResolvedMsg, { context: 'TICKET_RESOLVED_STUDENT_NOTICE' });
+    }
+
+    await whatsappService.sendTextMessage(senderPhone, `✅ Ticket #${ticket.ticketId} (${ticket.studentName}) ko *RESOLVED* mark kar diya gaya hai aur student ko confirmation bhej diya gaya hai.`, { context: 'FOUNDER_RESOLVE_CONFIRMED' });
+    return true;
+  }
+
+  // 3. Explicit Reply Command (REPLY #123456: text OR R 123456: text OR swipe-reply text)
+  const replyMatch = trimmed.match(/^(?:reply|r)\b\s*(?:#|no\s*|ticket\s*)?([a-z0-9-]+)[:\s]+([\s\S]+)/i);
+
+  if (replyMatch || (quoteTicketMatch && !trimmed.startsWith('/'))) {
+    let targetCode = replyMatch ? replyMatch[1] : quoteTicketMatch;
+    let replyContent = replyMatch ? replyMatch[2].trim() : trimmed;
+
+    // Remove any leading colon/hyphen
+    replyContent = replyContent.replace(/^[:\-\s]+/, '').trim();
+
+    const ticket = findTicket(targetCode);
+    if (!ticket) {
+      const notFoundMsg = 
+`❌ *Ticket Nahi Mila:* #${targetCode}
+
+Kripya valid docket ID use karein ya *TICKETS* bhejkar active queue check karein.
+Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
+      await whatsappService.sendTextMessage(senderPhone, notFoundMsg, { context: 'FOUNDER_TICKET_NOT_FOUND' });
+      return true;
+    }
+
+    if (!ticket.phone) {
+      await whatsappService.sendTextMessage(senderPhone, `❌ Error: Ticket #${ticket.ticketId} ke sath koi phone number linked nahi hai.`, { context: 'FOUNDER_TICKET_NO_PHONE' });
+      return true;
+    }
+
+    // Dispatch message to student FROM official bot (+91 7499085045)
+    const studentDispatch = 
+`🧑‍🏫 *CareerPath AI  -  Lead Counselor (Parth Patil)*
+
+"${replyContent}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎫 *Docket Ref:* #${ticket.ticketId}
+💬 _Aapka koi aur sawaal ho toh reply karein: *QUERY: [aapka doubt]*_
+
+🌐 *Web Portal:* https://careerpath.is-local.org
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+    await whatsappService.sendTextMessage(ticket.phone, studentDispatch, {
+      context: 'COUNSELOR_DIRECT_REPLY',
+      ticketId: ticket.ticketId,
+      studentName: ticket.studentName
+    });
+
+    // Update ticket status & log
+    ticket.status = 'COUNSELOR_REPLIED';
+    ticket.lastReply = replyContent;
+    ticket.lastReplyAt = new Date().toISOString();
+
+    // Confirm to founder (100% reassurance of privacy)
+    const confirmMsg = 
+`✅ *Reply Delivered to Student!*
+
+👤 *Student:* ${ticket.studentName}
+📞 *Student Phone:* ${ticket.phone}
+🎫 *Ticket:* #${ticket.ticketId}
+📤 *Delivered Message:*
+"${replyContent}"
+
+🔒 *Privacy Protected:* Aapka personal number (+91 9923092340) reveal nahi hua. Message official bot (+91 7499085045) ke through bheja gaya hai.`;
+
+    await whatsappService.sendTextMessage(senderPhone, confirmMsg, { context: 'FOUNDER_REPLY_CONFIRMED' });
+    return true;
+  }
+
+  // 4. Direct Message to Any Phone (MSG 9876543210: message)
+  const dmMatch = trimmed.match(/^(?:msg|send|dm)\s*(\+?[0-9]{10,13})[:\s]+([\s\S]+)/i);
+  if (dmMatch) {
+    const targetRawPhone = dmMatch[1];
+    const targetMsg = dmMatch[2].trim();
+    const formattedTarget = whatsappService.formatPhoneNumber(targetRawPhone);
+
+    const studentDispatch = 
+`🧑‍🏫 *CareerPath AI  -  Official Mentor Message*
+
+"${targetMsg}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👨‍💼 *From:* Parth Patil (Founder & Lead Counselor)
+🌐 *Web Portal:* https://careerpath.is-local.org
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+    await whatsappService.sendTextMessage(formattedTarget, studentDispatch, {
+      context: 'FOUNDER_DIRECT_OUTREACH'
+    });
+
+    await whatsappService.sendTextMessage(senderPhone, `✅ Message dispatched to ${formattedTarget} from official bot (+91 7499085045).\n\n📤 Text: "${targetMsg}"`, { context: 'FOUNDER_DM_CONFIRMED' });
+    return true;
+  }
+
+  // 5. Active Queue & Pending Tickets (TICKETS / PENDING / QUEUE / STATUS / LIST)
+  if (/^(tickets|pending|queue|status|list|open)\b/i.test(cleanLower)) {
+    const allTickets = Array.from(supportTicketsCache.values());
+    const pendingTickets = allTickets.filter(t => t.status !== 'RESOLVED');
+
+    if (pendingTickets.length === 0) {
+      const emptyMsg = 
+`📋 *CareerPath AI  -  Founder Admin Queue*
+
+Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. 🎉
+
+• Jab bhi koi student counselor call ya ticket raise karega, bot aapko instantly yahan notify karega.
+• Kisi student ko message bhejne ke liye: *MSG [phone]: [message]*
+• AI mentor testing ke liye: *TEST: [sawal]*`;
+      await whatsappService.sendTextMessage(senderPhone, emptyMsg, { context: 'FOUNDER_EMPTY_QUEUE' });
+      return true;
+    }
+
+    const listStr = pendingTickets.slice(-6).map(t => {
+      const shortCode = t.ticketId.replace(/^CP-[A-Z]+-/, '');
+      const timeStr = t.createdAt ? new Date(t.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
+      return `• *#${shortCode}* [${t.type || 'SUPPORT'}]\n  👤 ${t.studentName} (${t.phone})\n  💬 "${t.issue}"\n  🕒 ${timeStr} · Status: *${t.status}*`;
+    }).join('\n\n');
+
+    const queueMsg = 
+`📋 *CareerPath AI  -  Founder Admin Queue (${pendingTickets.length} Active)*
+
+${listStr}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👉 *Student ko reply karne ke liye:*
+*REPLY #[code]: [Aapka message]*
+_Example: REPLY #${pendingTickets[pendingTickets.length - 1].ticketId.replace(/^CP-[A-Z]+-/, '')}: Hello! Main check kar raha hoon._
+
+👉 *Quick reply to latest:*
+*REPLY LAST: [Aapka message]*`;
+
+    await whatsappService.sendTextMessage(senderPhone, queueMsg, { context: 'FOUNDER_TICKET_QUEUE' });
+    return true;
+  }
+
+  // 6. Founder Emulation Mode (TEST: ... or STUDENT: ...)
+  if (cleanLower.startsWith('test:') || cleanLower.startsWith('student:')) {
+    return false; // Proceed to student bot flow
+  }
+
+  // 7. Founder Admin Help & Command Guide
+  const helpMsg = 
+`👑 *CareerPath AI  -  Founder Admin & Counselor Console*
+
+Namaste Parth Patil! 🚀
+Aapka number (*+91 9923092340*) as Founder & Chief Counselor verified hai.
+
+📋 *Admin Commands Reference:*
+• *TICKETS* ➔ Pending student escalations ki list dekhein
+• *REPLY #[code]: [message]* ➔ Student ko secretly reply karein (Aapka number reveal nahi hoga)
+• *REPLY LAST: [message]* ➔ Sabse latest ticket wale student ko reply karein
+• *RESOLVE #[code]* ➔ Ticket resolve mark karein aur student ko notice bhejein
+• *MSG [phone]: [message]* ➔ Kisi bhi student ko official bot se custom message bhejein
+• *TEST: [sawal]* ➔ Normal student AI mentor responses test karein
+
+🔒 *Privacy:* Student ko aapka number kabhi nahi dikhega. Sabhi messages CareerPath AI ke official Bot (*+91 7499085045*) se dispatch hote hain.`;
+
+  await whatsappService.sendTextMessage(senderPhone, helpMsg, { context: 'FOUNDER_ADMIN_MENU' });
+  return true;
+}
+
 /**
  * GET /api/whatsapp/webhook
  * Meta WhatsApp Cloud API verification handshake.
@@ -190,6 +473,31 @@ const handleIncomingWebhook = async (req, res) => {
 
     console.log(`[WhatsApp Incoming] From: ${senderPhone} | Voice Note: ${isVoiceInput} | Query: "${incomingText}"`);
 
+    // ── FOUNDER & LEAD COUNSELOR ANONYMOUS RELAY ENGINE ──
+    const isFounder = last10Digits === FOUNDER_PHONE_DIGITS_10;
+    if (isFounder) {
+      let quotedText = '';
+      if (body.data?.quotedMsg) {
+        quotedText = body.data.quotedMsg.body || body.data.quotedMsg.text || body.data.quotedMsg.caption || '';
+      } else if (body.quotedMsg) {
+        quotedText = body.quotedMsg.body || body.quotedMsg.text || body.quotedMsg.caption || '';
+      }
+
+      const handled = await handleFounderInbound({
+        senderPhone,
+        incomingText,
+        trimmed: (incomingText || '').trim(),
+        cleanLower: (incomingText || '').trim().toLowerCase(),
+        quotedText
+      });
+
+      if (handled !== false) {
+        return;
+      }
+      // If founder typed "TEST: ...", remove prefix and proceed to student AI mentor flow
+      incomingText = incomingText.replace(/^(test|student):\s*/i, '');
+    }
+
     // 2. Locate student in database (with in-memory cache to eliminate repetitive DB latency)
     let userContext = null;
     const cachedContext = userContextCache.get(senderPhone);
@@ -308,6 +616,16 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 
       supportTicketsCache.set(ticketId, ticketRecord);
       console.log(`[Support Desk] New Ticket Registered: ${ticketId} for ${senderPhone}: "${issueDetails}"`);
+
+      // Alert Founder secretly on personal WhatsApp
+      await forwardAlertToFounder({
+        studentName: userContext.name,
+        studentPhone: senderPhone,
+        ticketId,
+        type: 'PRIORITY_SUPPORT_TICKET',
+        issue: issueDetails || 'General Support & Grievance Request',
+        userContext
+      });
 
       const ticketReply = 
 `🎫 *CareerPath AI  -  Support Ticket Registered*
@@ -439,13 +757,16 @@ Reply *TICKET: Recruiter onboarding assistance*
 
     // 3. Human Career Counselor & 1-on-1 Callback Desk
     const isCounselorKeyword = cleanLower === '6' ||
-                               /^(counselor|counsellor|counseling|career\s*counselor|human\s*counselor|academic\s*counselor|callback|call\s*me|call\s*back|phone\s*support|talk\s*to\s*human|live\s*agent|expert|mentor\s*call)\b/i.test(cleanLower) ||
+                               /^(counselor|counsellor|counseling|career\s*counselor|human\s*counselor|academic\s*counselor|callback|call\s*me|call\s*back|phone\s*support|talk\s*to\s*human|live\s*agent|expert|mentor\s*call|founder)\b/i.test(cleanLower) ||
                                cleanLower.includes('talk to human') ||
                                cleanLower.includes('human counselor') ||
                                cleanLower.includes('human support') ||
                                cleanLower.includes('call request') ||
                                cleanLower.includes('counselor chahiye') ||
-                               cleanLower.includes('counselor se baat');
+                               cleanLower.includes('counselor se baat') ||
+                               cleanLower.includes('founder se baat') ||
+                               cleanLower.includes('parth se baat') ||
+                               cleanLower.includes('parth patil');
 
     if (isCounselorKeyword) {
       const counselTicketId = 'CP-COUNSEL-' + Math.floor(100000 + Math.random() * 900000);
@@ -464,6 +785,16 @@ Reply *TICKET: Recruiter onboarding assistance*
 
       supportTicketsCache.set(counselTicketId, counselRecord);
       console.log(`[Support Desk] Human Counselor Request Logged: #${counselTicketId} for ${senderPhone} (${userContext.name})`);
+
+      // Alert Founder secretly on personal WhatsApp
+      await forwardAlertToFounder({
+        studentName: userContext.name,
+        studentPhone: senderPhone,
+        ticketId: counselTicketId,
+        type: 'HUMAN_COUNSELOR_CALLBACK',
+        issue: '1-on-1 Human Career Counseling & Callback Request',
+        userContext
+      });
 
       const counselReply = 
 `🧑‍🏫 *CareerPath AI  -  Human Career Counselor Desk*
@@ -517,6 +848,16 @@ parthpatil@careerpath.is-local.org
 
       supportTicketsCache.set(queryTicketId, queryRecord);
       console.log(`[Support Desk] Student Query Logged: #${queryTicketId} for ${senderPhone}: "${queryContent}"`);
+
+      // Alert Founder secretly on personal WhatsApp
+      await forwardAlertToFounder({
+        studentName: userContext.name,
+        studentPhone: senderPhone,
+        ticketId: queryTicketId,
+        type: 'STUDENT_COUNSELOR_QUERY',
+        issue: queryContent || 'Student Counseling Doubt',
+        userContext
+      });
 
       const queryReply = 
 `📝 *CareerPath AI  -  Counselor Query Docketed*
@@ -829,5 +1170,9 @@ module.exports = {
   handleIncomingWebhook,
   sendRoadmapPdf,
   testWhatsAppOtp,
-  supportTicketsCache
+  supportTicketsCache,
+  findTicket,
+  forwardAlertToFounder,
+  handleFounderInbound,
+  FOUNDER_PHONE
 };
