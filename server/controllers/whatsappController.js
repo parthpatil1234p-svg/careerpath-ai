@@ -437,7 +437,166 @@ Reply *TICKET: Recruiter onboarding assistance*
       return;
     }
 
-    // 3. General Support Protocol Menu
+    // 3. Human Career Counselor & 1-on-1 Callback Desk
+    const isCounselorKeyword = cleanLower === '6' ||
+                               /^(counselor|counsellor|counseling|career\s*counselor|human\s*counselor|academic\s*counselor|callback|call\s*me|call\s*back|phone\s*support|talk\s*to\s*human|live\s*agent|expert|mentor\s*call)\b/i.test(cleanLower) ||
+                               cleanLower.includes('talk to human') ||
+                               cleanLower.includes('human counselor') ||
+                               cleanLower.includes('human support') ||
+                               cleanLower.includes('call request') ||
+                               cleanLower.includes('counselor chahiye') ||
+                               cleanLower.includes('counselor se baat');
+
+    if (isCounselorKeyword) {
+      const counselTicketId = 'CP-COUNSEL-' + Math.floor(100000 + Math.random() * 900000);
+      const counselRecord = {
+        ticketId: counselTicketId,
+        studentName: userContext.name,
+        phone: senderPhone,
+        type: 'HUMAN_COUNSELOR_CALLBACK',
+        issue: '1-on-1 Human Career Counseling & Callback Request',
+        targetCareer: userContext.targetCareer,
+        activeWeek: userContext.activeWeek,
+        skills: userContext.skills,
+        createdAt: new Date().toISOString(),
+        status: 'PENDING_COUNSELOR_CALLBACK'
+      };
+
+      supportTicketsCache.set(counselTicketId, counselRecord);
+      console.log(`[Support Desk] Human Counselor Request Logged: #${counselTicketId} for ${senderPhone} (${userContext.name})`);
+
+      const counselReply = 
+`🧑‍🏫 *CareerPath AI  -  Human Career Counselor Desk*
+
+Namaste ${userContext.name}! 👋
+Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎫 *Counseling Docket:* #${counselTicketId}
+👤 *Student:* ${userContext.name} (${senderPhone})
+🎯 *Target Track:* ${userContext.targetCareer} (Roadmap Week ${userContext.activeWeek})
+👨‍💼 *Lead Counselor:* Parth Patil & GHRCEM Senior Mentors
+🕒 *Callback Window:* Within 2 to 4 business hours (10 AM – 7 PM IST)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 *What happens next?*
+1. Hamare senior academic advisor aapke WhatsApp number par directly connect karenge.
+2. Agar aapko koi specific question, portfolio link, ya resume review karwana hai, toh bas reply karein:
+   👉 *QUERY: [Aapka doubt ya portfolio link]*
+
+✉️ *Direct Counselor Email:*
+parthpatil@careerpath.is-local.org
+
+🌐 *Web Portal:* https://careerpath.is-local.org
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, counselReply, {
+        context: 'COUNSELOR_REQUEST_CONFIRMATION',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // 4. Student Counselor Query Logger (QUERY: ... / DOUBT: ...)
+    const isQueryLogging = cleanLower.startsWith('query:') || cleanLower.startsWith('doubt:') || cleanLower.startsWith('sawal:');
+    if (isQueryLogging) {
+      const queryContent = trimmed.replace(/^(query|doubt|sawal):\s*/i, '').trim();
+      const queryTicketId = 'CP-QRY-' + Math.floor(100000 + Math.random() * 900000);
+
+      const queryRecord = {
+        ticketId: queryTicketId,
+        studentName: userContext.name,
+        phone: senderPhone,
+        type: 'STUDENT_COUNSELOR_QUERY',
+        issue: queryContent || 'Student Counseling Doubt',
+        targetCareer: userContext.targetCareer,
+        activeWeek: userContext.activeWeek,
+        createdAt: new Date().toISOString(),
+        status: 'LOGGED_FOR_COUNSELOR_REVIEW'
+      };
+
+      supportTicketsCache.set(queryTicketId, queryRecord);
+      console.log(`[Support Desk] Student Query Logged: #${queryTicketId} for ${senderPhone}: "${queryContent}"`);
+
+      const queryReply = 
+`📝 *CareerPath AI  -  Counselor Query Docketed*
+
+Namaste ${userContext.name}! 
+Aapka doubt hamare lead career counselor ke priority review docket me add kar diya gaya hai:
+
+• *Docket ID:* #${queryTicketId}
+• *Logged Doubt:* "${queryContent}"
+• *Assigned Officer:* Parth Patil (Technical & Grievance Lead)
+• *Status:* Priority Review Active
+
+Hum is query ka specific roadmap solution lekar aapse WhatsApp par revert karenge!
+
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, queryReply, {
+        context: 'COUNSELOR_QUERY_LOGGED',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // 5. Active Tickets & Status Inquiries
+    const isStatusKeyword = cleanLower === '7' || 
+                            cleanLower === 'status' || 
+                            cleanLower === 'my ticket' || 
+                            cleanLower === 'ticket status' ||
+                            cleanLower === 'check ticket';
+
+    if (isStatusKeyword) {
+      const userTickets = [];
+      for (const [id, record] of supportTicketsCache.entries()) {
+        if (record.phone === senderPhone) {
+          userTickets.push(record);
+        }
+      }
+
+      let statusReply = '';
+      if (userTickets.length === 0) {
+        statusReply = 
+`🔍 *CareerPath AI  -  Support Ticket Status*
+
+Namaste ${userContext.name}!
+Aapke phone number (${senderPhone}) se koi open support ticket ya counselor request pending nahi hai.
+
+📋 *Quick Actions:*
+• Support menu ke liye type karein: *SUPPORT*
+• Naya ticket raise karne ke liye: *TICKET: [Aapka issue]*
+• Human counselor callback ke liye: *COUNSELOR*
+
+🌐 *Web Portal:* https://careerpath.is-local.org
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+      } else {
+        const ticketListStr = userTickets.slice(-3).map(t => 
+          `• *#${t.ticketId}* (${t.type || 'SUPPORT'})\n  Issue: "${t.issue}"\n  Status: ${t.status || 'ACTIVE'}\n  Date: ${new Date(t.createdAt).toLocaleDateString('en-IN')}`
+        ).join('\n\n');
+
+        statusReply = 
+`🔍 *CareerPath AI  -  Aapke Active Tickets*
+
+Namaste ${userContext.name}! 
+Aapke phone (${senderPhone}) se associated active requests:
+
+${ticketListStr}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@careerpath.is-local.org*.
+
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+      }
+
+      await whatsappService.sendTextMessage(senderPhone, statusReply, {
+        context: 'TICKET_STATUS_INQUIRY',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // 6. General Support Protocol Menu
     if (isSupportKeyword) {
       const supportMenuReply = 
 `🛠️ *CareerPath AI  -  Official Support & Grievance Desk*
@@ -462,8 +621,13 @@ CareerPath AI Support System me aapka swagat hai:
 *3* ➔ *Certificate & SHA-256 Ledger* (Verification & corrections)
 *4* ➔ *Recruiter Portal & Hiring Radar* (Company verification)
 *5* ➔ *Raise Priority Support Ticket* (Direct escalation to Parth Patil)
+*6* ➔ *Human Career Counselor & 1-on-1 Callback* (Direct call with senior mentor)
+*7* ➔ *Check My Active Tickets & Status* (Review your logged requests)
 
-💬 _Or simply send a message starting with *TICKET: [your issue]* and we will register your request immediately._
+💬 _Or send a direct command anytime:_
+• *COUNSELOR* ➔ Request 1-on-1 human guidance callback
+• *TICKET: [your issue]* ➔ Open instant priority ticket
+• *QUERY: [your doubt]* ➔ Docket technical question for mentor
 
 🌐 *Web Portal:* https://careerpath.is-local.org
 🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
