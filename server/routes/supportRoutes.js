@@ -24,5 +24,6 @@ router.post('/ticket', createTicket);
 router.get('/officer', getGrievanceDetails);
 router.get('/ticket/:ticketId', getTicketStatus);
 router.post('/voice-agent', handleVoiceCallAgent);
+router.get('/voice-agent', handleVoiceCallAgent);
 
 module.exports = router;

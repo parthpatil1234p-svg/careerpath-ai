@@ -182,13 +182,20 @@ const getTicketStatus = (req, res) => {
  */
 const handleVoiceCallAgent = async (req, res) => {
   try {
-    const { query, callerPhone, callerName } = req.body;
-    const cleanQuery = (query || '').trim();
+    const rawQuery = req.body?.query || req.query?.query || (typeof req.body === 'string' ? req.body : '');
+    const callerPhone = req.body?.callerPhone || req.query?.callerPhone || '';
+    const callerName = req.body?.callerName || req.query?.callerName || 'Student';
+    const cleanQuery = (rawQuery || '').trim();
+    const isTextFormat = req.query?.format === 'text' || req.headers['accept']?.includes('text/plain');
 
     if (!cleanQuery) {
+      const defaultGreeting = 'Namaste! CareerPath AI Counseling Desk me aapka swagat hai. Main aapki kya madad kar sakta hoon? Aap apna sawal boliye.';
+      if (isTextFormat) {
+        return res.status(200).send(defaultGreeting);
+      }
       return res.status(200).json({
         success: true,
-        replyText: 'Namaste! CareerPath AI Counseling Desk me aapka swagat hai. Main aapki kya madad kar sakta hoon? Aap apna sawal boliye.'
+        replyText: defaultGreeting
       });
     }
 
@@ -208,13 +215,17 @@ VOICE CONVERSATION GUIDELINES:
 
     let reply = '';
     try {
-      reply = await getGroqMentorReply(prompt, { name: callerName || 'Student' }, [], { maxTokens: 120 });
+      reply = await getGroqMentorReply(prompt, { name: callerName }, [], { maxTokens: 120 });
     } catch (e) {
-      reply = await getGeminiMentorReply(prompt, { name: callerName || 'Student' }, []);
+      reply = await getGeminiMentorReply(prompt, { name: callerName }, []);
     }
 
     // Clean any markdown formatting so TTS sounds completely natural
     const cleanedSpeech = reply.replace(/[*_#`>]/g, '').trim();
+
+    if (isTextFormat) {
+      return res.status(200).send(cleanedSpeech);
+    }
 
     return res.status(200).json({
       success: true,
@@ -222,9 +233,13 @@ VOICE CONVERSATION GUIDELINES:
     });
   } catch (err) {
     console.error('[Voice Call Agent] Error:', err);
+    const fallbackMsg = 'Aapka sawal CareerPath AI ke lead mentor Parth Patil ko forward kar diya gaya hai. Hum jald aapse connect karenge.';
+    if (req.query?.format === 'text') {
+      return res.status(200).send(fallbackMsg);
+    }
     return res.status(200).json({
       success: true,
-      replyText: 'Aapka sawal CareerPath AI ke lead mentor Parth Patil ko forward kar diya gaya hai. Hum jald aapse connect karenge.'
+      replyText: fallbackMsg
     });
   }
 };
