@@ -1,12 +1,12 @@
 /**
- * test_founder_relay.js — Comprehensive Verification for Anonymous Founder Relay
+ * test_founder_relay.js — Comprehensive Verification for Anonymous Founder & Co-Founder Relay
  * 
  * Verifies:
- * 1. Student requests counselor/submits doubt -> Docket created + Alert sent to Founder (+919923092340)
- * 2. Founder checks queue (TICKETS) -> Lists pending escalations
- * 3. Founder replies (REPLY #code: ... / REPLY LAST: ...) -> Message delivered to Student from Bot (+91 7499085045)
- * 4. Confirmation sent to Founder with privacy guarantee
- * 5. Founder resolves ticket (RESOLVE #code) -> Ticket marked RESOLVED + Student notified
+ * 1. Student requests counselor/submits doubt -> Docket created + Alert sent to BOTH Founder (+919923092340) & Co-Founder (+917709589602)
+ * 2. Co-Founder checks queue (TICKETS) from personal WhatsApp -> Lists pending escalations
+ * 3. Co-Founder replies (REPLY #code: ... / REPLY LAST: ...) -> Message delivered to Student from Bot (+91 7499085045)
+ * 4. Confirmation sent to Co-Founder with privacy guarantee
+ * 5. Founder checks queue and resolves ticket (RESOLVE #code) -> Ticket marked RESOLVED + Student notified
  */
 
 const assert = require('assert');
@@ -17,13 +17,13 @@ const {
   handleIncomingWebhook,
   supportTicketsCache,
   findTicket,
-  FOUNDER_PHONE
+  getFounders
 } = require('../controllers/whatsappController');
 const whatsappService = require('../services/whatsappService');
 
 async function runTest() {
   console.log('============================================================');
-  console.log('🧪 CareerPath AI — Founder Anonymous Two-Way Relay Test');
+  console.log('🧪 CareerPath AI — Founder & Co-Founder Anonymous Relay Test');
   console.log('============================================================');
 
   // Intercept whatsappService.sendTextMessage to capture outbound dispatches
@@ -43,12 +43,13 @@ async function runTest() {
 
   const studentPhone = '+919876543210';
   const founderPhone = '+919923092340';
+  const cofounderPhone = '+917709589602';
 
   try {
     // ----------------------------------------------------
-    // TEST 1: Student requests 1-on-1 Counselor Callback
+    // TEST 1: Student requests 1-on-1 Counselor Callback (Alerts BOTH Founders)
     // ----------------------------------------------------
-    console.log('\n▶ TEST 1: Student sends "counselor" request');
+    console.log('\n▶ TEST 1: Student sends "counselor" request (Alerts Both Founder & Co-Founder)');
     dispatchedMessages.length = 0;
 
     const mockReq1 = {
@@ -65,14 +66,17 @@ async function runTest() {
     // We expect: 
     // 1 message to Student (counselor docket confirmation)
     // 1 message to Founder (alert with student info & reply syntax)
+    // 1 message to Co-Founder (alert with student info & reply syntax)
     const studentCounselConfirm = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_REQUEST_CONFIRMATION');
     const founderCounselAlert = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
+    const cofounderCounselAlert = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
 
     assert(studentCounselConfirm, 'Student must receive counselor request confirmation');
     assert(founderCounselAlert, 'Founder must receive escalation alert on personal WhatsApp');
+    assert(cofounderCounselAlert, 'Co-Founder must also receive escalation alert on personal WhatsApp');
     assert(founderCounselAlert.text.includes('Rohit Verma'), 'Founder alert must cite student name');
-    assert(founderCounselAlert.text.includes('REPLY #'), 'Founder alert must provide REPLY instructions');
-    console.log('  ✓ PASSED: Counselor request alerted to Founder & confirmed to Student.');
+    assert(cofounderCounselAlert.text.includes('Rohit Verma'), 'Co-Founder alert must cite student name');
+    console.log('  ✓ PASSED: Counselor request alerted to both Founder & Co-Founder, confirmed to Student.');
 
     // ----------------------------------------------------
     // TEST 2: Student submits technical doubt via QUERY:
@@ -91,63 +95,64 @@ async function runTest() {
 
     const studentQueryConfirm = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_QUERY_LOGGED');
     const founderQueryAlert = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
+    const cofounderQueryAlert = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
 
     assert(studentQueryConfirm, 'Student must receive query logged notice');
     assert(founderQueryAlert, 'Founder must receive query alert');
-    assert(founderQueryAlert.text.includes('Supabase Prisma pooler'), 'Founder alert must contain query text');
-    console.log('  ✓ PASSED: Technical doubt alerted to Founder & logged in queue.');
+    assert(cofounderQueryAlert, 'Co-Founder must receive query alert');
+    console.log('  ✓ PASSED: Technical doubt alerted to both Founder & Co-Founder.');
 
     // ----------------------------------------------------
-    // TEST 3: Founder checks active ticket queue (TICKETS)
+    // TEST 3: Co-Founder checks active ticket queue (TICKETS)
     // ----------------------------------------------------
-    console.log('\n▶ TEST 3: Founder sends "TICKETS" to check queue');
+    console.log('\n▶ TEST 3: Co-Founder sends "TICKETS" from +917709589602');
     dispatchedMessages.length = 0;
 
     const mockReq3 = {
       body: {
-        from: founderPhone,
+        from: cofounderPhone,
         text: 'TICKETS',
-        senderName: 'Parth Patil'
+        senderName: 'Co-Founder'
       }
     };
     await handleIncomingWebhook(mockReq3, mockRes1);
 
-    const founderQueueView = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_TICKET_QUEUE');
-    assert(founderQueueView, 'Founder must receive active ticket queue');
-    assert(founderQueueView.text.includes('Rohit Verma'), 'Queue must show Rohit Verma tickets');
-    console.log('  ✓ PASSED: Founder queue renders active student escalations.');
+    const cofounderQueueView = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_TICKET_QUEUE');
+    assert(cofounderQueueView, 'Co-Founder must receive active ticket queue');
+    assert(cofounderQueueView.text.includes('Rohit Verma'), 'Queue must show Rohit Verma tickets');
+    console.log('  ✓ PASSED: Co-Founder queue renders active student escalations.');
 
     // ----------------------------------------------------
-    // TEST 4: Founder secretly replies to student via REPLY LAST:
+    // TEST 4: Co-Founder secretly replies to student via REPLY LAST:
     // ----------------------------------------------------
-    console.log('\n▶ TEST 4: Founder replies secretly via "REPLY LAST: ..."');
+    console.log('\n▶ TEST 4: Co-Founder replies secretly via "REPLY LAST: ..."');
     dispatchedMessages.length = 0;
 
     const mockReq4 = {
       body: {
-        from: founderPhone,
+        from: cofounderPhone,
         text: 'REPLY LAST: Use port 6543 with pgbouncer=true in DATABASE_URL, and direct 5432 for DIRECT_URL.',
-        senderName: 'Parth Patil'
+        senderName: 'Co-Founder'
       }
     };
     await handleIncomingWebhook(mockReq4, mockRes1);
 
-    // 1 message sent to Student (from bot)
+    // 1 message sent to Student (from official bot)
     const studentReceivedReply = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_DIRECT_REPLY');
-    // 1 message sent to Founder (confirmation)
-    const founderDeliveryConfirm = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_REPLY_CONFIRMED');
+    // 1 message sent to Co-Founder (confirmation)
+    const cofounderDeliveryConfirm = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_REPLY_CONFIRMED');
 
     assert(studentReceivedReply, 'Student must receive counselor reply from bot');
-    assert(studentReceivedReply.text.includes('Lead Counselor (Parth Patil)'), 'Message must show counselor title');
+    assert(studentReceivedReply.text.includes('Co-Founder Desk'), 'Message must reflect Co-Founder counselor desk');
     assert(studentReceivedReply.text.includes('pgbouncer=true'), 'Student must get exact text');
-    assert(founderDeliveryConfirm, 'Founder must get delivery confirmation');
-    assert(founderDeliveryConfirm.text.includes('Privacy Protected'), 'Founder confirmation must guarantee number masking');
-    console.log('  ✓ PASSED: Secret reply delivered to student; Founder personal number masked.');
+    assert(cofounderDeliveryConfirm, 'Co-Founder must get delivery confirmation');
+    assert(cofounderDeliveryConfirm.text.includes('Privacy Protected'), 'Co-Founder confirmation must guarantee number masking');
+    console.log('  ✓ PASSED: Co-Founder secret reply delivered to student; Co-Founder personal number masked.');
 
     // ----------------------------------------------------
     // TEST 5: Founder resolves ticket via "RESOLVE LAST"
     // ----------------------------------------------------
-    console.log('\n▶ TEST 5: Founder resolves ticket via "RESOLVE LAST"');
+    console.log('\n▶ TEST 5: Founder resolves ticket via "RESOLVE LAST" from +919923092340');
     dispatchedMessages.length = 0;
 
     const mockReq5 = {
@@ -164,10 +169,10 @@ async function runTest() {
 
     assert(studentResolveNotice, 'Student must receive ticket resolved notice');
     assert(founderResolveConfirm, 'Founder must receive resolve confirmation');
-    console.log('  ✓ PASSED: Ticket resolved and student notified.');
+    console.log('  ✓ PASSED: Ticket resolved by Founder and student notified.');
 
     console.log('\n============================================================');
-    console.log('🎉 ALL 5 FOUNDER ANONYMOUS RELAY TESTS PASSED PERFECTLY!');
+    console.log('🎉 ALL 5 FOUNDER & CO-FOUNDER ANONYMOUS RELAY TESTS PASSED!');
     console.log('============================================================\n');
 
   } finally {

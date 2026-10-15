@@ -24,7 +24,34 @@ const USER_CACHE_TTL_MS = 15 * 60 * 1000;
 // In-Memory Support Tickets Registry for instant tracking & Grievance SLA
 const supportTicketsCache = new Map();
 
-// Founder & Lead Counselor Contact for Anonymous Two-Way Relay
+// Founders & Core Leadership Contact Registry for Anonymous Two-Way Relay
+const FOUNDERS_REGISTRY = [
+  {
+    name: 'Parth Patil',
+    role: 'Founder & Chief Counselor',
+    rawPhone: process.env.FOUNDER_PERSONAL_PHONE || process.env.FOUNDER_PHONE || '+919923092340',
+    title: 'Lead Counselor (Parth Patil)'
+  },
+  {
+    name: 'Co-Founder',
+    role: 'Co-Founder & Academic Lead',
+    rawPhone: process.env.COFOUNDER_PERSONAL_PHONE || '+917709589602',
+    title: 'Senior Counselor (Co-Founder Desk)'
+  }
+];
+
+function getFounders() {
+  return FOUNDERS_REGISTRY.map(f => {
+    const formatted = whatsappService.formatPhoneNumber(f.rawPhone);
+    const digits10 = whatsappService.getPhoneDigits(formatted).slice(-10);
+    return {
+      ...f,
+      formattedPhone: formatted,
+      digits10
+    };
+  });
+}
+
 const FOUNDER_PHONE_RAW = process.env.FOUNDER_PERSONAL_PHONE || process.env.FOUNDER_PHONE || '+919923092340';
 const FOUNDER_PHONE = whatsappService.formatPhoneNumber(FOUNDER_PHONE_RAW);
 const FOUNDER_PHONE_DIGITS_10 = whatsappService.getPhoneDigits(FOUNDER_PHONE).slice(-10);
@@ -59,14 +86,15 @@ function findTicket(queryId) {
 }
 
 /**
- * Dispatches an anonymous escalation alert to the Founder's personal WhatsApp.
- * The student's identity and query are sent to the founder, along with instructions
- * on how to reply secretly via the official bot without exposing their personal number.
+ * Dispatches an anonymous escalation alert to the Founders' personal WhatsApp numbers.
+ * The student's identity and query are sent to both the Founder and Co-Founder, along with instructions
+ * on how to reply secretly via the official bot without exposing their personal numbers.
  */
 async function forwardAlertToFounder({ studentName, studentPhone, ticketId, type, issue, userContext }) {
   try {
     const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
     const shortCode = ticketId.replace(/^CP-[A-Z]+-/, '');
+    const founders = getFounders();
 
     const alertMessage = 
 `🚨 *CareerPath AI — Student Escalation Alert*
@@ -90,24 +118,34 @@ _Example:_
 👉 *Or quick reply to latest ticket:*
 *REPLY LAST: [Aapka message]*
 
-🔒 *Privacy Guaranteed:* Student ko sirf Bot (+91 7499085045) dikhega. Aapka personal number (+91 9923092340) 100% hidden rahega!`;
+🔒 *Privacy Guaranteed:* Student ko sirf Bot (+91 7499085045) dikhega. Aapka personal number 100% hidden rahega!`;
 
-    await whatsappService.sendTextMessage(FOUNDER_PHONE, alertMessage, {
-      context: 'FOUNDER_ESCALATION_ALERT',
-      ticketId
-    });
-    console.log(`[Founder Relay] Escalation alert dispatched to Founder (${FOUNDER_PHONE}) for ticket #${ticketId}`);
+    // Dispatch alert to all registered leadership numbers (Founder & Co-Founder)
+    for (const founder of founders) {
+      if (founder.formattedPhone) {
+        await whatsappService.sendTextMessage(founder.formattedPhone, alertMessage, {
+          context: 'FOUNDER_ESCALATION_ALERT',
+          ticketId,
+          recipientRole: founder.role
+        });
+        console.log(`[Founder Relay] Escalation alert dispatched to ${founder.name} (${founder.formattedPhone}) for ticket #${ticketId}`);
+      }
+    }
   } catch (err) {
-    console.warn('[Founder Relay] Warning dispatching alert to founder:', err.message);
+    console.warn('[Founder Relay] Warning dispatching alert to founders:', err.message);
   }
 }
 
 /**
- * Processes incoming WhatsApp messages from the Founder's personal phone (+91 9923092340).
+ * Processes incoming WhatsApp messages from Founder or Co-Founder (+91 9923092340 / +91 7709589602).
  * Powers two-way anonymous student messaging, ticket triage, and admin controls.
  */
-async function handleFounderInbound({ senderPhone, incomingText, trimmed, cleanLower, quotedText }) {
-  console.log(`[Founder Relay] Inbound action from Founder (${senderPhone}): "${trimmed}"`);
+async function handleFounderInbound({ founder, senderPhone, incomingText, trimmed, cleanLower, quotedText }) {
+  const adminName = founder?.name || 'Counselor';
+  const adminRole = founder?.role || 'Leadership Team';
+  const adminTitle = founder?.title || 'Senior Academic Counselor';
+
+  console.log(`[Founder Relay] Inbound action from ${adminName} (${senderPhone}): "${trimmed}"`);
 
   // 1. Quoted Message Ticket Detection (Swipe-to-reply in WhatsApp)
   let quoteTicketMatch = null;
@@ -129,6 +167,7 @@ async function handleFounderInbound({ senderPhone, incomingText, trimmed, cleanL
     }
 
     ticket.status = 'RESOLVED';
+    ticket.resolvedBy = adminName;
     ticket.resolvedAt = new Date().toISOString();
 
     // Friendly notice to student
@@ -137,7 +176,7 @@ async function handleFounderInbound({ senderPhone, incomingText, trimmed, cleanL
 `✨ *CareerPath AI  -  Ticket Resolved*
 
 Namaste ${ticket.studentName}! 👋
-Aapka support request (#${ticket.ticketId}) successfully resolve ho gaya hai.
+Aapka support request (#${ticket.ticketId}) successfully resolve ho gaya hai by ${adminTitle}.
 
 Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas WhatsApp par *ROADMAP*, *NOTES*, ya *SUPPORT* type karein.
 
@@ -177,7 +216,7 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
 
     // Dispatch message to student FROM official bot (+91 7499085045)
     const studentDispatch = 
-`🧑‍🏫 *CareerPath AI  -  Lead Counselor (Parth Patil)*
+`🧑‍🏫 *CareerPath AI  -  ${adminTitle}*
 
 "${replyContent}"
 
@@ -197,19 +236,21 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
     // Update ticket status & log
     ticket.status = 'COUNSELOR_REPLIED';
     ticket.lastReply = replyContent;
+    ticket.lastReplyBy = adminName;
     ticket.lastReplyAt = new Date().toISOString();
 
-    // Confirm to founder (100% reassurance of privacy)
+    // Confirm to sender (100% reassurance of privacy)
     const confirmMsg = 
 `✅ *Reply Delivered to Student!*
 
 👤 *Student:* ${ticket.studentName}
 📞 *Student Phone:* ${ticket.phone}
 🎫 *Ticket:* #${ticket.ticketId}
+👨‍💼 *Counselor:* ${adminName} (${adminRole})
 📤 *Delivered Message:*
 "${replyContent}"
 
-🔒 *Privacy Protected:* Aapka personal number (+91 9923092340) reveal nahi hua. Message official bot (+91 7499085045) ke through bheja gaya hai.`;
+🔒 *Privacy Protected:* Aapka personal number (${senderPhone}) reveal nahi hua. Message official bot (+91 7499085045) ke through bheja gaya hai.`;
 
     await whatsappService.sendTextMessage(senderPhone, confirmMsg, { context: 'FOUNDER_REPLY_CONFIRMED' });
     return true;
@@ -228,7 +269,7 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
 "${targetMsg}"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-👨‍💼 *From:* Parth Patil (Founder & Lead Counselor)
+👨‍💼 *From:* ${adminTitle}
 🌐 *Web Portal:* https://careerpath.is-local.org
 🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
 
@@ -247,11 +288,11 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
 
     if (pendingTickets.length === 0) {
       const emptyMsg = 
-`📋 *CareerPath AI  -  Founder Admin Queue*
+`📋 *CareerPath AI  -  Leadership Admin Queue*
 
 Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. 🎉
 
-• Jab bhi koi student counselor call ya ticket raise karega, bot aapko instantly yahan notify karega.
+• Jab bhi koi student counselor call ya ticket raise karega, bot Founder & Co-Founder dono ko alert karega.
 • Kisi student ko message bhejne ke liye: *MSG [phone]: [message]*
 • AI mentor testing ke liye: *TEST: [sawal]*`;
       await whatsappService.sendTextMessage(senderPhone, emptyMsg, { context: 'FOUNDER_EMPTY_QUEUE' });
@@ -265,7 +306,7 @@ Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. �
     }).join('\n\n');
 
     const queueMsg = 
-`📋 *CareerPath AI  -  Founder Admin Queue (${pendingTickets.length} Active)*
+`📋 *CareerPath AI  -  Leadership Admin Queue (${pendingTickets.length} Active)*
 
 ${listStr}
 
@@ -288,10 +329,10 @@ _Example: REPLY #${pendingTickets[pendingTickets.length - 1].ticketId.replace(/^
 
   // 7. Founder Admin Help & Command Guide
   const helpMsg = 
-`👑 *CareerPath AI  -  Founder Admin & Counselor Console*
+`👑 *CareerPath AI  -  Leadership Admin & Counselor Console*
 
-Namaste Parth Patil! 🚀
-Aapka number (*+91 9923092340*) as Founder & Chief Counselor verified hai.
+Namaste ${adminName}! 🚀
+Aapka number (*${senderPhone}*) as ${adminRole} verified hai.
 
 📋 *Admin Commands Reference:*
 • *TICKETS* ➔ Pending student escalations ki list dekhein
@@ -473,8 +514,10 @@ const handleIncomingWebhook = async (req, res) => {
 
     console.log(`[WhatsApp Incoming] From: ${senderPhone} | Voice Note: ${isVoiceInput} | Query: "${incomingText}"`);
 
-    // ── FOUNDER & LEAD COUNSELOR ANONYMOUS RELAY ENGINE ──
-    const isFounder = last10Digits === FOUNDER_PHONE_DIGITS_10;
+    // ── FOUNDER & LEADERSHIP ANONYMOUS RELAY ENGINE ──
+    const founders = getFounders();
+    const matchedFounder = founders.find(f => f.digits10 === last10Digits);
+    const isFounder = Boolean(matchedFounder);
     if (isFounder) {
       let quotedText = '';
       if (body.data?.quotedMsg) {
@@ -484,6 +527,7 @@ const handleIncomingWebhook = async (req, res) => {
       }
 
       const handled = await handleFounderInbound({
+        founder: matchedFounder,
         senderPhone,
         incomingText,
         trimmed: (incomingText || '').trim(),
@@ -494,7 +538,7 @@ const handleIncomingWebhook = async (req, res) => {
       if (handled !== false) {
         return;
       }
-      // If founder typed "TEST: ...", remove prefix and proceed to student AI mentor flow
+      // If leadership typed "TEST: ...", remove prefix and proceed to student AI mentor flow
       incomingText = incomingText.replace(/^(test|student):\s*/i, '');
     }
 
@@ -1174,5 +1218,7 @@ module.exports = {
   findTicket,
   forwardAlertToFounder,
   handleFounderInbound,
-  FOUNDER_PHONE
+  FOUNDER_PHONE,
+  FOUNDERS_REGISTRY,
+  getFounders
 };
