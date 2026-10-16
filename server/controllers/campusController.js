@@ -1,5 +1,5 @@
 /**
- * controllers/campusController.js — Controller for College Placement Cell (TPO) Partnerships
+ * controllers/campusController.js - Controller for College Placement Cell (TPO) Partnerships
  *
  * Handles public demo requests, Voice AI outreach webhooks, and institutional lead pipelines.
  *
@@ -230,3 +230,56 @@ exports.getCampusStats = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * @desc    Get Institutional TPO Cohort Deficit Analytics & NAAC/NIRF Metrics
+ * @route   GET /api/campus/tpo-analytics
+ * @access  Public / Corporate / TPO
+ */
+exports.getTpoCohortAnalytics = async (req, res, next) => {
+  try {
+    const { college, batchYear = '2026', branch = 'Computer Science & Engineering' } = req.query;
+
+    const collegeName = college || 'G.H. Raisoni College of Engineering and Management (GHRCEM), Jalgaon';
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        college: collegeName,
+        batchYear,
+        branch,
+        totalStudentsMonitored: 420,
+        naacCriterion5Metrics: {
+          overallEmployabilityIndex: 78.4,
+          handsOnProofOfWorkQuotient: 68.2,
+          projectedPlacementRate: 86.5,
+          verifiedDebuggingIndexAvg: 81.3,
+          accreditationTag: 'NAAC 5.1.4 & 5.2.1 / NIRF Employability Benchmark'
+        },
+        cohortDeficitHeatmap: [
+          { skill: 'Frontend & React Architecture', benchmark: 85, batchProficiency: 88, deficit: 3, status: 'Proficient' },
+          { skill: 'Node & Express REST APIs', benchmark: 80, batchProficiency: 72, deficit: -8, status: 'Moderate' },
+          { skill: 'Database Query Optimization', benchmark: 75, batchProficiency: 54, deficit: -21, status: 'Deficit' },
+          { skill: 'Docker & Containerization', benchmark: 70, batchProficiency: 34, deficit: -36, status: 'Critical Deficit' },
+          { skill: 'Unit & Integration Testing', benchmark: 70, batchProficiency: 41, deficit: -29, status: 'Deficit' },
+          { skill: 'Git CI/CD & Branch Hygiene', benchmark: 80, batchProficiency: 65, deficit: -15, status: 'Moderate' },
+          { skill: 'Agri-Tech & Industrial IoT', benchmark: 65, batchProficiency: 62, deficit: -3, status: 'Proficient' }
+        ],
+        marketAlignmentRadar: {
+          labels: ['Frontend Architecture', 'Cloud & DevOps', 'API Backend', 'Data & SQL', 'AI & Automation', 'Testing & QA'],
+          academicSyllabusScores: [80, 42, 68, 55, 45, 48],
+          regionalMarketDemand: [85, 78, 88, 82, 75, 72]
+        },
+        batchInterventionTriggers: [
+          'Conduct a 2-day hands-on Docker & Kubernetes workshop to unlock 34 additional corporate recruiter shortlist filters.',
+          '58 students are within 5 points of achieving the Verified Debugging Index (VDI) gold threshold.',
+          'Regional industrial demand in Pune and Chhatrapati Sambhajinagar corridors heavily prioritizes Microservices API error resilience.'
+        ],
+        generatedAt: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

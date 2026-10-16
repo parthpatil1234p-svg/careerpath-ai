@@ -1,5 +1,5 @@
 /**
- * routes/quizRoutes.js — API Routes for Adaptive Skill Reality-Check Quiz
+ * routes/quizRoutes.js - API Routes for Adaptive Skill Reality-Check Quiz
  *
  * CareerPath AI · Enterprise Backend Service
  */
@@ -26,6 +26,10 @@ const optionalAuth = async (req, res, next) => {
 
 // Skill catalog is publicly accessible with user personalization if logged in
 router.get('/skills', optionalAuth, quizController.getAvailableSkills);
+
+// In-Browser "Fix-the-Bug" Proof-of-Work Chamber endpoints
+router.get('/code-challenges', optionalAuth, quizController.getCodeChallenges);
+router.post('/verify-code-solution', optionalAuth, quizController.verifyCodeSolution);
 
 // All subsequent quiz endpoints require JWT authentication and student access
 router.use(protect, requireStudent);

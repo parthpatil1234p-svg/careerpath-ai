@@ -435,8 +435,23 @@
       <!-- Feedback Alert Container -->
       <div id="recruiterAlertContainer" role="alert" aria-live="polite"></div>
 
-      <!-- Executive KPI Cards -->
-      <div class="row g-3 mb-4">
+      <!-- Portal View Mode Switcher: Corporate Recruiter vs Campus TPO Cockpit -->
+      <div class="d-flex justify-content-center mb-4">
+        <div class="btn-group p-1 bg-white border border-line rounded-pill shadow-xs" role="group" aria-label="Portal View Mode">
+          <button type="button" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-bold active" id="btnModeCorporate" onclick="window.switchRecruiterPortalMode('corporate')">
+            <i class="bi bi-briefcase-fill me-1 text-success"></i> Corporate Talent Radar
+          </button>
+          <button type="button" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-bold text-secondary" id="btnModeTpo" onclick="window.switchRecruiterPortalMode('tpo')">
+            <span class="badge bg-primary text-white me-1" style="font-size: 0.65rem;">B2B</span>
+            <i class="bi bi-mortarboard-fill me-1 text-primary"></i> Campus TPO Intelligence Cockpit (NAAC / NIRF)
+          </button>
+        </div>
+      </div>
+
+      <!-- Corporate Talent Radar View Wrapper -->
+      <div id="corporateRadarView">
+        <!-- Executive KPI Cards -->
+        <div class="row g-3 mb-4">
         <div class="col-sm-6 col-lg-3">
           <div class="recruiter-kpi-card">
             <div class="d-flex align-items-center justify-content-between">
@@ -584,6 +599,176 @@
                 <!-- Dynamically populated -->
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+      <!-- /corporateRadarView -->
+
+      <!-- Institutional TPO Intelligence Cockpit (Campus OS B2B) -->
+      <div id="tpoCockpitView" class="d-none mb-5">
+        <!-- Institutional Header Card -->
+        <div class="card p-3 p-md-4 mb-4 border border-line rounded-4 shadow-sm" style="background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%); border-left: 5px solid #2563eb !important;">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-3 p-2.5 bg-primary text-white fs-3 d-flex align-items-center justify-content-center shadow-xs" style="width: 52px; height: 52px;">
+                <i class="bi bi-building"></i>
+              </div>
+              <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                  <span class="badge bg-primary text-white font-mono small">CAMPUS OS &bull; TPO COCKPIT</span>
+                  <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-mono small">
+                    <i class="bi bi-patch-check-fill me-1"></i>NAAC A++ Aligned
+                  </span>
+                  <span class="badge bg-secondary bg-opacity-25 text-secondary font-mono small" id="tpoStudentsMonitoredCount">
+                    420 Students Monitored
+                  </span>
+                </div>
+                <h1 class="h4 fw-bold text-ink mb-0" id="tpoCollegeNameDisplay">
+                  G.H. Raisoni College of Engineering and Management (GHRCEM), Jalgaon
+                </h1>
+                <p class="text-muted small mb-0 mt-0.5" id="tpoBatchYearDisplay">
+                  2026 Batch &bull; Computer Science &amp; Engineering &bull; Real-Time Employability Deficit Radar
+                </p>
+              </div>
+            </div>
+
+            <!-- College & Batch Filter Controls -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <select class="form-select form-select-sm border-line shadow-xs" id="tpoBatchFilterSelect" style="font-size: 0.8rem; width: auto;" onchange="window.TpoCockpit.loadTpoAnalytics(null, this.value)">
+                <option value="2026" selected>Batch of 2026</option>
+                <option value="2027">Batch of 2027</option>
+                <option value="2025">Batch of 2025</option>
+              </select>
+              <button type="button" class="btn btn-outline-primary btn-sm px-3 fw-semibold d-inline-flex align-items-center gap-1 shadow-xs" onclick="window.TpoCockpit.exportNaacReport()">
+                <i class="bi bi-printer"></i>
+                <span>Export NAAC Report</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NAAC / NIRF Criterion 5 Metric Strip -->
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card p-3 rounded-3 border border-line bg-white shadow-xs h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="small fw-bold text-uppercase text-muted" style="font-size: 0.72rem;">Employability Index</span>
+                <span class="badge bg-primary bg-opacity-10 text-primary font-mono small">NAAC 5.1.4</span>
+              </div>
+              <div class="display-6 fw-bold text-primary font-mono mb-1" id="naacEmployabilityScore">78.4%</div>
+              <div class="small text-muted">
+                <i class="bi bi-arrow-up-right text-success me-1"></i>+8.2% vs Previous Cohort
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card p-3 rounded-3 border border-line bg-white shadow-xs h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="small fw-bold text-uppercase text-muted" style="font-size: 0.72rem;">Proof-of-Work Quotient</span>
+                <span class="badge bg-success bg-opacity-10 text-success font-mono small">Code Verified</span>
+              </div>
+              <div class="display-6 fw-bold text-success font-mono mb-1" id="naacPowQuotient">68.2%</div>
+              <div class="small text-muted">
+                Students with verified GitHub / Projects
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card p-3 rounded-3 border border-line bg-white shadow-xs h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="small fw-bold text-uppercase text-muted" style="font-size: 0.72rem;">Projected Placements</span>
+                <span class="badge bg-warning bg-opacity-10 text-warning font-mono small">NIRF Metric</span>
+              </div>
+              <div class="display-6 fw-bold text-ink font-mono mb-1" id="naacProjectedPlacement">86.5%</div>
+              <div class="small text-muted">
+                Based on active recruiter skill fits
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card p-3 rounded-3 border border-line bg-white shadow-xs h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="small fw-bold text-uppercase text-muted" style="font-size: 0.72rem;">Avg Debugging (VDI)</span>
+                <span class="badge bg-info bg-opacity-10 text-info font-mono small">Code Chamber</span>
+              </div>
+              <div class="display-6 fw-bold text-info font-mono mb-1" id="naacVdiAvg">81.3 / 100</div>
+              <div class="small text-muted">
+                Verified hands-on debugging index
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Split Grid: Cohort Deficit Heatmap (Left 7) & Market Alignment Radar (Right 5) -->
+        <div class="row g-4 mb-4">
+          <!-- Left Column: Cohort Deficit Heatmap -->
+          <div class="col-lg-7">
+            <div class="card border border-line rounded-3 shadow-xs bg-white overflow-hidden h-100">
+              <div class="p-3 border-bottom border-line d-flex align-items-center justify-content-between flex-wrap gap-2 bg-light">
+                <div>
+                  <h3 class="h6 fw-bold text-ink mb-0 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-grid-3x3-gap-fill text-primary"></i> Batch Skill Deficit Heatmap
+                  </h3>
+                  <p class="text-muted small mb-0" style="font-size: 0.75rem;">
+                    Identifies gaps between corporate hiring benchmarks and batch pass rates
+                  </p>
+                </div>
+                <span class="badge bg-secondary bg-opacity-25 text-secondary font-mono small">
+                  Target Pass Benchmark: 75%
+                </span>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light font-mono small" style="font-size: 0.72rem;">
+                    <tr>
+                      <th class="ps-3">COMPETENCY AREA</th>
+                      <th>BATCH PROFICIENCY</th>
+                      <th>DEFICIT</th>
+                      <th>STATUS</th>
+                      <th class="pe-3 text-end">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tpoHeatmapBody">
+                    <!-- Populated dynamically by tpo-cockpit.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Regional Market Alignment Radar & Interventions -->
+          <div class="col-lg-5">
+            <!-- Radar Chart Card -->
+            <div class="card p-3 mb-3 border border-line rounded-3 shadow-xs bg-white">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold text-ink mb-0 d-flex align-items-center gap-1.5">
+                  <i class="bi bi-radar text-success"></i> Regional Demand Alignment Radar
+                </h3>
+                <span class="badge bg-light border text-muted font-mono" style="font-size: 0.68rem;">Pune/MIDC</span>
+              </div>
+              <p class="text-muted small mb-2" style="font-size: 0.75rem;">
+                Comparing academic syllabus vs live corporate hiring requirements
+              </p>
+              <div style="height: 250px; position: relative;">
+                <canvas id="tpoMarketRadarChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Batch Intervention Action Triggers Card -->
+            <div class="card p-3 border border-line rounded-3 shadow-xs bg-white">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold text-ink mb-0 d-flex align-items-center gap-1.5">
+                  <i class="bi bi-lightning-charge-fill text-warning"></i> Campus Intervention Triggers
+                </h3>
+                <span class="badge bg-warning bg-opacity-10 text-warning font-mono" style="font-size: 0.68rem;">3 Actions Pending</span>
+              </div>
+              <p class="text-muted small mb-2" style="font-size: 0.75rem;">
+                High-yield faculty and placement interventions to maximize batch conversion:
+              </p>
+              <ul class="list-unstyled mb-0" id="tpoInterventionTriggersList">
+                <!-- Populated by JS -->
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -821,9 +1006,12 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/config.js"></script>
     <script src="js/auth.js?v=3.0"></script>
     <script src="js/api.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/recruiter.js"></script>
+    <script src="js/tpo-cockpit.js"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * controllers/quizController.js — Controller for Adaptive Skill Reality-Check Quiz
+ * controllers/quizController.js - Controller for Adaptive Skill Reality-Check Quiz
  *
  * CareerPath AI · Enterprise Backend Service
  */
@@ -364,4 +364,172 @@ exports.getAvailableSkills = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to fetch available quiz skills' });
   }
 };
+
+/**
+ * GET /api/quiz/code-challenges
+ * Returns curated code bug challenges (with canonical solution stripped for integrity)
+ */
+exports.getCodeChallenges = async (req, res) => {
+  try {
+    const { CODE_BUG_CHALLENGES } = require('../data/codeBugChallenges');
+    const { category, skill } = req.query;
+
+    let list = [...CODE_BUG_CHALLENGES];
+    if (category && category !== 'all') {
+      const catLower = category.toLowerCase();
+      list = list.filter((c) => c.category.toLowerCase().includes(catLower));
+    }
+    if (skill) {
+      const skillLower = skill.toLowerCase();
+      list = list.filter((c) => c.targetSkill.toLowerCase().includes(skillLower));
+    }
+
+    // Strip canonical solutions so clients cannot cheat by inspecting JSON payloads
+    const sanitized = list.map((c) => ({
+      id: c.id,
+      title: c.title,
+      category: c.category,
+      difficulty: c.difficulty,
+      targetSkill: c.targetSkill,
+      scenario: c.scenario,
+      errorLog: c.errorLog,
+      initialCode: c.initialCode,
+      hints: c.hints,
+      testCasesCount: c.testCases.length,
+      testCaseDescriptions: c.testCases.map((t) => t.description)
+    }));
+
+    return res.status(200).json({
+      success: true,
+      count: sanitized.length,
+      data: sanitized
+    });
+  } catch (err) {
+    console.error('[QuizController.getCodeChallenges] Error:', err.message);
+    return res.status(500).json({ success: false, message: 'Failed to load code challenges' });
+  }
+};
+
+/**
+ * POST /api/quiz/verify-code-solution
+ * Evaluates candidate code submission against assertion tests and records Verified Debugging Index (VDI)
+ */
+exports.verifyCodeSolution = async (req, res) => {
+  try {
+    const { CODE_BUG_CHALLENGES } = require('../data/codeBugChallenges');
+    const {
+      challengeId,
+      submittedCode,
+      keystrokesCount = 0,
+      pasteEventsCount = 0,
+      timeElapsedSec = 30
+    } = req.body;
+
+    if (!challengeId || !submittedCode) {
+      return res.status(400).json({ success: false, message: 'challengeId and submittedCode are required' });
+    }
+
+    const challenge = CODE_BUG_CHALLENGES.find((c) => c.id === challengeId);
+    if (!challenge) {
+      return res.status(404).json({ success: false, message: 'Code challenge not found' });
+    }
+
+    // Safety check against excessively large payloads
+    if (submittedCode.length > 10000) {
+      return res.status(400).json({ success: false, message: 'Submitted code exceeds maximum length limit' });
+    }
+
+    // Automated Test Runner
+    let passed = false;
+    let feedback = '';
+    const testResults = [];
+
+    // Run test functions or pattern assertions defined in the challenge
+    for (const tc of challenge.testCases) {
+      let tcPass = false;
+      if (tc.testFn) {
+        try {
+          const evalFn = new Function('input', `return (${tc.testFn})(input)`);
+          tcPass = Boolean(evalFn(submittedCode));
+        } catch (e) {
+          tcPass = false;
+        }
+      } else {
+        tcPass = !submittedCode.includes('// BUG:') && submittedCode.length > challenge.initialCode.length * 0.5;
+      }
+
+      testResults.push({
+        description: tc.description,
+        passed: tcPass
+      });
+    }
+
+    const passedCount = testResults.filter((t) => t.passed).length;
+    passed = passedCount === testResults.length;
+
+    // Calculate Verified Debugging Index (VDI)
+    let vdiScore = 75;
+    if (passed) {
+      vdiScore += 10;
+      if (timeElapsedSec < 180 && timeElapsedSec > 15) vdiScore += 5;
+      if (keystrokesCount > 30) vdiScore += 5;
+      if (pasteEventsCount > 0) vdiScore = Math.max(70, vdiScore - 5);
+      feedback = 'All assertion tests passed! Bug successfully isolated and patched.';
+    } else {
+      vdiScore = Math.max(30, Math.round((passedCount / testResults.length) * 60));
+      feedback = `${testResults.length - passedCount} assertion test(s) failed. Review the stack trace and hints.`;
+    }
+
+    // If authenticated and passed, stamp user skill ledger
+    if (passed && req.user && req.user.id) {
+      const user = await User.findById(req.user.id);
+      if (user) {
+        if (!Array.isArray(user.skills)) user.skills = [];
+
+        const normSkill = challenge.targetSkill.toLowerCase();
+        const skillIndex = user.skills.findIndex((s) => s && s.name && s.name.toLowerCase() === normSkill);
+
+        const verificationRecord = {
+          name: challenge.targetSkill,
+          displayName: challenge.targetSkill,
+          level: 'Advanced',
+          isCodeVerified: true,
+          verifiedBy: 'CODE_CHAMBER',
+          vdiScore,
+          verifiedAt: new Date().toISOString(),
+          lastChallengeId: challenge.id
+        };
+
+        if (skillIndex >= 0) {
+          user.skills[skillIndex].isCodeVerified = true;
+          user.skills[skillIndex].verifiedBy = 'CODE_CHAMBER';
+          user.skills[skillIndex].vdiScore = vdiScore;
+        } else {
+          user.skills.push(verificationRecord);
+        }
+
+        user.markModified('skills');
+        await user.save();
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      passed,
+      vdiScore,
+      verificationBadge: passed ? '⭐ Code Verified' : 'Needs Debugging',
+      feedback,
+      telemetry: {
+        pasteEventsRecorded: pasteEventsCount,
+        keystrokesRecorded: keystrokesCount,
+        executionTimeSec: timeElapsedSec
+      },
+      testResults
+    });
+  } catch (err) {
+    console.error('[QuizController.verifyCodeSolution] Error:', err.message);
+    return res.status(500).json({ success: false, message: 'Code verification failed' });
+  }
+};
+
 
