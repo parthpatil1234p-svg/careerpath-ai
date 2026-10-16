@@ -88,6 +88,12 @@
     lineGutter.innerHTML = numbers;
   }
 
+  function getApiBaseUrl() {
+    if (window.CONFIG?.API_BASE_URL) return window.CONFIG.API_BASE_URL;
+    if (window.location.origin.includes('5500')) return 'http://localhost:5000/api';
+    return 'https://careerpath-ai-bdbt.onrender.com/api';
+  }
+
   // Fetch challenges from server
   async function loadChallenges() {
     const categorySelector = document.getElementById('chamberCategorySelect');
@@ -98,15 +104,21 @@
 
     try {
       const category = categorySelector ? categorySelector.value : 'all';
-      const res = await fetch(`/api/quiz/code-challenges?category=${encodeURIComponent(category)}`);
-      const result = await res.json();
+      let result;
+      if (window.API?.get) {
+        result = await window.API.get(`/quiz/code-challenges?category=${encodeURIComponent(category)}`);
+      } else {
+        const baseUrl = getApiBaseUrl();
+        const res = await fetch(`${baseUrl}/quiz/code-challenges?category=${encodeURIComponent(category)}`);
+        result = await res.json();
+      }
 
-      if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+      if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
         allChallenges = result.data;
         renderChallengePills(allChallenges);
         selectChallenge(allChallenges[0].id);
       } else {
-        challengeListContainer.innerHTML = '<div class="alert alert-info py-2 small">No challenges found for this category.</div>';
+        loadFallbackChallenges();
       }
     } catch (err) {
       console.warn('[CodeChamber] Error loading from server, using local fallback:', err);
@@ -237,23 +249,30 @@
 
     try {
       // Send to server evaluation endpoint
-      const token = window.Auth?.getToken?.() || localStorage.getItem('cp_token');
-      const headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      let data;
+      const payload = {
+        challengeId: activeChallenge.id,
+        submittedCode,
+        keystrokesCount,
+        pasteEventsCount,
+        timeElapsedSec
+      };
 
-      const res = await fetch('/api/quiz/verify-code-solution', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          challengeId: activeChallenge.id,
-          submittedCode,
-          keystrokesCount,
-          pasteEventsCount,
-          timeElapsedSec
-        })
-      });
+      if (window.API?.post) {
+        data = await window.API.post('/quiz/verify-code-solution', payload, { auth: true });
+      } else {
+        const baseUrl = getApiBaseUrl();
+        const token = window.Auth?.getToken?.() || localStorage.getItem('cp_token');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const data = await res.json();
+        const res = await fetch(`${baseUrl}/quiz/verify-code-solution`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload)
+        });
+        data = await res.json();
+      }
 
       if (data.success) {
         let terminalText = '';

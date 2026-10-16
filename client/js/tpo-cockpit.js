@@ -22,6 +22,12 @@
     await loadTpoAnalytics();
   }
 
+  function getApiBaseUrl() {
+    if (window.CONFIG?.API_BASE_URL) return window.CONFIG.API_BASE_URL;
+    if (window.location.origin.includes('5500')) return 'http://localhost:5000/api';
+    return 'https://careerpath-ai-bdbt.onrender.com/api';
+  }
+
   async function loadTpoAnalytics(college = null, batch = null) {
     if (college) activeCollege = college;
     if (batch) activeBatch = batch;
@@ -32,11 +38,17 @@
     }
 
     try {
-      const url = `/api/campus/tpo-analytics?college=${encodeURIComponent(activeCollege)}&batchYear=${encodeURIComponent(activeBatch)}`;
-      const res = await fetch(url);
-      const json = await res.json();
+      let json;
+      if (window.API?.get) {
+        json = await window.API.get(`/campus/tpo-analytics?college=${encodeURIComponent(activeCollege)}&batchYear=${encodeURIComponent(activeBatch)}`);
+      } else {
+        const baseUrl = getApiBaseUrl();
+        const url = `${baseUrl}/campus/tpo-analytics?college=${encodeURIComponent(activeCollege)}&batchYear=${encodeURIComponent(activeBatch)}`;
+        const res = await fetch(url);
+        json = await res.json();
+      }
 
-      if (json.success && json.data) {
+      if (json && json.success && json.data) {
         renderTpoMetrics(json.data);
       } else {
         renderFallbackTpoData();

@@ -229,8 +229,14 @@
     }
 
     try {
-      const res = await fetch(`/api/careers/regional/companies?${params.toString()}`);
-      const json = await res.json();
+      let json;
+      if (window.API?.get) {
+        json = await window.API.get(`/careers/regional/companies?${params.toString()}`);
+      } else {
+        const baseUrl = window.CONFIG?.API_BASE_URL || (window.location.origin.includes('5500') ? 'http://localhost:5000/api' : 'https://careerpath-ai-bdbt.onrender.com/api');
+        const res = await fetch(`${baseUrl}/careers/regional/companies?${params.toString()}`);
+        json = await res.json();
+      }
 
       if (spinner) spinner.classList.add('d-none');
 

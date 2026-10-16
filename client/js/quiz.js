@@ -1,5 +1,5 @@
 /**
- * js/quiz.js — Adaptive Skill Reality-Check Controller
+ * js/quiz.js - Adaptive Skill Reality-Check Controller
  *
  * Implements the 6-question dynamic difficulty micro-quiz.
  * Compares "You Said" vs "Quiz Says" and unlocks the verified credential.
@@ -922,7 +922,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     startQuestionTimer();
 
     // Meta Bar
-    if (activeSkillBadge) activeSkillBadge.textContent = activeSkillInfo.label.toUpperCase();
+    const badgeText = (activeSkillInfo?.displayName || activeSkillInfo?.label || activeSkillInfo?.name || activeSkillKey || 'SKILL').toUpperCase();
+    if (activeSkillBadge) activeSkillBadge.textContent = badgeText;
     if (qCurrent) qCurrent.textContent = qIndex;
     if (qTotal) qTotal.textContent = qTotalCount;
 
