@@ -15,7 +15,7 @@
  */
 
 const whatsappService = require('../services/whatsappService');
-const { supportTicketsCache } = require('./whatsappController');
+const { supportTicketsCache, persistTickets } = require('./whatsappController');
 
 // Category display mapping
 const CATEGORY_MAP = {
@@ -69,6 +69,7 @@ const createTicket = async (req, res, next) => {
     // Store in support tickets cache
     if (supportTicketsCache) {
       supportTicketsCache.set(ticketId, ticketRecord);
+      if (persistTickets) persistTickets().catch(() => {});
     }
 
     console.log(`[Support Desk] Web Ticket Registered: #${ticketId} | Name: ${studentName} | Category: ${categoryLabel}`);

@@ -1659,6 +1659,8 @@ module.exports = {
   testWhatsAppOtp,
   supportTicketsCache,
   findTicket,
+  findTicketAsync,
+  persistTickets,
   forwardAlertToFounder,
   handleFounderInbound,
   FOUNDER_PHONE,
