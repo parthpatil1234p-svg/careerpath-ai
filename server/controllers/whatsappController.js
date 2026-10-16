@@ -33,10 +33,16 @@ const FOUNDERS_REGISTRY = [
     title: 'Lead Counselor (Parth Patil)'
   },
   {
-    name: 'Co-Founder',
+    name: 'Suyog Pawar',
     role: 'Co-Founder & Academic Lead',
-    rawPhone: process.env.COFOUNDER_PERSONAL_PHONE || '+917709589602',
-    title: 'Senior Counselor (Co-Founder Desk)'
+    rawPhone: process.env.COFOUNDER_PERSONAL_PHONE || process.env.SUYOG_PERSONAL_PHONE || '+917709589602',
+    title: 'Senior Counselor (Co-Founder Desk - Suyog Pawar)'
+  },
+  {
+    name: 'Sanika',
+    role: 'Co-Founder & Academic Counselor',
+    rawPhone: process.env.SANIKA_PERSONAL_PHONE || process.env.COFOUNDER_2_PERSONAL_PHONE || '+918983020995',
+    title: 'Senior Counselor (Co-Founder Desk - Sanika)'
   }
 ];
 

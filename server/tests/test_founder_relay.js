@@ -44,12 +44,13 @@ async function runTest() {
   const studentPhone = '+919876543210';
   const founderPhone = '+919923092340';
   const cofounderPhone = '+917709589602';
+  const sanikaPhone = '+918983020995';
 
   try {
     // ----------------------------------------------------
-    // TEST 1: Student requests 1-on-1 Counselor Callback (Alerts BOTH Founders)
+    // TEST 1: Student requests 1-on-1 Counselor Callback (Alerts ALL Founders)
     // ----------------------------------------------------
-    console.log('\n▶ TEST 1: Student sends "counselor" request (Alerts Both Founder & Co-Founder)');
+    console.log('\n▶ TEST 1: Student sends "counselor" request (Alerts Founder, Suyog & Sanika)');
     dispatchedMessages.length = 0;
 
     const mockReq1 = {
@@ -65,18 +66,22 @@ async function runTest() {
 
     // We expect: 
     // 1 message to Student (counselor docket confirmation)
-    // 1 message to Founder (alert with student info & reply syntax)
-    // 1 message to Co-Founder (alert with student info & reply syntax)
+    // 1 message to Founder (Parth)
+    // 1 message to Co-Founder (Suyog)
+    // 1 message to Co-Founder (Sanika)
     const studentCounselConfirm = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_REQUEST_CONFIRMATION');
     const founderCounselAlert = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
     const cofounderCounselAlert = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
+    const sanikaCounselAlert = dispatchedMessages.find(m => m.phone === sanikaPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
 
     assert(studentCounselConfirm, 'Student must receive counselor request confirmation');
     assert(founderCounselAlert, 'Founder must receive escalation alert on personal WhatsApp');
-    assert(cofounderCounselAlert, 'Co-Founder must also receive escalation alert on personal WhatsApp');
+    assert(cofounderCounselAlert, 'Suyog must also receive escalation alert on personal WhatsApp');
+    assert(sanikaCounselAlert, 'Sanika must also receive escalation alert on personal WhatsApp');
     assert(founderCounselAlert.text.includes('Rohit Verma'), 'Founder alert must cite student name');
     assert(cofounderCounselAlert.text.includes('Rohit Verma'), 'Co-Founder alert must cite student name');
-    console.log('  ✓ PASSED: Counselor request alerted to both Founder & Co-Founder, confirmed to Student.');
+    assert(sanikaCounselAlert.text.includes('Rohit Verma'), 'Sanika alert must cite student name');
+    console.log('  ✓ PASSED: Counselor request alerted to Founder, Suyog & Sanika, confirmed to Student.');
 
     // ----------------------------------------------------
     // TEST 2: Student submits technical doubt via QUERY:
@@ -96,11 +101,13 @@ async function runTest() {
     const studentQueryConfirm = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_QUERY_LOGGED');
     const founderQueryAlert = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
     const cofounderQueryAlert = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
+    const sanikaQueryAlert = dispatchedMessages.find(m => m.phone === sanikaPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
 
     assert(studentQueryConfirm, 'Student must receive query logged notice');
     assert(founderQueryAlert, 'Founder must receive query alert');
-    assert(cofounderQueryAlert, 'Co-Founder must receive query alert');
-    console.log('  ✓ PASSED: Technical doubt alerted to both Founder & Co-Founder.');
+    assert(cofounderQueryAlert, 'Suyog must receive query alert');
+    assert(sanikaQueryAlert, 'Sanika must receive query alert');
+    console.log('  ✓ PASSED: Technical doubt alerted to Founder, Suyog & Sanika.');
 
     // ----------------------------------------------------
     // TEST 3: Co-Founder checks active ticket queue (TICKETS)
@@ -216,8 +223,33 @@ async function runTest() {
     assert(studentReplyAck, 'Student must receive forward acknowledgement');
     console.log('  ✓ PASSED: Student reply forwarded to Mentor with privacy maintained.');
 
+    // ----------------------------------------------------
+    // TEST 8: Sanika (Co-Founder +918983020995) replies secretly via REPLY LAST:
+    // ----------------------------------------------------
+    console.log('\n▶ TEST 8: Sanika replies secretly via "REPLY LAST: ..." from +918983020995');
+    dispatchedMessages.length = 0;
+
+    const mockReq8 = {
+      body: {
+        from: sanikaPhone,
+        text: 'REPLY LAST: Great question Rohit! Main aapko sample Axios code send kar rahi hu.',
+        senderName: 'Sanika'
+      }
+    };
+    await handleIncomingWebhook(mockReq8, mockRes1);
+
+    const studentReceivedSanikaReply = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_DIRECT_REPLY');
+    const sanikaDeliveryConfirm = dispatchedMessages.find(m => m.phone === sanikaPhone && m.meta.context === 'FOUNDER_REPLY_CONFIRMED');
+
+    assert(studentReceivedSanikaReply, 'Student must receive counselor reply from bot');
+    assert(studentReceivedSanikaReply.text.includes('Sanika'), 'Message must reflect Sanika Desk title');
+    assert(studentReceivedSanikaReply.text.includes('sample Axios code'), 'Student must get exact text');
+    assert(sanikaDeliveryConfirm, 'Sanika must get delivery confirmation');
+    assert(sanikaDeliveryConfirm.text.includes('Privacy Protected'), 'Sanika confirmation must guarantee number masking');
+    console.log('  ✓ PASSED: Sanika secret reply delivered to student; Sanika personal number masked.');
+
     console.log('\n============================================================');
-    console.log('🎉 ALL 7 FOUNDER & CO-FOUNDER ANONYMOUS RELAY TESTS PASSED!');
+    console.log('🎉 ALL 8 LEADERSHIP (PARTH, SUYOG & SANIKA) RELAY TESTS PASSED!');
     console.log('============================================================\n');
 
   } finally {
