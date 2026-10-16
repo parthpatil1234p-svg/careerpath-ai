@@ -248,8 +248,57 @@ async function runTest() {
     assert(sanikaDeliveryConfirm.text.includes('Privacy Protected'), 'Sanika confirmation must guarantee number masking');
     console.log('  ✓ PASSED: Sanika secret reply delivered to student; Sanika personal number masked.');
 
+    // ----------------------------------------------------
+    // TEST 9: Sanika resolves the ticket (Broadcasts Resolve Sync to Parth & Suyog)
+    // ----------------------------------------------------
+    console.log('\n▶ TEST 9: Sanika resolves ticket -> Broadcasts Sync to Parth & Suyog');
+    dispatchedMessages.length = 0;
+
+    const mockReq9 = {
+      body: {
+        from: sanikaPhone,
+        text: 'RESOLVE LAST',
+        senderName: 'Sanika'
+      }
+    };
+    await handleIncomingWebhook(mockReq9, mockRes1);
+
+    const resolveSyncToFounder = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'LEADERSHIP_TICKET_RESOLVED_SYNC');
+    const resolveSyncToSuyog = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'LEADERSHIP_TICKET_RESOLVED_SYNC');
+
+    assert(resolveSyncToFounder, 'Parth must receive real-time resolve sync alert');
+    assert(resolveSyncToSuyog, 'Suyog must receive real-time resolve sync alert');
+    assert(resolveSyncToFounder.text.includes('Sanika'), 'Sync alert must cite resolving mentor');
+    console.log('  ✓ PASSED: Real-time sync alert broadcasted to other 2 mentors when ticket is resolved.');
+
+    // ----------------------------------------------------
+    // TEST 10: Suyog tries to reply to already-resolved ticket (Collision Guard)
+    // ----------------------------------------------------
+    console.log('\n▶ TEST 10: Suyog tries to reply to already-resolved ticket (Collision Guard Active)');
+    dispatchedMessages.length = 0;
+
+    const ticketCodeMatch = resolveSyncToFounder.text.match(/Code:\s*\*#?([0-9a-zA-Z-]+)\*/);
+    const resolvedCode = ticketCodeMatch ? ticketCodeMatch[1] : 'LAST';
+
+    const mockReq10 = {
+      body: {
+        from: cofounderPhone,
+        text: `REPLY #${resolvedCode}: Let me also help you with that`,
+        senderName: 'Suyog Pawar'
+      }
+    };
+    await handleIncomingWebhook(mockReq10, mockRes1);
+
+    const duplicateReplyToStudent = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'COUNSELOR_DIRECT_REPLY');
+    const collisionNoticeToSuyog = dispatchedMessages.find(m => m.phone === cofounderPhone && m.meta.context === 'FOUNDER_REPLY_ALREADY_RESOLVED');
+
+    assert(!duplicateReplyToStudent, 'No duplicate reply must be sent to student once ticket is resolved');
+    assert(collisionNoticeToSuyog, 'Suyog must receive collision guard notification');
+    assert(collisionNoticeToSuyog.text.includes('Already Resolved'), 'Collision notification must inform that ticket was already resolved');
+    console.log('  ✓ PASSED: Collision guard prevented duplicate reply and informed mentor.');
+
     console.log('\n============================================================');
-    console.log('🎉 ALL 8 LEADERSHIP (PARTH, SUYOG & SANIKA) RELAY TESTS PASSED!');
+    console.log('🎉 ALL 10 LEADERSHIP SYNC & COLLISION GUARD TESTS PASSED!');
     console.log('============================================================\n');
 
   } finally {

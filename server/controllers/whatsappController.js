@@ -71,7 +71,10 @@ function findTicket(queryId) {
 
   if (clean.toUpperCase() === 'LAST') {
     const all = Array.from(supportTicketsCache.values());
-    return all.length ? all[all.length - 1] : null;
+    if (!all.length) return null;
+    // Prioritize the latest ACTIVE / UNRESOLVED ticket so resolved tickets don't block new ones
+    const latestUnresolved = all.slice().reverse().find(t => t.status !== 'RESOLVED');
+    return latestUnresolved || all[all.length - 1];
   }
 
   // Exact match
@@ -92,8 +95,31 @@ function findTicket(queryId) {
 }
 
 /**
+ * Broadcasts an operational sync alert to all OTHER founders/mentors.
+ * Keeps all 3 leaders (Parth, Suyog, Sanika) 100% in sync whenever one takes action.
+ */
+async function broadcastLeadershipSync({ excludePhone, message, context = 'LEADERSHIP_SYNC_BROADCAST' }) {
+  try {
+    const founders = getFounders();
+    const excludeDigits = excludePhone ? whatsappService.getPhoneDigits(excludePhone).slice(-10) : '';
+
+    for (const founder of founders) {
+      if (founder.formattedPhone && founder.digits10 !== excludeDigits) {
+        await whatsappService.sendTextMessage(founder.formattedPhone, message, {
+          context,
+          recipientRole: founder.role
+        });
+        console.log(`[Leadership Sync] Broadcast sent to ${founder.name} (${founder.formattedPhone})`);
+      }
+    }
+  } catch (err) {
+    console.warn('[Leadership Sync] Warning broadcasting to peers:', err.message);
+  }
+}
+
+/**
  * Dispatches an anonymous escalation alert to the Founders' personal WhatsApp numbers.
- * The student's identity and query are sent to both the Founder and Co-Founder, along with instructions
+ * The student's identity and query are sent to all founders, along with instructions
  * on how to reply secretly via the official bot without exposing their personal numbers.
  */
 async function forwardAlertToFounder({ studentName, studentPhone, ticketId, type, issue, userContext }) {
@@ -172,9 +198,24 @@ async function handleFounderInbound({ founder, senderPhone, incomingText, trimme
       return true;
     }
 
+    if (ticket.status === 'RESOLVED') {
+      const resolvedTime = ticket.resolvedAt ? new Date(ticket.resolvedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'recently';
+      const alreadyMsg = 
+`ℹ️ *Ticket Already Resolved!*
+
+Docket #${ticket.ticketId} (${ticket.studentName}) pehle hi *${ticket.resolvedBy || 'team member'}* ne resolve kar diya hai (at ${resolvedTime}).
+
+Sabhi open tickets dekhne ke liye *TICKETS* type karein.`;
+      await whatsappService.sendTextMessage(senderPhone, alreadyMsg, { context: 'FOUNDER_ALREADY_RESOLVED' });
+      return true;
+    }
+
     ticket.status = 'RESOLVED';
     ticket.resolvedBy = adminName;
     ticket.resolvedAt = new Date().toISOString();
+
+    const shortCode = ticket.ticketId.replace(/^CP-[A-Z]+-/, '');
+    const nowTimeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
     // Friendly notice to student
     if (ticket.phone) {
@@ -191,6 +232,24 @@ Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas What
     }
 
     await whatsappService.sendTextMessage(senderPhone, `✅ Ticket #${ticket.ticketId} (${ticket.studentName}) ko *RESOLVED* mark kar diya gaya hai aur student ko confirmation bhej diya gaya hai.`, { context: 'FOUNDER_RESOLVE_CONFIRMED' });
+
+    // Broadcast Real-Time Sync to all other mentors (Parth, Suyog, Sanika)
+    const syncResolveMsg = 
+`✅ *Leadership Team Sync: Ticket Resolved!*
+
+🎫 *Docket:* #${ticket.ticketId} (Code: *#${shortCode}*)
+👤 *Student:* ${ticket.studentName} (${ticket.phone})
+👨‍💼 *Resolved By:* ${adminName} (${adminRole})
+🕒 *Time:* ${nowTimeStr}
+
+ℹ️ *Status:* Is student ka issue solve ho chuka hai. Baki mentors ko ispar koi action lene ki zarurat nahi hai.`;
+
+    await broadcastLeadershipSync({
+      excludePhone: senderPhone,
+      message: syncResolveMsg,
+      context: 'LEADERSHIP_TICKET_RESOLVED_SYNC'
+    });
+
     return true;
   }
 
@@ -212,6 +271,19 @@ Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas What
 Kripya valid docket ID use karein ya *TICKETS* bhejkar active queue check karein.
 Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
       await whatsappService.sendTextMessage(senderPhone, notFoundMsg, { context: 'FOUNDER_TICKET_NOT_FOUND' });
+      return true;
+    }
+
+    if (ticket.status === 'RESOLVED') {
+      const resolvedTime = ticket.resolvedAt ? new Date(ticket.resolvedAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'recently';
+      const warnResolvedMsg = 
+`⚠️ *Notice: Ticket Already Resolved!*
+
+Docket #${ticket.ticketId} (${ticket.studentName}) pehle hi *${ticket.resolvedBy || 'team member'}* ne resolve kar diya hai (at ${resolvedTime}).
+
+Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi student ko message bhejna ho, toh use karein:
+*MSG ${ticket.phone}: [aapka message]*`;
+      await whatsappService.sendTextMessage(senderPhone, warnResolvedMsg, { context: 'FOUNDER_REPLY_ALREADY_RESOLVED' });
       return true;
     }
 
@@ -259,6 +331,28 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
 🔒 *Privacy Protected:* Aapka personal number (${senderPhone}) reveal nahi hua. Message official bot (+91 7499085045) ke through bheja gaya hai.`;
 
     await whatsappService.sendTextMessage(senderPhone, confirmMsg, { context: 'FOUNDER_REPLY_CONFIRMED' });
+
+    // Broadcast Real-Time Sync to all other mentors (Parth, Suyog, Sanika)
+    const shortCode = ticket.ticketId.replace(/^CP-[A-Z]+-/, '');
+    const nowTimeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const syncReplyMsg = 
+`💬 *Leadership Team Sync: Counselor Replied!*
+
+🎫 *Docket:* #${ticket.ticketId} (Code: *#${shortCode}*)
+👤 *Student:* ${ticket.studentName} (${ticket.phone})
+👨‍💼 *Replied By:* ${adminName} (${adminRole})
+🕒 *Time:* ${nowTimeStr}
+📝 *Delivered Reply:*
+"${replyContent}"
+
+ℹ️ *Status:* Handled by ${adminName}. No duplicate reply required.`;
+
+    await broadcastLeadershipSync({
+      excludePhone: senderPhone,
+      message: syncReplyMsg,
+      context: 'LEADERSHIP_COUNSELOR_REPLY_SYNC'
+    });
+
     return true;
   }
 
@@ -397,41 +491,55 @@ ${matchStr}
     }
   }
 
-  // 5. Active Queue & Pending Tickets (TICKETS / PENDING / QUEUE / STATUS / LIST)
-  if (/^(tickets|pending|queue|status|list|open)\b/i.test(cleanLower)) {
+  // 5. Active Queue & Pending Tickets (TICKETS / PENDING / QUEUE / STATUS / LIST / TICKETS ALL)
+  if (/^(tickets|pending|queue|status|list|open|history)\b/i.test(cleanLower)) {
     const allTickets = Array.from(supportTicketsCache.values());
-    const pendingTickets = allTickets.filter(t => t.status !== 'RESOLVED');
+    const showAll = cleanLower.includes('all') || cleanLower.includes('history');
+    const displayTickets = showAll ? allTickets : allTickets.filter(t => t.status !== 'RESOLVED');
 
-    if (pendingTickets.length === 0) {
+    if (displayTickets.length === 0) {
       const emptyMsg = 
 `📋 *CareerPath AI  -  Leadership Admin Queue*
 
 Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. 🎉
 
-• Jab bhi koi student counselor call ya ticket raise karega, bot Founder & Co-Founder dono ko alert karega.
+• Jab bhi koi student doubt ya counselor request bhejega, bot sabhi 3 mentors (Parth, Suyog, Sanika) ko turant alert karega.
+• Past/Resolved tickets dekhne ke liye: *TICKETS ALL*
 • Kisi student ko message bhejne ke liye: *MSG [phone]: [message]*
 • AI mentor testing ke liye: *TEST: [sawal]*`;
       await whatsappService.sendTextMessage(senderPhone, emptyMsg, { context: 'FOUNDER_EMPTY_QUEUE' });
       return true;
     }
 
-    const listStr = pendingTickets.slice(-6).map(t => {
+    const listStr = displayTickets.slice(-6).map(t => {
       const shortCode = t.ticketId.replace(/^CP-[A-Z]+-/, '');
       const timeStr = t.createdAt ? new Date(t.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '';
-      return `• *#${shortCode}* [${t.type || 'SUPPORT'}]\n  👤 ${t.studentName} (${t.phone})\n  💬 "${t.issue}"\n  🕒 ${timeStr} · Status: *${t.status}*`;
+      let statusTag = `*${t.status}*`;
+      if (t.status === 'RESOLVED') {
+        statusTag = `✅ *RESOLVED by ${t.resolvedBy || 'Mentor'}*`;
+      } else if (t.status === 'COUNSELOR_REPLIED') {
+        statusTag = `💬 *REPLIED by ${t.lastReplyBy || 'Mentor'}*`;
+      }
+      return `• *#${shortCode}* [${t.type || 'SUPPORT'}]\n  👤 ${t.studentName} (${t.phone})\n  💬 "${t.issue}"\n  🕒 ${timeStr} · Status: ${statusTag}`;
     }).join('\n\n');
 
+    const queueHeader = showAll 
+      ? `📋 *CareerPath AI  -  Leadership Admin Queue (All Recent)*` 
+      : `📋 *CareerPath AI  -  Leadership Admin Queue (${displayTickets.length} Active Pending)*`;
+
     const queueMsg = 
-`📋 *CareerPath AI  -  Leadership Admin Queue (${pendingTickets.length} Active)*
+`${queueHeader}
 
 ${listStr}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👉 *Student ko reply karne ke liye:*
 *REPLY #[code]: [Aapka message]*
-_Example: REPLY #${pendingTickets[pendingTickets.length - 1].ticketId.replace(/^CP-[A-Z]+-/, '')}: Hello! Main check kar raha hoon._
 
-👉 *Quick reply to latest:*
+👉 *Ticket close karne ke liye:*
+*RESOLVE #[code]* ya *RESOLVE LAST*
+
+👉 *Quick reply to latest active:*
 *REPLY LAST: [Aapka message]*`;
 
     await whatsappService.sendTextMessage(senderPhone, queueMsg, { context: 'FOUNDER_TICKET_QUEUE' });
