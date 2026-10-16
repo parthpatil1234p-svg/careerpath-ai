@@ -38,6 +38,199 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css?v=2.6" />
 
+    <!-- Dedicated Quiz & Code Chamber Layout & Dark Theme Overrides -->
+    <style>
+      /* Main Page Clearance for Floating Notch Navbar */
+      .quiz-page-container {
+        padding-top: calc(var(--notch-nav-height, 64px) + 2.5rem) !important;
+        padding-bottom: 5rem !important;
+        min-height: 100vh;
+      }
+
+      /* Fix-the-Bug Proof-of-Work Chamber Hero Card */
+      .chamber-banner-card {
+        background: linear-gradient(135deg, #090d16 0%, #0f172a 60%, #1e293b 100%) !important;
+        border: 1px solid #334155 !important;
+        color: #f8fafc !important;
+        border-radius: 1rem !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+      }
+      .chamber-banner-card h2,
+      .chamber-banner-card p,
+      .chamber-banner-card span {
+        color: #f8fafc;
+      }
+      .chamber-banner-card .text-white-50 {
+        color: #94a3b8 !important;
+      }
+      .chamber-banner-card #chamberTitle {
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+
+      /* Telemetry Counter Boxes in Chamber Header */
+      .chamber-telemetry-box {
+        background: #020617 !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 0.5rem !important;
+        padding: 0.45rem 1rem !important;
+        min-width: 84px;
+        text-align: center;
+      }
+      .chamber-telemetry-box .telemetry-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: #94a3b8;
+        font-family: var(--font-mono, monospace);
+        letter-spacing: 0.05em;
+      }
+      .chamber-telemetry-box .telemetry-val {
+        font-size: 1rem;
+        font-weight: 700;
+        font-family: var(--font-mono, monospace);
+      }
+
+      /* Chamber Category Selector */
+      #chamberCategorySelect {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        -webkit-text-fill-color: #f8fafc !important;
+        border: 1px solid #475569 !important;
+        border-radius: 0.5rem !important;
+        font-size: 0.8rem !important;
+        padding: 0.35rem 2rem 0.35rem 0.75rem !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f59e0b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+      }
+      #chamberCategorySelect option {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+        -webkit-text-fill-color: #f8fafc !important;
+      }
+
+      /* Challenge Selection Pills */
+      .challenge-select-pill {
+        background: #1e293b !important;
+        border: 1px solid #334155 !important;
+        color: #cbd5e1 !important;
+        font-size: 0.78rem !important;
+        padding: 0.35rem 0.85rem !important;
+        border-radius: 9999px !important;
+        transition: all 0.2s ease !important;
+      }
+      .challenge-select-pill:hover {
+        background: #334155 !important;
+        color: #ffffff !important;
+        border-color: #f59e0b !important;
+        transform: translateY(-1px);
+      }
+      .challenge-select-pill.active {
+        background: rgba(245, 158, 11, 0.15) !important;
+        border-color: #f59e0b !important;
+        color: #fbbf24 !important;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.25) !important;
+        font-weight: 600 !important;
+      }
+
+      .badge-pill-hard {
+        background: rgba(239, 68, 68, 0.25) !important;
+        color: #fca5a5 !important;
+        border: 1px solid rgba(239, 68, 68, 0.5) !important;
+      }
+      .badge-pill-med {
+        background: rgba(245, 158, 11, 0.25) !important;
+        color: #fde68a !important;
+        border: 1px solid rgba(245, 158, 11, 0.5) !important;
+      }
+      .badge-pill-easy {
+        background: rgba(16, 185, 129, 0.25) !important;
+        color: #a7f3d0 !important;
+        border: 1px solid rgba(16, 185, 129, 0.5) !important;
+      }
+
+      /* Terminal Stack Trace Box */
+      .chamber-terminal-card {
+        background: #090d16 !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 0.75rem !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+      }
+      .chamber-terminal-header {
+        background: #050811 !important;
+        border-bottom: 1px solid #1e293b !important;
+        padding: 0.55rem 0.95rem !important;
+      }
+      .chamber-terminal-badge {
+        background: rgba(239, 68, 68, 0.18) !important;
+        color: #f87171 !important;
+        border: 1px solid rgba(239, 68, 68, 0.45) !important;
+        font-family: var(--font-mono, monospace) !important;
+        font-size: 0.68rem !important;
+        font-weight: 700 !important;
+        padding: 0.2rem 0.65rem !important;
+        border-radius: 9999px !important;
+      }
+      #chamberErrorLog {
+        color: #f87171 !important;
+        font-family: var(--font-mono, monospace) !important;
+        font-size: 0.78rem !important;
+        line-height: 1.55 !important;
+        background: transparent !important;
+        margin: 0 !important;
+      }
+
+      /* In-Browser Code Editor Card */
+      .chamber-editor-card {
+        background: #0f172a !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 0.75rem !important;
+        overflow: hidden !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+      }
+      .chamber-editor-topbar {
+        background: #090e1a !important;
+        border-bottom: 1px solid #1e293b !important;
+        padding: 0.55rem 1rem !important;
+      }
+      #codeLineGutter {
+        background: #090e1a !important;
+        color: #475569 !important;
+        border-right: 1px solid #1e293b !important;
+      }
+      #codeEditorInput {
+        background: #0f172a !important;
+        color: #f8fafc !important;
+        caret-color: #38bdf8 !important;
+      }
+      .chamber-console-tray {
+        background: #050811 !important;
+        border-top: 1px solid #1e293b !important;
+      }
+
+      /* Verification Mode Switcher */
+      #btnModeMcq, #btnModeCodeChamber {
+        border: none !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      #btnModeMcq:not(.active), #btnModeCodeChamber:not(.active) {
+        background: transparent !important;
+        color: #64748b !important;
+      }
+      #btnModeMcq:not(.active):hover, #btnModeCodeChamber:not(.active):hover {
+        background: rgba(148, 163, 184, 0.18) !important;
+        color: #0f172a !important;
+      }
+      #btnModeMcq.active, #btnModeCodeChamber.active {
+        background: #2563eb !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
+      }
+      #btnModeMcq.active i, #btnModeCodeChamber.active i {
+        color: #ffffff !important;
+      }
+    </style>
+
     <!-- Vercel Web Analytics (@vercel/analytics) -->
     <script>
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -447,7 +640,7 @@
       <!-- In-Browser "Fix-the-Bug" Proof-of-Work Chamber View (Initially d-none) -->
       <div id="codeChamberView" class="d-none mb-5">
         <!-- Chamber Control Banner -->
-        <div class="card p-3 p-md-4 mb-4 border border-line rounded-3 shadow-xs" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95)); color: #f8fafc;">
+        <div class="chamber-banner-card p-3 p-md-4 mb-4 rounded-3 shadow-sm">
           <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3">
               <div class="rounded-3 p-2.5 bg-warning bg-opacity-10 border border-warning border-opacity-25 text-warning fs-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
@@ -455,8 +648,8 @@
               </div>
               <div>
                 <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                  <span class="badge bg-warning text-dark font-mono small">PROOF-OF-WORK CHAMBER</span>
-                  <span class="badge bg-secondary bg-opacity-50 text-white font-mono small" id="chamberDifficultyBadge">Medium</span>
+                  <span class="badge bg-warning text-dark font-mono small fw-bold">PROOF-OF-WORK CHAMBER</span>
+                  <span class="badge bg-secondary bg-opacity-75 text-white font-mono small" id="chamberDifficultyBadge">Medium</span>
                   <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 small">
                     <i class="bi bi-shield-lock-fill me-1"></i>Anti-Cheat Telemetry Guard Active
                   </span>
@@ -470,17 +663,17 @@
 
             <!-- Live Telemetry Ribbons -->
             <div class="d-flex align-items-center gap-3 flex-wrap">
-              <div class="px-3 py-1.5 rounded-2 bg-dark border border-secondary border-opacity-25 text-center">
-                <div class="text-white-50 font-mono" style="font-size: 0.68rem; text-transform: uppercase;">Keystrokes</div>
-                <div class="text-warning font-mono fw-bold small" id="keystrokesCounter">0</div>
+              <div class="chamber-telemetry-box">
+                <div class="telemetry-label">Keystrokes</div>
+                <div class="text-warning telemetry-val" id="keystrokesCounter">0</div>
               </div>
-              <div class="px-3 py-1.5 rounded-2 bg-dark border border-secondary border-opacity-25 text-center">
-                <div class="text-white-50 font-mono" style="font-size: 0.68rem; text-transform: uppercase;">Pastes</div>
-                <div class="text-info font-mono fw-bold small" id="pasteCounter">0</div>
+              <div class="chamber-telemetry-box">
+                <div class="telemetry-label">Pastes</div>
+                <div class="text-info telemetry-val" id="pasteCounter">0</div>
               </div>
-              <div class="px-3 py-1.5 rounded-2 bg-dark border border-secondary border-opacity-25 text-center">
-                <div class="text-white-50 font-mono" style="font-size: 0.68rem; text-transform: uppercase;">Stopwatch</div>
-                <div class="text-success font-mono fw-bold small" id="chamberTimerDisplay">00:00</div>
+              <div class="chamber-telemetry-box">
+                <div class="telemetry-label">Stopwatch</div>
+                <div class="text-success telemetry-val" id="chamberTimerDisplay">00:00</div>
               </div>
             </div>
           </div>
@@ -490,7 +683,7 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
               <span class="small text-white-50 fw-semibold"><i class="bi bi-cpu text-warning me-1"></i> Select Production Bug Scenario:</span>
               <div class="d-flex align-items-center gap-2">
-                <select class="form-select form-select-sm bg-dark text-white border-secondary border-opacity-50" id="chamberCategorySelect" style="width: auto; font-size: 0.78rem;" onchange="window.CodeChamber.loadChallenges()">
+                <select class="form-select form-select-sm" id="chamberCategorySelect" style="width: auto; font-size: 0.78rem;" onchange="window.CodeChamber.loadChallenges()">
                   <option value="all">All Categories (10 Challenges)</option>
                   <option value="javascript">JavaScript / Node.js</option>
                   <option value="react">React / Frontend</option>
@@ -525,18 +718,18 @@
             </div>
 
             <!-- Terminal Stack Trace Box -->
-            <div class="card mb-3 border-0 rounded-3 shadow-xs overflow-hidden" style="background: #090d16; border: 1px solid rgba(255,255,255,0.08) !important;">
-              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom border-secondary border-opacity-20" style="background: rgba(255,255,255,0.03);">
+            <div class="chamber-terminal-card mb-3 rounded-3 shadow-xs overflow-hidden">
+              <div class="d-flex align-items-center justify-content-between px-3 py-2 chamber-terminal-header">
                 <div class="d-flex align-items-center gap-1.5">
                   <span class="rounded-circle" style="width: 10px; height: 10px; background: #ef4444;"></span>
                   <span class="rounded-circle" style="width: 10px; height: 10px; background: #f59e0b;"></span>
                   <span class="rounded-circle" style="width: 10px; height: 10px; background: #10b981;"></span>
                   <span class="text-white-50 font-mono ms-2" style="font-size: 0.72rem;">terminal.stderr</span>
                 </div>
-                <span class="badge bg-danger bg-opacity-20 text-danger font-mono" style="font-size: 0.65rem;">Process Crash</span>
+                <span class="chamber-terminal-badge">Process Crash</span>
               </div>
-              <div class="p-3">
-                <pre class="mb-0 text-danger font-mono small" id="chamberErrorLog" style="white-space: pre-wrap; font-size: 0.75rem; line-height: 1.5; max-height: 140px; overflow-y: auto;">Loading error trace...</pre>
+              <div class="p-3" style="background: #090d16;">
+                <pre class="mb-0 font-mono small" id="chamberErrorLog" style="white-space: pre-wrap; font-size: 0.75rem; line-height: 1.5; max-height: 140px; overflow-y: auto;">Loading error trace...</pre>
               </div>
             </div>
 
@@ -570,7 +763,7 @@
 
           <!-- Right Column: In-Browser Code Editor & Output Console -->
           <div class="col-lg-7">
-            <div class="card border-0 rounded-3 shadow-sm overflow-hidden" style="background: #0f172a; border: 1px solid #1e293b !important;">
+            <div class="chamber-editor-card rounded-3 shadow-sm overflow-hidden">
               <!-- Editor Top Bar -->
               <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom border-secondary border-opacity-25" style="background: #090e1a;">
                 <div class="d-flex align-items-center gap-2">

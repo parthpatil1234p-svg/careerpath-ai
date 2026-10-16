@@ -133,9 +133,9 @@
 
     let html = '';
     challenges.forEach((ch, idx) => {
-      const diffBadge = ch.difficulty === 'Hard' ? 'bg-danger-subtle text-danger' : ch.difficulty === 'Medium' ? 'bg-warning-subtle text-warning' : 'bg-success-subtle text-success';
+      const diffBadge = ch.difficulty === 'Hard' ? 'badge-pill-hard' : ch.difficulty === 'Medium' ? 'badge-pill-med' : 'badge-pill-easy';
       html += `
-        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill text-start mb-1 text-truncate challenge-select-pill ${idx === 0 ? 'active' : ''}" 
+        <button type="button" class="btn btn-sm rounded-pill text-start mb-1 text-truncate challenge-select-pill ${idx === 0 ? 'active' : ''}" 
                 data-id="${ch.id}" onclick="window.CodeChamber.selectChallenge('${ch.id}')" style="font-size: 0.78rem;">
           <span class="badge ${diffBadge} me-1" style="font-size: 0.65rem;">${ch.difficulty}</span>
           <span>${escapeHtml(ch.title)}</span>
