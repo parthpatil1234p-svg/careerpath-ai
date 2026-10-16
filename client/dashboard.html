@@ -267,55 +267,55 @@
         <div class="readiness-hero-card p-4 p-md-4 rounded-3 mb-4" id="readinessHeroCard">
           <div class="row align-items-center g-4">
             <div class="col-lg-7">
-              <div class="d-flex align-items-center gap-2 mb-2">
-                <span class="badge bg-primary bg-opacity-25 text-info font-monospace text-uppercase" style="letter-spacing: 0.5px;">
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <span class="badge bg-primary bg-opacity-10 text-primary font-monospace text-uppercase border border-primary border-opacity-25" style="letter-spacing: 0.5px;">
                   <i class="bi bi-crosshair me-1"></i> CAREER GPS READINESS INDEX
                 </span>
                 <span class="badge badge-tier-developing font-monospace text-uppercase" id="readinessTierBadge">
                   Calculating...
                 </span>
               </div>
-              <h2 class="h3 fw-bold text-white mb-2">
-                Job Readiness Index: <span id="readinessScoreText" class="text-cyan font-mono">0%</span>
+              <h2 class="h3 fw-bold text-ink mb-2">
+                Job Readiness Index: <span id="readinessScoreText" class="text-primary font-mono">0%</span>
               </h2>
-              <p class="text-light text-opacity-75 small mb-3" id="readinessTargetRoleText">
-                Target Role: <strong class="text-white">Software Engineer</strong> &middot; Weighted composite score derived from verified skills, roadmap progress, resume ATS compliance, and AI mock interview simulations.
+              <p class="text-secondary small mb-3" id="readinessTargetRoleText">
+                Target Role: <strong class="text-ink">Software Engineer</strong> &middot; Weighted composite score derived from verified skills, roadmap progress, resume ATS compliance, and AI mock interview simulations.
               </p>
 
               <!-- Progress bar & metrics breakdown -->
               <div class="row g-2 mb-3" id="readinessMetricsRow">
                 <div class="col-6 col-sm-3">
-                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                  <div class="p-2 rounded-2 bg-white border border-line text-center shadow-xs">
                     <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-patch-check-fill text-success me-1"></i> Verified (35%)</div>
-                    <div class="fw-bold text-white font-mono" id="metricScoreVerified">--</div>
+                    <div class="fw-bold text-ink font-mono" id="metricScoreVerified">--</div>
                   </div>
                 </div>
                 <div class="col-6 col-sm-3">
-                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                  <div class="p-2 rounded-2 bg-white border border-line text-center shadow-xs">
                     <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-map-fill text-info me-1"></i> Roadmap (30%)</div>
-                    <div class="fw-bold text-white font-mono" id="metricScoreRoadmap">--</div>
+                    <div class="fw-bold text-ink font-mono" id="metricScoreRoadmap">--</div>
                   </div>
                 </div>
                 <div class="col-6 col-sm-3">
-                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                  <div class="p-2 rounded-2 bg-white border border-line text-center shadow-xs">
                     <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-file-earmark-person-fill text-warning me-1"></i> ATS (15%)</div>
-                    <div class="fw-bold text-white font-mono" id="metricScoreResume">--</div>
+                    <div class="fw-bold text-ink font-mono" id="metricScoreResume">--</div>
                   </div>
                 </div>
                 <div class="col-6 col-sm-3">
-                  <div class="p-2 rounded-2 bg-dark bg-opacity-50 border border-secondary border-opacity-25 text-center">
+                  <div class="p-2 rounded-2 bg-white border border-line text-center shadow-xs">
                     <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-mic-fill text-danger me-1"></i> Interview (20%)</div>
-                    <div class="fw-bold text-white font-mono" id="metricScoreInterview">--</div>
+                    <div class="fw-bold text-ink font-mono" id="metricScoreInterview">--</div>
                   </div>
                 </div>
               </div>
 
               <!-- Action buttons -->
               <div class="d-flex align-items-center gap-2 flex-wrap">
-                <button type="button" class="btn btn-primary btn-sm px-3 py-1.5 fw-semibold" id="btnLaunchMockInterview">
+                <button type="button" class="btn cp-btn-primary btn-sm px-3 py-1.5 fw-semibold" id="btnLaunchMockInterview">
                   <i class="bi bi-mic-fill me-1"></i> Practice AI Mock Interview
                 </button>
-                <button type="button" class="btn btn-outline-light btn-sm px-3 py-1.5 fw-semibold" id="btnViewCertificate" data-bs-toggle="modal" data-bs-target="#certificateModal">
+                <button type="button" class="btn cp-btn-outline btn-sm px-3 py-1.5 fw-semibold" id="btnViewCertificate" data-bs-toggle="modal" data-bs-target="#certificateModal">
                   <i class="bi bi-award-fill text-warning me-1"></i> View Career Certificate
                 </button>
               </div>
@@ -325,13 +325,13 @@
               <div class="d-flex align-items-center gap-4">
                 <div class="readiness-gauge-circle" id="readinessGaugeCircle" style="--readiness-pct: 65;">
                   <div class="readiness-gauge-inner">
-                    <span class="fs-4 fw-bold font-mono text-cyan" id="readinessGaugeVal">0%</span>
+                    <span class="fs-4 fw-bold font-mono text-primary" id="readinessGaugeVal">0%</span>
                     <span class="text-muted" style="font-size: 0.75rem; text-transform: uppercase;">Ready</span>
                   </div>
                 </div>
-                <div class="small text-light text-opacity-75">
-                  <div class="fw-bold text-white mb-1"><i class="bi bi-shield-check text-success me-1"></i> Anti-Cheat Grounded</div>
-                  <div style="font-size: 0.75rem;">Requires satisfying all 4 Job Ready benchmarks to unlock the official verifiable digital certificate.</div>
+                <div class="small text-secondary">
+                  <div class="fw-bold text-ink mb-1"><i class="bi bi-shield-check text-success me-1"></i> Anti-Cheat Grounded</div>
+                  <div class="text-muted" style="font-size: 0.75rem;">Requires satisfying all 4 Job Ready benchmarks to unlock the official verifiable digital certificate.</div>
                 </div>
               </div>
             </div>
@@ -1109,34 +1109,34 @@
     <!-- AI Interactive Mock Interview Chamber Modal -->
     <div class="modal fade" id="mockInterviewModal" tabindex="-1" aria-labelledby="mockInterviewModalLabel" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-line bg-dark text-white">
-          <div class="modal-header border-bottom border-secondary border-opacity-25">
+        <div class="modal-content border-line bg-white shadow-xl">
+          <div class="modal-header border-bottom border-line">
             <div class="d-flex align-items-center gap-2">
               <span class="chamber-live-badge">
                 <span class="chamber-beacon-dot"></span> AI INTERVIEW CHAMBER
               </span>
-              <h2 class="modal-title h5 fw-bold text-white mb-0" id="mockInterviewModalLabel">Live Technical &amp; Behavioral Interview</h2>
+              <h2 class="modal-title h5 fw-bold text-ink mb-0" id="mockInterviewModalLabel">Live Technical &amp; Behavioral Interview</h2>
             </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="btnCloseMockInterview"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btnCloseMockInterview"></button>
           </div>
 
           <div class="modal-body p-4">
             <!-- Chamber Header / Status -->
-            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-secondary border-opacity-25 flex-wrap gap-2">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-line flex-wrap gap-2">
               <div class="d-flex align-items-center gap-2 flex-wrap">
                 <div class="chamber-meta-chip">
                   <span class="chamber-meta-label">TARGET ROLE:</span>
-                  <strong class="chamber-meta-val text-cyan" id="interviewTargetRole">Full-Stack Developer</strong>
+                  <strong class="chamber-meta-val text-primary" id="interviewTargetRole">Full-Stack Developer</strong>
                 </div>
                 <div class="chamber-progress-chip font-monospace">
-                  <i class="bi bi-terminal-split me-1 text-cyan"></i>
+                  <i class="bi bi-terminal-split me-1 text-primary"></i>
                   <span id="interviewProgressText">Question 1 of 3</span>
                 </div>
               </div>
               <div class="d-flex align-items-center gap-2 flex-wrap">
                 <!-- Natural Human Voice Selector -->
                 <div class="d-flex align-items-center voice-select-pill">
-                  <i class="bi bi-soundwave text-cyan me-1.5" style="font-size: 0.95rem;"></i>
+                  <i class="bi bi-soundwave text-primary me-1.5" style="font-size: 0.95rem;"></i>
                   <label for="interviewVoiceSelector" class="visually-hidden">Interviewer Voice Persona</label>
                   <select class="chamber-voice-select" id="interviewVoiceSelector" title="Select natural human interviewer voice">
                     <option value="Joanna" selected>✨ Joanna (Natural US Recruiter)</option>
@@ -1148,14 +1148,14 @@
                 </div>
 
                 <!-- Speak / Stop Question Button -->
-                <button type="button" class="btn btn-outline-info btn-sm px-3 d-inline-flex align-items-center gap-1.5" id="btnSpeakQuestion" title="Play natural AI Interviewer voice">
+                <button type="button" class="btn cp-btn-outline btn-sm px-3 d-inline-flex align-items-center gap-1.5" id="btnSpeakQuestion" title="Play natural AI Interviewer voice">
                   <span class="audio-wave-anim d-none" id="audioWaveBars" aria-hidden="true">
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                   </span>
-                  <i class="bi bi-volume-up-fill" id="btnSpeakIcon"></i>
+                  <i class="bi bi-volume-up-fill text-primary" id="btnSpeakIcon"></i>
                   <span id="btnSpeakText">Read Question</span>
                 </button>
               </div>
@@ -1165,8 +1165,8 @@
             <div class="interview-hud-card p-3 mb-4">
               <!-- Loading state inside prompt box -->
               <div id="interviewQuestionLoading" class="text-center py-4 d-none">
-                <div class="spinner-border text-info mb-2" role="status" style="width: 2rem; height: 2rem;" aria-label="Loading question..."></div>
-                <div class="text-light small">AI Interviewer is formulating technical scenarios tailored to your skills...</div>
+                <div class="spinner-border text-primary mb-2" role="status" style="width: 2rem; height: 2rem;" aria-label="Loading question..."></div>
+                <div class="text-secondary small">AI Interviewer is formulating technical scenarios tailored to your skills...</div>
               </div>
 
               <div id="interviewQuestionContainer" class="d-flex align-items-start gap-3">
@@ -1188,7 +1188,7 @@
                       <div class="spectrum-bar"></div>
                     </div>
                   </div>
-                  <h3 class="h6 fw-semibold text-white mb-0" id="currentQuestionText" style="line-height: 1.65;">
+                  <h3 class="h6 fw-semibold text-ink mb-0" id="currentQuestionText" style="line-height: 1.65;">
                     Loading your interview question...
                   </h3>
                 </div>
@@ -1199,7 +1199,7 @@
             <div class="mb-3">
               <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
                 <label class="form-label interview-section-label small fw-bold mb-0 d-flex align-items-center gap-2" for="interviewAnswerInput">
-                  <i class="bi bi-chat-left-quote-fill text-cyan"></i>
+                  <i class="bi bi-chat-left-quote-fill text-primary"></i>
                   <span>Your Spoken or Written Response</span>
                 </label>
                 <div class="d-flex align-items-center gap-2">
@@ -1214,7 +1214,7 @@
               <textarea id="interviewAnswerInput" class="form-control" rows="5" placeholder="Speak into your microphone or type your technical response here..."></textarea>
               <div class="d-flex align-items-center justify-content-between mt-2 pt-1 interview-tip-bar flex-wrap gap-2">
                 <div class="interview-tip-text">
-                  <i class="bi bi-lightbulb-fill text-warning me-1"></i> <span class="fw-semibold text-light text-opacity-90">Tip:</span> Use the <strong class="text-cyan">STAR method</strong> (Situation, Task, Action, Result) for top marks.
+                  <i class="bi bi-lightbulb-fill text-warning me-1"></i> <span class="fw-semibold text-secondary">Tip:</span> Use the <strong class="text-primary">STAR method</strong> (Situation, Task, Action, Result) for top marks.
                 </div>
                 <div class="interview-char-badge" id="answerCharCount">0 chars</div>
               </div>
@@ -1223,24 +1223,24 @@
             <!-- Evaluation Feedback Card (Visible after submission) -->
             <div id="evaluationFeedbackCard" class="d-none p-3 rounded-3 mb-3">
               <div class="d-flex align-items-center justify-content-between mb-2.5 flex-wrap gap-2">
-                <div class="fw-bold text-info d-flex align-items-center gap-1.5">
-                  <i class="bi bi-shield-check text-cyan"></i>
+                <div class="fw-bold text-primary d-flex align-items-center gap-1.5">
+                  <i class="bi bi-shield-check text-primary"></i>
                   <span>AI Evaluation Breakdown</span>
                 </div>
                 <div class="badge font-mono" id="evalScoreBadge">Score: 85/100</div>
               </div>
-              <div class="small text-light mb-3" id="evalFeedbackText">Great explanation of the architecture.</div>
+              <div class="small text-secondary mb-3" id="evalFeedbackText">Great explanation of the architecture.</div>
               <div class="row g-2 mb-3">
                 <div class="col-4">
                   <div class="eval-score-tile">
                     <div class="eval-score-label">TECHNICAL DEPTH</div>
-                    <div class="eval-score-num text-cyan" id="evalTechScore">85%</div>
+                    <div class="eval-score-num text-primary" id="evalTechScore">85%</div>
                   </div>
                 </div>
                 <div class="col-4">
                   <div class="eval-score-tile">
                     <div class="eval-score-label">COMMUNICATION</div>
-                    <div class="eval-score-num text-info" id="evalCommScore">90%</div>
+                    <div class="eval-score-num text-primary" id="evalCommScore">90%</div>
                   </div>
                 </div>
                 <div class="col-4">
@@ -1251,24 +1251,24 @@
                 </div>
               </div>
               <div class="eval-model-answer-box">
-                <strong class="text-white d-block mb-1"><i class="bi bi-stars text-warning me-1"></i> Model Answer Benchmark:</strong>
+                <strong class="text-ink d-block mb-1"><i class="bi bi-stars text-warning me-1"></i> Model Answer Benchmark:</strong>
                 <span id="evalModelAnswer">--</span>
               </div>
             </div>
           </div>
 
-          <div class="modal-footer border-top border-secondary border-opacity-25 d-flex justify-content-between">
-            <button type="button" class="btn btn-outline-secondary btn-sm chamber-exit-btn" data-bs-dismiss="modal">
+          <div class="modal-footer border-top border-line d-flex justify-content-between">
+            <button type="button" class="btn cp-btn-outline btn-sm chamber-exit-btn" data-bs-dismiss="modal">
               <i class="bi bi-box-arrow-left me-1.5"></i> Exit Interview
             </button>
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-success btn-sm px-4 fw-semibold chamber-submit-btn" id="btnSubmitAnswer">
                 <i class="bi bi-lightning-charge-fill me-1"></i> Evaluate Response
               </button>
-              <button type="button" class="btn btn-primary btn-sm px-4 fw-semibold d-none" id="btnNextQuestion">
+              <button type="button" class="btn cp-btn-primary btn-sm px-4 fw-semibold d-none" id="btnNextQuestion">
                 Next Question <i class="bi bi-arrow-right ms-1"></i>
               </button>
-              <button type="button" class="btn btn-warning btn-sm px-4 fw-semibold d-none" id="btnFinalizeInterview">
+              <button type="button" class="btn btn-warning btn-sm px-4 fw-semibold d-none text-dark" id="btnFinalizeInterview">
                 <i class="bi bi-trophy-fill me-1"></i> Complete &amp; Save Score
               </button>
             </div>
@@ -1281,16 +1281,16 @@
     <div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable cert-modal-dialog">
         <div class="modal-content border-0 shadow-2xl cert-modal-content">
-          <div class="modal-header border-0 px-3 py-2 bg-dark text-white d-flex align-items-center justify-content-between">
+          <div class="modal-header border-0 px-3 py-2 bg-white border-bottom border-line d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-warning text-dark font-monospace text-uppercase fw-bold px-2 py-0.5" style="font-size: 0.75rem;">IVY-LEAGUE ACCREDITATION</span>
-              <h2 class="modal-title h6 fw-bold text-white mb-0" id="certificateModalLabel" style="font-size: 0.88rem;">CareerPath AI &mdash; Verified Job Ready Digital Credential</h2>
+              <span class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-50 font-monospace text-uppercase fw-bold px-2 py-0.5" style="font-size: 0.75rem;">IVY-LEAGUE ACCREDITATION</span>
+              <h2 class="modal-title h6 fw-bold text-ink mb-0" id="certificateModalLabel" style="font-size: 0.88rem;">CareerPath AI - Verified Job Ready Digital Credential</h2>
             </div>
             <div class="d-flex align-items-center gap-2">
-              <button type="button" class="btn btn-outline-light btn-sm py-1 px-2.5 d-flex align-items-center gap-1.5" id="btnToggleCertTheme" title="Toggle Parchment / Royal Obsidian Theme">
+              <button type="button" class="btn cp-btn-outline btn-sm py-1 px-2.5 d-flex align-items-center gap-1.5" id="btnToggleCertTheme" title="Toggle Parchment / Royal Obsidian Theme">
                 <i class="bi bi-moon-stars-fill text-warning"></i> <span class="d-none d-sm-inline" id="certThemeBtnText">Dark Obsidian</span>
               </button>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
           </div>
 
@@ -1514,16 +1514,16 @@
           </div>
 
           <!-- Modal Action Controls -->
-          <div class="modal-footer border-0 px-3 py-2 bg-dark d-flex flex-wrap align-items-center justify-content-between gap-2">
-            <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+          <div class="modal-footer border-0 px-3 py-2 bg-white border-top border-line d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Close</button>
             <div class="d-flex align-items-center gap-2 flex-wrap">
-              <button type="button" class="btn btn-outline-light btn-sm px-3" id="btnCopyCertLink" title="Copy public verification link to clipboard">
+              <button type="button" class="btn cp-btn-outline btn-sm px-3" id="btnCopyCertLink" title="Copy public verification link to clipboard">
                 <i class="bi bi-link-45deg me-1"></i> Copy Link
               </button>
-              <button type="button" class="btn btn-outline-info btn-sm px-3 text-white" id="btnAddLinkedInCert" title="Add directly to your LinkedIn Licenses & Certifications">
-                <i class="bi bi-linkedin text-info me-1"></i> Add to LinkedIn
+              <button type="button" class="btn cp-btn-outline btn-sm px-3" id="btnAddLinkedInCert" title="Add directly to your LinkedIn Licenses & Certifications">
+                <i class="bi bi-linkedin text-primary me-1"></i> Add to LinkedIn
               </button>
-              <button type="button" class="btn btn-warning btn-sm px-3 fw-semibold text-dark" id="btnPrintCertPdf" onclick="window.printCertificateModal ? window.printCertificateModal() : window.print()">
+              <button type="button" class="btn cp-btn-primary btn-sm px-3 fw-semibold" id="btnPrintCertPdf" onclick="window.printCertificateModal ? window.printCertificateModal() : window.print()">
                 <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
               </button>
             </div>

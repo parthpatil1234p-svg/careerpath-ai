@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Official Public Credential Verification Portal &mdash; CareerPath AI Global Accreditation Registry"
+      content="Official Public Credential Verification Portal - CareerPath AI Global Accreditation Registry"
     />
-    <meta name="theme-color" content="#0B1120" />
-    <title>Official Credential Verification &mdash; CareerPath AI</title>
+    <meta name="theme-color" content="#2563EB" />
+    <title>Official Credential Verification - CareerPath AI</title>
 
     <!-- Machine-Readable Context & WebMCP Discovery Declarations -->
     <link rel="alternate" type="text/markdown" href="https://careerpath-ai-bdbt.onrender.com/llms.txt" title="LLM Machine-Readable Context Manifest" />
@@ -25,7 +25,7 @@
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://careerpath-ai-bdbt.onrender.com/verify.html" />
-    <meta property="og:title" content="Official Credential Verification — CareerPath AI" />
+    <meta property="og:title" content="Official Credential Verification - CareerPath AI" />
     <meta property="og:description" content="Verify authentic SHA-256 cryptographic milestone certifications issued by CareerPath AI Technologies Inc." />
     <meta property="og:image" content="https://careerpath-ai-bdbt.onrender.com/favicon.svg" />
 
@@ -81,38 +81,39 @@
 
     <style>
       body.verify-page {
-        background-color: #070B14;
+        background-color: #F8FAFC;
         background-image: 
-          radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
-          radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
-        color: #E2E8F0;
+          radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 60%),
+          radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.04) 0%, transparent 50%);
+        color: #1E293B;
         min-height: 100vh;
         font-family: 'Inter', sans-serif;
       }
 
       .verify-nav {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(11, 17, 32, 0.85);
+        border-bottom: 1px solid #E2E8F0;
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(12px);
       }
 
       .verify-lookup-card {
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
       }
 
       .ledger-audit-box {
-        background: #0D1424;
-        border: 1px solid rgba(212, 175, 55, 0.3);
+        background: #FFFFFF;
+        border: 1.5px solid #BFDBFE;
         border-radius: 14px;
-        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.08);
       }
 
       .status-pill-authentic {
-        background: rgba(16, 185, 129, 0.15);
+        background: #ECFDF5;
         border: 1.5px solid #10B981;
-        color: #34D399;
+        color: #065F46;
         font-family: var(--font-mono);
         font-feature-settings: "zero" 0;
         font-weight: 700;
@@ -123,12 +124,13 @@
       }
 
       .status-pill-invalid {
-        background: rgba(239, 68, 68, 0.15);
+        background: #FEF2F2;
         border: 1.5px solid #EF4444;
-        color: #F87171;
+        color: #991B1B;
         font-family: var(--font-mono);
         font-feature-settings: "zero" 0;
         font-weight: 700;
+        letter-spacing: 0.5px;
         font-size: 0.82rem;
         padding: 0.35rem 0.85rem;
         border-radius: 9999px;
@@ -138,15 +140,15 @@
         font-size: 0.72rem;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #94A3B8;
+        color: #64748B;
         font-family: var(--font-mono);
         font-feature-settings: "zero" 0;
       }
 
       .verify-meta-val {
         font-size: 1.05rem;
-        font-weight: 600;
-        color: #F8FAFC;
+        font-weight: 700;
+        color: #0F172A;
       }
 
       .verify-card-cert {
@@ -159,11 +161,11 @@
         font-family: var(--font-code, monospace);
         font-feature-settings: "zero" 0;
         font-size: 0.72rem;
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px dashed rgba(212, 175, 55, 0.4);
+        background: #F1F5F9;
+        border: 1px dashed #CBD5E1;
         padding: 0.4rem 0.75rem;
         border-radius: 6px;
-        color: #FCD34D;
+        color: #1E293B;
         word-break: break-all;
       }
     </style>
@@ -181,10 +183,10 @@
     <!-- Top Navigation -->
     <header class="verify-nav py-3 sticky-top">
       <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
-        <a href="index.html" class="d-flex align-items-center text-decoration-none text-white gap-2">
+        <a href="index.html" class="d-flex align-items-center text-decoration-none text-dark gap-2">
           <img src="assets/logo.svg" alt="CareerPath AI" width="36" height="36" />
-          <span class="fs-5 fw-bold font-monospace">CareerPath <span class="text-teal" style="color: #0EA5E9;">AI</span></span>
-          <span class="badge bg-secondary bg-opacity-25 text-warning font-monospace small ms-2 border border-warning border-opacity-25">
+          <span class="fs-5 fw-bold font-monospace text-ink">CareerPath <span class="text-primary">AI</span></span>
+          <span class="badge bg-primary bg-opacity-10 text-primary font-monospace small ms-2 border border-primary border-opacity-25">
             <i class="bi bi-shield-lock-fill me-1"></i> Public Registry
           </span>
         </a>
@@ -192,16 +194,16 @@
         <!-- Lookup Search Form in Header (WebMCP Annotated) -->
         <form id="verifySearchForm" class="d-flex align-items-center gap-2 m-0" style="max-width: 380px;" data-mcp-action="verify_credential" data-mcp-description="Cryptographically verify milestone certificate by identifier" data-mcp-params='{"certificateId": "#inputCertId", "targetUrl": "/verify.html", "method": "GET"}'>
           <div class="input-group input-group-sm">
-            <span class="input-group-text bg-dark border-secondary text-secondary font-mono">ID:</span>
+            <span class="input-group-text bg-light border-line text-secondary font-mono">ID:</span>
             <input
               type="text"
               id="inputCertId"
-              class="form-control form-control-sm bg-dark text-white border-secondary font-mono"
+              class="form-control form-control-sm bg-white text-ink border-line font-mono"
               placeholder="e.g. CP-2026-VRF892"
               required
               data-mcp-param="certificateId"
             />
-            <button class="btn btn-warning btn-sm fw-semibold" type="submit" data-mcp-trigger="verify_credential">
+            <button class="btn cp-btn-primary btn-sm fw-semibold" type="submit" data-mcp-trigger="verify_credential">
               <i class="bi bi-search me-1"></i> Verify
             </button>
           </div>
@@ -216,7 +218,7 @@
         <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem;" role="status">
           <span class="visually-hidden">Auditing Cryptographic Ledger...</span>
         </div>
-        <h2 class="h5 fw-bold text-white mb-1">Querying CareerPath AI Public Ledger...</h2>
+        <h2 class="h5 fw-bold text-ink mb-1">Querying CareerPath AI Public Ledger...</h2>
         <p class="text-secondary small font-mono">Auditing SHA-256 seal &middot; Checking tamper-proof signature &middot; Verifying role competencies</p>
       </div>
 
@@ -229,7 +231,7 @@
           <div class="status-pill-invalid d-inline-block mx-auto mb-3">
             <i class="bi bi-exclamation-triangle-fill me-1"></i> INVALID OR UNREGISTERED CREDENTIAL
           </div>
-          <h2 class="h4 fw-bold text-white mb-2">No Matching Credential Found</h2>
+          <h2 class="h4 fw-bold text-ink mb-2">No Matching Credential Found</h2>
           <p class="text-secondary small mb-4" id="errorMessageText">
             The credential identifier does not match any authenticated record in the official registry ledger. Please verify the ID for typographical errors.
           </p>
@@ -237,7 +239,7 @@
             <a href="verify.html?certId=CP-2026-VRF892" class="btn btn-outline-info btn-sm font-mono">
               <i class="bi bi-shield-check me-1"></i> Verify Sample Credential (CP-2026-VRF892)
             </a>
-            <a href="index.html" class="btn btn-outline-light btn-sm">
+            <a href="index.html" class="btn cp-btn-outline btn-sm">
               <i class="bi bi-house me-1"></i> Return Home
             </a>
           </div>
@@ -261,7 +263,7 @@
                   ID: CP-2026-VRF892
                 </span>
               </div>
-              <div class="text-light small font-mono">
+              <div class="text-secondary small font-mono">
                 Official accreditation issued by CareerPath AI Global Verified Talent Registry.
               </div>
             </div>
@@ -269,16 +271,16 @@
 
           <!-- Quick Action Buttons -->
           <div class="d-flex align-items-center gap-2 flex-wrap">
-            <button type="button" class="btn btn-outline-warning btn-sm px-3" id="btnToggleVerifyCertTheme" title="Toggle Parchment / Dark Obsidian Theme">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" id="btnToggleVerifyCertTheme" title="Toggle Parchment / Dark Obsidian Theme">
               <i class="bi bi-moon-stars-fill me-1"></i> <span id="verifyThemeText">Dark Obsidian</span>
             </button>
-            <button type="button" class="btn btn-outline-light btn-sm px-3" id="btnCopyRecord">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" id="btnCopyRecord">
               <i class="bi bi-clipboard-check me-1"></i> Copy Record
             </button>
-            <button type="button" class="btn btn-outline-info btn-sm px-3 text-white" id="btnAddLinkedIn">
+            <button type="button" class="btn cp-btn-outline btn-sm px-3" id="btnAddLinkedIn">
               <i class="bi bi-linkedin text-info me-1"></i> Add to LinkedIn
             </button>
-            <button type="button" class="btn btn-warning btn-sm px-3 fw-semibold text-dark" id="btnPrintVerifyCertPdf" onclick="window.printCertificate ? window.printCertificate() : window.print()">
+            <button type="button" class="btn cp-btn-primary btn-sm px-3 fw-semibold" id="btnPrintVerifyCertPdf" onclick="window.printCertificate ? window.printCertificate() : window.print()">
               <i class="bi bi-printer-fill me-1"></i> Print / PDF
             </button>
           </div>
@@ -503,35 +505,35 @@
 
         <!-- Ledger Audit Details Table for Recruiters -->
         <div class="card p-4 verify-lookup-card mb-4">
-          <h3 class="h5 fw-bold text-white mb-3 d-flex align-items-center gap-2">
+          <h3 class="h5 fw-bold text-ink mb-3 d-flex align-items-center gap-2">
             <i class="bi bi-journal-code text-warning"></i>
             <span>Cryptographic Ledger Audit Breakdown (For Employers &amp; HR)</span>
           </h3>
 
           <div class="row g-3">
             <div class="col-md-6">
-              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+              <div class="p-3 rounded-2 bg-light border border-line h-100">
                 <div class="verify-meta-label mb-1">Candidate Profile</div>
                 <div class="verify-meta-val" id="auditCandidate">Parth Patil</div>
                 <div class="text-secondary small mt-1">Verified via institutional email and authenticated session check.</div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+              <div class="p-3 rounded-2 bg-light border border-line h-100">
                 <div class="verify-meta-label mb-1">Target Professional Track</div>
                 <div class="verify-meta-val text-info" id="auditRole">Financial Analyst &amp; Modeler</div>
                 <div class="text-secondary small mt-1">Curated against current Q1-2027 industry hiring bar.</div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+              <div class="p-3 rounded-2 bg-light border border-line h-100">
                 <div class="verify-meta-label mb-1">Issuing Authority</div>
                 <div class="verify-meta-val" id="auditIssuer">CareerPath AI Global Credential Registry</div>
                 <div class="text-secondary small mt-1">Governance by Academic &amp; Industry Certification Council.</div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="p-3 rounded-2 bg-dark border border-secondary border-opacity-25 h-100">
+              <div class="p-3 rounded-2 bg-light border border-line h-100">
                 <div class="verify-meta-label mb-1">Tamper-Proof Checksum (SHA-256)</div>
                 <div class="hash-block" id="auditHash">CC44899A307E2F2C5061A29F4E8D...</div>
                 <div class="text-secondary small mt-1">Deterministic hash computed across ID, candidate, role, and timestamp.</div>
@@ -543,7 +545,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-3 text-center text-secondary small border-top border-secondary border-opacity-25">
+    <footer class="py-3 text-center text-secondary small border-top border-line bg-white">
       <div class="container">
         <div class="mb-1">&copy; 2026 CareerPath AI &middot; Verified Talent Credential Protocol &middot; All Rights Reserved.</div>
         <div class="d-flex flex-wrap justify-content-center gap-3">
