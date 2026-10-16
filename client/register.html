@@ -16,7 +16,7 @@
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://careerpath-ai-bdbt.onrender.com/register.html" />
-    <meta property="og:title" content="Create Account — CareerPath AI" />
+    <meta property="og:title" content="Create Account &middot; CareerPath AI" />
     <meta property="og:description" content="Join 10,000+ students and verified corporate recruiters on CareerPath AI." />
     <meta property="og:image" content="https://careerpath-ai-bdbt.onrender.com/favicon.svg" />
 
@@ -239,7 +239,7 @@
                 Join CareerPath AI to build your profile, map your current skills, evaluate fit scores against 5 industry paths, and unlock an actionable roadmap.
               </p>
 
-              <div class="auth-panel-bullets">
+              <div class="auth-panel-bullets" id="authPanelBullets">
                 <div class="auth-panel-bullet">
                   <i class="bi bi-mortarboard fs-5"></i>
                   <span>Designed specifically for college students & freshers</span>
@@ -292,6 +292,30 @@
 
             <!-- Feedback Alert Area -->
             <div id="alertContainer" role="alert" aria-live="polite"></div>
+
+            <!-- Recruiter Plan Ribbon (Shown when Recruiter tab is active) -->
+            <div id="recruiterPlanPill" class="alert alert-success border-success border-opacity-50 p-2.5 mb-3 d-none align-items-center justify-content-between shadow-xs flex-wrap gap-2" role="alert" style="background: #F0FDF4;">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-radar text-success fs-5"></i>
+                <div class="small">
+                  <strong class="text-ink">Selected Plan: Recruiter Talent Radar (₹9,999/mo)</strong>
+                  <div class="text-secondary" style="font-size: 0.78rem;">Includes 60 verified candidate unlocks, anti-cheat test scores &amp; unlimited job posts.</div>
+                </div>
+              </div>
+              <span class="badge bg-success font-monospace px-2 py-1">TIER 02</span>
+            </div>
+
+            <!-- Student Plan Ribbon (Shown when Student tab is active) -->
+            <div id="studentPlanPill" class="alert alert-primary border-primary border-opacity-25 p-2.5 mb-3 d-flex align-items-center justify-content-between shadow-xs flex-wrap gap-2" role="alert" style="background: #EEF2FF;">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-gift-fill text-primary fs-5"></i>
+                <div class="small">
+                  <strong class="text-ink">Student Career Ecosystem &middot; 100% Free Forever</strong>
+                  <div class="text-secondary" style="font-size: 0.78rem;">Always free for students. No credit card, no paywalls, zero subscription fees.</div>
+                </div>
+              </div>
+              <span class="badge bg-success font-monospace px-2 py-1">₹0 FREE</span>
+            </div>
 
             <!-- Step 1: Registration Form -->
             <div id="registerStep1">

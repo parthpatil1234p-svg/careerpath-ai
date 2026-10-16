@@ -1679,247 +1679,389 @@
     <!-- ============================================================
          COMMERCIAL SAAS PRICING & PLANS SECTION
          ============================================================ -->
-    <section class="cp-section" id="pricing" style="scroll-margin-top: 130px; padding-top: 6rem;">
+    <!-- ============================================================
+         COMMERCIAL SAAS PRICING & PLANS SECTION (ROLE-SEPARATED)
+         ============================================================ -->
+    <section class="cp-section" id="pricing" style="scroll-margin-top: 130px; padding-top: 5rem; padding-bottom: 5rem;">
       <div class="container">
-        <div class="section-header text-center mb-5 pt-2">
-          <span class="section-tag"><i class="bi bi-shield-check text-success me-1"></i> Sustainable B2B Business Model</span>
-          <h2 class="section-title">100% Free for Students. Monetized via Enterprise Recruiters &amp; Universities.</h2>
+        <!-- Section Header -->
+        <div class="section-header text-center mb-4 pt-2">
+          <span class="section-tag"><i class="bi bi-shield-check text-success me-1"></i> Transparent Ecosystem Pricing</span>
+          <h2 class="section-title">Plans Tailored for Each Role</h2>
           <p class="section-subtitle">
-            Just like LinkedIn and Handshake: students never pay a single rupee. We monetize corporate hiring teams seeking pre-vetted, fraud-free talent and university placement cells managing institutional readiness.
+            Students learn and certify 100% free forever. Corporate recruiters and university placement cells access enterprise talent infrastructure.
           </p>
         </div>
 
-        <div class="pricing-grid">
-
-          <!-- Plan 1: Student Ecosystem (₹0 Free Forever) -->
-          <div class="pricing-card">
-            <div class="pricing-plan-header">
-              <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 font-monospace mb-2">TIER 01 &middot; CANDIDATE TALENT POOL</span>
-              <h3 class="pricing-plan-name">Student Ecosystem 🎓</h3>
-              <p class="pricing-plan-tagline">100% free forever for all college students, freshers, and job seekers worldwide.</p>
-              <div class="pricing-cost">
-                <span class="pricing-amount text-success">₹0</span>
-                <span class="pricing-period">/ free forever &bull; no credit card</span>
-              </div>
-            </div>
-
-            <ul class="pricing-features">
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span>3D Career Universe constellation exploration</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span>4-step multi-stream diagnostic assessment across 24 paths</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span>Cosine-similarity skill gap scoring &amp; market trends</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span>Dynamic 4, 8, or 12-week task roadmaps &amp; video chamber</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span><strong>30-minute proctored weekly milestone tests (Anti-Cheat Locked)</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span><strong>Interactive AI Mock Interview Chamber (Tech &amp; HR)</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span><strong>AI Resume Builder &amp; ATS Keyword Matcher (4 templates)</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span><strong>Cryptographic SHA-256 Job-Ready Certificate &amp; Public URL</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-success"></i>
-                <span><strong>Direct inclusion in Corporate Recruiter Talent Radar</strong></span>
-              </li>
-            </ul>
-
-            <div class="mt-auto">
-              <a href="assessment.html" class="btn cp-btn-outline w-100 py-2.5 fw-semibold border-success text-success">
-                <i class="bi bi-gift-fill me-1"></i> Start Free Assessment &rarr;
-              </a>
-            </div>
+        <!-- Audience Selector Tabs -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="p-1 rounded-pill d-inline-flex gap-1 shadow-sm border border-line" style="background: #F1F5F9;" role="tablist">
+            <button
+              type="button"
+              class="btn btn-sm rounded-pill px-3.5 py-2 fw-bold text-nowrap pricing-tab-btn active"
+              id="tabPricingStudent"
+              onclick="setPricingView('student')"
+              style="background: #FFFFFF; color: #0F172A; box-shadow: 0 2px 8px rgba(15,23,42,0.08);"
+            >
+              <i class="bi bi-mortarboard-fill text-success me-1.5"></i>
+              <span>For Students &amp; Job Seekers (100% Free)</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm rounded-pill px-3.5 py-2 fw-bold text-nowrap text-secondary pricing-tab-btn"
+              id="tabPricingRecruiter"
+              onclick="setPricingView('recruiter')"
+              style="background: transparent; color: #475569;"
+            >
+              <i class="bi bi-buildings-fill text-primary me-1.5"></i>
+              <span>For Corporate Recruiters</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm rounded-pill px-3.5 py-2 fw-bold text-nowrap text-secondary pricing-tab-btn"
+              id="tabPricingUniversity"
+              onclick="setPricingView('university')"
+              style="background: transparent; color: #475569;"
+            >
+              <i class="bi bi-bank2 text-warning me-1.5"></i>
+              <span>For Colleges &amp; Placement Cells</span>
+            </button>
           </div>
-
-          <!-- Plan 2: Recruiter Talent Radar (Primary B2B Revenue Stream) -->
-          <div class="pricing-card popular">
-            <div class="popular-badge">
-              <i class="bi bi-stars me-1"></i> PRIMARY B2B ENGINE &middot; RECRUITER SAAS
-            </div>
-            <div class="pricing-plan-header">
-              <span class="badge badge-teal font-monospace mb-2">TIER 02 &middot; CORPORATE HR &amp; STARTUPS</span>
-              <h3 class="pricing-plan-name">Recruiter Talent Radar 🏢</h3>
-              <p class="pricing-plan-tagline">For hiring teams and corporate recruiters sourcing pre-vetted engineers.</p>
-              <div class="pricing-cost">
-                <span class="pricing-amount">₹9,999</span>
-                <span class="pricing-period">/ month ($120 USD)</span>
-              </div>
-              <div class="small text-muted font-monospace mt-1">or ₹299 per single verified candidate unlock</div>
-            </div>
-
-            <ul class="pricing-features">
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span><strong>Search 5,000+ pre-vetted candidates across 24 streams</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span><strong>60 Verified Candidate Unlocks / month</strong> (contacts &amp; full ledger)</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span><strong>Filter candidates by verified proctored milestone test scores</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span><strong>Zero-cheating verification audit trail</strong> (3-strike sensor log)</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span><strong>Direct 1-click interview invitation messaging system</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span><strong>Unlimited featured job posts</strong> with automated match-score ranking</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span>Corporate ATS integration &amp; candidate export (CSV/JSON)</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-primary"></i>
-                <span>Dedicated Corporate Account Manager &amp; priority candidate matching</span>
-              </li>
-            </ul>
-
-            <div class="mt-auto">
-              <a href="recruiter-dashboard.html" class="btn cp-btn-primary w-100 py-2.5 fw-semibold shadow-sm">
-                <i class="bi bi-radar me-1"></i> Access Recruiter Portal &rarr;
-              </a>
-            </div>
-          </div>
-
-          <!-- Plan 3: University & Enterprise Campus OS -->
-          <div class="pricing-card">
-            <div class="pricing-plan-header">
-              <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 font-monospace mb-2">TIER 03 &middot; INSTITUTIONAL CONTRACT</span>
-              <h3 class="pricing-plan-name">Campus Placement OS 🏛️</h3>
-              <p class="pricing-plan-tagline">For engineering colleges, universities, and TPO placement cells.</p>
-              <div class="pricing-cost">
-                <span class="pricing-amount">₹1.5L&ndash;3L</span>
-                <span class="pricing-period">/ annual institutional license</span>
-              </div>
-              <div class="small text-muted font-monospace mt-1">Multi-year NAAC / NIRF accreditation packages</div>
-            </div>
-
-            <ul class="pricing-features">
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span>Full platform access for all enrolled college students</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span><strong>Training &amp; Placement Officer (TPO) administrative dashboard</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span><strong>Batch-wide &amp; department-wide skill gap heatmaps in real time</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span>Automated student milestone tracking &amp; placement readiness scores</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span>Custom university co-branding on all issued SHA-256 certificates</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span>Corporate recruiter direct interview matchmaking on campus</span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span><strong>Automated CSV/Excel export for NAAC (5.2.1) &amp; NIRF audits</strong></span>
-              </li>
-              <li class="pricing-feature-item">
-                <i class="bi bi-check-circle-fill text-warning"></i>
-                <span>Hosting custom proctored campus challenge tests &amp; hackathons</span>
-              </li>
-            </ul>
-
-            <div class="mt-auto">
-              <button type="button" class="btn btn-outline-warning w-100 py-2.5 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
-                <i class="bi bi-mortarboard-fill me-1"></i> Request Institutional Briefing &rarr;
-              </button>
-            </div>
-          </div>
-
         </div>
 
-        <!-- 4 High-Margin B2B Monetization Engines Breakdown Strip -->
-        <div class="card p-4 border-line mt-5 shadow-xs" style="background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%); border-radius: 16px;">
-          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-            <div class="d-flex align-items-center gap-2">
-              <span class="badge bg-primary bg-opacity-10 text-primary font-monospace px-2.5 py-1">THE B2B MONETIZATION BLUEPRINT</span>
-              <h4 class="h6 fw-bold text-ink mb-0">How CareerPath AI Generates High-Margin Revenue While Keeping Education 100% Free for Students:</h4>
+        <!-- PANEL 1: FOR STUDENTS & JOB SEEKERS (DEFAULT ACTIVE) -->
+        <div id="panelPricingStudent" class="pricing-panel">
+          <div class="card p-4 p-lg-5 border-2 border-success shadow-sm" style="border-radius: 24px; background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-4 border-bottom border-success border-opacity-25">
+              <div>
+                <span class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-25 font-monospace px-3 py-1.5 rounded-pill mb-2">
+                  <i class="bi bi-patch-check-fill me-1"></i> CANDIDATE TALENT POOL &middot; 100% FREE FOREVER
+                </span>
+                <h3 class="h3 fw-bold text-ink mb-1">Student Career Acceleration Ecosystem 🎓</h3>
+                <p class="text-secondary mb-0" style="max-width: 680px;">
+                  100% free forever for all college students, freshers, and job seekers worldwide. No hidden charges, no trial periods, and zero credit card required - ever.
+                </p>
+              </div>
+              <div class="text-lg-end">
+                <div class="d-flex align-items-baseline gap-2 justify-content-lg-end">
+                  <span class="display-4 fw-extrabold text-success font-heading">₹0</span>
+                  <span class="text-muted fw-semibold">/ free forever</span>
+                </div>
+                <div class="small text-muted font-monospace mt-1">
+                  <i class="bi bi-credit-card-2-front text-secondary me-1"></i> No Credit Card Ever Required
+                </div>
+              </div>
             </div>
-            <span class="badge bg-success-subtle text-success border border-success-subtle small font-mono">Zero Student Paywalls</span>
+
+            <!-- 10 Student Feature Highlights (2-Column Grid) -->
+            <div class="row g-3 g-lg-4 my-3">
+              <div class="col-md-6">
+                <div class="d-flex flex-column gap-3">
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">3D Career Universe Constellation</strong>
+                      <p class="text-muted small mb-0">Explore 24 interactive career constellations in 3D WebGL with direct node connections.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">4-Step Multi-Stream Diagnostic Assessment</strong>
+                      <p class="text-muted small mb-0">Map your degree, technical baseline, soft skills, and career preferences with intelligent match scoring.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">Cosine-Similarity Skill Gap Scoring</strong>
+                      <p class="text-muted small mb-0">Instant mathematical match breakdown with real-time industry demand &amp; salary benchmarks.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">Dynamic 4, 8, or 12-Week Learning Roadmaps</strong>
+                      <p class="text-muted small mb-0">Weekly task checklists, video chamber tutorials, and hands-on portfolio projects.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">30-Minute Proctored Milestone Tests</strong>
+                      <p class="text-muted small mb-0">Anti-cheat fullscreen lockdown, 3-strike tab detection, and verified skill badges.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="d-flex flex-column gap-3">
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">Interactive AI Mock Interview Chamber</strong>
+                      <p class="text-muted small mb-0">Real-time voice &amp; text simulations with instant AI feedback on technical accuracy and communication.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">AI Resume Builder &amp; ATS Matcher</strong>
+                      <p class="text-muted small mb-0">4 high-yield LaTeX/modern templates with automatic ATS keyword density checks.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">Cryptographic SHA-256 Job-Ready Certificate</strong>
+                      <p class="text-muted small mb-0">Tamper-proof verifiable credential with live QR code and public ledger verification URL.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">Direct Inclusion in Recruiter Talent Radar</strong>
+                      <p class="text-muted small mb-0">Verified candidates are surfaced directly to corporate recruiters hiring in their region.</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-start gap-2.5">
+                    <i class="bi bi-check-circle-fill text-success fs-5 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                      <strong class="text-ink">Real-Time Proximity Hiring Radar</strong>
+                      <p class="text-muted small mb-0">1-click applications to active regional jobs with live hiring updates and status notifications.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Action Bar -->
+            <div class="pt-4 border-top border-success border-opacity-25 d-flex align-items-center justify-content-between flex-wrap gap-3">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="assessment.html" class="btn cp-btn-primary px-4 py-2.5 fw-bold shadow-sm">
+                  <i class="bi bi-gift-fill me-1.5"></i> Start Free Assessment &rarr;
+                </a>
+                <a href="#universe" class="btn cp-btn-outline px-3.5 py-2.5 fw-semibold border-success text-success">
+                  <i class="bi bi-stars me-1.5"></i> Explore 3D Universe
+                </a>
+                <a href="jobs.html" class="btn btn-outline-secondary px-3.5 py-2.5 fw-semibold">
+                  <i class="bi bi-radar me-1.5"></i> View Live Jobs
+                </a>
+              </div>
+              <div class="small text-muted d-flex align-items-center gap-1.5">
+                <i class="bi bi-shield-check text-success fs-6"></i>
+                <span>Supported by corporate hiring partners &middot; 100% Free for Students</span>
+              </div>
+            </div>
           </div>
-          
-          <div class="row g-3">
-            <div class="col-sm-6 col-lg-3">
-              <div class="p-3 rounded-3 bg-white border border-line h-100">
-                <div class="text-primary fw-bold small mb-1 d-flex align-items-center gap-1.5">
-                  <i class="bi bi-radar text-primary fs-6"></i> 1. Recruiter Talent SaaS
+        </div>
+
+        <!-- PANEL 2: FOR CORPORATE RECRUITERS (SHOWN WHEN RECRUITER TAB CLICKED) -->
+        <div id="panelPricingRecruiter" class="pricing-panel d-none">
+          <div class="row g-4 align-items-stretch">
+            <div class="col-lg-7">
+              <div class="pricing-card popular h-100">
+                <div class="popular-badge">
+                  <i class="bi bi-stars me-1"></i> PRIMARY B2B ENGINE &middot; RECRUITER SAAS
                 </div>
-                <div class="fw-bold text-ink fs-6 mb-1">₹9,999 / month</div>
-                <p class="text-muted small mb-0" style="font-size: 0.78rem;">
-                  Monthly subscription for corporate talent acquisition teams to search, filter, and contact pre-vetted candidates across 24 streams.
-                </p>
+                <div class="pricing-plan-header">
+                  <span class="badge badge-teal font-monospace mb-2">TIER 02 &middot; CORPORATE HR &amp; STARTUPS</span>
+                  <h3 class="pricing-plan-name">Recruiter Talent Radar 🏢</h3>
+                  <p class="pricing-plan-tagline">For hiring teams and corporate recruiters sourcing pre-vetted engineers with verified test scores.</p>
+                  <div class="pricing-cost">
+                    <span class="pricing-amount">₹9,999</span>
+                    <span class="pricing-period">/ month ($120 USD)</span>
+                  </div>
+                  <div class="small text-muted font-monospace mt-1">or ₹299 per single verified candidate unlock</div>
+                </div>
+
+                <ul class="pricing-features">
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span><strong>Search 5,000+ pre-vetted candidates across 24 streams</strong></span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span><strong>60 Verified Candidate Unlocks / month</strong> (contacts &amp; full ledger)</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span><strong>Filter candidates by verified proctored milestone test scores</strong></span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span><strong>Zero-cheating verification audit trail</strong> (3-strike sensor log)</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span><strong>Direct 1-click interview invitation messaging system</strong></span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span><strong>Unlimited featured job posts</strong> with automated match-score ranking</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span>Corporate ATS integration &amp; candidate export (CSV/JSON)</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-primary"></i>
+                    <span>Dedicated Corporate Account Manager &amp; priority candidate matching</span>
+                  </li>
+                </ul>
+
+                <div class="mt-auto pt-3 border-top d-flex gap-2 flex-wrap">
+                  <a href="recruiter-dashboard.html" class="btn cp-btn-primary flex-grow-1 py-2.5 fw-semibold shadow-sm">
+                    <i class="bi bi-radar me-1"></i> Access Recruiter Portal &rarr;
+                  </a>
+                  <a href="register.html?role=recruiter" class="btn cp-btn-outline py-2.5 px-3 fw-semibold">
+                    <i class="bi bi-building me-1"></i> Register Company
+                  </a>
+                </div>
               </div>
             </div>
 
-            <div class="col-sm-6 col-lg-3">
-              <div class="p-3 rounded-3 bg-white border border-line h-100">
-                <div class="text-success fw-bold small mb-1 d-flex align-items-center gap-1.5">
-                  <i class="bi bi-unlock-fill text-success fs-6"></i> 2. Pay-Per-Candidate Unlock
+            <div class="col-lg-5">
+              <div class="d-flex flex-column gap-3 h-100">
+                <!-- Recruiter Monetization Engine 1 -->
+                <div class="p-3.5 rounded-3 bg-white border border-line shadow-xs">
+                  <div class="text-primary fw-bold small mb-1 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-radar text-primary fs-6"></i> 1. Talent SaaS Subscription
+                  </div>
+                  <div class="fw-bold text-ink fs-6 mb-1">₹9,999 / month</div>
+                  <p class="text-muted small mb-0" style="font-size: 0.82rem;">
+                    Full monthly subscription for corporate talent acquisition teams to search, filter, and contact pre-vetted candidates with 60 candidate unlocks included.
+                  </p>
                 </div>
-                <div class="fw-bold text-ink fs-6 mb-1">₹199 &ndash; ₹499 / unlock</div>
-                <p class="text-muted small mb-0" style="font-size: 0.78rem;">
-                  Pay-as-you-go profile unlocks for startups needing immediate contact info, unredacted skill ledgers, and verified project code.
-                </p>
+
+                <!-- Recruiter Monetization Engine 2 -->
+                <div class="p-3.5 rounded-3 bg-white border border-line shadow-xs">
+                  <div class="text-success fw-bold small mb-1 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-unlock-fill text-success fs-6"></i> 2. Pay-Per-Candidate Unlock
+                  </div>
+                  <div class="fw-bold text-ink fs-6 mb-1">₹199 &ndash; ₹499 / unlock</div>
+                  <p class="text-muted small mb-0" style="font-size: 0.82rem;">
+                    Pay-as-you-go profile unlocks for startups needing immediate contact info, unredacted skill ledgers, and verified project code without recurring fees.
+                  </p>
+                </div>
+
+                <!-- Recruiter Monetization Engine 3 -->
+                <div class="p-3.5 rounded-3 bg-white border border-line shadow-xs">
+                  <div class="text-info fw-bold small mb-1 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-shield-check text-info fs-6"></i> 3. Testing-as-a-Service
+                  </div>
+                  <div class="fw-bold text-ink fs-6 mb-1">₹49 / test attempt</div>
+                  <p class="text-muted small mb-0" style="font-size: 0.82rem;">
+                    Anti-cheating lockdown exam engine for companies hosting campus hiring drives with fullscreen enforcement and 3-strike traps.
+                  </p>
+                </div>
+
+                <div class="p-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 mt-auto">
+                  <div class="small fw-bold text-primary mb-1">Need Enterprise Volume Licensing?</div>
+                  <div class="small text-muted">For enterprises hiring 50+ engineers/year, custom ATS webhooks and dedicated sourcing pipelines are available.</div>
+                  <a href="mailto:parthpatil@careerpath.is-local.org" class="small fw-semibold text-primary text-decoration-none mt-1 d-inline-block">Contact Enterprise Sales &rarr;</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: FOR UNIVERSITIES & PLACEMENT CELLS (SHOWN WHEN UNIVERSITY TAB CLICKED) -->
+        <div id="panelPricingUniversity" class="pricing-panel d-none">
+          <div class="row g-4 align-items-stretch">
+            <div class="col-lg-7">
+              <div class="pricing-card h-100" style="border: 2px solid #F59E0B;">
+                <div class="pricing-plan-header">
+                  <span class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-50 font-monospace mb-2">TIER 03 &middot; INSTITUTIONAL CONTRACT</span>
+                  <h3 class="pricing-plan-name">Campus Placement OS 🏛️</h3>
+                  <p class="pricing-plan-tagline">For engineering colleges, universities, and Training &amp; Placement Officers (TPO).</p>
+                  <div class="pricing-cost">
+                    <span class="pricing-amount text-warning">₹1.5L&ndash;3L</span>
+                    <span class="pricing-period">/ annual institutional license</span>
+                  </div>
+                  <div class="small text-muted font-monospace mt-1">Multi-year NAAC / NIRF accreditation packages available</div>
+                </div>
+
+                <ul class="pricing-features">
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span>Full platform access for all enrolled college students</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span><strong>Training &amp; Placement Officer (TPO) administrative dashboard</strong></span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span><strong>Batch-wide &amp; department-wide skill gap heatmaps in real time</strong></span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span>Automated student milestone tracking &amp; placement readiness scores</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span>Custom university co-branding on all issued SHA-256 certificates</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span>Corporate recruiter direct interview matchmaking on campus</span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span><strong>Automated CSV/Excel export for NAAC (5.2.1) &amp; NIRF audits</strong></span>
+                  </li>
+                  <li class="pricing-feature-item">
+                    <i class="bi bi-check-circle-fill text-warning"></i>
+                    <span>Hosting custom proctored campus challenge tests &amp; hackathons</span>
+                  </li>
+                </ul>
+
+                <div class="mt-auto pt-3 border-top">
+                  <button type="button" class="btn btn-warning w-100 py-2.5 fw-bold text-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
+                    <i class="bi bi-mortarboard-fill me-1"></i> Request Institutional Briefing &rarr;
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="col-sm-6 col-lg-3">
-              <div class="p-3 rounded-3 bg-white border border-line h-100">
-                <div class="text-warning fw-bold small mb-1 d-flex align-items-center gap-1.5">
-                  <i class="bi bi-bank2 text-warning fs-6"></i> 3. University Campus OS
+            <div class="col-lg-5">
+              <div class="d-flex flex-column gap-3 h-100">
+                <div class="p-3.5 rounded-3 bg-white border border-line shadow-xs">
+                  <div class="text-warning fw-bold small mb-1 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-award-fill text-warning fs-6"></i> NAAC &amp; NIRF Compliance Ready
+                  </div>
+                  <p class="text-muted small mb-0" style="font-size: 0.82rem;">
+                    Institutional licenses generate 1-click evidence reports formatted precisely for <strong>NAAC Criterion 5.2.1 (Student Progression to Employment)</strong> and <strong>NIRF Graduation Outcome (GO)</strong> parameters.
+                  </p>
                 </div>
-                <div class="fw-bold text-ink fs-6 mb-1">₹1.5L &ndash; ₹3L / institution</div>
-                <p class="text-muted small mb-0" style="font-size: 0.78rem;">
-                  Annual institutional license for engineering colleges providing placement cell analytics, batch skill gap heatmaps, and NAAC data exports.
-                </p>
-              </div>
-            </div>
 
-            <div class="col-sm-6 col-lg-3">
-              <div class="p-3 rounded-3 bg-white border border-line h-100">
-                <div class="text-info fw-bold small mb-1 d-flex align-items-center gap-1.5">
-                  <i class="bi bi-shield-check text-info fs-6"></i> 4. Testing-as-a-Service
+                <div class="p-3.5 rounded-3 bg-white border border-line shadow-xs">
+                  <div class="text-primary fw-bold small mb-1 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-graph-up-arrow text-primary fs-6"></i> Batch-Wide Skill Heatmaps
+                  </div>
+                  <p class="text-muted small mb-0" style="font-size: 0.82rem;">
+                    TPOs can spot critical gaps across branches (e.g., Computer Engineering missing Docker/Cloud, Mechanical needing CAD simulation) before campus recruitment begins.
+                  </p>
                 </div>
-                <div class="fw-bold text-ink fs-6 mb-1">₹49 / test attempt</div>
-                <p class="text-muted small mb-0" style="font-size: 0.78rem;">
-                  Anti-cheating lockdown exam engine for companies hosting campus hiring drives with fullscreen enforcement and 3-strike traps.
-                </p>
+
+                <div class="p-3.5 rounded-3 bg-white border border-line shadow-xs">
+                  <div class="text-success fw-bold small mb-1 d-flex align-items-center gap-1.5">
+                    <i class="bi bi-building-check text-success fs-6"></i> Corporate Campus Drives
+                  </div>
+                  <p class="text-muted small mb-0" style="font-size: 0.82rem;">
+                    Invite verified recruiters from the CareerPath AI hiring radar to conduct pre-filtered on-campus and virtual hiring drives.
+                  </p>
+                </div>
+
+                <div class="p-3 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25 mt-auto">
+                  <div class="small fw-bold text-dark mb-1">Campus Pilot Available</div>
+                  <div class="small text-muted">Eligible tier-2 and tier-3 colleges can request a free 60-day pilot for a single department.</div>
+                  <button type="button" class="btn btn-sm btn-outline-dark mt-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
+                    Book Pilot Consultation
+                  </button>
+                </div>
               </div>
             </div>
           </div>

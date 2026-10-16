@@ -438,6 +438,77 @@ function initCampusDemoModal() {
 }
 
 // ============================================================
+// 8. Role-Specific Pricing View Switcher
+// ============================================================
+window.setPricingView = function(view) {
+  const studentPanel = document.getElementById('panelPricingStudent');
+  const recruiterPanel = document.getElementById('panelPricingRecruiter');
+  const universityPanel = document.getElementById('panelPricingUniversity');
+
+  const tabStudent = document.getElementById('tabPricingStudent');
+  const tabRecruiter = document.getElementById('tabPricingRecruiter');
+  const tabUniversity = document.getElementById('tabPricingUniversity');
+
+  if (!studentPanel || !recruiterPanel || !universityPanel) return;
+
+  // Reset panels
+  studentPanel.classList.add('d-none');
+  recruiterPanel.classList.add('d-none');
+  universityPanel.classList.add('d-none');
+
+  // Reset tabs
+  [tabStudent, tabRecruiter, tabUniversity].forEach((btn) => {
+    if (btn) {
+      btn.classList.remove('active');
+      btn.style.background = 'transparent';
+      btn.style.color = '#475569';
+      btn.style.boxShadow = 'none';
+    }
+  });
+
+  if (view === 'recruiter') {
+    recruiterPanel.classList.remove('d-none');
+    if (tabRecruiter) {
+      tabRecruiter.classList.add('active');
+      tabRecruiter.style.background = '#FFFFFF';
+      tabRecruiter.style.color = '#0F172A';
+      tabRecruiter.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)';
+    }
+  } else if (view === 'university') {
+    universityPanel.classList.remove('d-none');
+    if (tabUniversity) {
+      tabUniversity.classList.add('active');
+      tabUniversity.style.background = '#FFFFFF';
+      tabUniversity.style.color = '#0F172A';
+      tabUniversity.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)';
+    }
+  } else {
+    // Default to student
+    studentPanel.classList.remove('d-none');
+    if (tabStudent) {
+      tabStudent.classList.add('active');
+      tabStudent.style.background = '#FFFFFF';
+      tabStudent.style.color = '#0F172A';
+      tabStudent.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)';
+    }
+  }
+};
+
+function initPricingTabs() {
+  const params = new URLSearchParams(window.location.search);
+  const hash = window.location.hash || '';
+  if (params.get('role') === 'recruiter' || params.get('view') === 'recruiter' || hash.includes('recruiter')) {
+    window.setPricingView('recruiter');
+  } else if (params.get('role') === 'university' || params.get('view') === 'university' || hash.includes('university') || hash.includes('campus')) {
+    window.setPricingView('university');
+  } else if (window.Auth?.isAuthenticated() && window.Auth?.isRecruiter()) {
+    window.setPricingView('recruiter');
+  } else {
+    window.setPricingView('student');
+  }
+}
+
+// ============================================================
 // Init
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -449,6 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCareerSearch();
   initRecruiterLandingExperience();
   initCampusDemoModal();
+  initPricingTabs();
 
   console.log(
     '%cCareerPath AI Technologies Inc. | Autonomous Career GPS & Verified Talent Operating System',

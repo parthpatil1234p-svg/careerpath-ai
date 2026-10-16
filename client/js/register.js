@@ -1,5 +1,5 @@
 /**
- * register.js — Two-Step Registration & OTP Verification Controller
+ * register.js · Two-Step Registration & OTP Verification Controller
  * Supports Student Enrollment & Verified Company Recruiter Onboarding
  *
  * CareerPath AI · Enterprise Platform Engine
@@ -154,6 +154,35 @@ document.addEventListener('DOMContentLoaded', () => {
       if (form) form.classList.add('d-none');
       if (recruiterForm) recruiterForm.classList.remove('d-none');
 
+      const recruiterPlanPill = document.getElementById('recruiterPlanPill');
+      const studentPlanPill = document.getElementById('studentPlanPill');
+      if (recruiterPlanPill) {
+        recruiterPlanPill.classList.remove('d-none');
+        recruiterPlanPill.classList.add('d-flex');
+      }
+      if (studentPlanPill) {
+        studentPlanPill.classList.add('d-none');
+        studentPlanPill.classList.remove('d-flex');
+      }
+
+      const authPanelBullets = document.getElementById('authPanelBullets');
+      if (authPanelBullets) {
+        authPanelBullets.innerHTML = `
+          <div class="auth-panel-bullet">
+            <i class="bi bi-radar fs-5 text-success"></i>
+            <span>Recruiter Talent Radar: Sourcing 5,000+ pre-vetted engineers</span>
+          </div>
+          <div class="auth-panel-bullet">
+            <i class="bi bi-shield-check fs-5 text-success"></i>
+            <span>Zero-cheating guarantee with proctored test score audits</span>
+          </div>
+          <div class="auth-panel-bullet">
+            <i class="bi bi-lightning-charge fs-5 text-success"></i>
+            <span>Direct 1-click candidate interview invites &amp; ATS exports</span>
+          </div>
+        `;
+      }
+
       if (atlasCoordinate) atlasCoordinate.textContent = 'COMPANY RECRUITER ONBOARDING · REC-01';
       if (authFormTitle) authFormTitle.textContent = 'Register Your Company';
       if (authFormSubtitle) {
@@ -174,6 +203,35 @@ document.addEventListener('DOMContentLoaded', () => {
       if (form) form.classList.remove('d-none');
       if (recruiterForm) recruiterForm.classList.add('d-none');
 
+      const recruiterPlanPill = document.getElementById('recruiterPlanPill');
+      const studentPlanPill = document.getElementById('studentPlanPill');
+      if (recruiterPlanPill) {
+        recruiterPlanPill.classList.add('d-none');
+        recruiterPlanPill.classList.remove('d-flex');
+      }
+      if (studentPlanPill) {
+        studentPlanPill.classList.remove('d-none');
+        studentPlanPill.classList.add('d-flex');
+      }
+
+      const authPanelBullets = document.getElementById('authPanelBullets');
+      if (authPanelBullets) {
+        authPanelBullets.innerHTML = `
+          <div class="auth-panel-bullet">
+            <i class="bi bi-mortarboard fs-5"></i>
+            <span>Designed specifically for college students &amp; freshers</span>
+          </div>
+          <div class="auth-panel-bullet">
+            <i class="bi bi-sliders fs-5"></i>
+            <span>Transparent 60/25/15 career-fit evaluation formula</span>
+          </div>
+          <div class="auth-panel-bullet">
+            <i class="bi bi-map fs-5"></i>
+            <span>Self-paced weekly learning plans with real tasks</span>
+          </div>
+        `;
+      }
+
       if (atlasCoordinate) atlasCoordinate.textContent = 'NEW STUDENT ENROLLMENT · REG-01';
       if (authFormTitle) authFormTitle.textContent = 'Create Account';
       if (authFormSubtitle) {
@@ -184,6 +242,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (tabStudentRole) tabStudentRole.addEventListener('click', () => setRoleTab('student'));
   if (tabRecruiterRole) tabRecruiterRole.addEventListener('click', () => setRoleTab('recruiter'));
+
+  // Check URL query param ?role=recruiter
+  const regParams = new URLSearchParams(window.location.search);
+  if (regParams.get('role') === 'recruiter') {
+    setRoleTab('recruiter');
+  }
 
   // ── Real-Time Corporate Domain Validation ───────────────────
   const FREE_MAIL_BLACKLIST = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.in', 'outlook.com', 'hotmail.com', 'live.com', 'icloud.com', 'proton.me', 'protonmail.com', 'zoho.com', 'aol.com', 'mailinator.com', 'tempmail.com'];

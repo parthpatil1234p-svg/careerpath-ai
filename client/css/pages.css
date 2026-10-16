@@ -1515,6 +1515,35 @@
 }
 
 /* Commercial SaaS Pricing Section */
+.pricing-audience-nav {
+  transition: all 0.2s ease;
+}
+
+.pricing-tab-btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.pricing-tab-btn:hover {
+  color: #0F172A !important;
+}
+
+.pricing-panel {
+  animation: pricingFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pricingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

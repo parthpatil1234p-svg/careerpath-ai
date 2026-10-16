@@ -535,7 +535,7 @@
             </div>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-success btn-sm px-3 rounded-pill fw-semibold" onclick="alert('B2B Billing Portal: Talent Radar Pro Plan active at ₹9,999/month. 48 verified unlocks remaining. Next refill on 1st of next month.')">
+            <button class="btn btn-outline-success btn-sm px-3 rounded-pill fw-semibold" data-bs-toggle="modal" data-bs-target="#modalRecruiterPlanDetails">
               <i class="bi bi-credit-card me-1"></i> Manage Plan &amp; Unlocks
             </button>
           </div>
@@ -985,6 +985,172 @@
         </div>
       </div>
     </div>
+
+    <!-- ============================================================
+         MODAL: RECRUITER B2B SUBSCRIPTION & PLAN MANAGEMENT
+         ============================================================ -->
+    <div class="modal fade" id="modalRecruiterPlanDetails" tabindex="-1" aria-labelledby="modalRecruiterPlanDetailsLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="modal-header px-4 py-3 bg-dark text-white border-bottom border-secondary">
+            <div class="d-flex align-items-center gap-2.5">
+              <div class="p-2 rounded bg-success bg-opacity-20 text-success">
+                <i class="bi bi-radar fs-4"></i>
+              </div>
+              <div>
+                <h5 class="modal-title fw-bold text-white mb-0" id="modalRecruiterPlanDetailsLabel">
+                  B2B Subscription &middot; Talent Radar Pro
+                </h5>
+                <p class="text-white-50 small mb-0">Manage corporate recruitment package, verified profile unlocks, and invoicing</p>
+              </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body p-4 bg-light">
+            <!-- Active Plan Summary Card -->
+            <div class="card p-3 mb-4 border-2 border-success shadow-xs" style="background: linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 100%); border-radius: 16px;">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-success text-white font-mono px-2.5 py-1 small rounded-pill">
+                    <i class="bi bi-patch-check-fill me-1"></i> ACTIVE TIER 02
+                  </span>
+                  <h6 class="fw-bold text-ink mb-0 fs-5">Talent Radar Pro Subscription</h6>
+                </div>
+                <div class="text-end">
+                  <span class="fs-4 fw-extrabold text-success font-heading">₹9,999</span>
+                  <span class="text-muted small">/ month</span>
+                </div>
+              </div>
+
+              <!-- Unlocks Meter -->
+              <div class="p-3 bg-white rounded-3 border border-line mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-1.5 small">
+                  <span class="fw-semibold text-ink"><i class="bi bi-unlock-fill text-primary me-1"></i> Monthly Candidate Unlocks</span>
+                  <span class="font-mono fw-bold text-success" id="modalUnlocksProgressText">48 / 60 Remaining</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 80%;" aria-valuenow="48" aria-valuemin="0" aria-valuemax="60"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-2 small text-muted font-monospace" style="font-size: 0.75rem;">
+                  <span>Refills on 1st of next month</span>
+                  <span>₹299 / profile after quota</span>
+                </div>
+              </div>
+
+              <!-- Included Enterprise Features -->
+              <div class="row g-2 small text-secondary">
+                <div class="col-sm-6 d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>5,000+ Pre-Vetted Candidate Search</span>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Proctored Milestone Test Score Filters</span>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Zero-Cheating Sensor Audit Logs</span>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>Unlimited Featured Job Postings</span>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>1-Click Candidate Messaging &amp; Invites</span>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center gap-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  <span>ATS Export in CSV &amp; JSON</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instant Add-On Top-Up Packs -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-ink mb-2 d-flex align-items-center gap-1.5 small text-uppercase" style="letter-spacing: 0.05em;">
+                <i class="bi bi-plus-circle text-primary"></i> Need Additional Profile Unlocks This Month?
+              </h6>
+              <div class="row g-2">
+                <div class="col-sm-4">
+                  <div class="p-3 bg-white border border-line rounded-3 text-center h-100 d-flex flex-column justify-content-between shadow-xs">
+                    <div>
+                      <div class="fw-bold text-ink">+10 Profiles</div>
+                      <div class="text-muted small">₹2,490 (₹249/ea)</div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill mt-2 fw-semibold" onclick="topUpUnlocks(10)">
+                      Add Pack
+                    </button>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="p-3 bg-white border border-primary rounded-3 text-center h-100 d-flex flex-column justify-content-between shadow-xs position-relative" style="background: #F8FAFC;">
+                    <span class="badge bg-primary text-white position-absolute top-0 start-50 translate-middle font-mono px-2 py-0.5 rounded-pill" style="font-size: 0.65rem;">POPULAR</span>
+                    <div>
+                      <div class="fw-bold text-ink">+25 Profiles</div>
+                      <div class="text-muted small">₹5,499 (₹220/ea)</div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm rounded-pill mt-2 fw-semibold shadow-xs" onclick="topUpUnlocks(25)">
+                      Add Pack
+                    </button>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="p-3 bg-white border border-line rounded-3 text-center h-100 d-flex flex-column justify-content-between shadow-xs">
+                    <div>
+                      <div class="fw-bold text-ink">+50 Profiles</div>
+                      <div class="text-muted small">₹9,999 (₹199/ea)</div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill mt-2 fw-semibold" onclick="topUpUnlocks(50)">
+                      Add Pack
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invoices & Tax Receipts -->
+            <div class="p-3 rounded-3 bg-white border border-line d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-pdf-fill text-danger fs-4"></i>
+                <div>
+                  <div class="fw-bold text-ink small">Latest GST Tax Invoice</div>
+                  <div class="text-muted font-mono" style="font-size: 0.75rem;">INV-2026-CP9921 &middot; Paid ₹9,999 (18% GST Included)</div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" onclick="alert('Downloading GST Tax Invoice INV-2026-CP9921.pdf...')">
+                <i class="bi bi-download me-1"></i> Download PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-footer px-4 py-3 bg-white border-top">
+            <span class="small text-muted me-auto font-monospace" style="font-size: 0.78rem;">
+              <i class="bi bi-headset text-primary me-1"></i> Dedicated Account Manager: Priyanshu M. (Enterprise TA)
+            </span>
+            <button type="button" class="btn btn-secondary btn-sm px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function topUpUnlocks(count) {
+        const el = document.getElementById('recruiterUnlocksCount');
+        const modalEl = document.getElementById('modalUnlocksProgressText');
+        let current = 48;
+        if (el) {
+          const match = el.textContent.match(/(\d+)/);
+          if (match) current = parseInt(match[1], 10);
+          const updated = current + count;
+          const total = 60 + (updated > 60 ? updated - 48 : 0);
+          el.textContent = `${updated} / ${total} Remaining`;
+          if (modalEl) modalEl.textContent = `${updated} / ${total} Remaining`;
+        }
+        alert(`Success: Added ${count} verified candidate unlock credits! Total available: ${current + count}`);
+      }
+    </script>
 
     <!-- Recruiter Footer -->
     <footer class="atlas-footer py-4 mt-5 border-top border-line">
