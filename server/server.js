@@ -76,6 +76,8 @@ const youtubeRoutes = require('./routes/youtubeRoutes');
 const campusRoutes = require('./routes/campusRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
 const supportRoutes = require('./routes/supportRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const passportRoutes = require('./routes/passportRoutes');
 const errorHandler = require('./middleware/errorMiddleware');
 
 // ── 2. Connect Database (100% Pure Supabase PostgreSQL via Prisma) ──
@@ -441,6 +443,12 @@ app.use('/api/whatsapp', whatsappRoutes);
 
 // Official Support Desk & Grievance Redressal (DPDP Act 2023 & IT Rules 2021)
 app.use('/api/support', supportRoutes);
+
+// Practical Project Verification (Beyond MCQs - AI 4D Rubric Evaluator)
+app.use('/api/projects', projectRoutes);
+
+// Public Shareable Skill Passport with Dynamic QR Code
+app.use('/api/passport', passportRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────
 app.use((req, res) => {

@@ -8,6 +8,8 @@
 const Career = require('../models/Career');
 const Skill = require('../models/Skill');
 const { cacheManager } = require('../utils/cacheManager');
+const regionalCareersData = require('../data/regionalCareersData');
+const regionalCompaniesData = require('../data/regionalCompaniesData');
 
 // ── getCareers ─────────────────────────────────────────────────
 /**
@@ -104,7 +106,16 @@ const getCareerBySlug = async (req, res, next) => {
         .lean();
     });
 
-    if (!career) {
+    let resolvedCareer = career;
+    if (!resolvedCareer) {
+      // Check regional careers catalog fallback
+      const reg = regionalCareersData.find((c) => c.slug === normSlug || c.id === normSlug);
+      if (reg) {
+        resolvedCareer = reg;
+      }
+    }
+
+    if (!resolvedCareer) {
       return res.status(404).json({
         success: false,
         message: `Career with slug "${slug}" not found or is currently inactive`,
@@ -116,7 +127,75 @@ const getCareerBySlug = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: { career },
+      data: { career: resolvedCareer },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── getRegionalCareers ─────────────────────────────────────────
+/**
+ * GET /api/careers/regional
+ * Returns specialized Maharashtra / Jalgaon regional industrial career tracks
+ */
+const getRegionalCareers = async (req, res, next) => {
+  try {
+    const { stream } = req.query;
+    let list = regionalCareersData;
+    if (stream && typeof stream === 'string') {
+      const normStream = stream.trim().toLowerCase();
+      list = list.filter((c) => c.primaryStream === normStream || c.primaryStream === 'cross');
+    }
+
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).json({
+      success: true,
+      count: list.length,
+      data: {
+        regionalHub: 'North Maharashtra (Jalgaon, Khandesh, Aurangabad & Nashik)',
+        careers: list,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ── getRegionalCompanies ───────────────────────────────────────
+/**
+ * GET /api/careers/regional/companies
+ * Returns verified regional employers with proximity in km
+ */
+const getRegionalCompanies = async (req, res, next) => {
+  try {
+    const { city, verifiedOnly, hiringFresher } = req.query;
+    let companies = [...regionalCompaniesData];
+
+    if (city && typeof city === 'string') {
+      const normCity = city.trim().toLowerCase();
+      companies = companies.filter((c) => c.city.toLowerCase() === normCity);
+    }
+
+    if (verifiedOnly === 'true') {
+      companies = companies.filter((c) => c.verifiedPartner);
+    }
+
+    if (hiringFresher === 'true') {
+      companies = companies.filter((c) => c.hiringFresher);
+    }
+
+    // Sort by proximity distance in KM
+    companies.sort((a, b) => a.distanceKm - b.distanceKm);
+
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).json({
+      success: true,
+      count: companies.length,
+      data: {
+        referenceCity: city || 'Jalgaon',
+        companies,
+      },
     });
   } catch (error) {
     next(error);
@@ -126,4 +205,6 @@ const getCareerBySlug = async (req, res, next) => {
 module.exports = {
   getCareers,
   getCareerBySlug,
+  getRegionalCareers,
+  getRegionalCompanies,
 };
