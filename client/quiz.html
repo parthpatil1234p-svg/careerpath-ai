@@ -152,23 +152,29 @@
         border: 1px solid #A7F3D0 !important;
       }
 
-      /* Terminal Stack Trace Box (Left column incident report) */
+      /* Terminal Stack Trace Box (Left column incident report) - Sleek Dark IDE */
       .chamber-terminal-card {
-        background: #FFFFFF !important;
-        border: 1.5px solid #FECACA !important;
+        background: #0B0F19 !important;
+        border: 1.5px solid #1E293B !important;
         border-radius: 0.75rem !important;
         overflow: hidden !important;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.05) !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12) !important;
       }
       .chamber-terminal-header {
-        background: #FEF2F2 !important;
-        border-bottom: 1px solid #FEE2E2 !important;
+        background: #111827 !important;
+        border-bottom: 1px solid #1F2937 !important;
         padding: 0.55rem 0.95rem !important;
       }
+      .chamber-terminal-header .terminal-title {
+        color: #94A3B8 !important;
+        font-family: var(--font-mono, monospace) !important;
+        font-size: 0.72rem !important;
+        font-weight: 600;
+      }
       .chamber-terminal-badge {
-        background: rgba(239, 68, 68, 0.12) !important;
-        color: #DC2626 !important;
-        border: 1px solid #FCA5A5 !important;
+        background: rgba(239, 68, 68, 0.18) !important;
+        color: #F87171 !important;
+        border: 1px solid rgba(239, 68, 68, 0.35) !important;
         font-family: var(--font-mono, monospace) !important;
         font-size: 0.68rem !important;
         font-weight: 700 !important;
@@ -176,11 +182,11 @@
         border-radius: 9999px !important;
       }
       #chamberErrorLog {
-        color: #F87171 !important;
+        color: #FCA5A5 !important;
         font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
         font-size: 0.76rem !important;
         line-height: 1.55 !important;
-        background: #0F172A !important;
+        background: #0B0F19 !important;
         padding: 0.85rem !important;
         border-radius: 6px !important;
         margin: 0 !important;
@@ -321,7 +327,7 @@
     <main class="quiz-page-container">
       <div class="container">
         <!-- Title Banner -->
-        <div class="text-center mb-4" style="max-width: 920px; margin: 0 auto;">
+        <div class="text-center mb-4" id="quizHeroBanner" style="max-width: 920px; margin: 0 auto;">
           <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-surface-indigo border border-indigo-subtle text-primary fw-semibold small mb-2" style="font-family: var(--font-body);">
             <i class="bi bi-patch-check-fill text-indigo"></i>
             <span>Skill Reality-Check &middot; You Said vs. Quiz Says</span>
@@ -736,11 +742,11 @@
                   <span class="rounded-circle" style="width: 10px; height: 10px; background: #ef4444;"></span>
                   <span class="rounded-circle" style="width: 10px; height: 10px; background: #f59e0b;"></span>
                   <span class="rounded-circle" style="width: 10px; height: 10px; background: #10b981;"></span>
-                  <span class="text-white-50 font-mono ms-2" style="font-size: 0.72rem;">terminal.stderr</span>
+                  <span class="terminal-title ms-2">terminal.stderr</span>
                 </div>
-                <span class="chamber-terminal-badge">Process Crash</span>
+                <span class="chamber-terminal-badge"><i class="bi bi-exclamation-octagon-fill me-1"></i>Process Crash</span>
               </div>
-              <div class="p-3" style="background: #090d16;">
+              <div class="p-3" style="background: #0B0F19;">
                 <pre class="mb-0 font-mono small" id="chamberErrorLog" style="white-space: pre-wrap; font-size: 0.75rem; line-height: 1.5; max-height: 140px; overflow-y: auto;">Loading error trace...</pre>
               </div>
             </div>

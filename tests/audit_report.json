@@ -78,9 +78,7 @@
     "overflow": false,
     "excessWidth": 0,
     "overflowingElements": [],
-    "brokenImages": [
-      "https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=http%3A%2F%2Flocalhost%3A5500%2Fverify"
-    ],
+    "brokenImages": [],
     "consoleErrors": [],
     "failedRequests": [],
     "screenshot": "Cert_Verify_Desktop.png"
@@ -272,7 +270,9 @@
     "overflow": false,
     "excessWidth": 0,
     "overflowingElements": [],
-    "brokenImages": [],
+    "brokenImages": [
+      "https://ui-avatars.com/api/?name=Aarav+Patil&background=0284c7&color=fff&size=128"
+    ],
     "consoleErrors": [],
     "failedRequests": [],
     "screenshot": "Student_Passport_Desktop.png"
@@ -284,7 +284,9 @@
     "overflow": false,
     "excessWidth": 0,
     "overflowingElements": [],
-    "brokenImages": [],
+    "brokenImages": [
+      "https://ui-avatars.com/api/?name=Aarav+Patil&background=0284c7&color=fff&size=128"
+    ],
     "consoleErrors": [],
     "failedRequests": [],
     "screenshot": "Student_Passport_Mobile.png"

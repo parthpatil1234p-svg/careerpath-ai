@@ -405,10 +405,12 @@
   window.switchVerificationMode = function (mode) {
     const mcqView = document.getElementById('mcqQuizView');
     const codeView = document.getElementById('codeChamberView');
+    const heroBanner = document.getElementById('quizHeroBanner');
     const btnMcq = document.getElementById('btnModeMcq');
     const btnCode = document.getElementById('btnModeCodeChamber');
 
     if (mode === 'code') {
+      if (heroBanner) heroBanner.classList.add('d-none');
       if (mcqView) mcqView.classList.add('d-none');
       if (codeView) codeView.classList.remove('d-none');
       if (btnMcq) {
@@ -419,8 +421,10 @@
         btnCode.classList.add('active', 'btn-primary');
         btnCode.classList.remove('text-secondary');
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       initCodeChamber();
     } else {
+      if (heroBanner) heroBanner.classList.remove('d-none');
       if (mcqView) mcqView.classList.remove('d-none');
       if (codeView) codeView.classList.add('d-none');
       if (btnMcq) {
@@ -431,6 +435,7 @@
         btnCode.classList.remove('active', 'btn-primary');
         btnCode.classList.add('text-secondary');
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 })();

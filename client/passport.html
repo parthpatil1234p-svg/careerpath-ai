@@ -92,14 +92,87 @@
     }
 
     .project-portfolio-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      transition: all 0.2s ease;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+      border: 1.5px solid #E2E8F0;
+      border-radius: 1rem;
+      padding: 1.25rem 1.35rem;
+      box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .project-portfolio-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563EB 0%, #10B981 100%);
+      opacity: 0.8;
+      transition: opacity 0.25s ease;
     }
     .project-portfolio-card:hover {
-      border-color: #CBD5E1;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
-      transform: translateY(-2px);
+      border-color: #BFDBFE;
+      box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.12), 0 0 0 1px #BFDBFE;
+      transform: translateY(-3px);
+    }
+    .project-portfolio-card:hover::before {
+      opacity: 1;
+      height: 4px;
+    }
+    .project-metric-pill {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #475569;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .project-btn-github {
+      background: #0F172A;
+      color: #FFFFFF !important;
+      border: 1px solid #0F172A;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.38rem 0.9rem;
+      border-radius: 9999px;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+    }
+    .project-btn-github:hover {
+      background: #1E293B;
+      color: #FFFFFF !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    }
+    .project-btn-live {
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      color: #FFFFFF !important;
+      border: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.38rem 1rem;
+      border-radius: 9999px;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
+    }
+    .project-btn-live:hover {
+      background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+      color: #FFFFFF !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.42);
     }
   </style>
 </head>
