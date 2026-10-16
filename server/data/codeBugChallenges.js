@@ -13,6 +13,8 @@ const CODE_BUG_CHALLENGES = [
     category: 'JavaScript / Node.js',
     difficulty: 'Medium',
     targetSkill: 'JavaScript',
+    filename: 'worker.js',
+    language: 'javascript',
     scenario: 'In an asynchronous batch data pipeline, network retries fail silently and crash the Node.js process with UnhandledPromiseRejection. The error handler is not properly returned through the promise chain.',
     errorLog: 'UnhandledPromiseRejection: Error: Gateway timeout connecting to payment service\n    at fetchWithRetry (worker.js:14:11)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\nProcess exited with status code 1',
     initialCode: `// Buggy implementation: Unhandled promise rejection
@@ -81,6 +83,8 @@ async function fetchUserTransactions(userId, gatewayUrl) {
     category: 'JavaScript / Node.js',
     difficulty: 'Easy',
     targetSkill: 'JavaScript',
+    filename: 'analytics.js',
+    language: 'javascript',
     scenario: 'A dashboard data table allows users to sort candidates by score. However, calling sort() directly mutates the original props array in place, corrupting the parent component state and triggering accidental re-renders.',
     errorLog: 'Invariant Violation: Cannot modify frozen array elements in strict mode.\n    at Array.sort (<anonymous>)\n    at getTopPerformers (analytics.js:8:15)\n    at renderDashboard (dashboard.js:42:19)',
     initialCode: `// Buggy implementation: Mutates original array in place
@@ -126,6 +130,8 @@ function getTopPerformers(candidateList, limit) {
     category: 'React / Frontend',
     difficulty: 'Medium',
     targetSkill: 'React',
+    filename: 'ProfileCard.jsx',
+    language: 'jsx',
     scenario: 'A React user profile card fetches telemetry metrics inside useEffect. Because a new object reference is created on every render and placed in the dependency array, the component enters an infinite re-render loop that locks the browser tab.',
     errorLog: 'Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn\'t have a dependency array, or one of the dependencies changes on every render.\n    at ProfileCard (ProfileCard.jsx:18)',
     initialCode: `// Buggy React hook pattern: Object dependency recreated on each render
@@ -180,6 +186,8 @@ function useProfileTelemetry(userId) {
     category: 'React / Frontend',
     difficulty: 'Medium',
     targetSkill: 'React',
+    filename: 'useExamTimer.jsx',
+    language: 'jsx',
     scenario: 'An assessment timer displays elapsed exam seconds. The timer interval captures a stale closure of the state variable, causing the timer to freeze at 1 second instead of counting up.',
     errorLog: 'Telemetry anomaly: Timer state remained at 1 for 180 consecutive seconds.\n    at ExamHUD.jsx:34 (tick)',
     initialCode: `// Buggy React timer: Captures stale state value in interval closure
@@ -232,6 +240,8 @@ function useExamTimer() {
     category: 'Python / Backend',
     difficulty: 'Easy',
     targetSkill: 'Python',
+    filename: 'solution.py',
+    language: 'python',
     scenario: 'In an applicant tracking service, a helper function records interview stage notes with a default list parameter. Because Python evaluates default arguments once at definition time, notes from candidate A leak into candidate B.',
     errorLog: 'AssertionError: Candidate 2 should have 1 note, but found 3 notes from previous candidate evaluations!\n    assert len(candidate_b.notes) == 1\n    E  assert 3 == 1',
     initialCode: `# Buggy Python implementation: Mutable default argument
@@ -263,7 +273,10 @@ def add_interview_note(candidate_id, note, history=None):
       {
         description: 'Should use None as default parameter instead of mutable list []',
         testFn: `(code) => {
-          return code.includes('history=None') && (code.includes('if history is None') || code.includes('if not history'));
+          const norm = code.replace(/\\s+/g, ' ');
+          const hasNoneDefault = code.includes('history=None') || code.includes('history = None') || norm.includes('history=None') || norm.includes('history = None');
+          const hasNoneCheck = code.includes('if history is None') || code.includes('if not history') || code.includes('history is None') || norm.includes('if history is None');
+          return hasNoneDefault && hasNoneCheck;
         }`
       }
     ]
@@ -274,6 +287,8 @@ def add_interview_note(candidate_id, note, history=None):
     category: 'SQL / Databases',
     difficulty: 'Medium',
     targetSkill: 'SQL',
+    filename: 'query.sql',
+    language: 'sql',
     scenario: 'A recruiter applicant table queries 10 candidates per page. Due to an off-by-one formula in the OFFSET clause, the query skips candidate #10 on Page 1 and starts Page 2 at row #11, dropping candidates from the radar.',
     errorLog: 'Data Integrity Alert: Candidate ID 2049 present in database table but missing from both Page 1 and Page 2 search queries.',
     initialCode: `-- Buggy SQL Query: Page number calculation skips row on offset
@@ -317,6 +332,8 @@ FETCH NEXT @pageSize ROWS ONLY;`,
     category: 'JavaScript / Node.js',
     difficulty: 'Medium',
     targetSkill: 'Node.js',
+    filename: 'server.js',
+    language: 'javascript',
     scenario: 'When an unhandled database timeout occurs in an Express route, the server hangs indefinitely without responding to the client because the error handling middleware omits the 4th parameter or fails to call next(err).',
     errorLog: 'HTTP 504 Gateway Timeout: Client connection aborted after 30000ms.\n    No response returned from POST /api/roadmaps/enroll',
     initialCode: `// Buggy Express error middleware: Missing 4th parameter (err, req, res, next)
@@ -384,6 +401,8 @@ app.use((err, req, res, next) => {
     category: 'JavaScript / Node.js',
     difficulty: 'Hard',
     targetSkill: 'JavaScript',
+    filename: 'batchPipeline.js',
+    language: 'javascript',
     scenario: 'A batch assessment score calculator uses Array.prototype.forEach with an async callback. Because forEach does not await promises, the function returns an empty response before any database records are written.',
     errorLog: 'Race Condition Alert: HTTP 200 returned with 0 saved scores, followed 400ms later by asynchronous writes out-of-order.\n    at saveAllScores (batchService.js:22)',
     initialCode: `// Buggy implementation: forEach does NOT wait for async callbacks
@@ -439,6 +458,8 @@ async function saveCandidateScores(scoreEntries, dbClient) {
     category: 'Web Security / Express',
     difficulty: 'Medium',
     targetSkill: 'Security',
+    filename: 'authMiddleware.js',
+    language: 'javascript',
     scenario: 'An authentication middleware crashes with TypeError: Cannot read properties of undefined (reading split) when a bot sends an empty or malformed Authorization header without the Bearer scheme.',
     errorLog: 'TypeError: Cannot read properties of undefined (reading \'split\')\n    at authMiddleware (auth.js:9:32)\n    at Layer.handle [as handle_request] (express/lib/router/layer.js:95:5)',
     initialCode: `// Buggy Auth Header Parser
@@ -491,6 +512,8 @@ function authenticateRequest(req, res, next) {
     category: 'SQL / Databases',
     difficulty: 'Medium',
     targetSkill: 'SQL',
+    filename: 'searchFilter.sql',
+    language: 'sql',
     scenario: 'A student search endpoint interpolates user query strings directly into an SQL statement. A malicious input \' OR 1=1 -- bypasses college filters and dumps student personal contact data.',
     errorLog: 'Security Incident: SQL Injection telemetry alert triggered on /api/students/search query parameter.',
     initialCode: `-- Buggy raw query concatenation

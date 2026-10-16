@@ -391,6 +391,8 @@ exports.getCodeChallenges = async (req, res) => {
       category: c.category,
       difficulty: c.difficulty,
       targetSkill: c.targetSkill,
+      filename: c.filename || 'solution.js',
+      language: c.language || 'javascript',
       scenario: c.scenario,
       errorLog: c.errorLog,
       initialCode: c.initialCode,

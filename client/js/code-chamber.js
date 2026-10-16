@@ -184,6 +184,35 @@
       updateLineNumbers();
     }
 
+    // Update active tab filename, icon, and language badge
+    const filenameEl = document.getElementById('chamberTabFilename');
+    const iconEl = document.getElementById('chamberTabIcon');
+    const langBadgeEl = document.getElementById('chamberTabLangBadge');
+
+    const filename = challenge.filename || (challenge.targetSkill?.toLowerCase() === 'python' ? 'solution.py' : challenge.targetSkill?.toLowerCase() === 'sql' ? 'query.sql' : challenge.targetSkill?.toLowerCase() === 'react' ? 'Component.jsx' : 'solution.js');
+    const lang = (challenge.language || (challenge.targetSkill?.toLowerCase() === 'python' ? 'python' : challenge.targetSkill?.toLowerCase() === 'sql' ? 'sql' : 'javascript')).toLowerCase();
+
+    if (filenameEl) filenameEl.textContent = filename;
+    if (langBadgeEl) langBadgeEl.textContent = challenge.targetSkill || lang.toUpperCase();
+
+    if (iconEl) {
+      if (lang === 'python' || challenge.targetSkill?.toLowerCase() === 'python') {
+        iconEl.className = 'bi bi-filetype-py text-primary fs-6';
+      } else if (lang === 'sql' || challenge.targetSkill?.toLowerCase() === 'sql') {
+        iconEl.className = 'bi bi-database-fill text-info fs-6';
+      } else if (lang === 'jsx' || challenge.targetSkill?.toLowerCase() === 'react') {
+        iconEl.className = 'bi bi-filetype-jsx text-info fs-6';
+      } else {
+        iconEl.className = 'bi bi-filetype-js text-primary fs-6';
+      }
+    }
+
+    // Reset telemetry displays
+    const counterEl = document.getElementById('keystrokesCounter');
+    if (counterEl) counterEl.textContent = '0';
+    const pasteEl = document.getElementById('pasteCounter');
+    if (pasteEl) pasteEl.textContent = '0';
+
     if (testListEl && Array.isArray(challenge.testCaseDescriptions)) {
       testListEl.innerHTML = challenge.testCaseDescriptions.map(desc => `
         <li class="d-flex align-items-center gap-2 small mb-1.5 text-secondary">
@@ -202,7 +231,7 @@
     }
 
     if (terminal) {
-      terminal.innerHTML = `<span class="text-secondary">$ Initializing code sandbox...</span>\n<span class="text-danger">[FAIL] Existing code threw:</span>\n<span class="text-danger">${escapeHtml(challenge.errorLog)}</span>\n<span class="text-warning">> Isolate and fix the root cause. Press 'Run Code & Verify' when ready.</span>`;
+      terminal.innerHTML = `<span class="text-info font-monospace">$ Runtime Sandbox initialized: ${escapeHtml(challenge.targetSkill)} Environment</span>\n<span class="text-secondary">$ Target source: ${escapeHtml(filename)} (${challenge.testCaseDescriptions?.length || 1} assertion test(s) loaded)</span>\n<span class="text-success">> Review incident scenario on the left, patch the defect, and click 'Run Code &amp; Verify'.</span>`;
     }
 
     startChamberTimer();
@@ -332,9 +361,10 @@
       editor.value = activeChallenge.initialCode;
       updateLineNumbers();
     }
+    const filename = activeChallenge.filename || 'solution.js';
     const terminal = document.getElementById('chamberConsoleOutput');
     if (terminal) {
-      terminal.innerHTML = `<span class="text-secondary">> Code reset to original buggy state.</span>`;
+      terminal.innerHTML = `<span class="text-warning font-monospace">> Code reset to original buggy state for ${escapeHtml(filename)}.</span>`;
     }
   }
 
@@ -346,6 +376,8 @@
         category: 'JavaScript / Node.js',
         difficulty: 'Medium',
         targetSkill: 'JavaScript',
+        filename: 'worker.js',
+        language: 'javascript',
         scenario: 'In an asynchronous data pipeline, network retries fail silently and crash Node.js with UnhandledPromiseRejection.',
         errorLog: 'UnhandledPromiseRejection: Error: Gateway timeout connecting to payment service\nProcess exited with status code 1',
         initialCode: `async function fetchUserTransactions(userId, gatewayUrl) {\n  if (!userId) throw new Error("Invalid User ID");\n  // BUG: Missing try/catch or async rejection wrapper\n  return await fetchGateway(gatewayUrl);\n}`,
