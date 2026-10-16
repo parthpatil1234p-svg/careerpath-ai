@@ -305,10 +305,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // ── 1. Fetch & Render Verified Openings ──────────────────────
-  const loadOpenings = async () => {
-    openingsSpinner.classList.remove('d-none');
-    openingsGrid.classList.add('d-none');
-    emptyOpenings.classList.add('d-none');
+  const loadOpenings = async (silent = false) => {
+    if (!silent) {
+      openingsSpinner.classList.remove('d-none');
+      openingsGrid.classList.add('d-none');
+      emptyOpenings.classList.add('d-none');
+    }
 
     const params = new URLSearchParams();
     if (filterCareerSlug?.value) params.set('careerSlug', filterCareerSlug.value);
@@ -316,15 +318,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const response = await window.API.get(`/jobs/recruiter-openings?${params.toString()}`, { auth: true });
-      openingsSpinner.classList.add('d-none');
+      if (!silent) openingsSpinner.classList.add('d-none');
 
-      cachedOpenings = response.data?.openings || [];
-      if (badgeOpeningsCount) badgeOpeningsCount.textContent = cachedOpenings.length;
+      const incoming = response.data?.openings || [];
+      const hasChanged = !silent || incoming.length !== cachedOpenings.length || 
+        JSON.stringify(incoming.map(j => j._id || j.id)) !== JSON.stringify(cachedOpenings.map(j => j._id || j.id));
 
-      executeClientSearch();
+      if (hasChanged) {
+        cachedOpenings = incoming;
+        if (badgeOpeningsCount) badgeOpeningsCount.textContent = cachedOpenings.length;
+        executeClientSearch();
+      }
     } catch (err) {
-      openingsSpinner.classList.add('d-none');
-      showAlert(err.message || 'Failed to load verified company openings.');
+      if (!silent) {
+        openingsSpinner.classList.add('d-none');
+        showAlert(err.message || 'Failed to load verified company openings.');
+      }
     }
   };
 
@@ -409,6 +418,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const response = await window.API.post(`/jobs/${activeApplyJob.id}/apply`, {
           coverNote: applyCoverNote.value.trim(),
+          roleTitle: activeApplyJob.title,
+          companyName: activeApplyJob.company,
         }, { auth: true });
 
         btnSubmitApplication.disabled = false;
@@ -417,7 +428,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (response.success) {
           applyModal.hide();
           showAlert(`🎉 Your application was successfully delivered to ${activeApplyJob.company} for "${activeApplyJob.title}"!`, 'success');
-          loadOpenings();
+          loadOpenings(true);
           loadMyApplications();
         } else {
           applyModalAlert.innerHTML = `
@@ -434,8 +445,80 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  if (filterCareerSlug) filterCareerSlug.addEventListener('change', loadOpenings);
-  if (filterWorkplace) filterWorkplace.addEventListener('change', loadOpenings);
+  // ── Real-Time Job Stream & Polling Sync ──────────────────────
+  const initRealTimeJobFeed = () => {
+    // 1. WebSocket Live Stream
+    if (window.CareerPathSocket) {
+      window.CareerPathSocket.init();
+
+      window.CareerPathSocket.on('new_job_opening', (data) => {
+        if (!data || !data.job) return;
+        const newJob = data.job;
+        const exists = cachedOpenings.some(j => (j._id || j.id) === (newJob._id || newJob.id));
+        if (exists) return;
+
+        // Compute client match score if student is logged in
+        const user = window.Auth?.getCurrentUser();
+        if (user && Array.isArray(user.skills) && Array.isArray(newJob.requiredSkills)) {
+          const userSkillsMap = new Map();
+          user.skills.forEach(s => userSkillsMap.set((s.name || s).toLowerCase(), s));
+          let matches = 0;
+          newJob.requiredSkills.forEach(reqS => {
+            const sName = (reqS.skillName || reqS).toLowerCase();
+            const candS = userSkillsMap.get(sName);
+            if (candS) matches += (candS.isQuizVerified || candS.isCodeVerified ? 1.0 : 0.7);
+          });
+          const raw = Math.round((matches / (newJob.requiredSkills.length || 1)) * 100);
+          newJob.matchScore = Math.min(99, Math.max(45, raw));
+        } else {
+          newJob.matchScore = newJob.matchScore || 78;
+        }
+
+        // Prepend new job to cached list
+        cachedOpenings.unshift(newJob);
+        if (badgeOpeningsCount) badgeOpeningsCount.textContent = cachedOpenings.length;
+
+        // Display sleek live toast banner
+        const liveToastHtml = `
+          <div class="alert alert-success alert-dismissible fade show d-flex align-items-center justify-content-between py-2 px-3 small mb-3 border-success-subtle shadow-xs" role="alert">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-success font-mono" style="font-size:0.68rem;">LIVE NEW JOB</span>
+              <span class="fw-bold text-ink">${escapeHtml(newJob.title)}</span>
+              <span class="text-secondary">at</span>
+              <span class="fw-semibold text-ink">${escapeHtml(newJob.companyName || 'Verified Enterprise')}</span>
+              <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.68rem;">Just Posted</span>
+            </div>
+            <button type="button" class="btn-close ms-2 p-1.5" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        `;
+        alertContainer.insertAdjacentHTML('afterbegin', liveToastHtml);
+
+        // Re-execute search / filter so new job is rendered instantly
+        executeClientSearch();
+      });
+
+      window.CareerPathSocket.on('job_status_changed', (data) => {
+        if (!data || !data.jobId) return;
+        const { jobId, status } = data;
+        if (status === 'closed' || status === 'paused') {
+          cachedOpenings = cachedOpenings.filter(j => (j._id || j.id) !== jobId);
+          if (badgeOpeningsCount) badgeOpeningsCount.textContent = cachedOpenings.length;
+          executeClientSearch();
+        }
+      });
+    }
+
+    // 2. Background Polling Fallback (every 20s) to keep real-time guarantee 100% reliable
+    setInterval(() => {
+      loadOpenings(true);
+      if (document.getElementById('contentApplications')?.classList.contains('active')) {
+        loadMyApplications();
+      }
+    }, 20000);
+  };
+
+  if (filterCareerSlug) filterCareerSlug.addEventListener('change', () => loadOpenings(false));
+  if (filterWorkplace) filterWorkplace.addEventListener('change', () => loadOpenings(false));
   if (tabApplications) tabApplications.addEventListener('click', loadMyApplications);
 
   // Live BM25 Search Listeners
@@ -459,7 +542,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Initial Data Load
+  // Initial Data Load & Real-Time Activation
   await loadOpenings();
   await loadMyApplications();
+  initRealTimeJobFeed();
 });

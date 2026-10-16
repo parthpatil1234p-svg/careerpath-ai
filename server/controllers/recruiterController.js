@@ -1,5 +1,5 @@
 /**
- * controllers/recruiterController.js — Recruiter Verification & Job Opening Management
+ * controllers/recruiterController.js  -  Recruiter Verification & Job Opening Management
  *
  * Implements:
  *  - verifyCompanyPrecheck: Public live pre-check for registration form
@@ -375,6 +375,24 @@ const createJob = async (req, res, next) => {
       status: 'active',
     });
 
+    try {
+      const { getIO } = require('../services/socketService');
+      const io = getIO();
+      if (io) {
+        io.emit('new_job_opening', {
+          job: {
+            ...(jobOpening.toObject ? jobOpening.toObject() : jobOpening),
+            _id: String(jobOpening._id || jobOpening.id),
+            id: String(jobOpening._id || jobOpening.id),
+          },
+          message: `New verified role posted: ${jobOpening.title} at ${jobOpening.companyName}`,
+          timestamp: Date.now(),
+        });
+      }
+    } catch (socketErr) {
+      console.warn('[Socket.io] Real-time job broadcast notice:', socketErr.message);
+    }
+
     return res.status(201).json({
       success: true,
       message: `Job opening "${jobOpening.title}" posted successfully!`,
@@ -473,6 +491,22 @@ const updateJob = async (req, res, next) => {
 
     await targetJob.save();
 
+    try {
+      const { getIO } = require('../services/socketService');
+      const io = getIO();
+      if (io) {
+        io.emit('job_status_changed', {
+          jobId: String(targetJob._id || targetJob.id),
+          status: targetJob.status,
+          title: targetJob.title,
+          job: targetJob.toObject ? targetJob.toObject() : targetJob,
+          timestamp: Date.now(),
+        });
+      }
+    } catch (socketErr) {
+      console.warn('[Socket.io] Job update broadcast notice:', socketErr.message);
+    }
+
     return res.status(200).json({
       success: true,
       message: 'Job opening updated successfully',
@@ -497,6 +531,21 @@ const deleteJob = async (req, res, next) => {
     const targetJob = job || (await JobOpening.findById(req.params.id));
     targetJob.status = 'closed';
     await targetJob.save();
+
+    try {
+      const { getIO } = require('../services/socketService');
+      const io = getIO();
+      if (io) {
+        io.emit('job_status_changed', {
+          jobId: String(targetJob._id || targetJob.id),
+          status: 'closed',
+          title: targetJob.title,
+          timestamp: Date.now(),
+        });
+      }
+    } catch (socketErr) {
+      console.warn('[Socket.io] Job close broadcast notice:', socketErr.message);
+    }
 
     return res.status(200).json({
       success: true,

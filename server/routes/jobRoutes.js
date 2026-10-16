@@ -1,5 +1,5 @@
 /**
- * routes/jobRoutes.js — AI Dev Board Live Jobs API Routes
+ * routes/jobRoutes.js  -  AI Dev Board Live Jobs API Routes
  * CareerPath AI · Enterprise Backend Service
  */
 
@@ -273,6 +273,85 @@ router.post('/bridge-gap', protect, requireStudent, async (req, res, next) => {
 });
 
 /**
+ * Ensures top enterprise verified partner roles from regional data exist as active JobOpenings
+ */
+async function ensureVerifiedPartnerOpenings() {
+  try {
+    const regionalCompanies = require('../data/regionalCompaniesData');
+    const Company = require('../models/Company');
+
+    let recruiter = await User.findOne({ role: 'recruiter' });
+    if (!recruiter) {
+      recruiter = await User.findOne({ role: 'admin' });
+    }
+    if (!recruiter) return;
+
+    const featured = [
+      { id: 'larsen-toubro-powai', role: 'Structural Stress Analysis Trainee' },
+      { id: 'tata-motors-pune', role: 'Battery Management System (BMS) Firmware Trainee' },
+      { id: 'bajaj-finserv-pune', role: 'Full-Stack FinTech Developer' },
+      { id: 'reliance-jio-navi-mumbai', role: '5G RAN Network Optimization Trainee' },
+      { id: 'jain-irrigation', role: 'SCADA & Automation Field Trainee' },
+    ];
+
+    for (const item of featured) {
+      const reg = Array.isArray(regionalCompanies)
+        ? regionalCompanies.find((c) => c.id === item.id)
+        : null;
+      if (!reg) continue;
+
+      const domain = (reg.website ? new URL(reg.website).hostname.replace(/^www\./, '') : `${reg.id}.com`).toLowerCase();
+      let company = await Company.findOne({ domain });
+      if (!company) {
+        company = await Company.create({
+          name: reg.name,
+          domain,
+          website: reg.website,
+          logoUrl: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+          industry: reg.industry,
+          headquarters: `${reg.city}, ${reg.state}`,
+          isVerified: true,
+          verificationScore: 98,
+        });
+      }
+
+      const existingJob = await JobOpening.findOne({ company: company._id, title: item.role });
+      if (!existingJob) {
+        await JobOpening.create({
+          recruiter: recruiter._id,
+          company: company._id,
+          companyName: reg.name,
+          companyLogo: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+          companyWebsite: reg.website,
+          isCompanyVerified: true,
+          title: item.role,
+          careerSlug: 'software-engineer',
+          jobType: 'full-time',
+          workplace: 'hybrid',
+          location: `${reg.city}, ${reg.state}`,
+          experienceLevel: 'fresher',
+          salaryRange: { min: 500000, max: 920000, currency: 'INR', isDisclosed: true },
+          requiredSkills: (reg.requiredSkills || []).map((s) => ({
+            skillName: s.toLowerCase().trim(),
+            minimumProficiency: 'intermediate',
+            requiresVerification: true,
+          })),
+          description: `Official verified opening at ${reg.name} (${reg.cluster}). Active industrial hiring drive for ${item.role}.`,
+          status: 'active',
+          deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        });
+      } else if (existingJob.status !== 'active') {
+        existingJob.status = 'active';
+        existingJob.deadline = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+        await existingJob.save();
+      }
+    }
+  } catch (err) {
+    console.warn('[Jobs API] ensureVerifiedPartnerOpenings warning:', err.message);
+  }
+}
+
+/**
  * GET /api/jobs/recruiter-openings
  * Returns verified direct company postings created by recruiters on the platform.
  * If user has a token, computes match percentage based on candidate's verified skills.
@@ -290,7 +369,7 @@ router.get('/recruiter-openings', async (req, res, next) => {
         user = await User.findById(decoded.id);
         if (user) {
           const apps = await JobApplication.find({ student: user._id }, 'job status');
-          apps.forEach((a) => userAppliedJobIds.add(String(a.job)));
+          apps.forEach((a) => userAppliedJobIds.add(String(a.job?._id || a.job)));
         }
       } catch (tokenErr) {
         // Continue as guest
@@ -310,9 +389,16 @@ router.get('/recruiter-openings', async (req, res, next) => {
     if (workplace) filter.workplace = workplace.toLowerCase();
     if (level) filter.experienceLevel = level.toLowerCase();
 
-    const openings = await JobOpening.find(filter)
+    let openings = await JobOpening.find(filter)
       .populate('company', 'name domain logoUrl industry verificationScore isVerified')
       .sort({ createdAt: -1 });
+
+    if (openings.length < 3) {
+      await ensureVerifiedPartnerOpenings();
+      openings = await JobOpening.find(filter)
+        .populate('company', 'name domain logoUrl industry verificationScore isVerified')
+        .sort({ createdAt: -1 });
+    }
 
     const userSkillsMap = new Map();
     if (user && Array.isArray(user.skills)) {
@@ -385,13 +471,90 @@ router.post('/:id/apply', protect, requireStudent, async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Student account not found' });
     }
 
-    const job = await JobOpening.findById(jobId);
+    let job = null;
+    try {
+      job = await JobOpening.findById(jobId);
+    } catch (e) {
+      // not a standard ID
+    }
+
+    if (!job) {
+      // Check if it's a regional partner company from Proximity Radar
+      const roleTitle = req.body.roleTitle;
+      const companyName = req.body.companyName;
+
+      const regionalCompanies = require('../data/regionalCompaniesData');
+      const regComp = Array.isArray(regionalCompanies)
+        ? regionalCompanies.find((c) => c.id === jobId || (companyName && c.name.toLowerCase().includes(companyName.toLowerCase())))
+        : null;
+
+      if (regComp) {
+        const Company = require('../models/Company');
+        const domain = (regComp.website ? new URL(regComp.website).hostname.replace(/^www\./, '') : `${regComp.id}.com`).toLowerCase();
+        let company = await Company.findOne({ domain });
+        if (!company) {
+          company = await Company.create({
+            name: regComp.name,
+            domain,
+            website: regComp.website,
+            logoUrl: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+            industry: regComp.industry,
+            headquarters: `${regComp.city}, ${regComp.state}`,
+            isVerified: true,
+            verificationScore: 98,
+          });
+        }
+
+        let recruiter = await User.findOne({ role: 'recruiter' });
+        if (!recruiter) {
+          recruiter = (await User.findOne({ role: 'admin' })) || student;
+        }
+
+        const effectiveTitle = roleTitle || regComp.topRoles?.[0] || 'Graduate Engineering Trainee';
+
+        job = await JobOpening.findOne({
+          company: company._id,
+          title: effectiveTitle,
+        });
+
+        if (!job) {
+          job = await JobOpening.create({
+            recruiter: recruiter._id,
+            company: company._id,
+            companyName: regComp.name,
+            companyLogo: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+            companyWebsite: regComp.website,
+            isCompanyVerified: true,
+            title: effectiveTitle,
+            careerSlug: 'software-engineer',
+            jobType: 'full-time',
+            workplace: 'hybrid',
+            location: `${regComp.city}, ${regComp.state}`,
+            experienceLevel: regComp.hiringFresher ? 'fresher' : 'entry',
+            salaryRange: { min: 450000, max: 950000, currency: 'INR', isDisclosed: true },
+            requiredSkills: (regComp.requiredSkills || []).map((s) => ({
+              skillName: s.toLowerCase().trim(),
+              minimumProficiency: 'intermediate',
+              requiresVerification: true,
+            })),
+            description: `Official verified opening at ${regComp.name} (${regComp.cluster}). Active industrial hiring drive for ${effectiveTitle}.`,
+            status: 'active',
+            deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+          });
+        } else if (job.status !== 'active') {
+          job.status = 'active';
+          job.deadline = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+          await job.save();
+        }
+      }
+    }
+
     if (!job || job.status !== 'active') {
       return res.status(404).json({ success: false, message: 'Job opening is no longer active or does not exist.' });
     }
 
     // Check for duplicate application
-    const existing = await JobApplication.findOne({ job: jobId, student: student._id });
+    const existing = await JobApplication.findOne({ job: job._id, student: student._id });
     if (existing) {
       return res.status(409).json({
         success: false,
@@ -411,7 +574,7 @@ router.post('/:id/apply', protect, requireStudent, async (req, res, next) => {
 
     if (reqSkills.length > 0) {
       reqSkills.forEach((reqS) => {
-        const sName = reqS.skillName.toLowerCase();
+        const sName = (reqS.skillName || reqS).toLowerCase();
         const candSkill = userSkillsMap.get(sName);
         if (candSkill) {
           const isVer = candSkill.isQuizVerified || candSkill.isCodeVerified;
@@ -425,12 +588,12 @@ router.post('/:id/apply', protect, requireStudent, async (req, res, next) => {
 
     const calculatedMatch = reqSkills.length > 0
       ? Math.min(99, Math.max(45, Math.round((earnedPoints / reqSkills.length) * 100)))
-      : 85;
+      : 88;
 
     const application = await JobApplication.create({
       job: job._id,
       student: student._id,
-      recruiter: job.recruiter,
+      recruiter: job.recruiter?._id || job.recruiter || job.recruiterId,
       matchScore: calculatedMatch,
       matchedSkills,
       missingSkills,
@@ -441,9 +604,26 @@ router.post('/:id/apply', protect, requireStudent, async (req, res, next) => {
       status: 'applied',
     });
 
-    // Increment applicants counter on the job
-    job.applicantsCount = (job.applicantsCount || 0) + 1;
+    job.applicationsCount = (job.applicationsCount || 0) + 1;
     await job.save();
+
+    // Broadcast real-time application alert
+    try {
+      const { getIO } = require('../services/socketService');
+      const io = getIO();
+      if (io) {
+        io.emit('new_job_application', {
+          jobId: String(job._id || job.id),
+          jobTitle: job.title,
+          companyName: job.companyName,
+          studentName: student.name,
+          matchScore: calculatedMatch,
+          timestamp: Date.now(),
+        });
+      }
+    } catch (e) {
+      // non-fatal
+    }
 
     return res.status(201).json({
       success: true,

@@ -285,9 +285,13 @@
       <!-- Page Header -->
       <div class="row align-items-center mb-4 mt-2">
         <div class="col-md-8">
-          <div class="d-flex align-items-center gap-2 mb-2">
+          <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
             <span class="verified-employer-pill">
               <i class="bi bi-shield-check"></i> Enterprise Verified Direct Openings
+            </span>
+            <span class="badge bg-success-subtle text-success border border-success-subtle font-mono small rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1.5" id="realtimeJobStreamBadge">
+              <span class="badge-dot-pulse bg-success" style="width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></span>
+              <i class="bi bi-broadcast"></i> REAL-TIME HIRING RADAR ACTIVE
             </span>
             <span class="badge bg-light text-secondary border font-mono small">
               NO SPAM &middot; 1-CLICK APPLY
@@ -672,6 +676,7 @@
     <script src="js/auth.js?v=3.0"></script>
     <script src="js/api.js"></script>
     <script src="js/i18n.js"></script>
+    <script src="js/socket-client.js"></script>
     <script src="js/search-engine.js?v=2.6"></script>
     <script src="js/jobs.js"></script>
     <script src="js/proximity-radar.js"></script>
