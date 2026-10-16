@@ -256,12 +256,61 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
     return true;
   }
 
-  // 4. Direct Message to Any Phone (MSG 9876543210: message)
-  const dmMatch = trimmed.match(/^(?:msg|send|dm)\s*(\+?[0-9]{10,13})[:\s]+([\s\S]+)/i);
+  // 4. Direct Message to Any Phone or Email (MSG 9876543210: message OR MSG student@email.com: message)
+  const dmMatch = trimmed.match(/^(?:msg|send|dm)\s*([^\s:]+)[:\s]+([\s\S]+)/i);
   if (dmMatch) {
-    const targetRawPhone = dmMatch[1];
+    const targetIdentifier = dmMatch[1].trim();
     const targetMsg = dmMatch[2].trim();
-    const formattedTarget = whatsappService.formatPhoneNumber(targetRawPhone);
+
+    let targetPhone = '';
+    let studentName = 'Student';
+
+    // If identifier is an email address
+    if (targetIdentifier.includes('@')) {
+      try {
+        const studentUser = await User.findOne({ email: targetIdentifier.toLowerCase() });
+        if (studentUser && studentUser.phone) {
+          targetPhone = studentUser.phone;
+          studentName = studentUser.name || 'Student';
+        } else {
+          const failMsg = `❌ Student Not Found: Database me "${targetIdentifier}" ke sath koi student ya WhatsApp number linked nahi mila.\n\nTip: Aap direct phone number par message bhej sakte hain:\n*MSG [10-digit number]: [message]*`;
+          await whatsappService.sendTextMessage(senderPhone, failMsg, { context: 'FOUNDER_DM_USER_NOT_FOUND' });
+          return true;
+        }
+      } catch (err) {
+        console.warn('[Founder DM] Email lookup error:', err.message);
+      }
+    } else {
+      targetPhone = targetIdentifier;
+      try {
+        const digits10 = whatsappService.getPhoneDigits(targetPhone).slice(-10);
+        const studentUser = await User.findOne({
+          phone: { $in: [targetPhone, `+91${digits10}`, digits10] }
+        });
+        if (studentUser && studentUser.name) {
+          studentName = studentUser.name;
+        }
+      } catch (e) {}
+    }
+
+    const formattedTarget = whatsappService.formatPhoneNumber(targetPhone);
+    if (!formattedTarget) {
+      await whatsappService.sendTextMessage(senderPhone, `❌ Invalid Phone Number: "${targetIdentifier}". Kripya 10-digit number enter karein.`, { context: 'FOUNDER_DM_INVALID_PHONE' });
+      return true;
+    }
+
+    const outreachTicketId = 'CP-MSG-' + Math.floor(100000 + Math.random() * 900000);
+    const outreachRecord = {
+      ticketId: outreachTicketId,
+      studentName,
+      phone: formattedTarget,
+      type: 'DIRECT_MENTOR_OUTREACH',
+      issue: targetMsg,
+      createdAt: new Date().toISOString(),
+      status: 'SENT_BY_MENTOR',
+      counselor: adminName
+    };
+    supportTicketsCache.set(outreachTicketId, outreachRecord);
 
     const studentDispatch = 
 `🧑‍🏫 *CareerPath AI  -  Official Mentor Message*
@@ -270,15 +319,76 @@ Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👨‍💼 *From:* ${adminTitle}
+🎫 *Docket Ref:* #${outreachTicketId}
+💬 _Aap is message ka direct WhatsApp reply karke mentor se connect kar sakte hain!_
+
 🌐 *Web Portal:* https://careerpath.is-local.org
 🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(formattedTarget, studentDispatch, {
-      context: 'FOUNDER_DIRECT_OUTREACH'
+      context: 'FOUNDER_DIRECT_OUTREACH',
+      ticketId: outreachTicketId,
+      studentName
     });
 
-    await whatsappService.sendTextMessage(senderPhone, `✅ Message dispatched to ${formattedTarget} from official bot (+91 7499085045).\n\n📤 Text: "${targetMsg}"`, { context: 'FOUNDER_DM_CONFIRMED' });
+    const confirmOutreach = 
+`✅ *Direct Message Delivered to Student!*
+
+👤 *Student:* ${studentName}
+📞 *Target Phone:* ${formattedTarget}
+🎫 *Docket Created:* #${outreachTicketId}
+👨‍💼 *Sent By:* ${adminTitle}
+📤 *Delivered Message:*
+"${targetMsg}"
+
+🔒 *Privacy Protected:* Aapka personal number (${senderPhone}) reveal nahi hua. Message official bot (+91 7499085045) ke through bheja gaya hai. Jab student reply karega, aapko yahan alert mil jayega!`;
+
+    await whatsappService.sendTextMessage(senderPhone, confirmOutreach, { context: 'FOUNDER_DM_CONFIRMED' });
     return true;
+  }
+
+  // 5. Student Lookup Command (FIND rahul OR LOOKUP rahul@gmail.com)
+  const findMatch = trimmed.match(/^(?:find|search|lookup)\s+(.+)/i);
+  if (findMatch) {
+    const searchParam = findMatch[1].trim();
+    try {
+      const isEmail = searchParam.includes('@');
+      let matches = [];
+      if (isEmail) {
+        const u = await User.findOne({ email: searchParam.toLowerCase() });
+        if (u) matches = [u];
+      } else {
+        matches = await User.find({
+          $or: [
+            { name: { $regex: searchParam, $options: 'i' } },
+            { phone: { $regex: searchParam } }
+          ]
+        }).limit(5);
+      }
+
+      if (matches.length === 0) {
+        await whatsappService.sendTextMessage(senderPhone, `🔍 Koi student nahi mila with query: "${searchParam}".\n\nAap direct phone number par message bhej sakte hain:\n*MSG [10-digit number]: [message]*`, { context: 'FOUNDER_LOOKUP_EMPTY' });
+        return true;
+      }
+
+      const matchStr = matches.map(u => 
+        `• *${u.name || 'Candidate'}*\n  📞 Phone: ${u.phone || 'Not linked'}\n  📧 Email: ${u.email || 'N/A'}`
+      ).join('\n\n');
+
+      const lookupReply = 
+`🔍 *CareerPath AI  -  Student Lookup Results*
+
+${matchStr}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👉 Message bhejne ke liye copy karein:
+*MSG [phone]: [Aapka message]*`;
+
+      await whatsappService.sendTextMessage(senderPhone, lookupReply, { context: 'FOUNDER_LOOKUP_RESULTS' });
+      return true;
+    } catch (searchErr) {
+      console.warn('[Founder Lookup] Search warning:', searchErr.message);
+    }
   }
 
   // 5. Active Queue & Pending Tickets (TICKETS / PENDING / QUEUE / STATUS / LIST)
@@ -339,7 +449,8 @@ Aapka number (*${senderPhone}*) as ${adminRole} verified hai.
 • *REPLY #[code]: [message]* ➔ Student ko secretly reply karein (Aapka number reveal nahi hoga)
 • *REPLY LAST: [message]* ➔ Sabse latest ticket wale student ko reply karein
 • *RESOLVE #[code]* ➔ Ticket resolve mark karein aur student ko notice bhejein
-• *MSG [phone]: [message]* ➔ Kisi bhi student ko official bot se custom message bhejein
+• *MSG [phone or email]: [message]* ➔ Kisi bhi student ko official bot se direct message bhejein
+• *FIND [name or email]* ➔ Database me student ka phone number aur email search karein
 • *TEST: [sawal]* ➔ Normal student AI mentor responses test karein
 
 🔒 *Privacy:* Student ko aapka number kabhi nahi dikhega. Sabhi messages CareerPath AI ke official Bot (*+91 7499085045*) se dispatch hote hain.`;
@@ -1019,6 +1130,84 @@ CareerPath AI Support System me aapka swagat hai:
 
       await whatsappService.sendTextMessage(senderPhone, supportMenuReply, {
         context: 'SUPPORT_MENU',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── ACTIVE MENTOR CONVERSATION ROUTER ──
+    // If student is directly responding to a mentor outreach or active counselor discussion
+    let activeOutreachTicket = null;
+    for (const [id, rec] of supportTicketsCache.entries()) {
+      if (rec.phone === senderPhone && (rec.status === 'SENT_BY_MENTOR' || rec.status === 'COUNSELOR_REPLIED')) {
+        activeOutreachTicket = rec;
+      }
+    }
+
+    if (activeOutreachTicket && !isSupportKeyword && !isTicketCreation && !isCounselorKeyword) {
+      activeOutreachTicket.status = 'STUDENT_REPLIED';
+      activeOutreachTicket.lastReply = incomingText;
+      activeOutreachTicket.lastReplyAt = new Date().toISOString();
+
+      await forwardAlertToFounder({
+        studentName: userContext.name,
+        studentPhone: senderPhone,
+        ticketId: activeOutreachTicket.ticketId,
+        type: 'STUDENT_REPLY_TO_MENTOR',
+        issue: incomingText,
+        userContext
+      });
+
+      const ackNotice = 
+`🧑‍🏫 *CareerPath AI  -  Mentor Desk*
+
+Namaste ${userContext.name}!
+Aapka reply mentor ko forward kar diya gaya hai. Vo jald hi aapse yahan connect karenge!
+
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, ackNotice, {
+        context: 'STUDENT_REPLY_FORWARDED',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── SMART UNREGISTERED STUDENT ONBOARDING ROUTER ──
+    // Welcomes new unlinked users sending greetings with instant portal registration instructions
+    if (!userContext.isRegistered && /^(hi|hii|hiii|hello|hey|namaste|start|\/start)\b/i.test(cleanLower)) {
+      const welcomeOnboardingMsg = 
+`👋 *Namaste ${userContext.name}! CareerPath AI me aapka swagat hai!*
+
+Aapka yeh WhatsApp number hamare main portal par abhi *Registered / Linked* nahi hai.
+
+🎯 *CareerPath AI kya hai?*
+Yeh Bharat ka 1st Autonomous Career GPS platform hai — jo aapko personalized 12-week roadmap, live coding milestones, verified skill certificates aur top tech recruiters se connect karwata hai!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 *Quick Next Steps:*
+
+1️⃣ *Free Student Account Banayein (1 Minute):*
+👉 https://careerpath.is-local.org
+_(Website par sign up karke apna yeh WhatsApp number link karein)_
+
+2️⃣ *AI Career Mentor se Sawal Poochhein:*
+Aap koi bhi tech career sawal yahan type kar sakte hain:
+• *"Web development kaise start karein?"*
+• *"Python vs Java for freshers"*
+
+3️⃣ *1-on-1 Human Counselor Callback:*
+Senior mentor se seedha call connect karne ke liye reply karein:
+👉 *COUNSELOR*
+
+4️⃣ *Support Desk Menu:*
+Sabhi options dekhne ke liye reply karein:
+👉 *SUPPORT*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, welcomeOnboardingMsg, {
+        context: 'UNREGISTERED_WELCOME_ONBOARDING',
         studentName: userContext.name
       });
       return;

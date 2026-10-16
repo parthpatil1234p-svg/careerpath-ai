@@ -170,9 +170,54 @@ async function runTest() {
     assert(studentResolveNotice, 'Student must receive ticket resolved notice');
     assert(founderResolveConfirm, 'Founder must receive resolve confirmation');
     console.log('  ✓ PASSED: Ticket resolved by Founder and student notified.');
+    // ----------------------------------------------------
+    // TEST 6: Founder initiates proactive Direct Outreach (MSG <phone>: <msg>)
+    // ----------------------------------------------------
+    console.log('\n▶ TEST 6: Founder initiates direct outreach (MSG 9876543210: ...)');
+    dispatchedMessages.length = 0;
+
+    const mockReq6 = {
+      body: {
+        from: founderPhone,
+        text: 'MSG 9876543210: Hello Rohit, maine aapka Week 1 progress dekha. Project me koi doubt hai?',
+        senderName: 'Parth Patil'
+      }
+    };
+    await handleIncomingWebhook(mockReq6, mockRes1);
+
+    const studentOutreachMsg = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'FOUNDER_DIRECT_OUTREACH');
+    const founderOutreachConfirm = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_DM_CONFIRMED');
+
+    assert(studentOutreachMsg, 'Student must receive direct mentor outreach message from bot');
+    assert(studentOutreachMsg.text.includes('Week 1 progress'), 'Student must get exact outreach content');
+    assert(founderOutreachConfirm, 'Founder must get outreach delivery confirmation');
+    console.log('  ✓ PASSED: Proactive mentor message delivered to student without exposing mentor phone.');
+
+    // ----------------------------------------------------
+    // TEST 7: Student replies to mentor outreach (alerts Founder)
+    // ----------------------------------------------------
+    console.log('\n▶ TEST 7: Student replies directly to mentor outreach');
+    dispatchedMessages.length = 0;
+
+    const mockReq7 = {
+      body: {
+        from: studentPhone,
+        text: 'Haan sir, mujhe REST API call integrate karne me issue aa raha hai.',
+        senderName: 'Rohit Verma'
+      }
+    };
+    await handleIncomingWebhook(mockReq7, mockRes1);
+
+    const studentReplyAlertToFounder = dispatchedMessages.find(m => m.phone === founderPhone && m.meta.context === 'FOUNDER_ESCALATION_ALERT');
+    const studentReplyAck = dispatchedMessages.find(m => m.phone === studentPhone && m.meta.context === 'STUDENT_REPLY_FORWARDED');
+
+    assert(studentReplyAlertToFounder, 'Founder must receive alert with student reply');
+    assert(studentReplyAlertToFounder.text.includes('REST API call'), 'Alert must contain student reply text');
+    assert(studentReplyAck, 'Student must receive forward acknowledgement');
+    console.log('  ✓ PASSED: Student reply forwarded to Mentor with privacy maintained.');
 
     console.log('\n============================================================');
-    console.log('🎉 ALL 5 FOUNDER & CO-FOUNDER ANONYMOUS RELAY TESTS PASSED!');
+    console.log('🎉 ALL 7 FOUNDER & CO-FOUNDER ANONYMOUS RELAY TESTS PASSED!');
     console.log('============================================================\n');
 
   } finally {
