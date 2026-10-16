@@ -997,7 +997,7 @@
                 <span class="badge badge-teal font-monospace text-uppercase" style="letter-spacing: 0.5px;">COMPETENCY MANAGER</span>
                 <h2 class="modal-title h5 fw-bold text-ink mb-0" id="manageSkillsModalLabel">Manage Skills & Proficiency</h2>
               </div>
-              <p class="text-muted small mb-0 mt-1">Add, update proficiency, or remove skills in real-time. Career matches update immediately.</p>
+              <p class="text-muted small mb-0 mt-1">Add or remove skills in real-time. Proficiency levels are locked and verified via the Reality Check Quiz.</p>
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -1006,13 +1006,22 @@
             <!-- Modal Alert -->
             <div id="modalSkillAlert" class="d-none alert mb-3 py-2 px-3 small" role="alert"></div>
 
+            <!-- Skill Verifier Standard Notice -->
+            <div class="d-flex align-items-center gap-2.5 p-2.5 rounded-2 bg-primary bg-opacity-10 border border-primary border-opacity-20 mb-3 text-ink small">
+              <i class="bi bi-shield-lock-fill text-primary fs-5 flex-shrink-0"></i>
+              <div>
+                <span class="fw-bold">Skill Verifier Standard:</span>
+                <span class="text-secondary">Self-rating is locked. Skill proficiency is verified and calibrated through 90-second Reality Check Quizzes or GitHub project analysis.</span>
+              </div>
+            </div>
+
             <!-- Current Skills List -->
             <div class="mb-4">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <label class="form-label small fw-bold text-ink text-uppercase font-monospace mb-0">
                   <i class="bi bi-cpu text-teal me-1"></i> Current Logged Skills (<span id="modalCurrentSkillsCount">0</span>)
                 </label>
-                <span class="text-muted small" style="font-size: 0.75rem;">Click proficiency level to adjust</span>
+                <span class="badge bg-secondary-subtle text-secondary border font-mono small d-inline-flex align-items-center gap-1" style="font-size: 0.72rem;"><i class="bi bi-lock-fill text-warning"></i> Proficiency Locked to Skill Verifier</span>
               </div>
               <div id="modalSkillsList" class="d-flex flex-column gap-2" style="max-height: 230px; overflow-y: auto; padding-right: 4px;">
                 <!-- Populated dynamically via dashboard.js -->
@@ -1024,18 +1033,17 @@
               <label class="form-label small fw-bold text-ink text-uppercase font-monospace mb-2">
                 <i class="bi bi-plus-circle text-teal me-1"></i> Add Skill from Industry Catalog
               </label>
-              <div class="row g-2">
+              <div class="row g-2 align-items-center">
                 <div class="col-md-5">
                   <select id="catalogSkillSelect" class="form-select form-select-sm">
                     <option value="">Select a skill to add...</option>
                   </select>
                 </div>
                 <div class="col-md-4">
-                  <select id="catalogSkillProficiency" class="form-select form-select-sm">
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate" selected>Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-lock-fill text-warning"></i></span>
+                    <input type="text" class="form-control bg-light text-muted border-start-0 font-mono small" value="Level Pending (90s Quiz)" readonly title="Proficiency is locked: calibrate via Reality Check Quiz" style="font-size: 0.75rem;">
+                  </div>
                 </div>
                 <div class="col-md-3">
                   <button type="button" id="btnAddCatalogSkill" class="btn cp-btn-primary btn-sm w-100">
@@ -1053,7 +1061,7 @@
                 </label>
                 <span class="badge badge-navy small">Universal Write-In</span>
               </div>
-              <div class="row g-2">
+              <div class="row g-2 align-items-center">
                 <div class="col-md-4">
                   <input type="text" id="dashboardCustomSkillName" class="form-control form-control-sm" placeholder="e.g. Rust, Solidity, Blender..." maxlength="40">
                 </div>
@@ -1074,11 +1082,10 @@
                   </select>
                 </div>
                 <div class="col-md-3">
-                  <select id="dashboardCustomSkillProficiency" class="form-select form-select-sm">
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate" selected>Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-lock-fill text-warning"></i></span>
+                    <input type="text" class="form-control bg-light text-muted border-start-0 font-mono small" value="Level Pending" readonly title="Proficiency is locked: calibrate via Reality Check Quiz" style="font-size: 0.75rem;">
+                  </div>
                 </div>
                 <div class="col-md-2">
                   <button type="button" id="btnDashboardAddCustom" class="btn cp-btn-primary btn-sm w-100">

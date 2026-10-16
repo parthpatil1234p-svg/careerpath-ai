@@ -1425,52 +1425,102 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (editableSkills.length === 0) {
       modalSkillsList.innerHTML = `
-        <div class="text-muted small py-3 text-center border border-dashed rounded-2 border-line">
+        <div class="text-muted small py-4 text-center border border-dashed rounded-2 border-line">
+          <i class="bi bi-cpu text-muted fs-4 d-block mb-1"></i>
           No skills added yet. Choose from the catalog below or add a custom skill.
         </div>
       `;
       return;
     }
 
+    // Build lookup map from cachedSkillEvidence if present
+    const evidenceMap = new Map();
+    if (cachedSkillEvidence && Array.isArray(cachedSkillEvidence.evidence)) {
+      cachedSkillEvidence.evidence.forEach((ev) => {
+        const k = (ev.name || '').toLowerCase().trim();
+        if (k) evidenceMap.set(k, ev);
+      });
+    }
+
     modalSkillsList.innerHTML = editableSkills
       .map((s, idx) => {
-        const prof = (s.proficiency || 'beginner').toLowerCase();
+        const sKey = (s.name || '').toLowerCase().trim();
+        const ev = evidenceMap.get(sKey);
+        const isQuizVerified = Boolean(s.isQuizVerified || (ev && ev.hasEvidence && ev.method === 'quiz'));
+        const isCodeVerified = Boolean(s.isCodeVerified || (ev && ev.hasEvidence && ev.method === 'github'));
+        const isVerified = isQuizVerified || isCodeVerified || Boolean(s.verifiedProficiency) || Boolean(ev && ev.hasEvidence);
+
+        const rawProf = (s.verifiedProficiency || (ev && ev.verifiedLevel) || s.proficiency || 'beginner').toLowerCase();
+        const profDisplay = rawProf.charAt(0).toUpperCase() + rawProf.slice(1);
+        const skillLogo = window.TechLogos?.getLogoImg(s.name, { size: 16, className: 'me-1' }) || '';
+
+        let badgeHtml = '';
+        let actionBtnHtml = '';
+
+        if (isQuizVerified || (isVerified && !isCodeVerified)) {
+          badgeHtml = `
+            <span class="badge bg-success-subtle text-success border border-success font-mono px-2 py-1 small text-nowrap" title="Calibrated & Locked via Reality Check Quiz (${escapeHtml(profDisplay)})">
+              <i class="bi bi-patch-check-fill me-1"></i>${escapeHtml(profDisplay)}
+            </span>
+          `;
+          actionBtnHtml = `
+            <a href="quiz.html?skill=${encodeURIComponent(sKey)}" class="btn btn-outline-success btn-sm py-0 px-2 text-decoration-none font-mono btn-modal-quiz-action text-nowrap" data-skill="${escapeHtml(sKey)}" title="Verified via Quiz - Click to Retest and calibrate higher level">
+              <i class="bi bi-arrow-repeat me-1"></i>Retest
+            </a>
+          `;
+        } else if (isCodeVerified) {
+          badgeHtml = `
+            <span class="badge bg-info-subtle text-info border border-info font-mono px-2 py-1 small text-nowrap" title="Calibrated & Locked via GitHub Repository Code (${escapeHtml(profDisplay)})">
+              <i class="bi bi-github me-1"></i>${escapeHtml(profDisplay)}
+            </span>
+          `;
+          actionBtnHtml = `
+            <a href="quiz.html?skill=${encodeURIComponent(sKey)}" class="btn btn-outline-info btn-sm py-0 px-2 text-decoration-none font-mono btn-modal-quiz-action text-nowrap" data-skill="${escapeHtml(sKey)}" title="Calibrated via GitHub - Take quiz for full calibration">
+              <i class="bi bi-lightning-charge me-1"></i>Quiz
+            </a>
+          `;
+        } else {
+          badgeHtml = `
+            <span class="badge bg-warning-subtle text-warning border border-warning font-mono px-2 py-1 small text-nowrap" title="Proficiency locked: complete 90s reality-check quiz to calibrate level">
+              <i class="bi bi-lock-fill me-1"></i>Level Pending
+            </span>
+          `;
+          actionBtnHtml = `
+            <a href="quiz.html?skill=${encodeURIComponent(sKey)}" class="btn cp-btn-primary btn-sm py-0 px-2 text-decoration-none font-mono btn-modal-quiz-action text-nowrap shadow-sm" data-skill="${escapeHtml(sKey)}" title="Take 90s reality check quiz to calibrate and unlock verified proficiency">
+              <i class="bi bi-play-circle-fill me-1"></i>Take Quiz (90s)
+            </a>
+          `;
+        }
+
         return `
-        <div class="d-flex align-items-center justify-content-between p-2 rounded-2 stat-box-atlas border border-line gap-2 flex-wrap">
-          <div class="d-flex align-items-center gap-2">
-            <span class="badge badge-navy small" style="font-family: var(--font-body);">${escapeHtml(s.category || 'tech')}</span>
-            <span class="fw-semibold text-ink small">${escapeHtml(s.displayName || s.name)}</span>
-          </div>
-          <div class="d-flex align-items-center gap-2 ms-auto">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Proficiency selector">
-              <button type="button" class="btn btn-sm ${prof === 'beginner' ? 'btn-warning text-dark fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2" style="font-size: 0.72rem; font-family: var(--font-body);" data-idx="${idx}" data-prof="beginner">
-                Beg
-              </button>
-              <button type="button" class="btn btn-sm ${prof === 'intermediate' ? 'btn-info text-dark fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2" style="font-size: 0.72rem; font-family: var(--font-body);" data-idx="${idx}" data-prof="intermediate">
-                Int
-              </button>
-              <button type="button" class="btn btn-sm ${prof === 'advanced' ? 'btn-success text-white fw-bold' : 'btn-outline-secondary text-muted'} py-0 px-2" style="font-size: 0.72rem; font-family: var(--font-body);" data-idx="${idx}" data-prof="advanced">
-                Adv
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-2 stat-box-atlas border border-line gap-2 flex-wrap">
+            <div class="d-flex align-items-center gap-2" style="min-width: 0;">
+              <span class="badge badge-navy small text-nowrap" style="font-family: var(--font-body);">${escapeHtml(s.category || 'tech')}</span>
+              ${skillLogo}
+              <span class="fw-semibold text-ink small text-truncate" title="${escapeHtml(s.displayName || s.name)}">${escapeHtml(s.displayName || s.name)}</span>
+            </div>
+            <div class="d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+              ${badgeHtml}
+              ${actionBtnHtml}
+              <button type="button" class="btn btn-link text-danger p-0 ms-1 text-decoration-none btn-remove-skill" data-idx="${idx}" title="Remove skill">
+                <i class="bi bi-x-circle-fill"></i>
               </button>
             </div>
-            <button type="button" class="btn btn-link text-danger p-0 ms-2 text-decoration-none btn-remove-skill" data-idx="${idx}" title="Remove skill">
-              <i class="bi bi-x-circle-fill"></i>
-            </button>
           </div>
-        </div>
-      `;
+        `;
       })
       .join('');
 
-    // Wire segmented proficiency buttons
-    modalSkillsList.querySelectorAll('[data-prof]').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.currentTarget.getAttribute('data-idx'), 10);
-        const newProf = e.currentTarget.getAttribute('data-prof');
-        if (!isNaN(idx) && editableSkills[idx]) {
-          editableSkills[idx].proficiency = newProf;
-          renderModalSkillsList();
-        }
+    // Wire Quiz redirect buttons with auto-save
+    modalSkillsList.querySelectorAll('.btn-modal-quiz-action').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const targetUrl = btn.getAttribute('href');
+        try {
+          btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Saving...`;
+          await window.API.put('/users/me', { skills: editableSkills }, { auth: true });
+        } catch (_) {}
+        window.location.href = targetUrl;
       });
     });
 
@@ -1478,8 +1528,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     modalSkillsList.querySelectorAll('.btn-remove-skill').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const idx = parseInt(e.currentTarget.getAttribute('data-idx'), 10);
-        if (!isNaN(idx)) {
+        if (!isNaN(idx) && editableSkills[idx]) {
+          const removedName = editableSkills[idx].displayName || editableSkills[idx].name;
           editableSkills.splice(idx, 1);
+          showModalAlert(`Removed "${removedName}" from working list.`, 'info');
           renderModalSkillsList();
         }
       });
@@ -1520,17 +1572,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       const selectedOpt = catalogSkillSelect.options[catalogSkillSelect.selectedIndex];
       const displayName = selectedOpt?.getAttribute('data-display') || selectedName;
       const category = selectedOpt?.getAttribute('data-cat') || 'tech';
-      const proficiency = catalogSkillProficiency?.value || 'intermediate';
 
       editableSkills.push({
         name: selectedName.toLowerCase(),
         displayName: displayName,
         category: category,
-        proficiency: proficiency,
+        proficiency: 'beginner',
+        isQuizVerified: false,
+        isCodeVerified: false,
       });
 
       catalogSkillSelect.value = '';
-      showModalAlert(`✓ Added "${displayName}" (${proficiency})`, 'success');
+      showModalAlert(`✓ Added "${displayName}" (Level Pending: take 90s quiz to calibrate)`, 'info');
       renderModalSkillsList();
     });
   }
@@ -1556,14 +1609,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const category = dashboardCustomSkillCategory?.value || 'other';
-      const proficiency = dashboardCustomSkillProficiency?.value || 'intermediate';
 
       editableSkills.push({
         name: cleanSlug,
         displayName: rawName,
         category: category,
-        proficiency: proficiency,
+        proficiency: 'beginner',
         isCustom: true,
+        isQuizVerified: false,
+        isCodeVerified: false,
       });
 
       // Register with backend in background
@@ -1580,7 +1634,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (_) {}
 
       dashboardCustomSkillName.value = '';
-      showModalAlert(`✓ Custom skill "${rawName}" added!`, 'success');
+      showModalAlert(`✓ Custom skill "${rawName}" added! (Level Pending: calibrate via quiz)`, 'info');
       renderModalSkillsList();
     };
 
