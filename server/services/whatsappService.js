@@ -38,8 +38,10 @@ function getOpenwaConfig() {
  */
 function formatPhoneNumber(rawPhone) {
   if (!rawPhone || typeof rawPhone !== 'string') return '';
+  // Strip WhatsApp JID suffixes like @c.us, @s.whatsapp.net, @g.us
+  let cleaned = rawPhone.replace(/@(c\.us|s\.whatsapp\.net|g\.us)$/i, '');
   // Remove spaces, hyphens, parentheses, dots
-  let cleaned = rawPhone.replace(/[\s\-\(\)\.]/g, '').trim();
+  cleaned = cleaned.replace(/[\s\-\(\)\.]/g, '').trim();
 
   // If starts with 0, replace leading 0 with +91
   if (cleaned.startsWith('0')) {

@@ -1,0 +1,12 @@
+[
+  {
+    "ticketId": "CP-TKT-467491",
+    "studentName": "aditi",
+    "phone": "+917498376277",
+    "issue": "certificate gen nahi ho rha aditi",
+    "targetCareer": "Full Stack Engineer",
+    "activeWeek": 1,
+    "createdAt": "2026-10-16T04:35:00.000Z",
+    "status": "OPEN_ESCALATED"
+  }
+]

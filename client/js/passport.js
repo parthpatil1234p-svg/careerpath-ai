@@ -83,19 +83,19 @@
 
     skills.forEach(s => {
       const chip = document.createElement('div');
-      let badgeClass = 'badge bg-secondary bg-opacity-25 text-white-50 border border-secondary border-opacity-30';
+      let badgeClass = 'badge bg-secondary-subtle text-secondary border border-secondary-subtle';
       if (s.tier === 'Project Verified') badgeClass = 'badge badge-verified-project';
       else if (s.tier === 'Quiz Verified') badgeClass = 'badge badge-verified-quiz';
       else if (s.tier === 'Code Verified') badgeClass = 'badge badge-verified-code';
 
-      chip.className = `p-2.5 rounded-3 bg-dark bg-opacity-60 border border-secondary border-opacity-25 d-flex align-items-center justify-content-between gap-3`;
+      chip.className = `p-2.5 rounded-3 skill-chip-card d-flex align-items-center justify-content-between gap-3 shadow-xs`;
       chip.style.minWidth = '220px';
       chip.innerHTML = `
         <div>
-          <div class="fw-semibold text-white small">${s.displayName || s.name}</div>
-          <div class="text-muted" style="font-size: 0.7rem;">${s.verifiedSource || 'Verified by Protocol'}</div>
+          <div class="fw-bold text-ink small">${s.displayName || s.name}</div>
+          <div class="text-muted font-mono" style="font-size: 0.7rem;"><i class="bi bi-shield-check text-primary me-1"></i>${s.verifiedSource || 'Verified by Protocol'}</div>
         </div>
-        <span class="${badgeClass} font-mono small">${s.badge || s.tier}</span>
+        <span class="${badgeClass} font-mono small fw-semibold">${s.badge || s.tier}</span>
       `;
       skillsContainer.appendChild(chip);
     });
@@ -108,7 +108,7 @@
     if (projects.length === 0) {
       projectsContainer.innerHTML = `
         <div class="col-12 text-center py-4 text-muted small">
-          <i class="bi bi-code-square fs-3 d-block mb-1 text-white-50"></i>
+          <i class="bi bi-code-square fs-3 d-block mb-1 text-secondary"></i>
           Candidate is currently finalizing active milestone project submissions.
         </div>
       `;
@@ -117,23 +117,23 @@
         const col = document.createElement('div');
         col.className = 'col-md-6';
         col.innerHTML = `
-          <div class="p-3.5 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 h-100 d-flex flex-column justify-content-between">
+          <div class="p-3.5 rounded-3 project-portfolio-card h-100 d-flex flex-column justify-content-between">
             <div>
               <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
-                <h6 class="text-white fw-bold mb-0">${proj.projectTitle}</h6>
-                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-30 font-mono small">
-                  Score: ${proj.score}/100
+                <h6 class="text-ink fw-bold mb-0 fs-6">${proj.projectTitle}</h6>
+                <span class="badge bg-success-subtle text-success border border-success-subtle font-mono small fw-semibold">
+                  <i class="bi bi-patch-check-fill me-1"></i>Score: ${proj.score}/100
                 </span>
               </div>
-              <p class="text-muted small mb-3" style="font-size: 0.8rem; line-height: 1.45;">${proj.description || ''}</p>
+              <p class="text-secondary small mb-3" style="font-size: 0.82rem; line-height: 1.5;">${proj.description || ''}</p>
             </div>
             <div>
-              <div class="d-flex align-items-center justify-content-between pt-2 border-top border-secondary border-opacity-20 font-mono small">
-                <a href="${proj.githubUrl}" target="_blank" rel="noopener noreferrer" class="text-white-50 text-decoration-none hover-text-white d-inline-flex align-items-center gap-1">
-                  <i class="bi bi-github"></i> Repository
+              <div class="d-flex align-items-center justify-content-between pt-2.5 border-top border-line font-mono small">
+                <a href="${proj.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm py-1 px-2.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-medium" style="font-size: 0.76rem;">
+                  <i class="bi bi-github text-dark"></i> Repository
                 </a>
                 ${proj.liveUrl ? `
-                  <a href="${proj.liveUrl}" target="_blank" rel="noopener noreferrer" class="text-info text-decoration-none hover-text-white d-inline-flex align-items-center gap-1">
+                  <a href="${proj.liveUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm py-1 px-2.5 rounded-pill d-inline-flex align-items-center gap-1.5 fw-semibold" style="font-size: 0.76rem;">
                     <i class="bi bi-box-arrow-up-right"></i> Live Deployment
                   </a>
                 ` : ''}

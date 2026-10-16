@@ -9,6 +9,8 @@
  * CareerPath AI Technologies Inc.
  */
 
+const fs = require('fs');
+const path = require('path');
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const Career = require('../models/Career');
@@ -16,13 +18,86 @@ const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
 const { getGroqMentorReply } = require('../services/groqService');
 const { getGeminiMentorReply } = require('../services/geminiService');
+const { prisma } = require('../config/prisma');
+
+const TICKETS_FILE = path.join(__dirname, '../data/support_tickets.json');
 
 // In-Memory Student Context Cache (15 min TTL) to eliminate repetitive DB queries
 const userContextCache = new Map();
 const USER_CACHE_TTL_MS = 15 * 60 * 1000;
 
-// In-Memory Support Tickets Registry for instant tracking & Grievance SLA
+// Persistent Support Tickets Registry for instant tracking & Grievance SLA
 const supportTicketsCache = new Map();
+
+// Helper to persist supportTicketsCache to local disk and Supabase DB
+async function persistTickets() {
+  try {
+    const list = Array.from(supportTicketsCache.values());
+    try {
+      fs.writeFileSync(TICKETS_FILE, JSON.stringify(list, null, 2), 'utf8');
+    } catch (fsErr) {
+      console.warn('[Tickets Persist] Local file write warning:', fsErr.message);
+    }
+
+    if (prisma && prisma.youtubeCache) {
+      await prisma.youtubeCache.upsert({
+        where: { queryKey: 'SUPPORT_TICKETS_REGISTRY' },
+        update: { videos: list },
+        create: {
+          id: 'support-tickets-registry',
+          queryKey: 'SUPPORT_TICKETS_REGISTRY',
+          videos: list,
+          source: 'support_tickets_registry'
+        }
+      }).catch(dbErr => console.warn('[Tickets DB Persist] Supabase sync warning:', dbErr.message));
+    }
+  } catch (err) {
+    console.warn('[Tickets Persist] Warning writing tickets:', err.message);
+  }
+}
+
+// Load persisted tickets on boot
+async function loadPersistedTickets() {
+  try {
+    // 1. Try local JSON first (instant zero latency)
+    if (fs.existsSync(TICKETS_FILE)) {
+      try {
+        const raw = fs.readFileSync(TICKETS_FILE, 'utf8');
+        const list = JSON.parse(raw);
+        if (Array.isArray(list)) {
+          for (const t of list) {
+            if (t && t.ticketId) {
+              supportTicketsCache.set(t.ticketId, t);
+            }
+          }
+          console.log(`[Tickets Boot] Loaded ${supportTicketsCache.size} tickets from local storage.`);
+        }
+      } catch (e) {
+        console.warn('[Tickets Boot] Local read warning:', e.message);
+      }
+    }
+
+    // 2. Fetch from Supabase PostgreSQL (survives any dyno / container restart)
+    if (prisma && prisma.youtubeCache) {
+      const record = await prisma.youtubeCache.findUnique({
+        where: { queryKey: 'SUPPORT_TICKETS_REGISTRY' }
+      }).catch(() => null);
+      if (record && Array.isArray(record.videos) && record.videos.length > 0) {
+        for (const t of record.videos) {
+          if (t && t.ticketId) {
+            supportTicketsCache.set(t.ticketId, t);
+          }
+        }
+        console.log(`[Tickets Boot] Synchronized ${supportTicketsCache.size} tickets from Supabase DB.`);
+      }
+    }
+  } catch (err) {
+    console.warn('[Tickets Boot] Warning loading tickets:', err.message);
+  }
+}
+
+// Trigger load immediately
+loadPersistedTickets().catch(() => {});
 
 // Founders & Core Leadership Contact Registry for Anonymous Two-Way Relay
 const FOUNDERS_REGISTRY = [
@@ -82,13 +157,67 @@ function findTicket(queryId) {
     return supportTicketsCache.get(clean);
   }
 
-  // Suffix/partial match (e.g. "374033" matches "CP-COUNSEL-374033" or "CP-TKT-374033")
+  // Suffix/partial match (e.g. "467491" matches "CP-TKT-467491" or "CP-COUNSEL-467491")
   const upper = clean.toUpperCase();
   for (const [id, record] of supportTicketsCache.entries()) {
     const idUpper = id.toUpperCase();
     if (idUpper === upper || idUpper.endsWith(upper) || idUpper.includes(upper)) {
       return record;
     }
+    // Match phone number digits
+    const phoneDigits = record.phone ? whatsappService.getPhoneDigits(record.phone) : '';
+    if (phoneDigits && (phoneDigits.includes(clean) || clean.includes(phoneDigits.slice(-10)))) {
+      return record;
+    }
+    // Match student name
+    if (record.studentName && record.studentName.toLowerCase().includes(clean.toLowerCase())) {
+      return record;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Async version of findTicket with automatic database fallback lookup.
+ * If server was restarted and cache was flushed, recovers student by phone / name on the fly.
+ */
+async function findTicketAsync(queryId) {
+  let ticket = findTicket(queryId);
+  if (ticket) return ticket;
+
+  // Fallback: check if queryId matches student in User database
+  try {
+    const clean = String(queryId).trim().replace(/^#/, '');
+    const cleanDigits = clean.replace(/\D/g, '');
+    let matchedUser = null;
+
+    if (cleanDigits.length >= 10) {
+      matchedUser = await User.findOne({
+        phone: { $regex: cleanDigits.slice(-10) }
+      });
+    } else if (clean.length >= 3) {
+      matchedUser = await User.findOne({
+        name: { $regex: clean, $options: 'i' }
+      });
+    }
+
+    if (matchedUser) {
+      const recoveredTicketId = 'CP-USR-' + (cleanDigits.slice(-6) || Math.floor(100000 + Math.random() * 900000));
+      const recoveredTicket = {
+        ticketId: recoveredTicketId,
+        studentName: matchedUser.name,
+        phone: matchedUser.phone,
+        issue: 'Direct counselor query / recovered student contact',
+        createdAt: new Date().toISOString(),
+        status: 'OPEN_ESCALATED'
+      };
+      supportTicketsCache.set(recoveredTicketId, recoveredTicket);
+      persistTickets().catch(() => {});
+      return recoveredTicket;
+    }
+  } catch (err) {
+    console.warn('[findTicketAsync] Fallback lookup warning:', err.message);
   }
 
   return null;
@@ -192,7 +321,7 @@ async function handleFounderInbound({ founder, senderPhone, incomingText, trimme
   const resolveMatch = trimmed.match(/^(?:resolve|close|done)\b\s*(?:#|no\s*|ticket\s*)?([a-z0-9-]+)?/i);
   if (resolveMatch) {
     const targetCode = resolveMatch[1] || 'LAST';
-    const ticket = findTicket(targetCode);
+    const ticket = await findTicketAsync(targetCode);
     if (!ticket) {
       await whatsappService.sendTextMessage(senderPhone, `❌ Ticket nahi mila: #${targetCode}. Type *TICKETS* to view active queue.`, { context: 'FOUNDER_RESOLVE_NOT_FOUND' });
       return true;
@@ -213,6 +342,7 @@ Sabhi open tickets dekhne ke liye *TICKETS* type karein.`;
     ticket.status = 'RESOLVED';
     ticket.resolvedBy = adminName;
     ticket.resolvedAt = new Date().toISOString();
+    persistTickets().catch(() => {});
 
     const shortCode = ticket.ticketId.replace(/^CP-[A-Z]+-/, '');
     const nowTimeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
@@ -263,13 +393,18 @@ Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas What
     // Remove any leading colon/hyphen
     replyContent = replyContent.replace(/^[:\-\s]+/, '').trim();
 
-    const ticket = findTicket(targetCode);
+    const ticket = await findTicketAsync(targetCode);
     if (!ticket) {
       const notFoundMsg = 
 `❌ *Ticket Nahi Mila:* #${targetCode}
 
 Kripya valid docket ID use karein ya *TICKETS* bhejkar active queue check karein.
-Aap *REPLY LAST: [message]* bhi use kar sakte hain.`;
+Aap *REPLY LAST: [message]* bhi use kar sakte hain.
+
+👉 *Direct Student Outreach Alternative:*
+Aap student ke direct phone number par bhi message bhej sakte hain:
+*MSG [phone]: [Aapka message]*
+_Example: MSG 917498376277: Hello Aditi..._`;
       await whatsappService.sendTextMessage(senderPhone, notFoundMsg, { context: 'FOUNDER_TICKET_NOT_FOUND' });
       return true;
     }
@@ -316,6 +451,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
     ticket.lastReply = replyContent;
     ticket.lastReplyBy = adminName;
     ticket.lastReplyAt = new Date().toISOString();
+    persistTickets().catch(() => {});
 
     // Confirm to sender (100% reassurance of privacy)
     const confirmMsg = 
@@ -411,6 +547,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
       counselor: adminName
     };
     supportTicketsCache.set(outreachTicketId, outreachRecord);
+    persistTickets().catch(() => {});
 
     const studentDispatch = 
 `🧑‍🏫 *CareerPath AI  -  Official Mentor Message*
@@ -884,6 +1021,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
       };
 
       supportTicketsCache.set(ticketId, ticketRecord);
+      persistTickets().catch(() => {});
       console.log(`[Support Desk] New Ticket Registered: ${ticketId} for ${senderPhone}: "${issueDetails}"`);
 
       // Alert Founder secretly on personal WhatsApp
@@ -1053,6 +1191,7 @@ Reply *TICKET: Recruiter onboarding assistance*
       };
 
       supportTicketsCache.set(counselTicketId, counselRecord);
+      persistTickets().catch(() => {});
       console.log(`[Support Desk] Human Counselor Request Logged: #${counselTicketId} for ${senderPhone} (${userContext.name})`);
 
       // Alert Founder secretly on personal WhatsApp
@@ -1116,6 +1255,7 @@ parthpatil@careerpath.is-local.org
       };
 
       supportTicketsCache.set(queryTicketId, queryRecord);
+      persistTickets().catch(() => {});
       console.log(`[Support Desk] Student Query Logged: #${queryTicketId} for ${senderPhone}: "${queryContent}"`);
 
       // Alert Founder secretly on personal WhatsApp

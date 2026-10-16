@@ -262,10 +262,10 @@
     wrapper.className = 'd-inline-flex align-items-center gap-1 ms-2';
     wrapper.innerHTML = `
       <div class="input-group input-group-sm" style="width: auto;">
-        <span class="input-group-text bg-dark text-info border-secondary border-opacity-50 px-2 py-0.5" style="font-size: 0.72rem;">
+        <span class="input-group-text bg-light text-primary border-line px-2 py-0.5" style="font-size: 0.72rem;">
           <i class="bi bi-translate"></i>
         </span>
-        <select class="form-select form-select-sm cp-lang-selector bg-dark text-white border-secondary border-opacity-50 font-mono py-0.5 ps-2 pe-4" style="font-size: 0.72rem; cursor: pointer;" aria-label="Select Language">
+        <select class="form-select form-select-sm cp-lang-selector bg-white text-ink border-line font-mono py-0.5 ps-2 pe-4" style="font-size: 0.72rem; cursor: pointer;" aria-label="Select Language">
           <option value="en" ${currentLang === 'en' ? 'selected' : ''}>EN (English)</option>
           <option value="mr" ${currentLang === 'mr' ? 'selected' : ''}>MR (मराठी)</option>
           <option value="hi" ${currentLang === 'hi' ? 'selected' : ''}>HI (हिन्दी)</option>
