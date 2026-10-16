@@ -127,7 +127,10 @@
   }
 
   /**
-   * Background silent geolocation request with zero-error fallback
+   * Multi-tier Geolocation Request:
+   * Tier 1: Real-time browser GPS (accurate to meters)
+   * Tier 2: Vercel Edge IP Geolocation (instant city-level detection, zero prompts)
+   * Tier 3: Reference Hub (Khandesh & MIDC Jalgaon)
    */
   function requestLiveGeolocation(isUserTriggered = false) {
     const statusEl = document.getElementById('radarTelemetryStatus');
@@ -138,9 +141,15 @@
     }
 
     if (!('geolocation' in navigator)) {
-      applyFallbackLocation('Geolocation API not supported on this browser.');
+      fallbackToIpOrHub(isUserTriggered ? 'Browser Geolocation API unavailable.' : null);
       return;
     }
+
+    const geoOptions = {
+      enableHighAccuracy: isUserTriggered,
+      timeout: isUserTriggered ? 10000 : 7000,
+      maximumAge: 120000
+    };
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -158,15 +167,75 @@
         fetchAndRenderRadarCompanies();
       },
       (err) => {
-        // Fallback gracefully without disruptive alert popups
-        applyFallbackLocation(isUserTriggered ? 'Location permission was dismissed or unavailable.' : null);
+        // If high accuracy failed when user clicked, retry once with low accuracy (fast Wi-Fi/cellular triangulation)
+        if (isUserTriggered && geoOptions.enableHighAccuracy) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              userLat = pos.coords.latitude;
+              userLng = pos.coords.longitude;
+              hasGpsLocation = true;
+
+              if (statusEl) {
+                statusEl.innerHTML = `
+                  <span class="text-success fw-semibold">📡 Live Location Connected:</span>
+                  Lat ${userLat.toFixed(2)}°N, Lng ${userLng.toFixed(2)}°E · Haversine sorting active across India.
+                `;
+              }
+              if (btnGpsText) btnGpsText.textContent = 'GPS Active (Locked)';
+              fetchAndRenderRadarCompanies();
+            },
+            () => {
+              fallbackToIpOrHub(isUserTriggered ? 'Location permission was dismissed or unavailable.' : null);
+            },
+            { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+          );
+          return;
+        }
+
+        fallbackToIpOrHub(isUserTriggered ? 'Location permission was dismissed or unavailable.' : null);
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 6000,
-        maximumAge: 300000
-      }
+      geoOptions
     );
+  }
+
+  /**
+   * Tier 2 / 3 Fallback: Try Vercel Edge IP Geolocation, then Reference Hub
+   */
+  async function fallbackToIpOrHub(noticeMessage = null) {
+    const statusEl = document.getElementById('radarTelemetryStatus');
+    const btnGpsText = document.getElementById('btnGpsText');
+
+    try {
+      const baseUrl = window.CONFIG?.API_BASE_URL || (window.location.origin.includes('5500') ? 'http://localhost:5000/api' : 'https://careerpath-ai-bdbt.onrender.com/api');
+      const res = await fetch(`${baseUrl}/careers/regional/detect-location`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data && json.data.lat && json.data.lng) {
+          if (json.source === 'vercel-edge-ip') {
+            userLat = json.data.lat;
+            userLng = json.data.lng;
+            hasGpsLocation = false;
+
+            const cityName = json.data.city || 'Regional Hub';
+            if (statusEl) {
+              statusEl.innerHTML = `
+                <span class="text-teal fw-semibold">🌐 Vercel Edge Location:</span>
+                ${escapeHtml(cityName)} (${userLat.toFixed(2)}°N, ${userLng.toFixed(2)}°E) · Distance calibrated.
+                <span class="text-secondary opacity-75">Click "Detect Live GPS" for meter precision.</span>
+              `;
+            }
+            if (btnGpsText) btnGpsText.textContent = 'Detect Live GPS';
+            fetchAndRenderRadarCompanies();
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[ProximityRadar] Vercel IP location detection fallback unavailable:', e);
+    }
+
+    // Tier 3: Reference Hub
+    applyFallbackLocation(noticeMessage);
   }
 
   function applyFallbackLocation(noticeMessage = null) {

@@ -15,9 +15,11 @@ const {
   getCareerBySlug,
   getRegionalCareers,
   getRegionalCompanies,
+  detectLocation,
 } = require('../controllers/careerController');
 
 router.get('/regional', getRegionalCareers);
+router.get('/regional/detect-location', detectLocation);
 router.get('/regional/companies', getRegionalCompanies);
 router.get('/', getCareers);
 router.get('/:slug', getCareerBySlug);

@@ -182,8 +182,20 @@ const getRegionalCompanies = async (req, res, next) => {
     } = req.query;
 
     const hasCoords = lat != null && lng != null && !isNaN(Number(lat)) && !isNaN(Number(lng));
-    const userLat = hasCoords ? Number(lat) : null;
-    const userLng = hasCoords ? Number(lng) : null;
+    let userLat = hasCoords ? Number(lat) : null;
+    let userLng = hasCoords ? Number(lng) : null;
+    let locationSource = hasCoords ? 'gps' : 'hub';
+
+    // Auto-detect from Vercel edge headers if client didn't supply lat/lng
+    if (!hasCoords && req.headers['x-vercel-ip-latitude'] && req.headers['x-vercel-ip-longitude']) {
+      const vLat = Number(req.headers['x-vercel-ip-latitude']);
+      const vLng = Number(req.headers['x-vercel-ip-longitude']);
+      if (!isNaN(vLat) && !isNaN(vLng)) {
+        userLat = vLat;
+        userLng = vLng;
+        locationSource = 'vercel-edge-ip';
+      }
+    }
 
     const companies = regionalCompaniesData.getCompaniesByProximity({
       userLat,
@@ -199,18 +211,63 @@ const getRegionalCompanies = async (req, res, next) => {
 
     // Detect nearest cluster name from the closest employer
     const nearestClusterName = companies.length > 0 ? companies[0].cluster : 'Pan-India Industrial Network';
+    const edgeCity = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : null;
 
     res.setHeader('Cache-Control', 'public, max-age=120, s-maxage=600, stale-while-revalidate=86400');
     res.status(200).json({
       success: true,
       count: companies.length,
       data: {
-        referenceCity: city || (hasCoords ? 'Live GPS Location' : 'Jalgaon'),
-        detectedCoordinates: hasCoords ? { lat: userLat, lng: userLng } : null,
+        referenceCity: city || (locationSource === 'gps' ? 'Live GPS Location' : (edgeCity || 'Jalgaon')),
+        detectedCoordinates: (userLat != null && userLng != null) ? { lat: userLat, lng: userLng } : null,
+        locationSource,
         nearestClusterName,
         totalInRadiusCount: companies.length,
         companies,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/careers/regional/detect-location
+ * Extracts user coordinates and city from Vercel edge IP headers or fallback hub
+ */
+const detectLocation = async (req, res, next) => {
+  try {
+    const vLat = req.headers['x-vercel-ip-latitude'];
+    const vLng = req.headers['x-vercel-ip-longitude'];
+    const vCity = req.headers['x-vercel-ip-city'];
+    const vRegion = req.headers['x-vercel-ip-country-region'];
+    const vCountry = req.headers['x-vercel-ip-country'];
+
+    if (vLat && vLng && !isNaN(Number(vLat)) && !isNaN(Number(vLng))) {
+      return res.status(200).json({
+        success: true,
+        source: 'vercel-edge-ip',
+        data: {
+          lat: Number(vLat),
+          lng: Number(vLng),
+          city: vCity ? decodeURIComponent(vCity) : 'Local Region',
+          region: vRegion ? decodeURIComponent(vRegion) : 'India',
+          country: vCountry || 'IN',
+        }
+      });
+    }
+
+    // Default reference coordinates (Khandesh & MIDC Jalgaon, Maharashtra)
+    return res.status(200).json({
+      success: true,
+      source: 'default-hub',
+      data: {
+        lat: 21.0077,
+        lng: 75.5626,
+        city: 'Jalgaon',
+        region: 'MH',
+        country: 'IN',
+      }
     });
   } catch (error) {
     next(error);
@@ -222,4 +279,5 @@ module.exports = {
   getCareerBySlug,
   getRegionalCareers,
   getRegionalCompanies,
+  detectLocation,
 };

@@ -270,9 +270,7 @@
     "overflow": false,
     "excessWidth": 0,
     "overflowingElements": [],
-    "brokenImages": [
-      "https://ui-avatars.com/api/?name=Aarav+Patil&background=0284c7&color=fff&size=128"
-    ],
+    "brokenImages": [],
     "consoleErrors": [],
     "failedRequests": [],
     "screenshot": "Student_Passport_Desktop.png"
@@ -284,9 +282,7 @@
     "overflow": false,
     "excessWidth": 0,
     "overflowingElements": [],
-    "brokenImages": [
-      "https://ui-avatars.com/api/?name=Aarav+Patil&background=0284c7&color=fff&size=128"
-    ],
+    "brokenImages": [],
     "consoleErrors": [],
     "failedRequests": [],
     "screenshot": "Student_Passport_Mobile.png"
