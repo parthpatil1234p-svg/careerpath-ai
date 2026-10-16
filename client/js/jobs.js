@@ -1,5 +1,5 @@
 /**
- * jobs.js — Verified Job Board & 1-Click Recruiter Application Controller
+ * jobs.js - Verified Job Board & 1-Click Recruiter Application Controller
  *
  * CareerPath AI · Enterprise Platform Engine
  */
@@ -255,6 +255,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyModal.show();
       });
     });
+  };
+
+  // Expose global modal opener for Industrial Proximity Radar cards
+  window.openJobApplyModal = (jobId, title, company, match = 88) => {
+    activeApplyJob = { id: jobId, title, company, match };
+    const currentUser = window.Auth.getCurrentUser() || {};
+    applyModalSubtitle.textContent = `${title} at ${company}`;
+    applyCandidateName.textContent = currentUser.name || 'Candidate';
+    applyMatchScoreBadge.textContent = `${match}% Personal Match`;
+    applyCandidateDetails.textContent = `${currentUser.education?.course || 'Degree Program'} · ${currentUser.education?.college || 'College'}`;
+    applyCoverNote.value = '';
+    applyModalAlert.innerHTML = '';
+    applyModal.show();
   };
 
   // ── BM25 Hybrid Client Search Execution ──────────────────────

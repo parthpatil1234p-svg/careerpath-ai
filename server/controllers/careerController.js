@@ -1,5 +1,5 @@
 /**
- * controllers/careerController.js — Career Catalog Endpoints
+ * controllers/careerController.js - Career Catalog Endpoints
  *
  * getCareers       GET /api/careers       (public, query: category, search)
  * getCareerBySlug  GET /api/careers/:slug (public)
@@ -165,35 +165,50 @@ const getRegionalCareers = async (req, res, next) => {
 // ── getRegionalCompanies ───────────────────────────────────────
 /**
  * GET /api/careers/regional/companies
- * Returns verified regional employers with proximity in km
+ * Returns verified regional employers with live GPS Haversine proximity, cluster groups, and filters
  */
 const getRegionalCompanies = async (req, res, next) => {
   try {
-    const { city, verifiedOnly, hiringFresher } = req.query;
-    let companies = [...regionalCompaniesData];
+    const {
+      lat,
+      lng,
+      maxDistanceKm,
+      cluster,
+      city,
+      state,
+      verifiedOnly,
+      hiringFresher,
+      search
+    } = req.query;
 
-    if (city && typeof city === 'string') {
-      const normCity = city.trim().toLowerCase();
-      companies = companies.filter((c) => c.city.toLowerCase() === normCity);
-    }
+    const hasCoords = lat != null && lng != null && !isNaN(Number(lat)) && !isNaN(Number(lng));
+    const userLat = hasCoords ? Number(lat) : null;
+    const userLng = hasCoords ? Number(lng) : null;
 
-    if (verifiedOnly === 'true') {
-      companies = companies.filter((c) => c.verifiedPartner);
-    }
+    const companies = regionalCompaniesData.getCompaniesByProximity({
+      userLat,
+      userLng,
+      maxDistanceKm,
+      cluster,
+      city,
+      state,
+      verifiedOnly: verifiedOnly === 'true',
+      hiringFresher: hiringFresher === 'true',
+      search
+    });
 
-    if (hiringFresher === 'true') {
-      companies = companies.filter((c) => c.hiringFresher);
-    }
+    // Detect nearest cluster name from the closest employer
+    const nearestClusterName = companies.length > 0 ? companies[0].cluster : 'Pan-India Industrial Network';
 
-    // Sort by proximity distance in KM
-    companies.sort((a, b) => a.distanceKm - b.distanceKm);
-
-    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
+    res.setHeader('Cache-Control', 'public, max-age=120, s-maxage=600, stale-while-revalidate=86400');
     res.status(200).json({
       success: true,
       count: companies.length,
       data: {
-        referenceCity: city || 'Jalgaon',
+        referenceCity: city || (hasCoords ? 'Live GPS Location' : 'Jalgaon'),
+        detectedCoordinates: hasCoords ? { lat: userLat, lng: userLng } : null,
+        nearestClusterName,
+        totalInRadiusCount: companies.length,
         companies,
       },
     });
