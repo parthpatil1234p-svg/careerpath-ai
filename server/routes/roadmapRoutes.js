@@ -35,7 +35,15 @@ const {
   getVideoCheckpointController,
   verifyVideoLearningController,
   triggerStreakNudgeTestController,
+  getDeveloperRoadmapTracks,
+  getDeveloperRoadmapBySlug,
+  getDeveloperRoadmapTopicGuide,
 } = require('../controllers/roadmapController');
+
+// Interactive Developer Roadmap Explorer (nilbuild/developer-roadmap standards)
+router.get('/developer-explorer/tracks', getDeveloperRoadmapTracks);
+router.get('/developer-explorer/:slug', getDeveloperRoadmapBySlug);
+router.get('/developer-explorer/topic/:nodeId', getDeveloperRoadmapTopicGuide);
 
 router.use(protect, requireStudent);
 

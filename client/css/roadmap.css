@@ -1139,6 +1139,241 @@
   }
 }
 
+/* ============================================================
+   DEVELOPER ROADMAP EXPLORER (nilbuild/developer-roadmap)
+   ============================================================ */
+
+.roadmap-mode-switcher-card {
+  transition: all 0.25s ease;
+}
+
+.roadmap-mode-switcher-card .btn-group .btn {
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.roadmap-mode-switcher-card .btn-group .btn.active {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.dev-track-pills-row {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+.dev-track-pills-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.dev-track-pills-row::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+.dev-track-pill {
+  white-space: nowrap;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dev-track-pill:hover {
+  border-color: #93C5FD;
+  background: #F8FAFC;
+  color: #2563EB;
+  transform: translateY(-1px);
+}
+
+.dev-track-pill.active {
+  background: #2563EB;
+  border-color: #2563EB;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.dev-track-pill.active i {
+  color: #FFFFFF !important;
+}
+
+/* --- Stage Cards & Connectors --- */
+.dev-stage-wrapper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.dev-stage-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.dev-stage-card:hover {
+  border-color: #BFDBFE;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.08);
+}
+
+.dev-stage-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+  flex-shrink: 0;
+}
+
+.dev-stage-connector {
+  position: absolute;
+  left: 50%;
+  bottom: -2rem;
+  width: 2px;
+  height: 2rem;
+  background: repeating-linear-gradient(to bottom, #94A3B8 0, #94A3B8 6px, transparent 6px, transparent 12px);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* --- Interactive Node Cards --- */
+.dev-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.dev-node-card {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+}
+
+.dev-node-card:hover {
+  background: #FFFFFF;
+  border-color: #3B82F6;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+  transform: translateY(-2px);
+}
+
+.dev-node-card.core {
+  border-left: 4px solid #2563EB;
+}
+
+.dev-node-card.recommended {
+  border-left: 4px solid #10B981;
+}
+
+.dev-node-card.modern {
+  border-left: 4px solid #8B5CF6;
+}
+
+.dev-node-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dev-node-desc {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.dev-node-tag-pill {
+  font-size: 0.7rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: #E2E8F0;
+  color: #334155;
+  display: inline-block;
+}
+
+.dev-node-action {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2563EB;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: gap 0.2s ease;
+}
+
+.dev-node-card:hover .dev-node-action {
+  gap: 0.5rem;
+  color: #1D4ED8;
+}
+
+/* Concept Checklist Items */
+.concept-check-item {
+  padding: 0.5rem 0.75rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resource-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  color: #1E293B;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.resource-link-btn:hover {
+  background: #F8FAFC;
+  border-color: #93C5FD;
+  color: #2563EB;
+  transform: translateX(3px);
+}
+
+
 
 
 

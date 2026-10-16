@@ -1515,6 +1515,488 @@ document.addEventListener('DOMContentLoaded', async () => {
       { passive: true }
     );
   }
+  // ============================================================
+  // DEVELOPER ROADMAP EXPLORER (nilbuild/developer-roadmap standards)
+  // ============================================================
+  let currentExplorerSlug = 'frontend';
+  let allExplorerTracks = [];
+  let currentExplorerData = null;
+  let activeTypeFilter = 'all';
+  let searchQuery = '';
+
+  const personalViewEl = document.getElementById('personalRoadmapView');
+  const explorerViewEl = document.getElementById('developerExplorerView');
+  const btnViewPersonal = document.getElementById('btnViewPersonalRoadmap');
+  const btnViewExplorer = document.getElementById('btnViewDeveloperExplorer');
+  const btnExploreEmpty = document.getElementById('btnExploreRoadmapsEmpty');
+
+  const switchRoadmapView = (targetView) => {
+    if (targetView === 'explorer') {
+      if (personalViewEl) personalViewEl.classList.add('d-none');
+      if (explorerViewEl) explorerViewEl.classList.remove('d-none');
+      if (btnViewPersonal) {
+        btnViewPersonal.classList.remove('active', 'text-white');
+        btnViewPersonal.classList.add('text-secondary');
+      }
+      if (btnViewExplorer) {
+        btnViewExplorer.classList.add('active', 'text-white');
+        btnViewExplorer.classList.remove('text-secondary');
+      }
+      if (emptyState) emptyState.classList.add('d-none');
+      if (content) content.classList.remove('d-none');
+
+      // Initialize tracks if not yet loaded
+      if (allExplorerTracks.length === 0) {
+        loadDeveloperExplorer();
+      }
+    } else {
+      if (explorerViewEl) explorerViewEl.classList.add('d-none');
+      if (personalViewEl) personalViewEl.classList.remove('d-none');
+      if (btnViewPersonal) {
+        btnViewPersonal.classList.add('active', 'text-white');
+        btnViewPersonal.classList.remove('text-secondary');
+      }
+      if (btnViewExplorer) {
+        btnViewExplorer.classList.remove('active', 'text-white');
+        btnViewExplorer.classList.add('text-secondary');
+      }
+      if (!currentRoadmap && emptyState) {
+        emptyState.classList.remove('d-none');
+        if (content) content.classList.add('d-none');
+      }
+    }
+  };
+
+  if (btnViewPersonal) {
+    btnViewPersonal.addEventListener('click', () => switchRoadmapView('personal'));
+  }
+  if (btnViewExplorer) {
+    btnViewExplorer.addEventListener('click', () => switchRoadmapView('explorer'));
+  }
+  if (btnExploreEmpty) {
+    btnExploreEmpty.addEventListener('click', () => switchRoadmapView('explorer'));
+  }
+
+  // Fetch all tracks and populate track selector
+  const loadDeveloperExplorer = async () => {
+    try {
+      const baseUrl = window.API?.baseUrl || 'http://localhost:5000/api';
+      const res = await fetch(`${baseUrl}/roadmaps/developer-explorer/tracks`);
+      const json = await res.json();
+
+      if (!json.success || !Array.isArray(json.data)) {
+        return;
+      }
+
+      allExplorerTracks = json.data;
+      const trackCountBadge = document.getElementById('devExplorerTrackCountBadge');
+      if (trackCountBadge) {
+        trackCountBadge.textContent = `${allExplorerTracks.length} Industry Tracks`;
+      }
+
+      const trackSelector = document.getElementById('devRoadmapTrackSelector');
+      if (trackSelector) {
+        trackSelector.innerHTML = allExplorerTracks.map((t) => {
+          const isActive = t.slug === currentExplorerSlug;
+          return `
+            <button type="button" class="dev-track-pill ${isActive ? 'active' : ''}" data-slug="${escapeHtml(t.slug)}">
+              <i class="bi ${escapeHtml(t.icon || 'bi-diagram-3')}" style="color: ${isActive ? '#FFFFFF' : escapeHtml(t.color || '#2563EB')};"></i>
+              <span>${escapeHtml(t.title)}</span>
+              <span class="badge ${isActive ? 'bg-white text-primary' : 'bg-light text-muted border'} font-mono ms-1" style="font-size: 0.68rem;">
+                ${t.totalNodes || 0}
+              </span>
+            </button>
+          `;
+        }).join('');
+
+        trackSelector.querySelectorAll('.dev-track-pill').forEach((pill) => {
+          pill.addEventListener('click', () => {
+            const slug = pill.dataset.slug;
+            if (slug && slug !== currentExplorerSlug) {
+              selectExplorerTrack(slug);
+            }
+          });
+        });
+      }
+
+      // Check if URL has a specific track requested
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedTrack = urlParams.get('track');
+      const targetSlug = (requestedTrack && allExplorerTracks.some(t => t.slug === requestedTrack))
+        ? requestedTrack
+        : currentExplorerSlug;
+
+      await selectExplorerTrack(targetSlug);
+    } catch (err) {
+      console.error('Failed to load developer explorer tracks:', err);
+    }
+  };
+
+  const selectExplorerTrack = async (slug) => {
+    currentExplorerSlug = slug;
+
+    // Update active pill styling
+    const trackSelector = document.getElementById('devRoadmapTrackSelector');
+    if (trackSelector) {
+      trackSelector.querySelectorAll('.dev-track-pill').forEach((pill) => {
+        const isActive = pill.dataset.slug === slug;
+        pill.classList.toggle('active', isActive);
+        const icon = pill.querySelector('i');
+        if (icon) {
+          const matchTrack = allExplorerTracks.find(t => t.slug === pill.dataset.slug);
+          icon.style.color = isActive ? '#FFFFFF' : (matchTrack?.color || '#2563EB');
+        }
+      });
+    }
+
+    // Fetch track data
+    try {
+      const baseUrl = window.API?.baseUrl || 'http://localhost:5000/api';
+      const res = await fetch(`${baseUrl}/roadmaps/developer-explorer/${encodeURIComponent(slug)}`);
+      const json = await res.json();
+
+      if (!json.success || !json.data) return;
+
+      currentExplorerData = json.data;
+
+      // Update header stat card
+      const activeTitleEl = document.getElementById('devExplorerActiveTrackTitle');
+      const activeStatsEl = document.getElementById('devExplorerTrackStats');
+      const activeIconEl = document.getElementById('devExplorerActiveTrackIcon');
+
+      if (activeTitleEl) activeTitleEl.textContent = currentExplorerData.title;
+      if (activeStatsEl) {
+        let nodeCount = 0;
+        (currentExplorerData.stages || []).forEach(s => nodeCount += (s.nodes || []).length);
+        activeStatsEl.textContent = `${currentExplorerData.stages?.length || 0} Sequential Stages · ${nodeCount} Topics`;
+      }
+      if (activeIconEl && currentExplorerData.icon) {
+        activeIconEl.className = `bi ${currentExplorerData.icon} text-primary`;
+      }
+
+      renderExplorerStages();
+    } catch (err) {
+      console.error('Failed to fetch track data:', err);
+    }
+  };
+
+  const renderExplorerStages = () => {
+    const canvas = document.getElementById('devRoadmapStagesCanvas');
+    const showingCountEl = document.getElementById('devRoadmapShowingCount');
+    if (!canvas || !currentExplorerData) return;
+
+    const stages = currentExplorerData.stages || [];
+    let totalShownNodes = 0;
+    let totalTrackNodes = 0;
+
+    const q = (searchQuery || '').toLowerCase().trim();
+
+    const stagesHtml = stages.map((stage, sIdx) => {
+      const isLastStage = sIdx === stages.length - 1;
+      const allNodesInStage = stage.nodes || [];
+      totalTrackNodes += allNodesInStage.length;
+
+      // Filter nodes
+      const filteredNodes = allNodesInStage.filter((node) => {
+        // Status filter
+        if (activeTypeFilter !== 'all' && node.type !== activeTypeFilter) {
+          return false;
+        }
+        // Search query
+        if (q) {
+          const inTitle = (node.title || '').toLowerCase().includes(q);
+          const inDesc = (node.shortExplanation || '').toLowerCase().includes(q);
+          const inTopics = (node.keyTopics || []).some(t => t.toLowerCase().includes(q));
+          const inSkills = (node.relatedSkills || []).some(s => s.toLowerCase().includes(q));
+          if (!inTitle && !inDesc && !inTopics && !inSkills) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      totalShownNodes += filteredNodes.length;
+
+      if (filteredNodes.length === 0 && (q || activeTypeFilter !== 'all')) {
+        return ''; // Don't show empty stages when filtering
+      }
+
+      const nodesCardsHtml = filteredNodes.map((node) => {
+        const typeBadgeClass =
+          node.type === 'core'
+            ? 'bg-primary-subtle text-primary border border-primary-subtle'
+            : node.type === 'recommended'
+            ? 'bg-success-subtle text-success border border-success-subtle'
+            : 'bg-info-subtle text-info border border-info-subtle';
+
+        const keyTags = (node.keyTopics || []).slice(0, 3).map(
+          t => `<span class="dev-node-tag-pill">${escapeHtml(t)}</span>`
+        ).join(' ');
+
+        return `
+          <div class="dev-node-card ${escapeHtml(node.type)}" data-node-id="${escapeHtml(node.id)}">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge ${typeBadgeClass} font-mono" style="font-size: 0.68rem; font-weight: 700;">
+                  ${escapeHtml(node.status || node.type)}
+                </span>
+                <i class="bi bi-box-arrow-up-right text-muted small"></i>
+              </div>
+              <h5 class="dev-node-title">
+                <span>${escapeHtml(node.title)}</span>
+              </h5>
+              <p class="dev-node-desc">${escapeHtml(node.shortExplanation || '')}</p>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-1 flex-wrap mb-2">
+                ${keyTags}
+              </div>
+              <div class="dev-node-action">
+                <span>View Topic Guide & Resources</span>
+                <i class="bi bi-arrow-right"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="dev-stage-wrapper">
+          <div class="dev-stage-card">
+            <div class="d-flex align-items-start gap-3 flex-wrap">
+              <div class="dev-stage-badge">
+                ${stage.stageNumber}
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <h4 class="h5 fw-bold text-ink mb-1">
+                    Stage ${stage.stageNumber}: ${escapeHtml(stage.title)}
+                  </h4>
+                  <span class="badge bg-light text-muted border font-mono small">
+                    ${filteredNodes.length} ${filteredNodes.length === 1 ? 'Topic' : 'Topics'}
+                  </span>
+                </div>
+                <p class="text-secondary small mb-0">${escapeHtml(stage.description || '')}</p>
+              </div>
+            </div>
+
+            <div class="dev-nodes-grid">
+              ${nodesCardsHtml}
+            </div>
+          </div>
+          ${!isLastStage ? '<div class="dev-stage-connector"></div>' : ''}
+        </div>
+      `;
+    }).filter(Boolean).join('');
+
+    if (stagesHtml.trim() === '') {
+      canvas.innerHTML = `
+        <div class="card p-5 text-center bg-white border border-line rounded-3">
+          <i class="bi bi-search text-muted display-4 mb-2"></i>
+          <h5 class="h6 fw-bold text-ink mb-1">No topics match your filter or search</h5>
+          <p class="text-secondary small mb-3">Try clearing your search query or switching to "All" topics.</p>
+          <div>
+            <button type="button" class="btn btn-sm cp-btn-outline" id="btnResetDevRoadmapFilter">
+              Reset Search & Filters
+            </button>
+          </div>
+        </div>
+      `;
+      const btnReset = document.getElementById('btnResetDevRoadmapFilter');
+      if (btnReset) {
+        btnReset.addEventListener('click', () => {
+          searchQuery = '';
+          activeTypeFilter = 'all';
+          const input = document.getElementById('devRoadmapSearchInput');
+          if (input) input.value = '';
+          const typeButtons = document.querySelectorAll('#devRoadmapTypeFilters button');
+          typeButtons.forEach(b => b.classList.toggle('active', b.dataset.typeFilter === 'all'));
+          renderExplorerStages();
+        });
+      }
+    } else {
+      canvas.innerHTML = stagesHtml;
+
+      // Attach click listeners to all node cards
+      canvas.querySelectorAll('.dev-node-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          const nodeId = card.dataset.nodeId;
+          if (nodeId) {
+            openTopicGuideModal(nodeId);
+          }
+        });
+      });
+    }
+
+    if (showingCountEl) {
+      showingCountEl.textContent = `Showing ${totalShownNodes} of ${totalTrackNodes} topics`;
+    }
+  };
+
+  // Open Topic Guide Modal
+  const openTopicGuideModal = async (nodeId) => {
+    try {
+      const baseUrl = window.API?.baseUrl || 'http://localhost:5000/api';
+      const res = await fetch(`${baseUrl}/roadmaps/developer-explorer/topic/${encodeURIComponent(nodeId)}`);
+      const json = await res.json();
+
+      if (!json.success || !json.data) return;
+
+      const { node, track, stage } = json.data;
+
+      const titleEl = document.getElementById('devRoadmapTopicModalLabel');
+      const trackBadge = document.getElementById('topicModalTrackBadge');
+      const stageBadge = document.getElementById('topicModalStageBadge');
+      const typeBadge = document.getElementById('topicModalTypeBadge');
+      const shortDescEl = document.getElementById('topicModalShortDesc');
+      const explanationEl = document.getElementById('topicModalExplanation');
+      const keyConceptsEl = document.getElementById('topicModalKeyConcepts');
+      const resourcesListEl = document.getElementById('topicModalResourcesList');
+      const skillsListEl = document.getElementById('topicModalSkillsList');
+      const iconEl = document.getElementById('topicModalIcon');
+
+      if (titleEl) titleEl.textContent = node.title;
+      if (trackBadge) trackBadge.textContent = track?.title || 'Developer Roadmap';
+      if (stageBadge) stageBadge.textContent = `Stage ${stage?.stageNumber || 1}`;
+      if (typeBadge) {
+        typeBadge.textContent = node.status || node.type;
+        typeBadge.className = `badge font-mono px-2 py-1 ${
+          node.type === 'core'
+            ? 'bg-primary-subtle text-primary border border-primary-subtle'
+            : node.type === 'recommended'
+            ? 'bg-success-subtle text-success border border-success-subtle'
+            : 'bg-info-subtle text-info border border-info-subtle'
+        }`;
+      }
+      if (shortDescEl) shortDescEl.textContent = node.shortExplanation || '';
+      if (explanationEl) {
+        explanationEl.textContent = `${node.shortExplanation || ''} Mastering this topic forms a cornerstone competency aligned with official roadmap.sh developer standards.`;
+      }
+      if (iconEl && track?.icon) {
+        iconEl.className = `bi ${track.icon}`;
+      }
+
+      // Populate key concepts
+      if (keyConceptsEl) {
+        keyConceptsEl.innerHTML = (node.keyTopics || []).map((c) => `
+          <div class="col-sm-6">
+            <div class="concept-check-item">
+              <i class="bi bi-check-circle-fill text-success"></i>
+              <span>${escapeHtml(c)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Populate resources
+      if (resourcesListEl) {
+        const resources = [];
+        if (node.documentationUrl) {
+          resources.push(`
+            <a href="${escapeHtml(node.documentationUrl)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-journal-code text-primary fs-5"></i>
+                <div>
+                  <div class="fw-semibold text-ink">Official Documentation & Reference</div>
+                  <div class="text-muted small" style="font-size: 0.75rem;">Verified technical guide & API reference</div>
+                </div>
+              </div>
+              <i class="bi bi-box-arrow-up-right text-muted"></i>
+            </a>
+          `);
+        }
+        if (node.videoUrl) {
+          resources.push(`
+            <a href="${escapeHtml(node.videoUrl)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-youtube text-danger fs-5"></i>
+                <div>
+                  <div class="fw-semibold text-ink">Video Masterclass & Tutorial</div>
+                  <div class="text-muted small" style="font-size: 0.75rem;">Comprehensive video breakdown on YouTube</div>
+                </div>
+              </div>
+              <i class="bi bi-play-circle-fill text-danger"></i>
+            </a>
+          `);
+        }
+        if (node.cheatsheetUrl) {
+          resources.push(`
+            <a href="${escapeHtml(node.cheatsheetUrl)}" target="_blank" rel="noopener noreferrer" class="resource-link-btn">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-text text-teal fs-5"></i>
+                <div>
+                  <div class="fw-semibold text-ink">Developer Cheatsheet & Roadmap Guide</div>
+                  <div class="text-muted small" style="font-size: 0.75rem;">Visual syntax guide & quick-lookup reference</div>
+                </div>
+              </div>
+              <i class="bi bi-box-arrow-up-right text-muted"></i>
+            </a>
+          `);
+        }
+        resourcesListEl.innerHTML = resources.join('');
+      }
+
+      // Populate skills
+      if (skillsListEl) {
+        skillsListEl.innerHTML = (node.relatedSkills || []).map((s) => `
+          <span class="badge bg-light text-secondary border font-mono">
+            #${escapeHtml(s)}
+          </span>
+        `).join('');
+      }
+
+      // Add to focus handler
+      const btnFocus = document.getElementById('btnTopicModalAddToFocus');
+      if (btnFocus) {
+        btnFocus.onclick = () => {
+          showAlert(`🎯 Skill "${node.title}" added to your custom weekly focus list!`, 'success');
+          const modalInstance = bootstrap.Modal.getInstance(document.getElementById('devRoadmapTopicModal'));
+          if (modalInstance) modalInstance.hide();
+        };
+      }
+
+      const modalEl = document.getElementById('devRoadmapTopicModal');
+      if (modalEl && window.bootstrap?.Modal) {
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+      }
+    } catch (err) {
+      console.error('Failed to open topic guide modal:', err);
+    }
+  };
+
+  // Search input with debounce
+  const searchInput = document.getElementById('devRoadmapSearchInput');
+  if (searchInput) {
+    let debounceTimer;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        searchQuery = e.target.value;
+        renderExplorerStages();
+      }, 200);
+    });
+  }
+
+  // Type filter buttons
+  const typeFilterContainer = document.getElementById('devRoadmapTypeFilters');
+  if (typeFilterContainer) {
+    typeFilterContainer.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        typeFilterContainer.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTypeFilter = btn.dataset.typeFilter || 'all';
+        renderExplorerStages();
+      });
+    });
+  }
+
+  // Check URL query params for initial view
+  const initUrlParams = new URLSearchParams(window.location.search);
+  if (initUrlParams.get('view') === 'explorer') {
+    switchRoadmapView('explorer');
+  }
+
   loadRoadmap();
 });
 

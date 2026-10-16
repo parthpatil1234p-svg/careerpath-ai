@@ -27,6 +27,7 @@ const {
   evaluateVideoReflection,
 } = require('../services/videoDedicationService');
 const { invalidateDashboardCache } = require('./dashboardController');
+const { developerRoadmaps } = require('../data/developerRoadmapsData');
 
 // Helper to group tasks by weekNumber
 const groupTasksByWeek = (tasks, durationWeeks) => {
@@ -1292,6 +1293,116 @@ const triggerStreakNudgeTestController = async (req, res, next) => {
   }
 };
 
+// ── Developer Roadmap Explorer Endpoints (nilbuild/developer-roadmap) ──
+
+/**
+ * GET /api/roadmaps/developer-explorer/tracks
+ * Returns summary catalog of all interactive developer roadmaps
+ */
+const getDeveloperRoadmapTracks = (req, res, next) => {
+  try {
+    const tracks = Object.values(developerRoadmaps).map((roadmap) => {
+      let totalNodes = 0;
+      (roadmap.stages || []).forEach((stage) => {
+        totalNodes += (stage.nodes || []).length;
+      });
+
+      return {
+        slug: roadmap.slug,
+        title: roadmap.title,
+        icon: roadmap.icon,
+        color: roadmap.color,
+        category: roadmap.category,
+        shortDescription: roadmap.shortDescription,
+        totalStages: roadmap.totalStages || roadmap.stages?.length || 0,
+        totalNodes,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Developer roadmaps catalog retrieved successfully',
+      data: tracks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/roadmaps/developer-explorer/:slug
+ * Returns the full stage and node roadmap graph for a given track
+ */
+const getDeveloperRoadmapBySlug = (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    const normalizedSlug = (slug || '').toLowerCase().trim();
+    const roadmap = developerRoadmaps[normalizedSlug];
+
+    if (!roadmap) {
+      return res.status(404).json({
+        success: false,
+        message: `Developer roadmap track '${slug}' not found. Available tracks: ${Object.keys(developerRoadmaps).join(', ')}`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Developer roadmap for '${roadmap.title}' retrieved successfully`,
+      data: roadmap,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/roadmaps/developer-explorer/topic/:nodeId
+ * Returns deep topic guide, key concepts, and curated resources for a node
+ */
+const getDeveloperRoadmapTopicGuide = (req, res, next) => {
+  try {
+    const { nodeId } = req.params;
+    const normalizedNodeId = (nodeId || '').toLowerCase().trim();
+
+    let foundNode = null;
+    let foundTrack = null;
+    let foundStage = null;
+
+    for (const track of Object.values(developerRoadmaps)) {
+      for (const stage of track.stages || []) {
+        const node = (stage.nodes || []).find((n) => n.id.toLowerCase() === normalizedNodeId);
+        if (node) {
+          foundNode = node;
+          foundTrack = { slug: track.slug, title: track.title, color: track.color, icon: track.icon };
+          foundStage = { stageNumber: stage.stageNumber, title: stage.title };
+          break;
+        }
+      }
+      if (foundNode) break;
+    }
+
+    if (!foundNode) {
+      return res.status(404).json({
+        success: false,
+        message: `Topic node '${nodeId}' not found across developer roadmaps.`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Topic guide for '${foundNode.title}' retrieved successfully`,
+      data: {
+        node: foundNode,
+        track: foundTrack,
+        stage: foundStage,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   generateRoadmap,
   getCurrentRoadmap,
@@ -1310,4 +1421,7 @@ module.exports = {
   getVideoCheckpointController,
   verifyVideoLearningController,
   triggerStreakNudgeTestController,
+  getDeveloperRoadmapTracks,
+  getDeveloperRoadmapBySlug,
+  getDeveloperRoadmapTopicGuide,
 };

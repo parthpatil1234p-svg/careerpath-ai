@@ -193,17 +193,43 @@
         </div>
         <h2 class="h4 text-ink fw-bold mb-2">No Active Roadmap Found</h2>
         <p class="text-muted mb-4 mx-auto" style="max-width: 520px;">
-          You don't have an active learning roadmap yet. Complete your assessment and select a recommended career to generate a weekly plan.
+          You don't have an active learning roadmap yet. Complete your assessment and select a recommended career to generate a weekly plan, or explore standard developer roadmaps below.
         </p>
-        <div>
+        <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
           <a href="recommendations.html" class="btn cp-btn-primary px-4 py-2">
             <i class="bi bi-compass me-2"></i> View Career Recommendations
           </a>
+          <button type="button" class="btn cp-btn-outline px-4 py-2" id="btnExploreRoadmapsEmpty">
+            <i class="bi bi-diagram-3 me-2"></i> Explore Developer Roadmaps
+          </button>
         </div>
       </div>
 
       <!-- Main Roadmap Content Area -->
       <div id="roadmapContent" class="d-none">
+
+        <!-- Mode Switcher: My Active Plan vs Interactive Developer Roadmaps -->
+        <div class="roadmap-mode-switcher-card mb-4 p-2 bg-white rounded-3 border border-line shadow-sm">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="btn-group p-1 bg-light rounded-pill border border-line" role="group" aria-label="Roadmap Views">
+              <button type="button" class="btn btn-sm rounded-pill px-3 py-1 fw-semibold active" id="btnViewPersonalRoadmap" data-target-view="personal">
+                <i class="bi bi-calendar-check me-1"></i> My Active Plan & Milestones
+              </button>
+              <button type="button" class="btn btn-sm rounded-pill px-3 py-1 fw-semibold text-secondary" id="btnViewDeveloperExplorer" data-target-view="explorer">
+                <i class="bi bi-diagram-3-fill me-1 text-primary"></i> Interactive Developer Roadmaps
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1 font-mono d-none d-md-inline-block">roadmap.sh</span>
+              </button>
+            </div>
+            <div class="d-flex align-items-center gap-2 me-2">
+              <span class="badge badge-teal font-mono d-none d-lg-inline-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                <i class="bi bi-patch-check-fill text-teal"></i> Industry Standard 2026
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Active Roadmap View Container -->
+        <div id="personalRoadmapView">
 
         <!-- Dual Active Track Switcher Banner -->
         <div id="roadmapTrackSwitcher" class="d-none mb-4 p-3 rounded-3 stat-box-atlas border border-line">
@@ -411,7 +437,100 @@
           <!-- Populated dynamically via roadmap.js -->
         </div>
 
-      </div>
+        </div> <!-- end #personalRoadmapView -->
+
+        <!-- ============================================================
+             DEVELOPER ROADMAP EXPLORER (nilbuild/developer-roadmap standards)
+             ============================================================ -->
+        <div id="developerExplorerView" class="d-none">
+
+          <!-- Explorer Hero Banner -->
+          <div class="card p-4 p-md-5 mb-4 border border-line shadow-sm dev-explorer-hero-card" style="background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%); border-radius: 16px;">
+            <div class="row align-items-center g-4">
+              <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                  <span class="badge bg-primary text-white font-mono px-3 py-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                    <i class="bi bi-diagram-3-fill me-1"></i> ROADMAP.SH COMMUNITY STANDARD
+                  </span>
+                  <span class="badge bg-success-subtle text-success border border-success-subtle font-mono px-2 py-1" style="font-size: 0.75rem;">
+                    <i class="bi bi-shield-check me-1"></i> Industry Vetted 2026
+                  </span>
+                  <span class="badge bg-light text-secondary border font-mono px-2 py-1" style="font-size: 0.75rem;">
+                    Click any node for topic guides & vetted docs
+                  </span>
+                </div>
+                <h2 class="h2 fw-bold text-ink mb-2">
+                  Interactive Developer Roadmaps & Skill Trees
+                </h2>
+                <p class="text-secondary text-md mb-0" style="max-width: 680px;">
+                  Explore structured curriculum trees, prerequisite milestones, and curated official documentation inspired by <strong class="text-dark">nilbuild/developer-roadmap</strong>. Track your progress across frontend, backend, full stack, DevOps, and cutting-edge AI engineering.
+                </p>
+              </div>
+              <div class="col-lg-4 text-lg-end">
+                <div class="dev-explorer-stat-card d-inline-block text-start p-3 bg-white rounded-3 border border-line shadow-sm" style="min-width: 220px;">
+                  <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span class="small font-mono text-muted text-uppercase">Active Track</span>
+                    <i class="bi bi-check-circle-fill text-primary" id="devExplorerActiveTrackIcon"></i>
+                  </div>
+                  <h4 class="h5 fw-bold text-ink mb-1" id="devExplorerActiveTrackTitle">Frontend Developer</h4>
+                  <div class="small text-secondary" id="devExplorerTrackStats">6 Stages &middot; 16 Core & Recommended Topics</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Track Selector Pills Bar -->
+            <div class="mt-4 pt-3 border-top border-line">
+              <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                <span class="small font-mono fw-bold text-muted text-uppercase">Select Career Roadmap Track:</span>
+                <span class="small text-muted font-mono" id="devExplorerTrackCountBadge">7 Tracks Available</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 overflow-x-auto pb-2 dev-track-pills-row" id="devRoadmapTrackSelector">
+                <!-- Dynamically populated via roadmap.js with 7 tracks -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Explorer Filter & Search Toolbar -->
+          <div class="card p-3 mb-4 bg-white border border-line shadow-sm" style="border-radius: 12px;">
+            <div class="row align-items-center g-3">
+              <div class="col-md-6 col-lg-5">
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-line text-muted">
+                    <i class="bi bi-search"></i>
+                  </span>
+                  <input
+                    type="search"
+                    class="form-control border-line"
+                    id="devRoadmapSearchInput"
+                    placeholder="Search skills, topics & tools (e.g. Docker, LangChain, Next.js, Redis)..."
+                    aria-label="Search skills and topics"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                <div class="d-flex align-items-center gap-1 flex-wrap" id="devRoadmapTypeFilters">
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 active" data-type-filter="all">All</button>
+                  <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" data-type-filter="core">Core</button>
+                  <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3" data-type-filter="recommended">Recommended</button>
+                  <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-3" data-type-filter="modern">Modern 2026</button>
+                </div>
+              </div>
+
+              <div class="col-lg-3 text-lg-end">
+                <span class="small font-mono text-muted" id="devRoadmapShowingCount">Showing 16 of 16 topics</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roadmap Stages & Interactive Nodes Canvas -->
+          <div id="devRoadmapStagesCanvas" class="position-relative">
+            <!-- Dynamically populated stages & interactive node chips -->
+          </div>
+
+        </div> <!-- end #developerExplorerView -->
+
+      </div> <!-- end #roadmapContent -->
 
       <!-- Weekly Milestone Test Modal (Proctored Verification Command Center) -->
       <div class="modal fade" id="weeklyTestModal" tabindex="-1" aria-labelledby="weeklyTestModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -642,6 +761,85 @@
             <button type="button" class="btn btn-danger btn-sm px-3" id="btnConfirmAbandonRouteRoadmap">
               <i class="bi bi-check-circle me-1"></i> Confirm & Abandon Route
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Developer Roadmap Topic Guide Modal -->
+    <div class="modal fade" id="devRoadmapTopicModal" tabindex="-1" aria-labelledby="devRoadmapTopicModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden; background: #FFFFFF;">
+          <div class="modal-header py-3 px-4" style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0;">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="badge bg-primary text-white font-mono px-2 py-1" id="topicModalTrackBadge">Frontend</span>
+              <span class="badge bg-light text-secondary border font-mono px-2 py-1" id="topicModalStageBadge">Stage 1</span>
+              <span class="badge bg-info-subtle text-info border border-info-subtle font-mono px-2 py-1" id="topicModalTypeBadge">Core Foundation</span>
+            </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body p-4 p-md-5">
+            <div class="d-flex align-items-start gap-3 mb-4">
+              <div class="rounded-3 p-3 d-flex align-items-center justify-content-center text-primary flex-shrink-0" style="background: #EFF6FF; font-size: 1.8rem; width: 60px; height: 60px;">
+                <i class="bi bi-journal-code" id="topicModalIcon"></i>
+              </div>
+              <div>
+                <h3 class="h4 fw-bold text-ink mb-1" id="devRoadmapTopicModalLabel">Topic Title</h3>
+                <p class="text-secondary small mb-0" id="topicModalShortDesc">Short synopsis of this technology or concept.</p>
+              </div>
+            </div>
+
+            <!-- About & Industry Impact Card -->
+            <div class="card p-3 mb-4 bg-light border-0 rounded-3">
+              <h6 class="small fw-bold text-uppercase font-mono text-muted mb-2">
+                <i class="bi bi-lightbulb-fill text-warning me-1"></i> Core Knowledge & Why It Matters
+              </h6>
+              <p class="text-secondary mb-0 small" id="topicModalExplanation" style="line-height: 1.6;">
+                Detailed explanation will be placed here.
+              </p>
+            </div>
+
+            <!-- Key Concepts Checklist -->
+            <div class="mb-4">
+              <h6 class="small fw-bold text-uppercase font-mono text-muted mb-2">
+                <i class="bi bi-check2-circle text-success me-1"></i> Key Concepts to Master
+              </h6>
+              <div class="row g-2" id="topicModalKeyConcepts">
+                <!-- Dynamically populated concept items -->
+              </div>
+            </div>
+
+            <!-- Curated Resources Section -->
+            <div class="mb-4">
+              <h6 class="small fw-bold text-uppercase font-mono text-muted mb-2">
+                <i class="bi bi-book-half text-primary me-1"></i> Curated Learning Resources (developer-roadmap standard)
+              </h6>
+              <div class="d-flex flex-column gap-2" id="topicModalResourcesList">
+                <!-- Dynamically populated links -->
+              </div>
+            </div>
+
+            <!-- Related Skills Tags -->
+            <div>
+              <h6 class="small fw-bold text-uppercase font-mono text-muted mb-2">
+                <i class="bi bi-tags-fill text-secondary me-1"></i> CareerPath AI Skill Mapping
+              </h6>
+              <div class="d-flex align-items-center gap-1 flex-wrap" id="topicModalSkillsList">
+                <!-- Dynamically populated skill badges -->
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer py-3 px-4 bg-light border-top border-line d-flex align-items-center justify-content-between">
+            <span class="small text-muted font-mono">Curated from nilbuild/developer-roadmap</span>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn cp-btn-primary btn-sm px-3" id="btnTopicModalAddToFocus">
+                <i class="bi bi-bullseye me-1"></i> Focus This Skill
+              </button>
+            </div>
           </div>
         </div>
       </div>
