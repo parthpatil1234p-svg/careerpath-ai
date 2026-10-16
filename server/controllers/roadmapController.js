@@ -344,8 +344,8 @@ const getCurrentRoadmap = async (req, res, next) => {
     }
 
     if (!roadmap) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         hasRoadmap: false,
         canStartNewRoute: true,
         activeCount: 0,
@@ -354,6 +354,7 @@ const getCurrentRoadmap = async (req, res, next) => {
         canEnrollSecondCourse: false,
         activeRoadmaps: [],
         completedRoadmaps: [],
+        data: null,
         message: 'No active or completed roadmap found. Generate a roadmap first.',
       });
     }

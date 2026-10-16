@@ -333,12 +333,12 @@
         </div>
 
         <!-- Verification Mode Switcher (MCQ vs Proof-of-Work Chamber) -->
-        <div class="d-flex justify-content-center mb-4">
-          <div class="btn-group p-1 bg-surface-muted border border-line rounded-pill shadow-xs" role="group" aria-label="Verification Mode Selector">
-            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold active" id="btnModeMcq" onclick="window.switchVerificationMode('mcq')">
+        <div class="d-flex justify-content-center mb-4 w-100 overflow-x-auto pb-1" style="max-width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+          <div class="btn-group p-1 bg-surface-muted border border-line rounded-pill shadow-xs flex-nowrap" role="group" aria-label="Verification Mode Selector" style="max-width: 100%;">
+            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold active text-nowrap" id="btnModeMcq" onclick="window.switchVerificationMode('mcq')">
               <i class="bi bi-ui-checks me-1 text-primary"></i> Adaptive Reality-Check (MCQs)
             </button>
-            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold text-secondary" id="btnModeCodeChamber" onclick="window.switchVerificationMode('code')">
+            <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold text-secondary text-nowrap" id="btnModeCodeChamber" onclick="window.switchVerificationMode('code')">
               <span class="badge bg-warning text-dark me-1" style="font-size: 0.65rem;">NEW</span>
               <i class="bi bi-code-slash me-1 text-warning"></i> Fix-the-Bug Code Chamber
             </button>

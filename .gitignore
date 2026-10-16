@@ -31,6 +31,7 @@ build/
 coverage/
 .nyc_output/
 strix_runs/
+tests/audit_screenshots/
 
 # IDE & Editor Configuration
 .vscode/

@@ -317,7 +317,7 @@ const Auth = {
       <div class="row justify-content-center py-5">
         <div class="col-lg-8 col-xl-7">
           <div class="card p-4 p-md-5 text-center shadow-lg border border-warning-subtle" 
-               style="background: radial-gradient(circle at top, rgba(234, 179, 8, 0.09), transparent 70%), var(--bg-card); border-radius: 1.25rem;">
+               style="background: radial-gradient(circle at top, rgba(234, 179, 8, 0.09), transparent 70%), var(--bg-surface, #FFFFFF); border-radius: 1.25rem;">
             <div class="mb-3">
               <span class="badge badge-gold fs-6 px-3 py-1.5 rounded-pill" style="font-family: var(--font-body);">
                 <i class="bi bi-shield-lock-fill me-1"></i> Skill Verification Gate Active
@@ -340,7 +340,7 @@ const Auth = {
               </div>
             </div>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-              <a href="assessment.html#proveSkillsPanel" class="btn cp-btn-primary px-4 py-2.5 fw-semibold d-inline-flex align-items-center gap-2">
+              <a href="assessment.html?step=3#stepPanel3" class="btn cp-btn-primary px-4 py-2.5 fw-semibold d-inline-flex align-items-center gap-2">
                 <i class="bi bi-shield-check"></i>
                 <span>Prove Your Skills to Unlock</span>
                 <i class="bi bi-arrow-right"></i>

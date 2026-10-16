@@ -71,7 +71,7 @@
     // Render full 2D SVG Semi-Circular Gauge (Pure % scores only)
     container.innerHTML = `
       <div class="gauge-2d-wrapper" style="width: 100%; max-width: 250px; margin: 0 auto; user-select: none;">
-        <svg viewBox="0 0 220 155" class="gauge-svg" width="100%" height="auto" style="overflow: visible; display: block;">
+        <svg viewBox="0 0 220 155" class="gauge-svg" width="100%" style="overflow: visible; display: block; height: auto;">
           <defs>
             <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#4F46E5" />

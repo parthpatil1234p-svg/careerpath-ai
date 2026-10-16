@@ -436,14 +436,14 @@
       <div id="recruiterAlertContainer" role="alert" aria-live="polite"></div>
 
       <!-- Portal View Mode Switcher: Corporate Recruiter vs Campus TPO Cockpit -->
-      <div class="d-flex justify-content-center mb-4">
-        <div class="btn-group p-1 bg-white border border-line rounded-pill shadow-xs" role="group" aria-label="Portal View Mode">
-          <button type="button" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-bold active" id="btnModeCorporate" onclick="window.switchRecruiterPortalMode('corporate')">
-            <i class="bi bi-briefcase-fill me-1 text-success"></i> Corporate Talent Radar
+      <div class="d-flex justify-content-center mb-4 w-100 overflow-x-auto pb-1" style="max-width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+        <div class="btn-group p-1 bg-white border border-line rounded-pill shadow-xs flex-nowrap" role="group" aria-label="Portal View Mode" style="max-width: 100%;">
+          <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold active text-nowrap" id="btnModeCorporate" onclick="window.switchRecruiterPortalMode('corporate')">
+            <i class="bi bi-briefcase-fill me-1 text-success"></i> Corporate Radar
           </button>
-          <button type="button" class="btn btn-sm rounded-pill px-3.5 py-1.5 fw-bold text-secondary" id="btnModeTpo" onclick="window.switchRecruiterPortalMode('tpo')">
+          <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold text-secondary text-nowrap" id="btnModeTpo" onclick="window.switchRecruiterPortalMode('tpo')">
             <span class="badge bg-primary text-white me-1" style="font-size: 0.65rem;">B2B</span>
-            <i class="bi bi-mortarboard-fill me-1 text-primary"></i> Campus TPO Intelligence Cockpit (NAAC / NIRF)
+            <i class="bi bi-mortarboard-fill me-1 text-primary"></i> Campus TPO Cockpit
           </button>
         </div>
       </div>

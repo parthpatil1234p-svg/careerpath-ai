@@ -49,5 +49,8 @@
     "nodemailer": "^10.0.10",
     "pdf-parse": "^2.4.5",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.14.0"
   }
 }

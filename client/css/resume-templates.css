@@ -245,6 +245,18 @@
     max-height: none !important;
     margin-top: 1.5rem;
   }
+  .builder-container {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+  .builder-container > .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .builder-container > .row > [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -258,6 +270,7 @@
   .template-pill-btn {
     padding: 0.35rem 0.65rem;
     font-size: 0.76rem;
+    white-space: nowrap;
   }
   .builder-section-header {
     padding: 0.75rem 1rem;

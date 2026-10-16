@@ -96,6 +96,16 @@ function translateFilter(filter = {}, fieldMap = {}) {
       continue;
     }
 
+    // Handle RegExp instances directly
+    if (rawVal instanceof RegExp) {
+      const cleanSource = rawVal.source.replace(/^\^/, '').replace(/\$$/, '');
+      where[mappedKey] = {
+        contains: cleanSource,
+        mode: rawVal.flags.includes('i') ? 'insensitive' : 'default'
+      };
+      continue;
+    }
+
     // Handle ObjectId and document ID references before inspecting operator keys
     if (rawVal && typeof rawVal === 'object' && (rawVal._bsontype === 'ObjectID' || rawVal.constructor?.name === 'ObjectId' || typeof rawVal.toHexString === 'function')) {
       where[mappedKey] = String(rawVal);
