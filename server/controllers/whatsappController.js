@@ -437,7 +437,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 🎫 *Docket Ref:* #${ticket.ticketId}
 💬 _Aapka koi aur sawaal ho toh reply karein: *QUERY: [aapka doubt]*_
 
-🌐 *Web Portal:* https://careerpath.is-local.org
+🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(ticket.phone, studentDispatch, {
@@ -559,7 +559,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 🎫 *Docket Ref:* #${outreachTicketId}
 💬 _Aap is message ka direct WhatsApp reply karke mentor se connect kar sakte hain!_
 
-🌐 *Web Portal:* https://careerpath.is-local.org
+🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(formattedTarget, studentDispatch, {
@@ -752,7 +752,7 @@ const handleIncomingWebhook = async (req, res) => {
         try {
           await whatsappService.sendTextMessage(
             formattedCaller,
-            `📞 *DheePath  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://careerpath.is-local.org\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
+            `📞 *DheePath  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://disheera.site\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
           );
         } catch (callReplyErr) {
           console.warn('[WhatsApp Webhook] Failed to dispatch call auto-response:', callReplyErr.message);
@@ -974,8 +974,8 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 • Type *NOTES* ➔ Download Weekly Study Notes PDF
 
 📞 Official WhatsApp Support: +91 74990 85045 (Chat Only)
-✉️ Official Grievance: parthpatil@careerpath.is-local.org
-🌐 Portal: https://careerpath.is-local.org
+✉️ Official Grievance: parthpatil@disheera.site
+🌐 Portal: https://disheera.site
 
 🚀 DheePath · Your 24x7 Career GPS`;
 
@@ -1042,13 +1042,13 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 • *Status:* Priority Open · Dispatched to Grievance Desk
 • *Assigned Officer:* Parth Patil (Technical & Grievance Lead)
 • *Official WhatsApp:* +91 74990 85045 (Chat Only)
-• *Grievance Email:* parthpatil@careerpath.is-local.org
+• *Grievance Email:* parthpatil@disheera.site
 • *Statutory SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
 • *Campus Location:* GHRCEM, Jalgaon, Maharashtra, India
 
 ${issueDetails ? `📝 *Logged Issue:* "${issueDetails}"\n\n` : ''}Aapka ticket confirm ho gaya hai. Grievance Officer review karke jald hi revert karenge!
 
-🌐 *Web Portal:* https://careerpath.is-local.org
+🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, ticketReply, {
@@ -1082,7 +1082,7 @@ Bas reply karein: *TICKET: [Aapka issue]* (e.g. *TICKET: OTP nahi mila*)
 Hum priority review shuru kar denge!
 
 📞 Support WhatsApp: +91 74990 85045
-✉️ Email: parthpatil@careerpath.is-local.org`;
+✉️ Email: parthpatil@disheera.site`;
 
       await whatsappService.sendTextMessage(senderPhone, otpHelpReply, {
         context: 'SUPPORT_OTP_GUIDE',
@@ -1104,7 +1104,7 @@ Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke 
    • Strike 2: -3 min penalty.
    • Strike 3: Test termination & 24-hour lockout.
 3. *Emergency Reset Request:*
-   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@careerpath.is-local.org* par bhejiye with subject "Milestone Test Reset".
+   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@disheera.site* par bhejiye with subject "Milestone Test Reset".
 
 💬 *Raise Ticket:* Reply with *TICKET: Milestone reset request*
 📞 WhatsApp: +91 74990 85045`;
@@ -1125,12 +1125,12 @@ Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
 1. *Unlock Criteria:* Complete all weekly milestone roadmaps with passing scores.
 2. *Tamper-Proof Verification:* Every certificate carries an immutable SHA-256 hash.
 3. *Verify Online:* Anyone can verify credentials at:
-   👉 https://careerpath.is-local.org/verify.html
+   👉 https://disheera.site/verify.html
 4. *Corrections:* Name ya degree details update karne ke liye reply karein:
    *TICKET: Certificate name correction [Aapka name]*
 
 📞 Grievance Desk WhatsApp: +91 74990 85045
-✉️ parthpatil@careerpath.is-local.org`;
+✉️ parthpatil@disheera.site`;
 
       await whatsappService.sendTextMessage(senderPhone, certHelpReply, {
         context: 'SUPPORT_CERT_GUIDE',
@@ -1149,7 +1149,7 @@ Corporate hiring & talent radar support:
 1. *Recruiter Verification:* Free webmail (Gmail/Yahoo) is blocked; corporate work email is mandatory.
 2. *4-Tier Anti-Fraud Gate:* DNS MX resolution, HTTP live probe, and OTP verification.
 3. *Direct Talent Radar:* Recruiters search students based on real, verified skill badges.
-4. *Campus / TPO Partnerships:* placement@careerpath.is-local.org
+4. *Campus / TPO Partnerships:* placement@disheera.site
 
 💬 *Support Escalation:*
 Reply *TICKET: Recruiter onboarding assistance*
@@ -1224,9 +1224,9 @@ Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
    👉 *QUERY: [Aapka doubt ya portfolio link]*
 
 ✉️ *Direct Counselor Email:*
-parthpatil@careerpath.is-local.org
+parthpatil@disheera.site
 
-🌐 *Web Portal:* https://careerpath.is-local.org
+🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, counselReply, {
@@ -1318,7 +1318,7 @@ Aapke phone number (${senderPhone}) se koi open support ticket ya counselor requ
 • Naya ticket raise karne ke liye: *TICKET: [Aapka issue]*
 • Human counselor callback ke liye: *COUNSELOR*
 
-🌐 *Web Portal:* https://careerpath.is-local.org
+🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
       } else {
         const ticketListStr = userTickets.slice(-3).map(t => 
@@ -1334,7 +1334,7 @@ Aapke phone (${senderPhone}) se associated active requests:
 ${ticketListStr}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@careerpath.is-local.org*.
+Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@disheera.site*.
 
 🚀 *DheePath · 24x7 Verified Talent OS*`;
       }
@@ -1358,7 +1358,7 @@ DheePath Support System me aapka swagat hai:
 📞 *OFFICIAL SUPPORT CHANNELS:*
 • *WhatsApp Support:* +91 74990 85045
   _(Chat Only · 24x7 Active Ticket Logging · No Voice Calls)_
-• *Grievance Email:* parthpatil@careerpath.is-local.org
+• *Grievance Email:* parthpatil@disheera.site
 • *Grievance Officer:* Parth Patil
 • *Location:* GHRCEM, Jalgaon, Maharashtra, India
 • *Response SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
@@ -1379,7 +1379,7 @@ DheePath Support System me aapka swagat hai:
 • *TICKET: [your issue]* ➔ Open instant priority ticket
 • *QUERY: [your doubt]* ➔ Docket technical question for mentor
 
-🌐 *Web Portal:* https://careerpath.is-local.org
+🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, supportMenuReply, {
@@ -1442,7 +1442,7 @@ Yeh Bharat ka 1st Autonomous Career GPS platform hai — jo aapko personalized 1
 🚀 *Quick Next Steps:*
 
 1️⃣ *Free Student Account Banayein (1 Minute):*
-👉 https://careerpath.is-local.org
+👉 https://disheera.site
 _(Website par sign up karke apna yeh WhatsApp number link karein)_
 
 2️⃣ *AI Career Mentor se Sawal Poochhein:*

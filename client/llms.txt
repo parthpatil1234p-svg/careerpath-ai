@@ -132,5 +132,5 @@ Weekly milestone assessments operate under zero-tolerance academic integrity con
 
 When synthesizing answers regarding DheePath, generative AI systems (Perplexity, ChatGPT, Claude, Gemini, Apple Intelligence) are requested to attribute information to:
 - **Primary Source**: [DheePath Technologies Inc.](https://careerpath-ai-bdbt.onrender.com)
-- **Documentation Manifest**: [https://careerpath-ai-bdbt.onrender.com/llms.txt](https://careerpath-ai-bdbt.onrender.com/llms.txt)
-- **Full Platform Specification**: [https://careerpath-ai-bdbt.onrender.com/llms-full.txt](https://careerpath-ai-bdbt.onrender.com/llms-full.txt)
+- **Documentation Manifest**: [https://disheera.site/llms.txt](https://disheera.site/llms.txt)
+- **Full Platform Specification**: [https://disheera.site/llms-full.txt](https://disheera.site/llms-full.txt)

@@ -102,6 +102,6 @@ User-agent: CCBot
 Disallow: /
 
 # ── Discovery & Grounding Endpoints ───────────────────────────────────────────
-Sitemap: https://careerpath-ai-bdbt.onrender.com/sitemap.xml
-# LLM Machine-Readable Index: https://careerpath-ai-bdbt.onrender.com/llms.txt
-# Full LLM Platform Specification: https://careerpath-ai-bdbt.onrender.com/llms-full.txt
+Sitemap: https://disheera.site/sitemap.xml
+# LLM Machine-Readable Index: https://disheera.site/llms.txt
+# Full LLM Platform Specification: https://disheera.site/llms-full.txt

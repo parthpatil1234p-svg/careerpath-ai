@@ -47,8 +47,8 @@ services:
       - key: CLOUDINARY_URL
         sync: false
 
-      # Set this to your deployed Vercel frontend URL, e.g. https://careerpath.is-local.org
+      # Set this to your deployed Vercel frontend URL, e.g. https://disheera.site
       - key: CLIENT_URL
-        value: https://careerpath.is-local.org
+        value: https://disheera.site
       - key: PROD_CLIENT_URL
-        value: https://careerpath.is-local.org
+        value: https://disheera.site

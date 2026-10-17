@@ -24,6 +24,8 @@ function isAllowedOrigin(origin) {
     origin === 'http://127.0.0.1:5000' ||
     origin === 'http://localhost:5500' ||
     origin === 'http://127.0.0.1:5500' ||
+    origin === 'https://disheera.site' ||
+    origin === 'https://www.disheera.site' ||
     origin === 'https://careerpath.is-local.org' ||
     origin === 'https://www.careerpath.is-local.org' ||
     origin === 'https://dheepath.vercel.app' ||
@@ -32,7 +34,10 @@ function isAllowedOrigin(origin) {
   ) {
     return true;
   }
-  // Allow any *.is-local.org or *.vercel.app deployment URL
+  // Allow any *.disheera.site, *.is-local.org, or *.vercel.app deployment URL
+  if (/^https:\/\/([a-z0-9-]+\.)?disheera\.site$/i.test(origin)) {
+    return true;
+  }
   if (/^https:\/\/([a-z0-9-]+\.)?is-local\.org$/i.test(origin)) {
     return true;
   }

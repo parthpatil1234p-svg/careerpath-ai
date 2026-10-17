@@ -8,7 +8,7 @@
     {
       "topic": "Early-Career Navigation & Degree Specialization",
       "searchIntent": "Informational",
-      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/index.html#careers",
+      "targetUrl": "https://disheera.site/index.html#careers",
       "sampleQueries": [
         "best career options after bca 2026",
         "which stream to choose computer science vs ai",
@@ -22,7 +22,7 @@
     {
       "topic": "Autonomous Skill Diagnostic & Assessment",
       "searchIntent": "Commercial",
-      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/assessment.html",
+      "targetUrl": "https://disheera.site/assessment.html",
       "sampleQueries": [
         "free ai skill diagnostic test",
         "online technical skill assessment for college students",
@@ -36,7 +36,7 @@
     {
       "topic": "Milestone-Paced Skill Roadmaps",
       "searchIntent": "Informational / Commercial",
-      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/index.html#how-it-works",
+      "targetUrl": "https://disheera.site/index.html#how-it-works",
       "sampleQueries": [
         "full stack web development roadmap 4 weeks",
         "ai ml engineer learning roadmap step by step",
@@ -49,7 +49,7 @@
     {
       "topic": "Anti-Cheat Proctored Milestone Tests & Certification",
       "searchIntent": "Transactional",
-      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/verify.html",
+      "targetUrl": "https://disheera.site/verify.html",
       "sampleQueries": [
         "verify dheepath certificate",
         "proctored student skill certification sha256",
@@ -62,7 +62,7 @@
     {
       "topic": "Verified Direct Recruiter Job Board",
       "searchIntent": "Transactional",
-      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/jobs.html",
+      "targetUrl": "https://disheera.site/jobs.html",
       "sampleQueries": [
         "verified frontend developer fresher jobs",
         "direct recruiter openings without consultancy spam",
@@ -75,7 +75,7 @@
     {
       "topic": "ATS Resume Builder with Skill Sync",
       "searchIntent": "Commercial / Transactional",
-      "targetUrl": "https://careerpath-ai-bdbt.onrender.com/resume-builder.html",
+      "targetUrl": "https://disheera.site/resume-builder.html",
       "sampleQueries": [
         "ai resume builder for freshers free",
         "ats resume builder with verified skill badges",
@@ -121,11 +121,11 @@
   "cannibalizationSafeguards": {
     "rule": "Every primary keyword cluster has an exclusive single page owner to prevent search rank cannibalization.",
     "pageOwnership": {
-      "https://careerpath-ai-bdbt.onrender.com/": "Autonomous Career GPS, AI early-career OS, general brand queries",
-      "https://careerpath-ai-bdbt.onrender.com/assessment.html": "Skill assessment, candidate diagnostic, aptitude test",
-      "https://careerpath-ai-bdbt.onrender.com/jobs.html": "Direct recruiter openings, tech fresher jobs, talent radar",
-      "https://careerpath-ai-bdbt.onrender.com/verify.html": "Certificate authentication, SHA-256 credential verification",
-      "https://careerpath-ai-bdbt.onrender.com/resume-builder.html": "ATS resume generator, campus placement CV maker"
+      "https://disheera.site/": "Autonomous Career GPS, AI early-career OS, general brand queries",
+      "https://disheera.site/assessment.html": "Skill assessment, candidate diagnostic, aptitude test",
+      "https://disheera.site/jobs.html": "Direct recruiter openings, tech fresher jobs, talent radar",
+      "https://disheera.site/verify.html": "Certificate authentication, SHA-256 credential verification",
+      "https://disheera.site/resume-builder.html": "ATS resume generator, campus placement CV maker"
     }
   }
 }

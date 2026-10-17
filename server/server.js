@@ -125,6 +125,8 @@ app.use(helmet({
         "http://127.0.0.1:5000",
         "http://localhost:5500",
         "http://127.0.0.1:5500",
+        "https://disheera.site",
+        "https://www.disheera.site",
         "https://dheepath.vercel.app",
         "https://careerpath.is-local.org",
         "https://www.careerpath.is-local.org",
@@ -148,6 +150,8 @@ app.use(helmet({
 const rawOrigins = [
   process.env.CLIENT_URL,
   process.env.PROD_CLIENT_URL,
+  'https://disheera.site',
+  'https://www.disheera.site',
   'https://careerpath.is-local.org',
   'https://www.careerpath.is-local.org',
   'https://dheepath.vercel.app',
@@ -169,6 +173,10 @@ const corsOptions = {
 
     const normalizedOrigin = origin.trim().replace(/\/+$/, '');
     if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+    // Allow disheera.site and all subdomains (e.g. www.disheera.site)
+    if (/^https:\/\/([a-z0-9-]+\.)?disheera\.site$/i.test(normalizedOrigin)) {
       return callback(null, true);
     }
     // Allow is-local.org subdomains (e.g. careerpath.is-local.org, www.careerpath.is-local.org)

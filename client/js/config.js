@@ -23,6 +23,9 @@
     window.location.hostname === 'dheepath.vercel.app';
 
   const isCustomDomain =
+    window.location.hostname === 'disheera.site' ||
+    window.location.hostname === 'www.disheera.site' ||
+    window.location.hostname.endsWith('disheera.site') ||
     window.location.hostname === 'careerpath.is-local.org' ||
     window.location.hostname === 'www.careerpath.is-local.org' ||
     window.location.hostname.endsWith('.is-local.org');
@@ -46,7 +49,7 @@
     SOCKET_URL: isLocal ? LOCAL_REALTIME_URL : PRODUCTION_REALTIME_URL,
 
     // Canonical Domain
-    CANONICAL_URL: isLocal ? 'http://localhost:5500' : 'https://careerpath.is-local.org',
+    CANONICAL_URL: isLocal ? 'http://localhost:5500' : 'https://disheera.site',
 
     // Storage keys in localStorage
     TOKEN_KEY: 'careerpath_token',

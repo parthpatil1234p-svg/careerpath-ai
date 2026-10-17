@@ -104,7 +104,7 @@ async function generatePassportData(userOrId) {
     skillsMatrix,
     projectsPortfolio: rawProjects.filter(p => p.passed),
     cryptographicHash,
-    verificationUrl: `https://careerpath.is-local.org/passport.html?id=${user.id}`,
+    verificationUrl: `https://disheera.site/passport.html?id=${user.id}`,
     ledgerTimestamp: new Date().toISOString()
   };
 }

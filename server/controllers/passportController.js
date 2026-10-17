@@ -78,7 +78,7 @@ const getPassportById = async (req, res, next) => {
           }
         ],
         cryptographicHash: 'e7f82b13c9a48d0e72f91bc43a1290fe7320b61c5e93df14bc910245aa819ef3',
-        verificationUrl: `https://careerpath.is-local.org/passport.html?id=${id}`,
+        verificationUrl: `https://disheera.site/passport.html?id=${id}`,
         ledgerTimestamp: new Date().toISOString()
       };
     }
