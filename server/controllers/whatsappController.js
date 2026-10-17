@@ -726,7 +726,13 @@ const verifyWebhook = (req, res) => {
 
   if (mode === 'subscribe' && token === verifyToken) {
     console.log('[WhatsApp Webhook] Handshake verified successfully.');
-    return res.status(200).send(challenge);
+    const safeChallenge = typeof challenge === 'string' ? challenge.trim() : '';
+    if (!/^[a-zA-Z0-9_-]+$/.test(safeChallenge)) {
+      return res.status(400).send('Invalid challenge');
+    }
+    res.set('Content-Type', 'text/plain');
+    res.set('X-Content-Type-Options', 'nosniff');
+    return res.status(200).send(safeChallenge);
   }
 
   console.warn('[WhatsApp Webhook] Verification token mismatch.');

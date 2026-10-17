@@ -4,6 +4,7 @@
  * Disheera · Enterprise Backend Service
  */
 
+const crypto = require('crypto');
 const User = require('../models/User');
 const Roadmap = require('../models/Roadmap');
 const { generateInterviewQuestions, evaluateInterviewAnswer } = require('../services/mockInterviewService');
@@ -32,11 +33,12 @@ exports.startInterview = async (req, res, next) => {
       rubric: q.rubric || ''
     }));
 
+    const secureId = crypto.randomBytes(8).toString('hex');
     return res.status(200).json({
       success: true,
       message: `Interview session generated for ${role}.`,
       data: {
-        sessionId: `session_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        sessionId: `session_${Date.now()}_${secureId}`,
         targetRole: role,
         totalQuestions: normalizedQuestions.length,
         questions: normalizedQuestions

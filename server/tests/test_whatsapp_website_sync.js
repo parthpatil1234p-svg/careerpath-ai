@@ -69,7 +69,7 @@ async function runTests() {
     assert.ok(menuMsg.text.includes('NOTES'), 'Menu must list NOTES');
     assert.ok(menuMsg.text.includes('PASSPORT'), 'Menu must list PASSPORT');
     assert.ok(menuMsg.text.includes('QUIZ'), 'Menu must list QUIZ');
-    assert.ok(menuMsg.text.includes('https://disheera.site'), 'Menu must link to disheera.site');
+    assert.ok(/https:\/\/disheera\.site(\/|\b)/.test(menuMsg.text), 'Menu must link to disheera.site');
     console.log('  ✓ PASSED: MENU command returns full feature catalog.');
 
     // ----------------------------------------------------
@@ -199,7 +199,7 @@ async function runTests() {
     const supMsg = dispatchedMessages[0];
     assert.strictEqual(supMsg.meta.context, 'SUPPORT_MENU');
     assert.ok(supMsg.text.includes('parthpatil@disheera.site'), 'Must list official disheera.site email');
-    assert.ok(!supMsg.text.includes('careerpath.is-local.org'), 'Must NOT have legacy domain');
+    assert.ok(!/careerpath\.is-local\.org/.test(supMsg.text), 'Must NOT have legacy domain');
     console.log('  ✓ PASSED: SUPPORT command verified with official parthpatil@disheera.site.');
 
     console.log('\n============================================================');

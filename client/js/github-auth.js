@@ -39,6 +39,19 @@ window.GitHubAuth = (function () {
   };
 
   /**
+   * Validates client-side redirect parameters against open-redirect vulnerabilities
+   */
+  const getSafeRedirectUrl = (raw) => {
+    if (!raw || typeof raw !== 'string') return null;
+    const decoded = decodeURIComponent(raw).trim();
+    if (decoded.startsWith('//') || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(decoded)) return null;
+    if (/^\/[^\/\\]/.test(decoded) || /^[a-zA-Z0-9_-]+\.html(\?[a-zA-Z0-9_=&-]*)?$/.test(decoded)) {
+      return decoded;
+    }
+    return null;
+  };
+
+  /**
    * Sends GitHub authentication payload to backend API
    */
   const sendGitHubAuthPayload = async (payload, callbacks = {}) => {
@@ -73,8 +86,9 @@ window.GitHubAuth = (function () {
           }
 
           if (!customHandled) {
-            if (redirect) {
-              window.location.href = decodeURIComponent(redirect);
+            const safeRedirect = getSafeRedirectUrl(redirect);
+            if (safeRedirect) {
+              window.location.href = safeRedirect;
             } else if (isNewUser) {
               window.location.href = 'assessment.html';
             } else {
@@ -229,17 +243,26 @@ window.GitHubAuth = (function () {
           ? window.location.pathname
           : (window.location.pathname === '/' ? '/index.html' : window.location.pathname))
       : '';
-    const redirectUri = isLocal ? (window.location.origin + callbackPath) : '';
-    const oauthState = 'popup_' + Math.random().toString(36).substring(2, 9);
+    const cryptoObj = window.crypto || window.msCrypto;
+    let oauthState = 'popup_';
+    if (cryptoObj && cryptoObj.getRandomValues) {
+      const randBuf = new Uint8Array(16);
+      cryptoObj.getRandomValues(randBuf);
+      oauthState += Array.from(randBuf, b => b.toString(16).padStart(2, '0')).join('');
+    } else {
+      oauthState += Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
+    }
 
     try {
-      localStorage.setItem('cp_gh_oauth_intent', JSON.stringify({
+      const intentPayload = JSON.stringify({
         isConnectOnly: Boolean(isConnectOnly),
         returnUrl: window.location.href,
         redirectUri,
         state: oauthState,
         timestamp: Date.now()
-      }));
+      });
+      sessionStorage.setItem('cp_gh_oauth_intent', intentPayload);
+      localStorage.setItem('cp_gh_oauth_intent', intentPayload);
     } catch (err) {}
 
     const authUrl = redirectUri
@@ -352,8 +375,9 @@ window.GitHubAuth = (function () {
             const isNewUser = data?.isNewUser || !data?.user?.profileCompleted;
             const urlParams = new URLSearchParams(window.location.search);
             const redirect = urlParams.get('redirect');
-            if (redirect) {
-              window.location.href = decodeURIComponent(redirect);
+            const safeRedirect = getSafeRedirectUrl(redirect);
+            if (safeRedirect) {
+              window.location.href = safeRedirect;
             } else if (isNewUser) {
               window.location.href = 'assessment.html';
             } else {
@@ -367,6 +391,7 @@ window.GitHubAuth = (function () {
 
     // Channel A: postMessage
     const onMessage = (event) => {
+      if (event.origin !== window.location.origin) return;
       if (event.data && event.data.type === 'CAREERPATH_GITHUB_OAUTH_CODE' && event.data.code) {
         handleOAuthCodeReceived(event.data.code);
       }
@@ -375,12 +400,12 @@ window.GitHubAuth = (function () {
 
     // Channel B: storage event
     const onStorage = (event) => {
-      if (event.key === 'careerpath_gh_oauth_code' && event.newValue) {
+      if (event.key === 'cp_gh_payload' && event.newValue) {
         try {
-          const parsed = JSON.parse(event.newValue);
-          if (parsed?.code) {
-            localStorage.removeItem('careerpath_gh_oauth_code');
-            handleOAuthCodeReceived(parsed.code);
+          const raw = decodeURIComponent(atob(event.newValue));
+          localStorage.removeItem('cp_gh_payload');
+          if (raw) {
+            handleOAuthCodeReceived(raw);
           }
         } catch (e) {}
       }
@@ -394,12 +419,12 @@ window.GitHubAuth = (function () {
         return;
       }
       try {
-        const raw = localStorage.getItem('careerpath_gh_oauth_code');
+        const raw = localStorage.getItem('cp_gh_payload');
         if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed?.code) {
-            localStorage.removeItem('careerpath_gh_oauth_code');
-            handleOAuthCodeReceived(parsed.code);
+          localStorage.removeItem('cp_gh_payload');
+          const rawCode = decodeURIComponent(atob(raw));
+          if (rawCode) {
+            handleOAuthCodeReceived(rawCode);
             return;
           }
         }
@@ -446,22 +471,19 @@ window.GitHubAuth = (function () {
                     Boolean((window.opener && window.opener !== window) || window.name === 'careerpath_github_oauth');
 
     if (isPopup) {
-      // 1. Post message to opener
+      // 1. Post message to opener with strict origin check
       try {
         if (window.opener && !window.opener.closed) {
           window.opener.postMessage({
             type: 'CAREERPATH_GITHUB_OAUTH_CODE',
             code: oauthCode
-          }, '*');
+          }, window.location.origin);
         }
       } catch (e) {}
 
-      // 2. Set localStorage for cross-window storage event
+      // 2. Set obfuscated payload for cross-window storage event fallback
       try {
-        localStorage.setItem('careerpath_gh_oauth_code', JSON.stringify({
-          code: oauthCode,
-          timestamp: Date.now()
-        }));
+        localStorage.setItem('cp_gh_payload', btoa(encodeURIComponent(oauthCode)));
       } catch (e) {}
 
       // 3. Briefly display confirmation in popup and close it immediately
@@ -493,9 +515,12 @@ window.GitHubAuth = (function () {
 
     let intent = {};
     try {
-      intent = JSON.parse(localStorage.getItem('cp_gh_oauth_intent') || '{}');
+      intent = JSON.parse(sessionStorage.getItem('cp_gh_oauth_intent') || localStorage.getItem('cp_gh_oauth_intent') || '{}');
     } catch (e) {}
-    localStorage.removeItem('cp_gh_oauth_intent');
+    try {
+      sessionStorage.removeItem('cp_gh_oauth_intent');
+      localStorage.removeItem('cp_gh_oauth_intent');
+    } catch (e) {}
 
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const redirectUri = intent.redirectUri || (isLocal ? (window.location.origin + window.location.pathname) : '');

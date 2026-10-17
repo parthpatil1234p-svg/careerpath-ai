@@ -800,6 +800,17 @@ const linkProjectRepo = async (req, res, next) => {
     const owner = match[1];
     const repoName = match[2].replace(/\.git$/i, '');
 
+    // SSRF & Path Traversal Guard: Ensure owner and repoName follow strict GitHub naming
+    if (!/^[a-zA-Z0-9]([a-zA-Z0-9-]{0,38})$/.test(owner) || !/^[a-zA-Z0-9_.-]{1,100}$/.test(repoName) || repoName === '.' || repoName === '..') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid GitHub repository owner or repository name.',
+      });
+    }
+
+    const safeOwner = encodeURIComponent(owner);
+    const safeRepo = encodeURIComponent(repoName);
+
     const task = await RoadmapTask.findById(taskId);
     if (!task) {
       return res.status(404).json({
@@ -826,7 +837,7 @@ const linkProjectRepo = async (req, res, next) => {
     };
 
     try {
-      const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}`, {
+      const ghRes = await fetch(`https://api.github.com/repos/${safeOwner}/${safeRepo}`, {
         headers: {
           'User-Agent': 'Disheera-Project-Verifier',
           Accept: 'application/vnd.github.v3+json',

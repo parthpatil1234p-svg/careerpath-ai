@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Disheera Certificate &mdash; ${studentName} &mdash; ${roleName}</title>
+  <title>Disheera Certificate &mdash; ${escapeHtml(studentName)} &mdash; ${escapeHtml(roleName)}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">

@@ -14,6 +14,7 @@
  * Disheera Technologies Inc.
  */
 
+const crypto = require('crypto');
 const whatsappService = require('../services/whatsappService');
 const { supportTicketsCache, persistTickets } = require('./whatsappController');
 
@@ -40,7 +41,7 @@ const createTicket = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Your name is required.' });
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email || typeof email !== 'string' || email.length > 254 || !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(email)) {
       return res.status(400).json({ success: false, message: 'A valid email address is required.' });
     }
 
@@ -48,7 +49,7 @@ const createTicket = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Please provide a clear description of at least 10 characters.' });
     }
 
-    const ticketId = 'CP-TKT-' + Math.floor(100000 + Math.random() * 900000);
+    const ticketId = 'CP-TKT-' + crypto.randomInt(100000, 999999);
     const categoryLabel = CATEGORY_MAP[category] || CATEGORY_MAP.general;
     const cleanSubject = (subject || `${categoryLabel} Request`).trim();
 

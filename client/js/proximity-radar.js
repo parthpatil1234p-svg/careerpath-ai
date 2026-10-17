@@ -427,8 +427,10 @@
 
               <button
                 type="button"
-                class="btn btn-outline-teal btn-sm rounded-pill px-3 py-1 fw-bold font-mono"
-                onclick="window.triggerRadarCompanyApply('${c.id}', '${escapeAttr(firstRole)}', '${escapeAttr(c.name)}')"
+                class="btn btn-outline-teal btn-sm rounded-pill px-3 py-1 fw-bold font-mono btn-radar-apply"
+                data-company-id="${escapeHtml(c.id)}"
+                data-role="${escapeHtml(firstRole)}"
+                data-company-name="${escapeHtml(c.name)}"
                 style="font-size:0.78rem;"
               >
                 <i class="bi bi-send-fill me-1"></i>Apply Now
@@ -439,6 +441,17 @@
       `;
     }).join('');
   }
+
+  // Delegated click handler for radar company apply buttons
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-radar-apply');
+    if (btn) {
+      const companyId = btn.getAttribute('data-company-id');
+      const roleTitle = btn.getAttribute('data-role');
+      const companyName = btn.getAttribute('data-company-name');
+      window.triggerRadarCompanyApply(companyId, roleTitle, companyName);
+    }
+  });
 
   /**
    * Helper to invoke the 1-click apply modal with prefilled company and role
@@ -475,12 +488,5 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
-  }
-
-  function escapeAttr(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/'/g, "\\'")
-      .replace(/"/g, '&quot;');
   }
 })();

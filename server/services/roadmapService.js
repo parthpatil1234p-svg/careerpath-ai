@@ -204,9 +204,19 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
         resource: {
           ...(task.resource || {}),
           mediaType: mediaType,
-          url: (task.resource?.url && !task.resource.url.includes('youtube.com') && !task.resource.url.includes('youtu.be'))
-            ? task.resource.url
-            : `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(task.skillName || task.title)}`,
+          url: (() => {
+            if (task.resource?.url && typeof task.resource.url === 'string') {
+              try {
+                const parsedResUrl = new URL(task.resource.url);
+                const host = parsedResUrl.hostname.toLowerCase();
+                const isYouTube = host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtu.be' || host.endsWith('.youtu.be');
+                if (!isYouTube && (parsedResUrl.protocol === 'https:' || parsedResUrl.protocol === 'http:')) {
+                  return task.resource.url;
+                }
+              } catch (_) {}
+            }
+            return `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(task.skillName || task.title)}`;
+          })(),
           title: task.resource?.title || `${task.title} Documentation Guide`,
           provider: task.resource?.provider || 'Disheera Learning Hub',
         },

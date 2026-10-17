@@ -508,10 +508,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="tasks-list d-flex flex-column gap-3" id="week-tasks-${weekNumber}">
           ${tasks
             .map((task) => {
+              let isYouTubeUrl = false;
+              if (task.resource?.url && typeof task.resource.url === 'string') {
+                try {
+                  const parsedU = new URL(task.resource.url, window.location.origin);
+                  const h = parsedU.hostname.toLowerCase();
+                  isYouTubeUrl = h === 'youtube.com' || h.endsWith('.youtube.com') || h === 'youtu.be' || h.endsWith('.youtu.be');
+                } catch (_) {
+                  isYouTubeUrl = false;
+                }
+              }
               const isVideo = Boolean(
                 task.isVideoTask ||
                 task.resource?.mediaType === 'video' ||
-                (task.resource?.url && (task.resource.url.includes('youtube.com') || task.resource.url.includes('youtu.be')))
+                isYouTubeUrl
               );
 
               let resourceBadge = '';

@@ -106,7 +106,7 @@ async function startQuizSession(userId, skill, options = {}) {
       questions = aiResult.questions;
       providerUsed = aiResult.provider;
     } catch (err) {
-      console.warn(`[QuizService] Dynamic AI generation failed for "${skill}":`, err.message);
+      console.warn('[QuizService] Dynamic AI generation failed for skill:', String(skill), err && err.message);
     }
   }
 

@@ -247,7 +247,16 @@ app.get('/api/health', healthHandler);
 const fs = require('fs');
 const clientDir = path.resolve(__dirname, '..', 'client');
 
-app.get('/llms.txt', (req, res) => {
+// Dedicated rate limiter for public discovery and crawler endpoints
+const discoveryLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300, // 300 requests per 15 minutes per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many discovery requests from this IP. Please try again later.'
+});
+
+app.get('/llms.txt', discoveryLimiter, (req, res) => {
   const filePath = path.join(clientDir, 'llms.txt');
   if (fs.existsSync(filePath)) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
@@ -257,7 +266,7 @@ app.get('/llms.txt', (req, res) => {
   res.status(404).send('Not Found');
 });
 
-app.get('/llms-full.txt', (req, res) => {
+app.get('/llms-full.txt', discoveryLimiter, (req, res) => {
   const filePath = path.join(clientDir, 'llms-full.txt');
   if (fs.existsSync(filePath)) {
     res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
@@ -267,7 +276,7 @@ app.get('/llms-full.txt', (req, res) => {
   res.status(404).send('Not Found');
 });
 
-app.get('/robots.txt', (req, res) => {
+app.get('/robots.txt', discoveryLimiter, (req, res) => {
   const filePath = path.join(clientDir, 'robots.txt');
   if (fs.existsSync(filePath)) {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -277,7 +286,7 @@ app.get('/robots.txt', (req, res) => {
   res.status(404).send('User-agent: *\nAllow: /');
 });
 
-app.get('/sitemap.xml', (req, res) => {
+app.get('/sitemap.xml', discoveryLimiter, (req, res) => {
   const filePath = path.join(clientDir, 'sitemap.xml');
   if (fs.existsSync(filePath)) {
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
@@ -299,11 +308,11 @@ const mcpActionsHandler = (req, res) => {
   res.status(404).json({ error: 'WebMCP Actions Specification Not Found' });
 };
 
-app.get('/mcp-actions.json', mcpActionsHandler);
-app.get('/.well-known/mcp-actions.json', mcpActionsHandler);
+app.get('/mcp-actions.json', discoveryLimiter, mcpActionsHandler);
+app.get('/.well-known/mcp-actions.json', discoveryLimiter, mcpActionsHandler);
 
 // ── Strix Cloud Domain Verification Handlers ──────────────────────────────
-app.get(['/.well-known/strix-verify.txt', '/strix-verify.txt'], (req, res) => {
+app.get(['/.well-known/strix-verify.txt', '/strix-verify.txt'], discoveryLimiter, (req, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.status(200).send('strix-verify-207226fbbc1334839ba479158f608386');

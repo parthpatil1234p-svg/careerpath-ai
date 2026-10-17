@@ -117,8 +117,17 @@ b {
 
 .text-primary,
 .text-indigo,
-a:not(.btn):not(.domain-tab-btn):not(.pricing-tab-btn) {
+a:not(.btn):not(.domain-tab-btn):not(.pricing-tab-btn):not(.rg-button):not(.station-preview-action) {
   color: var(--color-indigo-600) !important; /* #4F46E5 */
+}
+
+.rg-button,
+a.rg-button,
+.rg-button .rg-label,
+a.rg-button .rg-label,
+.rg-button i,
+a.rg-button i {
+  color: #FFFFFF !important;
 }
 
 .text-success,
@@ -499,3 +508,434 @@ img {
   box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28) !important;
   cursor: grab !important;
 }
+
+/* ==========================================================================
+   Hero Grid & Interactive Route Map Hub (Floto Compliant)
+   ========================================================================== */
+.hero-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1.25fr !important;
+  gap: 2.5rem !important;
+  align-items: center !important;
+  position: relative !important;
+  z-index: 1 !important;
+  max-width: 1400px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+@media (max-width: 1199px) {
+  .hero-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+.hero-route-hub {
+  position: relative;
+  width: 100%;
+  padding: 1.5rem;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.hero-route-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.route-hub-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #0891B2 !important;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.route-hub-title {
+  margin: 0.25rem 0 0 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.route-track-pills {
+  display: inline-flex;
+  gap: 4px;
+  background: #F1F5F9;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  padding: 3px;
+}
+
+.route-track-pill {
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.route-track-pill:hover {
+  color: #0F172A;
+}
+
+.route-track-pill.active {
+  background: #FFFFFF;
+  color: #0F172A;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+/* Highway Rail */
+.hero-highway-rail {
+  position: relative;
+  padding: 1.25rem 0.5rem 0.75rem 0.5rem;
+  margin-bottom: 1.25rem;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.highway-track-line {
+  position: absolute;
+  top: 36px;
+  left: 36px;
+  right: 36px;
+  height: 4px;
+  background: #E2E8F0;
+  border-radius: 9999px;
+  z-index: 1;
+}
+
+.highway-track-progress {
+  height: 100%;
+  width: 35%;
+  background: linear-gradient(90deg, #10B981 0%, #00F2FE 100%);
+  border-radius: 9999px;
+  box-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+  transition: width 0.4s ease;
+}
+
+.highway-stations-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.highway-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.25rem 0.15rem;
+  border-radius: var(--radius-sm);
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.highway-station:hover,
+.highway-station.active {
+  transform: translateY(-2px);
+}
+
+.station-marker {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2.5px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.4rem;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  color: #475569 !important;
+}
+
+.highway-station.is-completed .station-marker {
+  border-color: #10B981;
+  background: #ECFDF5;
+  color: #10B981;
+}
+
+.highway-station.is-active .station-marker {
+  border-color: #0891B2;
+  background: #ECFEFF;
+  color: #0891B2;
+  box-shadow: 0 0 10px rgba(8, 145, 178, 0.35);
+}
+
+.highway-station.is-ready .station-marker {
+  border-color: #B45309;
+  background: #FFFBEB;
+  color: #B45309;
+}
+
+.highway-station.active .station-marker {
+  outline: 2px solid #4F46E5;
+  outline-offset: 2px;
+}
+
+.station-step {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #475569 !important;
+  margin-bottom: 0.15rem;
+  white-space: nowrap;
+}
+
+.station-name {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+  display: block;
+  white-space: nowrap;
+}
+
+.station-pill {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.pill-success { background: #ECFDF5; color: #15803D; border: 1px solid #A7F3D0; }
+.pill-active { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+.pill-warning { background: #FFFBEB; color: #B45309; border: 1px solid #FDE68A; }
+.pill-muted { background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
+
+/* Station Preview Card */
+.station-preview-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-left: 3px solid var(--color-indigo-600);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.station-preview-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.station-focus-badge {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-indigo-600);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.station-focus-title {
+  margin: 0.15rem 0 0 0;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.station-preview-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-indigo-600) !important;
+  text-decoration: none !important;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.station-preview-action:hover {
+  background: #E0E7FF;
+  color: #3730A3 !important;
+}
+
+.station-preview-desc {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.65rem 0;
+  line-height: 1.5;
+}
+
+.station-preview-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.station-skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Integrated Skills Strip */
+.hero-skill-strip {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+}
+
+.skill-strip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.skill-strip-label {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.skill-strip-counter {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.skill-strip-counter strong {
+  color: var(--color-indigo-600);
+}
+
+.hero-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+}
+
+.hero-skills-grid .skill-logo-card {
+  min-height: auto;
+  padding: 0.55rem 0.65rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.hero-skills-grid .skill-logo-card .skill-logo-mark {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.hero-skills-grid .skill-logo-card .skill-logo-name {
+  font-size: 0.8125rem;
+  line-height: 1.1;
+  font-weight: 700;
+  display: block;
+}
+
+.hero-skills-grid .skill-logo-card .skill-logo-type {
+  font-size: 0.8125rem;
+  display: block;
+  color: var(--color-text-muted);
+}
+
+/* Route Hub Footer Telemetry */
+.route-hub-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.route-telemetry-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+
+.pulse-dot-teal {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0891B2;
+  box-shadow: 0 0 6px #0891B2;
+}
+
+@media (max-width: 575.98px) {
+  .highway-stations-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  .hero-skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

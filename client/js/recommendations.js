@@ -233,12 +233,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (whatIfAfterDuration) whatIfAfterDuration.textContent = `${newDuration} Wks`;
 
     if (whatIfSkillContext) {
-      whatIfSkillContext.innerHTML = `<span class="text-teal fw-semibold">${escapeHtml(selectedSkill.displayName || selectedSkill.name)}</span> is a core skill (${selectedSkill.type}). Target: <strong class="text-ink">${targetLevel}</strong>.`;
+      whatIfSkillContext.innerHTML = `<span class="text-teal fw-semibold">${escapeHtml(selectedSkill.displayName || selectedSkill.name)}</span> is a core skill (${escapeHtml(selectedSkill.type)}). Target: <strong class="text-ink">${escapeHtml(targetLevel)}</strong>.`;
     }
 
     if (whatIfNarrativeText) {
       whatIfNarrativeText.innerHTML = `
-        Upgrading <strong class="text-ink">${escapeHtml(selectedSkill.displayName || selectedSkill.name)}</strong> from <em>${escapeHtml(selectedSkill.currentProf)}</em> to <strong>${targetLevel}</strong> resolves a high-impact bottleneck for ${escapeHtml(career.title)}.
+        Upgrading <strong class="text-ink">${escapeHtml(selectedSkill.displayName || selectedSkill.name)}</strong> from <em>${escapeHtml(selectedSkill.currentProf)}</em> to <strong>${escapeHtml(targetLevel)}</strong> resolves a high-impact bottleneck for ${escapeHtml(career.title)}.
         By strengthening the 60% skill match component from ${currentSkillMatch}% to ${newSkillMatch}%, your career match jumps from <span class="text-muted text-decoration-line-through">${finalScore}%</span> to <strong class="text-success">${newFinalScore}%</strong> (+${delta}%), shortening your placement-readiness timeline by <strong>${savedWeeks} ${savedWeeks === 1 ? 'week' : 'weeks'}</strong>.
       `;
     }

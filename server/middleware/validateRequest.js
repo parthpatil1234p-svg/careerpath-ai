@@ -21,8 +21,11 @@
 /** ID format check (24-char hex or UUID) */
 const isValidId = (id) => typeof id === 'string' && (/^[0-9a-fA-F]{24}$/.test(id.trim()) || /^[0-9a-fA-F-]{36}$/.test(id.trim()));
 
-/** Basic email format check */
-const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+/** Basic email format check (bounded length & linear pattern, immune to ReDoS) */
+const isValidEmail = (email) => {
+  if (typeof email !== 'string' || email.length < 3 || email.length > 254) return false;
+  return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/.test(email);
+};
 
 /** Send the standardised validation error response */
 const sendValidationError = (res, errors) => {

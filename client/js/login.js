@@ -134,16 +134,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
 
+        const getSafeRedirect = (raw) => {
+          if (!raw || typeof raw !== 'string') return null;
+          const decoded = decodeURIComponent(raw).trim();
+          if (decoded.startsWith('//') || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(decoded)) return null;
+          if (/^\/[^\/\\]/.test(decoded) || /^[a-zA-Z0-9_-]+\.html(\?[a-zA-Z0-9_=&-]*)?$/.test(decoded)) {
+            return decoded;
+          }
+          return null;
+        };
+
         setTimeout(() => {
           const role = response.data.user?.role;
-          if (redirect) {
-            const target = decodeURIComponent(redirect);
-            if (role === 'recruiter' && !target.includes('recruiter') && !target.includes('jobs.html')) {
+          const safeTarget = getSafeRedirect(redirect);
+
+          if (safeTarget) {
+            if (role === 'recruiter' && !safeTarget.includes('recruiter') && !safeTarget.includes('jobs.html')) {
               window.location.href = 'recruiter-dashboard.html';
-            } else if (role === 'student' && target.includes('recruiter')) {
+            } else if (role === 'student' && safeTarget.includes('recruiter')) {
               window.location.href = 'dashboard.html';
             } else {
-              window.location.href = target;
+              window.location.href = safeTarget;
             }
           } else if (role === 'recruiter') {
             window.location.href = 'recruiter-dashboard.html';

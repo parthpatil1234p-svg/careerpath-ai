@@ -10,6 +10,17 @@
  *  - Mounts Career Atlas 3D Compass
  */
 
+// Strict HTML escape helper for secure DOM rendering
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ============================================================
 // 1. Navbar - Add 'scrolled' class on scroll for background state
 // ============================================================
@@ -88,7 +99,7 @@ function initCareerCards() {
 
       const careerSlug = card.getAttribute('data-career');
       if (careerSlug) {
-        window.location.href = `assessment.html?career=${careerSlug}`;
+        window.location.href = `assessment.html?career=${encodeURIComponent(careerSlug)}`;
       }
     });
   });
@@ -190,7 +201,7 @@ function initCareerSearch() {
   const careerCards = Array.from(document.querySelectorAll('.career-card'));
   if (!careerCards.length) return;
 
-  const escapeFn = window.escapeHtml || function(str) { return str || ''; };
+  const escapeFn = escapeHtml;
 
   // Pre-extract metadata for high performance
   const cardData = careerCards.map(card => {
@@ -292,7 +303,7 @@ function initRecruiterLandingExperience() {
   const user = window.Auth.getCurrentUser();
   if (!user) return;
 
-  const escapeFn = window.escapeHtml || function(str) { return str || ''; };
+  const escapeFn = escapeHtml;
 
   // 1. Sleek top floating session bar
   if (!document.getElementById('recruiterActiveSessionBar')) {
@@ -421,7 +432,7 @@ function initCampusDemoModal() {
               <i class="bi bi-check-circle-fill text-success fs-5"></i>
               <div>
                 <strong>Briefing Request Confirmed!</strong>
-                <div>Our Academic Partnerships Director will email <em>${email}</em> and WhatsApp <em>${phone}</em> within 24 hours to coordinate your custom NAAC gap heatmap briefing.</div>
+                <div>Our Academic Partnerships Director will email <em>${escapeHtml(email)}</em> and WhatsApp <em>${escapeHtml(phone)}</em> within 24 hours to coordinate your custom NAAC gap heatmap briefing.</div>
               </div>
             </div>
           `;
@@ -439,7 +450,7 @@ function initCampusDemoModal() {
     } catch (err) {
       if (alertBox) {
         alertBox.className = 'alert alert-danger alert-dismissible fade show';
-        alertBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${err.message || 'Network error connecting to campus service. Please try again or email campus@disheera.site'}`;
+        alertBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${escapeHtml(err.message || 'Network error connecting to campus service. Please try again or email campus@disheera.site')}`;
       }
     } finally {
       if (submitBtn) submitBtn.disabled = false;

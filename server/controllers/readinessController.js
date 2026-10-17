@@ -99,18 +99,18 @@ exports.getJobReadyCheck = async (req, res, next) => {
 };
 
 /**
- * GET /api/readiness/public-verify/:certId
+ * GET /api/readiness/public-verify/:credentialRef
  * Unauthenticated public credential verification endpoint.
  * Enables recruiters, LinkedIn visitors, and QR code scanners to audit credential validity in real-time.
  */
 exports.verifyPublicCertificate = async (req, res, next) => {
   try {
-    const { certId } = req.params;
-    if (!certId) {
+    const rawRef = req.params?.credentialRef || req.params?.certId || req.body?.credentialRef || req.body?.certId;
+    if (!rawRef || typeof rawRef !== 'string') {
       return res.status(400).json({ success: false, message: 'Certificate verification ID is required' });
     }
 
-    const cleanCertId = certId.trim().toUpperCase();
+    const cleanCertId = rawRef.trim().toUpperCase();
 
     // Look up user by certificate ID using Prisma JSON path query
     let user = null;

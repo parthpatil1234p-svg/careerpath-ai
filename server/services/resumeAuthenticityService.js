@@ -79,7 +79,7 @@ const RESUME_SECTIONS = [
 const RESUME_CREDENTIALS = /\b(bachelor|b\.tech|bca|b\.e|m\.tech|mca|master|b\.sc|m\.sc|diploma|university|college|institute|cgpa|gpa|percentage|graduat(?:ed|ion))\b/i;
 const RESUME_ACTION_VERBS = /\b(developed|implemented|designed|created|built|managed|led|engineered|programmed|optimized|configured|architected|collaborated|contributed|delivered)\b/i;
 const CONTACT_MARKERS = {
-  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,
+  email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}/,
   phone: /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\b[6-9]\d{9}\b/,
   linkedinOrGithub: /\b(linkedin\.com\/in|github\.com)\b/i,
 };

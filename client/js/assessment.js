@@ -11,6 +11,17 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Strict HTML escape helper for secure DOM rendering
+  const escapeHtml = (str) => {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   // 1. Guard page (strict student portal isolation)
   if (!window.Auth?.requireStudent()) {
     return;

@@ -49,8 +49,9 @@ exports.submitDemoRequest = async (req, res, next) => {
       });
     }
 
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    if (!emailRegex.test(email.trim())) {
+    const trimmedEmail = email.trim();
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (trimmedEmail.length > 254 || !emailRegex.test(trimmedEmail)) {
       return res.status(400).json({
         success: false,
         message: 'Please provide a valid official email address.',

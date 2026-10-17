@@ -36,11 +36,12 @@ async function analyzeResumeText(resumeText, targetCareerSlug = '', userSkills =
 
   // Look up career expectations if available
   let careerDoc = null;
-  if (targetCareerSlug) {
+  if (targetCareerSlug && typeof targetCareerSlug === 'string') {
+    const escapedSlug = targetCareerSlug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     careerDoc = await Career.findOne({
       $or: [
         { slug: targetCareerSlug.toLowerCase() },
-        { title: new RegExp(`^${targetCareerSlug}$`, 'i') }
+        { title: new RegExp(`^${escapedSlug}$`, 'i') }
       ]
     }).populate('requiredSkills.skill').lean();
   }

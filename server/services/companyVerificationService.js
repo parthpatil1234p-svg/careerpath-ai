@@ -174,9 +174,29 @@ async function checkWebsiteLive(domainOrUrl, timeoutMs = 4000) {
     return { live: false, status: null, url: '', error: 'Invalid website specified' };
   }
 
+  // SSRF Protection: Reject private/local IP ranges and non-public hostnames
+  const lower = cleanDomain.toLowerCase();
+  const isPrivateOrLocal = (
+    lower === 'localhost' ||
+    lower.endsWith('.local') ||
+    lower.endsWith('.internal') ||
+    lower.endsWith('.lan') ||
+    lower.endsWith('.localdomain') ||
+    lower.includes(':') ||
+    lower.startsWith('[') ||
+    lower.endsWith(']') ||
+    /^(\d{1,3}\.){3}\d{1,3}$/.test(lower) // disallow raw IP addresses
+  );
+
+  const isValidFqdn = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*\.[a-z]{2,}$/i.test(cleanDomain);
+
+  if (isPrivateOrLocal || !isValidFqdn) {
+    return { live: false, status: null, url: '', error: 'Domain must be a valid public FQDN' };
+  }
+
   const urlsToTry = [
-    `https://${cleanDomain}`,
-    `http://${cleanDomain}`
+    `https://${encodeURIComponent(cleanDomain).replace(/%2E/gi, '.')}`,
+    `http://${encodeURIComponent(cleanDomain).replace(/%2E/gi, '.')}`
   ];
 
   for (const targetUrl of urlsToTry) {

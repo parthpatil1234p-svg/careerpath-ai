@@ -216,16 +216,16 @@ exports.getQuizProviders = async (req, res) => {
 exports.recordViolation = async (req, res) => {
   try {
     const { sessionId, skill, violationType, details } = req.body;
-    let targetSkill = skill;
-    if (!targetSkill && sessionId && sessionId.includes('_')) {
+    let targetSkill = typeof skill === 'string' ? skill.trim() : null;
+    if (!targetSkill && typeof sessionId === 'string' && sessionId.includes('_')) {
       targetSkill = sessionId.split('_').slice(1).join('_');
     }
 
     const violation = quizService.recordViolation(
       req.user.id,
       targetSkill,
-      violationType || 'proctoring_anomaly',
-      details || {}
+      typeof violationType === 'string' ? violationType : 'proctoring_anomaly',
+      details && typeof details === 'object' ? details : {}
     );
 
     return res.status(200).json({
@@ -245,7 +245,8 @@ exports.recordViolation = async (req, res) => {
  */
 exports.getActiveSession = async (req, res) => {
   try {
-    const { skill, sessionId } = req.query;
+    const skill = typeof req.query.skill === 'string' ? req.query.skill.trim() : null;
+    const sessionId = typeof req.query.sessionId === 'string' ? req.query.sessionId.trim() : null;
     let targetSkill = skill;
     if (!targetSkill && sessionId && sessionId.includes('_')) {
       targetSkill = sessionId.split('_').slice(1).join('_');

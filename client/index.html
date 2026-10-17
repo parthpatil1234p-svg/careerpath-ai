@@ -460,45 +460,192 @@
             </div>
           </div>
 
-          <!-- Right Column: Skills Employers Use Grid -->
+          <!-- Right Column: Interactive Student Career Route Map & Skills Hub -->
           <div class="hero-canvas-col">
-            <div class="skill-showcase" aria-label="Popular skills across technology careers">
-              <div class="skill-showcase-header">
+            <div class="hero-route-hub" id="heroRouteHub" aria-label="Interactive Student Career Route Map">
+              
+              <!-- Route Map Header & Track Switcher -->
+              <div class="hero-route-header">
                 <div>
-                  <span class="skill-showcase-eyebrow">Skills that move careers forward</span>
-                  <h2>Build with skills employers use</h2>
+                  <span class="route-hub-eyebrow">
+                    <span class="pulse-dot-teal"></span> Student Career Highway &middot; Route Map
+                  </span>
+                  <h2 class="route-hub-title">From Diagnostic to Verified Placement</h2>
                 </div>
-                <span class="skill-count"><strong>76+</strong><span>mapped skills</span></span>
-              </div>
-
-              <div class="skill-logo-grid">
-                <div class="skill-logo-card" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React">
-                  <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span><span class="skill-logo-name">React</span><span class="skill-logo-type">Frontend</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript">
-                  <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span><span class="skill-logo-name">JavaScript</span><span class="skill-logo-type">Language</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python">
-                  <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span><span class="skill-logo-name">Python</span><span class="skill-logo-type">Language</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js">
-                  <span class="skill-logo-mark node-mark" aria-hidden="true">N</span><span class="skill-logo-name">Node.js</span><span class="skill-logo-type">Backend</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma">
-                  <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span><span class="skill-logo-name">Figma</span><span class="skill-logo-type">Design</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL">
-                  <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span><span class="skill-logo-name">SQL</span><span class="skill-logo-type">Data</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS">
-                  <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span><span class="skill-logo-name">AWS</span><span class="skill-logo-type">Cloud</span>
-                </div>
-                <div class="skill-logo-card" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git">
-                  <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span><span class="skill-logo-name">Git</span><span class="skill-logo-type">Workflow</span>
+                <div class="route-track-pills" role="tablist" aria-label="Career Track Switcher">
+                  <div class="route-track-pill active" data-track="tech" role="tab" aria-selected="true" tabindex="0">
+                    Tech &amp; Cloud
+                  </div>
+                  <div class="route-track-pill" data-track="data" role="tab" aria-selected="false" tabindex="0">
+                    AI &amp; Data
+                  </div>
+                  <div class="route-track-pill" data-track="business" role="tab" aria-selected="false" tabindex="0">
+                    Business
+                  </div>
+                  <div class="route-track-pill" data-track="design" role="tab" aria-selected="false" tabindex="0">
+                    UI/UX
+                  </div>
                 </div>
               </div>
 
-              <div class="skill-showcase-footer"><span class="skill-footer-dot"></span> Practical skills, matched to your career goals</div>
+              <!-- Interactive 5-Station Career Highway Rail -->
+              <div class="hero-highway-rail">
+                <div class="highway-track-line">
+                  <div class="highway-track-progress" id="heroTrackProgress"></div>
+                </div>
+
+                <div class="highway-stations-row" id="heroStationsRow" role="list">
+                  
+                  <!-- Station 1 -->
+                  <div class="highway-station is-completed active" data-station="1" role="listitem" tabindex="0" aria-label="Station 1: Diagnostic Assessment">
+                    <div class="station-marker">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <span class="station-step">01 &middot; STEP</span>
+                    <span class="station-name">Diagnostic</span>
+                    <span class="station-pill pill-success">Verified</span>
+                  </div>
+
+                  <!-- Station 2 -->
+                  <div class="highway-station is-active" data-station="2" role="listitem" tabindex="0" aria-label="Station 2: Roadmap Sprint">
+                    <div class="station-marker">
+                      <i class="bi bi-map-fill"></i>
+                    </div>
+                    <span class="station-step">02 &middot; SPRINT</span>
+                    <span class="station-name">Roadmap</span>
+                    <span class="station-pill pill-active">In Progress</span>
+                  </div>
+
+                  <!-- Station 3 -->
+                  <div class="highway-station is-ready" data-station="3" role="listitem" tabindex="0" aria-label="Station 3: Proctored Test">
+                    <div class="station-marker">
+                      <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <span class="station-step">03 &middot; EXAM</span>
+                    <span class="station-name">Proctored Test</span>
+                    <span class="station-pill pill-warning">70% Pass</span>
+                  </div>
+
+                  <!-- Station 4 -->
+                  <div class="highway-station" data-station="4" role="listitem" tabindex="0" aria-label="Station 4: Verified Credential">
+                    <div class="station-marker">
+                      <i class="bi bi-patch-check-fill"></i>
+                    </div>
+                    <span class="station-step">04 &middot; PROOF</span>
+                    <span class="station-name">SHA-256 Cert</span>
+                    <span class="station-pill pill-muted">Credential</span>
+                  </div>
+
+                  <!-- Station 5 -->
+                  <div class="highway-station" data-station="5" role="listitem" tabindex="0" aria-label="Station 5: Talent Radar">
+                    <div class="station-marker">
+                      <i class="bi bi-radar"></i>
+                    </div>
+                    <span class="station-step">05 &middot; HIRED</span>
+                    <span class="station-name">Talent Radar</span>
+                    <span class="station-pill pill-muted">150+ Hiring</span>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Interactive Dynamic Station Preview & Insights Card -->
+              <div class="station-preview-card" id="stationPreviewCard">
+                <div class="station-preview-top">
+                  <div class="station-preview-meta">
+                    <span class="station-focus-badge" id="previewStationBadge">Station 01 &middot; Diagnostic Benchmark</span>
+                    <h3 class="station-focus-title" id="previewStationTitle">4-Step Adaptive Skill Diagnostic</h3>
+                  </div>
+                  <a href="assessment.html" class="station-preview-action" id="previewStationAction">
+                    <span>Start Diagnostic</span>
+                    <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+                <p class="station-preview-desc" id="previewStationDesc">
+                  Evaluates your technical knowledge across 24 software tracks to detect skill gaps and calculate your baseline readiness score.
+                </p>
+                <div class="station-preview-skills" id="previewStationSkills">
+                  <span class="station-skill-tag"><i class="bi bi-check2"></i> Instant Gap Analysis</span>
+                  <span class="station-skill-tag"><i class="bi bi-check2"></i> Cosine-Similarity Score</span>
+                  <span class="station-skill-tag"><i class="bi bi-check2"></i> Zero Guesswork</span>
+                </div>
+              </div>
+
+              <!-- Integrated Popular Skills Strip -->
+              <div class="hero-skill-strip" aria-label="Explore verified industry skills">
+                <div class="skill-strip-header">
+                  <span class="skill-strip-label"><i class="bi bi-layers-fill text-indigo me-1"></i> Mapped In-Demand Skills</span>
+                  <span class="skill-strip-counter"><strong>76+</strong> Skills Benchmarked</span>
+                </div>
+                <div class="hero-skills-grid" id="heroSkillsGrid">
+                  <div class="skill-logo-card" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React" tabindex="0">
+                    <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span>
+                    <div>
+                      <span class="skill-logo-name">React</span>
+                      <span class="skill-logo-type">Frontend</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript" tabindex="0">
+                    <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span>
+                    <div>
+                      <span class="skill-logo-name">JavaScript</span>
+                      <span class="skill-logo-type">Language</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python" tabindex="0">
+                    <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span>
+                    <div>
+                      <span class="skill-logo-name">Python</span>
+                      <span class="skill-logo-type">Language</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js" tabindex="0">
+                    <span class="skill-logo-mark node-mark" aria-hidden="true">N</span>
+                    <div>
+                      <span class="skill-logo-name">Node.js</span>
+                      <span class="skill-logo-type">Backend</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma" tabindex="0">
+                    <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span>
+                    <div>
+                      <span class="skill-logo-name">Figma</span>
+                      <span class="skill-logo-type">Design</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL" tabindex="0">
+                    <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span>
+                    <div>
+                      <span class="skill-logo-name">SQL</span>
+                      <span class="skill-logo-type">Data</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS" tabindex="0">
+                    <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span>
+                    <div>
+                      <span class="skill-logo-name">AWS</span>
+                      <span class="skill-logo-type">Cloud</span>
+                    </div>
+                  </div>
+                  <div class="skill-logo-card" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git" tabindex="0">
+                    <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span>
+                    <div>
+                      <span class="skill-logo-name">Git</span>
+                      <span class="skill-logo-type">Workflow</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Route Hub Footer Telemetry -->
+              <div class="route-hub-footer">
+                <span class="route-telemetry-item"><i class="bi bi-shield-check text-success"></i> Anti-Cheat Proctoring</span>
+                <span class="route-telemetry-dot">&bull;</span>
+                <span class="route-telemetry-item"><i class="bi bi-patch-check-fill text-indigo"></i> Cryptographic Proof</span>
+                <span class="route-telemetry-dot">&bull;</span>
+                <span class="route-telemetry-item"><i class="bi bi-buildings-fill text-warning"></i> 150+ Hiring Partners</span>
+              </div>
+
             </div>
           </div>
 
@@ -2538,6 +2685,7 @@
     <script defer src="js/search-engine.js?v=3.1"></script>
     <script defer src="js/main.js?v=3.1"></script>
     <script defer src="js/skill-guides.js"></script>
+    <script defer src="js/hero-route-map.js"></script>
     <script defer src="js/i18n.js"></script>
     <script defer src="js/chat.js"></script>
   </body>

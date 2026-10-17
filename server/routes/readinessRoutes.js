@@ -10,7 +10,8 @@ const { protect, requireStudent } = require('../middleware/authMiddleware');
 const { getReadinessStatus, getCertificate, getJobReadyCheck, verifyPublicCertificate } = require('../controllers/readinessController');
 
 // 1. Public Unauthenticated Credential Verification (Recruiters, LinkedIn, QR Scanners)
-router.get('/public-verify/:certId', verifyPublicCertificate);
+router.get('/public-verify/:credentialRef', verifyPublicCertificate);
+router.post('/public-verify', verifyPublicCertificate);
 
 // 2. Protected Student Routes
 router.use(protect, requireStudent);

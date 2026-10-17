@@ -74,6 +74,16 @@ window.GoogleAuth = (function () {
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
 
+        const getSafeRedirectUrl = (raw) => {
+          if (!raw || typeof raw !== 'string') return null;
+          const decoded = decodeURIComponent(raw).trim();
+          if (decoded.startsWith('//') || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(decoded)) return null;
+          if (/^\/[^\/\\]/.test(decoded) || /^[a-zA-Z0-9_-]+\.html(\?[a-zA-Z0-9_=&-]*)?$/.test(decoded)) {
+            return decoded;
+          }
+          return null;
+        };
+
         setTimeout(() => {
           let customHandled = false;
           if (typeof onSuccess === 'function') {
@@ -86,8 +96,9 @@ window.GoogleAuth = (function () {
           }
 
           if (!customHandled) {
-            if (redirect) {
-              window.location.href = decodeURIComponent(redirect);
+            const safeRedirect = getSafeRedirectUrl(redirect);
+            if (safeRedirect) {
+              window.location.href = safeRedirect;
             } else if (isNewUser) {
               window.location.href = 'assessment.html';
             } else {

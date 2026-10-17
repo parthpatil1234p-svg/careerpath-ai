@@ -175,7 +175,7 @@ const FALLBACK_JOBS = {
  * 100% reliable without third-party API keys or rate-limits.
  */
 function generateMultiPortalLinks(roleTitle = 'Software Engineer', location = 'India', companyName = null) {
-  const cleanRole = String(roleTitle || 'Developer').replace(/<\/?[^>]+(>|$)/g, '').trim();
+  const cleanRole = String(roleTitle || 'Developer').replace(/<[^>]*>/g, '').trim();
   const cleanSlug = cleanRole.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'software-engineer';
   const searchCompany = companyName ? String(companyName).trim() : '';
 

@@ -1,5 +1,8 @@
 name: Render Backend Keep-Alive
 
+permissions:
+  contents: read
+
 on:
   schedule:
     # Run every 10 minutes to prevent Render free-tier 15-minute inactivity spin down
