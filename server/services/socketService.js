@@ -27,6 +27,7 @@ function isAllowedOrigin(origin) {
     origin === 'https://disheera.site' ||
     origin === 'https://www.disheera.site' ||
     origin === 'https://api.disheera.site' ||
+    origin === 'https://apivercel.disheera.site' ||
     origin === 'https://careerpath.is-local.org' ||
     origin === 'https://www.careerpath.is-local.org' ||
     origin === 'https://dheepath.vercel.app' ||

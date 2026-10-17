@@ -153,6 +153,7 @@ const rawOrigins = [
   'https://disheera.site',
   'https://www.disheera.site',
   'https://api.disheera.site',
+  'https://apivercel.disheera.site',
   'https://careerpath.is-local.org',
   'https://www.careerpath.is-local.org',
   'https://dheepath.vercel.app',
