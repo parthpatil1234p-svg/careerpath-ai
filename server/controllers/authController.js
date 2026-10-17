@@ -57,7 +57,10 @@ const isDisposableEmail = (emailStr) => {
 // ── Helper: shape the user object returned in responses ───────
 const formatUser = (user) => {
   const email = (user.email || '').toLowerCase();
-  const isDemoOrAdmin = user.role === 'admin' || user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+  const isDemoStudent = email === 'demouser@gmail.com';
+  const isAdmin = user.role === 'admin' || user.isAdmin || email === 'kajimew275@blobapps.com';
+  const isRecruiter = user.role === 'recruiter';
+  const isDemo = isDemoStudent || isAdmin || isRecruiter || user.isDemo;
 
   const rawRepos = user.githubRepos || [];
   const sanitizedRepos = rawRepos.map((r) => ({
@@ -77,27 +80,24 @@ const formatUser = (user) => {
       }
     : null;
 
-  const isRecruiter = user.role === 'recruiter';
-  const resolvedRole = isRecruiter ? 'recruiter' : (isDemoOrAdmin ? 'admin' : user.role);
-
   return {
     id:                            user._id,
     name:                          user.name,
     email:                         user.email,
     phone:                         user.phone || '',
-    role:                          resolvedRole,
-    isAdmin:                       isDemoOrAdmin && !isRecruiter,
-    isDemo:                        isDemoOrAdmin,
-    isRecruiter:                   isRecruiter,
+    role:                          isRecruiter ? 'recruiter' : (isAdmin ? 'admin' : (user.role || 'student')),
+    isAdmin:                       Boolean(isAdmin && !isRecruiter),
+    isDemo:                        Boolean(isDemo),
+    isRecruiter:                   Boolean(isRecruiter),
     recruiterProfile:              user.recruiterProfile || null,
     authProvider:                  user.authProvider || 'local',
     primaryStream:                 user.primaryStream || 'engineering',
     education:                     user.education || {},
     interests:                     user.interests || [],
     careerGoals:                   user.careerGoals || [],
-    profileCompleted:              isDemoOrAdmin ? true : user.profileCompleted,
-    isVerified:                    isDemoOrAdmin ? true : (user.isVerified || false),
-    hasCompletedSkillVerification: isDemoOrAdmin ? true : Boolean(
+    profileCompleted:              isDemo ? true : user.profileCompleted,
+    isVerified:                    isDemo ? true : (user.isVerified || false),
+    hasCompletedSkillVerification: isDemo ? true : Boolean(
       user.hasCompletedSkillVerification ||
       (Array.isArray(user.skills) && user.skills.some((s) => s.isQuizVerified || s.isCodeVerified))
     ),
@@ -544,10 +544,10 @@ const loginUser = async (req, res, next) => {
     // If demo account doesn't exist yet, auto-create it with full pre-seeded profile!
     if (!user && isExplicitDemoEmail) {
       user = new User({
-        name: 'Demo Admin Student',
+        name: normalizedEmail === 'kajimew275@blobapps.com' ? 'Demo Admin Student' : 'Demo Student',
         email: normalizedEmail,
         password: password || 'demo123',
-        role: 'admin',
+        role: normalizedEmail === 'kajimew275@blobapps.com' ? 'admin' : 'student',
         isVerified: true,
         profileCompleted: true,
         hasCompletedSkillVerification: true,
