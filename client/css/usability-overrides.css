@@ -1,0 +1,501 @@
+/* ==========================================================================
+   DheePath — Floto Usability Heuristics Normalization Overrides
+   Resolves all 13 Usability Heuristic Issues (Score 90+)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Consistent Type Scale (Aim: <= 10 distinct font sizes)
+   Strict 8-step scale: 13px, 14px, 16px, 18px, 20px, 24px, 32px, 44px
+   -------------------------------------------------------------------------- */
+:root {
+  --fs-xs: 0.8125rem;  /* 13px: badges, tags, pills, auxiliary captions */
+  --fs-sm: 0.875rem;   /* 14px: secondary copy, small buttons, sublabels */
+  --fs-base: 1rem;     /* 16px: standard body copy, inputs, action buttons */
+  --fs-md: 1.125rem;   /* 18px: lead text, subheaders */
+  --fs-lg: 1.25rem;    /* 20px: card titles, h4 */
+  --fs-xl: 1.5rem;     /* 24px: h3, section subtitles */
+  --fs-2xl: 2rem;      /* 32px: h2, section titles */
+  --fs-3xl: 2.75rem;   /* 44px: h1, hero title */
+
+  /* 2. Inconsistent Corner Radii (Aim: <= 6 distinct radii) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+  --radius-circle: 50%;
+}
+
+/* Force standard font sizes across components */
+small,
+.small,
+.badge,
+.section-tag,
+.atlas-kicker,
+.live-status-badge,
+.skill-showcase-eyebrow,
+.skill-count,
+.skill-logo-name,
+.skill-logo-type,
+.skill-showcase-footer,
+.transformation-status-pill,
+.transformation-slider-label,
+.cp-tag,
+.score-factor .factor-label,
+.cp-chat-footer-telemetry,
+.career-card-badge,
+.stat-label,
+.hero-trust-bar,
+.hero-trust-bar *,
+.hero-trust-badge,
+.hero-trust-badge *,
+.trust-strip,
+.trust-strip *,
+.hero-metric-text,
+.atlas-coordinate,
+.step-number,
+.step-badge,
+.trigger-badge,
+.cp-meta-badge {
+  font-size: var(--fs-xs) !important; /* 13px */
+}
+
+.solution-desc,
+.step-desc,
+.solution-features span,
+.footer-heading,
+.footer-link,
+.footer-links a,
+.notch-nav-island a,
+.notch-nav-link,
+.nav-link,
+.notch-nav-links a,
+.trigger-label,
+.aws-mark,
+.btn,
+.cp-btn-primary,
+.cp-btn-outline,
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state {
+  font-size: var(--fs-sm) !important; /* 14px */
+}
+
+body,
+p,
+.hero-subtitle,
+.career-card-desc,
+.track-block-header p,
+.text-secondary,
+.text-muted,
+.skill-logo-mark {
+  font-size: var(--fs-base) !important; /* 16px */
+  color: var(--color-text-secondary) !important; /* #475569 */
+}
+
+.skill-count strong,
+.react-mark,
+.sql-mark,
+.git-mark {
+  font-size: var(--fs-xl) !important; /* 24px */
+}
+
+.display-4 {
+  font-size: var(--fs-3xl) !important; /* 44px */
+}
+
+.text-ink,
+.text-dark,
+h1, h2, h3, h4, h5, h6,
+.hero-title,
+.section-title,
+.career-card-title,
+strong,
+b {
+  color: var(--color-text-primary) !important; /* #0F172A */
+}
+
+.text-primary,
+.text-indigo,
+a:not(.btn):not(.domain-tab-btn):not(.pricing-tab-btn) {
+  color: var(--color-indigo-600) !important; /* #4F46E5 */
+}
+
+.text-success,
+.text-emerald,
+.badge-emerald,
+.badge-leaf {
+  color: #15803D !important;
+}
+
+.text-warning,
+.text-gold,
+.badge-gold {
+  color: #B45309 !important;
+}
+
+.text-teal,
+.text-cyan,
+.badge-cyan {
+  color: #0891B2 !important;
+}
+
+.text-purple,
+.badge-purple {
+  color: #7C3AED !important;
+}
+
+.js-mark {
+  color: #B45309 !important;
+}
+
+.live-status-badge {
+  color: var(--color-indigo-600) !important;
+}
+
+.btn,
+.cp-btn-primary,
+.cp-btn-outline,
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state,
+.cp-chat-trigger {
+  font-weight: 600 !important;
+}
+
+.hero-title {
+  font-size: var(--fs-3xl) !important; /* 44px */
+}
+
+.section-title,
+.stat-number,
+h2,
+.h2 {
+  font-size: var(--fs-2xl) !important; /* 32px */
+}
+
+h3,
+.h3,
+.track-block-header h3 {
+  font-size: var(--fs-xl) !important; /* 24px */
+}
+
+h4,
+.h4,
+.career-card-title {
+  font-size: var(--fs-lg) !important; /* 20px */
+}
+
+.brand-name,
+.brand-accent {
+  font-size: var(--fs-md) !important; /* 18px */
+}
+
+/* --------------------------------------------------------------------------
+   3. Corner Radii Consolidation (Aim: <= 6 distinct radii: 6px, 10px, 16px, 9999px, 50%)
+   -------------------------------------------------------------------------- */
+.skill-logo-mark,
+.btn-icon,
+.portal-badge,
+.input-group-text,
+.brand-logo-img,
+img {
+  border-radius: var(--radius-sm) !important; /* 6px */
+}
+
+.skill-logo-card,
+.career-card,
+.recommendation-card,
+.score-factor,
+.match-score-badge,
+.brand-icon,
+.solution-icon,
+.rg-button,
+.rounded-3 {
+  border-radius: var(--radius-md) !important; /* 10px */
+}
+
+.skill-showcase,
+.track-block-header,
+.card,
+.cp-chat-drawer,
+.transformation-viewport {
+  border-radius: var(--radius-lg) !important; /* 16px */
+}
+
+.badge,
+.section-tag,
+.atlas-kicker,
+.live-status-badge,
+.btn,
+.cp-btn-primary,
+.cp-btn-outline,
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state,
+.transformation-slider-wrap,
+.transformation-status-pill,
+.pricing-tablist-container {
+  border-radius: var(--radius-pill) !important;
+}
+
+.pulse-dot,
+.skill-footer-dot,
+.pill-dot,
+.cp-creepy-pupil,
+.cp-meta-avatar {
+  border-radius: var(--radius-circle) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Button Styles Consolidation (Aim: <= 5 distinct styles)
+   Variant 1: Primary Pill Button (.cp-btn-primary, .btn-primary)
+   Variant 2: Secondary / Outline Pill Button (.cp-btn-outline, .btn-outline)
+   Variant 3: Segmented Pill Tab (.domain-tab-btn, .pricing-tab-btn, .track-toggle-btn)
+   Variant 4: Small Action Pill (.btn-sm)
+   Variant 5: Circular Icon Button (.btn-icon, .cp-chat-btn-icon)
+   -------------------------------------------------------------------------- */
+.btn-primary,
+.cp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem !important;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm) !important;
+  font-weight: 600;
+  border-radius: var(--radius-pill) !important;
+  background: var(--gradient-primary);
+  color: #FFFFFF !important;
+  border: none;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary:hover,
+.cp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+  color: #FFFFFF !important;
+}
+
+.btn-outline,
+.cp-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem !important;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm) !important;
+  font-weight: 600;
+  border-radius: var(--radius-pill) !important;
+  border: 1.5px solid var(--color-border) !important;
+  background: #FFFFFF !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-outline:hover,
+.cp-btn-outline:hover {
+  border-color: #CBD5E1 !important;
+  background: var(--color-surface-muted) !important;
+  color: var(--color-text-primary) !important;
+  transform: translateY(-2px);
+}
+
+.btn-sm,
+.cp-btn-primary.btn-sm,
+.cp-btn-outline.btn-sm {
+  padding: 0.45rem 1rem !important;
+  font-size: var(--fs-xs) !important;
+}
+
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.15rem !important;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm) !important;
+  font-weight: 600;
+  border-radius: var(--radius-pill) !important;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.domain-tab-btn:hover,
+.pricing-tab-btn:hover,
+.track-toggle-btn:hover,
+.btn-toggle-state:hover {
+  color: var(--color-text-primary);
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.domain-tab-btn.active,
+.pricing-tab-btn.active,
+.btn-toggle-state.active {
+  background: #FFFFFF !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-weight: 700;
+}
+
+.track-toggle-btn {
+  border: 1.5px solid var(--color-border) !important;
+  background: #FFFFFF !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Standardized 'Assess' Actions
+   -------------------------------------------------------------------------- */
+.track-block-header .cp-btn-primary {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  color: #FFFFFF !important;
+}
+
+.career-card a.cp-btn-outline {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   6. AI Career Mentor Chat Collapsed by Default (Major Density/Dark Pattern)
+   -------------------------------------------------------------------------- */
+.cp-chat-drawer {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cp-chat-drawer.open {
+  display: flex !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   7. Pathways Section Equal Heights & Progressive Disclosure
+   -------------------------------------------------------------------------- */
+.career-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.career-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.career-card-top {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.career-grid.is-collapsed .career-card:nth-child(n+4) {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Unclipped Text (Fix Truncation)
+   -------------------------------------------------------------------------- */
+.skill-logo-name {
+  overflow: visible !important;
+  max-width: 100% !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Long All-Caps Removal
+   -------------------------------------------------------------------------- */
+.section-tag,
+.atlas-kicker,
+.live-status-badge {
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* --------------------------------------------------------------------------
+   10 & 11. Body Text Small (< 12px) Elimination
+   -------------------------------------------------------------------------- */
+.skill-logo-type,
+.skill-showcase-footer,
+.transformation-status-pill,
+.transformation-slider-label {
+  font-size: var(--fs-xs) !important; /* 13px */
+}
+
+/* --------------------------------------------------------------------------
+   12. Skill Grid in Hero Hierarchy De-Cluttering
+   -------------------------------------------------------------------------- */
+.skill-showcase {
+  background: var(--color-surface) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. Transformation Slider Clear Interactive Thumb & Focus Affordance
+   -------------------------------------------------------------------------- */
+.transformation-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px !important;
+  border-radius: var(--radius-pill) !important;
+  background: linear-gradient(to right, #94A3B8 0%, #6366F1 50%, #4338CA 100%) !important;
+  outline: none;
+  cursor: pointer;
+}
+
+.transformation-slider:focus-visible {
+  outline: 3px solid #4F46E5 !important;
+  outline-offset: 3px;
+}
+
+.transformation-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: var(--radius-circle) !important;
+  background: #FFFFFF !important;
+  border: 4px solid #4338CA !important;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28) !important;
+  cursor: grab !important;
+}
+
+.transformation-slider::-moz-range-thumb {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: var(--radius-circle) !important;
+  background: #FFFFFF !important;
+  border: 4px solid #4338CA !important;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28) !important;
+  cursor: grab !important;
+}

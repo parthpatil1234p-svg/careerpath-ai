@@ -1,3 +1,6 @@
+/* DheePath — Consolidated Production Stylesheet */
+
+/* --- Module: tokens.css --- */
 /* ==========================================================================
    DheePath — EduTech Modern Design Tokens (tokens.css)
    Clean Modern Light Theme · Indigo, Blue & Cyan Accents
@@ -172,6 +175,7 @@
 }
 
 
+/* --- Module: base.css --- */
 /* ==========================================================================
    DheePath — Base & Typography (base.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
@@ -456,6 +460,7 @@ small, .small {
 }
 
 
+/* --- Module: layout.css --- */
 /* ==========================================================================
    DheePath — Layout & Grid (layout.css)
    Clean Modern EduTech Layout · Max Width Constraints · Responsive
@@ -689,10 +694,10 @@ div[id].cp-section {
 .section-tag,
 .atlas-kicker {
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: none;
+  letter-spacing: 0.02em;
   color: var(--color-indigo-700);
   background: var(--color-surface-indigo);
   border: 1px solid #C7D2FE;
@@ -780,6 +785,7 @@ div[id].cp-section {
 }
 
 
+/* --- Module: components.css --- */
 /* ==========================================================================
    DheePath — EduTech Component Design System (components.css)
    Clean Modern Aesthetics · Indigo, Blue & Cyan Accents
@@ -1660,6 +1666,7 @@ div[id].cp-section {
 }
 
 
+/* --- Module: pages.css --- */
 /* ==========================================================================
    DheePath - EduTech Page Styles (pages.css)
    Clean Modern Light Aesthetics | Indigo, Blue & Cyan Accents
@@ -3413,6 +3420,7 @@ div[id].cp-section {
 }
 
 
+/* --- Module: three.css --- */
 /* ==========================================================================
    DheePath — Three.js EduTech Canvas & Clean Tooltips (three.css)
    Soft Indigo/Blue Canvas Canvas · Accessible HUD
@@ -3498,10 +3506,8 @@ div[id].cp-section {
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(circle at 90% 5%, rgba(99, 102, 241, 0.1), transparent 36%),
-    linear-gradient(145deg, #FFFFFF 0%, #F6F8FF 100%);
-  box-shadow: var(--shadow-lg);
+  background: var(--color-surface);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
 }
 
 .skill-showcase-header {
@@ -3517,7 +3523,7 @@ div[id].cp-section {
   margin-bottom: 0.45rem;
   color: var(--color-indigo-600);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -3537,7 +3543,7 @@ div[id].cp-section {
   flex-direction: column;
   align-items: flex-end;
   color: var(--color-text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   line-height: 1.25;
 }
 
@@ -3563,16 +3569,16 @@ div[id].cp-section {
   gap: 0.35rem;
   padding: 0.85rem;
   border: 1px solid #E6EAF2;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .skill-logo-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: #C7D2FE;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
 }
 
 .skill-logo-mark {
@@ -3580,34 +3586,35 @@ div[id].cp-section {
   width: 38px;
   height: 38px;
   place-items: center;
-  border-radius: 11px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-heading);
   font-size: 1.05rem;
   font-weight: 800;
 }
 
-.react-mark { color: #0891B2; background: #CFFAFE; font-size: 1.7rem; }
-.js-mark { color: #713F12; background: #FEF3C7; border-radius: 6px; }
-.python-mark { color: #1D4ED8; background: #DBEAFE; }
+.react-mark { color: #0891B2; background: #CFFAFE; font-size: 1.5rem; }
+.js-mark { color: #B45309; background: #FEF3C7; }
+.python-mark { color: #4F46E5; background: #DBEAFE; }
 .node-mark { color: #15803D; background: #DCFCE7; }
-.figma-mark { color: #86198F; background: #FAE8FF; }
-.sql-mark { color: #4338CA; background: #E0E7FF; font-size: 1.15rem; }
-.aws-mark { color: #B45309; background: #FEF3C7; font-size: 0.9rem; letter-spacing: -0.06em; }
-.git-mark { color: #C2410C; background: #FFEDD5; font-size: 1.15rem; }
+.figma-mark { color: #7C3AED; background: #FAE8FF; }
+.sql-mark { color: #4F46E5; background: #E0E7FF; font-size: 1.125rem; }
+.aws-mark { color: #B45309; background: #FEF3C7; font-size: 0.875rem; letter-spacing: -0.06em; }
+.git-mark { color: #B45309; background: #FFEDD5; font-size: 1.125rem; }
 
 .skill-logo-name {
-  overflow: hidden;
+  overflow: visible;
   max-width: 100%;
   color: var(--color-text-primary);
-  font-size: 0.82rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .skill-logo-type {
   color: var(--color-text-muted);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
 }
 
 .skill-showcase-footer {
@@ -3616,7 +3623,7 @@ div[id].cp-section {
   gap: 0.5rem;
   margin-top: 1.25rem;
   color: var(--color-text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
 }
 
 .skill-footer-dot {
@@ -3719,14 +3726,14 @@ div[id].cp-section {
 .skill-dialog-section-heading h3,
 .skill-practice-card h3 { margin: 0; color: #172033; font-size: 1rem; font-weight: 750; }
 .skill-progress-label { color: #64748B; font-size: 0.75rem; white-space: nowrap; }
-.skill-progress-track { height: 7px; margin-bottom: 0.65rem; overflow: hidden; border-radius: 999px; background: #E9EDF5; }
+.skill-progress-track { height: 7px; margin-bottom: 0.65rem; overflow: hidden; border-radius: var(--radius-pill); background: #E9EDF5; }
 .skill-progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #4F46E5, #06B6D4); transition: width 0.2s ease; }
 .skill-learning-steps { display: grid; gap: 0.35rem; margin: 0 0 1.25rem; padding: 0; list-style: none; }
-.skill-learning-steps label { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem; border: 1px solid #E8ECF3; border-radius: 11px; color: #334155; cursor: pointer; line-height: 1.45; }
+.skill-learning-steps label { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem; border: 1px solid #E8ECF3; border-radius: var(--radius-md); color: #334155; cursor: pointer; line-height: 1.45; }
 .skill-learning-steps label:has(input:checked) { border-color: #A7F3D0; background: #F0FDF4; }
 .skill-learning-steps input { flex: 0 0 auto; margin-top: 0.15rem; accent-color: #4F46E5; }
 .skill-step-number { display: grid; width: 22px; height: 22px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #EEF2FF; color: #4338CA; font-size: 0.75rem; font-weight: 800; }
-.skill-practice-card { padding: 1rem; border: 1px solid #DDE5FF; border-radius: 14px; background: linear-gradient(135deg, #F5F7FF, #F8FAFC); }
+.skill-practice-card { padding: 1rem; border: 1px solid #DDE5FF; border-radius: var(--radius-lg); background: linear-gradient(135deg, #F5F7FF, #F8FAFC); }
 .skill-practice-card .skill-showcase-eyebrow { margin-bottom: 0.3rem; }
 .skill-practice-card p { margin: 0.4rem 0 0; color: #475569; font-size: 0.88rem; line-height: 1.5; }
 .skill-resource-links { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1rem; }
@@ -3936,6 +3943,7 @@ div[id].cp-section {
 }
 
 
+/* --- Module: roadmap.css --- */
 /* ==========================================================================
    DheePath — Learning Roadmap Stylesheet (roadmap.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
@@ -5706,6 +5714,7 @@ div[id].cp-section {
 
 
 
+/* --- Module: dashboard.css --- */
 /* ==========================================================================
    DheePath — Student Dashboard Stylesheet (dashboard.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
@@ -8392,6 +8401,7 @@ body.modal-open .cp-chat-card {
 
 
 
+/* --- Module: chat.css --- */
 /* ==========================================================================
    DheePath — Student-Portal AI Career Mentor (chat.css)
    Enterprise Student Portal Aesthetics · Indigo, Violet & Emerald Accents
@@ -8460,7 +8470,7 @@ body.modal-open .cp-chat-card {
   background: rgba(255, 255, 255, 0.22);
   color: #FFFFFF;
   padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  border-radius: 9999px;
   margin-left: 0.5rem;
   letter-spacing: 0.04em;
   display: inline-flex;
@@ -8602,9 +8612,9 @@ body.modal-open .cp-chat-trigger {
   max-height: calc(100vh - 105px);
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.05);
-  display: flex;
+  display: none !important;
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
@@ -8615,6 +8625,7 @@ body.modal-open .cp-chat-trigger {
 }
 
 .cp-chat-drawer.open {
+  display: flex !important;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -8769,7 +8780,7 @@ body.modal-open .cp-chat-trigger {
 .cp-topic-pill {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 999px;
+  border-radius: 9999px;
   color: #475569;
   font-size: 0.76rem;
   font-weight: 600;
@@ -8883,7 +8894,7 @@ body.modal-open .cp-chat-trigger {
   background: #EEF2FF;
   color: #4338CA;
   border: 1px solid #E0E7FF;
-  border-radius: 999px;
+  border-radius: 9999px;
   padding: 0.08rem 0.45rem;
   display: inline-flex;
   align-items: center;
@@ -9072,7 +9083,7 @@ body.modal-open .cp-chat-trigger {
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.32rem 0.75rem;
-  border-radius: 999px;
+  border-radius: 9999px;
   text-decoration: none !important;
   margin: 0.25rem 0.25rem 0.25rem 0;
   box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
@@ -9206,7 +9217,7 @@ body.modal-open .cp-chat-trigger {
 .cp-followup-pill {
   background: #FFFFFF;
   border: 1px solid #C7D2FE;
-  border-radius: 999px;
+  border-radius: 9999px;
   color: #4338CA;
   font-size: 0.76rem;
   font-weight: 600;
@@ -9445,6 +9456,7 @@ body.modal-open .cp-chat-trigger {
 }
 
 
+/* --- Module: radial-glow-button.css --- */
 /* ==========================================================================
    DheePath — EduTech Radial Button (radial-glow-button.css)
    Clean Indigo & Blue Primary CTA Micro-interaction
@@ -9504,6 +9516,7 @@ a.rg-button:active {
 }
 
 
+/* --- Module: notch-navbar.css --- */
 /* ==========================================================================
    DheePath — EduTech Dynamic Navbar (notch-navbar.css)
    Ultra-Premium Floating Glass Island · High-End Design · Responsive
@@ -10287,6 +10300,7 @@ body.assessment-page .assessment-layout {
 
 
 
+/* --- Module: animated-icons.css --- */
 /* ==========================================================================
    DheePath — 21st.dev Animated Icons System (animated-icons.css)
    Micro-animations · State Transitions · Spring Physics · Ambient Glow
@@ -10575,6 +10589,7 @@ body.assessment-page .assessment-layout {
 }
 
 
+/* --- Module: typing-character-fx.css --- */
 /* ==========================================================================
    typing-character-fx.css — Keystroke Character Pop-up Micro-Animation
    DheePath · Enterprise Edition
@@ -10695,6 +10710,7 @@ body.assessment-page .assessment-layout {
 }
 
 
+/* --- Module: quiz.css --- */
 /* ==========================================================================
    DheePath — Adaptive Skill Reality-Check Micro-Quiz (quiz.css)
    Clean Modern Light Theme · Indigo, Emerald & Amber Accents
@@ -11941,4 +11957,775 @@ body.assessment-page .assessment-layout {
   40%, 80% { transform: translateX(6px); background: #DC2626 !important; color: white !important; }
 }
 
+
+
+
+/* --- Module: scroll-dissolve.css --- */
+/* ==========================================================================
+   DheePath — Scroll Dissolve Transformation Section (scroll-dissolve.css)
+   Clean Modern EduTech Transformation · Indigo & Blue Highlights
+   ========================================================================== */
+
+.cp-transformation-section {
+  position: relative;
+  padding: 5rem 0 6rem;
+  background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 50%, #F8FAFC 100%);
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+  overflow: hidden;
+  scroll-margin-top: calc(var(--notch-nav-height, 58px) + 2.5rem);
+}
+
+.transformation-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+/* Glass Viewport Container (Clean Browser/Canvas Window) */
+.transformation-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 12 / 8;
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  box-shadow: 0 8px 16px -6px rgba(15, 23, 42, 0.12), 0 0 0 1px #F1F5F9;
+  overflow: hidden;
+}
+
+/* Comparison Layers */
+.dissolve-fallback-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.dissolve-fallback-layer.front {
+  z-index: 2;
+}
+
+.dissolve-fallback-layer.back {
+  z-index: 1;
+}
+
+/* Window Navigation Dots */
+.transformation-window-dots {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 11;
+  pointer-events: none;
+}
+
+.transformation-window-dots .w-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.w-dot.w-red { background: #EF4444; opacity: 0.85; }
+.w-dot.w-yellow { background: #F59E0B; opacity: 0.85; }
+.w-dot.w-green { background: #10B981; opacity: 0.85; }
+
+/* Floating Status Pills (Hidden: native SVG vector headers provide seamless dissolve badges) */
+.transformation-overlay-bar {
+  display: none !important;
+}
+
+.transformation-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid #E2E8F0;
+  border-radius: 9999px;
+  padding: 0.35rem 0.95rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #0F172A;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.transformation-status-pill.pill-before {
+  border-color: #FECDD3;
+  color: #DC2626;
+  background: #FFF1F2;
+}
+
+.transformation-status-pill.pill-after {
+  border-color: #C7D2FE;
+  color: #4338CA;
+  background: #EEF2FF;
+}
+
+.transformation-status-pill .pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.pill-before .pill-dot {
+  background: #EF4444;
+}
+
+.pill-after .pill-dot {
+  background: #4F46E5;
+}
+
+/* Interactive Controls & Scrubber */
+.transformation-controls {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.transformation-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 9999px;
+  padding: 0.35rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.btn-toggle-state {
+  border: none;
+  background: transparent;
+  color: #64748B;
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.55rem 1.35rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-toggle-state:hover {
+  color: #0F172A;
+}
+
+.btn-toggle-state.active {
+  background: #4F46E5;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  font-weight: 700;
+}
+
+.btn-toggle-state.active i {
+  color: #FFFFFF !important;
+}
+
+.transformation-slider-wrap {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.transformation-slider-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.transformation-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #94A3B8 0%, #6366F1 50%, #4338CA 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.transformation-slider:focus-visible {
+  outline: 3px solid #4F46E5;
+  outline-offset: 3px;
+}
+
+.transformation-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 4px solid #4338CA;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28);
+  cursor: grab;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.transformation-slider::-webkit-slider-thumb:hover,
+.transformation-slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.32), 0 4px 12px rgba(15, 23, 42, 0.38);
+  cursor: grabbing;
+}
+
+.transformation-slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 4px solid #4338CA;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28);
+  cursor: grab;
+}
+
+@media (max-width: 768px) {
+  .transformation-viewport {
+    aspect-ratio: 12 / 8;
+  }
+  .transformation-window-dots {
+    display: none;
+  }
+  .transformation-overlay-bar {
+    left: 10px;
+    top: 10px;
+    right: 10px;
+  }
+  .transformation-status-pill {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+  .transformation-slider-wrap {
+    padding: 0.5rem 1rem;
+    gap: 0.75rem;
+  }
+}
+
+
+/* --- Module: usability-overrides.css --- */
+/* ==========================================================================
+   DheePath — Floto Usability Heuristics Normalization Overrides
+   Resolves all 13 Usability Heuristic Issues (Score 90+)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Consistent Type Scale (Aim: <= 10 distinct font sizes)
+   Strict 8-step scale: 13px, 14px, 16px, 18px, 20px, 24px, 32px, 44px
+   -------------------------------------------------------------------------- */
+:root {
+  --fs-xs: 0.8125rem;  /* 13px: badges, tags, pills, auxiliary captions */
+  --fs-sm: 0.875rem;   /* 14px: secondary copy, small buttons, sublabels */
+  --fs-base: 1rem;     /* 16px: standard body copy, inputs, action buttons */
+  --fs-md: 1.125rem;   /* 18px: lead text, subheaders */
+  --fs-lg: 1.25rem;    /* 20px: card titles, h4 */
+  --fs-xl: 1.5rem;     /* 24px: h3, section subtitles */
+  --fs-2xl: 2rem;      /* 32px: h2, section titles */
+  --fs-3xl: 2.75rem;   /* 44px: h1, hero title */
+
+  /* 2. Inconsistent Corner Radii (Aim: <= 6 distinct radii) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+  --radius-circle: 50%;
+}
+
+/* Force standard font sizes across components */
+small,
+.small,
+.badge,
+.section-tag,
+.atlas-kicker,
+.live-status-badge,
+.skill-showcase-eyebrow,
+.skill-count,
+.skill-logo-name,
+.skill-logo-type,
+.skill-showcase-footer,
+.transformation-status-pill,
+.transformation-slider-label,
+.cp-tag,
+.score-factor .factor-label,
+.cp-chat-footer-telemetry,
+.career-card-badge,
+.stat-label,
+.hero-trust-bar,
+.hero-trust-bar *,
+.hero-trust-badge,
+.hero-trust-badge *,
+.trust-strip,
+.trust-strip *,
+.hero-metric-text,
+.atlas-coordinate,
+.step-number,
+.step-badge,
+.trigger-badge,
+.cp-meta-badge {
+  font-size: var(--fs-xs) !important; /* 13px */
+}
+
+.solution-desc,
+.step-desc,
+.solution-features span,
+.footer-heading,
+.footer-link,
+.footer-links a,
+.notch-nav-island a,
+.notch-nav-link,
+.nav-link,
+.notch-nav-links a,
+.trigger-label,
+.aws-mark,
+.btn,
+.cp-btn-primary,
+.cp-btn-outline,
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state {
+  font-size: var(--fs-sm) !important; /* 14px */
+}
+
+body,
+p,
+.hero-subtitle,
+.career-card-desc,
+.track-block-header p,
+.text-secondary,
+.text-muted,
+.skill-logo-mark {
+  font-size: var(--fs-base) !important; /* 16px */
+  color: var(--color-text-secondary) !important; /* #475569 */
+}
+
+.skill-count strong,
+.react-mark,
+.sql-mark,
+.git-mark {
+  font-size: var(--fs-xl) !important; /* 24px */
+}
+
+.display-4 {
+  font-size: var(--fs-3xl) !important; /* 44px */
+}
+
+.text-ink,
+.text-dark,
+h1, h2, h3, h4, h5, h6,
+.hero-title,
+.section-title,
+.career-card-title,
+strong,
+b {
+  color: var(--color-text-primary) !important; /* #0F172A */
+}
+
+.text-primary,
+.text-indigo,
+a:not(.btn):not(.domain-tab-btn):not(.pricing-tab-btn) {
+  color: var(--color-indigo-600) !important; /* #4F46E5 */
+}
+
+.text-success,
+.text-emerald,
+.badge-emerald,
+.badge-leaf {
+  color: #15803D !important;
+}
+
+.text-warning,
+.text-gold,
+.badge-gold {
+  color: #B45309 !important;
+}
+
+.text-teal,
+.text-cyan,
+.badge-cyan {
+  color: #0891B2 !important;
+}
+
+.text-purple,
+.badge-purple {
+  color: #7C3AED !important;
+}
+
+.js-mark {
+  color: #B45309 !important;
+}
+
+.live-status-badge {
+  color: var(--color-indigo-600) !important;
+}
+
+.btn,
+.cp-btn-primary,
+.cp-btn-outline,
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state,
+.cp-chat-trigger {
+  font-weight: 600 !important;
+}
+
+.hero-title {
+  font-size: var(--fs-3xl) !important; /* 44px */
+}
+
+.section-title,
+.stat-number,
+h2,
+.h2 {
+  font-size: var(--fs-2xl) !important; /* 32px */
+}
+
+h3,
+.h3,
+.track-block-header h3 {
+  font-size: var(--fs-xl) !important; /* 24px */
+}
+
+h4,
+.h4,
+.career-card-title {
+  font-size: var(--fs-lg) !important; /* 20px */
+}
+
+.brand-name,
+.brand-accent {
+  font-size: var(--fs-md) !important; /* 18px */
+}
+
+/* --------------------------------------------------------------------------
+   3. Corner Radii Consolidation (Aim: <= 6 distinct radii: 6px, 10px, 16px, 9999px, 50%)
+   -------------------------------------------------------------------------- */
+.skill-logo-mark,
+.btn-icon,
+.portal-badge,
+.input-group-text,
+.brand-logo-img,
+img {
+  border-radius: var(--radius-sm) !important; /* 6px */
+}
+
+.skill-logo-card,
+.career-card,
+.recommendation-card,
+.score-factor,
+.match-score-badge,
+.brand-icon,
+.solution-icon,
+.rg-button,
+.rounded-3 {
+  border-radius: var(--radius-md) !important; /* 10px */
+}
+
+.skill-showcase,
+.track-block-header,
+.card,
+.cp-chat-drawer,
+.transformation-viewport {
+  border-radius: var(--radius-lg) !important; /* 16px */
+}
+
+.badge,
+.section-tag,
+.atlas-kicker,
+.live-status-badge,
+.btn,
+.cp-btn-primary,
+.cp-btn-outline,
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state,
+.transformation-slider-wrap,
+.transformation-status-pill,
+.pricing-tablist-container {
+  border-radius: var(--radius-pill) !important;
+}
+
+.pulse-dot,
+.skill-footer-dot,
+.pill-dot,
+.cp-creepy-pupil,
+.cp-meta-avatar {
+  border-radius: var(--radius-circle) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Button Styles Consolidation (Aim: <= 5 distinct styles)
+   Variant 1: Primary Pill Button (.cp-btn-primary, .btn-primary)
+   Variant 2: Secondary / Outline Pill Button (.cp-btn-outline, .btn-outline)
+   Variant 3: Segmented Pill Tab (.domain-tab-btn, .pricing-tab-btn, .track-toggle-btn)
+   Variant 4: Small Action Pill (.btn-sm)
+   Variant 5: Circular Icon Button (.btn-icon, .cp-chat-btn-icon)
+   -------------------------------------------------------------------------- */
+.btn-primary,
+.cp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem !important;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm) !important;
+  font-weight: 600;
+  border-radius: var(--radius-pill) !important;
+  background: var(--gradient-primary);
+  color: #FFFFFF !important;
+  border: none;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary:hover,
+.cp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+  color: #FFFFFF !important;
+}
+
+.btn-outline,
+.cp-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem !important;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm) !important;
+  font-weight: 600;
+  border-radius: var(--radius-pill) !important;
+  border: 1.5px solid var(--color-border) !important;
+  background: #FFFFFF !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-outline:hover,
+.cp-btn-outline:hover {
+  border-color: #CBD5E1 !important;
+  background: var(--color-surface-muted) !important;
+  color: var(--color-text-primary) !important;
+  transform: translateY(-2px);
+}
+
+.btn-sm,
+.cp-btn-primary.btn-sm,
+.cp-btn-outline.btn-sm {
+  padding: 0.45rem 1rem !important;
+  font-size: var(--fs-xs) !important;
+}
+
+.domain-tab-btn,
+.pricing-tab-btn,
+.track-toggle-btn,
+.btn-toggle-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.15rem !important;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm) !important;
+  font-weight: 600;
+  border-radius: var(--radius-pill) !important;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.domain-tab-btn:hover,
+.pricing-tab-btn:hover,
+.track-toggle-btn:hover,
+.btn-toggle-state:hover {
+  color: var(--color-text-primary);
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.domain-tab-btn.active,
+.pricing-tab-btn.active,
+.btn-toggle-state.active {
+  background: #FFFFFF !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-weight: 700;
+}
+
+.track-toggle-btn {
+  border: 1.5px solid var(--color-border) !important;
+  background: #FFFFFF !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Standardized 'Assess' Actions
+   -------------------------------------------------------------------------- */
+.track-block-header .cp-btn-primary {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  color: #FFFFFF !important;
+}
+
+.career-card a.cp-btn-outline {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   6. AI Career Mentor Chat Collapsed by Default (Major Density/Dark Pattern)
+   -------------------------------------------------------------------------- */
+.cp-chat-drawer {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cp-chat-drawer.open {
+  display: flex !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   7. Pathways Section Equal Heights & Progressive Disclosure
+   -------------------------------------------------------------------------- */
+.career-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.career-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.career-card-top {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.career-grid.is-collapsed .career-card:nth-child(n+4) {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Unclipped Text (Fix Truncation)
+   -------------------------------------------------------------------------- */
+.skill-logo-name {
+  overflow: visible !important;
+  max-width: 100% !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Long All-Caps Removal
+   -------------------------------------------------------------------------- */
+.section-tag,
+.atlas-kicker,
+.live-status-badge {
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* --------------------------------------------------------------------------
+   10 & 11. Body Text Small (< 12px) Elimination
+   -------------------------------------------------------------------------- */
+.skill-logo-type,
+.skill-showcase-footer,
+.transformation-status-pill,
+.transformation-slider-label {
+  font-size: var(--fs-xs) !important; /* 13px */
+}
+
+/* --------------------------------------------------------------------------
+   12. Skill Grid in Hero Hierarchy De-Cluttering
+   -------------------------------------------------------------------------- */
+.skill-showcase {
+  background: var(--color-surface) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. Transformation Slider Clear Interactive Thumb & Focus Affordance
+   -------------------------------------------------------------------------- */
+.transformation-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px !important;
+  border-radius: var(--radius-pill) !important;
+  background: linear-gradient(to right, #94A3B8 0%, #6366F1 50%, #4338CA 100%) !important;
+  outline: none;
+  cursor: pointer;
+}
+
+.transformation-slider:focus-visible {
+  outline: 3px solid #4F46E5 !important;
+  outline-offset: 3px;
+}
+
+.transformation-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: var(--radius-circle) !important;
+  background: #FFFFFF !important;
+  border: 4px solid #4338CA !important;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28) !important;
+  cursor: grab !important;
+}
+
+.transformation-slider::-moz-range-thumb {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: var(--radius-circle) !important;
+  background: #FFFFFF !important;
+  border: 4px solid #4338CA !important;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28) !important;
+  cursor: grab !important;
+}
 

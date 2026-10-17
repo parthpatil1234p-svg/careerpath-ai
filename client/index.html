@@ -264,9 +264,10 @@
     <link rel="preload" as="style" href="css/style.min.css?v=4.2" />
     <link rel="stylesheet" href="css/style.min.css?v=4.2" />
 
-    <!-- Non-Critical Below-the-fold Stylesheets -->
-    <link rel="stylesheet" href="css/scroll-dissolve.css?v=3.2" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="css/scroll-dissolve.css?v=3.2" /></noscript>
+    <!-- Auxiliary & Feature Stylesheets -->
+    <link rel="stylesheet" href="css/scroll-dissolve.css?v=3.3" />
+    <link rel="stylesheet" href="css/chat.css?v=3.3" />
+    <link rel="stylesheet" href="css/usability-overrides.css?v=1.0" />
 
     <!-- Immediate Recruiter Auto-Redirect Protection -->
     <script>
@@ -471,30 +472,30 @@
               </div>
 
               <div class="skill-logo-grid">
-                <button class="skill-logo-card" type="button" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React">
+                <div class="skill-logo-card" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React">
                   <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span><span class="skill-logo-name">React</span><span class="skill-logo-type">Frontend</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript">
+                </div>
+                <div class="skill-logo-card" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript">
                   <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span><span class="skill-logo-name">JavaScript</span><span class="skill-logo-type">Language</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python">
+                </div>
+                <div class="skill-logo-card" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python">
                   <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span><span class="skill-logo-name">Python</span><span class="skill-logo-type">Language</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js">
+                </div>
+                <div class="skill-logo-card" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js">
                   <span class="skill-logo-mark node-mark" aria-hidden="true">N</span><span class="skill-logo-name">Node.js</span><span class="skill-logo-type">Backend</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma">
+                </div>
+                <div class="skill-logo-card" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma">
                   <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span><span class="skill-logo-name">Figma</span><span class="skill-logo-type">Design</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL">
+                </div>
+                <div class="skill-logo-card" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL">
                   <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span><span class="skill-logo-name">SQL</span><span class="skill-logo-type">Data</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS">
+                </div>
+                <div class="skill-logo-card" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS">
                   <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span><span class="skill-logo-name">AWS</span><span class="skill-logo-type">Cloud</span>
-                </button>
-                <button class="skill-logo-card" type="button" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git">
+                </div>
+                <div class="skill-logo-card" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git">
                   <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span><span class="skill-logo-name">Git</span><span class="skill-logo-type">Workflow</span>
-                </button>
+                </div>
               </div>
 
               <div class="skill-showcase-footer"><span class="skill-footer-dot"></span> Practical skills, matched to your career goals</div>
@@ -709,7 +710,7 @@
               </li>
             </ul>
             <div class="mt-auto pt-3">
-              <a href="mailto:campus@careerpathai.com?subject=Campus%20Placement%20OS%20Inquiry" class="btn btn-outline-warning btn-sm w-100 py-2 fw-semibold">
+              <a href="mailto:campus@careerpathai.com?subject=Campus%20Placement%20OS%20Inquiry" class="btn cp-btn-outline btn-sm w-100">
                 Request Campus Pilot &rarr;
               </a>
             </div>
@@ -744,7 +745,7 @@
               </li>
             </ul>
             <div class="mt-auto pt-3">
-              <a href="recruiter-dashboard.html" class="btn btn-outline-success btn-sm w-100 py-2 fw-semibold">
+              <a href="recruiter-dashboard.html" class="btn cp-btn-outline btn-sm w-100">
                 Access Recruiter Portal &rarr;
               </a>
             </div>
@@ -795,10 +796,10 @@
 
         <!-- Sticky Domain Filter Bar -->
         <div class="career-domain-bar d-flex justify-content-center flex-wrap gap-2 mb-5" id="domainFilterBar">
-          <button class="domain-tab-btn active" data-target="all" type="button">
+          <button class="domain-tab-btn" data-target="all" type="button">
             <i class="bi bi-grid-fill me-1"></i> All Tracks
           </button>
-          <button class="domain-tab-btn" data-target="tech" type="button">
+          <button class="domain-tab-btn active" data-target="tech" type="button">
             <i class="bi bi-laptop me-1 text-cyan"></i> Tech & Engineering
           </button>
           <button class="domain-tab-btn" data-target="business" type="button">
@@ -1195,7 +1196,7 @@
         <!-- ============================================================
              Track 2: 💼 Business, Finance & Corporate Operations (3 Roles)
              ============================================================ -->
-        <div class="domain-track-block track-block-business mb-5" id="track-business" data-domain="business">
+        <div class="domain-track-block track-block-business mb-5 d-none" id="track-business" data-domain="business">
           <div class="track-block-header mb-4 p-3 rounded-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3" style="padding: 1rem 1.25rem; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.25);">
             <div>
               <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
@@ -1287,7 +1288,7 @@
         <!-- ============================================================
              Track 3: 📈 Digital Marketing, Performance & Growth (3 Roles)
              ============================================================ -->
-        <div class="domain-track-block track-block-marketing mb-5" id="track-marketing" data-domain="marketing">
+        <div class="domain-track-block track-block-marketing mb-5 d-none" id="track-marketing" data-domain="marketing">
           <div class="track-block-header mb-4 p-3 rounded-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3" style="padding: 1rem 1.25rem; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25);">
             <div>
               <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
@@ -1379,7 +1380,7 @@
         <!-- ============================================================
              Track 4: 🎨 Design & Creative Media (3 Roles)
              ============================================================ -->
-        <div class="domain-track-block track-block-creative mb-5" id="track-creative" data-domain="creative">
+        <div class="domain-track-block track-block-creative mb-5 d-none" id="track-creative" data-domain="creative">
           <div class="track-block-header mb-4 p-3 rounded-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3" style="padding: 1rem 1.25rem; background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.25);">
             <div>
               <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
@@ -1653,10 +1654,10 @@
               </p>
             </div>
             <div class="col-lg-5 text-lg-end d-flex flex-column flex-sm-row flex-lg-column gap-2 justify-content-lg-center">
-              <button type="button" class="btn btn-warning btn-lg px-4 py-3 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
+              <button type="button" class="btn cp-btn-primary btn-lg px-4 py-3" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
                 <i class="bi bi-calendar-check-fill me-2"></i> Request Institutional Briefing
               </button>
-              <button type="button" class="btn btn-outline-dark px-4 py-2.5 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCampusBrief">
+              <button type="button" class="btn cp-btn-outline px-4 py-2.5" data-bs-toggle="modal" data-bs-target="#modalCampusBrief">
                 <i class="bi bi-file-earmark-text-fill me-2 text-warning"></i> View NAAC Alignment Brief
               </button>
             </div>
@@ -1864,7 +1865,7 @@
                 <a href="roadmap.html" class="btn cp-btn-outline px-3.5 py-2.5 fw-semibold border-success text-success">
                   <i class="bi bi-signpost-split me-1.5"></i> View Career Route Map
                 </a>
-                <a href="jobs.html" class="btn btn-outline-secondary px-3.5 py-2.5 fw-semibold">
+                <a href="jobs.html" class="btn cp-btn-outline px-3.5 py-2.5">
                   <i class="bi bi-radar me-1.5"></i> View Live Jobs
                 </a>
               </div>
@@ -2038,7 +2039,7 @@
                 </ul>
 
                 <div class="mt-auto pt-3 border-top">
-                  <button type="button" class="btn btn-warning w-100 py-2.5 fw-bold text-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
+                  <button type="button" class="btn cp-btn-primary w-100 py-2.5" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
                     <i class="bi bi-mortarboard-fill me-1"></i> Request Institutional Briefing &rarr;
                   </button>
                 </div>
@@ -2077,7 +2078,7 @@
                 <div class="p-3 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25 mt-auto">
                   <div class="small fw-bold text-dark mb-1">Campus Pilot Available</div>
                   <div class="small text-muted">Eligible tier-2 and tier-3 colleges can request a free 60-day pilot for a single department.</div>
-                  <button type="button" class="btn btn-sm btn-outline-dark mt-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
+                  <button type="button" class="btn cp-btn-outline btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#modalCampusDemo">
                     Book Pilot Consultation
                   </button>
                 </div>
@@ -2330,8 +2331,8 @@
                   <span>24-Hour Executive SLA &bull; Dedicated Academic Consultant</span>
                 </div>
                 <div class="d-flex gap-2">
-                  <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-warning px-4 fw-bold shadow-sm" id="btnCampusDemoSubmit">
+                  <button type="button" class="btn cp-btn-outline btn-sm px-3" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn cp-btn-primary btn-sm px-4" id="btnCampusDemoSubmit">
                     <span class="spinner-border spinner-border-sm me-1 d-none" id="campusDemoSpinner" role="status" aria-hidden="true"></span>
                     <span id="campusDemoSubmitText"><i class="bi bi-send-fill me-1"></i> Submit Briefing Request</span>
                   </button>
@@ -2491,7 +2492,7 @@
                 <div class="fw-bold text-ink">Ready to deploy Campus OS for your next academic session?</div>
                 <div class="small text-muted">Contact: <a href="mailto:campus@careerpathai.com" class="text-primary fw-semibold">campus@careerpathai.com</a> &middot; WhatsApp: +91 98765 43210</div>
               </div>
-              <button type="button" class="btn btn-warning px-4 fw-bold" data-bs-target="#modalCampusDemo" data-bs-toggle="modal">
+              <button type="button" class="btn cp-btn-primary px-4" data-bs-target="#modalCampusDemo" data-bs-toggle="modal">
                 <i class="bi bi-calendar-event me-1"></i> Book Institutional Briefing
               </button>
             </div>

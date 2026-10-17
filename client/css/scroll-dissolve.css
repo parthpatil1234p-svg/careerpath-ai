@@ -89,7 +89,7 @@
   border-radius: 9999px;
   padding: 0.35rem 0.95rem;
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: #0F172A;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
@@ -188,7 +188,7 @@
 
 .transformation-slider-label {
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: #475569;
   white-space: nowrap;
@@ -200,13 +200,13 @@
   width: 100%;
   height: 14px;
   border-radius: 9999px;
-  background: linear-gradient(to right, #F87171 0%, #818CF8 50%, #4F46E5 100%);
+  background: linear-gradient(to right, #94A3B8 0%, #6366F1 50%, #4338CA 100%);
   outline: none;
   cursor: pointer;
 }
 
 .transformation-slider:focus-visible {
-  outline: 2px solid #4F46E5;
+  outline: 3px solid #4F46E5;
   outline-offset: 3px;
 }
 
@@ -217,8 +217,8 @@
   height: 28px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 3.5px solid #4F46E5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.25);
+  border: 4px solid #4338CA;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28);
   cursor: grab;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -226,7 +226,7 @@
 .transformation-slider::-webkit-slider-thumb:hover,
 .transformation-slider::-webkit-slider-thumb:active {
   transform: scale(1.15);
-  box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.32), 0 4px 12px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.32), 0 4px 12px rgba(15, 23, 42, 0.38);
   cursor: grabbing;
 }
 
@@ -235,8 +235,8 @@
   height: 28px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 3.5px solid #4F46E5;
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.25);
+  border: 4px solid #4338CA;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.22), 0 3px 8px rgba(15, 23, 42, 0.28);
   cursor: grab;
 }
 
@@ -253,8 +253,8 @@
     right: 10px;
   }
   .transformation-status-pill {
-    padding: 0.25rem 0.65rem;
-    font-size: 0.68rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
   }
   .transformation-slider-wrap {
     padding: 0.5rem 1rem;

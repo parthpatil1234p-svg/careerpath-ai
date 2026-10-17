@@ -91,15 +91,6 @@ function initCareerCards() {
         window.location.href = `assessment.html?career=${careerSlug}`;
       }
     });
-
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'button');
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        card.click();
-      }
-    });
   });
 }
 

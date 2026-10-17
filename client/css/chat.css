@@ -66,7 +66,7 @@
   background: rgba(255, 255, 255, 0.22);
   color: #FFFFFF;
   padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  border-radius: 9999px;
   margin-left: 0.5rem;
   letter-spacing: 0.04em;
   display: inline-flex;
@@ -208,9 +208,9 @@ body.modal-open .cp-chat-trigger {
   max-height: calc(100vh - 105px);
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.05);
-  display: flex;
+  display: none !important;
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
@@ -221,6 +221,7 @@ body.modal-open .cp-chat-trigger {
 }
 
 .cp-chat-drawer.open {
+  display: flex !important;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -375,7 +376,7 @@ body.modal-open .cp-chat-trigger {
 .cp-topic-pill {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 999px;
+  border-radius: 9999px;
   color: #475569;
   font-size: 0.76rem;
   font-weight: 600;
@@ -489,7 +490,7 @@ body.modal-open .cp-chat-trigger {
   background: #EEF2FF;
   color: #4338CA;
   border: 1px solid #E0E7FF;
-  border-radius: 999px;
+  border-radius: 9999px;
   padding: 0.08rem 0.45rem;
   display: inline-flex;
   align-items: center;
@@ -678,7 +679,7 @@ body.modal-open .cp-chat-trigger {
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.32rem 0.75rem;
-  border-radius: 999px;
+  border-radius: 9999px;
   text-decoration: none !important;
   margin: 0.25rem 0.25rem 0.25rem 0;
   box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
@@ -812,7 +813,7 @@ body.modal-open .cp-chat-trigger {
 .cp-followup-pill {
   background: #FFFFFF;
   border: 1px solid #C7D2FE;
-  border-radius: 999px;
+  border-radius: 9999px;
   color: #4338CA;
   font-size: 0.76rem;
   font-weight: 600;
