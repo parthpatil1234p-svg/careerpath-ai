@@ -13666,4 +13666,34 @@ img {
   }
 }
 
+/* --------------------------------------------------------------------------
+   Bootstrap Background Opacity Extensions & Soft Badge Contrast Fallbacks
+   -------------------------------------------------------------------------- */
+.bg-opacity-10 { --bs-bg-opacity: 0.10 !important; }
+.bg-opacity-15 { --bs-bg-opacity: 0.15 !important; }
+.bg-opacity-20 { --bs-bg-opacity: 0.20 !important; }
+.bg-opacity-25 { --bs-bg-opacity: 0.25 !important; }
+
+/* Ensure soft badges with bg-success & text-success always maintain high-contrast light mint background */
+.badge.text-success.bg-success,
+.badge.bg-success.bg-opacity-10,
+.badge.bg-success.bg-opacity-15,
+.badge.bg-success.bg-opacity-20,
+.badge.bg-success.bg-opacity-25 {
+  background-color: rgba(22, 163, 74, 0.12) !important;
+  color: #15803D !important;
+  border-color: rgba(22, 163, 74, 0.25) !important;
+}
+
+/* Ensure soft badges with bg-warning & text-warning always maintain high-contrast light amber background */
+.badge.text-warning.bg-warning,
+.badge.bg-warning.bg-opacity-10,
+.badge.bg-warning.bg-opacity-15,
+.badge.bg-warning.bg-opacity-20,
+.badge.bg-warning.bg-opacity-25 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+  color: #B45309 !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
 

@@ -938,7 +938,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const pct = Math.round(activeMatch.progressPercentage || 0);
         routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-lightning-charge-fill me-1"></i> ACTIVE COURSE · ${escapeHtml(weekStr)} (${pct}% Tasks)</span>`;
       } else if (isGraduated) {
-        routeStatusBadge = `<span class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-50 font-mono"><i class="bi bi-patch-check-fill me-1"></i> CREDENTIAL VERIFIED · 100% MASTERED</span>`;
+        routeStatusBadge = `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-50 font-mono"><i class="bi bi-patch-check-fill me-1"></i> CREDENTIAL VERIFIED · 100% MASTERED</span>`;
       } else if (userActiveRoadmaps.length === 1 && !window.Auth?.isAdmin()) {
         if (isRelatedForSecondTrack) {
           routeStatusBadge = `<span class="badge badge-teal font-mono"><i class="bi bi-link-45deg me-1"></i> RELATED TRACK (2nd Slot Open)</span>`;
