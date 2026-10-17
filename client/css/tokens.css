@@ -119,7 +119,7 @@
   --shadow-glow-violet: none;
 
   /* ------------------------------------------------------------------------
-     6. Modern Sleek Typography Stacks (Zero-Clean: Standard Clean Numbers)
+     6. Modern Sleek Typography Stacks & Scale (Issue 1 Heuristic)
      ------------------------------------------------------------------------ */
   --font-heading: 'Outfit', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -127,14 +127,24 @@
   --font-code: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
   --font-serif: var(--font-heading);
 
+  /* Standard 8-Tier Modular Type Scale (Minimizes distinct font sizes < 10) */
+  --font-size-xs: 0.75rem;    /* 12px: Badges, timestamps, small tags */
+  --font-size-sm: 0.875rem;   /* 14px: Secondary captions, table data, sub-labels */
+  --font-size-base: 1rem;     /* 16px: Standard body copy, inputs, primary buttons */
+  --font-size-lg: 1.125rem;   /* 18px: Subheadings, highlighted cards */
+  --font-size-xl: 1.25rem;    /* 20px: Card titles, modal headers */
+  --font-size-2xl: 1.5rem;    /* 24px: Section subheadings */
+  --font-size-3xl: 2rem;      /* 32px: Section titles */
+  --font-size-display: 2.5rem;/* 40px: Hero headlines */
+
   /* ------------------------------------------------------------------------
-     7. Spacing & Geometric Radii
+     7. Spacing & Geometric Radii (Issue 3 Heuristic - 4 Core System Radii)
      ------------------------------------------------------------------------ */
   --radius-xs: 6px;
-  --radius-sm: 8px;                   /* Small controls: 8px */
-  --radius-md: 16px;                  /* Cards: 14–18px */
-  --radius-lg: 22px;                  /* Hero containers: 20–24px */
-  --radius-pill: 9999px;
+  --radius-sm: 6px;                   /* Small controls: 6px */
+  --radius-md: 10px;                  /* Controls, buttons, inputs: 10px */
+  --radius-lg: 16px;                  /* Cards, modals, containers: 16px */
+  --radius-pill: 9999px;              /* Segmented tabs, search bars, pills: 9999px */
 
   --container-max-width: 90vw;
   --container-narrow-width: 85vw;

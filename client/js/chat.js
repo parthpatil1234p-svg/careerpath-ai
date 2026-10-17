@@ -417,7 +417,8 @@
       }
     }
 
-    setTimeout(showQuestionPopup, 3000);
+    // Keep chat widget dormant as a small floating action button until explicit user action
+    // setTimeout(showQuestionPopup, 3000); (Removed unsolicited intrusive popup)
 
     bindEvents(trigger, drawer, dismissNudge);
     renderTopicSuggestions(activeTopic);

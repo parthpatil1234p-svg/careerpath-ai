@@ -1,6 +1,3 @@
-/* DheePath - Bundled Production Stylesheet (Zero @import Waterfall) */
-
-/* --- Module: tokens.css --- */
 /* ==========================================================================
    DheePath — EduTech Modern Design Tokens (tokens.css)
    Clean Modern Light Theme · Indigo, Blue & Cyan Accents
@@ -122,7 +119,7 @@
   --shadow-glow-violet: none;
 
   /* ------------------------------------------------------------------------
-     6. Modern Sleek Typography Stacks (Zero-Clean: Standard Clean Numbers)
+     6. Modern Sleek Typography Stacks & Scale (Issue 1 Heuristic)
      ------------------------------------------------------------------------ */
   --font-heading: 'Outfit', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -130,14 +127,24 @@
   --font-code: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
   --font-serif: var(--font-heading);
 
+  /* Standard 8-Tier Modular Type Scale (Minimizes distinct font sizes < 10) */
+  --font-size-xs: 0.75rem;    /* 12px: Badges, timestamps, small tags */
+  --font-size-sm: 0.875rem;   /* 14px: Secondary captions, table data, sub-labels */
+  --font-size-base: 1rem;     /* 16px: Standard body copy, inputs, primary buttons */
+  --font-size-lg: 1.125rem;   /* 18px: Subheadings, highlighted cards */
+  --font-size-xl: 1.25rem;    /* 20px: Card titles, modal headers */
+  --font-size-2xl: 1.5rem;    /* 24px: Section subheadings */
+  --font-size-3xl: 2rem;      /* 32px: Section titles */
+  --font-size-display: 2.5rem;/* 40px: Hero headlines */
+
   /* ------------------------------------------------------------------------
-     7. Spacing & Geometric Radii
+     7. Spacing & Geometric Radii (Issue 3 Heuristic - 4 Core System Radii)
      ------------------------------------------------------------------------ */
   --radius-xs: 6px;
-  --radius-sm: 8px;                   /* Small controls: 8px */
-  --radius-md: 16px;                  /* Cards: 14–18px */
-  --radius-lg: 22px;                  /* Hero containers: 20–24px */
-  --radius-pill: 9999px;
+  --radius-sm: 6px;                   /* Small controls: 6px */
+  --radius-md: 10px;                  /* Controls, buttons, inputs: 10px */
+  --radius-lg: 16px;                  /* Cards, modals, containers: 16px */
+  --radius-pill: 9999px;              /* Segmented tabs, search bars, pills: 9999px */
 
   --container-max-width: 90vw;
   --container-narrow-width: 85vw;
@@ -164,7 +171,7 @@
   --teal-subtle: var(--color-surface-cyan);
 }
 
-/* --- Module: base.css --- */
+
 /* ==========================================================================
    DheePath — Base & Typography (base.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
@@ -358,8 +365,8 @@ small, .small {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--color-indigo-700);
   background: var(--color-surface-indigo);
   border: 1px solid #C7D2FE;
@@ -448,7 +455,7 @@ small, .small {
   color: var(--color-cyan-600) !important;
 }
 
-/* --- Module: layout.css --- */
+
 /* ==========================================================================
    DheePath — Layout & Grid (layout.css)
    Clean Modern EduTech Layout · Max Width Constraints · Responsive
@@ -772,7 +779,7 @@ div[id].cp-section {
   color: var(--color-text-disabled);
 }
 
-/* --- Module: components.css --- */
+
 /* ==========================================================================
    DheePath — EduTech Component Design System (components.css)
    Clean Modern Aesthetics · Indigo, Blue & Cyan Accents
@@ -1060,7 +1067,7 @@ div[id].cp-section {
   color: #92400E !important;
   border: 1px solid #FCD34D !important;
   font-weight: 600 !important;
-  font-size: 0.72rem !important;
+  font-size: 0.8125rem !important;
   padding: 0.28rem 0.65rem !important;
   border-radius: var(--radius-pill) !important;
   display: inline-flex !important;
@@ -1074,7 +1081,7 @@ div[id].cp-section {
   color: #166534 !important;
   border: 1px solid #86EFAC !important;
   font-weight: 700 !important;
-  font-size: 0.72rem !important;
+  font-size: 0.8125rem !important;
   padding: 0.28rem 0.65rem !important;
   border-radius: var(--radius-pill) !important;
   display: inline-flex !important;
@@ -1652,7 +1659,7 @@ div[id].cp-section {
   color: var(--color-text-muted);
 }
 
-/* --- Module: pages.css --- */
+
 /* ==========================================================================
    DheePath - EduTech Page Styles (pages.css)
    Clean Modern Light Aesthetics | Indigo, Blue & Cyan Accents
@@ -1679,23 +1686,25 @@ div[id].cp-section {
 .hero-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 3rem;
+  gap: 2rem;
   align-items: center;
   position: relative;
   z-index: 1;
+  max-width: 1160px;
+  margin: 0 auto;
 }
 
 @media (min-width: 1200px) {
   .hero-grid {
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 3.5rem;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2.25rem;
   }
 }
 
 @media (max-width: 991px) {
   .hero-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
   }
 }
 
@@ -1864,6 +1873,39 @@ div[id].cp-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* Progressive Disclosure for Dense Career Catalogs (Issue 10) */
+.career-grid.is-collapsed .career-card:nth-child(n+4) {
+  display: none !important;
+}
+
+.track-toggle-wrap {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.track-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.55rem 1.35rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-border);
+  background: #FFFFFF;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.track-toggle-btn:hover {
+  border-color: #CBD5E1;
+  background: var(--color-surface-muted);
+  color: var(--color-text-primary);
 }
 
 @media (max-width: 575.98px) {
@@ -1884,11 +1926,18 @@ div[id].cp-section {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
   transition: all var(--transition-normal);
   cursor: pointer;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+}
+
+.career-card-top {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .career-card::before {
@@ -3170,6 +3219,35 @@ div[id].cp-section {
 }
 
 /* Commercial SaaS Pricing Section */
+.pricing-audience-nav {
+  transition: all 0.2s ease;
+}
+
+.pricing-tab-btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.pricing-tab-btn:hover {
+  color: #0F172A !important;
+}
+
+.pricing-panel {
+  animation: pricingFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pricingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3296,11 +3374,45 @@ div[id].cp-section {
   color: #CBD5E1;
 }
 
+/* Role-Specific Pricing Tab Switcher (Issue 13) */
+.pricing-tablist-container {
+  display: inline-flex;
+  gap: 4px;
+  background: #F1F5F9;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  padding: 4px;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.pricing-tab-btn {
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1.15rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.pricing-tab-btn:hover {
+  color: #0F172A;
+}
+
+.pricing-tab-btn.active {
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-weight: 700;
+}
 
 
-
-
-/* --- Module: three.css --- */
 /* ==========================================================================
    DheePath — Three.js EduTech Canvas & Clean Tooltips (three.css)
    Soft Indigo/Blue Canvas Canvas · Accessible HUD
@@ -3823,7 +3935,7 @@ div[id].cp-section {
   color: var(--color-text-muted);
 }
 
-/* --- Module: roadmap.css --- */
+
 /* ==========================================================================
    DheePath — Learning Roadmap Stylesheet (roadmap.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
@@ -3850,17 +3962,17 @@ div[id].cp-section {
   background: var(--gradient-primary);
 }
 
-/* 3D Roadmap Milestone Path Canvas Container */
-.roadmap-path-card {
+/* Student-Explainable Interactive Career Route Map */
+.student-route-card {
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
-.roadmap-path-card::before {
+.student-route-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -3868,15 +3980,403 @@ div[id].cp-section {
   right: 0;
   height: 3px;
   background: var(--gradient-primary);
+  z-index: 5;
 }
 
-#roadmap-path {
-  cursor: grab;
+.route-progress-strip {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
 }
 
-#roadmap-path:active {
-  cursor: grabbing;
+.route-track-progress {
+  background-color: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
 }
+
+.route-track-progress .bg-teal {
+  background: linear-gradient(90deg, #10B981, #00F2FE) !important;
+}
+
+/* Route Rail & Stations Track */
+.route-rail-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.route-rail-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.route-rail-container::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+
+.route-rail-container::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.student-route-track-wrapper {
+  position: relative;
+  min-width: max-content;
+  padding: 1.75rem 0.75rem 0.5rem 0.75rem;
+}
+
+/* Connecting Rail Line behind stations */
+.route-rail-line-bg {
+  position: absolute;
+  top: 48px;
+  left: 50px;
+  right: 50px;
+  height: 4px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.route-rail-line-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #00F2FE 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.route-stations-row {
+  display: flex;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 2;
+  align-items: stretch;
+}
+
+/* Single Route Station Column */
+.route-station {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  scroll-snap-align: start;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.route-station:hover {
+  transform: translateY(-2px);
+}
+
+/* Station Node Marker */
+.route-node-anchor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0.85rem;
+  z-index: 3;
+}
+
+.station-node-pin {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 3px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+  transition: all 0.25s ease;
+}
+
+.station-node-number {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748B;
+  display: none;
+}
+
+.station-node-icon {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Station State Styling */
+.state-completed .station-node-pin {
+  border-color: #10B981;
+  background: #ECFDF5;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.state-active .station-node-pin {
+  border-color: #00F2FE;
+  background: #0F172A;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.45);
+}
+
+.state-awaiting-test .station-node-pin {
+  border-color: #F59E0B;
+  background: #FFFBEB;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+}
+
+.state-locked .station-node-pin {
+  border-color: #E2E8F0;
+  background: #F8FAFC;
+  opacity: 0.85;
+}
+
+/* Active Station Beacon Pulse Animation */
+.station-beacon-ring {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 242, 254, 0.6);
+  animation: stationBeaconPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+.station-beacon-ring.beacon-outer {
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border-color: rgba(0, 242, 254, 0.3);
+  animation-delay: 0.5s;
+}
+
+@keyframes stationBeaconPing {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* "YOU ARE HERE" Tooltip */
+.station-here-tooltip {
+  position: absolute;
+  top: -28px;
+  background: linear-gradient(135deg, #0284C7, #0D9488);
+  color: #FFFFFF;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4);
+  animation: floatHereTag 2s ease-in-out infinite;
+}
+
+@keyframes floatHereTag {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Station Content Card */
+.station-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 1.1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.route-station:hover .station-card {
+  border-color: #38BDF8;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.route-station.is-active-station .station-card {
+  border-color: #00F2FE;
+  background: linear-gradient(180deg, #F0FDFA 0%, #FFFFFF 100%);
+  box-shadow: 0 6px 18px rgba(0, 242, 254, 0.15);
+}
+
+.station-week-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #0F172A;
+  background: #F1F5F9;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.station-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #0F172A;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
+
+.station-skill-badge {
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+/* Route Test Pills */
+.route-test-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+}
+
+.pill-passed {
+  background: #ECFDF5;
+  color: #059669;
+  border-color: #A7F3D0;
+}
+
+.pill-ready {
+  background: #FEF3C7;
+  color: #B45309;
+  border-color: #FCD34D;
+  cursor: pointer;
+  animation: pulseReadyTest 2s infinite;
+}
+
+@keyframes pulseReadyTest {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(245, 158, 11, 0); }
+}
+
+.pill-inprogress {
+  background: #F0FDFA;
+  color: #0D9488;
+  border-color: #99F6E4;
+}
+
+.pill-locked {
+  background: #F8FAFC;
+  color: #94A3B8;
+  border-color: #E2E8F0;
+}
+
+/* Highlight Flash on Targeted Week Card */
+.week-card.station-focus-glow {
+  animation: stationFocusPulse 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes stationFocusPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.8), 0 0 25px rgba(0, 242, 254, 0.4);
+    border-color: #00F2FE;
+    transform: translateY(-4px);
+  }
+  30% {
+    box-shadow: 0 0 0 10px rgba(0, 242, 254, 0.25), 0 0 20px rgba(0, 242, 254, 0.3);
+    border-color: #00F2FE;
+    transform: translateY(-4px);
+  }
+  100% {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-border);
+    transform: translateY(0);
+  }
+}
+
+.station-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #00F2FE;
+  display: inline-block;
+  margin-right: 4px;
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.route-legend-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  display: inline-block;
+  animation: pulseDot 1.5s infinite;
+}
+
+/* Responsive: Mobile Vertical Route Rail */
+@media (max-width: 768px) {
+  .student-route-track-wrapper {
+    min-width: 100%;
+    padding: 0.5rem 0.25rem;
+  }
+
+  .route-rail-line-bg {
+    top: 24px;
+    bottom: 24px;
+    left: 21px;
+    width: 3px;
+    height: auto;
+    right: auto;
+  }
+
+  .route-rail-line-fill {
+    width: 100% !important;
+    height: var(--fill-height, 50%);
+    transition: height 0.6s ease;
+  }
+
+  .route-stations-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .route-station {
+    flex: 1 1 100%;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .route-node-anchor {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    margin-top: 0.25rem;
+  }
+
+  .station-here-tooltip {
+    display: none;
+  }
+
+  .station-card {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 
 /* Timeline Layout */
 .roadmap-timeline {
@@ -4965,12 +5465,247 @@ div[id].cp-section {
   }
 }
 
+/* ============================================================
+   DEVELOPER ROADMAP EXPLORER (nilbuild/developer-roadmap)
+   ============================================================ */
+
+.roadmap-mode-switcher-card {
+  transition: all 0.25s ease;
+}
+
+.roadmap-mode-switcher-card .btn-group .btn {
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.roadmap-mode-switcher-card .btn-group .btn.active {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.dev-track-pills-row {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+.dev-track-pills-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.dev-track-pills-row::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+.dev-track-pill {
+  white-space: nowrap;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dev-track-pill:hover {
+  border-color: #93C5FD;
+  background: #F8FAFC;
+  color: #2563EB;
+  transform: translateY(-1px);
+}
+
+.dev-track-pill.active {
+  background: #2563EB;
+  border-color: #2563EB;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.dev-track-pill.active i {
+  color: #FFFFFF !important;
+}
+
+/* --- Stage Cards & Connectors --- */
+.dev-stage-wrapper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.dev-stage-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.dev-stage-card:hover {
+  border-color: #BFDBFE;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.08);
+}
+
+.dev-stage-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+  flex-shrink: 0;
+}
+
+.dev-stage-connector {
+  position: absolute;
+  left: 50%;
+  bottom: -2rem;
+  width: 2px;
+  height: 2rem;
+  background: repeating-linear-gradient(to bottom, #94A3B8 0, #94A3B8 6px, transparent 6px, transparent 12px);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* --- Interactive Node Cards --- */
+.dev-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.dev-node-card {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+}
+
+.dev-node-card:hover {
+  background: #FFFFFF;
+  border-color: #3B82F6;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+  transform: translateY(-2px);
+}
+
+.dev-node-card.core {
+  border-left: 4px solid #2563EB;
+}
+
+.dev-node-card.recommended {
+  border-left: 4px solid #10B981;
+}
+
+.dev-node-card.modern {
+  border-left: 4px solid #8B5CF6;
+}
+
+.dev-node-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dev-node-desc {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.dev-node-tag-pill {
+  font-size: 0.7rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: #E2E8F0;
+  color: #334155;
+  display: inline-block;
+}
+
+.dev-node-action {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2563EB;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: gap 0.2s ease;
+}
+
+.dev-node-card:hover .dev-node-action {
+  gap: 0.5rem;
+  color: #1D4ED8;
+}
+
+/* Concept Checklist Items */
+.concept-check-item {
+  padding: 0.5rem 0.75rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resource-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  color: #1E293B;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.resource-link-btn:hover {
+  background: #F8FAFC;
+  border-color: #93C5FD;
+  color: #2563EB;
+  transform: translateX(3px);
+}
 
 
 
 
 
-/* --- Module: dashboard.css --- */
+
+
+
 /* ==========================================================================
    DheePath — Student Dashboard Stylesheet (dashboard.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
@@ -5625,13 +6360,13 @@ div[id].cp-section {
 
 /* 1. Job Readiness Hero Card */
 .readiness-hero-card {
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%);
+  border: 1.5px solid #BFDBFE;
   border-radius: var(--radius-md);
-  color: #F8FAFC;
+  color: #0F172A;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.08);
 }
 
 .readiness-hero-card::after {
@@ -5641,7 +6376,7 @@ div[id].cp-section {
   right: -20%;
   width: 320px;
   height: 320px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -5649,29 +6384,30 @@ div[id].cp-section {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: conic-gradient(#0EA5E9 calc(var(--readiness-pct, 0) * 1%), rgba(255, 255, 255, 0.1) 0);
+  background: conic-gradient(#2563EB calc(var(--readiness-pct, 0) * 1%), #E2E8F0 0);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 
 .readiness-gauge-inner {
   width: 78px;
   height: 78px;
   border-radius: 50%;
-  background: #0F172A;
+  background: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 .readiness-meter-bar {
   height: 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.12);
+  background: #E2E8F0;
   overflow: hidden;
   position: relative;
 }
@@ -5682,28 +6418,28 @@ div[id].cp-section {
 }
 
 .badge-tier-foundational {
-  background: rgba(148, 163, 184, 0.2);
-  color: #CBD5E1;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #CBD5E1;
 }
 
 .badge-tier-developing {
-  background: rgba(245, 158, 11, 0.2);
-  color: #FCD34D;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
 }
 
 .badge-tier-interview {
-  background: rgba(14, 165, 233, 0.2);
-  color: #7DD3FC;
-  border: 1px solid rgba(14, 165, 233, 0.4);
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
 }
 
 .badge-tier-certified {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(14, 165, 233, 0.25));
-  color: #6EE7B7;
-  border: 1px solid #10B981;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.12);
 }
 
 /* 2. Resume AI Lab Card */
@@ -5937,23 +6673,23 @@ div[id].cp-section {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
   padding: 4px 10px;
   border-radius: 8px;
   font-size: 0.78rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
 }
 
 .chamber-meta-label {
-  color: #94A3B8;
+  color: #64748B;
   font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 0.8px;
 }
 
 .chamber-meta-val {
-  color: #38BDF8 !important;
+  color: #1D4ED8 !important;
   font-weight: 700;
   letter-spacing: 0.2px;
 }
@@ -5961,24 +6697,24 @@ div[id].cp-section {
 .chamber-progress-chip {
   display: inline-flex;
   align-items: center;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #F1F5F9;
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  color: #4338CA;
   padding: 4px 10px;
   border-radius: 8px;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.3px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.08);
 }
 
-/* Voice Persona Selector (Explicit dark styling to prevent white box or squishing on Windows/Chrome) */
+/* Voice Persona Selector */
 #mockInterviewModal .voice-select-pill {
-  background: rgba(15, 23, 42, 0.95) !important;
-  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
   border-radius: 8px !important;
   padding: 3px 10px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
@@ -5989,8 +6725,8 @@ div[id].cp-section {
 
 #mockInterviewModal .voice-select-pill:hover,
 #mockInterviewModal .voice-select-pill:focus-within {
-  border-color: #38BDF8 !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3) !important;
+  border-color: #2563EB !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
 }
 
 #mockInterviewModal .chamber-voice-select,
@@ -5999,12 +6735,12 @@ div[id].cp-section {
 #mockInterviewModal select,
 #mockInterviewModal select.form-select {
   background-color: transparent !important;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2338bdf8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%232563eb' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
   background-repeat: no-repeat !important;
   background-position: right 0.4rem center !important;
   background-size: 10px 8px !important;
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
+  color: #1E40AF !important;
+  -webkit-text-fill-color: #1E40AF !important;
   border: none !important;
   border-radius: 6px !important;
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif) !important;
@@ -6026,9 +6762,9 @@ div[id].cp-section {
 #mockInterviewModal #interviewVoiceSelector option,
 #mockInterviewModal .voice-select-pill select option,
 #mockInterviewModal select option {
-  background-color: #0F172A !important;
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  -webkit-text-fill-color: #0F172A !important;
   padding: 8px 12px !important;
   font-size: 0.82rem !important;
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif) !important;
@@ -6036,9 +6772,9 @@ div[id].cp-section {
 
 /* Read Question Button */
 #mockInterviewModal #btnSpeakQuestion {
-  background: rgba(6, 182, 212, 0.12) !important;
-  border: 1px solid rgba(6, 182, 212, 0.45) !important;
-  color: #38BDF8 !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+  color: #1D4ED8 !important;
   border-radius: 8px !important;
   font-weight: 600 !important;
   font-size: 0.78rem !important;
@@ -6050,31 +6786,28 @@ div[id].cp-section {
 }
 
 #mockInterviewModal #btnSpeakQuestion:hover {
-  background: rgba(6, 182, 212, 0.25) !important;
-  border-color: #38BDF8 !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3) !important;
+  background: #DBEAFE !important;
+  border-color: #2563EB !important;
+  color: #1E40AF !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
 }
 
 /* Question Prompt HUD Card */
 .interview-hud-card {
   padding: 1.25rem 1.5rem !important;
-  background: rgba(11, 17, 32, 0.9) !important;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.08) 0%, transparent 45%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(7, 11, 22, 0.95) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  background: #F8FAFC !important;
+  background-image: linear-gradient(180deg, #FFFFFF 0%, #EFF6FF 100%) !important;
+  border: 1.5px solid #BFDBFE !important;
   border-radius: 14px !important;
-  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06) !important;
   position: relative;
   overflow: hidden;
 }
 
 .chamber-category-badge {
-  background: rgba(56, 189, 248, 0.12) !important;
-  border: 1px solid rgba(56, 189, 248, 0.45) !important;
-  color: #38BDF8 !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+  color: #1D4ED8 !important;
   font-family: var(--font-mono, monospace) !important;
   font-size: 0.75rem !important;
   font-weight: 700 !important;
@@ -6088,34 +6821,34 @@ div[id].cp-section {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(14, 165, 233, 0.25) 100%);
-  border: 1.5px solid rgba(56, 189, 248, 0.5);
+  background: linear-gradient(135deg, #EFF6FF 0%, #EEF2FF 100%);
+  border: 1.5px solid #C7D2FE;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #38BDF8;
+  color: #2563EB;
   font-size: 1.4rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
   flex-shrink: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ai-interviewer-avatar.speaking-pulse {
   animation: avatarVoiceGlow 1.2s infinite alternate;
-  border-color: #38BDF8;
+  border-color: #2563EB;
 }
 
 @keyframes avatarVoiceGlow {
-  0% { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.4); border-color: rgba(56, 189, 248, 0.5); }
-  100% { box-shadow: 0 4px 16px rgba(15, 23, 42, 0.6); border-color: #38BDF8; color: #FFFFFF; }
+  0% { box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15); border-color: #C7D2FE; }
+  100% { box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3); border-color: #2563EB; color: #1D4ED8; }
 }
 
 #mockInterviewModal #currentQuestionText {
-  color: #FFFFFF !important;
+  color: #0F172A !important;
   line-height: 1.65;
   font-size: 1.02rem;
   letter-spacing: 0.2px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Audio Waveform Spectrum Equalizer */
@@ -6124,8 +6857,8 @@ div[id].cp-section {
   align-items: center;
   gap: 2.5px;
   padding: 4px 8px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
   border-radius: 9999px;
   vertical-align: middle;
 }
@@ -6133,13 +6866,13 @@ div[id].cp-section {
 .interview-audio-spectrum .spectrum-bar {
   width: 2.5px;
   height: 5px;
-  background: #38BDF8;
+  background: #2563EB;
   border-radius: 2px;
 }
 
 .interview-audio-spectrum.mic-active {
   border-color: rgba(239, 68, 68, 0.6);
-  background: rgba(239, 68, 68, 0.18);
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .interview-audio-spectrum.mic-active .spectrum-bar {
@@ -6166,39 +6899,39 @@ div[id].cp-section {
 #mockInterviewModal label,
 #mockInterviewModal .interview-section-label,
 #mockInterviewModal .form-label span {
-  color: #FFFFFF !important;
+  color: #0F172A !important;
   font-size: 0.86rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.3px !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  text-shadow: none !important;
 }
 
 /* Live Recording Badge Indicator */
 #mockInterviewModal #voiceLiveIndicator {
-  background: rgba(239, 68, 68, 0.15) !important;
+  background: rgba(239, 68, 68, 0.12) !important;
   border: 1px solid rgba(239, 68, 68, 0.4) !important;
-  color: #EF4444 !important;
+  color: #DC2626 !important;
   font-weight: 700 !important;
   padding: 3px 10px !important;
   border-radius: 9999px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2) !important;
+  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.1) !important;
   font-size: 0.75rem !important;
 }
 
 /* Micro Start Voice Answer Button */
 #mockInterviewModal #btnToggleMic {
-  background: rgba(239, 68, 68, 0.12) !important;
-  border: 1px solid rgba(239, 68, 68, 0.45) !important;
-  color: #F87171 !important;
+  background: #FEF2F2 !important;
+  border: 1px solid #FECACA !important;
+  color: #DC2626 !important;
   font-family: var(--font-sans, sans-serif) !important;
   font-weight: 600 !important;
   font-size: 0.8rem !important;
   padding: 0.38rem 0.9rem !important;
   border-radius: 8px !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.08) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
@@ -6207,10 +6940,10 @@ div[id].cp-section {
 }
 
 #mockInterviewModal #btnToggleMic:hover {
-  background: rgba(239, 68, 68, 0.25) !important;
+  background: #FEE2E2 !important;
   border-color: #EF4444 !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25) !important;
+  color: #B91C1C !important;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15) !important;
 }
 
 #mockInterviewModal #btnToggleMic.btn-danger,
@@ -6218,53 +6951,53 @@ div[id].cp-section {
   background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%) !important;
   border-color: #EF4444 !important;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
   animation: micPulseGlow 1.5s infinite !important;
 }
 
 @keyframes micPulseGlow {
-  0% { box-shadow: 0 0 0 0 rgba(15, 23, 42, 0.3); }
-  70% { box-shadow: 0 0 0 10px rgba(15, 23, 42, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(15, 23, 42, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
 /* Candidate Response Textarea */
 #mockInterviewModal #interviewAnswerInput {
-  background-color: #060A14 !important;
-  color: #F8FAFC !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1.5px solid #CBD5E1 !important;
   border-radius: 10px !important;
   padding: 0.9rem !important;
   font-size: 0.92rem !important;
   line-height: 1.6 !important;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.04) !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 #mockInterviewModal #interviewAnswerInput:focus {
-  border-color: #38BDF8 !important;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.25), inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+  border-color: #2563EB !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
   outline: none !important;
 }
 
 /* Tip & Live Character Counter Bar */
 #mockInterviewModal .interview-tip-text {
-  color: #94A3B8 !important;
+  color: #64748B !important;
   font-size: 0.77rem !important;
   line-height: 1.4 !important;
 }
 
 #mockInterviewModal .interview-tip-text strong {
-  color: #38BDF8 !important;
+  color: #2563EB !important;
 }
 
 #mockInterviewModal #answerCharCount,
 #mockInterviewModal .interview-char-badge {
   font-family: var(--font-mono, monospace) !important;
   font-size: 0.75rem !important;
-  color: #38BDF8 !important;
-  background: rgba(56, 189, 248, 0.1) !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  color: #2563EB !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
   padding: 2px 9px !important;
   border-radius: 6px !important;
   font-weight: 700 !important;
@@ -6273,36 +7006,37 @@ div[id].cp-section {
 
 /* Evaluation Feedback Card */
 #mockInterviewModal #evaluationFeedbackCard {
-  background: rgba(11, 17, 32, 0.95) !important;
-  background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.14) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  border: 1px solid rgba(52, 211, 153, 0.35) !important;
+  background: #EFF6FF !important;
+  background-image: linear-gradient(135deg, #EFF6FF 0%, #EEF2FF 100%) !important;
+  border: 1.5px solid #BFDBFE !important;
   border-radius: 12px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06) !important;
 }
 
 #mockInterviewModal #evalScoreBadge {
-  background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
-  border: 1px solid #34D399 !important;
-  color: #FFFFFF !important;
+  background: #ECFDF5 !important;
+  border: 1px solid #10B981 !important;
+  color: #065F46 !important;
   font-family: var(--font-mono, monospace) !important;
   font-size: 0.78rem !important;
   font-weight: 700 !important;
   padding: 0.3rem 0.75rem !important;
   border-radius: 6px !important;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 #mockInterviewModal .eval-score-tile {
-  background: rgba(15, 23, 42, 0.8) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
   border-radius: 8px !important;
   padding: 0.5rem 0.25rem !important;
   text-align: center !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
 }
 
 #mockInterviewModal .eval-score-label {
-  color: #94A3B8 !important;
-  font-size: 0.75rem !important;
+  color: #64748B !important;
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.6px !important;
 }
@@ -6314,21 +7048,25 @@ div[id].cp-section {
 }
 
 #mockInterviewModal .eval-model-answer-box {
-  background: rgba(15, 23, 42, 0.75) !important;
-  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  background: #FFFFFF !important;
+  border: 1px solid #BFDBFE !important;
   border-radius: 8px !important;
   padding: 0.65rem 0.85rem !important;
-  color: #CBD5E1 !important;
-  font-size: 0.78rem !important;
-  line-height: 1.5 !important;
+  color: #334155 !important;
+  font-size: 0.82rem !important;
+  line-height: 1.55 !important;
+}
+
+#mockInterviewModal .eval-model-answer-box strong {
+  color: #0F172A !important;
 }
 
 /* Modal Action Controls in Footer */
 #mockInterviewModal .chamber-exit-btn,
 #mockInterviewModal .btn-outline-secondary {
-  background: rgba(148, 163, 184, 0.1) !important;
-  border: 1px solid rgba(148, 163, 184, 0.3) !important;
-  color: #E2E8F0 !important;
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #475569 !important;
   border-radius: 8px !important;
   font-weight: 600 !important;
   font-size: 0.82rem !important;
@@ -6340,10 +7078,9 @@ div[id].cp-section {
 
 #mockInterviewModal .chamber-exit-btn:hover,
 #mockInterviewModal .btn-outline-secondary:hover {
-  background: rgba(148, 163, 184, 0.22) !important;
-  color: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #94A3B8 !important;
 }
 
 #mockInterviewModal .chamber-submit-btn,
@@ -7654,7 +8391,7 @@ body.modal-open .cp-chat-card {
 
 
 
-/* --- Module: chat.css --- */
+
 /* ==========================================================================
    DheePath — Student-Portal AI Career Mentor (chat.css)
    Enterprise Student Portal Aesthetics · Indigo, Violet & Emerald Accents
@@ -7871,13 +8608,15 @@ body.modal-open .cp-chat-trigger {
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(24px) scale(0.96);
-  transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1), transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), width 0.2s ease, height 0.2s ease;
+  transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1), transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.26s, width 0.2s ease, height 0.2s ease;
 }
 
 .cp-chat-drawer.open {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: translateY(0) scale(1);
 }
@@ -8659,8 +9398,8 @@ body.modal-open .cp-chat-trigger {
   justify-content: space-between;
   margin-top: 0.4rem;
   padding: 0 0.2rem;
-  font-size: 0.68rem;
-  color: #94A3B8;
+  font-size: 0.8125rem;
+  color: #64748B;
 }
 
 /* --------------------------------------------------------------------------
@@ -8675,8 +9414,8 @@ body.modal-open .cp-chat-trigger {
     bottom: 0;
     right: 0;
     left: 0;
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     height: 85vh;
     max-height: 85vh;
     border-radius: 22px 22px 0 0;
@@ -8684,7 +9423,7 @@ body.modal-open .cp-chat-trigger {
   }
 
   .cp-chat-drawer.expanded {
-    width: 100vw;
+    width: 100%;
     height: 94vh;
     max-height: 94vh;
   }
@@ -8705,7 +9444,7 @@ body.modal-open .cp-chat-trigger {
   }
 }
 
-/* --- Module: radial-glow-button.css --- */
+
 /* ==========================================================================
    DheePath — EduTech Radial Button (radial-glow-button.css)
    Clean Indigo & Blue Primary CTA Micro-interaction
@@ -8764,7 +9503,7 @@ a.rg-button:active {
   gap: 0.5rem;
 }
 
-/* --- Module: notch-navbar.css --- */
+
 /* ==========================================================================
    DheePath — EduTech Dynamic Navbar (notch-navbar.css)
    Ultra-Premium Floating Glass Island · High-End Design · Responsive
@@ -9547,7 +10286,7 @@ body.assessment-page .assessment-layout {
 }
 
 
-/* --- Module: animated-icons.css --- */
+
 /* ==========================================================================
    DheePath — 21st.dev Animated Icons System (animated-icons.css)
    Micro-animations · State Transitions · Spring Physics · Ambient Glow
@@ -9835,7 +10574,7 @@ body.assessment-page .assessment-layout {
   filter: drop-shadow(0 0 12px #00F2FE);
 }
 
-/* --- Module: typing-character-fx.css --- */
+
 /* ==========================================================================
    typing-character-fx.css — Keystroke Character Pop-up Micro-Animation
    DheePath · Enterprise Edition
@@ -9955,7 +10694,7 @@ body.assessment-page .assessment-layout {
   }
 }
 
-/* --- Module: quiz.css --- */
+
 /* ==========================================================================
    DheePath — Adaptive Skill Reality-Check Micro-Quiz (quiz.css)
    Clean Modern Light Theme · Indigo, Emerald & Amber Accents
@@ -11203,338 +11942,3 @@ body.assessment-page .assessment-layout {
 }
 
 
-
-/* --- Core style.css Overrides --- */
-
-/* --------------------------------------------------------------------------
-   2. Token Compatibility Bridge (Light EduTech Foundation)
-   -------------------------------------------------------------------------- */
-:root {
-  --cp-primary:          var(--color-indigo-600);
-  --cp-secondary:        var(--color-primary-600);
-  --cp-accent:           var(--color-cyan-600);
-  --cp-success:          var(--color-success);
-  --cp-warning:          var(--color-warning);
-  --cp-danger:           var(--color-danger);
-  --cp-bg-dark:          var(--color-surface-muted);
-  --cp-bg-light:         var(--color-background);
-  --cp-bg-card:          var(--color-surface);
-  --cp-bg-card-light:    var(--color-surface);
-  --cp-text-primary:     var(--color-text-primary);
-  --cp-text-light:       var(--color-text-primary);
-  --cp-text-muted:       var(--color-text-muted);
-  --cp-border:           var(--color-border);
-  --cp-border-light:     var(--color-border);
-  --cp-shadow-sm:        var(--shadow-sm);
-  --cp-shadow-md:        var(--shadow-md);
-  --cp-shadow-glow:      0 4px 16px rgba(15, 23, 42, 0.08);
-  --cp-gradient-primary: var(--gradient-primary);
-  --cp-gradient-accent:  var(--gradient-secondary);
-  --cp-gradient-hero:    var(--gradient-primary);
-}
-
-/* Typography Hierarchy Scale */
-h1, .h1 {
-  font-size: 2.35rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  color: var(--color-text-primary);
-}
-
-h2, .h2 {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-h3, .h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-/* --------------------------------------------------------------------------
-   3. Recommendations Compatibility (Rendered by recommendations.js)
-   -------------------------------------------------------------------------- */
-.recommendation-card {
-  background: #FFFFFF !important;
-  border: 1px solid var(--color-border) !important;
-  border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-md) !important;
-  position: relative;
-  transition: all var(--transition-normal);
-  color: var(--color-text-secondary);
-}
-
-.recommendation-card:hover {
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
-}
-
-.recommendation-card.top-match-card {
-  border: 1.5px solid var(--color-indigo-600) !important;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
-}
-
-.match-score-badge {
-  background: var(--color-surface-blue) !important;
-  border: 1px solid #BFDBFE !important;
-  border-radius: var(--radius-md) !important;
-  padding: 1rem 1.25rem !important;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-}
-
-.top-match-card .match-score-badge {
-  border-color: #C7D2FE !important;
-  background: var(--color-surface-indigo) !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
-}
-
-.match-score-badge .score-number {
-  font-family: var(--font-heading);
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: var(--color-indigo-700) !important;
-  line-height: 1;
-}
-
-.score-factor {
-  background: var(--color-surface-muted) !important;
-  border: 1px solid var(--color-border) !important;
-  border-radius: var(--radius-sm) !important;
-  padding: 0.5rem 0.75rem !important;
-  text-align: center;
-}
-
-.score-factor .factor-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--color-text-muted) !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.score-factor .factor-value {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--color-text-primary) !important;
-}
-
-/* --------------------------------------------------------------------------
-   4. High-Contrast Accessible Color Harmony
-   -------------------------------------------------------------------------- */
-.text-navy {
-  color: var(--color-primary-800) !important;
-}
-
-.text-ink {
-  color: var(--color-text-primary) !important;
-}
-
-.text-teal {
-  color: var(--color-cyan-600) !important;
-}
-
-.text-gold {
-  color: var(--color-warning) !important;
-}
-
-.text-leaf {
-  color: var(--color-success) !important;
-}
-
-.text-coral {
-  color: var(--color-danger) !important;
-}
-
-.border-line {
-  border-color: var(--color-border) !important;
-}
-
-.spinner-border {
-  width: 2rem;
-  height: 2rem;
-  border-width: 3px;
-  color: var(--color-indigo-600) !important;
-}
-
-/* --------------------------------------------------------------------------
-   5. Consistent Reading Alignment Across Project Pages
-   -------------------------------------------------------------------------- */
-main {
-  text-align: start;
-}
-
-main p:not(.text-center) {
-  line-height: 1.6;
-}
-
-.recommendations-page main .text-center p {
-  max-width: 100%;
-  margin-inline: auto;
-}
-
-.recommendations-page .recommendation-card .row > * {
-  min-width: 0;
-}
-
-.recommendations-page .recommendation-card h2 {
-  min-width: 0;
-  flex-wrap: wrap;
-  overflow-wrap: anywhere;
-}
-
-.recommendations-page .recommendation-card h2 > span {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.recommendations-page .recommendation-card :where(.ai-brief-text, .ai-brief-tip, .ai-bottleneck-box, .why-recommended-banner) {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.recommendations-page .skill-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  max-width: 100%;
-  padding: 0.32rem 0.72rem;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 600;
-  line-height: 1.35;
-  text-align: start;
-  white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  transition: all 0.15s ease;
-}
-
-.recommendations-page .skill-pill:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
-}
-
-.recommendations-page .skill-pill.matched-pill {
-  color: #065F46 !important;
-  background-color: #ECFDF5 !important;
-  border: 1px solid #A7F3D0 !important;
-}
-
-.recommendations-page .skill-pill.weak-pill {
-  color: #92400E !important;
-  background-color: #FFFBEB !important;
-  border: 1px solid #FDE68A !important;
-}
-
-.recommendations-page .skill-pill.missing-pill {
-  color: #991B1B !important;
-  background-color: #FEF2F2 !important;
-  border: 1px solid #FECACA !important;
-}
-
-.recommendations-page .skill-pill .tech-brand-logo {
-  flex-shrink: 0;
-  margin-right: 2px;
-}
-
-/* --------------------------------------------------------------------------
-   6. Mobile & Tablet Touch Target & Accessibility Polish (WCAG 2.5.5)
-   -------------------------------------------------------------------------- */
-@media (max-width: 767.98px) {
-  /* Expand interactive touch targets to min 44px */
-  .btn,
-  .cp-btn-primary,
-  .cp-btn-outline {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .form-check-label {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .form-check-input {
-    min-width: 20px;
-    min-height: 20px;
-  }
-
-  /* Safe bottom padding for floating chat FAB */
-  body {
-    padding-bottom: 64px;
-  }
-
-  /* Keep profile details aligned with other page content on small screens */
-  .dashboard-profile-card {
-    text-align: start;
-  }
-
-  .dashboard-profile-card .dashboard-avatar-container {
-    margin: 0;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   7. Multi-Portal Job Market Hub & Launcher Badges
-   -------------------------------------------------------------------------- */
-.portal-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-decoration: none;
-  background: #ffffff;
-  border: 1px solid var(--border-line, #e2e8f0);
-  color: var(--ink, #0f172a);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-}
-.portal-badge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: var(--color-teal, #0d9488);
-  color: var(--color-teal, #0d9488);
-}
-.portal-badge i {
-  font-size: 0.95rem;
-  transition: transform 0.2s ease;
-}
-.portal-badge:hover i {
-  transform: scale(1.15);
-}
-.portal-linkedin:hover { border-color: #0a66c2; color: #0a66c2; }
-.portal-naukri:hover { border-color: #e60023; color: #e60023; }
-.portal-indeed:hover { border-color: #2164f3; color: #2164f3; }
-.portal-wellfound:hover { border-color: #c2410c; color: #c2410c; }
-.portal-internshala:hover { border-color: #0369a1; color: #0369a1; }
-.portal-google:hover { border-color: #c5221f; color: #c5221f; }
-
-.cross-search-btn {
-  padding: 2px 8px;
-  font-size: 0.72rem;
-  font-weight: 500;
-  border-radius: 6px;
-  border: 1px solid var(--border-line, #e2e8f0);
-  background: #f8fafc;
-  color: var(--secondary, #475569);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  transition: all 0.15s ease;
-}
-.cross-search-btn:hover {
-  background: #ffffff;
-  color: var(--ink, #0f172a);
-  border-color: #cbd5e1;
-  transform: translateY(-1px);
-}

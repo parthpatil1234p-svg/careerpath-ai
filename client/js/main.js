@@ -169,6 +169,24 @@ function initDomainFilter() {
 }
 
 // ============================================================
+// 6a. Progressive Disclosure Track Toggle
+// ============================================================
+window.toggleTrackGrid = function(gridId, btn) {
+  const grid = document.getElementById(gridId);
+  if (!grid || !btn) return;
+  const isCollapsed = grid.classList.toggle('is-collapsed');
+  btn.setAttribute('aria-expanded', !isCollapsed);
+  const span = btn.querySelector('span');
+  const icon = btn.querySelector('i');
+  if (span) {
+    span.textContent = isCollapsed ? 'Explore all 15 Tech Pathways (+12 more)' : 'Show Fewer Tech Pathways';
+  }
+  if (icon) {
+    icon.className = isCollapsed ? 'bi bi-chevron-down' : 'bi bi-chevron-up';
+  }
+};
+
+// ============================================================
 // 6b. Intelligent BM25 Career Search Bar Filter
 // ============================================================
 function initCareerSearch() {
@@ -217,6 +235,9 @@ function initCareerSearch() {
       trackBlocks.forEach(b => b.classList.remove('d-none'));
       return;
     }
+
+    // Auto-expand collapsed grids when actively searching
+    document.querySelectorAll('.career-grid').forEach(g => g.classList.remove('is-collapsed'));
 
     // Run BM25 search
     const results = searchEngine.search(
@@ -460,6 +481,8 @@ window.setPricingView = function(view) {
   [tabStudent, tabRecruiter, tabUniversity].forEach((btn) => {
     if (btn) {
       btn.classList.remove('active');
+      btn.setAttribute('aria-selected', 'false');
+      btn.setAttribute('tabindex', '-1');
       btn.style.background = 'transparent';
       btn.style.color = '#475569';
       btn.style.boxShadow = 'none';
@@ -470,6 +493,8 @@ window.setPricingView = function(view) {
     recruiterPanel.classList.remove('d-none');
     if (tabRecruiter) {
       tabRecruiter.classList.add('active');
+      tabRecruiter.setAttribute('aria-selected', 'true');
+      tabRecruiter.setAttribute('tabindex', '0');
       tabRecruiter.style.background = '#FFFFFF';
       tabRecruiter.style.color = '#0F172A';
       tabRecruiter.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)';
@@ -478,6 +503,8 @@ window.setPricingView = function(view) {
     universityPanel.classList.remove('d-none');
     if (tabUniversity) {
       tabUniversity.classList.add('active');
+      tabUniversity.setAttribute('aria-selected', 'true');
+      tabUniversity.setAttribute('tabindex', '0');
       tabUniversity.style.background = '#FFFFFF';
       tabUniversity.style.color = '#0F172A';
       tabUniversity.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)';
@@ -487,6 +514,8 @@ window.setPricingView = function(view) {
     studentPanel.classList.remove('d-none');
     if (tabStudent) {
       tabStudent.classList.add('active');
+      tabStudent.setAttribute('aria-selected', 'true');
+      tabStudent.setAttribute('tabindex', '0');
       tabStudent.style.background = '#FFFFFF';
       tabStudent.style.color = '#0F172A';
       tabStudent.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)';

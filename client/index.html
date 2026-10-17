@@ -381,7 +381,7 @@
           <div class="hero-text-col">
             <div class="hero-meta-bar mb-3">
               <span class="live-status-badge">
-                <span class="pulse-dot"></span> AUTONOMOUS CAREER NAVIGATION PLATFORM
+                <span class="pulse-dot"></span> Autonomous Career Navigation Platform
               </span>
             </div>
 
@@ -829,7 +829,7 @@
             </a>
           </div>
 
-          <div class="career-grid">
+          <div class="career-grid is-collapsed" id="track-tech-grid">
 
           <!-- 1. Front-End Developer -->
           <div class="career-card" data-career="front-end-developer">
@@ -1176,8 +1176,21 @@
             </div>
           </div>
         </div>
+        <div class="track-toggle-wrap">
+          <button
+            type="button"
+            class="track-toggle-btn"
+            id="btnToggleTechTrack"
+            onclick="toggleTrackGrid('track-tech-grid', this)"
+            aria-expanded="false"
+            aria-controls="track-tech-grid"
+          >
+            <span>Explore all 15 Tech Pathways (+12 more)</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
         </div>
-        <!-- End Track 1: Tech -->
+      </div>
+      <!-- End Track 1: Tech -->
 
         <!-- ============================================================
              Track 2: 💼 Business, Finance & Corporate Operations (3 Roles)
@@ -1692,42 +1705,51 @@
 
         <!-- Audience Selector Tabs -->
         <div class="d-flex justify-content-center mb-4 w-100 overflow-x-auto pb-1" style="max-width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
-          <div class="p-1 rounded-pill d-inline-flex gap-1 shadow-sm border border-line flex-nowrap" style="background: #F1F5F9; max-width: 100%;" role="tablist">
+          <div class="pricing-tablist-container" role="tablist" aria-label="Plans tailored for each role">
             <button
               type="button"
-              class="btn btn-sm rounded-pill px-3.5 py-2 fw-bold text-nowrap pricing-tab-btn active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="panelPricingStudent"
+              tabindex="0"
+              class="pricing-tab-btn active"
               id="tabPricingStudent"
               onclick="setPricingView('student')"
-              style="background: #FFFFFF; color: #0F172A; box-shadow: 0 2px 8px rgba(15,23,42,0.08);"
             >
               <i class="bi bi-mortarboard-fill text-success me-1.5"></i>
-              <span>For Students &amp; Job Seekers (100% Free)</span>
+              <span>Students &amp; Job Seekers (100% Free)</span>
             </button>
             <button
               type="button"
-              class="btn btn-sm rounded-pill px-3.5 py-2 fw-bold text-nowrap text-secondary pricing-tab-btn"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panelPricingRecruiter"
+              tabindex="-1"
+              class="pricing-tab-btn"
               id="tabPricingRecruiter"
               onclick="setPricingView('recruiter')"
-              style="background: transparent; color: #475569;"
             >
               <i class="bi bi-buildings-fill text-primary me-1.5"></i>
-              <span>For Corporate Recruiters</span>
+              <span>Corporate Recruiters</span>
             </button>
             <button
               type="button"
-              class="btn btn-sm rounded-pill px-3.5 py-2 fw-bold text-nowrap text-secondary pricing-tab-btn"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panelPricingUniversity"
+              tabindex="-1"
+              class="pricing-tab-btn"
               id="tabPricingUniversity"
               onclick="setPricingView('university')"
-              style="background: transparent; color: #475569;"
             >
               <i class="bi bi-bank2 text-warning me-1.5"></i>
-              <span>For Colleges &amp; Placement Cells</span>
+              <span>Colleges &amp; Placement Cells</span>
             </button>
           </div>
         </div>
 
         <!-- PANEL 1: FOR STUDENTS & JOB SEEKERS (DEFAULT ACTIVE) -->
-        <div id="panelPricingStudent" class="pricing-panel">
+        <div id="panelPricingStudent" class="pricing-panel" role="tabpanel" aria-labelledby="tabPricingStudent">
           <div class="card p-4 p-lg-5 border-2 border-success shadow-sm" style="border-radius: 24px; background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%);">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 pb-4 border-bottom border-success border-opacity-25">
               <div>
@@ -1855,7 +1877,7 @@
         </div>
 
         <!-- PANEL 2: FOR CORPORATE RECRUITERS (SHOWN WHEN RECRUITER TAB CLICKED) -->
-        <div id="panelPricingRecruiter" class="pricing-panel d-none">
+        <div id="panelPricingRecruiter" class="pricing-panel d-none" role="tabpanel" aria-labelledby="tabPricingRecruiter">
           <div class="row g-4 align-items-stretch">
             <div class="col-lg-7">
               <div class="pricing-card popular h-100">
@@ -1965,7 +1987,7 @@
         </div>
 
         <!-- PANEL 3: FOR UNIVERSITIES & PLACEMENT CELLS (SHOWN WHEN UNIVERSITY TAB CLICKED) -->
-        <div id="panelPricingUniversity" class="pricing-panel d-none">
+        <div id="panelPricingUniversity" class="pricing-panel d-none" role="tabpanel" aria-labelledby="tabPricingUniversity">
           <div class="row g-4 align-items-stretch">
             <div class="col-lg-7">
               <div class="pricing-card h-100" style="border: 2px solid #F59E0B;">
