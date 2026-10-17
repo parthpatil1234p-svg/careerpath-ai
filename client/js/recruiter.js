@@ -5,7 +5,18 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Enforce Recruiter Auth Guard or Seamless Demo Recruiter Auto-Login for Guests
+  // 1. Strict Portal Isolation Guard (blocks students and redirects to dashboard.html immediately)
+  const existingUser = window.Auth?.getCurrentUser();
+  if (existingUser && existingUser.role !== 'recruiter' && existingUser.role !== 'admin') {
+    sessionStorage.setItem(
+      'portal_redirect_alert',
+      '🎓 Student accounts cannot access the company recruiter portal. You have been redirected to your Student Dashboard.'
+    );
+    window.location.replace('dashboard.html');
+    return;
+  }
+
+  // 2. Enforce Recruiter Auth Guard or Seamless Demo Recruiter Auto-Login for Guests
   if (!window.Auth?.isAuthenticated()) {
     try {
       const loginRes = await window.API.post('/auth/login', {
@@ -22,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Strict Portal Isolation Guard (blocks students and redirects to dashboard.html)
+  // 3. Final Verification
   if (!window.Auth?.requireRecruiter()) {
     return;
   }

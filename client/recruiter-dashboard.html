@@ -3,6 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Immediate Synchronous Portal Isolation Guard (Zero-Flash Redirect for Students) -->
+    <script>
+      (function() {
+        try {
+          var rawUser = localStorage.getItem('careerpath_user');
+          var token = localStorage.getItem('careerpath_token');
+          if (token && rawUser) {
+            var user = JSON.parse(rawUser);
+            if (user && user.role !== 'recruiter' && user.role !== 'admin') {
+              sessionStorage.setItem(
+                'portal_redirect_alert',
+                '🎓 Student accounts cannot access the company recruiter portal. You have been redirected to your Student Dashboard.'
+              );
+              window.location.replace('dashboard.html');
+            }
+          }
+        } catch (e) {
+          // Fallback to client controller guard
+        }
+      })();
+    </script>
     <meta
       name="description"
       content="Corporate Recruiter Portal & Talent Radar &mdash; DheePath"
@@ -1163,7 +1185,7 @@
             <a href="terms.html" class="text-secondary text-decoration-none hover-primary">Terms of Service</a>
             <a href="privacy.html" class="text-secondary text-decoration-none hover-primary">Privacy Policy</a>
             <a href="security.html" class="text-secondary text-decoration-none hover-primary">Security Architecture</a>
-            <a href="mailto:parthpatil@careerpath.is-local.org" class="text-secondary text-decoration-none hover-primary">Support Desk</a>
+            <a href="mailto:parthpatil@disheera.site" class="text-secondary text-decoration-none hover-primary">Support Desk</a>
             <a href="https://wa.me/917499085045" target="_blank" class="text-success text-decoration-none hover-primary"><i class="bi bi-whatsapp me-1"></i>WhatsApp: 7499085045</a>
           </div>
         </div>

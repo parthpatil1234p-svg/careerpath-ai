@@ -6,26 +6,45 @@
 
 // ── Portal Isolation Catalogs ─────────────────────────────────
 const STUDENT_PAGES = [
+  'dashboard',
   'dashboard.html',
+  'assessment',
   'assessment.html',
+  'recommendations',
   'recommendations.html',
+  'roadmap',
   'roadmap.html',
+  'resume-builder',
   'resume-builder.html',
+  'quiz',
   'quiz.html',
 ];
 
 const RECRUITER_PAGES = [
+  'recruiter-dashboard',
   'recruiter-dashboard.html',
+  'post-job',
+  'post-job.html',
 ];
+
+function checkPageMatch(pathname, pageList) {
+  if (!pathname) return false;
+  const clean = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '').toLowerCase();
+  const slug = clean.split('/').pop() || '';
+  return pageList.some((p) => {
+    const baseP = p.replace(/\.html$/, '').toLowerCase();
+    return slug === p.toLowerCase() || slug === baseP;
+  });
+}
 
 // Immediate Portal Isolation Trap (runs synchronously on script load before page DOM renders)
 (function enforcePortalIsolation() {
   if (typeof window === 'undefined') return;
   const path = (window.location.pathname || '').toLowerCase();
 
-  const isStudentPage = STUDENT_PAGES.some((p) => path.endsWith(p));
-  const isRecruiterPage = RECRUITER_PAGES.some((p) => path.endsWith(p));
-  const isLandingPage = path === '' || path === '/' || path.endsWith('/index.html') || path.endsWith('index.html');
+  const isStudentPage = checkPageMatch(path, STUDENT_PAGES);
+  const isRecruiterPage = checkPageMatch(path, RECRUITER_PAGES);
+  const isLandingPage = path === '' || path === '/' || path.endsWith('/index.html') || path.endsWith('index.html') || path.endsWith('/index') || path.endsWith('index');
 
   if (!isStudentPage && !isRecruiterPage && !isLandingPage) return;
 
@@ -36,16 +55,9 @@ const RECRUITER_PAGES = [
   try {
     const user = JSON.parse(rawUser);
     if (!user) return;
-    const email = (user.email || '').toLowerCase();
-    const isDemoOrAdmin =
-      user.role === 'admin' ||
-      user.isAdmin ||
-      user.isDemo ||
-      email === 'demouser@gmail.com' ||
-      email.includes('admin');
-    if (isDemoOrAdmin) return; // Dual evaluation access for demo/admin
+    if (user.role === 'admin' || user.isAdmin) return; // Full admin bypass only
 
-    const isRecruiter = user.role === 'recruiter' || Boolean(user.isRecruiter) || Boolean(user.recruiterProfile?.canPostJobs);
+    const isRecruiter = user.role === 'recruiter';
 
     // Auto-redirect recruiter from student landing page unless public preview requested
     if (isRecruiter && isLandingPage && !window.location.search.includes('view=public')) {
@@ -53,13 +65,13 @@ const RECRUITER_PAGES = [
       return;
     }
 
-    if (user.role === 'recruiter' && isStudentPage) {
+    if (isRecruiter && isStudentPage) {
       sessionStorage.setItem(
         'portal_redirect_alert',
         '🏢 Recruiter accounts cannot access student learning and roadmap resources. You have been redirected to your Recruiter Portal.'
       );
       window.location.replace('recruiter-dashboard.html');
-    } else if (user.role === 'student' && isRecruiterPage) {
+    } else if (user.role !== 'recruiter' && isRecruiterPage) {
       sessionStorage.setItem(
         'portal_redirect_alert',
         '🎓 Student accounts cannot access the company recruiter portal. You have been redirected to your Student Dashboard.'
@@ -165,19 +177,19 @@ const Auth = {
   },
 
   /**
-   * Checks whether the current user is an admin or demo user
+   * Checks whether the current user is a system admin
    * @returns {boolean}
    */
   isAdmin() {
     const user = this.getCurrentUser();
     if (!user) return false;
-    if (user.role === 'admin' || user.isAdmin || user.isDemo) return true;
-    const email = (user.email || '').toLowerCase();
-    return email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
+    return user.role === 'admin' || Boolean(user.isAdmin);
   },
 
   isDemo() {
-    return this.isAdmin();
+    const user = this.getCurrentUser();
+    if (!user) return false;
+    return Boolean(user.isDemo || user.role === 'admin' || user.isAdmin);
   },
 
   /**
@@ -187,7 +199,7 @@ const Auth = {
   isRecruiter() {
     const user = this.getCurrentUser();
     if (!user) return false;
-    return user.role === 'recruiter' || Boolean(user.isRecruiter) || Boolean(user.recruiterProfile?.canPostJobs);
+    return user.role === 'recruiter';
   },
 
   /**
@@ -200,7 +212,8 @@ const Auth = {
       window.location.href = `login.html?redirect=${currentPath}`;
       return false;
     }
-    if (this.isRecruiter() && !this.isAdmin()) {
+    const user = this.getCurrentUser();
+    if (user && user.role === 'recruiter' && user.role !== 'admin') {
       sessionStorage.setItem(
         'portal_redirect_alert',
         '🏢 Recruiter accounts cannot access student learning and roadmap resources. You have been redirected to your Recruiter Portal.'
@@ -221,7 +234,8 @@ const Auth = {
       window.location.href = `login.html?redirect=${currentPath}`;
       return false;
     }
-    if (!this.isRecruiter() && !this.isAdmin()) {
+    const user = this.getCurrentUser();
+    if (!user || (user.role !== 'recruiter' && user.role !== 'admin')) {
       sessionStorage.setItem(
         'portal_redirect_alert',
         '🎓 Student accounts cannot access the company recruiter portal. You have been redirected to your Student Dashboard.'

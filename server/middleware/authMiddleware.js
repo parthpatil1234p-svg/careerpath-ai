@@ -142,7 +142,6 @@ const requireSkillVerification = (req, res, next) => {
 // ── requireVerifiedRecruiter ──────────────────────────────────
 /**
  * requireVerifiedRecruiter — Ensures user is an authorized, corporate-verified recruiter.
- * Bypassed by demo/admin accounts so evaluations remain 100% unlocked.
  */
 const requireVerifiedRecruiter = (req, res, next) => {
   if (!req.user) {
@@ -152,16 +151,14 @@ const requireVerifiedRecruiter = (req, res, next) => {
     });
   }
 
-  // Admin and Demo accounts have all features completely unlocked
-  const email = (req.user.email || '').toLowerCase();
-  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email === 'kajimew275@blobapps.com' || email.includes('admin') || email.includes('demo');
-  if (isDemoOrAdmin) {
+  if (req.user.role === 'admin') {
     return next();
   }
 
   if (req.user.role !== 'recruiter') {
     return res.status(403).json({
       success: false,
+      code: 'STUDENT_ACCESS_DENIED',
       message: 'Access denied. Recruiter account required.',
     });
   }
@@ -181,7 +178,6 @@ const requireVerifiedRecruiter = (req, res, next) => {
 /**
  * requireStudent — Ensures authenticated user has student access.
  * Blocks recruiters from accessing student learning, roadmap, and assessment endpoints.
- * Admin/demo accounts are permitted.
  */
 const requireStudent = (req, res, next) => {
   if (!req.user) {
@@ -191,9 +187,7 @@ const requireStudent = (req, res, next) => {
     });
   }
 
-  const email = (req.user.email || '').toLowerCase();
-  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email.includes('admin');
-  if (isDemoOrAdmin) {
+  if (req.user.role === 'admin') {
     return next();
   }
 
@@ -212,7 +206,6 @@ const requireStudent = (req, res, next) => {
 /**
  * requireRecruiter — Ensures authenticated user has recruiter access.
  * Blocks students from accessing recruiter management endpoints.
- * Admin/demo accounts are permitted.
  */
 const requireRecruiter = (req, res, next) => {
   if (!req.user) {
@@ -222,9 +215,7 @@ const requireRecruiter = (req, res, next) => {
     });
   }
 
-  const email = (req.user.email || '').toLowerCase();
-  const isDemoOrAdmin = req.user.role === 'admin' || req.user.isDemo || email === 'demouser@gmail.com' || email.includes('admin');
-  if (isDemoOrAdmin) {
+  if (req.user.role === 'admin') {
     return next();
   }
 

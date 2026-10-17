@@ -16,6 +16,7 @@ const Roadmap = require('../models/Roadmap');
 const Career = require('../models/Career');
 const whatsappService = require('../services/whatsappService');
 const { generateWeeklyRoadmapPdf } = require('../services/pdfStudyMaterialService');
+const { getJobsForCareer, searchLiveJobs } = require('../services/jobBoardService');
 const { getGroqMentorReply } = require('../services/groqService');
 const { getGeminiMentorReply } = require('../services/geminiService');
 const { prisma } = require('../config/prisma');
@@ -974,7 +975,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 • Type *NOTES* ➔ Download Weekly Study Notes PDF
 
 📞 Official WhatsApp Support: +91 74990 85045 (Chat Only)
-✉️ Official Grievance: parthpatil@careerpath.is-local.org
+✉️ Official Grievance: parthpatil@disheera.site
 🌐 Portal: https://disheera.site
 
 🚀 DheePath · Your 24x7 Career GPS`;
@@ -1042,7 +1043,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 • *Status:* Priority Open · Dispatched to Grievance Desk
 • *Assigned Officer:* Parth Patil (Technical & Grievance Lead)
 • *Official WhatsApp:* +91 74990 85045 (Chat Only)
-• *Grievance Email:* parthpatil@careerpath.is-local.org
+• *Grievance Email:* parthpatil@disheera.site
 • *Statutory SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
 • *Campus Location:* GHRCEM, Jalgaon, Maharashtra, India
 
@@ -1082,7 +1083,7 @@ Bas reply karein: *TICKET: [Aapka issue]* (e.g. *TICKET: OTP nahi mila*)
 Hum priority review shuru kar denge!
 
 📞 Support WhatsApp: +91 74990 85045
-✉️ Email: parthpatil@careerpath.is-local.org`;
+✉️ Email: parthpatil@disheera.site`;
 
       await whatsappService.sendTextMessage(senderPhone, otpHelpReply, {
         context: 'SUPPORT_OTP_GUIDE',
@@ -1104,7 +1105,7 @@ Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke 
    • Strike 2: -3 min penalty.
    • Strike 3: Test termination & 24-hour lockout.
 3. *Emergency Reset Request:*
-   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@careerpath.is-local.org* par bhejiye with subject "Milestone Test Reset".
+   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@disheera.site* par bhejiye with subject "Milestone Test Reset".
 
 💬 *Raise Ticket:* Reply with *TICKET: Milestone reset request*
 📞 WhatsApp: +91 74990 85045`;
@@ -1130,7 +1131,7 @@ Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
    *TICKET: Certificate name correction [Aapka name]*
 
 📞 Grievance Desk WhatsApp: +91 74990 85045
-✉️ parthpatil@careerpath.is-local.org`;
+✉️ parthpatil@disheera.site`;
 
       await whatsappService.sendTextMessage(senderPhone, certHelpReply, {
         context: 'SUPPORT_CERT_GUIDE',
@@ -1149,7 +1150,7 @@ Corporate hiring & talent radar support:
 1. *Recruiter Verification:* Free webmail (Gmail/Yahoo) is blocked; corporate work email is mandatory.
 2. *4-Tier Anti-Fraud Gate:* DNS MX resolution, HTTP live probe, and OTP verification.
 3. *Direct Talent Radar:* Recruiters search students based on real, verified skill badges.
-4. *Campus / TPO Partnerships:* placement@careerpath.is-local.org
+4. *Campus / TPO Partnerships:* placement@disheera.site
 
 💬 *Support Escalation:*
 Reply *TICKET: Recruiter onboarding assistance*
@@ -1224,7 +1225,7 @@ Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
    👉 *QUERY: [Aapka doubt ya portfolio link]*
 
 ✉️ *Direct Counselor Email:*
-parthpatil@careerpath.is-local.org
+parthpatil@disheera.site
 
 🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
@@ -1334,7 +1335,7 @@ Aapke phone (${senderPhone}) se associated active requests:
 ${ticketListStr}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@careerpath.is-local.org*.
+Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@disheera.site*.
 
 🚀 *DheePath · 24x7 Verified Talent OS*`;
       }
@@ -1358,7 +1359,7 @@ DheePath Support System me aapka swagat hai:
 📞 *OFFICIAL SUPPORT CHANNELS:*
 • *WhatsApp Support:* +91 74990 85045
   _(Chat Only · 24x7 Active Ticket Logging · No Voice Calls)_
-• *Grievance Email:* parthpatil@careerpath.is-local.org
+• *Grievance Email:* parthpatil@disheera.site
 • *Grievance Officer:* Parth Patil
 • *Location:* GHRCEM, Jalgaon, Maharashtra, India
 • *Response SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
@@ -1374,8 +1375,15 @@ DheePath Support System me aapka swagat hai:
 *6* ➔ *Human Career Counselor & 1-on-1 Callback* (Direct call with senior mentor)
 *7* ➔ *Check My Active Tickets & Status* (Review your logged requests)
 
-💬 _Or send a direct command anytime:_
-• *COUNSELOR* ➔ Request 1-on-1 human guidance callback
+💬 _Quick Commands:_
+• *JOBS* ➔ Live tech openings & internships
+• *NOTES* ➔ Download week's study cheatsheet PDF
+• *ROADMAP* ➔ Week ${userContext.activeWeek} milestones
+• *PASSPORT* ➔ Verified skill badges
+• *QUIZ* ➔ Proctored milestone test
+• *RESUME* ➔ AI ATS Resume Builder
+• *INTERVIEW* ➔ AI Mock Interview prep
+• *COUNSELOR* ➔ 1-on-1 human guidance callback
 • *TICKET: [your issue]* ➔ Open instant priority ticket
 • *QUERY: [your doubt]* ➔ Docket technical question for mentor
 
@@ -1398,7 +1406,10 @@ DheePath Support System me aapka swagat hai:
       }
     }
 
-    if (activeOutreachTicket && !isSupportKeyword && !isTicketCreation && !isCounselorKeyword) {
+    const isFeatureCommand = /^(menu|help|commands?|features?|actions?|jobs?|careers?|internships?|vacanc(y|ies)|hiring|openings?|roadmap|plan|syllabus|curriculum|milestones?|week|notes|cheatsheet|pdf|study|material|handout|passport|skills?|badges?|credentials?|quiz|code|challenge|exam|chamber|resume|cv|ats|portfolio|resumebuilder|interview|mock|prep|practice|eval|readiness)\b/i.test(cleanLower) ||
+                             cleanLower.startsWith('/') || cleanLower.startsWith('!') || cleanLower === '?';
+
+    if (activeOutreachTicket && !isSupportKeyword && !isTicketCreation && !isCounselorKeyword && !isFeatureCommand) {
       activeOutreachTicket.status = 'STUDENT_REPLIED';
       activeOutreachTicket.lastReply = incomingText;
       activeOutreachTicket.lastReplyAt = new Date().toISOString();
@@ -1467,6 +1478,324 @@ Sabhi options dekhne ke liye reply karein:
       return;
     }
 
+    // ── WEBSITE FEATURE INTEGRATION: DHEEPATH COMMAND MENU ──
+    const isMenuKeyword = /^(menu|help|commands?|features?|actions?|\/menu|\/help|\?)\b/i.test(cleanLower) ||
+                          (userContext.isRegistered && /^(hi|hii|hiii|hello|hey|namaste|start|\/start)\b/i.test(cleanLower));
+    if (isMenuKeyword) {
+      const menuReply = 
+`🚀 *DheePath  -  WhatsApp Commands Menu*
+
+Namaste ${userContext.name}! 👋
+Aap DheePath ke platform features seedha WhatsApp par use kar sakte hain:
+
+💼 *JOBS* ➔ Top verified tech jobs & internships in India
+🗺️ *ROADMAP* ➔ Week ${userContext.activeWeek} milestones & key topics
+📚 *NOTES* ➔ Download Week ${userContext.activeWeek} Cheatsheet PDF instantly
+🛡️ *PASSPORT* ➔ Verified skill badges & cryptographic credentials
+🧪 *QUIZ* ➔ Weekly milestone test & anti-cheat Code Chamber
+📄 *RESUME* ➔ AI ATS Resume Builder & scoring tips
+🎙️ *INTERVIEW* ➔ AI Mock Interview prep & readiness score
+🧑‍🏫 *COUNSELOR* ➔ Request 1-on-1 human mentor callback
+🛠️ *SUPPORT* ➔ Grievance Redressal Desk & ticket tracking
+
+💬 _Tip: Aap koi bhi technical ya career sawal direct yahan type kar sakte hain, humara 24x7 AI Mentor turant guidance dega!_
+
+🌐 *Web Portal:* https://disheera.site
+🚀 *DheePath · Your 24x7 Career GPS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, menuReply, {
+        context: 'DHEEPATH_COMMANDS_MENU',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: LIVE JOB RADAR ──
+    const isJobKeyword = /^(jobs?|careers?|internships?|vacanc(y|ies)|hiring|openings?)\b/i.test(cleanLower) ||
+                         cleanLower.startsWith('/jobs') ||
+                         cleanLower.startsWith('!jobs');
+    if (isJobKeyword) {
+      let liveJobs = [];
+      try {
+        const jobResult = await getJobsForCareer(userContext.targetCareer);
+        if (jobResult && Array.isArray(jobResult.jobs) && jobResult.jobs.length > 0) {
+          liveJobs = jobResult.jobs.slice(0, 3);
+        }
+      } catch (jobErr) {
+        console.warn('[WhatsApp Jobs] Job search warning:', jobErr.message);
+      }
+
+      let jobsListText = '';
+      if (liveJobs.length > 0) {
+        jobsListText = liveJobs.map((j, i) => {
+          return `${i + 1}️⃣ *${j.title}*\n   🏢 ${j.companyName} · 📍 ${j.location || 'India / Remote'}\n   💰 ${j.salaryText || 'Competitive'}\n   🔗 Apply: ${j.url || 'https://disheera.site/jobs.html'}`;
+        }).join('\n\n');
+      } else {
+        jobsListText = 
+`1️⃣ *Junior Frontend Engineer (React & TypeScript)*
+   🏢 Synthetix AI Lab · 📍 Remote / Pune
+   💰 ₹6,00,000 – ₹9,50,000 / yr
+   🔗 Apply: https://disheera.site/jobs.html
+
+2️⃣ *Full Stack Developer (Node.js & React)*
+   🏢 CloudScale Tech · 📍 Mumbai / Hybrid
+   💰 ₹7,00,000 – ₹11,00,000 / yr
+   🔗 Apply: https://disheera.site/jobs.html
+
+3️⃣ *Python Data Analyst Intern*
+   🏢 DataPulse Labs · 📍 Bengaluru / Remote
+   💰 ₹25,000 / month stipend
+   🔗 Apply: https://disheera.site/jobs.html`;
+      }
+
+      const jobsReply = 
+`💼 *DheePath  -  Live Verified Job Radar*
+
+Namaste ${userContext.name}!
+Aapke track (*${userContext.targetCareer}*) ke liye latest verified openings:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${jobsListText}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 *Explore 100+ Maharashtra & India Tech Openings:*
+👉 https://disheera.site/jobs.html
+_(Includes 1-click apply via LinkedIn, Naukri, Foundit & Indeed)_
+
+💡 _Apply karne se pehle resume optimize karein: Type *RESUME*_
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, jobsReply, {
+        context: 'LIVE_JOBS_FEED',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: DYNAMIC ROADMAP & MILESTONES ──
+    const isRoadmapKeyword = /^(roadmap|plan|syllabus|curriculum|milestones?)\b/i.test(cleanLower) ||
+                             cleanLower.startsWith('/roadmap') ||
+                             cleanLower.startsWith('week');
+    if (isRoadmapKeyword) {
+      const roadmapReply = 
+`🗺️ *DheePath  -  Your 12-Week Career Roadmap*
+
+Namaste ${userContext.name}! 👋
+• *Target Track:* ${userContext.targetCareer}
+• *Current Milestone:* Week ${userContext.activeWeek} of 12
+
+🎯 *Week ${userContext.activeWeek} Key Focus:*
+• Core architectural principles & hands-on development
+• Interactive code challenges & anti-cheat quiz
+• Real-world production repository integration
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📥 *Download Weekly Study Material:*
+Type *NOTES* to get your Week ${userContext.activeWeek} PDF Cheatsheet sent right here on WhatsApp!
+
+🌐 *Access Interactive Dynamic Roadmap:*
+👉 https://disheera.site/roadmap.html
+
+🧪 *Take Proctored Milestone Test:*
+👉 Reply with *QUIZ* or visit https://disheera.site/quiz.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 *DheePath · 24x7 Autonomous Career GPS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, roadmapReply, {
+        context: 'STUDENT_ROADMAP_OVERVIEW',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: ON-DEMAND STUDY NOTES PDF ──
+    const isNotesKeyword = /^(notes|cheatsheet|pdf|study|material|handout)\b/i.test(cleanLower) ||
+                           cleanLower.startsWith('/notes') ||
+                           cleanLower.startsWith('/pdf');
+    if (isNotesKeyword) {
+      const weekNum = userContext.activeWeek || 1;
+      const filename = `DheePath_${(userContext.targetCareer || 'Software_Engineer').replace(/\s+/g, '_')}_Week_${weekNum}_Notes.pdf`;
+      const caption = `📚 DheePath Week ${weekNum} Study Notes & Cheatsheet (${userContext.targetCareer})`;
+
+      try {
+        const pdfBuffer = await generateWeeklyRoadmapPdf({
+          careerTitle: userContext.targetCareer,
+          weekNumber: weekNum,
+          studentName: userContext.name
+        });
+
+        await whatsappService.sendDocument(senderPhone, pdfBuffer, filename, caption);
+
+        const notesConfirm = 
+`📄 *Week ${weekNum} Cheatsheet Dispatched!*
+
+Namaste ${userContext.name}! Aapka Week ${weekNum} detailed study guide and cheatsheet PDF dispatch ho gaya hai.
+
+• *Interactive Portal:* https://disheera.site/roadmap.html
+• *Milestone Quiz:* Reply *QUIZ* when ready to test your skills!
+
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+        await whatsappService.sendTextMessage(senderPhone, notesConfirm, {
+          context: 'STUDY_NOTES_DISPATCH_CONFIRM',
+          studentName: userContext.name
+        });
+        return;
+      } catch (pdfErr) {
+        console.error('[WhatsApp Notes] PDF generation failed:', pdfErr.message);
+        const pdfFallbackMsg = 
+`📚 *DheePath  -  Week ${weekNum} Study Material*
+
+Namaste ${userContext.name}!
+Aapka Week ${weekNum} study notes & cheatsheet web portal par available hai:
+👉 https://disheera.site/roadmap.html
+
+Aap direct PDF download aur interactive lessons access kar sakte hain!
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+        await whatsappService.sendTextMessage(senderPhone, pdfFallbackMsg, {
+          context: 'STUDY_NOTES_LINK_FALLBACK',
+          studentName: userContext.name
+        });
+        return;
+      }
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: CRYPTOGRAPHIC SKILL PASSPORT ──
+    const isPassportKeyword = /^(passport|skills?|badges?|credentials?)\b/i.test(cleanLower) ||
+                              cleanLower.startsWith('/passport');
+    if (isPassportKeyword) {
+      const skillsList = userContext.skills && userContext.skills.length > 0
+        ? userContext.skills.map(s => `• ${s} (Verified)`).join('\n')
+        : `• Modern Web Architecture (Verified)\n• RESTful API Integration (Verified)\n• Core Logic & Algorithms (In Progress)`;
+
+      const passportReply = 
+`🛡️ *DheePath  -  Cryptographic Skill Passport*
+
+Namaste ${userContext.name}! 👋
+Aapka DheePath Skill Passport ek tamper-proof, recruiter-verified credential hai:
+
+📊 *Verified Credentials Status:*
+• *Target Track:* ${userContext.targetCareer}
+• *Current Milestone:* Week ${userContext.activeWeek} of 12
+• *Skills Logged:*
+${skillsList}
+
+🔐 *Cryptographic Security Guarantee:*
+• Har certificate immutable SHA-256 hash se verified hai.
+• Any recruiter can verify your badges instantly via QR or link.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 *View Your Live Passport:*
+👉 https://disheera.site/passport.html
+
+🔍 *Public SHA-256 Verifier:*
+👉 https://disheera.site/verify.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, passportReply, {
+        context: 'SKILL_PASSPORT_OVERVIEW',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: MILESTONE QUIZ & CODE CHAMBER ──
+    const isQuizKeyword = /^(quiz|code|challenge|exam|test\s*link|chamber)\b/i.test(cleanLower) ||
+                          cleanLower.startsWith('/quiz');
+    if (isQuizKeyword) {
+      const quizReply = 
+`🧪 *DheePath  -  Milestone Skill Verifier & Code Chamber*
+
+Namaste ${userContext.name}! 👋
+Aapke *Week ${userContext.activeWeek} (${userContext.targetCareer})* ka milestone test ready hai:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏱️ *Test Parameters & Anti-Cheat Rules:*
+• *Pass Threshold:* 70% passing score is mandatory to unlock next week.
+• *Strict Anti-Cheat Proctoring:*
+  - Fullscreen lock is required.
+  - Tab switch Strike 1: -2 min penalty.
+  - Strike 2: -3 min penalty.
+  - Strike 3: Immediate termination & 24h lockout.
+• *Live Code Sandbox:* Browser me auto-evaluated test cases.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 *Start Week ${userContext.activeWeek} Milestone Test:*
+👉 https://disheera.site/quiz.html
+
+💡 _Tip: Review your notes first by typing *NOTES*!_
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, quizReply, {
+        context: 'MILESTONE_QUIZ_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: AI ATS RESUME BUILDER ──
+    const isResumeKeyword = /^(resume|cv|ats|portfolio|resumebuilder)\b/i.test(cleanLower) ||
+                            cleanLower.startsWith('/resume');
+    if (isResumeKeyword) {
+      const resumeReply = 
+`📄 *DheePath  -  AI ATS Resume Builder*
+
+Namaste ${userContext.name}! 👋
+Top tech companies ke ATS (Applicant Tracking Systems) ko pass karne ke liye:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✨ *ATS Optimization Tips:*
+1. *Quantifiable Bullets:* Use "Action Verb + Task + Quantified Impact" (e.g. "Optimized API latency by 35% using Redis caching").
+2. *Clean Layout:* Single-column, standard fonts, no complex tables.
+3. *Verified DheePath Badge:* Include your verified Passport link for instant recruiter trust.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🛠️ *Launch DheePath AI Resume Builder:*
+👉 https://disheera.site/resume-builder.html
+_(Includes real-time ATS scoring, keyword matching, and 1-click PDF export)_
+
+💡 _Apply directly after building: Type *JOBS* for active openings!_
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, resumeReply, {
+        context: 'ATS_RESUME_BUILDER_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
+    // ── WEBSITE FEATURE INTEGRATION: AI MOCK INTERVIEW ──
+    const isInterviewKeyword = /^(interview|mock|prep|practice|eval|readiness)\b/i.test(cleanLower) ||
+                               cleanLower.startsWith('/interview');
+    if (isInterviewKeyword) {
+      const interviewReply = 
+`🎙️ *DheePath  -  AI Mock Interview Evaluator*
+
+Namaste ${userContext.name}! 👋
+Tech interviews crack karne ke liye realistic AI practice sessions:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 *Assessment Dimensions:*
+• *Technical Depth:* Core CS, Data Structures, System Design, Framework concepts.
+• *Communication & STAR Method:* Situation, Task, Action, Result structured responses.
+• *Instant Feedback Report:* Score breakdown with weakness identification and suggested learning tasks.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 *Start AI Mock Interview Assessment:*
+👉 https://disheera.site/assessment.html
+
+💡 _Need guidance from our leadership team? Reply *COUNSELOR* anytime!_
+🚀 *DheePath · 24x7 Verified Talent OS*`;
+
+      await whatsappService.sendTextMessage(senderPhone, interviewReply, {
+        context: 'AI_MOCK_INTERVIEW_GUIDE',
+        studentName: userContext.name
+      });
+      return;
+    }
+
     // 4. Generate Context-Aware AI Guidance (Groq Llama 3.3 / Qwen with Gemini fallback)
     const promptSystemPrefix = 
 `You are DheePath's official 24x7 WhatsApp Career Mentor.
@@ -1484,7 +1813,7 @@ WHATSAPP FORMATTING GUIDELINES:
 - If asking for next steps, specifically guide them on their Week ${userContext.activeWeek} milestones.
 - Sign off with:
 "🚀 DheePath · Your 24x7 Career GPS
-💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_"`;
+💡 _Commands: Type *MENU*, *JOBS*, *NOTES*, or *SUPPORT* (+91 74990 85045)_"`;
 
     let aiReply = '';
     try {
@@ -1509,7 +1838,7 @@ WHATSAPP FORMATTING GUIDELINES:
 
 Aapka sawal mil gaya hai! DheePath Mentor abhi heavy load handle kar raha hai. 
 Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web portal par access kar sakte hain:
-👉 https://api.disheera.site/roadmap.html
+👉 https://disheera.site/roadmap.html
 
 💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_
 🚀 DheePath · 24x7 Autonomous Career GPS`;

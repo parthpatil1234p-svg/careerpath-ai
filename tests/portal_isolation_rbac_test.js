@@ -72,15 +72,15 @@ console.log('\n▶ TEST 2: requireStudent allows student role');
   assert(res.statusCode === 200, 'Status remains 200');
 }
 
-// --- Test 3: requireStudent with demo account ---
-console.log('\n▶ TEST 3: requireStudent allows demo/admin account (demouser@gmail.com)');
+// --- Test 3: requireStudent with admin account ---
+console.log('\n▶ TEST 3: requireStudent allows true admin role');
 {
-  const req = { user: { role: 'recruiter', email: 'demouser@gmail.com' } };
+  const req = { user: { role: 'admin', email: 'admin@dheepath.site' } };
   const res = createMockRes();
   let nextCalled = false;
   requireStudent(req, res, () => { nextCalled = true; });
 
-  assert(nextCalled, 'Next MUST be called for demo user even if role is recruiter');
+  assert(nextCalled, 'Next MUST be called for admin role');
   assert(res.statusCode === 200, 'Status remains 200');
 }
 
@@ -109,15 +109,28 @@ console.log('\n▶ TEST 5: requireRecruiter allows recruiter role');
   assert(res.statusCode === 200, 'Status remains 200');
 }
 
-// --- Test 6: requireRecruiter with demo account ---
-console.log('\n▶ TEST 6: requireRecruiter allows demo/admin account');
+// --- Test 6: requireRecruiter blocks demo student account (demouser@gmail.com) ---
+console.log('\n▶ TEST 6: requireRecruiter strictly blocks student demo account (demouser@gmail.com)');
 {
   const req = { user: { role: 'student', email: 'demouser@gmail.com' } };
   const res = createMockRes();
   let nextCalled = false;
   requireRecruiter(req, res, () => { nextCalled = true; });
 
-  assert(nextCalled, 'Next MUST be called for demo user even if role is student');
+  assert(!nextCalled, 'Next must NOT be called for student even if demo user email');
+  assert(res.statusCode === 403, 'Status must be 403');
+  assert(res.body && res.body.code === 'STUDENT_ACCESS_DENIED', 'Error code must be STUDENT_ACCESS_DENIED');
+}
+
+// --- Test 6B: requireRecruiter allows true admin ---
+console.log('\n▶ TEST 6B: requireRecruiter allows true admin role');
+{
+  const req = { user: { role: 'admin', email: 'admin@dheepath.site' } };
+  const res = createMockRes();
+  let nextCalled = false;
+  requireRecruiter(req, res, () => { nextCalled = true; });
+
+  assert(nextCalled, 'Next MUST be called for admin role');
   assert(res.statusCode === 200, 'Status remains 200');
 }
 
@@ -125,39 +138,58 @@ console.log('\n▶ TEST 6: requireRecruiter allows demo/admin account');
 console.log('\n▶ TEST 7: Client-side Isolation Routing Rules');
 {
   const STUDENT_PAGES = [
+    'dashboard',
     'dashboard.html',
+    'assessment',
     'assessment.html',
+    'recommendations',
     'recommendations.html',
+    'roadmap',
     'roadmap.html',
+    'resume-builder',
     'resume-builder.html',
+    'quiz',
     'quiz.html',
+    'job-market',
     'job-market.html',
+    'technical-interview',
     'technical-interview.html'
   ];
   const RECRUITER_PAGES = [
+    'recruiter-dashboard',
     'recruiter-dashboard.html',
+    'recruiter-register',
     'recruiter-register.html',
+    'recruiter-login',
     'recruiter-login.html',
+    'post-job',
     'post-job.html'
   ];
 
-  // Verify no intersection between student and recruiter pages
-  const intersection = STUDENT_PAGES.filter(p => RECRUITER_PAGES.includes(p));
-  assert(intersection.length === 0, 'No overlapping pages between student and recruiter catalogs');
+  function checkPageMatch(pathname, pageList) {
+    if (!pathname) return false;
+    const clean = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '').toLowerCase();
+    const slug = clean.split('/').pop() || '';
+    return pageList.some((p) => {
+      const baseP = p.replace(/\.html$/, '').toLowerCase();
+      return slug === p.toLowerCase() || slug === baseP;
+    });
+  }
 
-  // Verify recruiter redirected from student pages
+  // Verify match on cleanUrl without extension
+  assert(checkPageMatch('/recruiter-dashboard', RECRUITER_PAGES) === true, 'Matches /recruiter-dashboard without .html');
+  assert(checkPageMatch('/recruiter-dashboard.html', RECRUITER_PAGES) === true, 'Matches /recruiter-dashboard.html');
+  assert(checkPageMatch('/dashboard', STUDENT_PAGES) === true, 'Matches /dashboard without .html');
+  assert(checkPageMatch('/dashboard.html', STUDENT_PAGES) === true, 'Matches /dashboard.html');
+
+  // Verify recruiter role detection
   const testRecruiterUser = { role: 'recruiter', email: 'talent@company.com' };
-  const isRecruiter = testRecruiterUser.role === 'recruiter';
-  assert(isRecruiter === true, 'Role detected as recruiter');
+  assert(testRecruiterUser.role === 'recruiter', 'Role detected as recruiter');
 
-  const testStudentUser = { role: 'student', email: 'student@college.edu' };
-  const isStudent = testStudentUser.role === 'student';
-  assert(isStudent === true, 'Role detected as student');
-
-  // Verify demo user detection
-  const demoUser = { role: 'student', email: 'demouser@gmail.com' };
-  const isDemo = demoUser.role === 'admin' || demoUser.isDemo || demoUser.email === 'demouser@gmail.com';
-  assert(isDemo === true, 'Demo user correctly bypassed from hard lock');
+  // Verify student role detection
+  const testStudentUser = { role: 'student', email: 'demouser@gmail.com' };
+  assert(testStudentUser.role === 'student', 'Student demo role is student');
+  assert(testStudentUser.role !== 'recruiter', 'Student demo role is NOT recruiter');
 }
 
 // --- Test 8: Smart Brand Logo Dispatch Logic ---
