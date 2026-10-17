@@ -48,22 +48,22 @@ The `client/` directory contains the complete redesigned presentation and intera
 | `register.html` | `/register.html` | Quiet 2-column split with onboarding summary and clean registration inputs. | `#registerForm`, `#name`, `#email`, `#password`, `#confirmPassword`, `#submitBtn`, `#alertContainer` |
 | `assessment.html` | `/assessment.html` | 4-step progressive wizard (Academics, Interests, Skills, Goals), desktop left stepper, category filter tabs, proficiency selects. | `#assessmentForm`, `#interestChipsWrapper`, `#skillsGrid`, `#skillSearchInput`, `#skillCategoryFilter`, `#submitAssessmentBtn` |
 | `recommendations.html` | `/recommendations.html` | Results-first layout, "Best route for now" hero panel, 3-color gap analysis, duration selection modal (4/8/12 weeks). | `#recommendationsContainer`, `#skillOrbitTitle`, `#roadmapDurationModal`, `#btnConfirmGenerate` |
-| `roadmap.html` | `/roadmap.html` | Route-map timeline, active route summary header, 3D milestone stepping stones, live task checkboxes with immediate API sync. | `#roadmapContent`, `#weeksContainer`, `#roadmapPercentage`, `#roadmapProgressBar`, `#careerIcon` |
-| `dashboard.html` | `/dashboard.html` | Student command center, active goal telemetry, calibrated 3D Journey Marker, live priority task queue. | `#dashboardContent`, `#userAvatar`, `#userName`, `#statPercentage`, `#progress-orb`, `#upcomingTasksList` |
+| `roadmap.html` | `/roadmap.html` | Student-explainable interactive route map, active route summary header, milestone station tracking, live task checkboxes with immediate API sync. | `#roadmapContent`, `#weeksContainer`, `#roadmapPercentage`, `#roadmapProgressBar`, `#careerIcon` |
+| `dashboard.html` | `/dashboard.html` | Student command center, active goal telemetry, calibrated progress gauge, live priority task queue. | `#dashboardContent`, `#userAvatar`, `#userName`, `#statPercentage`, `#progress-orb`, `#upcomingTasksList` |
 | `404.html` | `/404.html` | Cartographic "Waypoint Uncharted" error page with warm paper card and coordinate badge. | Clean navigation links |
 
 ---
 
-## 🧭 3D Visualizations & Fallback System
+## 🧭 Visualizations & Learning Navigation System
 
-DheePath features four purposeful 3D visual experiences:
-1. **Career Atlas Compass** (`js/three-career-universe.js`): Central octahedron compass waypoint connected to 5 career nodes (Front-End, Full-Stack, Data Analyst, UI/UX, Cybersecurity) with clickable interactive tooltips.
-2. **Skill Map** (`js/three-skill-orbit.js`): Target career core surrounded by up to 12 skill nodes color-coded Leaf Green (Matched), Gold (Weak), and Coral (Missing).
-3. **Route Map** (`js/three-roadmap-path.js`): Stepping-stone milestone platforms with numbered weeks; clicking a platform smoothly scrolls directly to that week's card.
-4. **Journey Marker** (`js/three-progress.js`): Calibrated compass ring with completion fill arc and progress needle reflecting completed task telemetry.
+DheePath features clean, high-performance, student-explainable visual experiences:
+1. **Interactive Route Map** (`js/roadmap-route-map.js`): Metro / career highway station rail with numbered milestones, status badges, task meters, and proctored test tracking; clicking any station smoothly scrolls to that week's curriculum.
+2. **Skill Map & Radar** (`recommendations.html`): Match score breakdowns color-coded Emerald Green (Matched), Gold (Weak), and Rose (Missing).
+3. **Journey Marker Gauge** (`js/three-progress.js`): Calibrated vector semi-circular gauge reflecting verified task telemetry and progress percentage.
+4. **Before/After Transformation Slider** (`js/scroll-dissolve.js`): Interactive GPU-accelerated comparison showing raw skill gaps transforming into a guided roadmap.
 
-### Graceful Fallback Guarantee
-If WebGL is disabled or unsupported, every visualizer detects the condition and renders crisp, accessible **2D HTML/CSS cards**. Core user workflows are never blocked.
+### Universal Accessibility & Performance Guarantee
+All navigation components are pure, lightweight 2D vectors and CSS/SVG structures. Zero WebGL dependencies, zero heavy 3D canvases, and 100% accessible on all mobile and desktop devices. Core user workflows are never blocked.
 
 ---
 
