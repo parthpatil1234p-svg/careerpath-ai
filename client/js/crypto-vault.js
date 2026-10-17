@@ -10,7 +10,7 @@
  *
  * Works in both Modern Browser (window.crypto) and Node.js (globalThis.crypto / require('crypto').webcrypto)
  *
- * CareerPath AI · Enterprise Platform
+ * DheePath · Enterprise Platform
  */
 
 (function (root, factory) {

@@ -3,7 +3,7 @@
  * Comprehensive unit and integration test suite for the Resume Authenticity
  * & Non-Resume Content Guard (Document Classification Gate).
  *
- * CareerPath AI · Enterprise Test Suite
+ * DheePath · Enterprise Test Suite
  */
 
 const http = require('http');

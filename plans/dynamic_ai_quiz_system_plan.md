@@ -52,7 +52,7 @@ flowchart TD
 
 ### Component 1: Server AI Quiz Engine
 
-#### [NEW] `careerpath-ai/server/services/aiQuizGeneratorService.js`
+#### [NEW] `dheepath/server/services/aiQuizGeneratorService.js`
 Create a dedicated multi-model question generator service:
 - Accepts `skill`, `difficulty` (`easy`, `medium`, `hard`), `usedTopics`, and optional `customApiKey` / `preferredProvider`.
 - Integrates with:
@@ -74,31 +74,31 @@ Create a dedicated multi-model question generator service:
   ```
 - In-memory cache for generated questions so repeated or concurrent steps don't re-query the LLM unnecessarily.
 
-#### [MODIFY] `careerpath-ai/server/services/quizService.js`
+#### [MODIFY] `dheepath/server/services/quizService.js`
 - Remove the strict restriction that blocked skills outside the 7 hardcoded ones.
 - When `startQuizSession` is called:
   - If the skill is in `QUIZ_QUESTIONS` (banked), it can use the bank or generate with AI.
   - If the skill is NOT in `QUIZ_QUESTIONS` (e.g. Docker, Kubernetes, C++, AWS), it automatically calls `aiQuizGeneratorService` to generate the 5 adaptive questions.
 - Update `submitAnswer` to use the session's question list and generate dynamic AI feedback explanations when an answer is evaluated.
 
-#### [MODIFY] `careerpath-ai/server/controllers/quizController.js`
+#### [MODIFY] `dheepath/server/controllers/quizController.js`
 - Add `GET /api/quiz/providers`: returns active AI models status (e.g. `groq: ready`, `gemini: ready`, `static: ready`).
 - Update `startQuiz` to optionally accept `provider` (`groq`, `gemini`, `auto`) and optional `userApiKey` in headers or body.
 
-#### [MODIFY] `careerpath-ai/server/routes/quizRoutes.js`
+#### [MODIFY] `dheepath/server/routes/quizRoutes.js`
 - Expose the `/api/quiz/providers` endpoint.
 
 ---
 
 ### Component 2: Client Interface & Modal
 
-#### [MODIFY] `careerpath-ai/client/js/assessment.js`
+#### [MODIFY] `dheepath/client/js/assessment.js`
 - Update `AVAILABLE_QUIZ_SKILLS` or allow ANY selected skill with `['intermediate', 'advanced']` to be eligible for reality-check verification in the "Prove your skills" panel.
 - In `skillCheckModal`:
   - Add a subtle status indicator: `⚡ AI-Powered Reality Check` (with provider badge like `Groq Llama 3.3` or `Gemini`).
   - Add an optional gear icon or dropdown allowing judges to select their preferred AI model or input a custom API key if they want to test their own keys.
 
-#### [MODIFY] `careerpath-ai/client/js/quiz.js` & `client/quiz.html`
+#### [MODIFY] `dheepath/client/js/quiz.js` & `client/quiz.html`
 - Enable the skill selector tabs to support ANY custom skill in addition to the standard ones.
 - Display the active AI provider badge (`Groq Fast Inference` / `Gemini AI`).
 

@@ -52,7 +52,7 @@
 │             LAYERED ENCRYPTION & ANTI-CHEATING LOCK ARCHITECTURE                                 │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                                  │
-│   [CLIENT BROWSER]                                              [CAREERPATH AI BACKEND]          │
+│   [CLIENT BROWSER]                                              [DHEEPATH BACKEND]          │
 │                                                                                                  │
 │   A. CLIENT-SIDE ENCRYPTION (AES-GCM-256 + PBKDF2)                                               │
 │   ├── User logs in / enters password                                                             │

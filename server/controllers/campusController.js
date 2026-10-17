@@ -3,7 +3,7 @@
  *
  * Handles public demo requests, Voice AI outreach webhooks, and institutional lead pipelines.
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const CampusLead = require('../models/CampusLead');

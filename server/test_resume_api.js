@@ -98,9 +98,9 @@ async function runTests() {
 
   currentResume.projects = [
     {
-      title: 'CareerPath AI Platform',
+      title: 'DheePath Platform',
       role: 'Lead Architect',
-      githubUrl: 'https://github.com/alex/careerpath-ai',
+      githubUrl: 'https://github.com/alex/dheepath',
       liveUrl: 'https://careerpath-demo.vercel.app',
       technologies: 'React, Node.js, MongoDB, Three.js',
       bulletPoints: [

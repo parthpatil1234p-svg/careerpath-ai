@@ -1,13 +1,13 @@
 # Implementation Plan: Hardened Single Active Career Route & Gated Progression
 
-**CareerPath AI · Team 404 Brain Not Found**  
+**DheePath · Team 404 Brain Not Found**  
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Executive Summary
 
-This plan elevates the CareerPath AI career route system into a hardened, server-authoritative, sequential learning progression engine. It ensures students commit to and master one chosen career roadmap at a time, protecting data integrity at the database engine level while maintaining an open, browse-friendly discovery experience.
+This plan elevates the DheePath career route system into a hardened, server-authoritative, sequential learning progression engine. It ensures students commit to and master one chosen career roadmap at a time, protecting data integrity at the database engine level while maintaining an open, browse-friendly discovery experience.
 
 ### Core Enhancements:
 1. **Database-Level Partial Unique Index:** Guaranteed single active route via MongoDB partial filter expression index (`{ user: 1 }, { unique: true, partialFilterExpression: { status: 'active' } }`). Concurrent requests (double-clicks, multiple tabs) are rejected with **HTTP 409 Conflict** (`ACTIVE_ROUTE_IN_PROGRESS`).

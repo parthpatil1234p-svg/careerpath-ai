@@ -13,7 +13,7 @@
  *  - getJobApplicants: Enriched candidate radar with verified skill badges & match scores
  *  - updateApplicationStatus: Moves candidate across recruitment stages
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const User = require('../models/User');
@@ -323,7 +323,7 @@ const createJob = async (req, res, next) => {
       company = await Company.findOneAndUpdate(
         { domain },
         {
-          name: req.user.recruiterProfile?.companyName || 'CareerPath AI Enterprise Partner',
+          name: req.user.recruiterProfile?.companyName || 'DheePath Enterprise Partner',
           domain,
           website: `https://${domain}`,
           isVerified: true,

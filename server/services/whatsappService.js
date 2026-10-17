@@ -11,7 +11,7 @@
  * - 🗺️ Weekly Roadmap Notes & Cheatsheet PDF delivery
  * - 🤖 24x7 AI Career Assistant response delivery
  * 
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const https = require('https');
@@ -85,10 +85,10 @@ async function sendOtp(phone, otpCode, studentName = 'Student') {
 
   const name = (studentName || 'Student').trim().split(' ')[0];
   const messageText = 
-`🔐 *CareerPath AI — WhatsApp Verification Code*
+`🔐 *DheePath — WhatsApp Verification Code*
 
 Namaste ${name}! 👋 
-Aapka CareerPath AI student account WhatsApp verification code hai:
+Aapka DheePath Student account WhatsApp verification code hai:
 
 👉 *${otpCode}*
 
@@ -96,7 +96,7 @@ Aapka CareerPath AI student account WhatsApp verification code hai:
 
 Ye code agle 10 minute tak valid hai. Kripya ise kisi ke sath share na karein.
 
-🚀 CareerPath AI Technologies Inc. · 24x7 Autonomous Career GPS`;
+🚀 DheePath Technologies Inc. · 24x7 Autonomous Career GPS`;
 
   return sendTextMessage(formattedPhone, messageText, {
     context: 'OTP_VERIFICATION',
@@ -110,11 +110,11 @@ Ye code agle 10 minute tak valid hai. Kripya ise kisi ke sath share na karein.
  * 
  * @param {string} phone - Recipient phone number
  * @param {Buffer|string} documentBufferOrUrl - PDF buffer or public URL
- * @param {string} filename - Document filename (e.g. "CareerPath_Week_1_Notes.pdf")
+ * @param {string} filename - Document filename (e.g. "DheePath_Week_1_Notes.pdf")
  * @param {string} caption - WhatsApp message caption
  * @returns {Promise<{success: boolean, provider: string, messageId?: string, error?: string}>}
  */
-async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_Roadmap_Notes.pdf', caption = '') {
+async function sendDocument(phone, documentBufferOrUrl, filename = 'DheePath_Roadmap_Notes.pdf', caption = '') {
   const formattedPhone = formatPhoneNumber(phone);
   if (!formattedPhone) {
     return { success: false, error: 'Invalid or missing phone number' };
@@ -133,7 +133,7 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
       const docPayload = {
         chatId: `${digits}@c.us`,
         filename,
-        caption: caption || `📄 ${filename} — CareerPath AI Study Material`
+        caption: caption || `📄 ${filename} — DheePath Study Material`
       };
 
       if (isBuffer) {
@@ -166,7 +166,7 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
         document: {
           link: documentBufferOrUrl,
           filename,
-          caption: caption || `📄 ${filename} — CareerPath AI Study Material`
+          caption: caption || `📄 ${filename} — DheePath Study Material`
         }
       });
 
@@ -188,7 +188,7 @@ async function sendDocument(phone, documentBufferOrUrl, filename = 'CareerPath_R
       const payload = JSON.stringify({
         phone: digits,
         filename,
-        caption: caption || `📄 ${filename} — CareerPath AI Study Material`,
+        caption: caption || `📄 ${filename} — DheePath Study Material`,
         base64: base64Data,
         url: fileUrl
       });

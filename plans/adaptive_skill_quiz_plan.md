@@ -1,14 +1,14 @@
 # Implementation Plan: Adaptive Skill Quiz & Reality-Check Verification ("You Said vs. Quiz Says")
 
 > **Status:** Planning Mode Only — No implementation or code changes made.  
-> **Brand:** CareerPath AI · **Track:** EduTech / AI for Good · **Team:** 404 Brain Not Found  
+> **Brand:** DheePath · **Track:** EduTech / AI for Good · **Team:** 404 Brain Not Found  
 > **Core Concept:** *"Instead of blindly trusting what a student claims they know, test them with a 6-question adaptive micro-quiz, reveal the gap between claimed vs. actual proficiency, and weight their roadmap accordingly."*
 
 ---
 
 ## 1. Goal Description
 
-Currently, CareerPath AI captures self-reported skill proficiencies (Beginner, Intermediate, Advanced) in `assessment.html`. However, **hackathon judges and recruiters always point out that self-assessments are inherently biased or inflated**.
+Currently, DheePath captures self-reported skill proficiencies (Beginner, Intermediate, Advanced) in `assessment.html`. However, **hackathon judges and recruiters always point out that self-assessments are inherently biased or inflated**.
 
 This feature introduces an **Adaptive 6-Question Reality-Check Micro-Quiz**:
 1. Students self-rate on skills during onboarding (e.g., *"JavaScript: Advanced"*).
@@ -604,7 +604,7 @@ When presenting, Sanika or Parth can deliver this punchy explanation:
 
 > *"Most career guidance tools blindly trust what students say about themselves on registration forms. If a student claims they are 'Advanced in JavaScript', existing tools assume they're ready for senior developer jobs.
 > 
-> CareerPath AI doesn't rely on guesswork. We run an **adaptive 6-question micro-quiz** that gets harder when students answer correctly and drops difficulty when they struggle.
+> DheePath doesn't rely on guesswork. We run an **adaptive 6-question micro-quiz** that gets harder when students answer correctly and drops difficulty when they struggle.
 > 
 > At the end, we give students an honest **Reality Check**: 'You said Advanced, but the quiz says Intermediate — here are your exact gaps in closures and async.'
 > 

@@ -1,7 +1,7 @@
 # Implementation Plan: Complete Removal of Hackathon Visuals & Enterprise Production Branding
 
 ## Goal Description
-The objective is to cleanse the entire **CareerPath AI** platform of all hackathon-specific artifacts, badges, and visual tags (such as `Hack2Ignite 2026–27`, problem statement code `ED-02`, `Team 404 Brain Not Found`, `HACKATHON EVALUATION`, and `Judge Quick-Fill Mode`). 
+The objective is to cleanse the entire **DheePath** platform of all hackathon-specific artifacts, badges, and visual tags (such as `Hack2Ignite 2026–27`, problem statement code `ED-02`, `Team 404 Brain Not Found`, `HACKATHON EVALUATION`, and `Judge Quick-Fill Mode`). 
 
 The platform will be elevated into an autonomous, professional, production-grade **Enterprise SaaS Career Navigation & Skill Verification Platform** ready for real-world launch, institutional adoption, and investor/recruiter presentations.
 
@@ -24,47 +24,47 @@ The platform will be elevated into an autonomous, professional, production-grade
 
 ### Component 1: Frontend Landing Page & Core Pages (HTML Visuals)
 
-#### [MODIFY] [`client/index.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/index.html)
+#### [MODIFY] [`client/index.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/index.html)
 - **Meta Tags (Lines 10-11)**:
   - Remove `Hack2Ignite` keyword.
-  - Update author from `Team 404 Brain Not Found` to `CareerPath AI Team`.
+  - Update author from `Team 404 Brain Not Found` to `DheePath Team`.
 - **Hero Meta Bar (Lines 150-155)**:
   - Replace `<span class="pulse-dot"></span> HACK2IGNITE 2026–27` with `<span class="pulse-dot"></span> NEXT-GEN AI CAREER ATLAS`.
   - Replace `ED-02 · AI CAREER GUIDANCE & SKILL ROADMAP` with `AUTONOMOUS CAREER GUIDANCE & VERIFIED SKILL ROADMAPS`.
 - **Footer (Lines 1176-1221)**:
-  - Replace `Hack2Ignite 2026–27` badge and `Team 404 Brain Not Found` with `Enterprise Edition` and `CareerPath AI Global Talent Protocol`.
+  - Replace `Hack2Ignite 2026–27` badge and `Team 404 Brain Not Found` with `Enterprise Edition` and `DheePath Global Talent Protocol`.
   - Reframe team credits as `Engineering & Product Team`.
-  - Update copyright colophon to `&copy; 2026 CareerPath AI &middot; All Rights Reserved.`.
+  - Update copyright colophon to `&copy; 2026 DheePath &middot; All Rights Reserved.`.
 
 ---
 
-#### [MODIFY] [`client/dashboard.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/dashboard.html)
+#### [MODIFY] [`client/dashboard.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/dashboard.html)
 - **Job-Ready Certificate Attestation (Lines 1297, 1413-1416)**:
   - Header: Replace `VERIFIED TALENT CREDENTIAL DIRECTORY · HACK2IGNITE 2026–27` with `VERIFIED TALENT CREDENTIAL DIRECTORY · ISO/IEEE ACCREDITED STANDARD`.
-  - Signature SVG: Replace `Team 404 Protocol` with `CareerPath AI Council`.
+  - Signature SVG: Replace `Team 404 Protocol` with `DheePath Council`.
   - Signatory Name: Replace `Team 404 Brain Not Found` with `Academic & Industry Council`.
-  - Signatory Title: Replace `Lead Protocol Stewards · Hack2Ignite 2026–27` with `Accreditation Board · CareerPath AI Global Registry`.
+  - Signatory Title: Replace `Lead Protocol Stewards · Hack2Ignite 2026–27` with `Accreditation Board · DheePath Global Registry`.
 - **Footer (Lines 1547-1552)**:
-  - Replace `Hack2Ignite 2026–27` and `Team: 404 Brain Not Found` badges with `Enterprise Edition` and `&copy; 2026 CareerPath AI`.
+  - Replace `Hack2Ignite 2026–27` and `Team: 404 Brain Not Found` badges with `Enterprise Edition` and `&copy; 2026 DheePath`.
 
 ---
 
-#### [MODIFY] [`client/verify.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/verify.html)
+#### [MODIFY] [`client/verify.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/verify.html)
 - **Accreditation Text (Line 211)**:
-  - Replace `Official accreditation issued by CareerPath AI Global Registry (Hack2Ignite 2026-27).` with `Official accreditation issued by CareerPath AI Global Verified Talent Registry.`.
+  - Replace `Official accreditation issued by DheePath Global Registry (Hack2Ignite 2026-27).` with `Official accreditation issued by DheePath Global Verified Talent Registry.`.
 - **Certificate Sub-Header (Line 250)**:
-  - Replace `VERIFIED TALENT CREDENTIAL DIRECTORY · HACK2IGNITE 2026–27` with `VERIFIED TALENT CREDENTIAL DIRECTORY · CAREERPATH AI GLOBAL REGISTRY`.
+  - Replace `VERIFIED TALENT CREDENTIAL DIRECTORY · HACK2IGNITE 2026–27` with `VERIFIED TALENT CREDENTIAL DIRECTORY · DHEEPATH GLOBAL REGISTRY`.
 - **Signatory Block (Lines 364-367)**:
-  - Signatory SVG: Replace `Team 404 Protocol` with `CareerPath AI Council`.
+  - Signatory SVG: Replace `Team 404 Protocol` with `DheePath Council`.
   - Signatory Name: Replace `Team 404 Brain Not Found` with `Academic & Industry Council`.
-  - Signatory Title: Replace `Lead Protocol Stewards · Hack2Ignite 2026–27` with `Accreditation Board · CareerPath AI Global Registry`.
+  - Signatory Title: Replace `Lead Protocol Stewards · Hack2Ignite 2026–27` with `Accreditation Board · DheePath Global Registry`.
 - **Governance & Footer (Lines 405, 423)**:
   - Replace `Governance by Evaluation Council & Team 404 Brain Not Found.` with `Governance by Academic & Industry Certification Council.`.
   - Replace `Team 404 Brain Not Found · Hack2Ignite Round 1 Credential Protocol` with `Verified Talent Credential Protocol`.
 
 ---
 
-#### [MODIFY] [`client/assessment.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/assessment.html)
+#### [MODIFY] [`client/assessment.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/assessment.html)
 - **Step 1 Quick-Access Banner (Lines 340-357)**:
   - Replace `HACKATHON EVALUATION` badge with `<i class="bi bi-lightning-charge-fill me-1"></i> INSTANT PREVIEW`.
   - Replace `Judge Quick-Fill Mode` title with `Sample Profile Autofill`.
@@ -72,22 +72,22 @@ The platform will be elevated into an autonomous, professional, production-grade
   - Update button text: `1-Click Sample Profile Fill`.
 - **Footer (Lines 935-940)**:
   - Replace `ED-02 · AI Career Guidance & Skill Roadmap Platform` with `Autonomous AI Career Guidance & Skill Roadmap Ecosystem`.
-  - Replace `Hack2Ignite 2026–27` and `Team: 404 Brain Not Found` badges with `Enterprise Edition` and `&copy; 2026 CareerPath AI`.
+  - Replace `Hack2Ignite 2026–27` and `Team: 404 Brain Not Found` badges with `Enterprise Edition` and `&copy; 2026 DheePath`.
 
 ---
 
-#### [MODIFY] [`client/login.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/login.html) & [`client/register.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/register.html)
+#### [MODIFY] [`client/login.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/login.html) & [`client/register.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/register.html)
 - **`login.html`**:
-  - Line 141: Replace `CareerPath AI · Team 404 Brain Not Found` with `CareerPath AI · Next-Gen Career Intelligence Platform`.
+  - Line 141: Replace `DheePath · Team 404 Brain Not Found` with `DheePath · Next-Gen Career Intelligence Platform`.
   - Lines 160-164: Replace `HACKATHON EVALUATION` badge and `Pre-seeded Accounts` text with `<i class="bi bi-shield-check me-1"></i> DEMO ACCOUNTS` and `Instant Test Logins`.
 - **`register.html`**:
-  - Line 189: Replace `CareerPath AI · Team 404 Brain Not Found` with `CareerPath AI · Next-Gen Career Intelligence Platform`.
+  - Line 189: Replace `DheePath · Team 404 Brain Not Found` with `DheePath · Next-Gen Career Intelligence Platform`.
 
 ---
 
-#### [MODIFY] [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/roadmap.html), [`client/quiz.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/quiz.html), [`client/recommendations.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/recommendations.html), [`client/404.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/404.html), [`client/resume-builder.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/resume-builder.html)
+#### [MODIFY] [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/roadmap.html), [`client/quiz.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/quiz.html), [`client/recommendations.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/recommendations.html), [`client/404.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/404.html), [`client/resume-builder.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/resume-builder.html)
 - **`roadmap.html`**:
-  - Line 215: Replace `Personalized Career Preparation Plan · Team: 404 Brain Not Found · CareerPath AI` with `Personalized Career Preparation Plan · AI Milestone Tracking · CareerPath AI`.
+  - Line 215: Replace `Personalized Career Preparation Plan · Team: 404 Brain Not Found · DheePath` with `Personalized Career Preparation Plan · AI Milestone Tracking · DheePath`.
   - Lines 548-552: Rebrand footer.
 - **`quiz.html` & `recommendations.html`**:
   - Rebrand footers to standard production colophon.
@@ -100,40 +100,40 @@ The platform will be elevated into an autonomous, professional, production-grade
 
 ### Component 2: Frontend Client Scripts (JS Visuals & Logs)
 
-#### [MODIFY] [`client/js/chat.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/js/chat.js)
-- Line 146: Update chat window disclaimer from `<p class="cp-chat-disclaimer">CareerPath AI Assistant · Team 404 Brain Not Found</p>` to `<p class="cp-chat-disclaimer">CareerPath AI Career Intelligence Assistant</p>`.
+#### [MODIFY] [`client/js/chat.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/chat.js)
+- Line 146: Update chat window disclaimer from `<p class="cp-chat-disclaimer">DheePath Assistant · Team 404 Brain Not Found</p>` to `<p class="cp-chat-disclaimer">DheePath Career Intelligence Assistant</p>`.
 
-#### [MODIFY] [`client/js/config.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/js/config.js)
-- Line 44: Update `TEAM_NAME: '404 Brain Not Found'` to `PLATFORM_NAME: 'CareerPath AI'`.
+#### [MODIFY] [`client/js/config.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/config.js)
+- Line 44: Update `TEAM_NAME: '404 Brain Not Found'` to `PLATFORM_NAME: 'DheePath'`.
 
-#### [MODIFY] [`client/js/main.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/js/main.js)
+#### [MODIFY] [`client/js/main.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/main.js)
 - Line 240: Update browser console splash greeting to `'%cCareerPath AI | Next-Gen AI Career Intelligence Platform'`.
 
-#### [MODIFY] [`client/js/verify.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/client/js/verify.js)
+#### [MODIFY] [`client/js/verify.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/verify.js)
 - Line 85: Update client-side mock/fallback `leadSteward` from `Team 404 Brain Not Found (Hack2Ignite 2026–27)` to `Academic & Industry Certification Council`.
 
 ---
 
 ### Component 3: Backend Services & API Responses (Server)
 
-#### [MODIFY] [`server/controllers/readinessController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/server/controllers/readinessController.js)
+#### [MODIFY] [`server/controllers/readinessController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/controllers/readinessController.js)
 - Lines 195-200: Update certificate response payload:
-  - `team: '404 Brain Not Found'` $\rightarrow$ `issuer: 'CareerPath AI Global Registry'`
-  - `hackathon: 'Hack2Ignite 2026–27'` $\rightarrow$ `accreditation: 'CareerPath AI Verified Standard'`
+  - `team: '404 Brain Not Found'` $\rightarrow$ `issuer: 'DheePath Global Registry'`
+  - `hackathon: 'Hack2Ignite 2026–27'` $\rightarrow$ `accreditation: 'DheePath Verified Standard'`
   - `leadSteward: 'Team 404 Brain Not Found (Hack2Ignite 2026–27)'` $\rightarrow$ `leadSteward: 'Academic & Industry Certification Council'`
 
-#### [MODIFY] [`server/services/careerInsightService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/server/services/careerInsightService.js)
-- Line 268: Update AI system prompt from `You are an expert Career & Industry Talent Analyst for the Hack2Ignite 2026-27 hackathon.` to `You are an expert Career & Industry Talent Analyst for CareerPath AI.`.
+#### [MODIFY] [`server/services/careerInsightService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/services/careerInsightService.js)
+- Line 268: Update AI system prompt from `You are an expert Career & Industry Talent Analyst for the Hack2Ignite 2026-27 hackathon.` to `You are an expert Career & Industry Talent Analyst for DheePath.`.
 
-#### [MODIFY] [`server/services/emailService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/server/services/emailService.js)
+#### [MODIFY] [`server/services/emailService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/services/emailService.js)
 - Lines 104, 124-125: Update transactional email signatures:
-  - Replace `CareerPath AI · Team 404 Brain Not Found · Hack2Ignite 2026–27` with `CareerPath AI · Next-Gen AI Career Guidance Platform`.
+  - Replace `DheePath · Team 404 Brain Not Found · Hack2Ignite 2026–27` with `DheePath · Next-Gen AI Career Guidance Platform`.
   - Remove `Hack2Ignite 2026–27 (GHRISTU Pune)`.
 
-#### [MODIFY] [`server/server.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/careerpath-ai/server/server.js)
+#### [MODIFY] [`server/server.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/server.js)
 - Health check endpoints (`/api/health`, `/health`):
-  - Replace `team: '404 Brain Not Found'` with `platform: 'CareerPath AI'`.
-  - Update console banner from `👥 Team : 404 Brain Not Found · Hack2Ignite 2026–27` to `👥 Platform : CareerPath AI Production Server`.
+  - Replace `team: '404 Brain Not Found'` with `platform: 'DheePath'`.
+  - Update console banner from `👥 Team : 404 Brain Not Found · Hack2Ignite 2026–27` to `👥 Platform : DheePath Production Server`.
 
 ---
 
@@ -153,7 +153,7 @@ npm test
 
 ### Manual Verification
 1. **Landing Page (`index.html`)**: Check hero meta badge and footer. Verify there is no "HACK2IGNITE" or "ED-02".
-2. **Dashboard (`dashboard.html`)**: Open "View Job-Ready Certificate". Verify the certificate header and signatory line show official "Academic & Industry Council" and "CareerPath AI Global Registry".
+2. **Dashboard (`dashboard.html`)**: Open "View Job-Ready Certificate". Verify the certificate header and signatory line show official "Academic & Industry Council" and "DheePath Global Registry".
 3. **Verification Page (`verify.html`)**: Check certificate preview and footer. Verify clean institutional branding.
 4. **Assessment Page (`assessment.html`)**: Check Step 1 profile fill badge. Verify it displays "INSTANT PREVIEW / Sample Profile Autofill" without any "HACKATHON EVALUATION" text.
 5. **Login Page (`login.html`)**: Check demo login cards. Verify clean "TEST ACCOUNTS / Instant Demo Logins" badge.

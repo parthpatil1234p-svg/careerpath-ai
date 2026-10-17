@@ -1,7 +1,7 @@
 /**
  * routes/campusRoutes.js - Routes for College Placement Cell (TPO) Partnerships & Campus OS
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const express = require('express');

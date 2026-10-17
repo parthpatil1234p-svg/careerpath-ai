@@ -1,6 +1,6 @@
 // ============================================================
-// CareerPath AI — Supabase (PostgreSQL) Prisma Schema
-// Enterprise Architecture · CareerPath AI Technologies Inc.
+// DheePath — Supabase (PostgreSQL) Prisma Schema
+// Enterprise Architecture · DheePath Technologies Inc.
 // ============================================================
 
 generator client {

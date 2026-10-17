@@ -1,7 +1,7 @@
 /**
  * routes/quizRoutes.js - API Routes for Adaptive Skill Reality-Check Quiz
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const express = require('express');

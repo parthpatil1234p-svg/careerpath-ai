@@ -1,7 +1,7 @@
 /**
  * scroll-dissolve.js — Interactive WebGL Shader Transformation
  * Vengeance UI Scroll Dissolve Reveal Component Engine
- * CareerPath AI · Enterprise Platform
+ * DheePath · Enterprise Platform
  */
 
 (function () {
@@ -134,7 +134,7 @@
         discard;
       }
 
-      // CareerPath AI EduTech Indigo-to-Cyan Edge Glow (#4F46E5 to #06B6D4)
+      // DheePath EduTech Indigo-to-Cyan Edge Glow (#4F46E5 to #06B6D4)
       vec3 edgeColor = mix(vec3(0.31, 0.27, 0.90), vec3(0.02, 0.71, 0.83), vUv.x);
       vec3 finalColor = texColor.rgb;
 

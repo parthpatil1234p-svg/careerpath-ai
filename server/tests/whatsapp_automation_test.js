@@ -9,7 +9,7 @@
  * 5. Incoming Student Query Webhook parsing & AI context assembly
  * 6. User Model Supabase PostgreSQL phone persistence
  * 
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const assert = require('assert');
@@ -24,7 +24,7 @@ const { sendLinkPhoneOtp, verifyLinkPhoneOtp } = require('../controllers/userCon
 
 async function runTests() {
   console.log('============================================================');
-  console.log('🧪 CareerPath AI — WhatsApp Automation Suite Verification');
+  console.log('🧪 DheePath — WhatsApp Automation Suite Verification');
   console.log('============================================================');
 
   let passed = 0;
@@ -81,7 +81,7 @@ async function runTests() {
   });
 
   await asyncTest('Dispatches general text message', async () => {
-    const res = await whatsappService.sendTextMessage('+919876543210', 'Hello from CareerPath AI!');
+    const res = await whatsappService.sendTextMessage('+919876543210', 'Hello from DheePath!');
     assert.strictEqual(res.success, true);
     assert.ok(['openwa_gateway', 'meta_cloud_api', 'console_fallback'].includes(res.provider), `Provider was: ${res.provider}`);
   });

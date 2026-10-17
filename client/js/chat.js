@@ -9,7 +9,7 @@
  * - Expandable Focus View for Roadmaps
  * - Dual-Engine Real-Time WebSocket Streaming with REST Fallback
  *
- * CareerPath AI · Enterprise Platform Engine
+ * DheePath · Enterprise Platform Engine
  */
 
 (function () {
@@ -266,7 +266,7 @@
           </div>
           <div class="cp-chat-header-text">
             <div class="d-flex align-items-center gap-1">
-              <h4 class="cp-chat-title">CareerPath AI Mentor</h4>
+              <h4 class="cp-chat-title">DheePath Mentor</h4>
               <i class="bi bi-patch-check-fill cp-verified-icon" title="Certified Career Intelligence"></i>
             </div>
             <div class="cp-chat-subtitle" id="cpChatSubtitle">
@@ -630,7 +630,7 @@
     container.innerHTML = '';
 
     const ctx = getStudentContext();
-    const studentGreeting = ctx.isLoggedIn ? `Welcome back, <strong>${escapeHtml(ctx.name)}</strong>! 👋` : 'Welcome to CareerPath AI! 👋';
+    const studentGreeting = ctx.isLoggedIn ? `Welcome back, <strong>${escapeHtml(ctx.name)}</strong>! 👋` : 'Welcome to DheePath! 👋';
 
     // Welcome Greeting Card
     const welcomeRow = document.createElement('div');
@@ -638,7 +638,7 @@
     welcomeRow.innerHTML = `
       <div class="cp-msg-meta-header">
         <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
-        <span class="cp-meta-name">CareerPath AI Mentor</span>
+        <span class="cp-meta-name">DheePath Mentor</span>
         <span class="cp-meta-badge"><i class="bi bi-patch-check-fill text-primary"></i> Academic Advisor</span>
       </div>
       <div class="cp-chat-bubble">
@@ -679,12 +679,12 @@
 
     if (role === 'ai') {
       const parsedContent = parseMarkdown(text);
-      const engineLabel = engine ? escapeHtml(engine) : 'CareerPath AI Knowledge Engine';
+      const engineLabel = engine ? escapeHtml(engine) : 'DheePath Knowledge Engine';
 
       row.innerHTML = `
         <div class="cp-msg-meta-header">
           <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
-          <span class="cp-meta-name">CareerPath AI Mentor</span>
+          <span class="cp-meta-name">DheePath Mentor</span>
           <span class="cp-meta-badge"><i class="bi bi-lightning-charge-fill text-warning"></i> ${engineLabel}</span>
         </div>
         <div class="cp-chat-bubble">
@@ -739,7 +739,7 @@
     indicator.innerHTML = `
       <div class="cp-msg-meta-header">
         <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
-        <span class="cp-meta-name">CareerPath AI Mentor</span>
+        <span class="cp-meta-name">DheePath Mentor</span>
         <span class="cp-meta-badge"><i class="bi bi-hourglass-split"></i> Reasoning...</span>
       </div>
       <div class="cp-chat-typing">
@@ -823,7 +823,7 @@
               streamRow.innerHTML = `
                 <div class="cp-msg-meta-header">
                   <div class="cp-meta-avatar"><i class="bi bi-robot"></i></div>
-                  <span class="cp-meta-name">CareerPath AI Mentor</span>
+                  <span class="cp-meta-name">DheePath Mentor</span>
                   <span class="cp-meta-badge"><i class="bi bi-lightning-charge-fill text-warning"></i> Real-time Stream</span>
                 </div>
               `;
@@ -921,7 +921,7 @@
 
           if (data.success && data.reply) {
             const aiTime = formatTime();
-            appendBubbleToDOM('ai', data.reply, aiTime, true, data.engine || 'CareerPath AI Engine');
+            appendBubbleToDOM('ai', data.reply, aiTime, true, data.engine || 'DheePath Engine');
             chatHistory.push({ role: 'ai', text: data.reply, time: aiTime, engine: data.engine });
             try {
               sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory.slice(-20)));
@@ -935,7 +935,7 @@
           console.error('Chatbot fetch error:', fetchErr);
           appendBubbleToDOM(
             'ai',
-            '⚠️ Could not connect to CareerPath AI backend server. Please verify your connection or try again shortly.',
+            '⚠️ Could not connect to DheePath backend server. Please verify your connection or try again shortly.',
             formatTime()
           );
         }
@@ -977,7 +977,7 @@
     window.addEventListener('load', scheduleWidgetInit, { once: true });
   }
 
-  window.CareerPathChat = {
+  window.DheePathChat = window.CareerPathChat = {
     open: () => {
       safeInjectWidgetDOM();
       const drawer = document.getElementById('cpChatDrawer');

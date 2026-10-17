@@ -1,6 +1,6 @@
 /**
  * google-auth.js — Client-Side Google Authentication Controller
- * CareerPath AI · Enterprise Platform Engine
+ * DheePath · Enterprise Platform Engine
  *
  * Implements:
  * - Google Identity Services (GSI) One-Tap and Pop-up Credential verification
@@ -50,7 +50,7 @@ window.GoogleAuth = (function () {
   };
 
   /**
-   * Authenticates with CareerPath AI backend using Google credentials or profile
+   * Authenticates with DheePath backend using Google credentials or profile
    */
   const sendGoogleAuthPayload = async (payload, callbacks) => {
     const { showAlert, setLoadingState, onSuccess } = callbacks;

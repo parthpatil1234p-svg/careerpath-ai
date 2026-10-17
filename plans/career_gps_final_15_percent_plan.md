@@ -1,6 +1,6 @@
 # Implementation Plan: Career GPS Final 15% Pipeline Completion
 
-**CareerPath AI · Team 404 Brain Not Found**  
+**DheePath · Team 404 Brain Not Found**  
 *Hack2Ignite 2026-27*
 
 ---

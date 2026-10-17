@@ -26,7 +26,7 @@ function isAllowedOrigin(origin) {
     origin === 'http://127.0.0.1:5500' ||
     origin === 'https://careerpath.is-local.org' ||
     origin === 'https://www.careerpath.is-local.org' ||
-    origin === 'https://careerpath-ai.vercel.app' ||
+    origin === 'https://dheepath.vercel.app' ||
     (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) ||
     (process.env.PROD_CLIENT_URL && origin === process.env.PROD_CLIENT_URL)
   ) {
@@ -117,8 +117,8 @@ function initSocket(server) {
         if (!reply) {
           const name = userContext?.name || 'Student';
           const targetStr = userContext?.targetCareer ? ` for **${userContext.targetCareer}**` : '';
-          reply = `Hello ${name}! 👋\n\nI am your CareerPath AI Real-Time Mentor. Here is my strategic advice${targetStr}:\n\n1. **Build End-to-End Projects**: Implement key full-stack capabilities with real deployment.\n2. **Follow Weekly Roadmaps**: Complete milestones step by step to eliminate identified skill gaps.\n3. **Practice Live Interviews**: Use the Mock Chamber to build technical fluency.\n\nKeep growing your skills!`;
-          engineUsed = 'CareerPath AI Knowledge Engine';
+          reply = `Hello ${name}! 👋\n\nI am your DheePath Real-Time Mentor. Here is my strategic advice${targetStr}:\n\n1. **Build End-to-End Projects**: Implement key full-stack capabilities with real deployment.\n2. **Follow Weekly Roadmaps**: Complete milestones step by step to eliminate identified skill gaps.\n3. **Practice Live Interviews**: Use the Mock Chamber to build technical fluency.\n\nKeep growing your skills!`;
+          engineUsed = 'DheePath Knowledge Engine';
         }
 
         // Stream chunks to simulate realistic real-time AI generation

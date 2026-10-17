@@ -8,7 +8,7 @@
  * Each question conforms strictly to:
  * - id, skill, difficulty, topic, question, options (4), correctIndex (0-3), explanation
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const ADDITIONAL_QUIZ_QUESTIONS = {

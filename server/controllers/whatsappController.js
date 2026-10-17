@@ -6,7 +6,7 @@
  * 2. On-Demand Weekly Roadmap & Cheatsheet PDF WhatsApp Delivery
  * 3. WhatsApp OTP Test & Healthcheck Gateway
  * 
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const fs = require('fs');
@@ -258,7 +258,7 @@ async function forwardAlertToFounder({ studentName, studentPhone, ticketId, type
     const founders = getFounders();
 
     const alertMessage = 
-`🚨 *CareerPath AI — Student Escalation Alert*
+`🚨 *DheePath — Student Escalation Alert*
 
 👤 *Student:* ${studentName}
 📞 *Phone:* ${studentPhone}
@@ -350,14 +350,14 @@ Sabhi open tickets dekhne ke liye *TICKETS* type karein.`;
     // Friendly notice to student
     if (ticket.phone) {
       const studentResolvedMsg = 
-`✨ *CareerPath AI  -  Ticket Resolved*
+`✨ *DheePath  -  Ticket Resolved*
 
 Namaste ${ticket.studentName}! 👋
 Aapka support request (#${ticket.ticketId}) successfully resolve ho gaya hai by ${adminTitle}.
 
 Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas WhatsApp par *ROADMAP*, *NOTES*, ya *SUPPORT* type karein.
 
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
       await whatsappService.sendTextMessage(ticket.phone, studentResolvedMsg, { context: 'TICKET_RESOLVED_STUDENT_NOTICE' });
     }
 
@@ -429,7 +429,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 
     // Dispatch message to student FROM official bot (+91 7499085045)
     const studentDispatch = 
-`🧑‍🏫 *CareerPath AI  -  ${adminTitle}*
+`🧑‍🏫 *DheePath  -  ${adminTitle}*
 
 "${replyContent}"
 
@@ -438,7 +438,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 💬 _Aapka koi aur sawaal ho toh reply karein: *QUERY: [aapka doubt]*_
 
 🌐 *Web Portal:* https://careerpath.is-local.org
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(ticket.phone, studentDispatch, {
       context: 'COUNSELOR_DIRECT_REPLY',
@@ -550,7 +550,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
     persistTickets().catch(() => {});
 
     const studentDispatch = 
-`🧑‍🏫 *CareerPath AI  -  Official Mentor Message*
+`🧑‍🏫 *DheePath  -  Official Mentor Message*
 
 "${targetMsg}"
 
@@ -560,7 +560,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 💬 _Aap is message ka direct WhatsApp reply karke mentor se connect kar sakte hain!_
 
 🌐 *Web Portal:* https://careerpath.is-local.org
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(formattedTarget, studentDispatch, {
       context: 'FOUNDER_DIRECT_OUTREACH',
@@ -613,7 +613,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
       ).join('\n\n');
 
       const lookupReply = 
-`🔍 *CareerPath AI  -  Student Lookup Results*
+`🔍 *DheePath  -  Student Lookup Results*
 
 ${matchStr}
 
@@ -636,7 +636,7 @@ ${matchStr}
 
     if (displayTickets.length === 0) {
       const emptyMsg = 
-`📋 *CareerPath AI  -  Leadership Admin Queue*
+`📋 *DheePath  -  Leadership Admin Queue*
 
 Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. 🎉
 
@@ -661,8 +661,8 @@ Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. �
     }).join('\n\n');
 
     const queueHeader = showAll 
-      ? `📋 *CareerPath AI  -  Leadership Admin Queue (All Recent)*` 
-      : `📋 *CareerPath AI  -  Leadership Admin Queue (${displayTickets.length} Active Pending)*`;
+      ? `📋 *DheePath  -  Leadership Admin Queue (All Recent)*` 
+      : `📋 *DheePath  -  Leadership Admin Queue (${displayTickets.length} Active Pending)*`;
 
     const queueMsg = 
 `${queueHeader}
@@ -690,7 +690,7 @@ ${listStr}
 
   // 7. Founder Admin Help & Command Guide
   const helpMsg = 
-`👑 *CareerPath AI  -  Leadership Admin & Counselor Console*
+`👑 *DheePath  -  Leadership Admin & Counselor Console*
 
 Namaste ${adminName}! 🚀
 Aapka number (*${senderPhone}*) as ${adminRole} verified hai.
@@ -704,7 +704,7 @@ Aapka number (*${senderPhone}*) as ${adminRole} verified hai.
 • *FIND [name or email]* ➔ Database me student ka phone number aur email search karein
 • *TEST: [sawal]* ➔ Normal student AI mentor responses test karein
 
-🔒 *Privacy:* Student ko aapka number kabhi nahi dikhega. Sabhi messages CareerPath AI ke official Bot (*+91 7499085045*) se dispatch hote hain.`;
+🔒 *Privacy:* Student ko aapka number kabhi nahi dikhega. Sabhi messages DheePath ke official Bot (*+91 7499085045*) se dispatch hote hain.`;
 
   await whatsappService.sendTextMessage(senderPhone, helpMsg, { context: 'FOUNDER_ADMIN_MENU' });
   return true;
@@ -752,7 +752,7 @@ const handleIncomingWebhook = async (req, res) => {
         try {
           await whatsappService.sendTextMessage(
             formattedCaller,
-            `📞 *CareerPath AI  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://careerpath.is-local.org\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
+            `📞 *DheePath  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://careerpath.is-local.org\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
           );
         } catch (callReplyErr) {
           console.warn('[WhatsApp Webhook] Failed to dispatch call auto-response:', callReplyErr.message);
@@ -977,7 +977,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 ✉️ Official Grievance: parthpatil@careerpath.is-local.org
 🌐 Portal: https://careerpath.is-local.org
 
-🚀 CareerPath AI · Your 24x7 Career GPS`;
+🚀 DheePath · Your 24x7 Career GPS`;
 
       await whatsappService.sendTextMessage(senderPhone, voiceNotice, {
         context: 'AUDIO_INPUT_NOTICE',
@@ -1035,7 +1035,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
       });
 
       const ticketReply = 
-`🎫 *CareerPath AI  -  Support Ticket Registered*
+`🎫 *DheePath  -  Support Ticket Registered*
 
 • *Ticket ID:* #${ticketId}
 • *Student:* ${userContext.name} (${senderPhone})
@@ -1049,7 +1049,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 ${issueDetails ? `📝 *Logged Issue:* "${issueDetails}"\n\n` : ''}Aapka ticket confirm ho gaya hai. Grievance Officer review karke jald hi revert karenge!
 
 🌐 *Web Portal:* https://careerpath.is-local.org
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, ticketReply, {
         context: 'SUPPORT_TICKET_CONFIRMATION',
@@ -1061,7 +1061,7 @@ ${issueDetails ? `📝 *Logged Issue:* "${issueDetails}"\n\n` : ''}Aapka ticket 
     // 2. Instant Category Quick Responders (Option 1, 2, 3, 4)
     if (cleanLower === '1' || cleanLower === 'otp' || cleanLower === 'login') {
       const otpHelpReply = 
-`🔐 *CareerPath AI  -  Login & Dual-OTP Support*
+`🔐 *DheePath  -  Login & Dual-OTP Support*
 
 Namaste ${userContext.name}! Agar aapko OTP ya login me issue aa raha hai:
 
@@ -1093,7 +1093,7 @@ Hum priority review shuru kar denge!
 
     if (cleanLower === '2' || cleanLower === 'test' || cleanLower === 'proctor' || cleanLower === 'strike') {
       const testHelpReply = 
-`⏱️ *CareerPath AI  -  Milestone Test & Anti-Cheat Support*
+`⏱️ *DheePath  -  Milestone Test & Anti-Cheat Support*
 
 Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke saath aate hain:
 
@@ -1118,7 +1118,7 @@ Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke 
 
     if (cleanLower === '3' || cleanLower === 'certificate' || cleanLower === 'cert') {
       const certHelpReply = 
-`📜 *CareerPath AI  -  Certificate & Verification Support*
+`📜 *DheePath  -  Certificate & Verification Support*
 
 Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
 
@@ -1141,7 +1141,7 @@ Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
 
     if (cleanLower === '4' || cleanLower === 'recruiter' || cleanLower === 'hiring') {
       const recruiterHelpReply = 
-`🏢 *CareerPath AI  -  Corporate Recruiter & Job Radar Support*
+`🏢 *DheePath  -  Corporate Recruiter & Job Radar Support*
 
 Namaste ${userContext.name}!
 Corporate hiring & talent radar support:
@@ -1205,7 +1205,7 @@ Reply *TICKET: Recruiter onboarding assistance*
       });
 
       const counselReply = 
-`🧑‍🏫 *CareerPath AI  -  Human Career Counselor Desk*
+`🧑‍🏫 *DheePath  -  Human Career Counselor Desk*
 
 Namaste ${userContext.name}! 👋
 Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
@@ -1227,7 +1227,7 @@ Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
 parthpatil@careerpath.is-local.org
 
 🌐 *Web Portal:* https://careerpath.is-local.org
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, counselReply, {
         context: 'COUNSELOR_REQUEST_CONFIRMATION',
@@ -1269,7 +1269,7 @@ parthpatil@careerpath.is-local.org
       });
 
       const queryReply = 
-`📝 *CareerPath AI  -  Counselor Query Docketed*
+`📝 *DheePath  -  Counselor Query Docketed*
 
 Namaste ${userContext.name}! 
 Aapka doubt hamare lead career counselor ke priority review docket me add kar diya gaya hai:
@@ -1281,7 +1281,7 @@ Aapka doubt hamare lead career counselor ke priority review docket me add kar di
 
 Hum is query ka specific roadmap solution lekar aapse WhatsApp par revert karenge!
 
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, queryReply, {
         context: 'COUNSELOR_QUERY_LOGGED',
@@ -1308,7 +1308,7 @@ Hum is query ka specific roadmap solution lekar aapse WhatsApp par revert kareng
       let statusReply = '';
       if (userTickets.length === 0) {
         statusReply = 
-`🔍 *CareerPath AI  -  Support Ticket Status*
+`🔍 *DheePath  -  Support Ticket Status*
 
 Namaste ${userContext.name}!
 Aapke phone number (${senderPhone}) se koi open support ticket ya counselor request pending nahi hai.
@@ -1319,14 +1319,14 @@ Aapke phone number (${senderPhone}) se koi open support ticket ya counselor requ
 • Human counselor callback ke liye: *COUNSELOR*
 
 🌐 *Web Portal:* https://careerpath.is-local.org
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
       } else {
         const ticketListStr = userTickets.slice(-3).map(t => 
           `• *#${t.ticketId}* (${t.type || 'SUPPORT'})\n  Issue: "${t.issue}"\n  Status: ${t.status || 'ACTIVE'}\n  Date: ${new Date(t.createdAt).toLocaleDateString('en-IN')}`
         ).join('\n\n');
 
         statusReply = 
-`🔍 *CareerPath AI  -  Aapke Active Tickets*
+`🔍 *DheePath  -  Aapke Active Tickets*
 
 Namaste ${userContext.name}! 
 Aapke phone (${senderPhone}) se associated active requests:
@@ -1336,7 +1336,7 @@ ${ticketListStr}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@careerpath.is-local.org*.
 
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
       }
 
       await whatsappService.sendTextMessage(senderPhone, statusReply, {
@@ -1349,10 +1349,10 @@ Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hai
     // 6. General Support Protocol Menu
     if (isSupportKeyword) {
       const supportMenuReply = 
-`🛠️ *CareerPath AI  -  Official Support & Grievance Desk*
+`🛠️ *DheePath  -  Official Support & Grievance Desk*
 
 Namaste ${userContext.name}! 👋
-CareerPath AI Support System me aapka swagat hai:
+DheePath Support System me aapka swagat hai:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📞 *OFFICIAL SUPPORT CHANNELS:*
@@ -1380,7 +1380,7 @@ CareerPath AI Support System me aapka swagat hai:
 • *QUERY: [your doubt]* ➔ Docket technical question for mentor
 
 🌐 *Web Portal:* https://careerpath.is-local.org
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, supportMenuReply, {
         context: 'SUPPORT_MENU',
@@ -1413,12 +1413,12 @@ CareerPath AI Support System me aapka swagat hai:
       });
 
       const ackNotice = 
-`🧑‍🏫 *CareerPath AI  -  Mentor Desk*
+`🧑‍🏫 *DheePath  -  Mentor Desk*
 
 Namaste ${userContext.name}!
 Aapka reply mentor ko forward kar diya gaya hai. Vo jald hi aapse yahan connect karenge!
 
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, ackNotice, {
         context: 'STUDENT_REPLY_FORWARDED',
@@ -1431,11 +1431,11 @@ Aapka reply mentor ko forward kar diya gaya hai. Vo jald hi aapse yahan connect 
     // Welcomes new unlinked users sending greetings with instant portal registration instructions
     if (!userContext.isRegistered && /^(hi|hii|hiii|hello|hey|namaste|start|\/start)\b/i.test(cleanLower)) {
       const welcomeOnboardingMsg = 
-`👋 *Namaste ${userContext.name}! CareerPath AI me aapka swagat hai!*
+`👋 *Namaste ${userContext.name}! DheePath me aapka swagat hai!*
 
 Aapka yeh WhatsApp number hamare main portal par abhi *Registered / Linked* nahi hai.
 
-🎯 *CareerPath AI kya hai?*
+🎯 *DheePath kya hai?*
 Yeh Bharat ka 1st Autonomous Career GPS platform hai — jo aapko personalized 12-week roadmap, live coding milestones, verified skill certificates aur top tech recruiters se connect karwata hai!
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1458,7 +1458,7 @@ Senior mentor se seedha call connect karne ke liye reply karein:
 Sabhi options dekhne ke liye reply karein:
 👉 *SUPPORT*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 *CareerPath AI · 24x7 Verified Talent OS*`;
+🚀 *DheePath · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, welcomeOnboardingMsg, {
         context: 'UNREGISTERED_WELCOME_ONBOARDING',
@@ -1469,7 +1469,7 @@ Sabhi options dekhne ke liye reply karein:
 
     // 4. Generate Context-Aware AI Guidance (Groq Llama 3.3 / Qwen with Gemini fallback)
     const promptSystemPrefix = 
-`You are CareerPath AI's official 24x7 WhatsApp Career Mentor.
+`You are DheePath's official 24x7 WhatsApp Career Mentor.
 You are chatting with a student on WhatsApp.
 Student Context:
 - Name: ${userContext.name}
@@ -1483,7 +1483,7 @@ WHATSAPP FORMATTING GUIDELINES:
 - Keep response under 150 words  -  concise, actionable, and encouraging.
 - If asking for next steps, specifically guide them on their Week ${userContext.activeWeek} milestones.
 - Sign off with:
-"🚀 CareerPath AI · Your 24x7 Career GPS
+"🚀 DheePath · Your 24x7 Career GPS
 💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_"`;
 
     let aiReply = '';
@@ -1507,12 +1507,12 @@ WHATSAPP FORMATTING GUIDELINES:
         aiReply = 
 `Namaste ${userContext.name}! 👋
 
-Aapka sawal mil gaya hai! CareerPath AI Mentor abhi heavy load handle kar raha hai. 
+Aapka sawal mil gaya hai! DheePath Mentor abhi heavy load handle kar raha hai. 
 Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web portal par access kar sakte hain:
 👉 https://careerpath-ai-bdbt.onrender.com/roadmap.html
 
 💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_
-🚀 CareerPath AI · 24x7 Autonomous Career GPS`;
+🚀 DheePath · 24x7 Autonomous Career GPS`;
       }
     }
 
@@ -1576,7 +1576,7 @@ const sendRoadmapPdf = async (req, res, next) => {
       tasks: weekTasks
     });
 
-    const filename = `CareerPath_${careerTitle.replace(/\s+/g, '_')}_Week_${weekNumber}_Notes.pdf`;
+    const filename = `DheePath_${careerTitle.replace(/\s+/g, '_')}_Week_${weekNumber}_Notes.pdf`;
 
     // 3. If direct download requested, stream PDF buffer
     if (isDownloadOnly) {
@@ -1596,7 +1596,7 @@ const sendRoadmapPdf = async (req, res, next) => {
     }
 
     const caption = 
-`🗺️ *CareerPath AI  -  Week ${weekNumber} Study Notes*
+`🗺️ *DheePath  -  Week ${weekNumber} Study Notes*
 Career: *${careerTitle}*
 Student: *${user.name}*
 

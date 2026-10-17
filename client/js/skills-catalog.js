@@ -1,6 +1,6 @@
 /**
- * skills-catalog.js — Standardized 94-Skill Reference Catalog for CareerPath AI
- * CareerPath AI · Skills Ontology
+ * skills-catalog.js — Standardized 94-Skill Reference Catalog for DheePath
+ * DheePath · Skills Ontology
  */
 window.DEFAULT_94_SKILLS = [
   {

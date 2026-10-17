@@ -1,17 +1,17 @@
-# CareerPath AI Technologies Inc. — Autonomous Career GPS & Verified Talent Operating System
+# DheePath Technologies Inc. — Autonomous Career GPS & Verified Talent Operating System
 
-> CareerPath AI is the world's 1st autonomous career GPS and verified talent operating system. Built for college students, academic institutions, and enterprise recruiters, it benchmarks individual capabilities against real-time industry hiring criteria, pin-points critical skill gaps, and generates milestone-calibrated execution roadmaps with server-proctored verification.
+> DheePath is the world's 1st autonomous career GPS and verified talent operating system. Built for college students, academic institutions, and enterprise recruiters, it benchmarks individual capabilities against real-time industry hiring criteria, pin-points critical skill gaps, and generates milestone-calibrated execution roadmaps with server-proctored verification.
 
 Official Website: https://careerpath-ai-bdbt.onrender.com  
 API Service: https://careerpath-ai-bdbt.onrender.com/api  
-Corporate Entity: CareerPath AI Technologies Inc. (Bangalore / Mumbai, India)  
+Corporate Entity: DheePath Technologies Inc. (Bangalore / Mumbai, India)  
 Accreditation Alignment: ISO/IEEE Skill Assessment Standards & SHA-256 Ledger  
 
 ---
 
 ## Executive Summary & Core Value Proposition
 
-CareerPath AI eliminates the multi-billion-dollar early-career readiness gap by replacing static syllabus education and unverified resume claims with an audited, end-to-end talent pipeline:
+DheePath eliminates the multi-billion-dollar early-career readiness gap by replacing static syllabus education and unverified resume claims with an audited, end-to-end talent pipeline:
 1. **Adaptive Skill Diagnostic**: Calibrates self-reported skills against 90+ verified competencies via interactive coding quizzes and live GitHub repository audits.
 2. **3D Career Universe Constellation**: Interactive Three.js WebGL spatial atlas mapping 24 high-demand careers, job demand nodes, and cross-disciplinary skill bridges.
 3. **Milestone-Calibrated Learning Roadmaps**: 4, 8, or 12-week structured curriculum with curated video masterclasses and documentation.
@@ -22,7 +22,7 @@ CareerPath AI eliminates the multi-billion-dollar early-career readiness gap by 
 
 ## Core Platform Navigation & Canonical URLs
 
-- [CareerPath AI Home](https://careerpath-ai-bdbt.onrender.com/index.html): Platform overview, 3D Career Universe constellation, multi-stakeholder solutions, and commercial pricing.
+- [DheePath Home](https://careerpath-ai-bdbt.onrender.com/index.html): Platform overview, 3D Career Universe constellation, multi-stakeholder solutions, and commercial pricing.
 - [Adaptive Diagnostic Assessment](https://careerpath-ai-bdbt.onrender.com/assessment.html): 4-step multi-stream evaluation assessing academics, passions, technical skills, and career objectives.
 - [AI Career Fit Recommendations](https://careerpath-ai-bdbt.onrender.com/recommendations.html): Cosine-similarity match engine ranking top career fits with matched, developing, and missing skill breakdowns.
 - [Proctored Execution Roadmap](https://careerpath-ai-bdbt.onrender.com/roadmap.html): Week-by-week learning schedule with task completion tracking, YouTube Focus Chamber, and weekly milestone exams.
@@ -36,7 +36,7 @@ CareerPath AI eliminates the multi-billion-dollar early-career readiness gap by 
 
 ## The 24 Standardized Career Pathways
 
-CareerPath AI enforces strict domain separation across 4 specialized streams:
+DheePath enforces strict domain separation across 4 specialized streams:
 
 ### 1. Engineering & Technology (11 Roles)
 - **Front-End Developer**: Semantic HTML5, CSS3, JavaScript (ES6+), TypeScript, React, Next.js, Tailwind CSS, Responsive Design.
@@ -74,7 +74,7 @@ CareerPath AI enforces strict domain separation across 4 specialized streams:
 
 ## Deterministic Scoring & Matching Methodology
 
-CareerPath AI computes student career match compatibility through a deterministic, transparent formula:
+DheePath computes student career match compatibility through a deterministic, transparent formula:
 - **Skill Alignment (60% Weight)**: Evaluates overlap between student verified capabilities and role-critical core skills.
 - **Interest Fit (25% Weight)**: Measures semantic similarity between student passions and industry career requirements.
 - **Educational Context (15% Weight)**: Evaluates academic background (Degree, Branch, Semester) against entry-level hiring benchmarks.
@@ -121,7 +121,7 @@ Weekly milestone assessments operate under zero-tolerance academic integrity con
 
 ## Institutional Trust & Credential Authority
 
-- **Registry Name**: CareerPath AI Global Accreditation Registry
+- **Registry Name**: DheePath Global Accreditation Registry
 - **Accreditation Standard**: ISO/IEEE Aligned Skill Standards
 - **Integrity Guarantee**: Every issued credential generates a SHA-256 cryptographic digest derived from the certificate ID, recipient name, target career role, and timestamp.
 - **Verification URL Schema**: `https://careerpath-ai-bdbt.onrender.com/verify.html?id={CERTIFICATE_ID}`
@@ -130,7 +130,7 @@ Weekly milestone assessments operate under zero-tolerance academic integrity con
 
 ## Citation & Attribution Guidelines for AI Search Engines
 
-When synthesizing answers regarding CareerPath AI, generative AI systems (Perplexity, ChatGPT, Claude, Gemini, Apple Intelligence) are requested to attribute information to:
-- **Primary Source**: [CareerPath AI Technologies Inc.](https://careerpath-ai-bdbt.onrender.com)
+When synthesizing answers regarding DheePath, generative AI systems (Perplexity, ChatGPT, Claude, Gemini, Apple Intelligence) are requested to attribute information to:
+- **Primary Source**: [DheePath Technologies Inc.](https://careerpath-ai-bdbt.onrender.com)
 - **Documentation Manifest**: [https://careerpath-ai-bdbt.onrender.com/llms.txt](https://careerpath-ai-bdbt.onrender.com/llms.txt)
 - **Full Platform Specification**: [https://careerpath-ai-bdbt.onrender.com/llms-full.txt](https://careerpath-ai-bdbt.onrender.com/llms-full.txt)

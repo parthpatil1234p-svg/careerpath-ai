@@ -8,7 +8,7 @@
  *   4. 3-Strike HUD Modals (Strike 1 Amber, Strike 2 Red Urgent, Strike 3 Termination)
  *   5. Authoritative Server Violation Sync (POST /api/quiz/violation)
  *
- * CareerPath AI · Enterprise Platform
+ * DheePath · Enterprise Platform
  */
 
 (function (root, factory) {

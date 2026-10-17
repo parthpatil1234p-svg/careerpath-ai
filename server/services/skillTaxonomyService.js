@@ -9,7 +9,7 @@
  *   4. Hierarchical taxonomy tree (Category -> Subcategory -> Skills)
  *
  * 100% Pure Supabase PostgreSQL via Prisma Client · Zero MongoDB Architecture
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const path = require('path');

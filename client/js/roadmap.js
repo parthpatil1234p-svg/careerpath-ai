@@ -1474,7 +1474,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = downloadUrl;
-        a.download = `CareerPath_Week_${activeWeek}_Study_Notes.pdf`;
+        a.download = `DheePath_Week_${activeWeek}_Study_Notes.pdf`;
         document.body.appendChild(a);
         a.click();
         a.remove();

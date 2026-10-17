@@ -2,7 +2,7 @@
  * services/emailService.js — High-Reliability Email Delivery for OTP Verification
  * Uses Nodemailer with direct Gmail SMTP (Port 465 SSL with Port 587 STARTTLS Fallback).
  * Anti-Spam Optimized: Clean headers, no trigger emojis, RFC compliance.
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const nodemailer = require('nodemailer');
@@ -53,7 +53,7 @@ async function sendOtpEmail(toEmail, name, otpCode) {
   }
 
   const recipientName = name ? name.trim() : 'Student';
-  const cleanSubject = `CareerPath AI Account Verification Code: ${otpCode}`;
+  const cleanSubject = `DheePath Account Verification Code: ${otpCode}`;
 
   const htmlContent = `
   <!DOCTYPE html>
@@ -61,7 +61,7 @@ async function sendOtpEmail(toEmail, name, otpCode) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerPath AI Verification Code</title>
+    <title>DheePath Verification Code</title>
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 24px 16px; }
       .container { max-width: 520px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 32px 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
@@ -79,12 +79,12 @@ async function sendOtpEmail(toEmail, name, otpCode) {
   <body>
     <div class="container">
       <div class="brand">
-        CareerPath <span>AI</span>
+        Dhee<span>Path</span>
       </div>
-      <div class="title">Verify Your CareerPath AI Account</div>
+      <div class="title">Verify Your DheePath Account</div>
       <p class="desc">
         Hi <strong>${recipientName}</strong>,<br>
-        Welcome to CareerPath AI. Please enter the 6-digit verification code below to activate your account and start your personalized career assessment:
+        Welcome to DheePath. Please enter the 6-digit verification code below to activate your account and start your personalized career assessment:
       </p>
       
       <div class="otp-card">
@@ -101,7 +101,7 @@ async function sendOtpEmail(toEmail, name, otpCode) {
       </p>
 
       <div class="footer">
-        CareerPath AI Technologies Inc. · Next-Gen Career Navigation Platform<br>
+        DheePath Technologies Inc. · Next-Gen Career Navigation Platform<br>
         Autonomous Career GPS &amp; Verified Talent Operating System
       </div>
     </div>
@@ -110,23 +110,23 @@ async function sendOtpEmail(toEmail, name, otpCode) {
   `;
 
   const textContent = `
-CareerPath AI - Account Verification Code
+DheePath - Account Verification Code
 
 Hi ${recipientName},
 
 Your 6-digit verification code is: ${otpCode}
 
-This code is valid for 10 minutes. Please enter it to activate your CareerPath AI account.
+This code is valid for 10 minutes. Please enter it to activate your DheePath account.
 
 If you did not request this code, you can safely ignore this email.
 
 --
-CareerPath AI Technologies Inc. · Next-Gen Career Navigation Platform
+DheePath Technologies Inc. · Next-Gen Career Navigation Platform
 Autonomous Career GPS & Verified Talent Operating System
 `;
 
   const mailOptions = {
-    from: `"CareerPath AI" <${emailUser}>`,
+    from: `"DheePath" <${emailUser}>`,
     to: toEmail,
     replyTo: emailUser,
     subject: cleanSubject,
@@ -212,7 +212,7 @@ async function sendInactivityNudgeEmail({
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerPath AI - Streak Alert</title>
+    <title>DheePath - Streak Alert</title>
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 24px 16px; }
       .container { max-width: 540px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 32px 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
@@ -238,7 +238,7 @@ async function sendInactivityNudgeEmail({
   <body>
     <div class="container">
       <div class="header">
-        <div class="brand">CareerPath <span>AI</span></div>
+        <div class="brand">Dhee<span>Path</span></div>
         <div class="streak-badge">🔥 Streak Alert</div>
       </div>
       
@@ -277,7 +277,7 @@ async function sendInactivityNudgeEmail({
       </div>
 
       <div class="footer">
-        CareerPath AI Technologies Inc. · Automated Learning Engagement Engine<br>
+        DheePath Technologies Inc. · Automated Learning Engagement Engine<br>
         Autonomous Career GPS &amp; Verified Talent Operating System · 
         <a href="${clientUrl}/dashboard.html" style="color: #64748B;">Student Dashboard</a>
       </div>
@@ -287,7 +287,7 @@ async function sendInactivityNudgeEmail({
   `;
 
   const textContent = `
-CareerPath AI - Streak Alert: Don't lose your momentum!
+DheePath - Streak Alert: Don't lose your momentum!
 
 Hi ${recipientName},
 
@@ -301,12 +301,12 @@ Resume your learning now: ${roadmapUrl}
 "Consistent 20-minute daily progress beats 5-hour weekend marathons every time."
 
 --
-CareerPath AI Technologies Inc.
+DheePath Technologies Inc.
 Autonomous Career GPS & Verified Talent Operating System
 `;
 
   const mailOptions = {
-    from: `"CareerPath AI Mentor" <${emailUser}>`,
+    from: `"DheePath Mentor" <${emailUser}>`,
     to: toEmail,
     replyTo: emailUser,
     subject,

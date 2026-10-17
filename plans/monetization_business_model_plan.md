@@ -1,4 +1,4 @@
-# Implementation Plan: CareerPath AI Monetization & Business Model
+# Implementation Plan: DheePath Monetization & Business Model
 
 > **Status:** Planning Mode Only — No implementation or code changes made.  
 > **Target Audience:** Hackathon Judges (Hack2Ignite 2026–27), College TPOs, Hiring Partners, and Investors.
@@ -11,7 +11,7 @@ Hackathon judges consistently ask: **"How does this make money?"** or **"What is
 
 Most student projects fall into the trap of proposing student subscription paywalls (e.g., *"₹199/month for premium roadmap tasks"*). In Indian higher education, this model fails: students have high price sensitivity, CAC (customer acquisition cost) is prohibitive, and monetizing students directly contradicts the core mission of **EduTech / AI for Good**.
 
-**CareerPath AI adopts a proven B2B2C Talent & Telemetry Flywheel:**
+**DheePath adopts a proven B2B2C Talent & Telemetry Flywheel:**
 1. **100% Free for Students, Always:** Frictionless adoption builds an organic, high-intent talent pipeline across colleges.
 2. **Colleges Pay for Placement Intelligence:** Per-batch or yearly enterprise SaaS licenses for Training & Placement Officers (TPOs) and college leadership.
 3. **Companies Pay for Verified-Skill Talent:** B2B subscription and pay-per-pipeline fees for pre-assessed, proof-of-work candidates matching exact skill rubrics.
@@ -19,7 +19,7 @@ Most student projects fall into the trap of proposing student subscription paywa
 
 ```
        ┌────────────────────────────────────────────────────────┐
-       │                 CAREERPATH AI PLATFORM                 │
+       │                 DheePath Platform                 │
        └──────────────────────────┬─────────────────────────────┘
                                   │
           ┌───────────────────────┼───────────────────────┐
@@ -61,7 +61,7 @@ When a judge asks: *"How do you make money? What's the business model?"*, the te
 > In India, charging students creates friction and kills adoption. Instead, our monetization follows a high-margin **B2B institutional model**:
 > 
 > 1. **Colleges pay for our Placement Readiness Portal** — a yearly SaaS license starting at ₹1.5 to ₹3 Lakhs per campus. TPOs get real-time batch skill heatmaps, curriculum gap analytics, and predictive placement metrics essential for their NAAC and NIRF rankings.
-> 2. **Companies pay for Verified Candidate Access** — recruiters spend over ₹50,000 per engineering hire sifting through thousands of unverified resumes. CareerPath AI gives them direct access to pre-assessed candidates with transparent roadmap proof-of-work.
+> 2. **Companies pay for Verified Candidate Access** — recruiters spend over ₹50,000 per engineering hire sifting through thousands of unverified resumes. DheePath gives them direct access to pre-assessed candidates with transparent roadmap proof-of-work.
 > 3. **Optional Sponsored Certifications** — vetted, clearly labeled industry course partners pay a small referral fee when a student voluntarily chooses a certified learning track for their roadmap gap.
 > 
 > Students get free guidance, colleges boost placement rates, and companies cut hiring time by 60%."
@@ -259,7 +259,7 @@ To demonstrate this during the hackathon or future phases, lightweight frontend 
 
 ### Question 2: *"Why would recruiters use this instead of LinkedIn, Internshala, or Naukri?"*
 **Answer:**  
-> "LinkedIn and Naukri are resume dumps where anyone can claim 'React Expert' with zero validation. Recruiters spend an average of ₹40,000 on screening tests and initial interview rounds just to filter out 90% of applicants. CareerPath AI pre-filters candidates with our explainable 60/25/15 algorithm, completed roadmap checkpoints, and proof-of-work. Recruiters pay for **signal over noise**."
+> "LinkedIn and Naukri are resume dumps where anyone can claim 'React Expert' with zero validation. Recruiters spend an average of ₹40,000 on screening tests and initial interview rounds just to filter out 90% of applicants. DheePath pre-filters candidates with our explainable 60/25/15 algorithm, completed roadmap checkpoints, and proof-of-work. Recruiters pay for **signal over noise**."
 
 ### Question 3: *"What if students lie on their self-assessment to get recruiter interviews?"*
 **Answer:**  

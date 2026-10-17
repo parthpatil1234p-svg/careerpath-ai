@@ -13,11 +13,11 @@ Secondary: Campus recruiters and Training & Placement Officers (TPOs) seeking ve
 
 ## Product Purpose
 
-Democratize AI-driven, evidence-based career guidance. CareerPath AI eliminates career blindness and credential inflation by transforming subjective aspirations into deterministic matching, actionable week-by-week learning milestones, and validated proof-of-work.
+Democratize AI-driven, evidence-based career guidance. DheePath eliminates career blindness and credential inflation by transforming subjective aspirations into deterministic matching, actionable week-by-week learning milestones, and validated proof-of-work.
 
 ## Positioning
 
-Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI chatbots, CareerPath AI uses an explainable deterministic matching algorithm (60% Skill Match + 25% Interest Match + 15% Education Fit) coupled with two-factor skill verification (automated GitHub repository code audit + adaptive reality-check quizzes) and corporate recruiter domain verification.
+Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI chatbots, DheePath uses an explainable deterministic matching algorithm (60% Skill Match + 25% Interest Match + 15% Education Fit) coupled with two-factor skill verification (automated GitHub repository code audit + adaptive reality-check quizzes) and corporate recruiter domain verification.
 
 ## Operating Context
 
@@ -36,7 +36,7 @@ Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI cha
 
 ## Brand Commitments
 
-- **Name**: CareerPath AI
+- **Name**: DheePath
 - **Tagline**: Discover Your Career. Bridge Your Skill Gaps. Build Your Future.
 - **Team**: 404 Brain Not Found (Hack2Ignite 2026–27, Problem Statement ED-02)
 - **Voice**: Authoritative, encouraging, pragmatic, objective, and transparent (no inflated hype; clear gap analysis: 🟢 Matched, 🟡 Upgrade, 🔴 Missing).
@@ -46,7 +46,7 @@ Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI cha
 
 - Hackathon Project Documentation: `docs/PRD.md`, `docs/ARCHITECTURE.md`, `docs/UI-UX-DESIGN.md`, `docs/REQUIREMENTS-MATRIX.md`, `README.md`.
 - Working local and production deployments:
-  - Frontend: `https://careerpath-ai-jade.vercel.app` (and `http://localhost:5500`)
+  - Frontend: `https://dheepath-jade.vercel.app` (and `http://localhost:5500`)
   - Backend API: `https://careerpath-ai-bdbt.onrender.com` (and `http://localhost:5000`)
 - Demo Evaluator Credentials: 1-Click Sandbox on `/login.html` and recruiter demo access.
 - Test suites: E2E and unit test scripts under `tests/` and root `test_*.js`.

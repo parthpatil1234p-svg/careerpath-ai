@@ -1,6 +1,6 @@
 /**
  * resume-builder.js — Dual-Pane Reactive Resume Builder & ATS Job Matcher
- * CareerPath AI · Enterprise Platform Engine
+ * DheePath · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const skillsHtml = (data.skills || []).map(s => `
       <span class="skill-tag ${s.isVerified ? 'verified' : ''}">
         ${escapeHtml(s.name)}
-        ${s.isVerified ? '<span class="verified-badge-mini" title="CareerPath AI Verified"><i class="bi bi-patch-check-fill"></i></span>' : ''}
+        ${s.isVerified ? '<span class="verified-badge-mini" title="DheePath Verified"><i class="bi bi-patch-check-fill"></i></span>' : ''}
       </span>
     `).join('');
 
@@ -825,11 +825,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="row g-2">
           <div class="col-sm-6">
             <label class="cp-input-label">Certification Name</label>
-            <input type="text" class="cp-form-control cert-field" data-field="name" data-index="${index}" value="${escapeHtml(c.name || '')}" placeholder="CareerPath AI Verified Assessment" />
+            <input type="text" class="cp-form-control cert-field" data-field="name" data-index="${index}" value="${escapeHtml(c.name || '')}" placeholder="DheePath Verified Assessment" />
           </div>
           <div class="col-sm-6">
             <label class="cp-input-label">Issuing Organization</label>
-            <input type="text" class="cp-form-control cert-field" data-field="issuer" data-index="${index}" value="${escapeHtml(c.issuer || '')}" placeholder="CareerPath AI / AWS / Google" />
+            <input type="text" class="cp-form-control cert-field" data-field="issuer" data-index="${index}" value="${escapeHtml(c.issuer || '')}" placeholder="DheePath / AWS / Google" />
           </div>
           <div class="col-sm-6">
             <label class="cp-input-label">Issue Date / Year</label>
@@ -1096,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnAddCertification) {
     btnAddCertification.addEventListener('click', () => {
       if (!resumeData.certifications) resumeData.certifications = [];
-      resumeData.certifications.push({ name: 'Certified Web Specialist', issuer: 'CareerPath AI', date: '2026', credentialUrl: '' });
+      resumeData.certifications.push({ name: 'Certified Web Specialist', issuer: 'DheePath', date: '2026', credentialUrl: '' });
       renderCertificationsList();
       renderResumePreview();
       triggerAutoSave();
@@ -1457,7 +1457,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnDownloadPdf.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Generating PDF...`;
 
       const candidateName = (resumeData?.personalInfo?.fullName || 'Student').replace(/\s+/g, '_');
-      const filename = `${candidateName}_Resume_CareerPath.pdf`;
+      const filename = `${candidateName}_Resume_DheePath.pdf`;
 
       // Save current zoom transform and reset for clean render
       const prevTransform = paper.style.transform;

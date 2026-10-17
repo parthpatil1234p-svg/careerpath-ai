@@ -2,7 +2,7 @@
  * config/prisma.js — Supabase PostgreSQL Prisma Client Singleton
  *
  * Provides a cached, pooled PrismaClient instance across hot-reloads and serverless invocations.
- * CareerPath AI · Enterprise Architecture
+ * DheePath · Enterprise Architecture
  */
 
 const { PrismaClient } = require('@prisma/client');

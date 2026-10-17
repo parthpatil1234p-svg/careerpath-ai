@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "name": "CareerPath AI WebMCP Actions",
-  "platform": "CareerPath AI Technologies Inc.",
+  "name": "DheePath WebMCP Actions",
+  "platform": "DheePath Technologies Inc.",
   "version": "1.0.0",
   "description": "Standard WebMCP & Model Context Protocol agent actions specification for autonomous AI browsing agents (Chrome AI, Gemini, Claude Computer Use, Operator). Enables structured automation of career diagnostics, roadmap creation, job discovery, and credential verification.",
   "baseUrl": "https://careerpath-ai-bdbt.onrender.com",

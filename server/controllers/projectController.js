@@ -1,6 +1,6 @@
 /**
  * projectController.js - Handles student practical project submissions & evaluations
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const User = require('../models/User');

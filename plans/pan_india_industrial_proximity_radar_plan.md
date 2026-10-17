@@ -14,7 +14,7 @@
 ### Current Limitations
 1. **Generic Job Scraping**: Standard job boards show remote listings or generic metro postings in Bengaluru and USA, ignoring tier-2/tier-3 local engineering talent (e.g. KBCNMU Jalgaon students, Pune diploma holders, Nashik freshers).
 2. **Heavy Map Bloat in Competitor Apps**: When competitors attempt "location features", they embed massive 2MB Google/Leaflet map canvases with clunky pin icons that lag on mobile devices, consume battery, and distract from direct job applications.
-3. **National vs. Regional Tension**: CareerPath AI must serve both:
+3. **National vs. Regional Tension**: DheePath must serve both:
    - Deep hyper-local focus: 30+ verified employers in Jalgaon, Bhusawal, Chhatrapati Sambhajinagar (Aurangabad), and Nashik MIDC.
    - Pan-India scalability: Seamless coverage for students across Karnataka, Telangana, NCR, Tamil Nadu, and Gujarat.
 
@@ -68,7 +68,7 @@
 
 ### Component 1: Data & Coordinate Layer
 
-#### [MODIFY] `careerpath-ai/server/data/regionalCompaniesData.js`
+#### [MODIFY] `dheepath/server/data/regionalCompaniesData.js`
 1. Enrich all existing 30+ Maharashtra companies with exact GPS coordinates:
    - Jalgaon companies: `latitude: 21.0077`, `longitude: 75.5626`
    - Bhusawal companies: `latitude: 21.0454`, `longitude: 75.7885`
@@ -99,7 +99,7 @@
 
 ### Component 2: Backend Controller & API Layer
 
-#### [MODIFY] `careerpath-ai/server/controllers/careerController.js`
+#### [MODIFY] `dheepath/server/controllers/careerController.js`
 Upgrade `getRegionalCompanies` (`GET /api/careers/regional/companies`):
 - Support query parameters:
   - `lat` & `lng`: Client's background live coordinates.
@@ -117,7 +117,7 @@ Upgrade `getRegionalCompanies` (`GET /api/careers/regional/companies`):
 
 ### Component 3: Frontend Radar HUD & Job Board Tab
 
-#### [MODIFY] `careerpath-ai/client/jobs.html`
+#### [MODIFY] `dheepath/client/jobs.html`
 1. Add **Tab 3** to `#jobsTab`:
    ```html
    <li class="nav-item" role="presentation">
@@ -143,7 +143,7 @@ Upgrade `getRegionalCompanies` (`GET /api/careers/regional/companies`):
      - Verified Partner seal, active fresher openings, and required skills tags.
      - Direct apply / walk-in recruitment contact details.
 
-#### [MODIFY] `careerpath-ai/client/js/jobs.js`
+#### [MODIFY] `dheepath/client/js/jobs.js`
 1. Implement silent background geolocation:
    - On page load or tab activation, invoke `navigator.geolocation.getCurrentPosition()`.
    - On success: capture `lat`, `lng`, query `/api/careers/regional/companies?lat=...&lng=...`, and update HUD with user's live city and distance.
@@ -153,7 +153,7 @@ Upgrade `getRegionalCompanies` (`GET /api/careers/regional/companies`):
    - Instant search input matching company name, industry, cluster, or skills.
    - Skill-match calculator comparing student's verified skills against employer requirements.
 
-#### [MODIFY] `careerpath-ai/client/css/style.css`
+#### [MODIFY] `dheepath/client/css/style.css`
 1. Radar HUD styling:
    - Dark modern HUD panel with animated green/teal radar sweep pulse.
    - High-contrast distance pills (`bg-success-subtle` for `< 15 km`, `bg-primary-subtle` for `< 50 km`).
@@ -163,7 +163,7 @@ Upgrade `getRegionalCompanies` (`GET /api/careers/regional/companies`):
 
 ### Component 4: Automated Verification Test
 
-#### [NEW] `careerpath-ai/server/tests/proximity_radar_test.js`
+#### [NEW] `dheepath/server/tests/proximity_radar_test.js`
 1. Test Haversine distance formula with known benchmark coordinates (Jalgaon to Bhusawal = ~24 km; Jalgaon to Pune = ~345 km).
 2. Test `getRegionalCompanies` endpoint with:
    - No coordinates (defaults to reference order).

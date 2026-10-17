@@ -1,7 +1,7 @@
 /**
  * data/quizQuestions.js — Curated Adaptive Micro-Quiz Question Bank
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  *
  * 45 Vetted Technical Questions across 3 Core Foundational Skills:
  * - JavaScript (5 Easy, 5 Medium, 5 Hard)

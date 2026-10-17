@@ -1,7 +1,7 @@
 /**
  * controllers/resumeController.js — AI Resume ATS Scoring & Keyword Optimization
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const User = require('../models/User');
@@ -268,8 +268,8 @@ function buildSampleResume(user, targetCareer = 'Full-Stack Developer') {
     ],
     certifications: [
       {
-        name: 'CareerPath AI Verified Skill Competency',
-        issuer: 'CareerPath AI Platform',
+        name: 'DheePath Verified Skill Competency',
+        issuer: 'DheePath Platform',
         date: '2026',
         credentialUrl: '',
       },
@@ -302,7 +302,7 @@ exports.getBuiltResume = async (req, res, next) => {
     // Detect if this account has the legacy fabricated placeholder draft (Demopo Institute of Technology)
     const isLegacyFakeResume = resume && (
       resume.education?.[0]?.college === 'Demopo Institute of Technology' ||
-      resume.projects?.[0]?.title === 'CareerPath AI Web Platform' ||
+      resume.projects?.[0]?.title === 'DheePath Web Platform' ||
       resume.experience?.[0]?.company === 'Academic & Hackathon Projects'
     );
 

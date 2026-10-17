@@ -1,6 +1,6 @@
 {
-  "name": "CareerPath AI — Navigable Career Atlas",
-  "short_name": "CareerPath AI",
+  "name": "DheePath — Navigable Career Atlas",
+  "short_name": "DheePath",
   "description": "AI-powered career guidance, 3D interactive career atlas, and practical skill roadmaps for Indian college students and freshers.",
   "start_url": "/index.html",
   "display": "standalone",

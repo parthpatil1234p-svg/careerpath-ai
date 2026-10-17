@@ -10,7 +10,7 @@
  * 6. requireRecruiter permits demo/admin user
  * 7. Client-side page list isolation logic verification
  *
- * CareerPath AI · Enterprise Test Suite
+ * DheePath · Enterprise Test Suite
  */
 
 const path = require('path');

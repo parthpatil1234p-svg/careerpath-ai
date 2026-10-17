@@ -3,7 +3,7 @@
  *
  * Implements Mongoose-compatible interface for User queries and document instances.
  * Powered 100% by Supabase PostgreSQL via Prisma Client.
- * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
+ * DheePath Technologies Inc. · 0% MongoDB Architecture
  */
 
 const bcrypt = require('bcryptjs');

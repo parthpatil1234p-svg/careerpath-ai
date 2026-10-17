@@ -19,7 +19,7 @@ From analyzing the uploaded screenshot, here are the critical issues and improve
 | **3. Clunky Score Box** | `"94% ( 🔥 JOB READY CERTIFIED)"` is rendered in a generic grey box with awkward text spacing and plain blue color. | **Executive 4-Pillar Scorecard**: Replace the box with an embossed scorecard displaying all 4 verified benchmarks: (1) Skills Mastered, (2) Roadmap Completion, (3) ATS Resume Score, (4) Mock Interview Rating. |
 | **4. Authenticity & Verification** | Claims "Cryptographically Grounded", but there is **no QR code** and **no public verification link** for recruiters to verify. | **Live Scannable QR Code + Public Verification Portal (`verify.html`)**: Recruiter scans the QR code with their phone to view the official real-time verification record with issuing authority timestamps. |
 | **5. Physical Aesthetics & Frame** | Flat double border and generic seal. | **Machined Guilloche Gold Foil Frame & 3D Embossed Seal**: Multi-layer concentric borders with ornate corner rosettes, subtle guilloche geometric watermark, and embossed golden medallion with ribbons. |
-| **6. Signatures & Tamper-Proof Hash** | Plain text "CareerPath AI Academic Protocol". | **Dual Digital Signatures & SHA-256 Hash**: Realistic digital signatures of the Evaluation Board Chair and Academic Director + immutable SHA-256 cryptographic hash. |
+| **6. Signatures & Tamper-Proof Hash** | Plain text "DheePath Academic Protocol". | **Dual Digital Signatures & SHA-256 Hash**: Realistic digital signatures of the Evaluation Board Chair and Academic Director + immutable SHA-256 cryptographic hash. |
 | **7. Export & Sharing** | "Print" just opens default `window.print()` which prints the website chrome. Share button only opens a generic LinkedIn feed post. | **Direct 'Add to LinkedIn Licenses & Certifications'** (adds directly to the student's LinkedIn profile certifications section) + **1-Click High-Res Landscape PDF/PNG Download**. |
 
 ---
@@ -29,7 +29,7 @@ From analyzing the uploaded screenshot, here are the critical issues and improve
 ```
 CURRENT (Basic Modal):                        ELEVATED (Ivy-League Digital Credential):
 ┌───────────────────────────────┐              ┌─────────────────────────────────────────────────────────────┐
-│ CAREERPATH AI       [Seal]    │              │ 🏛️ CAREERPATH AI GLOBAL REGISTRY              [3D Foil Seal]│
+│ DHEEPATH       [Seal]    │              │ 🏛️ DHEEPATH GLOBAL REGISTRY              [3D Foil Seal]│
 │                               │              │                                                             │
 │   Official Credential         │              │            OFFICIAL DIGITAL CREDENTIAL OF MERIT             │
 │       Demo Student            │              │                   ✦ DEMO STUDENT ✦                          │
@@ -88,7 +88,7 @@ CURRENT (Basic Modal):                        ELEVATED (Ivy-League Digital Crede
    ```javascript
    const linkedInCertUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME` +
      `&name=${encodeURIComponent('Verified Job Ready: ' + roleTitle)}` +
-     `&organizationName=${encodeURIComponent('CareerPath AI')}` +
+     `&organizationName=${encodeURIComponent('DheePath')}` +
      `&issueYear=${issueDate.getFullYear()}&issueMonth=${issueDate.getMonth() + 1}` +
      `&certId=${encodeURIComponent(certId)}` +
      `&certUrl=${encodeURIComponent(window.location.origin + '/verify.html?certId=' + certId)}`;
@@ -100,7 +100,7 @@ CURRENT (Basic Modal):                        ELEVATED (Ivy-League Digital Crede
 #### [MODIFY] `client/dashboard.html`
 1. Load Google Fonts: `<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">`.
 2. Restructure `#printableCertificate`:
-   - **Header**: Ornate crest with CareerPath AI monogram, verified talent registry stamp, and 3D gold medallion seal with hanging ribbons.
+   - **Header**: Ornate crest with DheePath monogram, verified talent registry stamp, and 3D gold medallion seal with hanging ribbons.
    - **Main Body**:
      - Eyebrow: `OFFICIAL DIGITAL CREDENTIAL OF MERIT & JOB READINESS`
      - Recipient Name: Rendered in distinguished `Playfair Display` with subtle golden glow and ornamental divider.
@@ -150,7 +150,7 @@ A dedicated public verification page for employers and recruiters:
     - Certified Role: **Financial Analyst & Modeler**
     - Issuing Date: **October 1, 2026**
     - Skills Verified: **100% Proven via Code Assessment & Weekly Milestones**
-    - Issuing Entity: **CareerPath AI Academic Protocol (Team 404 Brain Not Found)**
+    - Issuing Entity: **DheePath Academic Protocol (Team 404 Brain Not Found)**
   - Allows the recruiter to download the verified transcript or view candidate profile!
 
 ---

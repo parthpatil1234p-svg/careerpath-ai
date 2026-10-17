@@ -1,6 +1,6 @@
 /**
  * passportController.js - Public Skill Passport Endpoints
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const { generatePassportData } = require('../services/passportService');

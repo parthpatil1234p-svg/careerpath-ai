@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
-  "title": "CareerPath AI Search Query & Intent Architecture",
+  "title": "DheePath Search Query & Intent Architecture",
   "description": "Comprehensive search query mining, intent classification, landing page routing matrix, and negative keywords master list for organic SEO and Google/Bing Ads campaigns.",
   "lastAudited": "2026-10-07",
   "clusters": [
@@ -51,13 +51,13 @@
       "searchIntent": "Transactional",
       "targetUrl": "https://careerpath-ai-bdbt.onrender.com/verify.html",
       "sampleQueries": [
-        "verify careerpath ai certificate",
+        "verify dheepath certificate",
         "proctored student skill certification sha256",
         "tamper proof tech certification check online",
         "public credential verification registry"
       ],
       "ctrTarget": 15.4,
-      "pagePrimaryKeyword": "verify careerpath ai certificate"
+      "pagePrimaryKeyword": "verify dheepath certificate"
     },
     {
       "topic": "Verified Direct Recruiter Job Board",
@@ -88,9 +88,9 @@
   ],
   "negativeKeywords": {
     "academicCheatingAndLeaks": [
-      "careerpath exam paper leak",
+      "dheepath exam paper leak",
       "milestone test cheating trick",
-      "telegram answers bot careerpath",
+      "telegram answers bot dheepath",
       "bypass proctoring fullscreen strike",
       "fake certificate generator download",
       "buy forged degree certificate",
@@ -105,8 +105,8 @@
       "job consultancy registration fees call"
     ],
     "piracyAndCracks": [
-      "careerpath pro free crack apk",
-      "careerpath premium account generator",
+      "dheepath pro free crack apk",
+      "dheepath premium account generator",
       "nulled script",
       "license key activation code txt",
       "torrent download"

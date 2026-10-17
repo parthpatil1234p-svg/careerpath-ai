@@ -1,6 +1,6 @@
 /**
  * github-auth.js — Universal Client-Side GitHub Authentication & Study Connector
- * CareerPath AI · Enterprise Platform Engine
+ * DheePath · Enterprise Platform Engine
  *
  * Implements:
  * - Universal GitHub Sign-In for EVERY user
@@ -54,7 +54,7 @@ window.GitHubAuth = (function () {
         window.Auth.setCurrentUser(response.data.user);
 
         if (showAlert) {
-          showAlert(response.message || 'GitHub authentication successful! Welcome to CareerPath AI.', 'success');
+          showAlert(response.message || 'GitHub authentication successful! Welcome to DheePath.', 'success');
         }
 
         const isNewUser = response.data.isNewUser || !response.data.user?.profileCompleted;
@@ -470,7 +470,7 @@ window.GitHubAuth = (function () {
           <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;background:#0d1117;color:#fff;text-align:center;">
             <div>
               <div style="font-size:1.4rem;font-weight:600;margin-bottom:8px;color:#2ea043;">✓ GitHub Authorized</div>
-              <div style="font-size:0.9rem;color:#8b949e;">Connecting to CareerPath AI & scanning repositories...</div>
+              <div style="font-size:0.9rem;color:#8b949e;">Connecting to DheePath & scanning repositories...</div>
             </div>
           </div>
         `;

@@ -1,10 +1,10 @@
 /**
- * geminiService.js — Google Gemini AI Integration for CareerPath AI
+ * geminiService.js — Google Gemini AI Integration for DheePath
  * Powers the AI Career Mentor & Doubt Solver
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
-const SYSTEM_PROMPT = `You are CareerPath AI Mentor, an empathetic, encouraging, and expert technical career counselor embedded inside the student's learning portal.
+const SYSTEM_PROMPT = `You are DheePath Mentor, an empathetic, encouraging, and expert technical career counselor embedded inside the student's learning portal.
 Your mission is to provide structured, student-friendly, and actionable tech career guidance to college students and freshers.
 
 FORMATTING & STRUCTURE RULES (STUDENT PORTAL FRIENDLY):

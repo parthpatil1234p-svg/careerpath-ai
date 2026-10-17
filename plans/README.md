@@ -1,4 +1,4 @@
-# CareerPath AI — Master Implementation Plans Tracker
+# DheePath — Master Implementation Plans Tracker
 
 > **Mandatory Protocol**:
 > 1. Har naya plan banane ke baad use is `plans/` folder me `.md` file ke roop me save karna hai.
@@ -24,7 +24,7 @@
 | **11** | [`focus_video_chamber_youtube_v3_plan.md`](./focus_video_chamber_youtube_v3_plan.md) | YouTube Data API v3 integration with curated topic videos | **✅ Yes** | Implemented in `roadmap.js`, `sync_video_routes.js` & YouTube IFrame API. |
 | **12** | [`job_market_multi_portal_launcher_plan.md`](./job_market_multi_portal_launcher_plan.md) | Multi-portal external job search links (LinkedIn, Indeed, Naukri) | **✅ Yes** | Implemented in `jobs.js`. |
 | **13** | [`job_ready_certificate_elevation_plan.md`](./job_ready_certificate_elevation_plan.md) | 3D gold seal, SHA-256 tamper-proof ledger, and public verification | **✅ Yes** | Implemented in `dashboard.html` & `verify.html`. |
-| **14** | [`logo_design_plan.md`](./logo_design_plan.md) | CareerPath AI SVG brand marks & favicon assets | **✅ Yes** | Implemented in `client/assets/` & `client/favicon.svg`. |
+| **14** | [`logo_design_plan.md`](./logo_design_plan.md) | DheePath SVG brand marks & favicon assets | **✅ Yes** | Implemented in `client/assets/` & `client/favicon.svg`. |
 | **15** | [`monetization_business_model_plan.md`](./monetization_business_model_plan.md) | Initial SaaS pricing & plan structures | **✅ Yes** | Implemented in `index.html`. |
 | **16** | [`recruiter_logo_navigation_solution_plan.md`](./recruiter_logo_navigation_solution_plan.md) | Recruiter portal logo & navigation isolation | **✅ Yes** | Implemented in `recruiter.js` & `auth.js`. |
 | **17** | [`recruiter_student_portal_isolation_plan.md`](./recruiter_student_portal_isolation_plan.md) | Role-based RBAC redirect protection (Students vs Recruiters) | **✅ Yes** | Implemented in `authMiddleware.js` & client headers. |
@@ -42,7 +42,7 @@
 | **29** | [`youtube_api_v3_search_integration_plan.md`](./youtube_api_v3_search_integration_plan.md) | YouTube Data API v3 search endpoint integration | **✅ Yes** | Implemented in `roadmapRoutes.js`. |
 | **30** | [`weekly_milestone_strict_anti_cheat_lockdown_plan.md`](./weekly_milestone_strict_anti_cheat_lockdown_plan.md) | Bind Strict Anti-Cheat Lockdown to `#weeklyTestModal` on `roadmap.html` | **⏳ Ready for Execution** | Plan designed & reviewed. Ready to execute code changes. |
 | **31** | [`clear_hackathon_visuals_and_branding_plan.md`](./clear_hackathon_visuals_and_branding_plan.md) | Complete removal of hackathon references across all pages | **⏳ Ready for Execution** | Detailed plan prepared. Merged into startup streamlining. |
-| **32** | [`startup_transformation_roadmap_plan.md`](./startup_transformation_roadmap_plan.md) | Transition to commercial startup: CareerPath AI Technologies Inc. | **⏳ Ready for Execution** | Strategic roadmap created. |
+| **32** | [`startup_transformation_roadmap_plan.md`](./startup_transformation_roadmap_plan.md) | Transition to commercial startup: DheePath Technologies Inc. | **⏳ Ready for Execution** | Strategic roadmap created. |
 | **33** | [`b2b_monetization_and_student_free_model_plan.md`](./b2b_monetization_and_student_free_model_plan.md) | 100% Free for Students, B2B Recruiter & Campus OS Monetization | **⏳ Ready for Execution** | Business model & landing page integration designed. |
 | **34** | [`college_placement_partner_portal_plan.md`](./college_placement_partner_portal_plan.md) | Standalone University & College TPO Portal (`colleges.html`) | **⏳ Ready for Execution** | Plan created for dedicated institutional partner portal. |
 | **35** | [`keep_required_remove_bloat_plan.md`](./keep_required_remove_bloat_plan.md) | Keep strictly required core pillars, purge `bicea.org` ads & hackathon bloat | **✅ Yes** | 100% completed: Purged all 6 `bicea.org` third-party ad units, hackathon bloat eliminated. |
@@ -61,7 +61,7 @@
 ## Protocol for Every New Plan
 
 Whenever a new plan is created:
-1. Save the new plan markdown file into this directory: `careerpath-ai/plans/<plan_name>.md`.
+1. Save the new plan markdown file into this directory: `dheepath/plans/<plan_name>.md`.
 2. Check the previous plan(s) in this table:
    - Agar previous plan ka code implement ho chuka hai, toh use **`✅ Yes`** mark karein.
    - Agar abhi approval/execution pending hai, toh **`⏳ In Progress / Ready for Execution`** mark karein.

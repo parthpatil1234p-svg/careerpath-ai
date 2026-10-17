@@ -20,7 +20,7 @@ const prisma = new PrismaClient();
 
 async function runVerificationSuite() {
   console.log('\n============================================================');
-  console.log('🧪 CareerPath AI — Supabase PostgreSQL Migration Test Suite');
+  console.log('🧪 DheePath — Supabase PostgreSQL Migration Test Suite');
   console.log('============================================================\n');
 
   let passedTests = 0;

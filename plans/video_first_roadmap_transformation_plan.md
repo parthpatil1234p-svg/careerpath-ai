@@ -1,7 +1,7 @@
-# Plan #43: 100% Video-First Roadmap Transformation for CareerPath AI
+# Plan #43: 100% Video-First Roadmap Transformation for DheePath
 
 > **Strategic Objective**: 
-> Transform CareerPath AI from text-heavy documentation links into a **100% Video-First Learning Platform** across all 5 career tracks (Front-End, Back-End, Full-Stack, Data Science, AI/ML) and dynamic roadmaps. 
+> Transform DheePath from text-heavy documentation links into a **100% Video-First Learning Platform** across all 5 career tracks (Front-End, Back-End, Full-Stack, Data Science, AI/ML) and dynamic roadmaps. 
 > Powered by an authoritative **Curated Free Video Catalog (76+ Skills)** with **Bilingual (English + Hindi) Support**, **Zero API Quota Risk**, and the **Focus Video Chamber** with AI Dedication Monitoring.
 
 ---
@@ -50,7 +50,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                      CAREERPATH AI 100% VIDEO-FIRST ROADMAP ARCHITECTURE                         │
+│                      DHEEPATH 100% VIDEO-FIRST ROADMAP ARCHITECTURE                         │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                                  │
 │   1. CURATED DATASET (server/data/curatedVideoCatalog.json)                                      │
@@ -87,7 +87,7 @@
 
 ### Component 1: Curated Video Catalog Dataset
 
-#### [NEW] `careerpath-ai/server/data/curatedVideoCatalog.json`
+#### [NEW] `dheepath/server/data/curatedVideoCatalog.json`
 Comprehensive verified dataset mapping 76+ technical competencies to embeddable YouTube masterclasses with dual-language tracks:
 ```json
 {
@@ -147,7 +147,7 @@ Skills included in initial catalog:
 
 ### Component 2: Backend Resolution Engine & Templates Overhaul
 
-#### [MODIFY] `careerpath-ai/server/services/youtubeService.js`
+#### [MODIFY] `dheepath/server/services/youtubeService.js`
 1. Load `server/data/curatedVideoCatalog.json` at startup.
 2. In `searchYouTubeVideos` and `resolveVideoForTask`:
    - Inspect query/skill key and preferred `language` (`'en'` or `'hi'`).
@@ -157,7 +157,7 @@ Skills included in initial catalog:
    - Fall back to YouTube Data API v3 only when API key is present and uncached.
 3. Add helper `getCuratedSkillsList()` to expose all 76+ supported skills.
 
-#### [MODIFY] `careerpath-ai/server/services/roadmapService.js`
+#### [MODIFY] `dheepath/server/services/roadmapService.js`
 1. Fix fallback task generation (lines 73–110):
    - Replace hardcoded `https://developer.mozilla.org/en-US/search?q=...` with resolved video objects from `youtubeService`.
    - Set `isVideoTask: true` and map real duration, embed URL, thumbnail, and provider.
@@ -165,7 +165,7 @@ Skills included in initial catalog:
    - Delete the logic that forces `mediaType = 'doc'` and overrides YouTube URLs.
    - Retain `isVideoTask: true` for video resources.
 
-#### [MODIFY] `careerpath-ai/server/data/roadmapTemplates.js`
+#### [MODIFY] `dheepath/server/data/roadmapTemplates.js`
 1. Update all 5 tracks:
    - `front-end-developer`
    - `back-end-developer`
@@ -178,7 +178,7 @@ Skills included in initial catalog:
 
 ### Component 3: Frontend Interactive Video UI & Focus Video Chamber
 
-#### [MODIFY] `careerpath-ai/client/js/roadmap.js`
+#### [MODIFY] `dheepath/client/js/roadmap.js`
 1. **Fix Task Card Rendering (lines 478–550)**:
    - When a task is a video (`task.isVideoTask || task.resource?.mediaType === 'video'`):
      - Render a rich **Video Lesson Card**:
@@ -197,7 +197,7 @@ Skills included in initial catalog:
      - Student writes 2-3 sentences of what they learned -> Submits to `POST /api/roadmaps/tasks/:taskId/verify-video`.
      - On successful AI evaluation: Task automatically checks off, progress bar animates, and modal displays celebratory confetti/stamp.
 
-#### [MODIFY] `careerpath-ai/client/roadmap.html`
+#### [MODIFY] `dheepath/client/roadmap.html`
 1. Add markup for `#videoChamberModal`:
    - Fullscreen/theater modal layout with split screen:
      - **Left Pane (70%)**: YouTube player container (`#videoChamberPlayerContainer`), dedication HUD, instructor switch button.
@@ -208,7 +208,7 @@ Skills included in initial catalog:
 
 ### Component 4: Automated Test Suite
 
-#### [MODIFY] `careerpath-ai/server/tests/youtube_chamber_test.js`
+#### [MODIFY] `dheepath/server/tests/youtube_chamber_test.js`
 1. Test loading and JSON schema validation of `curatedVideoCatalog.json` (ensure 76+ skills present, all video IDs are exactly 11 characters).
 2. Test bilingual resolution: verify that querying for `javascript` with `language='hi'` returns Chai aur Code or CodeWithHarry, and with `language='en'` returns freeCodeCamp or Mosh.
 3. Test task synthesis in `roadmapService.js` to assert that generated roadmaps have `isVideoTask: true` and valid YouTube watch URLs.

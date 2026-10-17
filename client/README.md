@@ -1,9 +1,9 @@
-# CareerPath AI — Career Atlas Frontend Documentation
+# DheePath — Career Atlas Frontend Documentation
 
-> **CareerPath AI Technologies Inc. — Enterprise Career Operating System**  
+> **DheePath Technologies Inc. — Enterprise Career Operating System**  
 > *World's 1st Autonomous Career GPS & Verified Talent Operating System*
 
-The `client/` directory contains the complete redesigned presentation and interaction tier of CareerPath AI. It is architected as an intentional, high-performance static web application built without bulky frontend frameworks—delivering instant page loads, zero build overhead, and universal browser compatibility while replacing generic AI landing page clichés with a warm, cartographic Career Atlas aesthetic.
+The `client/` directory contains the complete redesigned presentation and interaction tier of DheePath. It is architected as an intentional, high-performance static web application built without bulky frontend frameworks—delivering instant page loads, zero build overhead, and universal browser compatibility while replacing generic AI landing page clichés with a warm, cartographic Career Atlas aesthetic.
 
 ---
 
@@ -56,7 +56,7 @@ The `client/` directory contains the complete redesigned presentation and intera
 
 ## 🧭 3D Visualizations & Fallback System
 
-CareerPath AI features four purposeful 3D visual experiences:
+DheePath features four purposeful 3D visual experiences:
 1. **Career Atlas Compass** (`js/three-career-universe.js`): Central octahedron compass waypoint connected to 5 career nodes (Front-End, Full-Stack, Data Analyst, UI/UX, Cybersecurity) with clickable interactive tooltips.
 2. **Skill Map** (`js/three-skill-orbit.js`): Target career core surrounded by up to 12 skill nodes color-coded Leaf Green (Matched), Gold (Weak), and Coral (Missing).
 3. **Route Map** (`js/three-roadmap-path.js`): Stepping-stone milestone platforms with numbered weeks; clicking a platform smoothly scrolls directly to that week's card.

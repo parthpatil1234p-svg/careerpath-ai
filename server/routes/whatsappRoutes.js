@@ -9,7 +9,7 @@
  *   POST  /api/whatsapp/send-roadmap-pdf   → Protected: Send weekly study material PDF to WhatsApp (or download)
  *   POST  /api/whatsapp/test-otp           → Testing: Dispatches mock/real WhatsApp OTP
  * 
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const express = require('express');

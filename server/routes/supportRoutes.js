@@ -8,7 +8,7 @@
  *   GET  /api/support/officer           → Official Grievance Officer details
  *   GET  /api/support/ticket/:ticketId  → Look up ticket status
  * 
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const express = require('express');

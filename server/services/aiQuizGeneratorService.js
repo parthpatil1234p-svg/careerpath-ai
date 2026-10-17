@@ -7,7 +7,7 @@
  * - OpenAI-compatible endpoints / Custom User-provided API keys
  * - Built-in Domain Engine Fallback (guaranteed 100% uptime with zero failure)
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const questionCache = new Map(); // key: skill.toLowerCase(), value: { questions, timestamp }

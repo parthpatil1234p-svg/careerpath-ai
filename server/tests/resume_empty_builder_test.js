@@ -138,7 +138,7 @@ async function runTestSuite() {
       template: 'student',
       personalInfo: { fullName: testUser.name, email: testUser.email },
       education: [{ college: 'Demopo Institute of Technology', degree: 'BCA' }],
-      projects: [{ title: 'CareerPath AI Web Platform' }],
+      projects: [{ title: 'DheePath Web Platform' }],
       experience: [{ company: 'Academic & Hackathon Projects' }],
     };
     await testUser.save();

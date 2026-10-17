@@ -1,12 +1,12 @@
-# Implementation Plan: CareerPath AI Resume Builder & ATS Job Matcher
-**CareerPath AI · Team 404 Brain Not Found**
+# Implementation Plan: DheePath Resume Builder & ATS Job Matcher
+**DheePath · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Goal Description
 
-Build an end-to-end, intelligent **Resume Builder** for CareerPath AI that bridges career assessment, verified skills, and job placement into an actionable, job-ready resume:
+Build an end-to-end, intelligent **Resume Builder** for DheePath that bridges career assessment, verified skills, and job placement into an actionable, job-ready resume:
 1. **4 Tailored Resume Templates:** Student/Fresher ⭐, Modern 💎, Professional 💼, and ATS Simple 📄 with instant live preview.
 2. **8-Step Form Wizard:** Personal Info, Career Summary, Education, Skills, Projects, Experience, Certifications, and Additional Details.
 3. **CareerPath Profile & GitHub Auto-Sync:** Automatically imports verified skills (with `[✓ Verified]` badges), education, and connected GitHub study repositories as pre-populated projects.
@@ -20,7 +20,7 @@ Build an end-to-end, intelligent **Resume Builder** for CareerPath AI that bridg
 
 > [!IMPORTANT]
 > **Career Evidence Integration:**
-> Unlike generic resume builders (Canva, NovoResume), CareerPath AI highlights which skills are **Quiz Verified** or **GitHub Code Verified**. Recruiters viewing the resume or portfolio link see proven competence, giving our students an unfair advantage in hiring pools.
+> Unlike generic resume builders (Canva, NovoResume), DheePath highlights which skills are **Quiz Verified** or **GitHub Code Verified**. Recruiters viewing the resume or portfolio link see proven competence, giving our students an unfair advantage in hiring pools.
 
 > [!NOTE]
 > **Seamless Autosave:**
@@ -194,7 +194,7 @@ Dual-pane responsive split screen:
 2. **Left Column (Form Wizard):**
    - Accordion / Tab Stepper for the 8 sections.
    - Quick-action buttons:
-     - `[ ⚡ Auto-Fill from CareerPath Profile ]`
+     - `[ ⚡ Auto-Fill from DheePath Profile ]`
      - `[ 🐙 Import from Connected GitHub Repos ]`
      - `[ ✨ Improve with AI ]` on summary and bullet points.
 3. **Right Column (Live Preview Chamber):**
@@ -260,7 +260,7 @@ Client controller logic:
 
 ### Manual Verification
 1. **Auto-Population Check:**
-   - Log into CareerPath AI and navigate to `resume-builder.html`.
+   - Log into DheePath and navigate to `resume-builder.html`.
    - Verify that your name, degree, verified skills, and GitHub repos are automatically populated.
 2. **Template Switcher Check:**
    - Toggle between **Student**, **Modern**, **Professional**, and **ATS Simple**.

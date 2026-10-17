@@ -3,7 +3,7 @@
  * Featuring Khandesh (Jalgaon, Bhusawal), Marathwada & Nashik, Pune & Mumbai,
  * Bengaluru, NCR (Gurgaon, Noida, Manesar), Hyderabad, Gujarat, and Chennai corridors.
  *
- * CareerPath AI - Enterprise Industrial Proximity Radar Engine
+ * DheePath - Enterprise Industrial Proximity Radar Engine
  */
 
 /**

@@ -8,7 +8,7 @@ This is the exact business model that built multi-billion dollar tech giants:
 - **LinkedIn**: 100% free for job seekers; over 70% of revenue comes from **Recruiter Talent Solutions**.
 - **LeetCode & HackerRank**: Free for developers; enterprise companies pay \$20,000 to \$100,000+ for enterprise recruitment screening and talent sourcing.
 
-In CareerPath AI, **students are the high-quality talent pool (the supply)**. The paying customers are **Corporate Recruiters** (who waste 40+ hours filtering fake resumes) and **Colleges/Universities** (who struggle to track placement readiness and NAAC/NIRF accreditation metrics).
+In DheePath, **students are the high-quality talent pool (the supply)**. The paying customers are **Corporate Recruiters** (who waste 40+ hours filtering fake resumes) and **Colleges/Universities** (who struggle to track placement readiness and NAAC/NIRF accreditation metrics).
 
 ---
 
@@ -43,7 +43,7 @@ flowchart TD
 
 ### Stream 1: Recruiter Talent Radar & Candidate Unlocks (B2B SaaS)
 * **The Problem**: When a tech company posts an entry-level opening on LinkedIn or Naukri, they receive 2,000+ resumes within 48 hours. Over 85% are keyword-stuffed spam, and candidates cannot write basic code. HR spends 40+ hours screening.
-* **Our Solution**: Recruiters access CareerPath AI's **Talent Radar** (`recruiter-dashboard.html`) to filter candidates by **Verified Scores**, **Proctored Test Attempts**, and **Verified GitHub Projects**.
+* **Our Solution**: Recruiters access DheePath's **Talent Radar** (`recruiter-dashboard.html`) to filter candidates by **Verified Scores**, **Proctored Test Attempts**, and **Verified GitHub Projects**.
 * **Pricing Plans**:
   1. **Pay-Per-Verified-Unlock**: ₹299 per candidate to unlock full contact info, unredacted verified skill ledger, and verified portfolio link.
   2. **Talent Radar Pro (₹9,999 / month)**: 
@@ -56,7 +56,7 @@ flowchart TD
 
 ### Stream 2: University & College Placement Operating System (Campus SaaS)
 * **The Problem**: Engineering and degree colleges in India must maintain high placement ratios for NAAC accreditation and NIRF rankings. Today, Training & Placement Officers (TPOs) have zero real-time visibility into student skill gaps until corporate aptitude drives start.
-* **Our Solution**: **CareerPath AI Campus OS**:
+* **Our Solution**: **DheePath Campus OS**:
   - Centralized TPO analytics dashboard.
   - Real-time batch-wide skill gap heatmaps (e.g., *"64% of 3rd Year IT students lack SQL fundamentals"*).
   - Automated weekly student milestone tracking and placement readiness scores.
@@ -67,12 +67,12 @@ flowchart TD
 ### Stream 3: Corporate Assessment-as-a-Service (Testing Engine)
 * **The Problem**: Conducting online screening tests using HackerEarth, Mettl, or Mercer costs companies ₹150–₹300 per test attempt.
 * **Our Solution**: Companies use our **Strict Anti-Cheating Lockdown Engine** (with fullscreen lock, 3-strike tab switch traps, and 24h lockout) to host custom campus aptitude drives.
-* **Pricing**: **₹49 per student test attempt** (saving companies 70% while yielding 85% gross margins for CareerPath AI).
+* **Pricing**: **₹49 per student test attempt** (saving companies 70% while yielding 85% gross margins for DheePath).
 
 ---
 
 ### Stream 4: Pay-on-Hire / Placement Bounty (Zero Upfront Risk for Employers)
-* **The Model**: If a recruiter hires an intern or fresher sourced through CareerPath AI, the company pays a **flat placement success fee** (₹15,000 for full-time hires / ₹5,000 for paid interns).
+* **The Model**: If a recruiter hires an intern or fresher sourced through DheePath, the company pays a **flat placement success fee** (₹15,000 for full-time hires / ₹5,000 for paid interns).
 * **Cost to Student**: **Always ₹0** (charging candidates for jobs is illegal; employers happily pay because agency fees are 8.33% of annual CTC).
 
 ---
@@ -108,7 +108,7 @@ Replace confusing student pricing with an authoritative **Dual-Audience Pricing 
 2. **Update `client/recruiter-dashboard.html` & `client/login.html`**:
    - Showcase Recruiter Pro Plan features (Candidate Unlocks, Talent Radar search, Pre-Vetted Badges).
 3. **Update Footer across all pages**:
-   - Add: *"CareerPath AI is 100% free for students worldwide. Monetized through enterprise recruiter intelligence & university campus software."*
+   - Add: *"DheePath is 100% free for students worldwide. Monetized through enterprise recruiter intelligence & university campus software."*
 
 ---
 

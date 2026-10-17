@@ -1,10 +1,10 @@
-/* CareerPath AI - Bundled Production Stylesheet (Zero @import Waterfall) */
+/* DheePath - Bundled Production Stylesheet (Zero @import Waterfall) */
 
 /* --- Module: tokens.css --- */
 /* ==========================================================================
-   CareerPath AI — EduTech Modern Design Tokens (tokens.css)
+   DheePath — EduTech Modern Design Tokens (tokens.css)
    Clean Modern Light Theme · Indigo, Blue & Cyan Accents
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 :root {
@@ -166,9 +166,9 @@
 
 /* --- Module: base.css --- */
 /* ==========================================================================
-   CareerPath AI — Base & Typography (base.css)
+   DheePath — Base & Typography (base.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 *, *::before, *::after {
@@ -450,9 +450,9 @@ small, .small {
 
 /* --- Module: layout.css --- */
 /* ==========================================================================
-   CareerPath AI — Layout & Grid (layout.css)
+   DheePath — Layout & Grid (layout.css)
    Clean Modern EduTech Layout · Max Width Constraints · Responsive
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* Global Container Constraints — Optimized to fill modern screens while maintaining readability */
@@ -774,9 +774,9 @@ div[id].cp-section {
 
 /* --- Module: components.css --- */
 /* ==========================================================================
-   CareerPath AI — EduTech Component Design System (components.css)
+   DheePath — EduTech Component Design System (components.css)
    Clean Modern Aesthetics · Indigo, Blue & Cyan Accents
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -1654,9 +1654,9 @@ div[id].cp-section {
 
 /* --- Module: pages.css --- */
 /* ==========================================================================
-   CareerPath AI - EduTech Page Styles (pages.css)
+   DheePath - EduTech Page Styles (pages.css)
    Clean Modern Light Aesthetics | Indigo, Blue & Cyan Accents
-   CareerPath AI | Enterprise Edition
+   DheePath | Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -3302,9 +3302,9 @@ div[id].cp-section {
 
 /* --- Module: three.css --- */
 /* ==========================================================================
-   CareerPath AI — Three.js EduTech Canvas & Clean Tooltips (three.css)
+   DheePath — Three.js EduTech Canvas & Clean Tooltips (three.css)
    Soft Indigo/Blue Canvas Canvas · Accessible HUD
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -3825,9 +3825,9 @@ div[id].cp-section {
 
 /* --- Module: roadmap.css --- */
 /* ==========================================================================
-   CareerPath AI — Learning Roadmap Stylesheet (roadmap.css)
+   DheePath — Learning Roadmap Stylesheet (roadmap.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* Top Roadmap Summary Header */
@@ -4972,9 +4972,9 @@ div[id].cp-section {
 
 /* --- Module: dashboard.css --- */
 /* ==========================================================================
-   CareerPath AI — Student Dashboard Stylesheet (dashboard.css)
+   DheePath — Student Dashboard Stylesheet (dashboard.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* Page Background */
@@ -7656,10 +7656,10 @@ body.modal-open .cp-chat-card {
 
 /* --- Module: chat.css --- */
 /* ==========================================================================
-   CareerPath AI — Student-Portal AI Career Mentor (chat.css)
+   DheePath — Student-Portal AI Career Mentor (chat.css)
    Enterprise Student Portal Aesthetics · Indigo, Violet & Emerald Accents
    Features: Code Cards, Step Badges, Section Tags, Pro-Tips & Action Pills
-   CareerPath AI Technologies Inc.
+   DheePath Technologies Inc.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -8707,7 +8707,7 @@ body.modal-open .cp-chat-trigger {
 
 /* --- Module: radial-glow-button.css --- */
 /* ==========================================================================
-   CareerPath AI — EduTech Radial Button (radial-glow-button.css)
+   DheePath — EduTech Radial Button (radial-glow-button.css)
    Clean Indigo & Blue Primary CTA Micro-interaction
    ========================================================================== */
 
@@ -8766,7 +8766,7 @@ a.rg-button:active {
 
 /* --- Module: notch-navbar.css --- */
 /* ==========================================================================
-   CareerPath AI — EduTech Dynamic Navbar (notch-navbar.css)
+   DheePath — EduTech Dynamic Navbar (notch-navbar.css)
    Ultra-Premium Floating Glass Island · High-End Design · Responsive
    ========================================================================== */
 
@@ -9549,9 +9549,9 @@ body.assessment-page .assessment-layout {
 
 /* --- Module: animated-icons.css --- */
 /* ==========================================================================
-   CareerPath AI — 21st.dev Animated Icons System (animated-icons.css)
+   DheePath — 21st.dev Animated Icons System (animated-icons.css)
    Micro-animations · State Transitions · Spring Physics · Ambient Glow
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -9838,7 +9838,7 @@ body.assessment-page .assessment-layout {
 /* --- Module: typing-character-fx.css --- */
 /* ==========================================================================
    typing-character-fx.css — Keystroke Character Pop-up Micro-Animation
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    
    High-performance, GPU-accelerated character pop-up animations that trigger
    dynamically above input carets as users type in form fields and search bars.
@@ -9957,9 +9957,9 @@ body.assessment-page .assessment-layout {
 
 /* --- Module: quiz.css --- */
 /* ==========================================================================
-   CareerPath AI — Adaptive Skill Reality-Check Micro-Quiz (quiz.css)
+   DheePath — Adaptive Skill Reality-Check Micro-Quiz (quiz.css)
    Clean Modern Light Theme · Indigo, Emerald & Amber Accents
-   CareerPath AI · Enterprise Edition
+   DheePath · Enterprise Edition
    ========================================================================== */
 
 /* ── Container Layout ────────────────────────────────────────── */

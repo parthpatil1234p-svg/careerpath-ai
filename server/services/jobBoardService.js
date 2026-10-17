@@ -2,7 +2,7 @@
  * services/jobBoardService.js — AI Dev Board Live Jobs Integration
  * Connects to https://aidevboard.com/api/v1 for real-time tech & developer openings.
  * Built with graceful failover for reliable hackathon demos.
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const AIDEVBOARD_API_URL = 'https://aidevboard.com/api/v1';

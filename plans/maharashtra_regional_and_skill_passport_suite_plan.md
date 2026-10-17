@@ -1,13 +1,13 @@
 # Maharashtra Regional & Skill Passport Suite Plan (Marathi/Hindi Voice + Local Career Map + Project Verification + Skill Passport)
 
-> **Platform**: CareerPath AI Technologies Inc.  
+> **Platform**: DheePath Technologies Inc.  
 > **Target Capabilities**:  
 > 1. 🗣️ **Marathi & Hindi Multilingual + Voice AI Guidance** (Roadmap, Quiz & Results with Web Speech API audio support)  
 > 2. 🗺️ **Local Career Map for Jalgaon & Maharashtra Industrial Corridors** (Agri-Tech, Food Processing, MIDC Manufacturing & nearby company proximity)  
 > 3. 🛠️ **Practical Project Verification Beyond MCQs** (Real code repo & live task submission with automated AI rubric grading)  
 > 4. 🪪 **Skill Passport with Dynamic Shareable Link & QR Code** (1-click tamper-proof candidate verification for recruiters)  
 > **Status**: ⏳ Ready for Execution (Plan #41)  
-> **Tracking File**: [`careerpath-ai/plans/maharashtra_regional_and_skill_passport_suite_plan.md`](./maharashtra_regional_and_skill_passport_suite_plan.md)  
+> **Tracking File**: [`dheepath/plans/maharashtra_regional_and_skill_passport_suite_plan.md`](./maharashtra_regional_and_skill_passport_suite_plan.md)  
 
 ---
 
@@ -148,7 +148,7 @@ flowchart TD
 ## 3. Implementation Blueprint & File Changes
 
 ```text
-careerpath-ai/
+dheepath/
 ├── client/
 │   ├── js/
 │   │   ├── i18n.js                  # [NEW] Multilingual dictionary (EN, MR, HI) & voice speech helper

@@ -384,7 +384,7 @@ const Auth = {
         }
       } else {
         brand.setAttribute('href', 'index.html');
-        brand.setAttribute('title', 'CareerPath AI Home');
+        brand.setAttribute('title', 'DheePath Home');
       }
     });
   },

@@ -13,7 +13,7 @@
  *  9. Recruiter applicant radar with candidate verified skill badges
  * 10. Hiring stage update (Applied -> Shortlisted -> Interview Scheduled)
  *
- * CareerPath AI · Enterprise Test Suite
+ * DheePath · Enterprise Test Suite
  */
 const path = require('path');
 module.paths.push(path.join(__dirname, '../server/node_modules'));
@@ -175,7 +175,7 @@ async function runEndToEndRecruiterSuite() {
     missingSkills: [],
     readinessTier: testStudent.jobReadiness?.tierLabel || '🔥 JOB READY CERTIFIED',
     resumeUrl: testStudent.resumeUrl || 'https://cloudinary.com/demo_resume.pdf',
-    coverNote: 'Excited about Razorpay fintech scale! I verified all core JavaScript and Node.js skills on CareerPath AI.',
+    coverNote: 'Excited about Razorpay fintech scale! I verified all core JavaScript and Node.js skills on DheePath.',
     status: 'applied'
   });
   job.applicantsCount = 1;

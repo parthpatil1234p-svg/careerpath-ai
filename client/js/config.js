@@ -1,13 +1,13 @@
 /**
  * config.js — Frontend Global Configuration
  *
- * Provides centralized API endpoint and runtime settings for CareerPath AI.
+ * Provides centralized API endpoint and runtime settings for DheePath.
  * Automatically switches between local development and production Render backend.
  *
  * ⚠️ PRODUCTION DEPLOYMENT NOTE:
  * When deploying the frontend to Vercel and backend to Render:
  * 1. Replace "YOUR-RENDER-SERVICE" below with your actual deployed Render service slug.
- *    Example: "https://careerpath-ai-api.onrender.com/api"
+ *    Example: "https://dheepath-api.onrender.com/api"
  * 2. Do not include a trailing slash after "/api".
  */
 
@@ -20,7 +20,7 @@
 
   const isVercel =
     window.location.hostname.endsWith('vercel.app') ||
-    window.location.hostname === 'careerpath-ai.vercel.app';
+    window.location.hostname === 'dheepath.vercel.app';
 
   const isCustomDomain =
     window.location.hostname === 'careerpath.is-local.org' ||
@@ -59,11 +59,11 @@
     GITHUB_CLIENT_ID: 'Ov23liphgi9YF1lbYiUa',
 
     // App Metadata
-    APP_NAME: 'CareerPath AI',
+    APP_NAME: 'DheePath',
     TAGLINE: 'Autonomous Career GPS & Verified Talent Operating System',
-    PLATFORM_NAME: 'CareerPath AI',
-    COMPANY_NAME: 'CareerPath AI Technologies Inc.',
-    TEAM_NAME: 'CareerPath AI Technologies Inc.',
+    PLATFORM_NAME: 'DheePath',
+    COMPANY_NAME: 'DheePath Technologies Inc.',
+    TEAM_NAME: 'DheePath Technologies Inc.',
     EDITION: 'Enterprise Edition 2026',
     VERSION: '2.5.0',
   };

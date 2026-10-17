@@ -1,6 +1,6 @@
 /**
  * services/githubService.js — GitHub Integration & Repository Study Analyzer
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  *
  * Provides:
  * - GitHub REST API integration for student profile and repository fetching
@@ -9,7 +9,7 @@
  * - Safe fallback for offline evaluation and unauthenticated GitHub API limits
  */
 
-// Skill mapping taxonomy: maps GitHub languages and repo topics to CareerPath AI skills
+// Skill mapping taxonomy: maps GitHub languages and repo topics to DheePath skills
 const SKILL_TAXONOMY = {
   // Languages
   javascript: { name: 'javascript', displayName: 'JavaScript', category: 'frontend/backend' },
@@ -104,7 +104,7 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'User-Agent': 'CareerPath-AI-Platform',
+          'User-Agent': 'DheePath-Platform',
         },
         body: JSON.stringify(payload),
       });
@@ -124,7 +124,7 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
               headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-                'User-Agent': 'CareerPath-AI-Platform',
+                'User-Agent': 'DheePath-Platform',
               },
               body: JSON.stringify(fallbackPayload),
             });
@@ -156,7 +156,7 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
 const fetchGitHubData = async (username, accessToken = null) => {
   const headers = {
     Accept: 'application/vnd.github.v3+json',
-    'User-Agent': 'CareerPath-AI-Study-Platform',
+    'User-Agent': 'DheePath-Study-Platform',
   };
 
   if (accessToken) {

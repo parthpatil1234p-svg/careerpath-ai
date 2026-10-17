@@ -208,7 +208,7 @@ const generateRoadmapTasks = (user, career, durationWeeks = 4) => {
             ? task.resource.url
             : `https://developer.mozilla.org/en-US/search?q=${encodeURIComponent(task.skillName || task.title)}`,
           title: task.resource?.title || `${task.title} Documentation Guide`,
-          provider: task.resource?.provider || 'CareerPath AI Learning Hub',
+          provider: task.resource?.provider || 'DheePath Learning Hub',
         },
         isVideoTask: false,
         videoDurationSeconds: 0,

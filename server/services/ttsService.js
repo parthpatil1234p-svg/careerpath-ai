@@ -7,7 +7,7 @@
  * - Dynamic +22% speaking rate to eliminate sluggishness
  * - Instant in-memory / temp audio synthesis for WhatsApp PTT
  * 
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const { EdgeTTS } = require('node-edge-tts');

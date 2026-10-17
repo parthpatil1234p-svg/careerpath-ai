@@ -1,6 +1,6 @@
 /**
- * CareerPath AI — Official Public Credential Verification Controller
- * CareerPath AI · Verified Talent Credential Protocol
+ * DheePath — Official Public Credential Verification Controller
+ * DheePath · Verified Talent Credential Protocol
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -79,14 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
             interviewScore: 90
           },
           verifiedSkills: ['Financial Modeling', 'DCF Valuation', 'Corporate Accounting', 'Excel & VBA', 'Python for Finance'],
-          issuer: 'CareerPath AI Global Credential Registry',
+          issuer: 'DheePath Global Credential Registry',
           authority: 'Academic Evaluation Council & Technical Industry Standards Board',
           academicDirector: 'Dr. Rajiv Mehta',
           leadSteward: 'Academic & Industry Certification Council',
           tamperProofHash: 'CC44899A307E2F2C5061A29F4E8DB710294CAE081943892F3E768499B0182CDE'
         });
       } else {
-        renderError('Could not connect to the CareerPath AI ledger service. Please check your network connection.');
+        renderError('Could not connect to the DheePath ledger service. Please check your network connection.');
       }
     }
   }
@@ -152,13 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (auditCandidate) auditCandidate.textContent = data.studentName;
     if (auditRole) auditRole.textContent = data.targetRole;
-    if (auditIssuer) auditIssuer.textContent = data.issuer || 'CareerPath AI Global Credential Registry';
+    if (auditIssuer) auditIssuer.textContent = data.issuer || 'DheePath Global Credential Registry';
 
     // Configure Action Buttons
     const btnCopyRecord = document.getElementById('btnCopyRecord');
     if (btnCopyRecord) {
       btnCopyRecord.onclick = () => {
-        const recordSummary = `OFFICIAL CAREERPATH AI VERIFIED CREDENTIAL RECORD\n` +
+        const recordSummary = `OFFICIAL DheePath Verified CREDENTIAL RECORD\n` +
           `Status: ACTIVE & AUTHENTIC\n` +
           `Credential ID: ${data.certificateId}\n` +
           `Candidate: ${data.studentName}\n` +
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const issueMonth = d.getMonth() + 1;
         const addLinkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME` +
           `&name=${encodeURIComponent('Verified Job Ready: ' + data.targetRole)}` +
-          `&organizationName=${encodeURIComponent('CareerPath AI')}` +
+          `&organizationName=${encodeURIComponent('DheePath')}` +
           `&issueYear=${issueYear}&issueMonth=${issueMonth}` +
           `&certId=${encodeURIComponent(data.certificateId)}` +
           `&certUrl=${encodeURIComponent(window.location.href)}`;
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CareerPath AI Certificate &mdash; ${studentName} &mdash; ${roleName}</title>
+  <title>DheePath Certificate &mdash; ${studentName} &mdash; ${roleName}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">

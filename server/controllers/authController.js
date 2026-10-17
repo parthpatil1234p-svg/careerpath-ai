@@ -403,7 +403,7 @@ const verifyOtp = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Account verified successfully! Welcome to CareerPath AI.',
+      message: 'Account verified successfully! Welcome to DheePath.',
       data: {
         user: formatUser(user),
         token,
@@ -702,7 +702,7 @@ const loginUser = async (req, res, next) => {
             readinessTier: '🔥 JOB READY CERTIFIED',
             resumeUrl: demoStudent.resumeUrl || '',
             builtResumeSnapshot: demoStudent.builtResume || {},
-            coverNote: 'Excited about Razorpay fintech scale! I completed verified assessments and roadmaps on CareerPath AI with 94% job readiness score.',
+            coverNote: 'Excited about Razorpay fintech scale! I completed verified assessments and roadmaps on DheePath with 94% job readiness score.',
             status: 'shortlisted',
           });
           job1.applicantsCount = 1;
@@ -939,7 +939,7 @@ const googleAuth = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: isNewUser
-        ? 'Google account created successfully! Welcome to CareerPath AI.'
+        ? 'Google account created successfully! Welcome to DheePath.'
         : 'Welcome back! Google login successful.',
       data: {
         user: formatUser(user),

@@ -3,7 +3,7 @@
  * Dynamically computes Haversine distance to 60+ verified employers across India
  * with zero heavy map canvas overhead.
  *
- * CareerPath AI - Enterprise Industrial Platform
+ * DheePath - Enterprise Industrial Platform
  */
 
 (function () {

@@ -1,12 +1,12 @@
 # WhatsApp Automation Suite Plan (Instant OTP + Weekly PDF Delivery + 24x7 AI Chatbot)
 
-> **Platform**: CareerPath AI Technologies Inc.  
+> **Platform**: DheePath Technologies Inc.  
 > **Target Capabilities**:  
 > 1. 🔑 **Instant WhatsApp OTP Verification** (2-second verification for student registrations)  
 > 2. 🗺️ **Weekly Roadmap & Study Material PDF Delivery** (Automated cheatsheets & notes direct to WhatsApp)  
 > 3. 🤖 **24x7 WhatsApp AI Career Assistant** (OpenWA webhook integration with Groq Llama 3.3 / Gemini)  
 > **Status**: ✅ Fully Executed & Verified (Plan #40)  
-> **Tracking File**: [`careerpath-ai/plans/whatsapp_automation_suite_plan.md`](./whatsapp_automation_suite_plan.md)  
+> **Tracking File**: [`dheepath/plans/whatsapp_automation_suite_plan.md`](./whatsapp_automation_suite_plan.md)  
 
 ---
 
@@ -14,10 +14,10 @@
 
 Email OTP verification and web-only dashboards often suffer from spam-folder delays, low notification open rates, and friction for students on mobile devices. 
 
-By integrating a **WhatsApp Automation Suite**, CareerPath AI transforms into a mobile-first, omnipresent career mentor:
+By integrating a **WhatsApp Automation Suite**, DheePath transforms into a mobile-first, omnipresent career mentor:
 1. **Instant 2-Second OTP Verification**: Students receive their 6-digit verification code directly on WhatsApp with >99% deliverability and zero spam-folder lag.
 2. **Weekly Study Material & Roadmap PDF Delivery**: Each week, students receive a clean, professionally formatted PDF containing their weekly milestone tasks, concept cheatsheets, code snippets, and curated YouTube focus links attached directly in their WhatsApp chat.
-3. **24x7 WhatsApp AI Career Assistant (Chatbot)**: Students can ask questions directly on WhatsApp (e.g., *"Bhai, Frontend Developer banne ke liye agla step kya hai?"*). An OpenWA webhook routes the question to CareerPath AI's dual-engine AI backend (Groq Llama 3.3 / Qwen with Gemini fallback), enriches it with the student's active roadmap context, and replies instantly on WhatsApp in Hinglish or English.
+3. **24x7 WhatsApp AI Career Assistant (Chatbot)**: Students can ask questions directly on WhatsApp (e.g., *"Bhai, Frontend Developer banne ke liye agla step kya hai?"*). An OpenWA webhook routes the question to DheePath's dual-engine AI backend (Groq Llama 3.3 / Qwen with Gemini fallback), enriches it with the student's active roadmap context, and replies instantly on WhatsApp in Hinglish or English.
 
 ---
 
@@ -37,7 +37,7 @@ flowchart TD
         WS["server/services/whatsappService.js<br/>(Provider-Agnostic Messaging Driver)"]
     end
 
-    subgraph BackendServices["⚙️ CareerPath AI Backend Services"]
+    subgraph BackendServices["⚙️ DheePath Backend Services"]
         AUTH["authController.js<br/>(Generates & Validates 6-Digit OTP)"]
         PDF["pdfStudyMaterialService.js<br/>(Compiles Weekly Roadmap Cheatsheet PDF)"]
         AI["Dual-Engine AI Mentor<br/>(groqService.js Llama 3.3 / geminiService.js)"]
@@ -68,16 +68,16 @@ flowchart TD
   2. Backend generates a cryptographic 6-digit OTP code with 5-minute validity.
   3. `whatsappService.sendOtp(phone, otpCode, studentName)` dispatches the message via WhatsApp in under 2 seconds:
      ```text
-     🔐 *CareerPath AI — Verification Code*
+     🔐 *DheePath — Verification Code*
 
      Namaste Parth! 👋 
-     Aapka CareerPath AI student account verification code hai:
+     Aapka DheePath Student account verification code hai:
 
      👉 *482910*
 
      Ye code agle 5 minute tak valid hai. Kripya ise kisi ke sath share na karein.
 
-     🚀 CareerPath AI Technologies Inc.
+     🚀 DheePath Technologies Inc.
      ```
   4. Email OTP is also dispatched in parallel as a fallback.
   5. Student enters the 6 digits on the OTP screen and their account is verified instantly.
@@ -88,7 +88,7 @@ flowchart TD
 * **User Flow**:
   1. When a student unlocks a new weekly milestone or clicks **"📱 Get Week Notes on WhatsApp"** on `roadmap.html`:
   2. Backend service `pdfStudyMaterialService.js` dynamically compiles a branded PDF buffer using `pdfkit`:
-     - **Header**: CareerPath AI Seal & Career Track Title (e.g., *Frontend Developer*).
+     - **Header**: DheePath Seal & Career Track Title (e.g., *Frontend Developer*).
      - **Milestone Details**: Week Number, Objective, and Estimated Hours.
      - **Core Concept Cheatsheet**: Clean explanations and syntax reference cards for that week's competencies.
      - **Curated Video Lessons**: YouTube video titles and links from the Focus Video Chamber.
@@ -99,7 +99,7 @@ flowchart TD
 
 ### Pillar 3: 🤖 24x7 WhatsApp AI Career Assistant (Chatbot via OpenWA Webhook)
 * **User Flow**:
-  1. Student sends a message to the CareerPath AI WhatsApp number:
+  1. Student sends a message to the DheePath WhatsApp number:
      > *"Bhai, Frontend Developer banne ke liye agla step kya hai?"*
   2. The OpenWA bot runner captures the incoming message event (`onMessage`) and sends a webhook to `POST /api/whatsapp/webhook`.
   3. `whatsappController.js`:

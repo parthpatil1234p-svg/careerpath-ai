@@ -1,15 +1,15 @@
-# Project Assets Directory — CareerPath AI
+# Project Assets Directory — DheePath
 
 > **Hack2Ignite 2026–27 · Team 404 Brain Not Found**
 
-This directory stores visual, structural, and multimedia assets supporting the CareerPath AI repository.
+This directory stores visual, structural, and multimedia assets supporting the DheePath repository.
 
 ---
 
 ## 📁 Subdirectory Structure & Screenshots Catalog
 
 ### 1. `screenshots/`
-All screenshots are real, un-mocked captures of the working CareerPath AI application:
+All screenshots are real, un-mocked captures of the working DheePath application:
 
 | Filename | Module / Page | Visual Description |
 | :--- | :--- | :--- |
@@ -43,7 +43,7 @@ All screenshots are real, un-mocked captures of the working CareerPath AI applic
 
 ### 3. `demo/`
 - **Purpose:** Optional compressed demo video recordings (e.g., 1080p MP4) and master demo scripts.
-- **Master Script:** Refer to [`CareerPath-AI-Demo-Video-Voice-Script.txt`](../CareerPath-AI-Demo-Video-Voice-Script.txt) in the project root.
+- **Master Script:** Refer to [`DheePath-Demo-Video-Voice-Script.txt`](../DheePath-Demo-Video-Voice-Script.txt) in the project root.
 
 ---
 

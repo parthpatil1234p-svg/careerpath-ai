@@ -5,7 +5,7 @@
  * of Supabase PostgreSQL via Prisma Client.
  *
  * Replaces Mongoose ODM 100% across all controllers with ZERO breakage.
- * CareerPath AI Technologies Inc. · 0% MongoDB Architecture
+ * DheePath Technologies Inc. · 0% MongoDB Architecture
  */
 
 const crypto = require('crypto');

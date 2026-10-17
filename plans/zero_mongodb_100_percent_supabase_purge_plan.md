@@ -1,9 +1,9 @@
 # Zero-MongoDB & 100% Pure Supabase (PostgreSQL) Purge Plan
 
-> **Platform**: CareerPath AI Technologies Inc.  
+> **Platform**: DheePath Technologies Inc.  
 > **Target State**: **0.0% MongoDB Footprint** · **100% Pure Supabase PostgreSQL via Prisma ORM**  
 > **Status**: ✅ Fully Implemented (Plan #38)  
-> **Tracking File**: [`careerpath-ai/plans/zero_mongodb_100_percent_supabase_purge_plan.md`](./zero_mongodb_100_percent_supabase_purge_plan.md)  
+> **Tracking File**: [`dheepath/plans/zero_mongodb_100_percent_supabase_purge_plan.md`](./zero_mongodb_100_percent_supabase_purge_plan.md)  
 
 ---
 

@@ -8,7 +8,7 @@
  * 4. User-isolated key namespacing with targeted user invalidation.
  * 5. Telemetry & cache statistics (hits, misses, evictions).
  *
- * CareerPath AI · Enterprise Scalability Infrastructure
+ * DheePath · Enterprise Scalability Infrastructure
  */
 
 class CacheManager {

@@ -3,7 +3,7 @@
  * Powers the In-Browser "Fix-the-Bug" Proof-of-Work Chamber.
  * Replaces cheat-prone multiple-choice questions with authentic production code debugging.
  *
- * CareerPath AI - Enterprise Skill Verification Engine
+ * DheePath - Enterprise Skill Verification Engine
  */
 
 const CODE_BUG_CHALLENGES = [

@@ -1,5 +1,5 @@
 # ==============================================================================
-# CareerPath AI — Unified Robots & AI Crawler Discovery Policy
+# DheePath — Unified Robots & AI Crawler Discovery Policy
 # Supports: Google, Bing, Baidu (百度), and Modern AI Search (Perplexity, ChatGPT, Claude)
 # ==============================================================================
 

@@ -117,7 +117,7 @@ const API = {
         .then(data => {
           if (data?.status === 'healthy') {
             window._serverIsWarm = true;
-            console.log('⚡ CareerPath AI backend is awake and ready.');
+            console.log('⚡ DheePath backend is awake and ready.');
           }
         })
         .catch(() => {});

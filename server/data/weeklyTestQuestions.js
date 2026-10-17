@@ -1,7 +1,7 @@
 /**
  * data/weeklyTestQuestions.js — Topic-Tagged Comprehensive Question Bank for Weekly Milestone Tests
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  *
  * Provides a massive, domain-categorized repository (450+ questions) across:
  *  - Tech & Engineering (Frontend, Backend, Fullstack, Mobile, Game Dev, Cloud, DevOps, Security, AI/ML)

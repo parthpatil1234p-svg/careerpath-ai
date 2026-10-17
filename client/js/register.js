@@ -2,7 +2,7 @@
  * register.js · Two-Step Registration & OTP Verification Controller
  * Supports Student Enrollment & Verified Company Recruiter Onboarding
  *
- * CareerPath AI · Enterprise Platform Engine
+ * DheePath · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {

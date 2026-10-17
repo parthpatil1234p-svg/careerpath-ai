@@ -1,9 +1,9 @@
 # Hybrid Backend Architecture Plan (Vercel + Render + Shared MongoDB Atlas + Local Integrity)
 
-> **Platform**: CareerPath AI Technologies Inc.  
+> **Platform**: DheePath Technologies Inc.  
 > **Architecture Pattern**: Hybrid Distributed Backend (Stateless Serverless REST + Persistent Real-Time Worker + Shared Atlas Cluster)  
 > **Status**: ✅ Fully Implemented (Plan #36)  
-> **Tracking File**: [`careerpath-ai/plans/hybrid_backend_architecture_plan.md`](./hybrid_backend_architecture_plan.md)  
+> **Tracking File**: [`dheepath/plans/hybrid_backend_architecture_plan.md`](./hybrid_backend_architecture_plan.md)  
 
 ---
 
@@ -18,7 +18,7 @@ Previously, relying solely on Render's free-tier server resulted in **30–50 se
 ### The Hybrid Solution
 We adopt a **Dual-Engine Hybrid Backend Architecture**:
 - **Vercel**: Handles **all static frontend pages** (`client/`) and **stateless REST APIs** (`/api/*`) as Serverless Functions, providing users with a **0-second instantaneous experience** worldwide.
-- **Render**: Hosts a **persistent 24/7 service** (`careerpath-ai-api`) dedicated to **Socket.io real-time events**, AI live chat streaming, asynchronous background jobs, and automated maintenance cron tasks.
+- **Render**: Hosts a **persistent 24/7 service** (`dheepath-api`) dedicated to **Socket.io real-time events**, AI live chat streaming, asynchronous background jobs, and automated maintenance cron tasks.
 - **Shared MongoDB Atlas**: Both Vercel and Render connect to the **identical MongoDB Atlas database cluster**, guaranteeing strict single-source-of-truth consistency.
 - **100% Local Development Integrity**: On local machines (`localhost:5000`), the entire system runs seamlessly as a **single unified server process** using `npm start` / `npm run dev` with zero microservice friction.
 
@@ -44,7 +44,7 @@ flowchart TD
         end
 
         subgraph SharedDB["🍃 Shared MongoDB Atlas Database"]
-            DB1[("Cluster: CareerPath AI Production<br/>(Users, Roadmaps, Attempts, Chats)")]
+            DB1[("Cluster: DheePath Production<br/>(Users, Roadmaps, Attempts, Chats)")]
         end
     end
 
@@ -229,7 +229,7 @@ if (!process.env.VERCEL) {
   initCron();
 
   server.listen(PORT, () => {
-    console.log(`🚀 Unified CareerPath AI Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Unified DheePath Server running on http://localhost:${PORT}`);
     console.log(`⚡ REST APIs: http://localhost:${PORT}/api`);
     console.log(`🔌 WebSockets: ws://localhost:${PORT}`);
   });
@@ -247,7 +247,7 @@ const isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname
 // 2. Render hosts persistent Socket.io & worker services
 const PRODUCTION_REST_API = window.location.origin.includes('vercel.app') 
   ? `${window.location.origin}/api` 
-  : 'https://careerpath-ai.vercel.app/api';
+  : 'https://dheepath.vercel.app/api';
 
 const PRODUCTION_REALTIME_URL = 'https://careerpath-ai-bdbt.onrender.com';
 
@@ -267,7 +267,7 @@ const CONFIG = {
 Update Render configuration to identify as the persistent real-time & worker service:
 - Sets `PORT: 10000`.
 - Sets `SERVER_ROLE: realtime-worker`.
-- Sets `CLIENT_URL: https://careerpath-ai.vercel.app`.
+- Sets `CLIENT_URL: https://dheepath.vercel.app`.
 - Configures health check at `/api/health`.
 
 ---
@@ -284,7 +284,7 @@ Update Render configuration to identify as the persistent real-time & worker ser
 | **Step 6** | **Server Unified Bootstrapping**<br/>Wrap `server.js` with `http.createServer()`, mount Socket.io & cron in non-serverless mode, export `app` cleanly. | `server/server.js` | `node --check server/server.js` |
 | **Step 7** | **Client Dual-Endpoint Configuration**<br/>Update `client/js/config.js`, add `client/js/socket-client.js`, and wire graceful fallback into `chat.js`. | `client/js/config.js`, `client/js/socket-client.js`, `client/js/chat.js` | Browser console test |
 | **Step 8** | **Render Deployment Blueprint Sync**<br/>Update `server/render.yaml` with explicit worker roles, CORS origin whitelisting, and health telemetry. | `server/render.yaml`, `server/.env.example` | YAML schema check |
-| **Step 9** | **Master Tracker & Plans Audit Update**<br/>Record Plan 36 in `careerpath-ai/plans/README.md` and audit previous plan states. | `careerpath-ai/plans/README.md` | Audit check |
+| **Step 9** | **Master Tracker & Plans Audit Update**<br/>Record Plan 36 in `dheepath/plans/README.md` and audit previous plan states. | `dheepath/plans/README.md` | Audit check |
 
 ---
 
@@ -294,7 +294,7 @@ Update Render configuration to identify as the persistent real-time & worker ser
 - **Environment Variables Matrix**:
   - `MONGODB_URI`: Shared between Vercel Environment Variables and Render Environment Variables.
   - `JWT_SECRET`: Identical on both Vercel and Render so tokens signed by Vercel REST authentication are valid for Render Socket.io authentication.
-  - `CLIENT_URL`: Configured on Render to allow CORS from `https://careerpath-ai.vercel.app` as well as `http://localhost:5000` and `http://localhost:5500`.
+  - `CLIENT_URL`: Configured on Render to allow CORS from `https://dheepath.vercel.app` as well as `http://localhost:5000` and `http://localhost:5500`.
 - **CORS Dual-Whitelisting in `server/server.js`**:
   Allow both Vercel production domains, local development origins (`localhost:5000`, `localhost:5500`, `127.0.0.1`), and mobile wrappers cleanly without wildcard security risks.
 
@@ -303,7 +303,7 @@ Update Render configuration to identify as the persistent real-time & worker ser
 ## 6. Verification & Quality Gates
 
 1. **Local Single-Server Integrity Test**:
-   - Run `npm start` in `careerpath-ai/server` $\rightarrow$ verify both REST endpoints (`/api/health`) and WebSocket connection succeed on port 5000.
+   - Run `npm start` in `dheepath/server` $\rightarrow$ verify both REST endpoints (`/api/health`) and WebSocket connection succeed on port 5000.
 2. **Serverless Emulation Test**:
    - Run `node -e "process.env.VERCEL='1'; const app = require('./server/server'); console.log('Exported app:', typeof app);"` $\rightarrow$ verify app exports without opening lingering network ports.
 3. **Mongoose Connection Pool Reuse Test**:

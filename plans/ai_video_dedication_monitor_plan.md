@@ -14,7 +14,7 @@ Eliminate passive video watching, skipping, scrubbing to the end, background tab
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────┐
-│                   CAREERPATH AI DEDICATED LEARNING CHAMBER                       │
+│                   DHEEPATH DEDICATED LEARNING CHAMBER                       │
 ├──────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                  │
 │   1. ACTIVE TAB / FOCUS GUARDIAN                                                │

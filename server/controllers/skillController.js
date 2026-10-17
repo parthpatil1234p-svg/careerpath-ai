@@ -12,7 +12,7 @@
  *  - POST /api/skills/custom          (protected — register custom skill to catalog)
  *
  * 100% Pure Supabase PostgreSQL via Prisma Client · 0% MongoDB Footprint
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const Skill = require('../models/Skill');

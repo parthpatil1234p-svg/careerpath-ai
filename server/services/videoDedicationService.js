@@ -6,7 +6,7 @@
  *  2. AI Post-Video Reflection Evaluation (scored with Groq Llama 3.3 / Gemini / heuristic fallback)
  *  3. Anti-spam and gibberish detection
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const { callGroq } = require('./groqService');

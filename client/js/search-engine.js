@@ -7,7 +7,7 @@
  * - Damerau-Levenshtein Edit-Distance Typo Tolerance (max edit distance: 2)
  * - Multi-Field Weight Boosting (Title: 5x, Skills: 3x, Category: 2x, Text: 1x)
  * 
- * CareerPath AI · Enterprise Search & Discovery Engine
+ * DheePath · Enterprise Search & Discovery Engine
  */
 
 (function (window) {

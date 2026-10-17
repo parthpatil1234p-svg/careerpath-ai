@@ -1,7 +1,7 @@
 /**
  * jobs.js - Verified Job Board & 1-Click Recruiter Application Controller
  *
- * CareerPath AI · Enterprise Platform Engine
+ * DheePath · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', async () => {

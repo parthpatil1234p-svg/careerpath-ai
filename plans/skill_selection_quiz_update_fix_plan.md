@@ -5,7 +5,7 @@
 > 
 > ![Skill Selection Screenshot](file:///C:/Users/PARTH/.gemini/antigravity/brain/0c496c2a-761b-466e-ac21-a7de2b4734ea/.user_uploaded/media_1791008024276.png)
 > 
-> In the screenshot, the user is on `https://careerpath-ai-jade.vercel.app/assessment` (Step 3: Technical Skills):
+> In the screenshot, the user is on `https://dheepath-jade.vercel.app/assessment` (Step 3: Technical Skills):
 > - The user selected **"Solidity Smart Contracts (Beginner)"** and **"Git (Beginner)"**.
 > - But **no quiz section updated on the screen**, and an alert remained: `⚠️ Please select at least 1 skill you possess before proceeding.`
 

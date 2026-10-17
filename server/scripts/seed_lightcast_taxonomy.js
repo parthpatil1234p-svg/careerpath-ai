@@ -2,14 +2,14 @@
  * seed_lightcast_taxonomy.js — Lightcast Open Skills Taxonomy Ingestion & Seeding Engine
  *
  * Implements Plan #39: Lightcast Skills Taxonomy Integration
- * Enriches CareerPath AI with 400+ curated industry labor-market skills with:
+ * Enriches DheePath with 400+ curated industry labor-market skills with:
  *   - Standardized Lightcast IDs (KS...)
  *   - 3-Level Hierarchy (Category -> Subcategory -> Skill)
  *   - Skill Classification (Specialized, Software, Common)
  *   - Rich Synonyms & Aliases for fuzzy matching and ATS resume optimization
  *
  * 100% Pure Supabase PostgreSQL via Prisma Client · 0% MongoDB Footprint
- * CareerPath AI Technologies Inc.
+ * DheePath Technologies Inc.
  */
 
 const fs = require('fs');

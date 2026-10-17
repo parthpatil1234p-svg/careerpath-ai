@@ -4,7 +4,7 @@
  * Formula:
  * Readiness Index = (Verified Skills * 0.35) + (Roadmap Tasks * 0.30) + (Resume ATS * 0.15) + (Mock Interview * 0.20)
  *
- * CareerPath AI · Enterprise Backend Service
+ * DheePath · Enterprise Backend Service
  */
 
 const User = require('../models/User');

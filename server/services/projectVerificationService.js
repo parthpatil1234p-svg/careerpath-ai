@@ -69,7 +69,7 @@ async function fetchGitHubRepoDetails(owner, repo) {
       path: `/repos/${owner}/${repo}`,
       method: 'GET',
       headers: {
-        'User-Agent': 'CareerPath-AI-Project-Evaluator/2.5.0',
+        'User-Agent': 'DheePath-Project-Evaluator/2.5.0',
         'Accept': 'application/vnd.github.v3+json'
       },
       timeout: 5000
@@ -239,7 +239,7 @@ Return ONLY a valid JSON object matching this exact structure:
       },
       strengths: ['Valid repository structure identified', 'Clear milestone focus demonstrated'],
       improvements: ['Add deeper documentation of component state transitions and edge cases'],
-      summary: 'Verified via CareerPath AI Deterministic Rubric Evaluator.',
+      summary: 'Verified via DheePath Deterministic Rubric Evaluator.',
       evaluatedAt: new Date().toISOString()
     };
   }

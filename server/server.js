@@ -1,5 +1,5 @@
 /**
- * server.js — CareerPath AI Express Entry Point (Step 2)
+ * server.js — DheePath Express Entry Point (Step 2)
  *
  * Startup order:
  *  1. Load .env
@@ -125,7 +125,7 @@ app.use(helmet({
         "http://127.0.0.1:5000",
         "http://localhost:5500",
         "http://127.0.0.1:5500",
-        "https://careerpath-ai.vercel.app",
+        "https://dheepath.vercel.app",
         "https://careerpath.is-local.org",
         "https://www.careerpath.is-local.org",
         "https://careerpath-ai-bdbt.onrender.com",
@@ -150,7 +150,7 @@ const rawOrigins = [
   process.env.PROD_CLIENT_URL,
   'https://careerpath.is-local.org',
   'https://www.careerpath.is-local.org',
-  'https://careerpath-ai.vercel.app',
+  'https://dheepath.vercel.app',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
   'http://localhost:5000',
@@ -205,12 +205,12 @@ const healthHandler = (req, res) => {
   res.status(200).json({
     status: 'healthy',
     success: true,
-    message: 'CareerPath AI Server is running and healthy ✅',
+    message: 'DheePath Server is running and healthy ✅',
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
     version: '2.5.0',
-    platform: 'CareerPath AI Technologies Inc.',
+    platform: 'DheePath Technologies Inc.',
     databases: ['Supabase PostgreSQL (100% Pure · 0% MongoDB)'],
     databaseEngine: 'Supabase PostgreSQL (Prisma ORM)',
     supabaseConfigured: !!process.env.DATABASE_URL,
@@ -343,10 +343,10 @@ app.use('/api/recommendations', aiLimiter);
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Welcome to CareerPath AI API 🚀',
+    message: 'Welcome to DheePath API 🚀',
     frontendUrl: process.env.CLIENT_URL || 'http://localhost:5500',
     version: '1.0.0',
-    platform: 'CareerPath AI Enterprise',
+    platform: 'DheePath Enterprise',
     endpoints: {
       health: 'GET /api/health',
       version: 'GET /api/version',
@@ -375,7 +375,7 @@ app.get('/', (req, res) => {
 app.get('/api/version', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'CareerPath AI API',
+    message: 'DheePath API',
     data: {
       version: '1.0.0',
       environment: process.env.NODE_ENV || 'development',
@@ -472,7 +472,7 @@ if (!process.env.VERCEL) {
 
   server.listen(PORT, () => {
     console.log('');
-    console.log('🚀 CareerPath AI Unified Server started!');
+    console.log('🚀 DheePath Unified Server started!');
     console.log(`📡 Listening on      : http://localhost:${PORT}`);
     console.log(`⚡ REST APIs         : http://localhost:${PORT}/api`);
     console.log(`🔌 WebSockets        : ws://localhost:${PORT}`);
@@ -486,7 +486,7 @@ if (!process.env.VERCEL) {
     console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
     console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
     console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
-    console.log('👥 Platform          : CareerPath AI Dual-Engine Hybrid Architecture');
+    console.log('👥 Platform          : DheePath Dual-Engine Hybrid Architecture');
     console.log('');
   });
 }

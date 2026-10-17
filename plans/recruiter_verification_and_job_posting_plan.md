@@ -7,11 +7,11 @@
 
 ## 1. Goal Description
 
-Provide a complete, secure, enterprise-grade **Recruiter & Company Ecosystem** on CareerPath AI where:
+Provide a complete, secure, enterprise-grade **Recruiter & Company Ecosystem** on DheePath where:
 1. **Real Company Validation**: During registration form filling, the site verifies in real-time that the employer company is genuine through corporate domain matching, DNS MX record resolution, live website probing, and AI corporate intelligence verification (Gemini 2.5 Flash).
 2. **Recruiter Authenticity Check**: Proves that the registrant is an authentic, authorized recruiter for that company through mandatory corporate inbox OTP challenges (`recruiter@company.com`), LinkedIn profile credentials, and automated trust scoring.
 3. **Job Opening Management & Applicant Radar**: Verified recruiters can create and manage job postings with required skills, experience levels, and salary ranges. They can view candidate applications sorted by **AI Skill Match Score**, inspect student verified skill badges (`Quiz-Verified`, `Code-Verified`, `Job Ready Tier`), and update candidate hiring stages (`Shortlisted`, `Interview Scheduled`, `Declined`).
-4. **Student Experience**: Students discover verified direct company openings on the platform and apply in 1-click using their verified CareerPath AI profile, digital badges, and built ATS resume.
+4. **Student Experience**: Students discover verified direct company openings on the platform and apply in 1-click using their verified DheePath profile, digital badges, and built ATS resume.
 
 ---
 
@@ -255,7 +255,7 @@ Mounted at `/api/recruiter`:
   - Company Trust Score
 - **"Post New Job Opening" Modal**:
   - Job title, career track dropdown, workplace type (Remote / Hybrid / Onsite), experience level.
-  - Required skills tag selector with checkbox: *"Mandate CareerPath AI Skill Verification"*.
+  - Required skills tag selector with checkbox: *"Mandate DheePath Skill Verification"*.
   - Salary range, role description, qualifications, and deadline.
 - **Active Jobs Table**:
   - Title, Career Track, Date Posted, Status Toggle (Active/Paused), Applicants count, "View Applicants" action.
@@ -270,7 +270,7 @@ Mounted at `/api/recruiter`:
 - On successful login, if `user.role === 'recruiter'`, automatically redirect to `recruiter-dashboard.html`.
 
 #### [MODIFY] `client/jobs.html`
-- Render recruiter-posted jobs prominently with a **"⭐ Direct Recruiter Post"** badge, company logo, verified badge, and 1-Click "Apply with CareerPath AI Profile" button.
+- Render recruiter-posted jobs prominently with a **"⭐ Direct Recruiter Post"** badge, company logo, verified badge, and 1-Click "Apply with DheePath Profile" button.
 
 ---
 

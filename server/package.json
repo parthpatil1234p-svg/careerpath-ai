@@ -1,7 +1,7 @@
 {
-  "name": "careerpath-ai-server",
+  "name": "dheepath-server",
   "version": "1.0.0",
-  "description": "CareerPath AI — Backend API server built with Node.js and Express.js",
+  "description": "DheePath — Backend API server built with Node.js and Express.js",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -32,7 +32,7 @@
     "edtech",
     "career-atlas"
   ],
-  "author": "CareerPath AI Team",
+  "author": "DheePath Team",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.19.3",

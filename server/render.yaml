@@ -1,11 +1,11 @@
 # ============================================================
-# CareerPath AI — Render Blueprint Deployment Specification
+# DheePath — Render Blueprint Deployment Specification
 # Dual-Engine Architecture: Persistent Real-Time & Worker Service
 # ============================================================
 
 services:
   - type: web
-    name: careerpath-ai-api
+    name: dheepath-api
     runtime: node
     plan: free
     region: oregon

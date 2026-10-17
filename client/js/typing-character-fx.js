@@ -1,6 +1,6 @@
 /**
  * typing-character-fx.js — Universal Keystroke Character Pop-up Animation Engine
- * CareerPath AI · Enterprise Platform
+ * DheePath · Enterprise Platform
  *
  * Spawns a micro-popup badge above the active input caret whenever a user types,
  * creating a tactile, juicy, game-like keystroke micro-interaction.
