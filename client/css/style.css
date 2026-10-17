@@ -10124,7 +10124,7 @@ body.assessment-page .assessment-layout {
   line-height: 1.15;
   display: inline-flex;
   align-items: baseline;
-  gap: 0.25rem;
+  gap: 0;
   white-space: nowrap;
 }
 
@@ -12823,8 +12823,16 @@ h4,
 }
 
 .brand-name,
-.brand-accent {
+.notch-nav-island .brand-name {
   font-size: var(--fs-md) !important; /* 18px */
+  gap: 0 !important;
+}
+
+.brand-accent,
+.notch-nav-island .brand-accent {
+  font-size: var(--fs-md) !important; /* 18px */
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 
 /* --------------------------------------------------------------------------
