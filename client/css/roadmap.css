@@ -24,17 +24,17 @@
   background: var(--gradient-primary);
 }
 
-/* 3D Roadmap Milestone Path Canvas Container */
-.roadmap-path-card {
+/* Student-Explainable Interactive Career Route Map */
+.student-route-card {
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
-.roadmap-path-card::before {
+.student-route-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -42,15 +42,403 @@
   right: 0;
   height: 3px;
   background: var(--gradient-primary);
+  z-index: 5;
 }
 
-#roadmap-path {
-  cursor: grab;
+.route-progress-strip {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
 }
 
-#roadmap-path:active {
-  cursor: grabbing;
+.route-track-progress {
+  background-color: #E2E8F0;
+  border-radius: 999px;
+  overflow: hidden;
 }
+
+.route-track-progress .bg-teal {
+  background: linear-gradient(90deg, #10B981, #00F2FE) !important;
+}
+
+/* Route Rail & Stations Track */
+.route-rail-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.route-rail-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.route-rail-container::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+
+.route-rail-container::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.student-route-track-wrapper {
+  position: relative;
+  min-width: max-content;
+  padding: 1.75rem 0.75rem 0.5rem 0.75rem;
+}
+
+/* Connecting Rail Line behind stations */
+.route-rail-line-bg {
+  position: absolute;
+  top: 48px;
+  left: 50px;
+  right: 50px;
+  height: 4px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.route-rail-line-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #00F2FE 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.route-stations-row {
+  display: flex;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 2;
+  align-items: stretch;
+}
+
+/* Single Route Station Column */
+.route-station {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  scroll-snap-align: start;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.route-station:hover {
+  transform: translateY(-2px);
+}
+
+/* Station Node Marker */
+.route-node-anchor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0.85rem;
+  z-index: 3;
+}
+
+.station-node-pin {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 3px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+  transition: all 0.25s ease;
+}
+
+.station-node-number {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748B;
+  display: none;
+}
+
+.station-node-icon {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Station State Styling */
+.state-completed .station-node-pin {
+  border-color: #10B981;
+  background: #ECFDF5;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.state-active .station-node-pin {
+  border-color: #00F2FE;
+  background: #0F172A;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.45);
+}
+
+.state-awaiting-test .station-node-pin {
+  border-color: #F59E0B;
+  background: #FFFBEB;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+}
+
+.state-locked .station-node-pin {
+  border-color: #E2E8F0;
+  background: #F8FAFC;
+  opacity: 0.85;
+}
+
+/* Active Station Beacon Pulse Animation */
+.station-beacon-ring {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 242, 254, 0.6);
+  animation: stationBeaconPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+.station-beacon-ring.beacon-outer {
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+  border-color: rgba(0, 242, 254, 0.3);
+  animation-delay: 0.5s;
+}
+
+@keyframes stationBeaconPing {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* "YOU ARE HERE" Tooltip */
+.station-here-tooltip {
+  position: absolute;
+  top: -28px;
+  background: linear-gradient(135deg, #0284C7, #0D9488);
+  color: #FFFFFF;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.4);
+  animation: floatHereTag 2s ease-in-out infinite;
+}
+
+@keyframes floatHereTag {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Station Content Card */
+.station-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 1.1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+.route-station:hover .station-card {
+  border-color: #38BDF8;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.route-station.is-active-station .station-card {
+  border-color: #00F2FE;
+  background: linear-gradient(180deg, #F0FDFA 0%, #FFFFFF 100%);
+  box-shadow: 0 6px 18px rgba(0, 242, 254, 0.15);
+}
+
+.station-week-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #0F172A;
+  background: #F1F5F9;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.station-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #0F172A;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
+
+.station-skill-badge {
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+/* Route Test Pills */
+.route-test-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+}
+
+.pill-passed {
+  background: #ECFDF5;
+  color: #059669;
+  border-color: #A7F3D0;
+}
+
+.pill-ready {
+  background: #FEF3C7;
+  color: #B45309;
+  border-color: #FCD34D;
+  cursor: pointer;
+  animation: pulseReadyTest 2s infinite;
+}
+
+@keyframes pulseReadyTest {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(245, 158, 11, 0); }
+}
+
+.pill-inprogress {
+  background: #F0FDFA;
+  color: #0D9488;
+  border-color: #99F6E4;
+}
+
+.pill-locked {
+  background: #F8FAFC;
+  color: #94A3B8;
+  border-color: #E2E8F0;
+}
+
+/* Highlight Flash on Targeted Week Card */
+.week-card.station-focus-glow {
+  animation: stationFocusPulse 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes stationFocusPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.8), 0 0 25px rgba(0, 242, 254, 0.4);
+    border-color: #00F2FE;
+    transform: translateY(-4px);
+  }
+  30% {
+    box-shadow: 0 0 0 10px rgba(0, 242, 254, 0.25), 0 0 20px rgba(0, 242, 254, 0.3);
+    border-color: #00F2FE;
+    transform: translateY(-4px);
+  }
+  100% {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-border);
+    transform: translateY(0);
+  }
+}
+
+.station-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #00F2FE;
+  display: inline-block;
+  margin-right: 4px;
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.route-legend-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  display: inline-block;
+  animation: pulseDot 1.5s infinite;
+}
+
+/* Responsive: Mobile Vertical Route Rail */
+@media (max-width: 768px) {
+  .student-route-track-wrapper {
+    min-width: 100%;
+    padding: 0.5rem 0.25rem;
+  }
+
+  .route-rail-line-bg {
+    top: 24px;
+    bottom: 24px;
+    left: 21px;
+    width: 3px;
+    height: auto;
+    right: auto;
+  }
+
+  .route-rail-line-fill {
+    width: 100% !important;
+    height: var(--fill-height, 50%);
+    transition: height 0.6s ease;
+  }
+
+  .route-stations-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .route-station {
+    flex: 1 1 100%;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .route-node-anchor {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    margin-top: 0.25rem;
+  }
+
+  .station-here-tooltip {
+    display: none;
+  }
+
+  .station-card {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 
 /* Timeline Layout */
 .roadmap-timeline {

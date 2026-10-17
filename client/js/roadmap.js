@@ -268,38 +268,70 @@ document.addEventListener('DOMContentLoaded', async () => {
       weekMap[task.weekNumber].push(task);
     });
 
-    // Determine 3D Milestones data
+    // Determine Student-Explainable Milestone Route Data
+    const weekProgressList = currentRoadmap.weekProgress || [];
+    const isGraduatedRoadmap = currentRoadmap.status === 'completed' || (currentRoadmap.progressPercentage || 0) >= 100;
     const weeklyMilestones = [];
     let firstIncompleteFound = false;
 
     Object.keys(weekMap).forEach((wNum) => {
       const weekNumber = parseInt(wNum, 10);
-      const tasks = weekMap[weekNumber];
+      const tasks = weekMap[weekNumber] || [];
+      const completedCount = tasks.filter((t) => t.completed).length;
       const isCompleted = tasks.length > 0 && tasks.every((t) => t.completed);
-      let isActive = false;
+      
+      let wp = weekProgressList.find((p) => p.weekNumber === weekNumber);
+      if (!wp) {
+        wp = {
+          weekNumber,
+          status: weekNumber === 1 ? 'in_progress' : 'locked',
+          testScore: null,
+          testPercent: null,
+          passedAt: null,
+          attemptsCount: 0
+        };
+      }
 
+      let isActive = false;
       if (!isCompleted && !firstIncompleteFound) {
         isActive = true;
         firstIncompleteFound = true;
       }
 
       const weekTitle = tasks[0]?.title ? tasks[0].title.split(':')[0] : `Week ${weekNumber}`;
+      const skillName = tasks[0]?.skill?.displayName || tasks[0]?.skill?.name || '';
+
       weeklyMilestones.push({
         weekNumber,
         title: weekTitle,
-        isCompleted,
+        skillName,
+        tasksCount: tasks.length,
+        completedTasksCount: completedCount,
+        isCompleted: isCompleted || wp.status === 'passed' || isGraduatedRoadmap,
         isActive,
+        status: isGraduatedRoadmap ? 'passed' : (wp.status || (isCompleted ? 'passed' : (isActive ? 'in_progress' : 'locked'))),
+        testScore: wp.testScore,
+        testPercent: wp.testPercent,
+        passedAt: wp.passedAt,
+        attemptsCount: wp.attemptsCount || 0
       });
     });
 
-    // Initialize 3D Milestone Pathway
-    if (window.initRoadmapPath) {
-      window.initRoadmapPath('roadmap-path', weeklyMilestones);
+    // Initialize Student-Explainable Milestone Route Map
+    if (window.renderStudentRouteMap) {
+      window.renderStudentRouteMap('roadmap-path', weeklyMilestones, {
+        progressPercentage: currentRoadmap.progressPercentage || 0,
+        careerTitle: currentRoadmap.careerTitle || currentRoadmap.title || 'Career Path'
+      });
+    } else if (window.initRoadmapPath) {
+      window.initRoadmapPath('roadmap-path', weeklyMilestones, {
+        progressPercentage: currentRoadmap.progressPercentage || 0,
+        careerTitle: currentRoadmap.careerTitle || currentRoadmap.title || 'Career Path'
+      });
     }
 
     // Render Weekly Cards in DOM
     weeksContainer.innerHTML = '';
-    const weekProgressList = currentRoadmap.weekProgress || [];
 
     Object.keys(weekMap).forEach((wNum) => {
       const weekNumber = parseInt(wNum, 10);
