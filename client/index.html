@@ -460,74 +460,136 @@
             </div>
           </div>
 
-          <!-- Right Column: Mapped In-Demand Skills Showcase -->
+          <!-- Right Column: Mapped In-Demand Skills & Career Readiness Hub -->
           <div class="hero-canvas-col">
             <div class="hero-route-hub" id="heroRouteHub" aria-label="Explore verified in-demand industry skills">
               
-              <!-- Integrated Popular Skills Strip -->
-              <div class="hero-skill-strip" aria-label="Explore verified industry skills">
-                <div class="skill-strip-header">
-                  <span class="skill-strip-label"><i class="bi bi-layers-fill text-indigo me-1"></i> Mapped In-Demand Skills</span>
-                  <span class="skill-strip-counter"><strong>76+</strong> Skills Benchmarked</span>
+              <!-- Hub Header -->
+              <div class="hero-route-header">
+                <div>
+                  <span class="route-hub-eyebrow">
+                    <span class="pulse-dot-teal"></span> Verified Industry Benchmarks
+                  </span>
+                  <h2 class="route-hub-title">Mapped In-Demand Skills</h2>
                 </div>
-                <div class="hero-skills-grid" id="heroSkillsGrid">
-                  <div class="skill-logo-card" data-skill-id="react" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React" tabindex="0">
-                    <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span>
-                    <div>
-                      <span class="skill-logo-name">React</span>
-                      <span class="skill-logo-type">Frontend</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="javascript" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript" tabindex="0">
-                    <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span>
-                    <div>
-                      <span class="skill-logo-name">JavaScript</span>
-                      <span class="skill-logo-type">Language</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="python" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python" tabindex="0">
-                    <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span>
-                    <div>
-                      <span class="skill-logo-name">Python</span>
-                      <span class="skill-logo-type">Language</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="node" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js" tabindex="0">
-                    <span class="skill-logo-mark node-mark" aria-hidden="true">N</span>
-                    <div>
-                      <span class="skill-logo-name">Node.js</span>
-                      <span class="skill-logo-type">Backend</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="figma" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma" tabindex="0">
-                    <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span>
-                    <div>
-                      <span class="skill-logo-name">Figma</span>
-                      <span class="skill-logo-type">Design</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="sql" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL" tabindex="0">
-                    <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span>
-                    <div>
-                      <span class="skill-logo-name">SQL</span>
-                      <span class="skill-logo-type">Data</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="aws" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS" tabindex="0">
-                    <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span>
-                    <div>
-                      <span class="skill-logo-name">AWS</span>
-                      <span class="skill-logo-type">Cloud</span>
-                    </div>
-                  </div>
-                  <div class="skill-logo-card" data-skill-id="git" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git" tabindex="0">
-                    <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span>
-                    <div>
-                      <span class="skill-logo-name">Git</span>
-                      <span class="skill-logo-type">Workflow</span>
-                    </div>
+                <div class="route-hub-stat-badge">
+                  <span class="badge-accent-counter"><strong>76+</strong> Benchmarked</span>
+                </div>
+              </div>
+
+              <p class="hero-route-desc">
+                Core competencies benchmarked against 150+ corporate hiring requirements. Click any skill to explore verified practice guides.
+              </p>
+
+              <!-- Track Category Filter Pills -->
+              <div class="route-track-pills mb-3" role="tablist" aria-label="Skill Track Filter">
+                <div class="route-track-pill active" data-track="all" role="tab" aria-selected="true" tabindex="0">
+                  All Disciplines
+                </div>
+                <div class="route-track-pill" data-track="tech" role="tab" aria-selected="false" tabindex="0">
+                  Tech &amp; Cloud
+                </div>
+                <div class="route-track-pill" data-track="data" role="tab" aria-selected="false" tabindex="0">
+                  AI &amp; Data
+                </div>
+                <div class="route-track-pill" data-track="design" role="tab" aria-selected="false" tabindex="0">
+                  UI/UX &amp; Biz
+                </div>
+              </div>
+
+              <!-- 8 Featured Mapped In-Demand Skill Cards -->
+              <div class="hero-skills-grid mb-3" id="heroSkillsGrid">
+                <div class="skill-logo-card" data-skill-id="react" data-track="tech" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn React" tabindex="0">
+                  <span class="skill-logo-mark react-mark" aria-hidden="true">&#9883;</span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">React</span>
+                    <span class="skill-logo-type">Frontend &middot; 96% Match</span>
                   </div>
                 </div>
+
+                <div class="skill-logo-card" data-skill-id="javascript" data-track="tech" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn JavaScript" tabindex="0">
+                  <span class="skill-logo-mark js-mark" aria-hidden="true">JS</span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">JavaScript</span>
+                    <span class="skill-logo-type">Language &middot; Core</span>
+                  </div>
+                </div>
+
+                <div class="skill-logo-card" data-skill-id="python" data-track="data" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Python" tabindex="0">
+                  <span class="skill-logo-mark python-mark" aria-hidden="true">Py</span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">Python</span>
+                    <span class="skill-logo-type">AI &amp; ML &middot; 94% Match</span>
+                  </div>
+                </div>
+
+                <div class="skill-logo-card" data-skill-id="node" data-track="tech" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Node.js" tabindex="0">
+                  <span class="skill-logo-mark node-mark" aria-hidden="true">N</span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">Node.js</span>
+                    <span class="skill-logo-type">Backend &middot; APIs</span>
+                  </div>
+                </div>
+
+                <div class="skill-logo-card" data-skill-id="figma" data-track="design" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Figma" tabindex="0">
+                  <span class="skill-logo-mark figma-mark" aria-hidden="true">F</span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">Figma</span>
+                    <span class="skill-logo-type">Product Design &middot; UI</span>
+                  </div>
+                </div>
+
+                <div class="skill-logo-card" data-skill-id="sql" data-track="data" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn SQL" tabindex="0">
+                  <span class="skill-logo-mark sql-mark" aria-hidden="true"><i class="bi bi-database-fill"></i></span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">SQL</span>
+                    <span class="skill-logo-type">Data &middot; Analytics</span>
+                  </div>
+                </div>
+
+                <div class="skill-logo-card" data-skill-id="aws" data-track="tech" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn AWS" tabindex="0">
+                  <span class="skill-logo-mark aws-mark" aria-hidden="true">aws</span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">AWS</span>
+                    <span class="skill-logo-type">Cloud &middot; DevOps</span>
+                  </div>
+                </div>
+
+                <div class="skill-logo-card" data-skill-id="git" data-track="tech" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn Git" tabindex="0">
+                  <span class="skill-logo-mark git-mark" aria-hidden="true"><i class="bi bi-git"></i></span>
+                  <div class="skill-card-text">
+                    <span class="skill-logo-name">Git</span>
+                    <span class="skill-logo-type">CI/CD &middot; Workflow</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interactive Benchmark Callout -->
+              <div class="station-preview-card mb-3">
+                <div class="station-preview-top">
+                  <div class="station-preview-meta">
+                    <span class="station-focus-badge">Skill Gap Benchmark</span>
+                    <h3 class="station-focus-title">Measure Your Readiness Against These Skills</h3>
+                  </div>
+                  <a href="assessment.html" class="station-preview-action">
+                    <span>Start Diagnostic</span>
+                    <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+                <div class="station-preview-skills">
+                  <span class="station-skill-tag"><i class="bi bi-check2"></i> Instant Gap Analysis</span>
+                  <span class="station-skill-tag"><i class="bi bi-check2"></i> Cosine-Similarity Score</span>
+                  <span class="station-skill-tag"><i class="bi bi-check2"></i> Anti-Cheat Monitored</span>
+                </div>
+              </div>
+
+              <!-- Route Hub Footer Telemetry -->
+              <div class="route-hub-footer">
+                <span class="route-telemetry-item"><i class="bi bi-shield-check text-success"></i> Server-Proctored</span>
+                <span class="route-telemetry-dot">&bull;</span>
+                <span class="route-telemetry-item"><i class="bi bi-patch-check-fill text-indigo"></i> SHA-256 Proof</span>
+                <span class="route-telemetry-dot">&bull;</span>
+                <span class="route-telemetry-item"><i class="bi bi-buildings-fill text-warning"></i> 150+ Hiring Partners</span>
               </div>
 
             </div>

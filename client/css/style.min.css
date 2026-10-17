@@ -591,6 +591,36 @@ img {
   letter-spacing: -0.025em;
 }
 
+.badge-accent-counter {
+  font-size: var(--fs-xs) !important;
+  color: var(--color-text-muted);
+  background: #F1F5F9;
+  border: 1px solid var(--color-border);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.badge-accent-counter strong {
+  color: var(--color-indigo-600);
+  margin-right: 0.25rem;
+}
+
+.hero-route-desc {
+  font-size: var(--fs-xs) !important;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+  margin: 0.35rem 0 0.85rem 0;
+}
+
+.skill-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .route-track-pills {
   display: inline-flex;
   gap: 4px;
