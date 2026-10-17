@@ -303,8 +303,10 @@
       .map(s => `
         <div class="skill-logo-card" data-skill-id="${escapeHtml(s.id)}" aria-haspopup="dialog" aria-controls="skillDetailDialog" aria-label="Learn ${escapeHtml(s.name)}" tabindex="0">
           <span class="skill-logo-mark ${escapeHtml(s.markClass)}" aria-hidden="true">${s.mark}</span>
-          <span class="skill-logo-name">${escapeHtml(s.name)}</span>
-          <span class="skill-logo-type">${escapeHtml(s.type)}</span>
+          <div>
+            <span class="skill-logo-name">${escapeHtml(s.name)}</span>
+            <span class="skill-logo-type">${escapeHtml(s.type)}</span>
+          </div>
         </div>
       `)
       .join('');
@@ -349,6 +351,11 @@
 
     // Attach Track Pill Listeners
     const pills = document.querySelectorAll('.route-track-pill');
+    const stations = document.querySelectorAll('.highway-station');
+
+    // If route highway stations and track pills are not present, keep static skills showcase intact
+    if (!pills.length && !stations.length) return;
+
     pills.forEach(pill => {
       pill.addEventListener('click', () => {
         const track = pill.getAttribute('data-track');
@@ -364,7 +371,6 @@
     });
 
     // Attach Station Click & Hover Listeners
-    const stations = document.querySelectorAll('.highway-station');
     stations.forEach(st => {
       st.addEventListener('click', () => {
         const id = st.getAttribute('data-station');
