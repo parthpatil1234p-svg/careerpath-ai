@@ -25,6 +25,50 @@
     <meta property="og:description" content="Explore step-by-step career roadmaps, structured weekly milestones, curated courses, and verifiable skill checkpoints." />
     <meta property="og:image" content="https://disheera.site/favicon.svg" />
 
+    <!-- Schema.org Structured Data (Course, LearningResource & BreadcrumbList) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://disheera.site/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Learning Roadmap",
+              "item": "https://disheera.site/roadmap.html"
+            }
+          ]
+        },
+        {
+          "@type": "Course",
+          "@id": "https://disheera.site/roadmap.html#course",
+          "name": "Autonomous Career Mastery Roadmap & Proctored Milestone System",
+          "description": "Structured multi-week milestone roadmaps covering Full Stack Development, AI/Machine Learning, Cloud DevOps, and Product Design with 30-minute proctored verification tests.",
+          "provider": {
+            "@type": "EducationalOrganization",
+            "name": "DheePath",
+            "sameAs": "https://disheera.site/"
+          },
+          "isAccessibleForFree": true,
+          "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "online",
+            "courseWorkload": "PT10H"
+          },
+          "educationalCredentialAwarded": "Cryptographic SHA-256 Job-Ready Certificate"
+        }
+      ]
+    }
+    </script>
+
     <!-- Favicon & PWA Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="apple-touch-icon" href="favicon.svg" />

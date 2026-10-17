@@ -29,23 +29,40 @@
     <meta property="og:description" content="Verify authentic SHA-256 cryptographic milestone certifications issued by DheePath Technologies Inc." />
     <meta property="og:image" content="https://disheera.site/favicon.svg" />
 
-    <!-- BreadcrumbList Schema.org -->
+    <!-- BreadcrumbList & Credential Verification Service Schema.org -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
+      "@graph": [
         {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://disheera.site/"
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://disheera.site/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Public Credential Registry",
+              "item": "https://disheera.site/verify.html"
+            }
+          ]
         },
         {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Public Credential Registry",
-          "item": "https://disheera.site/verify.html"
+          "@type": "Service",
+          "@id": "https://disheera.site/verify.html#service",
+          "name": "DheePath Cryptographic Credential Authentication Registry",
+          "description": "Instant public validation of tamper-proof, SHA-256 cryptographic milestone certificates and student skill passports issued by DheePath Technologies Inc.",
+          "provider": {
+            "@type": "EducationalOrganization",
+            "name": "DheePath",
+            "sameAs": "https://disheera.site/"
+          },
+          "serviceType": "Certificate Verification & Proctored Skill Authentication",
+          "url": "https://disheera.site/verify.html"
         }
       ]
     }
