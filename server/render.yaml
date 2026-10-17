@@ -1,11 +1,11 @@
 # ============================================================
-# DheePath — Render Blueprint Deployment Specification
+# Disheera — Render Blueprint Deployment Specification
 # Dual-Engine Architecture: Persistent Real-Time & Worker Service
 # ============================================================
 
 services:
   - type: web
-    name: dheepath-api
+    name: disheera-api
     runtime: node
     plan: free
     region: oregon

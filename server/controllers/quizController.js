@@ -1,7 +1,7 @@
 /**
  * controllers/quizController.js - Controller for Adaptive Skill Reality-Check Quiz
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const quizService = require('../services/quizService');

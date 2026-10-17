@@ -3,7 +3,7 @@
  *
  * Implements Mongoose-compatible interface for learning roadmaps.
  * Powered 100% by Supabase PostgreSQL via Prisma Client.
- * DheePath Technologies Inc. · 0% MongoDB Architecture
+ * Disheera Technologies Inc. · 0% MongoDB Architecture
  */
 
 const { createPrismaModel, PrismaDocument } = require('./prismaBase');

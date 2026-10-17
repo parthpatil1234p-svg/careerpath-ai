@@ -9,7 +9,7 @@
  * 5. Full 5-Question Adaptive Flow & Verdict Graduation
  * 6. 24-Hour Review Cooldown Integrity Check
  *
- * DheePath · Enterprise Test Suite
+ * Disheera · Enterprise Test Suite
  */
 
 require('dotenv').config({ path: __dirname + '/../.env' });

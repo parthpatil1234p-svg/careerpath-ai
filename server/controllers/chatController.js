@@ -2,7 +2,7 @@
  * controllers/chatController.js — Dual-Engine AI Career Mentor Controller
  * Primary: Groq Cloud (Ultra-Fast <100ms Inference)
  * Secondary Fallback: Google Gemini 3.6 Flash
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const User = require('../models/User');
@@ -91,7 +91,7 @@ const handleChatMessage = async (req, res, next) => {
       const degreeStr = userContext?.degree ? ` (${userContext.degree})` : '';
 
       reply = `### 🎯 Key Takeaway
-Hello ${name}${degreeStr}! 👋 As your **DheePath Mentor**, here is your personalized action strategy${targetStr}:
+Hello ${name}${degreeStr}! 👋 As your **Disheera Mentor**, here is your personalized action strategy${targetStr}:
 
 ### 📌 Action Plan (Next Steps)
 1. **Focus on Hands-on Building**: Build real-world projects and deploy them live (e.g., on Vercel or Render) with a clear GitHub README.
@@ -107,7 +107,7 @@ Hello ${name}${degreeStr}! 👋 As your **DheePath Mentor**, here is your person
 
 ### 🚀 Portal Quick Action
 Keep your learning momentum going! Open your **[Roadmap](roadmap.html)** to check off this week's tasks, or review hiring requirements on **[Job Market](jobs.html)**.`;
-      engineUsed = 'DheePath Knowledge Engine';
+      engineUsed = 'Disheera Knowledge Engine';
     }
 
     return res.status(200).json({

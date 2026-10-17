@@ -1,8 +1,8 @@
 {
-  "name": "dheepath",
+  "name": "disheera",
   "version": "1.0.0",
   "private": true,
-  "description": "DheePath — Autonomous AI Career Guidance and Skill Roadmap Platform",
+  "description": "Disheera — Autonomous AI Career Guidance and Skill Roadmap Platform",
   "scripts": {
     "start": "npm --prefix server start",
     "dev": "npm --prefix server run dev",
@@ -29,7 +29,7 @@
     "career-atlas",
     "roadmap"
   ],
-  "author": "DheePath Team",
+  "author": "Disheera Team",
   "license": "MIT",
   "dependencies": {
     "@prisma/client": "^6.19.3",

@@ -10,7 +10,7 @@
  * 6. requireRecruiter permits demo/admin user
  * 7. Client-side page list isolation logic verification
  *
- * DheePath · Enterprise Test Suite
+ * Disheera · Enterprise Test Suite
  */
 
 const path = require('path');
@@ -75,7 +75,7 @@ console.log('\n▶ TEST 2: requireStudent allows student role');
 // --- Test 3: requireStudent with admin account ---
 console.log('\n▶ TEST 3: requireStudent allows true admin role');
 {
-  const req = { user: { role: 'admin', email: 'admin@dheepath.site' } };
+  const req = { user: { role: 'admin', email: 'admin@disheera.site' } };
   const res = createMockRes();
   let nextCalled = false;
   requireStudent(req, res, () => { nextCalled = true; });
@@ -125,7 +125,7 @@ console.log('\n▶ TEST 6: requireRecruiter strictly blocks student demo account
 // --- Test 6B: requireRecruiter allows true admin ---
 console.log('\n▶ TEST 6B: requireRecruiter allows true admin role');
 {
-  const req = { user: { role: 'admin', email: 'admin@dheepath.site' } };
+  const req = { user: { role: 'admin', email: 'admin@disheera.site' } };
   const res = createMockRes();
   let nextCalled = false;
   requireRecruiter(req, res, () => { nextCalled = true; });

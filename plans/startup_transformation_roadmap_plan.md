@@ -1,20 +1,20 @@
-# Implementation Plan: Transformation to Full Commercial Startup (DheePath Technologies)
+# Implementation Plan: Transformation to Full Commercial Startup (Disheera Technologies)
 
 ## Goal Description
 The user has established a major strategic pivot: **"Abhi ye hackathon model nahi hai, abhi ye startup hai hamara!"** (*"This is no longer a hackathon model; this is now our startup!"*).
 
-This plan elevates the entire **DheePath** platform from a collegiate hackathon prototype into a high-growth, commercial **EdTech & HRTech SaaS Startup** (**DheePath Technologies Inc.**). 
+This plan elevates the entire **Disheera** platform from a collegiate hackathon prototype into a high-growth, commercial **EdTech & HRTech SaaS Startup** (**Disheera Technologies Inc.**). 
 
 This requires:
 1. **Zero Hackathon Artifacts**: Complete purging of all hackathon text, problem statement codes (`ED-02`), competition tags (`Hack2Ignite 2026–27`), team handles (`Team 404 Brain Not Found`), and judge-specific buttons across all 20+ frontend and backend files.
-2. **Commercial Brand Positioning**: Repositioning DheePath as the **"World's 1st Autonomous Career GPS & Verified Talent Operating System"** solving the multi-billion-dollar college-to-workforce readiness gap.
+2. **Commercial Brand Positioning**: Repositioning Disheera as the **"World's 1st Autonomous Career GPS & Verified Talent Operating System"** solving the multi-billion-dollar college-to-workforce readiness gap.
 3. **Startup Landing Page (`index.html`) Elevation**:
    - Modern SaaS Hero with investor/customer-ready messaging.
    - **Transparent Commercial Pricing & Plans** section (Free Student Tier, Pro Career Accelerator ₹499/mo, University/Recruiter Enterprise).
    - **B2B Multi-Stakeholder Solutions**: Dedicated value propositions for Students, Universities (Campus Placement OS), and Recruiters (Pre-Verified Talent Radar).
    - Comprehensive Corporate Footer with Legal (Privacy, Terms, Security), Company, Product, and Governance links.
 4. **Institutional Trust & Credential Authority**:
-   - Transforming certificates into **"DheePath National Credential Registry"** backed by ISO/IEEE skill standards, cryptographic SHA-256 hashes, and verified proctoring audit trails.
+   - Transforming certificates into **"Disheera National Credential Registry"** backed by ISO/IEEE skill standards, cryptographic SHA-256 hashes, and verified proctoring audit trails.
 5. **Investor & Customer Sandbox Experience**:
    - Rebranding judge 1-click test buttons on `login.html` and `assessment.html` into a polished **"Interactive Product Sandbox"** for prospective investors, universities, and enterprise recruiters.
 
@@ -41,7 +41,7 @@ This requires:
 
 ```mermaid
 flowchart TD
-    A["Hackathon Prototype Model"] -->|Full Startup Transformation| B["DheePath Technologies Inc."]
+    A["Hackathon Prototype Model"] -->|Full Startup Transformation| B["Disheera Technologies Inc."]
     
     subgraph Brand & Visuals
         B --> C["Hero: Next-Gen Autonomous Career GPS & Verified Talent OS"]
@@ -65,10 +65,10 @@ flowchart TD
 
 ### Component 1: Landing Page (`index.html`) SaaS Transformation
 
-#### [MODIFY] [`client/index.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/index.html)
+#### [MODIFY] [`client/index.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/index.html)
 - **Meta & SEO**:
   - Keywords: Remove `Hack2Ignite`, add `AI career platform, student career roadmap, verified skills, hiring radar, campus recruitment OS, EdTech SaaS`.
-  - Author: Change `Team 404 Brain Not Found` to `DheePath Technologies Inc.`.
+  - Author: Change `Team 404 Brain Not Found` to `Disheera Technologies Inc.`.
 - **Navigation Bar**:
   - Add navigation items: `Platform`, `Solutions` (Students, Universities, Recruiters), `Pricing`, `About Us`.
   - Primary CTA: `Get Started Free` and `For Recruiters`.
@@ -92,41 +92,41 @@ flowchart TD
     - **Solutions**: College Placement Cell, Enterprise Hiring, Bootcamps.
     - **Company**: About Us, Leadership, Careers, Press & Media.
     - **Legal & Security**: Privacy Policy, Terms of Service, Security Architecture, ISO/IEEE Alignment.
-  - Colophon: `© 2026 DheePath Technologies Inc. All rights reserved. Registered under Indian Companies Act.`
+  - Colophon: `© 2026 Disheera Technologies Inc. All rights reserved. Registered under Indian Companies Act.`
 
 ---
 
 ### Component 2: Complete Purge of Hackathon Remnants Across All HTML Files
 
-#### [MODIFY] [`client/dashboard.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/dashboard.html)
+#### [MODIFY] [`client/dashboard.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/dashboard.html)
 - Update Certificate Header:
-  - `VERIFIED TALENT CREDENTIAL DIRECTORY · HACK2IGNITE 2026–27` $\rightarrow$ `VERIFIED TALENT CREDENTIAL DIRECTORY · DHEEPATH GLOBAL REGISTRY`.
+  - `VERIFIED TALENT CREDENTIAL DIRECTORY · HACK2IGNITE 2026–27` $\rightarrow$ `VERIFIED TALENT CREDENTIAL DIRECTORY · DISHEERA GLOBAL REGISTRY`.
 - Update Certificate Signatory:
-  - Signature SVG: `Team 404 Protocol` $\rightarrow$ `DheePath Council`.
+  - Signature SVG: `Team 404 Protocol` $\rightarrow$ `Disheera Council`.
   - Signatory Name: `Team 404 Brain Not Found` $\rightarrow$ `Academic & Industry Council`.
-  - Title: `Lead Protocol Stewards · Hack2Ignite 2026–27` $\rightarrow$ `National Board of Skill Standards · DheePath`.
-- Footer: Rebrand badges to `Enterprise Edition` and `DheePath`.
+  - Title: `Lead Protocol Stewards · Hack2Ignite 2026–27` $\rightarrow$ `National Board of Skill Standards · Disheera`.
+- Footer: Rebrand badges to `Enterprise Edition` and `Disheera`.
 
-#### [MODIFY] [`client/verify.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/verify.html)
-- Update accreditation badge text: `Official accreditation issued by DheePath Global Verified Talent Registry.`.
+#### [MODIFY] [`client/verify.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/verify.html)
+- Update accreditation badge text: `Official accreditation issued by Disheera Global Verified Talent Registry.`.
 - Update certificate sub-header, signatory lines, and governance text.
-- Update footer copyright to `© 2026 DheePath Technologies Inc.`.
+- Update footer copyright to `© 2026 Disheera Technologies Inc.`.
 
-#### [MODIFY] [`client/assessment.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/assessment.html)
+#### [MODIFY] [`client/assessment.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/assessment.html)
 - Step 1 Demo Banner:
   - Replace `HACKATHON EVALUATION` with `<i class="bi bi-sparkles me-1"></i> INTERACTIVE SANDBOX`.
   - Replace `Judge Quick-Fill Mode` with `1-Click Sample Student Profile`.
   - Rephrase description: `Instantly pre-populate an engineering student profile to preview our diagnostic assessment and skill-gap recommendations.`.
 - Footer: Update to clean startup colophon.
 
-#### [MODIFY] [`client/login.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/login.html) & [`client/register.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/register.html)
+#### [MODIFY] [`client/login.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/login.html) & [`client/register.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/register.html)
 - `login.html`:
   - Rebrand quick-login container to `Instant Demo Sandbox` with badges `Student Sandbox` and `Recruiter Sandbox`.
-  - Remove `DheePath · Team 404 Brain Not Found` branding.
+  - Remove `Disheera · Team 404 Brain Not Found` branding.
 - `register.html`:
   - Update branding header and footer.
 
-#### [MODIFY] [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/roadmap.html), [`client/quiz.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/quiz.html), [`client/recommendations.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/recommendations.html), [`client/404.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/404.html)
+#### [MODIFY] [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/roadmap.html), [`client/quiz.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/quiz.html), [`client/recommendations.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/recommendations.html), [`client/404.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/404.html)
 - Remove `ED-02` problem statement references.
 - Remove `Hack2Ignite 2026–27` and `Team: 404 Brain Not Found` from footers.
 - In `resume-builder.html`: update placeholder from `Finalist at Hack2Ignite 2026 Hackathon` to `National Collegiate Innovation Challenge Finalist`.
@@ -135,39 +135,39 @@ flowchart TD
 
 ### Component 3: Client Scripts & Console Log Cleansing
 
-#### [MODIFY] [`client/js/chat.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/chat.js)
-- Update chat disclaimer: `<p class="cp-chat-disclaimer">DheePath Assistant &middot; Enterprise Intelligence Engine</p>`.
+#### [MODIFY] [`client/js/chat.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/chat.js)
+- Update chat disclaimer: `<p class="cp-chat-disclaimer">Disheera Assistant &middot; Enterprise Intelligence Engine</p>`.
 
-#### [MODIFY] [`client/js/config.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/config.js)
-- Update `TEAM_NAME: '404 Brain Not Found'` $\rightarrow$ `COMPANY_NAME: 'DheePath Technologies Inc.'`.
+#### [MODIFY] [`client/js/config.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/config.js)
+- Update `TEAM_NAME: '404 Brain Not Found'` $\rightarrow$ `COMPANY_NAME: 'Disheera Technologies Inc.'`.
 
-#### [MODIFY] [`client/js/main.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/main.js)
+#### [MODIFY] [`client/js/main.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/main.js)
 - Update console splash to: `'%cCareerPath AI Technologies | Autonomous Career Navigation & Verified Talent Platform'`.
 
-#### [MODIFY] [`client/js/verify.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/verify.js)
-- Update client fallback steward: `DheePath Academic & Industry Certification Council`.
+#### [MODIFY] [`client/js/verify.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/verify.js)
+- Update client fallback steward: `Disheera Academic & Industry Certification Council`.
 
 ---
 
 ### Component 4: Backend API & Service Layer Modernization
 
-#### [MODIFY] [`server/controllers/readinessController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/controllers/readinessController.js)
+#### [MODIFY] [`server/controllers/readinessController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/controllers/readinessController.js)
 - Update certificate metadata payload:
-  - `issuer: 'DheePath Global Registry'`
+  - `issuer: 'Disheera Global Registry'`
   - `accreditation: 'National Skill Standards & ISO/IEEE Aligned'`
   - `leadSteward: 'Academic & Industry Standards Board'`
 
-#### [MODIFY] [`server/services/careerInsightService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/services/careerInsightService.js)
+#### [MODIFY] [`server/services/careerInsightService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/services/careerInsightService.js)
 - Update AI prompt from `You are an expert Career & Industry Talent Analyst for the Hack2Ignite 2026-27 hackathon.` to:
-  `You are an expert Career & Industry Talent Analyst for DheePath Technologies.`
+  `You are an expert Career & Industry Talent Analyst for Disheera Technologies.`
 
-#### [MODIFY] [`server/services/emailService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/services/emailService.js)
+#### [MODIFY] [`server/services/emailService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/services/emailService.js)
 - Update transactional email signatures:
-  `DheePath Technologies Inc. · Next-Gen Career Navigation Platform`
+  `Disheera Technologies Inc. · Next-Gen Career Navigation Platform`
 
-#### [MODIFY] [`server/server.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/server.js)
-- Update health check endpoints to return `{ status: 'healthy', platform: 'DheePath Technologies Inc.', version: '2.5.0' }`.
-- Update startup console banner to: `🚀 Platform : DheePath Production Server · DheePath Technologies Inc.`.
+#### [MODIFY] [`server/server.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/server.js)
+- Update health check endpoints to return `{ status: 'healthy', platform: 'Disheera Technologies Inc.', version: '2.5.0' }`.
+- Update startup console banner to: `🚀 Platform : Disheera Production Server · Disheera Technologies Inc.`.
 
 ---
 

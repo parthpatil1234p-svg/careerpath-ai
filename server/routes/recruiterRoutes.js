@@ -1,7 +1,7 @@
 /**
  * routes/recruiterRoutes.js — Corporate Recruiter & Job Management Routes
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const express = require('express');

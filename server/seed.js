@@ -19,7 +19,7 @@ const Career = require('./models/Career');
 const { skillsData, careersData } = require('./data/seedData');
 
 const seedDatabase = async () => {
-  console.log('🌱 Starting DheePath Database Seed...');
+  console.log('🌱 Starting Disheera Database Seed...');
 
   try {
     // 1. Connect to MongoDB

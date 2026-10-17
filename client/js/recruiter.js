@@ -1,7 +1,7 @@
 /**
  * recruiter.js — Corporate Recruiter Dashboard & Applicant Radar Controller
  *
- * DheePath · Enterprise Platform Engine
+ * Disheera · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', async () => {

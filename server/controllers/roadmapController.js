@@ -828,7 +828,7 @@ const linkProjectRepo = async (req, res, next) => {
     try {
       const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}`, {
         headers: {
-          'User-Agent': 'DheePath-Project-Verifier',
+          'User-Agent': 'Disheera-Project-Verifier',
           Accept: 'application/vnd.github.v3+json',
         },
       });

@@ -1,7 +1,7 @@
 # Strict Anti-Cheating Lockdown Implementation Plan: Weekly Milestone Verification
 
 ## Executive Summary
-This plan addresses the critical security gap identified in the **Weekly Milestone Verification Test** (`#weeklyTestModal` on [roadmap.html](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/roadmap.html) as shown in the user's screenshot). While adaptive skill checks in `quiz.html` have anti-cheating protection, the 30-minute, 10-question weekly milestone test—which permanently unlocks subsequent weeks and stamps skill evidence—currently operates **with zero proctoring deterrence**. Students can switch tabs, copy questions, use DevTools, or query LLMs completely undetected.
+This plan addresses the critical security gap identified in the **Weekly Milestone Verification Test** (`#weeklyTestModal` on [roadmap.html](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/roadmap.html) as shown in the user's screenshot). While adaptive skill checks in `quiz.html` have anti-cheating protection, the 30-minute, 10-question weekly milestone test—which permanently unlocks subsequent weeks and stamps skill evidence—currently operates **with zero proctoring deterrence**. Students can switch tabs, copy questions, use DevTools, or query LLMs completely undetected.
 
 This plan binds the **Strict Anti-Cheating Lockdown Protocol** directly to `#weeklyTestModal`, backed by server-authoritative penalties, audit logging in MongoDB, and an unbreakable 24-hour retake lockout.
 
@@ -48,7 +48,7 @@ flowchart TD
 ## 2. Detailed File Modifications
 
 ### A. Core Anti-Cheat Controller Enhancement
-**File**: [`client/js/anti-cheat-lock.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/anti-cheat-lock.js)
+**File**: [`client/js/anti-cheat-lock.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/anti-cheat-lock.js)
 - Upgrade `AntiCheatController` to support parameterized endpoints and payloads:
   - Add options: `violationEndpoint` (default `'/quiz/violation'`), `disqualifyEndpoint` (default `'/quiz/disqualify'`).
   - Add options: `attemptId`, `roadmapId`, `weekNumber` to support milestone test sessions.
@@ -57,7 +57,7 @@ flowchart TD
   - Enhance modals to reflect customized penalties (displaying "-2 Minutes" and "-3 Minutes" for weekly tests).
 
 ### B. Milestone Modal UI & HUD Additions
-**File**: [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/roadmap.html)
+**File**: [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/roadmap.html)
 1. **Header HUD**:
    - Add `<span id="testProctorBadge" class="badge bg-danger-subtle text-danger border border-danger-subtle font-mono px-2.5 py-1 small"><i class="bi bi-shield-lock-fill text-danger me-1"></i>STRICT PROCTOR: ACTIVE</span>`.
    - Add `<span id="testStrikesBadge" class="badge bg-success-subtle text-success border border-success-subtle font-mono px-2.5 py-1 small"><i class="bi bi-shield-check me-1"></i>Strikes: <span id="testStrikesCount">0</span>/3</span>`.
@@ -68,7 +68,7 @@ flowchart TD
    - Add `<script src="js/anti-cheat-lock.js?v=2.1"></script>` right before `<script src="js/roadmap.js"></script>`.
 
 ### C. Client Roadmap Test Controller Integration
-**File**: [`client/js/roadmap.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/roadmap.js)
+**File**: [`client/js/roadmap.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/roadmap.js)
 1. **Instantiation & Arming in `openWeeklyTestModal(weekNumber)`**:
    - Upon successful test start response, request fullscreen: `await antiCheatLock.requestFullscreen()`.
    - Initialize and arm `antiCheatLock` with:
@@ -101,24 +101,24 @@ flowchart TD
 
 ### D. Server Roadmap Controller & Routes
 **Files**:
-- [`server/routes/roadmapRoutes.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/routes/roadmapRoutes.js)
-- [`server/controllers/roadmapController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/controllers/roadmapController.js)
+- [`server/routes/roadmapRoutes.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/routes/roadmapRoutes.js)
+- [`server/controllers/roadmapController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/controllers/roadmapController.js)
 - Add endpoints:
   - `POST /roadmaps/test/violation`: validates attempt ownership, logs violation type, deducts penalty seconds from server deadline.
   - `POST /roadmaps/test/disqualify`: marks attempt as `disqualified_cheating`, zeroes scores, activates 24-hour week lockout.
 
 ### E. Server Weekly Test Service & Mongoose Models
 **Files**:
-- [`server/models/Roadmap.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/models/Roadmap.js)
+- [`server/models/Roadmap.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/models/Roadmap.js)
   - Add fields to `weekProgress`:
     - `cooldownUntil: { type: Date, default: null }`
     - `lastDisqualifiedAt: { type: Date, default: null }`
     - `disqualifiedReason: { type: String, default: '' }`
-- [`server/models/Attempt.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/models/Attempt.js)
+- [`server/models/Attempt.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/models/Attempt.js)
   - Add `'disqualified_cheating'` to `status` enum.
   - Add `violationLog: [{ type: String, penaltySeconds: Number, timestamp: Date, details: String }]`.
   - Add `strikesCount: { type: Number, default: 0 }`.
-- [`server/services/weeklyTestService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/services/weeklyTestService.js)
+- [`server/services/weeklyTestService.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/services/weeklyTestService.js)
   1. **Enforce Cooldown in `startWeeklyTest`**:
      - Check `weekProgress[wNum - 1].cooldownUntil`.
      - If `Date.now() < cooldownUntil`, reject immediately:

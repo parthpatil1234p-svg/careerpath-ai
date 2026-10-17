@@ -1,7 +1,7 @@
 /**
  * server/loadtest/k6_load_test.js — Production-Grade k6 Load Test Suite
  *
- * Simulates realistic student user journeys through DheePath:
+ * Simulates realistic student user journeys through Disheera:
  * 1. Discover / Explore public career catalog & skills taxonomy
  * 2. Authenticate / Login to student profile (JWT session)
  * 3. Load centralized Dashboard & live Job Readiness KPI telemetry
@@ -15,7 +15,7 @@
  *     - http_req_failed < 1%
  *     - http_req_duration p(95) < 500ms
  *
- * DheePath · Enterprise Performance Engineering
+ * Disheera · Enterprise Performance Engineering
  */
 
 import http from 'k6/http';

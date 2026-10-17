@@ -2,7 +2,7 @@
  * services/mockInterviewService.js — AI Interactive Technical & Behavioral Mock Interviewer
  *
  * Powers speech/text interviews for Career GPS Step 9.
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const { callGemini } = require('./geminiService');

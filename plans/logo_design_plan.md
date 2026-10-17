@@ -1,14 +1,14 @@
-# Implementation Plan: DheePath Official Brand Logo & AI Prompts
+# Implementation Plan: Disheera Official Brand Logo & AI Prompts
 
 > **Status:** Planning Mode Only — Awaiting User Approval  
-> **Brand:** DheePath · **Track:** EduTech / AI for Good · **Team:** 404 Brain Not Found  
+> **Brand:** Disheera · **Track:** EduTech / AI for Good · **Team:** 404 Brain Not Found  
 > **Tagline:** *Discover Your Career. Bridge Your Skill Gaps. Build Your Future.*
 
 ---
 
 ## 1. Goal Description
 
-Design and establish the official, iconic brand logo and visual mark for **DheePath**. 
+Design and establish the official, iconic brand logo and visual mark for **Disheera**. 
 
 Currently, the web application uses a generic Bootstrap Icons `<i class="bi bi-compass-fill"></i>` in the navbar and a custom SVG in `favicon.svg`. To give the project a world-class, hackathon-winning, professional identity across the **live web application**, **pitch slide deck (`presentation/`)**, **demo video**, and **project repository**, we need a cohesive, modern logo mark and full horizontal lockup.
 
@@ -59,7 +59,7 @@ This plan delivers:
 
 ### Concept 2: "The Neural Pathway & North Star"
 * **The Visual:** A stylized, upward-curving path constructed of glowing network nodes and connecting threads that taper into a brilliant 4-point radiant North Star at the top right.
-* **Why It Wins:** Directly illustrates the "Skill Roadmap" and "Career Destination" theme of DheePath.
+* **Why It Wins:** Directly illustrates the "Skill Roadmap" and "Career Destination" theme of Disheera.
 
 ### Concept 3: "The Orbital C-P Monogram"
 * **The Visual:** An unbroken, dynamic Möbius-style orbital ribbon that forms the letter 'C' on the left and loops into a forward arrow 'P', with a pulsing cyan AI core in the center.
@@ -72,7 +72,7 @@ This plan delivers:
 ### 🎨 Prompt 1: For Midjourney v6 / v6.1 (The Gold Standard)
 
 ```text
-A modern, minimalist tech logo for an AI career guidance platform called "DheePath". Flat vector app icon on a solid dark slate background #020617. The logo symbol is an abstract, sleek geometric compass combined with a forward-pointing 45-degree arrow and connected neural constellation nodes. Smooth neon gradient from luminous cyan #00F2FE to radiant indigo-violet #6366F1. Elegant, futuristic, high-end SaaS branding style, Swiss graphic design, clean lines, perfectly symmetrical, vector art, SVG aesthetic, zero shadows, no realistic textures, no mockups, no text, no words, centered composition --v 6.0 --style raw --ar 1:1
+A modern, minimalist tech logo for an AI career guidance platform called "Disheera". Flat vector app icon on a solid dark slate background #020617. The logo symbol is an abstract, sleek geometric compass combined with a forward-pointing 45-degree arrow and connected neural constellation nodes. Smooth neon gradient from luminous cyan #00F2FE to radiant indigo-violet #6366F1. Elegant, futuristic, high-end SaaS branding style, Swiss graphic design, clean lines, perfectly symmetrical, vector art, SVG aesthetic, zero shadows, no realistic textures, no mockups, no text, no words, centered composition --v 6.0 --style raw --ar 1:1
 ```
 
 ---
@@ -80,7 +80,7 @@ A modern, minimalist tech logo for an AI career guidance platform called "DheePa
 ### 🎨 Prompt 2: For DALL-E 3 / ChatGPT Plus
 
 ```text
-Create a high-end, minimalist vector logo for a modern educational technology AI company named "DheePath". 
+Create a high-end, minimalist vector logo for a modern educational technology AI company named "Disheera". 
 Visual Elements:
 - An abstract geometric compass needle angled at 45 degrees pointing upwards and towards the top-right, symbolizing forward career growth.
 - The path behind the compass needle consists of 3 glowing, connected milestone nodes (constellation / skill points).
@@ -102,7 +102,7 @@ App icon logo mark, flat vector, modern tech startup, abstract stylized compass 
 ### 🎨 Prompt 4: Full Horizontal Lockup (Logo Mark + Wordmark Typography)
 
 ```text
-Horizontal corporate logo lockup for "DheePath" on a dark space navy background #0F172A. On the left is an abstract glowing geometric compass icon angled at 45 degrees with cyan and violet accents. On the right is the typography: "CareerPath" in bold, modern geometric sans-serif white typography, followed by "AI" enclosed inside a sleek glowing neon cyan pill badge. Modern tech branding, premium aesthetic, crisp typography, clean vector spacing.
+Horizontal corporate logo lockup for "Disheera" on a dark space navy background #0F172A. On the left is an abstract glowing geometric compass icon angled at 45 degrees with cyan and violet accents. On the right is the typography: "CareerPath" in bold, modern geometric sans-serif white typography, followed by "AI" enclosed inside a sleek glowing neon cyan pill badge. Modern tech branding, premium aesthetic, crisp typography, clean vector spacing.
 ```
 
 ---
@@ -166,19 +166,19 @@ If you approve **Route A**, we can immediately deploy this crisp, scalable SVG i
 ## 7. Proposed Code Changes (Post-Approval)
 
 ### Assets Component
-#### [NEW] `dheepath/client/assets/logo.svg`
+#### [NEW] `disheera/client/assets/logo.svg`
 - High-definition standalone vector logo mark.
-#### [NEW] `dheepath/client/assets/logo-full.svg`
-- Horizontal lockup with icon + "DheePath" text.
-#### [MODIFY] `dheepath/client/favicon.svg`
+#### [NEW] `disheera/client/assets/logo-full.svg`
+- Horizontal lockup with icon + "Disheera" text.
+#### [MODIFY] `disheera/client/favicon.svg`
 - Updated to match the new logo mark geometry.
 
 ### Client Pages Component
-#### [MODIFY] `dheepath/client/index.html`
-- Replace `<div class="brand-icon"><i class="bi bi-compass-fill"></i></div>` with `<img src="assets/logo.svg" alt="DheePath" class="brand-logo-img">`.
-#### [MODIFY] `dheepath/client/login.html` & `register.html`
+#### [MODIFY] `disheera/client/index.html`
+- Replace `<div class="brand-icon"><i class="bi bi-compass-fill"></i></div>` with `<img src="assets/logo.svg" alt="Disheera" class="brand-logo-img">`.
+#### [MODIFY] `disheera/client/login.html` & `register.html`
 - Include the new official logo mark on the authentication cards.
-#### [MODIFY] `dheepath/client/dashboard.html`
+#### [MODIFY] `disheera/client/dashboard.html`
 - Align top-left brand header with the new official logo.
 
 ---

@@ -1,6 +1,6 @@
 /**
  * routes/jobRoutes.js  -  AI Dev Board Live Jobs API Routes
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const express = require('express');

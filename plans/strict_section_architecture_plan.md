@@ -1,12 +1,12 @@
 # Implementation Plan: Strict Section-Based Architecture (No Domain Mix-up)
-**DheePath · Team 404 Brain Not Found**
+**Disheera · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Goal Description
 
-Prevent confusion and domain clutter across DheePath by implementing a **Strict Section-Based Architecture**. Currently, careers and skills are primarily tech-heavy, and mixing all disciplines into a single list alienates non-engineering students (Commerce, BBA, MBA, Arts) while forcing engineering students to filter through unrelated fields.
+Prevent confusion and domain clutter across Disheera by implementing a **Strict Section-Based Architecture**. Currently, careers and skills are primarily tech-heavy, and mixing all disciplines into a single list alienates non-engineering students (Commerce, BBA, MBA, Arts) while forcing engineering students to filter through unrelated fields.
 
 This plan enforces clean domain separation across three critical layers:
 1. **Landing Page (`#careers` in `index.html`):** Divides the catalog into **4 visually distinct blocks** (Engineering, Business & Finance, Digital Marketing, Creative & Design) with custom color branding and a sticky domain switcher.

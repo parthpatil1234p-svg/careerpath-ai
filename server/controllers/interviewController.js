@@ -1,7 +1,7 @@
 /**
  * controllers/interviewController.js — AI Mock Interview Controller
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const User = require('../models/User');

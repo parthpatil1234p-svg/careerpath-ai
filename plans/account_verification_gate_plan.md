@@ -1,12 +1,12 @@
 # Implementation Plan: Account Verification Gate & Skill-Proof Access Control
-**DheePath · Team 404 Brain Not Found**
+**Disheera · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Goal Description
 
-Implement an **Access Control & Skill Verification Gate** across DheePath. Currently, users can navigate directly to `dashboard.html`, `recommendations.html`, and `roadmap.html` without verifying their skills. Under this plan:
+Implement an **Access Control & Skill Verification Gate** across Disheera. Currently, users can navigate directly to `dashboard.html`, `recommendations.html`, and `roadmap.html` without verifying their skills. Under this plan:
 1. **Access Lock:** Until a student proves their skills in Step 3 ("Prove your skills" via 90-second adaptive check or GitHub repo scan), all high-value pages (**Dashboard**, **Recommendations**, **Active Roadmap**) remain locked.
 2. **Account Verified ✓ Badge:** Once a student proves their skills, their profile receives the permanent **`Account Verified ✓`** credential in MongoDB and in the navbar, instantly unlocking all pages.
 3. **High-Aesthetic Locked Gates:** If an unverified user navigates directly to a locked page (via URL or menu), they are presented with a dedicated **Verification Gate** explaining why it is locked with a 1-click CTA to **[ Prove Your Skills Now ➔ ]**.

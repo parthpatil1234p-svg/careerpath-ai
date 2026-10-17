@@ -1,9 +1,9 @@
-# DheePath — Career Atlas Frontend Documentation
+# Disheera — Career Atlas Frontend Documentation
 
-> **DheePath Technologies Inc. — Enterprise Career Operating System**  
+> **Disheera Technologies Inc. — Enterprise Career Operating System**  
 > *World's 1st Autonomous Career GPS & Verified Talent Operating System*
 
-The `client/` directory contains the complete redesigned presentation and interaction tier of DheePath. It is architected as an intentional, high-performance static web application built without bulky frontend frameworks—delivering instant page loads, zero build overhead, and universal browser compatibility while replacing generic AI landing page clichés with a warm, cartographic Career Atlas aesthetic.
+The `client/` directory contains the complete redesigned presentation and interaction tier of Disheera. It is architected as an intentional, high-performance static web application built without bulky frontend frameworks—delivering instant page loads, zero build overhead, and universal browser compatibility while replacing generic AI landing page clichés with a warm, cartographic Career Atlas aesthetic.
 
 ---
 
@@ -56,7 +56,7 @@ The `client/` directory contains the complete redesigned presentation and intera
 
 ## 🧭 Visualizations & Learning Navigation System
 
-DheePath features clean, high-performance, student-explainable visual experiences:
+Disheera features clean, high-performance, student-explainable visual experiences:
 1. **Interactive Route Map** (`js/roadmap-route-map.js`): Metro / career highway station rail with numbered milestones, status badges, task meters, and proctored test tracking; clicking any station smoothly scrolls to that week's curriculum.
 2. **Skill Map & Radar** (`recommendations.html`): Match score breakdowns color-coded Emerald Green (Matched), Gold (Weak), and Rose (Missing).
 3. **Journey Marker Gauge** (`js/three-progress.js`): Calibrated vector semi-circular gauge reflecting verified task telemetry and progress percentage.

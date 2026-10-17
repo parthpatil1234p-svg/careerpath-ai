@@ -6,7 +6,7 @@
  * 2. On-Demand Weekly Roadmap & Cheatsheet PDF WhatsApp Delivery
  * 3. WhatsApp OTP Test & Healthcheck Gateway
  * 
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const fs = require('fs');
@@ -259,7 +259,7 @@ async function forwardAlertToFounder({ studentName, studentPhone, ticketId, type
     const founders = getFounders();
 
     const alertMessage = 
-`🚨 *DheePath — Student Escalation Alert*
+`🚨 *Disheera — Student Escalation Alert*
 
 👤 *Student:* ${studentName}
 📞 *Phone:* ${studentPhone}
@@ -351,14 +351,14 @@ Sabhi open tickets dekhne ke liye *TICKETS* type karein.`;
     // Friendly notice to student
     if (ticket.phone) {
       const studentResolvedMsg = 
-`✨ *DheePath  -  Ticket Resolved*
+`✨ *Disheera  -  Ticket Resolved*
 
 Namaste ${ticket.studentName}! 👋
 Aapka support request (#${ticket.ticketId}) successfully resolve ho gaya hai by ${adminTitle}.
 
 Agar aapko future me koi aur guidance ya roadmap notes chahiye hon, toh bas WhatsApp par *ROADMAP*, *NOTES*, ya *SUPPORT* type karein.
 
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
       await whatsappService.sendTextMessage(ticket.phone, studentResolvedMsg, { context: 'TICKET_RESOLVED_STUDENT_NOTICE' });
     }
 
@@ -430,7 +430,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 
     // Dispatch message to student FROM official bot (+91 7499085045)
     const studentDispatch = 
-`🧑‍🏫 *DheePath  -  ${adminTitle}*
+`🧑‍🏫 *Disheera  -  ${adminTitle}*
 
 "${replyContent}"
 
@@ -439,7 +439,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 💬 _Aapka koi aur sawaal ho toh reply karein: *QUERY: [aapka doubt]*_
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(ticket.phone, studentDispatch, {
       context: 'COUNSELOR_DIRECT_REPLY',
@@ -553,7 +553,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
     persistTickets().catch(() => {});
 
     const studentDispatch = 
-`🧑‍🏫 *DheePath  -  Official Mentor Message*
+`🧑‍🏫 *Disheera  -  Official Mentor Message*
 
 "${targetMsg}"
 
@@ -563,7 +563,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
 💬 _Aap is message ka direct WhatsApp reply karke mentor se connect kar sakte hain!_
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
     await whatsappService.sendTextMessage(formattedTarget, studentDispatch, {
       context: 'FOUNDER_DIRECT_OUTREACH',
@@ -616,7 +616,7 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
       ).join('\n\n');
 
       const lookupReply = 
-`🔍 *DheePath  -  Student Lookup Results*
+`🔍 *Disheera  -  Student Lookup Results*
 
 ${matchStr}
 
@@ -639,7 +639,7 @@ ${matchStr}
 
     if (displayTickets.length === 0) {
       const emptyMsg = 
-`📋 *DheePath  -  Leadership Admin Queue*
+`📋 *Disheera  -  Leadership Admin Queue*
 
 Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. 🎉
 
@@ -664,8 +664,8 @@ Sabhi tickets clear hain! Currently koi pending student escalation nahi hai. �
     }).join('\n\n');
 
     const queueHeader = showAll 
-      ? `📋 *DheePath  -  Leadership Admin Queue (All Recent)*` 
-      : `📋 *DheePath  -  Leadership Admin Queue (${displayTickets.length} Active Pending)*`;
+      ? `📋 *Disheera  -  Leadership Admin Queue (All Recent)*` 
+      : `📋 *Disheera  -  Leadership Admin Queue (${displayTickets.length} Active Pending)*`;
 
     const queueMsg = 
 `${queueHeader}
@@ -693,7 +693,7 @@ ${listStr}
 
   // 7. Founder Admin Help & Command Guide
   const helpMsg = 
-`👑 *DheePath  -  Leadership Admin & Counselor Console*
+`👑 *Disheera  -  Leadership Admin & Counselor Console*
 
 Namaste ${adminName}! 🚀
 Aapka number (*${senderPhone}*) as ${adminRole} verified hai.
@@ -707,7 +707,7 @@ Aapka number (*${senderPhone}*) as ${adminRole} verified hai.
 • *FIND [name or email]* ➔ Database me student ka phone number aur email search karein
 • *TEST: [sawal]* ➔ Normal student AI mentor responses test karein
 
-🔒 *Privacy:* Student ko aapka number kabhi nahi dikhega. Sabhi messages DheePath ke official Bot (*+91 7499085045*) se dispatch hote hain.`;
+🔒 *Privacy:* Student ko aapka number kabhi nahi dikhega. Sabhi messages Disheera ke official Bot (*+91 7499085045*) se dispatch hote hain.`;
 
   await whatsappService.sendTextMessage(senderPhone, helpMsg, { context: 'FOUNDER_ADMIN_MENU' });
   return true;
@@ -755,7 +755,7 @@ const handleIncomingWebhook = async (req, res) => {
         try {
           await whatsappService.sendTextMessage(
             formattedCaller,
-            `📞 *DheePath  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://disheera.site\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
+            `📞 *Disheera  -  Automated Assistant Notice*\n\nNamaste! Yeh hamara 24x7 automated AI Career Assistant number hai. Hum live voice calls attend nahi kar sakte.\n\nKripya apna sawal ya career doubt yahan *WhatsApp text message* me bhejiye ya hamari website par visit karein:\n👉 https://disheera.site\n\nHum turant aapko verified roadmap aur guidance reply bhej denge! 🚀`
           );
         } catch (callReplyErr) {
           console.warn('[WhatsApp Webhook] Failed to dispatch call auto-response:', callReplyErr.message);
@@ -980,7 +980,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 ✉️ Official Grievance: parthpatil@disheera.site
 🌐 Portal: https://disheera.site
 
-🚀 DheePath · Your 24x7 Career GPS`;
+🚀 Disheera · Your 24x7 Career GPS`;
 
       await whatsappService.sendTextMessage(senderPhone, voiceNotice, {
         context: 'AUDIO_INPUT_NOTICE',
@@ -1038,7 +1038,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
       });
 
       const ticketReply = 
-`🎫 *DheePath  -  Support Ticket Registered*
+`🎫 *Disheera  -  Support Ticket Registered*
 
 • *Ticket ID:* #${ticketId}
 • *Student:* ${userContext.name} (${senderPhone})
@@ -1052,7 +1052,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 ${issueDetails ? `📝 *Logged Issue:* "${issueDetails}"\n\n` : ''}Aapka ticket confirm ho gaya hai. Grievance Officer review karke jald hi revert karenge!
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, ticketReply, {
         context: 'SUPPORT_TICKET_CONFIRMATION',
@@ -1064,7 +1064,7 @@ ${issueDetails ? `📝 *Logged Issue:* "${issueDetails}"\n\n` : ''}Aapka ticket 
     // 2. Instant Category Quick Responders (Option 1, 2, 3, 4)
     if (cleanLower === '1' || cleanLower === 'otp' || cleanLower === 'login') {
       const otpHelpReply = 
-`🔐 *DheePath  -  Login & Dual-OTP Support*
+`🔐 *Disheera  -  Login & Dual-OTP Support*
 
 Namaste ${userContext.name}! Agar aapko OTP ya login me issue aa raha hai:
 
@@ -1096,7 +1096,7 @@ Hum priority review shuru kar denge!
 
     if (cleanLower === '2' || cleanLower === 'test' || cleanLower === 'proctor' || cleanLower === 'strike') {
       const testHelpReply = 
-`⏱️ *DheePath  -  Milestone Test & Anti-Cheat Support*
+`⏱️ *Disheera  -  Milestone Test & Anti-Cheat Support*
 
 Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke saath aate hain:
 
@@ -1121,7 +1121,7 @@ Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke 
 
     if (cleanLower === '3' || cleanLower === 'certificate' || cleanLower === 'cert') {
       const certHelpReply = 
-`📜 *DheePath  -  Certificate & Verification Support*
+`📜 *Disheera  -  Certificate & Verification Support*
 
 Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
 
@@ -1144,7 +1144,7 @@ Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
 
     if (cleanLower === '4' || cleanLower === 'recruiter' || cleanLower === 'hiring') {
       const recruiterHelpReply = 
-`🏢 *DheePath  -  Corporate Recruiter & Job Radar Support*
+`🏢 *Disheera  -  Corporate Recruiter & Job Radar Support*
 
 Namaste ${userContext.name}!
 Corporate hiring & talent radar support:
@@ -1208,7 +1208,7 @@ Reply *TICKET: Recruiter onboarding assistance*
       });
 
       const counselReply = 
-`🧑‍🏫 *DheePath  -  Human Career Counselor Desk*
+`🧑‍🏫 *Disheera  -  Human Career Counselor Desk*
 
 Namaste ${userContext.name}! 👋
 Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
@@ -1230,7 +1230,7 @@ Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
 parthpatil@disheera.site
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, counselReply, {
         context: 'COUNSELOR_REQUEST_CONFIRMATION',
@@ -1272,7 +1272,7 @@ parthpatil@disheera.site
       });
 
       const queryReply = 
-`📝 *DheePath  -  Counselor Query Docketed*
+`📝 *Disheera  -  Counselor Query Docketed*
 
 Namaste ${userContext.name}! 
 Aapka doubt hamare lead career counselor ke priority review docket me add kar diya gaya hai:
@@ -1284,7 +1284,7 @@ Aapka doubt hamare lead career counselor ke priority review docket me add kar di
 
 Hum is query ka specific roadmap solution lekar aapse WhatsApp par revert karenge!
 
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, queryReply, {
         context: 'COUNSELOR_QUERY_LOGGED',
@@ -1311,7 +1311,7 @@ Hum is query ka specific roadmap solution lekar aapse WhatsApp par revert kareng
       let statusReply = '';
       if (userTickets.length === 0) {
         statusReply = 
-`🔍 *DheePath  -  Support Ticket Status*
+`🔍 *Disheera  -  Support Ticket Status*
 
 Namaste ${userContext.name}!
 Aapke phone number (${senderPhone}) se koi open support ticket ya counselor request pending nahi hai.
@@ -1322,14 +1322,14 @@ Aapke phone number (${senderPhone}) se koi open support ticket ya counselor requ
 • Human counselor callback ke liye: *COUNSELOR*
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
       } else {
         const ticketListStr = userTickets.slice(-3).map(t => 
           `• *#${t.ticketId}* (${t.type || 'SUPPORT'})\n  Issue: "${t.issue}"\n  Status: ${t.status || 'ACTIVE'}\n  Date: ${new Date(t.createdAt).toLocaleDateString('en-IN')}`
         ).join('\n\n');
 
         statusReply = 
-`🔍 *DheePath  -  Aapke Active Tickets*
+`🔍 *Disheera  -  Aapke Active Tickets*
 
 Namaste ${userContext.name}! 
 Aapke phone (${senderPhone}) se associated active requests:
@@ -1339,7 +1339,7 @@ ${ticketListStr}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@disheera.site*.
 
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
       }
 
       await whatsappService.sendTextMessage(senderPhone, statusReply, {
@@ -1352,10 +1352,10 @@ Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hai
     // 6. General Support Protocol Menu
     if (isSupportKeyword) {
       const supportMenuReply = 
-`🛠️ *DheePath  -  Official Support & Grievance Desk*
+`🛠️ *Disheera  -  Official Support & Grievance Desk*
 
 Namaste ${userContext.name}! 👋
-DheePath Support System me aapka swagat hai:
+Disheera Support System me aapka swagat hai:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📞 *OFFICIAL SUPPORT CHANNELS:*
@@ -1390,7 +1390,7 @@ DheePath Support System me aapka swagat hai:
 • *QUERY: [your doubt]* ➔ Docket technical question for mentor
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, supportMenuReply, {
         context: 'SUPPORT_MENU',
@@ -1426,12 +1426,12 @@ DheePath Support System me aapka swagat hai:
       });
 
       const ackNotice = 
-`🧑‍🏫 *DheePath  -  Mentor Desk*
+`🧑‍🏫 *Disheera  -  Mentor Desk*
 
 Namaste ${userContext.name}!
 Aapka reply mentor ko forward kar diya gaya hai. Vo jald hi aapse yahan connect karenge!
 
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, ackNotice, {
         context: 'STUDENT_REPLY_FORWARDED',
@@ -1444,11 +1444,11 @@ Aapka reply mentor ko forward kar diya gaya hai. Vo jald hi aapse yahan connect 
     // Welcomes new unlinked users sending greetings with instant portal registration instructions
     if (!userContext.isRegistered && /^(hi|hii|hiii|hello|hey|namaste|start|\/start)\b/i.test(cleanLower)) {
       const welcomeOnboardingMsg = 
-`👋 *Namaste ${userContext.name}! DheePath me aapka swagat hai!*
+`👋 *Namaste ${userContext.name}! Disheera me aapka swagat hai!*
 
 Aapka yeh WhatsApp number hamare main portal par abhi *Registered / Linked* nahi hai.
 
-🎯 *DheePath kya hai?*
+🎯 *Disheera kya hai?*
 Yeh Bharat ka 1st Autonomous Career GPS platform hai — jo aapko personalized 12-week roadmap, live coding milestones, verified skill certificates aur top tech recruiters se connect karwata hai!
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1471,7 +1471,7 @@ Senior mentor se seedha call connect karne ke liye reply karein:
 Sabhi options dekhne ke liye reply karein:
 👉 *SUPPORT*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, welcomeOnboardingMsg, {
         context: 'UNREGISTERED_WELCOME_ONBOARDING',
@@ -1480,15 +1480,15 @@ Sabhi options dekhne ke liye reply karein:
       return;
     }
 
-    // ── WEBSITE FEATURE INTEGRATION: DHEEPATH COMMAND MENU ──
+    // ── WEBSITE FEATURE INTEGRATION: DISHEERA COMMAND MENU ──
     const isMenuKeyword = /^(menu|help|commands?|features?|actions?|\/menu|\/help|\?)\b/i.test(cleanLower) ||
                           (userContext.isRegistered && /^(hi|hii|hiii|hello|hey|namaste|start|\/start)\b/i.test(cleanLower));
     if (isMenuKeyword) {
       const menuReply = 
-`🚀 *DheePath  -  WhatsApp Commands Menu*
+`🚀 *Disheera  -  WhatsApp Commands Menu*
 
 Namaste ${userContext.name}! 👋
-Aap DheePath ke platform features seedha WhatsApp par use kar sakte hain:
+Aap Disheera ke platform features seedha WhatsApp par use kar sakte hain:
 
 💼 *JOBS* ➔ Top verified tech jobs & internships in India
 🗺️ *ROADMAP* ➔ Week ${userContext.activeWeek} milestones & key topics
@@ -1503,10 +1503,10 @@ Aap DheePath ke platform features seedha WhatsApp par use kar sakte hain:
 💬 _Tip: Aap koi bhi technical ya career sawal direct yahan type kar sakte hain, humara 24x7 AI Mentor turant guidance dega!_
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · Your 24x7 Career GPS*`;
+🚀 *Disheera · Your 24x7 Career GPS*`;
 
       await whatsappService.sendTextMessage(senderPhone, menuReply, {
-        context: 'DHEEPATH_COMMANDS_MENU',
+        context: 'DISHEERA_COMMANDS_MENU',
         studentName: userContext.name
       });
       return;
@@ -1551,7 +1551,7 @@ Aap DheePath ke platform features seedha WhatsApp par use kar sakte hain:
       }
 
       const jobsReply = 
-`💼 *DheePath  -  Live Verified Job Radar*
+`💼 *Disheera  -  Live Verified Job Radar*
 
 Namaste ${userContext.name}!
 Aapke track (*${userContext.targetCareer}*) ke liye latest verified openings:
@@ -1565,7 +1565,7 @@ ${jobsListText}
 _(Includes 1-click apply via LinkedIn, Naukri, Foundit & Indeed)_
 
 💡 _Apply karne se pehle resume optimize karein: Type *RESUME*_
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, jobsReply, {
         context: 'LIVE_JOBS_FEED',
@@ -1580,7 +1580,7 @@ _(Includes 1-click apply via LinkedIn, Naukri, Foundit & Indeed)_
                              cleanLower.startsWith('week');
     if (isRoadmapKeyword) {
       const roadmapReply = 
-`🗺️ *DheePath  -  Your 12-Week Career Roadmap*
+`🗺️ *Disheera  -  Your 12-Week Career Roadmap*
 
 Namaste ${userContext.name}! 👋
 • *Target Track:* ${userContext.targetCareer}
@@ -1601,7 +1601,7 @@ Type *NOTES* to get your Week ${userContext.activeWeek} PDF Cheatsheet sent righ
 🧪 *Take Proctored Milestone Test:*
 👉 Reply with *QUIZ* or visit https://disheera.site/quiz.html
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 *DheePath · 24x7 Autonomous Career GPS*`;
+🚀 *Disheera · 24x7 Autonomous Career GPS*`;
 
       await whatsappService.sendTextMessage(senderPhone, roadmapReply, {
         context: 'STUDENT_ROADMAP_OVERVIEW',
@@ -1616,8 +1616,8 @@ Type *NOTES* to get your Week ${userContext.activeWeek} PDF Cheatsheet sent righ
                            cleanLower.startsWith('/pdf');
     if (isNotesKeyword) {
       const weekNum = userContext.activeWeek || 1;
-      const filename = `DheePath_${(userContext.targetCareer || 'Software_Engineer').replace(/\s+/g, '_')}_Week_${weekNum}_Notes.pdf`;
-      const caption = `📚 DheePath Week ${weekNum} Study Notes & Cheatsheet (${userContext.targetCareer})`;
+      const filename = `Disheera_${(userContext.targetCareer || 'Software_Engineer').replace(/\s+/g, '_')}_Week_${weekNum}_Notes.pdf`;
+      const caption = `📚 Disheera Week ${weekNum} Study Notes & Cheatsheet (${userContext.targetCareer})`;
 
       try {
         const pdfBuffer = await generateWeeklyRoadmapPdf({
@@ -1636,7 +1636,7 @@ Namaste ${userContext.name}! Aapka Week ${weekNum} detailed study guide and chea
 • *Interactive Portal:* https://disheera.site/roadmap.html
 • *Milestone Quiz:* Reply *QUIZ* when ready to test your skills!
 
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
         await whatsappService.sendTextMessage(senderPhone, notesConfirm, {
           context: 'STUDY_NOTES_DISPATCH_CONFIRM',
@@ -1646,14 +1646,14 @@ Namaste ${userContext.name}! Aapka Week ${weekNum} detailed study guide and chea
       } catch (pdfErr) {
         console.error('[WhatsApp Notes] PDF generation failed:', pdfErr.message);
         const pdfFallbackMsg = 
-`📚 *DheePath  -  Week ${weekNum} Study Material*
+`📚 *Disheera  -  Week ${weekNum} Study Material*
 
 Namaste ${userContext.name}!
 Aapka Week ${weekNum} study notes & cheatsheet web portal par available hai:
 👉 https://disheera.site/roadmap.html
 
 Aap direct PDF download aur interactive lessons access kar sakte hain!
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
         await whatsappService.sendTextMessage(senderPhone, pdfFallbackMsg, {
           context: 'STUDY_NOTES_LINK_FALLBACK',
@@ -1672,10 +1672,10 @@ Aap direct PDF download aur interactive lessons access kar sakte hain!
         : `• Modern Web Architecture (Verified)\n• RESTful API Integration (Verified)\n• Core Logic & Algorithms (In Progress)`;
 
       const passportReply = 
-`🛡️ *DheePath  -  Cryptographic Skill Passport*
+`🛡️ *Disheera  -  Cryptographic Skill Passport*
 
 Namaste ${userContext.name}! 👋
-Aapka DheePath Skill Passport ek tamper-proof, recruiter-verified credential hai:
+Aapka Disheera Skill Passport ek tamper-proof, recruiter-verified credential hai:
 
 📊 *Verified Credentials Status:*
 • *Target Track:* ${userContext.targetCareer}
@@ -1694,7 +1694,7 @@ ${skillsList}
 🔍 *Public SHA-256 Verifier:*
 👉 https://disheera.site/verify.html
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, passportReply, {
         context: 'SKILL_PASSPORT_OVERVIEW',
@@ -1708,7 +1708,7 @@ ${skillsList}
                           cleanLower.startsWith('/quiz');
     if (isQuizKeyword) {
       const quizReply = 
-`🧪 *DheePath  -  Milestone Skill Verifier & Code Chamber*
+`🧪 *Disheera  -  Milestone Skill Verifier & Code Chamber*
 
 Namaste ${userContext.name}! 👋
 Aapke *Week ${userContext.activeWeek} (${userContext.targetCareer})* ka milestone test ready hai:
@@ -1728,7 +1728,7 @@ Aapke *Week ${userContext.activeWeek} (${userContext.targetCareer})* ka mileston
 👉 https://disheera.site/quiz.html
 
 💡 _Tip: Review your notes first by typing *NOTES*!_
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, quizReply, {
         context: 'MILESTONE_QUIZ_GUIDE',
@@ -1742,7 +1742,7 @@ Aapke *Week ${userContext.activeWeek} (${userContext.targetCareer})* ka mileston
                             cleanLower.startsWith('/resume');
     if (isResumeKeyword) {
       const resumeReply = 
-`📄 *DheePath  -  AI ATS Resume Builder*
+`📄 *Disheera  -  AI ATS Resume Builder*
 
 Namaste ${userContext.name}! 👋
 Top tech companies ke ATS (Applicant Tracking Systems) ko pass karne ke liye:
@@ -1751,15 +1751,15 @@ Top tech companies ke ATS (Applicant Tracking Systems) ko pass karne ke liye:
 ✨ *ATS Optimization Tips:*
 1. *Quantifiable Bullets:* Use "Action Verb + Task + Quantified Impact" (e.g. "Optimized API latency by 35% using Redis caching").
 2. *Clean Layout:* Single-column, standard fonts, no complex tables.
-3. *Verified DheePath Badge:* Include your verified Passport link for instant recruiter trust.
+3. *Verified Disheera Badge:* Include your verified Passport link for instant recruiter trust.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🛠️ *Launch DheePath AI Resume Builder:*
+🛠️ *Launch Disheera AI Resume Builder:*
 👉 https://disheera.site/resume-builder.html
 _(Includes real-time ATS scoring, keyword matching, and 1-click PDF export)_
 
 💡 _Apply directly after building: Type *JOBS* for active openings!_
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, resumeReply, {
         context: 'ATS_RESUME_BUILDER_GUIDE',
@@ -1773,7 +1773,7 @@ _(Includes real-time ATS scoring, keyword matching, and 1-click PDF export)_
                                cleanLower.startsWith('/interview');
     if (isInterviewKeyword) {
       const interviewReply = 
-`🎙️ *DheePath  -  AI Mock Interview Evaluator*
+`🎙️ *Disheera  -  AI Mock Interview Evaluator*
 
 Namaste ${userContext.name}! 👋
 Tech interviews crack karne ke liye realistic AI practice sessions:
@@ -1789,7 +1789,7 @@ Tech interviews crack karne ke liye realistic AI practice sessions:
 👉 https://disheera.site/assessment.html
 
 💡 _Need guidance from our leadership team? Reply *COUNSELOR* anytime!_
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
       await whatsappService.sendTextMessage(senderPhone, interviewReply, {
         context: 'AI_MOCK_INTERVIEW_GUIDE',
@@ -1800,7 +1800,7 @@ Tech interviews crack karne ke liye realistic AI practice sessions:
 
     // 4. Generate Context-Aware AI Guidance (Groq Llama 3.3 / Qwen with Gemini fallback)
     const promptSystemPrefix = 
-`You are DheePath's official 24x7 WhatsApp Career Mentor.
+`You are Disheera's official 24x7 WhatsApp Career Mentor.
 You are chatting with a student on WhatsApp.
 Student Context:
 - Name: ${userContext.name}
@@ -1814,7 +1814,7 @@ WHATSAPP FORMATTING GUIDELINES:
 - Keep response under 150 words  -  concise, actionable, and encouraging.
 - If asking for next steps, specifically guide them on their Week ${userContext.activeWeek} milestones.
 - Sign off with:
-"🚀 DheePath · Your 24x7 Career GPS
+"🚀 Disheera · Your 24x7 Career GPS
 💡 _Commands: Type *MENU*, *JOBS*, *NOTES*, or *SUPPORT* (+91 74990 85045)_"`;
 
     let aiReply = '';
@@ -1838,12 +1838,12 @@ WHATSAPP FORMATTING GUIDELINES:
         aiReply = 
 `Namaste ${userContext.name}! 👋
 
-Aapka sawal mil gaya hai! DheePath Mentor abhi heavy load handle kar raha hai. 
+Aapka sawal mil gaya hai! Disheera Mentor abhi heavy load handle kar raha hai. 
 Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web portal par access kar sakte hain:
 👉 https://disheera.site/roadmap.html
 
 💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_
-🚀 DheePath · 24x7 Autonomous Career GPS`;
+🚀 Disheera · 24x7 Autonomous Career GPS`;
       }
     }
 
@@ -1907,7 +1907,7 @@ const sendRoadmapPdf = async (req, res, next) => {
       tasks: weekTasks
     });
 
-    const filename = `DheePath_${careerTitle.replace(/\s+/g, '_')}_Week_${weekNumber}_Notes.pdf`;
+    const filename = `Disheera_${careerTitle.replace(/\s+/g, '_')}_Week_${weekNumber}_Notes.pdf`;
 
     // 3. If direct download requested, stream PDF buffer
     if (isDownloadOnly) {
@@ -1927,7 +1927,7 @@ const sendRoadmapPdf = async (req, res, next) => {
     }
 
     const caption = 
-`🗺️ *DheePath  -  Week ${weekNumber} Study Notes*
+`🗺️ *Disheera  -  Week ${weekNumber} Study Notes*
 Career: *${careerTitle}*
 Student: *${user.name}*
 

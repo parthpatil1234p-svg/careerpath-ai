@@ -1,5 +1,5 @@
 # Anti-Cheating & High-Integrity Skill Verification Architecture Plan
-**DheePath · Team 404 Brain Not Found**
+**Disheera · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
@@ -11,7 +11,7 @@ Skill verification only holds real-world value for students, recruiters, and hac
 2. **Client-Side Leaks & Memorization:** Answers sent in JSON or static answer keys (`A`, `B`, `C`, `D`) allow students to memorize positions or inspect the browser DOM.
 3. **Unchecked Sybil Attacks & Scripting:** Bots or cheaters retrying instantly with unlimited attempts until they guess their way to an "Advanced" badge.
 
-This architectural plan outlines an **8-Pillar Anti-Cheating Defense** seamlessly integrated into DheePath's existing Express/MongoDB backend and responsive frontend.
+This architectural plan outlines an **8-Pillar Anti-Cheating Defense** seamlessly integrated into Disheera's existing Express/MongoDB backend and responsive frontend.
 
 ---
 
@@ -143,7 +143,7 @@ flowchart TD
 * Quizzes are intentionally positioned as **Tier 1 (Foundational Check)**, not the final word.
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│              DHEEPATH SKILL PASSPORT                │
+│              DISHEERA SKILL PASSPORT                │
 ├───────────────┬────────────┬─────────────────────────────┤
 │ Level         │ Badge      │ Validation Source           │
 ├───────────────┼────────────┼─────────────────────────────┤
@@ -155,7 +155,7 @@ flowchart TD
 ```
 * **Pedagogical Impact:**
   - A cheater who buys answers or cheats on the 5-minute quiz only obtains **Tier 1**.
-  - Recruiters and the DheePath recommendation engine assign **100% full weight** only to **Tier 2 (GitHub-verified code)** and **Tier 3 (Spoken interview)**. Cheating on the quiz becomes pointless because it cannot unlock top-tier status without genuine code artifacts.
+  - Recruiters and the Disheera recommendation engine assign **100% full weight** only to **Tier 2 (GitHub-verified code)** and **Tier 3 (Spoken interview)**. Cheating on the quiz becomes pointless because it cannot unlock top-tier status without genuine code artifacts.
 
 ### Pillar 8: Randomized Spot-Checks
 * When a student requests an official certificate, applies for high-match job roles, or achieves a top 5% leaderboard rank:

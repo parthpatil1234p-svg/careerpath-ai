@@ -1,7 +1,7 @@
 /**
  * controllers/readinessController.js — Job Readiness Index & Certificate Controller
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const crypto = require('crypto');
@@ -67,8 +67,8 @@ exports.getCertificate = async (req, res, next) => {
         targetRole: readiness.targetRole || 'Full-Stack Developer',
         readinessScore: isDemoOrAdmin ? Math.max(94, readiness.readinessScore || 94) : readiness.readinessScore,
         issueDate: readiness.certifiedAt || user.jobReadiness?.certifiedAt || new Date(),
-        issuer: 'DheePath Credential Authority',
-        accreditation: 'DheePath Verified Standard',
+        issuer: 'Disheera Credential Authority',
+        accreditation: 'Disheera Verified Standard',
         council: 'Academic & Industry Certification Council',
         verifiedSkills: (user.skills && user.skills.length > 0)
           ? user.skills.map(s => s.displayName || s.name)
@@ -174,7 +174,7 @@ exports.verifyPublicCertificate = async (req, res, next) => {
       roleSkills = ['Applied Technical Competency', 'Production Engineering', 'System Verification', 'Code Assessment'];
     }
 
-    const shaSeed = `${cleanCertId}|${user.name}|${targetRole}|${certIso}|DheePath`;
+    const shaSeed = `${cleanCertId}|${user.name}|${targetRole}|${certIso}|Disheera`;
     const tamperProofHash = crypto.createHash('sha256').update(shaSeed).digest('hex').toUpperCase();
 
     return res.status(200).json({
@@ -194,7 +194,7 @@ exports.verifyPublicCertificate = async (req, res, next) => {
           interviewScore: 90,
         },
         verifiedSkills: roleSkills,
-        issuer: 'DheePath Global Credential Registry',
+        issuer: 'Disheera Global Credential Registry',
         authority: 'Academic Evaluation Council & Technical Industry Standards Board',
         academicDirector: 'Dr. Rajiv Mehta',
         leadSteward: 'Academic & Industry Certification Council',

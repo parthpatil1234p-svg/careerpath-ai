@@ -1,6 +1,6 @@
 /**
  * services/githubService.js — GitHub Integration & Repository Study Analyzer
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  *
  * Provides:
  * - GitHub REST API integration for student profile and repository fetching
@@ -9,7 +9,7 @@
  * - Safe fallback for offline evaluation and unauthenticated GitHub API limits
  */
 
-// Skill mapping taxonomy: maps GitHub languages and repo topics to DheePath skills
+// Skill mapping taxonomy: maps GitHub languages and repo topics to Disheera skills
 const SKILL_TAXONOMY = {
   // Languages
   javascript: { name: 'javascript', displayName: 'JavaScript', category: 'frontend/backend' },
@@ -104,7 +104,7 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'User-Agent': 'DheePath-Platform',
+          'User-Agent': 'Disheera-Platform',
         },
         body: JSON.stringify(payload),
       });
@@ -124,7 +124,7 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
               headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-                'User-Agent': 'DheePath-Platform',
+                'User-Agent': 'Disheera-Platform',
               },
               body: JSON.stringify(fallbackPayload),
             });
@@ -156,7 +156,7 @@ const exchangeOAuthCode = async (code, redirectUri = null) => {
 const fetchGitHubData = async (username, accessToken = null) => {
   const headers = {
     Accept: 'application/vnd.github.v3+json',
-    'User-Agent': 'DheePath-Study-Platform',
+    'User-Agent': 'Disheera-Study-Platform',
   };
 
   if (accessToken) {

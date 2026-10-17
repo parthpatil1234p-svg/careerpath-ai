@@ -1,13 +1,13 @@
 # Implementation Plan: Single Resume per Account Architecture
 
-**DheePath · Team 404 Brain Not Found**  
+**Disheera · Team 404 Brain Not Found**  
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Executive Summary
 
-Currently in DheePath, resume uploads update a single `resumeUrl` string on the `User` document, but:
+Currently in Disheera, resume uploads update a single `resumeUrl` string on the `User` document, but:
 1. Every upload to Cloudinary generates a timestamped `public_id` (`resume_${userId}_${Date.now()}`), leaving orphaned previous resumes in cloud storage without deletion.
 2. There is no dedicated `resumes` collection with a database-level unique constraint (`unique: true` on `user`), making duplicate records possible if future features or concurrent requests insert rows.
 3. The dashboard UI lacks explicit state management for loading, locked (unverified skill gate), replacement confirmation, and failure recovery.

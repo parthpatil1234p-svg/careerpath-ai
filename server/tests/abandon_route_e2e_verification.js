@@ -9,7 +9,7 @@
  * 5. Verifies subsequent enrollment is unlocked (GET /api/roadmaps/current -> activeCount: 0)
  * 6. Inspects client screens (recommendations.html and roadmap.html) for interactive DOM buttons & modal wiring
  *
- * DheePath · Enterprise QA Verification
+ * Disheera · Enterprise QA Verification
  */
 
 const assert = require('assert');

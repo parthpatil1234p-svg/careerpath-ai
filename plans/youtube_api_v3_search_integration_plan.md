@@ -3,7 +3,7 @@
 > **Context & Requirement**:
 > The user provided the official Google documentation for `YouTube Data API v3: Search: list` (`GET https://www.googleapis.com/youtube/v3/search`).
 > Currently, `roadmapService.js` and dynamic task generation was using static search query links (`https://www.youtube.com/results?search_query=...`) which cannot be embedded in our in-app `VideoChamber` player and fall back to a hardcoded video ID.
-> By integrating the official YouTube Data API v3 `search.list` method, DheePath will dynamically fetch, embed, and cache real, embeddable video masterclasses and tutorials for every skill and topic in the student's roadmap.
+> By integrating the official YouTube Data API v3 `search.list` method, Disheera will dynamically fetch, embed, and cache real, embeddable video masterclasses and tutorials for every skill and topic in the student's roadmap.
 
 ---
 
@@ -57,7 +57,7 @@
 │           • 0 errors, 100% uptime!                                                               │
 │                                                                                                  │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
-│                     CONSUMPTION IN DheePath Platform                                        │
+│                     CONSUMPTION IN Disheera Platform                                        │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                                  │
 │   A. Roadmap Generation (roadmapService.js):                                                     │

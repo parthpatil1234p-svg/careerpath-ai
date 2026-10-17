@@ -1,7 +1,7 @@
-# Plan #42: DheePath — 5 Compounding Defensible Moats Architecture & Implementation Plan
+# Plan #42: Disheera — 5 Compounding Defensible Moats Architecture & Implementation Plan
 
 > **Strategic Directive**: 
-> Transform DheePath from a generic career portal into an institutional, defensible product with a 1-5 year compounding moat that copycats cannot easily duplicate.
+> Transform Disheera from a generic career portal into an institutional, defensible product with a 1-5 year compounding moat that copycats cannot easily duplicate.
 >
 > **Core Focus**:
 > 1. In-Browser "Fix-the-Bug" Proof-of-Work Chamber (replaces cheat-prone MCQs with code debugging challenges).
@@ -18,7 +18,7 @@ In 2026, building multiple-choice quizzes, static linear roadmaps, and scraped j
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                        DHEEPATH: 5 COMPOUNDING DEFENSIVE MOATS                    │
+│                        DISHEERA: 5 COMPOUNDING DEFENSIVE MOATS                    │
 ├──────────────────────────┬─────────────────────────────┬───────────────────────────────┤
 │ 1. PROOF-OF-WORK CHAMBER │ 2. DIAGNOSTIC REMEDIATION   │ 3. SPONSORED BOUNTY HIRING    │
 │ • Live in-browser debug  │ • Adaptive branch insertion │ • Real PRs for real startups  │
@@ -69,7 +69,7 @@ In 2026, building multiple-choice quizzes, static linear roadmaps, and scraped j
 * **The CareerPath Moat**:
   * Post-placement onboarding track: "First 90 Days Survival Kit" (Git branch hygiene, code review etiquette, incident post-mortem guide).
   * 1-to-5 year salary milestone and skill roadmap guiding engineers from Junior Dev -> SDE II -> Tech Lead.
-  * Converts DheePath into a lifelong career operating system.
+  * Converts Disheera into a lifelong career operating system.
 
 ---
 

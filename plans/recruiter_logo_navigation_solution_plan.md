@@ -1,9 +1,9 @@
 # Implementation Plan: Recruiter Logo Navigation & Landing Page Redirection Solution
 
 > **User Request**:
-> *"in recruiter dasbord after the click the dheepath logo i well redirect her what is our solution on thet /plan"*
+> *"in recruiter dasbord after the click the disheera logo i well redirect her what is our solution on thet /plan"*
 > 
-> **Context Screenshot**: The user uploaded a screenshot of `index.html` showing the student-focused landing page ("Find the right career path. Build the skills to reach it. Start Assessment"). Currently, clicking the top-left DheePath logo inside the Recruiter Dashboard sends recruiters to this student marketing page.
+> **Context Screenshot**: The user uploaded a screenshot of `index.html` showing the student-focused landing page ("Find the right career path. Build the skills to reach it. Start Assessment"). Currently, clicking the top-left Disheera logo inside the Recruiter Dashboard sends recruiters to this student marketing page.
 
 ---
 
@@ -63,10 +63,10 @@
   <!-- Brand / Logo for Recruiter Portal -->
   <a class="navbar-brand d-flex align-items-center" href="recruiter-dashboard.html" title="Recruiter Dashboard Home">
     <div class="brand-icon">
-      <img src="assets/logo.svg" alt="DheePath Logo" class="brand-logo-img" width="40" height="40" />
+      <img src="assets/logo.svg" alt="Disheera Logo" class="brand-logo-img" width="40" height="40" />
     </div>
     <div class="d-flex flex-column ms-1">
-      <span class="brand-name">Dhee<span class="brand-accent">Path</span></span>
+      <span class="brand-name">Dishe<span class="brand-accent">era</span></span>
       <span class="brand-tagline-sub font-mono text-teal" style="font-size: 0.65rem; margin-top: -3px; letter-spacing: 0.5px;">
         RECRUITER HUB
       </span>
@@ -104,12 +104,12 @@
         brand.setAttribute('title', 'Return to Student Dashboard');
       } else {
         brand.setAttribute('href', 'index.html');
-        brand.setAttribute('title', 'DheePath Home');
+        brand.setAttribute('title', 'Disheera Home');
       }
     });
   }
   ```
-- **Benefit**: Even if a recruiter opens any page (`jobs.html`, `index.html`, etc.), clicking the DheePath logo will **always** safely bring them back to `recruiter-dashboard.html`!
+- **Benefit**: Even if a recruiter opens any page (`jobs.html`, `index.html`, etc.), clicking the Disheera logo will **always** safely bring them back to `recruiter-dashboard.html`!
 
 ---
 
@@ -168,7 +168,7 @@
 1. **Logo Click inside Recruiter Dashboard**:
    - Log in as a recruiter (`recruiter@company.com`).
    - Open `http://localhost:5500/recruiter-dashboard.html`.
-   - Click the **DheePath** logo on the top-left.
+   - Click the **Disheera** logo on the top-left.
    - **Verify**: The browser remains on `recruiter-dashboard.html` (refreshes/scrolls to top) and does NOT redirect to `index.html`.
 2. **Navigating to `index.html` while Logged In as Recruiter**:
    - In the browser URL bar, type `http://localhost:5500/index.html` and hit Enter.

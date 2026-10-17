@@ -2,7 +2,7 @@
  * proximity_radar_test.js - Comprehensive Verification Test for Pan-India Industrial Proximity Radar
  * Validates Haversine distance engine, corridor filtering, and live GPS coordinate sorting.
  *
- * DheePath - Quality Assurance Suite
+ * Disheera - Quality Assurance Suite
  */
 
 const assert = require('assert');

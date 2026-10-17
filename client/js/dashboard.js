@@ -3555,7 +3555,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Official LinkedIn profile certification pre-fill endpoint
         const addLinkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME` +
           `&name=${encodeURIComponent('Verified Job Ready: ' + role)}` +
-          `&organizationName=${encodeURIComponent('DheePath')}` +
+          `&organizationName=${encodeURIComponent('Disheera')}` +
           `&issueYear=${issueYear}&issueMonth=${issueMonth}` +
           `&certId=${encodeURIComponent(certId)}` +
           `&certUrl=${encodeURIComponent(verifyUrl)}`;
@@ -3612,7 +3612,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DheePath Certificate &mdash; ${studentName} &mdash; ${roleName}</title>
+  <title>Disheera Certificate &mdash; ${studentName} &mdash; ${roleName}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -3697,7 +3697,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const certId = document.getElementById('certVerificationId')?.textContent?.trim() || 'CP-2026-VRF892';
         const role = document.getElementById('certCareerTitle')?.textContent?.trim() || 'Financial Analyst & Modeler';
         const verifyUrl = `${window.location.origin}/verify.html?certId=${encodeURIComponent(certId)}`;
-        const shareText = `🎓 Verified Job Ready in ${role} on DheePath! Credential ID: ${certId}. Verify at: ${verifyUrl}`;
+        const shareText = `🎓 Verified Job Ready in ${role} on Disheera! Credential ID: ${certId}. Verify at: ${verifyUrl}`;
         const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl)}&summary=${encodeURIComponent(shareText)}`;
         window.open(url, '_blank', 'width=600,height=600');
       };

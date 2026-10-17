@@ -23,7 +23,7 @@ const whatsappService = require('../services/whatsappService');
 
 async function runTest() {
   console.log('============================================================');
-  console.log('🧪 DheePath — Founder & Co-Founder Anonymous Relay Test');
+  console.log('🧪 Disheera — Founder & Co-Founder Anonymous Relay Test');
   console.log('============================================================');
 
   // Intercept whatsappService.sendTextMessage to capture outbound dispatches

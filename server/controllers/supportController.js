@@ -11,7 +11,7 @@
  * WhatsApp: +91 74990 85045 (Chat Only · No Voice Calls)
  * Location: GHRCEM, Jalgaon, Maharashtra, India
  * 
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const whatsappService = require('../services/whatsappService');
@@ -78,7 +78,7 @@ const createTicket = async (req, res, next) => {
     if (ticketRecord.phone) {
       try {
         const waMsg = 
-`🎫 *DheePath - Support Ticket Registered*
+`🎫 *Disheera - Support Ticket Registered*
 
 Namaste ${studentName}! 👋
 Aapka support ticket receive ho gaya hai:
@@ -96,7 +96,7 @@ Aapka support ticket receive ho gaya hai:
 Hamari support team aapse jald hi connect karegi!
 
 🌐 *Web Portal:* https://disheera.site
-🚀 *DheePath · 24x7 Verified Talent OS*`;
+🚀 *Disheera · 24x7 Verified Talent OS*`;
 
         await whatsappService.sendTextMessage(ticketRecord.phone, waMsg, {
           context: 'SUPPORT_TICKET_WEB',
@@ -135,7 +135,7 @@ const getGrievanceDetails = (req, res) => {
   res.status(200).json({
     success: true,
     data: {
-      platform: 'DheePath Technologies Inc.',
+      platform: 'Disheera Technologies Inc.',
       grievanceOfficer: 'Parth Patil',
       designation: 'Grievance Redressal & Technical Lead',
       email: 'parthpatil@disheera.site',

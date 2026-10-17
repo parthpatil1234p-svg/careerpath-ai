@@ -3,7 +3,7 @@
  *
  * Multi-model evaluation (Gemini / Groq + Heuristic Fallback) for Career GPS Step 8.
  * Integrated with Lightcast Open Skills Taxonomy for alias-aware canonical ATS matching.
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const { callGemini } = require('./geminiService');

@@ -1,6 +1,6 @@
 # Implementation Plan: Dual Active Roadmaps & Related Course Synergy
 
-**DheePath · Team 404 Brain Not Found**  
+**Disheera · Team 404 Brain Not Found**  
 *Hack2Ignite 2026-27*
 
 ---

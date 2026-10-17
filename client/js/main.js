@@ -1,5 +1,5 @@
 /**
- * main.js - DheePath Landing Page Controller
+ * main.js - Disheera Landing Page Controller
  *
  * Handles:
  *  - Navbar scroll elevation
@@ -439,7 +439,7 @@ function initCampusDemoModal() {
     } catch (err) {
       if (alertBox) {
         alertBox.className = 'alert alert-danger alert-dismissible fade show';
-        alertBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${err.message || 'Network error connecting to campus service. Please try again or email campus@dheepath.is-local.org'}`;
+        alertBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${err.message || 'Network error connecting to campus service. Please try again or email campus@disheera.site'}`;
       }
     } finally {
       if (submitBtn) submitBtn.disabled = false;
@@ -543,11 +543,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initPricingTabs();
 
   console.log(
-    '%cDheePath Technologies Inc. | Autonomous Career GPS & Verified Talent Operating System',
+    '%cDisheera Technologies Inc. | Autonomous Career GPS & Verified Talent Operating System',
     'color: #167D8D; font-size: 15px; font-weight: bold;'
   );
   console.log(
-    '%cEnterprise Edition v2.5.0 | DheePath Global Talent Protocol',
+    '%cEnterprise Edition v2.5.0 | Disheera Global Talent Protocol',
     'color: #4F46E5; font-size: 12px;'
   );
 });

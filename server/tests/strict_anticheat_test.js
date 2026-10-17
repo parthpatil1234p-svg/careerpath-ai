@@ -8,7 +8,7 @@
  * 4. Strike 3 Automatic Disqualification & Session Destruction
  * 5. Prevention of Demo Account Bypass on Cheating Disqualifications
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 require('dotenv').config({ path: __dirname + '/../.env' });

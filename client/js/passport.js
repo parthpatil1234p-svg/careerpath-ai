@@ -1,6 +1,6 @@
 /**
  * passport.js - Client-Side Controller for Public Skill Passport
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  * Renders verified talent dossier, project portfolio, and real-time QR code.
  */
 
@@ -59,7 +59,7 @@
     const btnWa = document.getElementById('btnContactCandidateWa');
     if (btnWa) {
       const cleanPhone = (p.phoneRaw || '917499085045').replace(/[^0-9]/g, '');
-      const waMsg = encodeURIComponent(`Hello ${p.name}, I reviewed your verified Skill Passport on DheePath (${window.location.href}) and would like to connect regarding an opportunity.`);
+      const waMsg = encodeURIComponent(`Hello ${p.name}, I reviewed your verified Skill Passport on Disheera (${window.location.href}) and would like to connect regarding an opportunity.`);
       btnWa.href = `https://wa.me/${cleanPhone}?text=${waMsg}`;
     }
 
@@ -267,7 +267,7 @@
       const canvas = document.getElementById('qrCodeCanvas');
       if (!canvas) return;
       const link = document.createElement('a');
-      link.download = `dheepath_skill_passport_qr.png`;
+      link.download = `disheera_skill_passport_qr.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
@@ -282,8 +282,8 @@
       if (navigator.share) {
         try {
           await navigator.share({
-            title: 'Verified Skill Passport · DheePath',
-            text: 'Check out my verified technical skills and evaluated GitHub projects on DheePath.',
+            title: 'Verified Skill Passport · Disheera',
+            text: 'Check out my verified technical skills and evaluated GitHub projects on Disheera.',
             url
           });
           return;

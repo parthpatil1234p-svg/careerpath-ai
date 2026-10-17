@@ -1,7 +1,7 @@
 /**
  * services/quizService.js — Adaptive Skill Quiz & Reality-Check Engine
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  *
  * Core Logic:
  * - 6 Questions per skill session.

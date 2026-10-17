@@ -1,7 +1,7 @@
 /**
  * services/weeklyTestService.js — Server-Authoritative Weekly Milestone Test Engine
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  *
  * Implements Pillar 4 of the Shared Foundation:
  *  - 30-Minute Server-Locked Countdown (immune to page reloads)

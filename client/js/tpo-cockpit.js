@@ -3,7 +3,7 @@
  * Provides real-time Batch Skill Deficit Heatmap, NAAC / NIRF Criterion 5 Metrics,
  * and Regional Market Alignment Radar for college placement directors and TPOs.
  *
- * DheePath - Enterprise Institutional Platform
+ * Disheera - Enterprise Institutional Platform
  */
 
 (function () {

@@ -1,6 +1,6 @@
 /**
  * scroll-dissolve.js — Lightweight 2D Interactive Transformation Slider
- * DheePath · Enterprise Platform
+ * Disheera · Enterprise Platform
  *
  * Clean, accessible Before/After comparison:
  * - Before: Student Skill Gaps

@@ -2,7 +2,7 @@
  * scripts/openwa_bot_runner.js — OpenWA & WhatsApp Automation Suite Runner / Webhook Simulator
  * 
  * Provides:
- * 1. Interactive simulated WhatsApp chat with DheePath 24x7 Mentor
+ * 1. Interactive simulated WhatsApp chat with Disheera 24x7 Mentor
  * 2. Webhook test runner against local or remote Express server
  * 3. Configuration instructions for physical WhatsApp QR bridge
  * 
@@ -10,7 +10,7 @@
  *   node server/scripts/openwa_bot_runner.js
  *   node server/scripts/openwa_bot_runner.js --query "Bhai, Frontend Developer banne ke liye agla step kya hai?" --phone "+919876543210"
  * 
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const http = require('http');
@@ -32,7 +32,7 @@ for (let i = 0; i < args.length; i++) {
 }
 
 console.log('============================================================');
-console.log('🤖 DHEEPATH — WHATSAPP AUTOMATION SUITE TEST RUNNER');
+console.log('🤖 DISHEERA — WHATSAPP AUTOMATION SUITE TEST RUNNER');
 console.log('============================================================');
 console.log(`Target Webhook: http://${WEBHOOK_HOST}:${PORT}${WEBHOOK_PATH}`);
 console.log(`Student Phone:  ${testPhone}`);

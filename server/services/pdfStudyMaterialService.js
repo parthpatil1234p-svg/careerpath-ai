@@ -4,7 +4,7 @@
  * Generates clean, high-density, branded PDF cheatsheets and study guides
  * using PDFKit for automated WhatsApp delivery and direct student download.
  * 
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const PDFDocument = require('pdfkit');
@@ -33,8 +33,8 @@ function generateWeeklyRoadmapPdf({
         size: 'A4',
         margins: { top: 40, bottom: 40, left: 45, right: 45 },
         info: {
-          Title: `DheePath — Week ${weekNumber} Study Notes: ${careerTitle}`,
-          Author: 'DheePath Technologies Inc.',
+          Title: `Disheera — Week ${weekNumber} Study Notes: ${careerTitle}`,
+          Author: 'Disheera Technologies Inc.',
           Subject: 'Weekly Milestone Roadmap Cheatsheet & Study Guide',
           Keywords: 'career, roadmap, cheatsheet, edtech, ai'
         }
@@ -57,7 +57,7 @@ function generateWeeklyRoadmapPdf({
       doc.rect(45, 40, 505, 55).fill(primaryColor);
       
       doc.fillColor('#ffffff').fontSize(16).font('Helvetica-Bold')
-         .text('DHEEPATH', 60, 52, { characterSpacing: 1.5 });
+         .text('DISHEERA', 60, 52, { characterSpacing: 1.5 });
       doc.fontSize(8).font('Helvetica')
          .text('AUTONOMOUS CAREER GPS & VERIFIED TALENT OS', 60, 72, { characterSpacing: 1 });
 
@@ -184,7 +184,7 @@ function generateWeeklyRoadmapPdf({
       doc.rect(45, bottomY, 505, 1).fill(borderLine);
       
       doc.fillColor(mutedText).fontSize(7).font('Helvetica')
-         .text('DheePath Technologies Inc. · Cryptographic Milestone Verification · OpenWA WhatsApp Suite', 45, bottomY + 6);
+         .text('Disheera Technologies Inc. · Cryptographic Milestone Verification · OpenWA WhatsApp Suite', 45, bottomY + 6);
       
       doc.fillColor(goldColor).fontSize(7).font('Helvetica-Bold')
          .text('🔐 TAMPER-PROOF PROCTOR VERIFIED', 380, bottomY + 6, { align: 'right', width: 170 });
@@ -238,7 +238,7 @@ function getCheatsheetContent(careerTitle, weekNumber) {
  */
 function getVideoLessons(careerTitle, weekNumber) {
   return [
-    { title: `${careerTitle} — Architecture & Best Practices Masterclass`, channel: 'DheePath Academy', duration: '32 mins' },
+    { title: `${careerTitle} — Architecture & Best Practices Masterclass`, channel: 'Disheera Academy', duration: '32 mins' },
     { title: `Building Production Projects Step-by-Step for Week ${weekNumber}`, channel: 'FreeCodeCamp / Fireship', duration: '45 mins' }
   ];
 }

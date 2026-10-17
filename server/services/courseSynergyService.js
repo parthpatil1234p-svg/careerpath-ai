@@ -9,7 +9,7 @@
  *    - business <-> marketing (e.g. Business Ops + Digital Marketing)
  * 3. Shared required skill overlap >= 2
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 function isRelatedCourse(careerA, careerB) {

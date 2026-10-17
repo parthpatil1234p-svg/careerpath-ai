@@ -4,7 +4,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const { Client } = require('pg');
 
 async function runMigration() {
-  console.log('=== DHEEPATH: EXECUTING DATABASE INDEX MIGRATION ===');
+  console.log('=== DISHEERA: EXECUTING DATABASE INDEX MIGRATION ===');
   const directUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
   if (!directUrl) {
     throw new Error('Neither DIRECT_URL nor DATABASE_URL found in environment.');

@@ -1,9 +1,9 @@
-# DheePath — Backend API Documentation
+# Disheera — Backend API Documentation
 
-> **DheePath Technologies Inc. — Enterprise Backend Service**  
+> **Disheera Technologies Inc. — Enterprise Backend Service**  
 > *Node.js + Express.js REST API · MongoDB Atlas · JWT Authentication · Deterministic Recommendation Engine*
 
-The `server/` directory contains the core application business logic, data models, recommendation algorithms, and RESTful API endpoints for DheePath.
+The `server/` directory contains the core application business logic, data models, recommendation algorithms, and RESTful API endpoints for Disheera.
 
 ---
 
@@ -66,7 +66,7 @@ Ensure `server/.env` includes:
 ```env
 PORT=5000
 NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/dheepath
+MONGODB_URI=mongodb://localhost:27017/disheera
 JWT_SECRET=replace_with_a_long_random_secret
 JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5500
@@ -92,7 +92,7 @@ The server will listen at **[http://localhost:5000](http://localhost:5000)**.
 | :--- | :--- | :--- | :--- |
 | `PORT` | No | Port on which Express server listens | `5000` (Local) / `10000` (Render) |
 | `NODE_ENV` | Yes | Environment mode | `development` or `production` |
-| `MONGODB_URI` | Yes | MongoDB Atlas or Local connection URI | `mongodb+srv://<user>:<pass>@cluster.mongodb.net/dheepath` |
+| `MONGODB_URI` | Yes | MongoDB Atlas or Local connection URI | `mongodb+srv://<user>:<pass>@cluster.mongodb.net/disheera` |
 | `JWT_SECRET` | Yes | Secret key used to sign and verify JWT tokens | `replace_with_a_long_random_secret` |
 | `JWT_EXPIRES_IN`| No | Token validity duration | `7d` |
 | `CLIENT_URL` | Yes | Allowed frontend origin for CORS policies | `http://localhost:5500` or `https://YOUR-APP.vercel.app` |
@@ -101,7 +101,7 @@ The server will listen at **[http://localhost:5000](http://localhost:5000)**.
 
 ## 🔐 Authentication & Authorization Flow
 
-DheePath uses stateless JWT Bearer authorization:
+Disheera uses stateless JWT Bearer authorization:
 1. **Registration / Login:** The client sends credentials to `/api/auth/register` or `/api/auth/login`.
 2. **Token Generation:** Upon successful verification, the server generates a signed JWT payload (`{ id: user._id }`).
 3. **Protected Requests:** The client attaches the token in the `Authorization` header:

@@ -4,7 +4,7 @@
  * Implements the 6-question dynamic difficulty micro-quiz.
  * Compares "You Said" vs "Quiz Says" and unlocks the verified credential.
  *
- * DheePath · Enterprise Platform
+ * Disheera · Enterprise Platform
  */
 
 document.addEventListener('DOMContentLoaded', async () => {

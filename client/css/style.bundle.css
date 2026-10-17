@@ -1,10 +1,10 @@
-/* DheePath — Consolidated Production Stylesheet */
+/* Disheera — Consolidated Production Stylesheet */
 
 /* --- Module: tokens.css --- */
 /* ==========================================================================
-   DheePath — EduTech Modern Design Tokens (tokens.css)
+   Disheera — EduTech Modern Design Tokens (tokens.css)
    Clean Modern Light Theme · Indigo, Blue & Cyan Accents
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 :root {
@@ -177,9 +177,9 @@
 
 /* --- Module: base.css --- */
 /* ==========================================================================
-   DheePath — Base & Typography (base.css)
+   Disheera — Base & Typography (base.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 *, *::before, *::after {
@@ -462,9 +462,9 @@ small, .small {
 
 /* --- Module: layout.css --- */
 /* ==========================================================================
-   DheePath — Layout & Grid (layout.css)
+   Disheera — Layout & Grid (layout.css)
    Clean Modern EduTech Layout · Max Width Constraints · Responsive
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* Global Container Constraints — Optimized to fill modern screens while maintaining readability */
@@ -787,9 +787,9 @@ div[id].cp-section {
 
 /* --- Module: components.css --- */
 /* ==========================================================================
-   DheePath — EduTech Component Design System (components.css)
+   Disheera — EduTech Component Design System (components.css)
    Clean Modern Aesthetics · Indigo, Blue & Cyan Accents
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -1668,9 +1668,9 @@ div[id].cp-section {
 
 /* --- Module: pages.css --- */
 /* ==========================================================================
-   DheePath - EduTech Page Styles (pages.css)
+   Disheera - EduTech Page Styles (pages.css)
    Clean Modern Light Aesthetics | Indigo, Blue & Cyan Accents
-   DheePath | Enterprise Edition
+   Disheera | Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -3422,9 +3422,9 @@ div[id].cp-section {
 
 /* --- Module: three.css --- */
 /* ==========================================================================
-   DheePath — Three.js EduTech Canvas & Clean Tooltips (three.css)
+   Disheera — Three.js EduTech Canvas & Clean Tooltips (three.css)
    Soft Indigo/Blue Canvas Canvas · Accessible HUD
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -3945,9 +3945,9 @@ div[id].cp-section {
 
 /* --- Module: roadmap.css --- */
 /* ==========================================================================
-   DheePath — Learning Roadmap Stylesheet (roadmap.css)
+   Disheera — Learning Roadmap Stylesheet (roadmap.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* Top Roadmap Summary Header */
@@ -5716,9 +5716,9 @@ div[id].cp-section {
 
 /* --- Module: dashboard.css --- */
 /* ==========================================================================
-   DheePath — Student Dashboard Stylesheet (dashboard.css)
+   Disheera — Student Dashboard Stylesheet (dashboard.css)
    Clean Modern EduTech Aesthetics · Indigo, Blue & Cyan Accents
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* Page Background */
@@ -8403,10 +8403,10 @@ body.modal-open .cp-chat-card {
 
 /* --- Module: chat.css --- */
 /* ==========================================================================
-   DheePath — Student-Portal AI Career Mentor (chat.css)
+   Disheera — Student-Portal AI Career Mentor (chat.css)
    Enterprise Student Portal Aesthetics · Indigo, Violet & Emerald Accents
    Features: Code Cards, Step Badges, Section Tags, Pro-Tips & Action Pills
-   DheePath Technologies Inc.
+   Disheera Technologies Inc.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -9458,7 +9458,7 @@ body.modal-open .cp-chat-trigger {
 
 /* --- Module: radial-glow-button.css --- */
 /* ==========================================================================
-   DheePath — EduTech Radial Button (radial-glow-button.css)
+   Disheera — EduTech Radial Button (radial-glow-button.css)
    Clean Indigo & Blue Primary CTA Micro-interaction
    ========================================================================== */
 
@@ -9518,7 +9518,7 @@ a.rg-button:active {
 
 /* --- Module: notch-navbar.css --- */
 /* ==========================================================================
-   DheePath — EduTech Dynamic Navbar (notch-navbar.css)
+   Disheera — EduTech Dynamic Navbar (notch-navbar.css)
    Ultra-Premium Floating Glass Island · High-End Design · Responsive
    ========================================================================== */
 
@@ -10302,9 +10302,9 @@ body.assessment-page .assessment-layout {
 
 /* --- Module: animated-icons.css --- */
 /* ==========================================================================
-   DheePath — 21st.dev Animated Icons System (animated-icons.css)
+   Disheera — 21st.dev Animated Icons System (animated-icons.css)
    Micro-animations · State Transitions · Spring Physics · Ambient Glow
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -10592,7 +10592,7 @@ body.assessment-page .assessment-layout {
 /* --- Module: typing-character-fx.css --- */
 /* ==========================================================================
    typing-character-fx.css — Keystroke Character Pop-up Micro-Animation
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    
    High-performance, GPU-accelerated character pop-up animations that trigger
    dynamically above input carets as users type in form fields and search bars.
@@ -10712,9 +10712,9 @@ body.assessment-page .assessment-layout {
 
 /* --- Module: quiz.css --- */
 /* ==========================================================================
-   DheePath — Adaptive Skill Reality-Check Micro-Quiz (quiz.css)
+   Disheera — Adaptive Skill Reality-Check Micro-Quiz (quiz.css)
    Clean Modern Light Theme · Indigo, Emerald & Amber Accents
-   DheePath · Enterprise Edition
+   Disheera · Enterprise Edition
    ========================================================================== */
 
 /* ── Container Layout ────────────────────────────────────────── */
@@ -11962,7 +11962,7 @@ body.assessment-page .assessment-layout {
 
 /* --- Module: scroll-dissolve.css --- */
 /* ==========================================================================
-   DheePath — Scroll Dissolve Transformation Section (scroll-dissolve.css)
+   Disheera — Scroll Dissolve Transformation Section (scroll-dissolve.css)
    Clean Modern EduTech Transformation · Indigo & Blue Highlights
    ========================================================================== */
 
@@ -12228,7 +12228,7 @@ body.assessment-page .assessment-layout {
 
 /* --- Module: usability-overrides.css --- */
 /* ==========================================================================
-   DheePath — Floto Usability Heuristics Normalization Overrides
+   Disheera — Floto Usability Heuristics Normalization Overrides
    Resolves all 13 Usability Heuristic Issues (Score 90+)
    ========================================================================== */
 

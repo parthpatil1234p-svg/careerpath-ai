@@ -52,7 +52,7 @@
 │             LAYERED ENCRYPTION & ANTI-CHEATING LOCK ARCHITECTURE                                 │
 ├──────────────────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                                  │
-│   [CLIENT BROWSER]                                              [DHEEPATH BACKEND]          │
+│   [CLIENT BROWSER]                                              [DISHEERA BACKEND]          │
 │                                                                                                  │
 │   A. CLIENT-SIDE ENCRYPTION (AES-GCM-256 + PBKDF2)                                               │
 │   ├── User logs in / enters password                                                             │

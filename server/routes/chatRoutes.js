@@ -1,7 +1,7 @@
 /**
  * routes/chatRoutes.js — AI Career Mentor Chat Endpoints
  * Protected by JWT authentication and dedicated rate limiting.
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const express = require('express');

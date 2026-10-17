@@ -2,7 +2,7 @@
  * register.js · Two-Step Registration & OTP Verification Controller
  * Supports Student Enrollment & Verified Company Recruiter Onboarding
  *
- * DheePath · Enterprise Platform Engine
+ * Disheera · Enterprise Platform Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -221,8 +221,8 @@
     window.addEventListener('load', initSocket, { once: true });
   }
 
-  // Expose public API (DheePathSocket with CareerPathSocket backward compatibility)
-  window.DheePathSocket = window.CareerPathSocket = {
+  // Expose public API (DisheeraSocket with CareerPathSocket backward compatibility)
+  window.DisheeraSocket = window.CareerPathSocket = {
     init: initSocket,
     getSocket: () => socket,
     isConnected: () => isConnected,

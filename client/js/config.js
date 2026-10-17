@@ -1,13 +1,13 @@
 /**
  * config.js — Frontend Global Configuration
  *
- * Provides centralized API endpoint and runtime settings for DheePath.
+ * Provides centralized API endpoint and runtime settings for Disheera.
  * Automatically switches between local development and production Render backend.
  *
  * ⚠️ PRODUCTION DEPLOYMENT NOTE:
  * When deploying the frontend to Vercel and backend to Render:
  * 1. Replace "YOUR-RENDER-SERVICE" below with your actual deployed Render service slug.
- *    Example: "https://dheepath-api.onrender.com/api"
+ *    Example: "https://disheera-api.onrender.com/api"
  * 2. Do not include a trailing slash after "/api".
  */
 
@@ -20,7 +20,7 @@
 
   const isVercel =
     window.location.hostname.endsWith('vercel.app') ||
-    window.location.hostname === 'dheepath.vercel.app';
+    window.location.hostname === 'disheera.vercel.app';
 
   const isCustomDomain =
     window.location.hostname === 'disheera.site' ||
@@ -62,11 +62,11 @@
     GITHUB_CLIENT_ID: 'Ov23liphgi9YF1lbYiUa',
 
     // App Metadata
-    APP_NAME: 'DheePath',
+    APP_NAME: 'Disheera',
     TAGLINE: 'Autonomous Career GPS & Verified Talent Operating System',
-    PLATFORM_NAME: 'DheePath',
-    COMPANY_NAME: 'DheePath Technologies Inc.',
-    TEAM_NAME: 'DheePath Technologies Inc.',
+    PLATFORM_NAME: 'Disheera',
+    COMPANY_NAME: 'Disheera Technologies Inc.',
+    TEAM_NAME: 'Disheera Technologies Inc.',
     EDITION: 'Enterprise Edition 2026',
     VERSION: '2.5.0',
   };

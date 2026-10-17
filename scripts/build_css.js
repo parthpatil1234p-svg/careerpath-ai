@@ -22,7 +22,7 @@ const imports = [
   'usability-overrides.css'
 ];
 
-let bundledParts = ['/* DheePath — Consolidated Production Stylesheet */\n'];
+let bundledParts = ['/* Disheera — Consolidated Production Stylesheet */\n'];
 
 for (const f of imports) {
   const filePath = path.join(cssDir, f);

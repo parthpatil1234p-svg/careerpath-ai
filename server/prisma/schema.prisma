@@ -1,6 +1,6 @@
 // ============================================================
-// DheePath — Supabase (PostgreSQL) Prisma Schema
-// Enterprise Architecture · DheePath Technologies Inc.
+// Disheera — Supabase (PostgreSQL) Prisma Schema
+// Enterprise Architecture · Disheera Technologies Inc.
 // ============================================================
 
 generator client {

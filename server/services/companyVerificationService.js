@@ -8,7 +8,7 @@
  *  4. HTTP/HTTPS Live Probing (verifies company website responds with valid HTTP status)
  *  5. AI Corporate Intelligence (Groq Llama 3.3 / Gemini corporate analysis & legitimacy score)
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const dns = require('dns');
@@ -188,7 +188,7 @@ async function checkWebsiteLive(domainOrUrl, timeoutMs = 4000) {
       const response = await fetch(targetUrl, {
         method: 'GET',
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 DheePath-Verifier/1.0',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Disheera-Verifier/1.0',
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
         },
         signal: controller.signal,

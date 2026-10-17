@@ -1,6 +1,6 @@
 /**
  * passportController.js - Public Skill Passport Endpoints
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const { generatePassportData } = require('../services/passportService');

@@ -1,6 +1,6 @@
 /**
  * projectController.js - Handles student practical project submissions & evaluations
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const User = require('../models/User');

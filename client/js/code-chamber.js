@@ -3,7 +3,7 @@
  * Replaces multiple-choice quizzes with authentic production code debugging challenges.
  * Features client-side execution sandbox, 3-second hard timeout, keystroke cadence, and paste detection.
  *
- * DheePath - Enterprise Skill Verification Engine
+ * Disheera - Enterprise Skill Verification Engine
  */
 
 (function () {

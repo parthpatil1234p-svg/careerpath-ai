@@ -13,7 +13,7 @@
  *  9. Recruiter applicant radar with candidate verified skill badges
  * 10. Hiring stage update (Applied -> Shortlisted -> Interview Scheduled)
  *
- * DheePath · Enterprise Test Suite
+ * Disheera · Enterprise Test Suite
  */
 const path = require('path');
 module.paths.push(path.join(__dirname, '../server/node_modules'));
@@ -175,7 +175,7 @@ async function runEndToEndRecruiterSuite() {
     missingSkills: [],
     readinessTier: testStudent.jobReadiness?.tierLabel || '🔥 JOB READY CERTIFIED',
     resumeUrl: testStudent.resumeUrl || 'https://cloudinary.com/demo_resume.pdf',
-    coverNote: 'Excited about Razorpay fintech scale! I verified all core JavaScript and Node.js skills on DheePath.',
+    coverNote: 'Excited about Razorpay fintech scale! I verified all core JavaScript and Node.js skills on Disheera.',
     status: 'applied'
   });
   job.applicantsCount = 1;

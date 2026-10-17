@@ -9,7 +9,7 @@
  * 5. 3-Strike Anti-Cheating System & Authoritative Session Lockout
  * 6. Refresh & Reload Session Persistence (Anti-Reset Guard)
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 require('dotenv').config({ path: __dirname + '/../.env' });

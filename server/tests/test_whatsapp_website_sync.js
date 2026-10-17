@@ -2,7 +2,7 @@
  * test_whatsapp_website_sync.js — Verification for Website Features Synchronized to WhatsApp Service
  * 
  * Verifies:
- * 1. MENU command -> returns DheePath master commands catalog
+ * 1. MENU command -> returns Disheera master commands catalog
  * 2. JOBS command -> returns real-time tech job radar & apply links to https://disheera.site/jobs.html
  * 3. ROADMAP command -> returns milestone breakdown & link to https://disheera.site/roadmap.html
  * 4. NOTES command -> dispatches dynamic PDF cheatsheet buffer via sendDocument
@@ -12,7 +12,7 @@
  * 8. INTERVIEW command -> returns AI mock interview evaluation guide & link to https://disheera.site/assessment.html
  * 9. SUPPORT command -> returns Grievance Officer details with parthpatil@disheera.site
  * 
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const assert = require('assert');
@@ -24,7 +24,7 @@ const whatsappService = require('../services/whatsappService');
 
 async function runTests() {
   console.log('============================================================');
-  console.log('🧪 DheePath — WhatsApp & Website Features Sync Verification');
+  console.log('🧪 Disheera — WhatsApp & Website Features Sync Verification');
   console.log('============================================================');
 
   const dispatchedMessages = [];
@@ -63,7 +63,7 @@ async function runTests() {
 
     assert.ok(dispatchedMessages.length >= 1, 'Should dispatch menu message');
     const menuMsg = dispatchedMessages[0];
-    assert.strictEqual(menuMsg.meta.context, 'DHEEPATH_COMMANDS_MENU');
+    assert.strictEqual(menuMsg.meta.context, 'DISHEERA_COMMANDS_MENU');
     assert.ok(menuMsg.text.includes('JOBS'), 'Menu must list JOBS');
     assert.ok(menuMsg.text.includes('ROADMAP'), 'Menu must list ROADMAP');
     assert.ok(menuMsg.text.includes('NOTES'), 'Menu must list NOTES');

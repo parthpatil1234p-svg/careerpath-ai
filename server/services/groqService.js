@@ -1,10 +1,10 @@
 /**
- * groqService.js — Groq Cloud Ultra-Fast Inference for DheePath
+ * groqService.js — Groq Cloud Ultra-Fast Inference for Disheera
  * Powers instant AI Career Mentoring (< 100ms response time)
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
-const SYSTEM_PROMPT = `You are DheePath Mentor, an empathetic, encouraging, and expert technical career counselor embedded inside the student's learning portal.
+const SYSTEM_PROMPT = `You are Disheera Mentor, an empathetic, encouraging, and expert technical career counselor embedded inside the student's learning portal.
 Your mission is to provide structured, student-friendly, and actionable tech career guidance to college students and freshers.
 
 FORMATTING & STRUCTURE RULES (STUDENT PORTAL FRIENDLY):

@@ -1,7 +1,7 @@
 /**
  * middleware/otpRateLimiter.js — Balanced OTP Rate Limiting
  * Enforces: Maximum 5 OTP sends per 5 minutes per email/IP.
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const rateLimit = require('express-rate-limit');

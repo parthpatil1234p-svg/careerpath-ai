@@ -1,9 +1,9 @@
 # Lightcast Skills Taxonomy Integration Plan
 
-> **Platform**: DheePath Technologies Inc.  
+> **Platform**: Disheera Technologies Inc.  
 > **External Dataset Source**: [Lightcast Open Skills Taxonomy](https://lightcast.io/taxonomies/skills-taxonomy)  
 > **Status**: ✅ Completed (100% Implemented & Verified)  
-> **Tracking File**: [`dheepath/plans/lightcast_skills_taxonomy_integration_plan.md`](./lightcast_skills_taxonomy_integration_plan.md)  
+> **Tracking File**: [`disheera/plans/lightcast_skills_taxonomy_integration_plan.md`](./lightcast_skills_taxonomy_integration_plan.md)  
 
 ---
 
@@ -22,14 +22,14 @@ Additionally, every skill is classified into one of three **Skill Types**:
 * **Software Skills**: Tool, platform, or software proficiency (e.g., *Git*, *Figma*, *VS Code*, *Postman*, *Jira*).
 * **Common Skills**: Transferable human/soft skills (e.g., *Problem Solving*, *Critical Thinking*, *Agile Methodologies*, *Technical Communication*).
 
-### Why Integrate Lightcast into DheePath?
-Currently, DheePath uses a small, flat list of ~35–94 hardcoded skills. This creates significant bottlenecks:
+### Why Integrate Lightcast into Disheera?
+Currently, Disheera uses a small, flat list of ~35–94 hardcoded skills. This creates significant bottlenecks:
 1. **Limited Vocabulary**: Students cannot find emerging or niche skills (e.g., *LangChain*, *Supabase*, *Next.js 14*, *Vector Databases*).
 2. **Naive String Matching**: Resumes containing "ReactJS" or "React.js" fail to match target job postings requiring "React".
 3. **No Skill Hierarchy**: The platform cannot recommend adjacent or complementary skills (e.g., recognizing that knowing *React* makes learning *Next.js* and *TypeScript* natural next steps).
 4. **Lack of Enterprise Credibility**: Corporate recruiters and universities expect standard industry skill frameworks when evaluating student job readiness.
 
-By integrating Lightcast's taxonomy, DheePath gains **enterprise-grade labor market intelligence** with standard IDs, rich aliases, and hierarchical classification.
+By integrating Lightcast's taxonomy, Disheera gains **enterprise-grade labor market intelligence** with standard IDs, rich aliases, and hierarchical classification.
 
 ---
 

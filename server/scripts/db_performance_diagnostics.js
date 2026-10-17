@@ -3,7 +3,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const { prisma } = require('../config/prisma');
 
 async function runDiagnostics() {
-  console.log('=== DHEEPATH DATABASE PERFORMANCE DIAGNOSTICS ===');
+  console.log('=== DISHEERA DATABASE PERFORMANCE DIAGNOSTICS ===');
   try {
     // 1. Version
     const versionRes = await prisma.$queryRawUnsafe(`SELECT version()`);

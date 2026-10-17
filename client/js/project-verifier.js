@@ -1,6 +1,6 @@
 /**
  * project-verifier.js - Client-Side Controller for Practical Project Verification
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  * Manages project submission modal, animated rubric grading, and credential stamping.
  */
 

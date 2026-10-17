@@ -1,7 +1,7 @@
 /**
  * server/tests/caching_architecture_verification.js
  *
- * Automated verification suite for DheePath Caching Infrastructure:
+ * Automated verification suite for Disheera Caching Infrastructure:
  * 1. CacheManager Core Unit Test: TTL, Stampede Coalescing, Eviction.
  * 2. Privacy & User Isolation Test: Never leak user data across keys, targeted invalidation.
  * 3. Public Catalog Caching & HTTP Headers: Edge CDN headers, 0ms repeat requests.
@@ -54,7 +54,7 @@ function createMockReqRes({ user = null, query = {}, params = {}, body = {} } = 
 
 async function runTests() {
   console.log('============================================================');
-  console.log('🧪 DheePath — Enterprise Caching Architecture Test');
+  console.log('🧪 Disheera — Enterprise Caching Architecture Test');
   console.log('============================================================\n');
 
   let passed = 0;

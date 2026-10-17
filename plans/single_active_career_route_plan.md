@@ -1,13 +1,13 @@
 # Implementation Plan: Single Active Career Route per Account
 
-**DheePath · Team 404 Brain Not Found**  
+**Disheera · Team 404 Brain Not Found**  
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Goal Description
 
-In DheePath, students currently can select any career role on the Recommendations page at any time. When `POST /api/roadmaps/generate` is called, the server silently archives any existing active roadmap and starts a new one, allowing students to hop between incomplete tracks without mastering their chosen field.
+In Disheera, students currently can select any career role on the Recommendations page at any time. When `POST /api/roadmaps/generate` is called, the server silently archives any existing active roadmap and starts a new one, allowing students to hop between incomplete tracks without mastering their chosen field.
 
 This change implements a **strict, server-authoritative "One Active Route at a Time" progression model**:
 1. **Single Focused Route:** An account can have **at most one active career roadmap** in progress at any given moment.

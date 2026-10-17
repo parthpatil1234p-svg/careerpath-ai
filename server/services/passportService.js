@@ -1,7 +1,7 @@
 /**
  * passportService.js - Compiles Canonical Public Skill Passport Data
  * Generates tamper-proof cryptographic ledger hash for recruiter verification.
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  */
 
 const crypto = require('crypto');

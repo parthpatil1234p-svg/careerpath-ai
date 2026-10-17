@@ -1,17 +1,17 @@
-# DheePath Technologies Inc. — Full Platform Technical Specification & API Contracts
+# Disheera Technologies Inc. — Full Platform Technical Specification & API Contracts
 
 > Complete machine-readable curriculum, evaluation models, proctoring specifications, and API contracts for LLMs, answer engines, and autonomous agents.
 
 Official URL: https://api.disheera.site  
 Base API URL: https://api.disheera.site/api  
-Corporate Registry: DheePath Technologies Inc.  
+Corporate Registry: Disheera Technologies Inc.  
 Standards Alignment: ISO/IEEE Skill Assessment Guidelines & SHA-256 Ledger  
 
 ---
 
 ## 1. System Architecture & Dual-Engine Fallback
 
-DheePath is architected for zero-downtime high-reliability delivery across web and mobile browsers:
+Disheera is architected for zero-downtime high-reliability delivery across web and mobile browsers:
 - **Presentation Layer**: High-performance static HTML5/CSS3/ES6+ client hosted on CDN edge nodes.
   - Three.js WebGL: Renders the 3D Career Universe constellation with interactive raycasting.
   - GSAP (GreenSock): Micro-interactions, counter animations, and smooth state morphing.
@@ -194,7 +194,7 @@ Each career is indexed with an importance rating (High, Medium, Low) and require
 
 Upon completing all 4 milestone benchmarks (100% Roadmap Tasks, 100% Proctored Exams Passed, $\ge 85\%$ Resume ATS Score, and $\ge 80\%$ AI Mock Interview Score):
 - A verifiable certificate is generated with a unique identifier: `CP-2026-{UUID}`.
-- An immutable SHA-256 checksum is minted over: `{CertificateID}|{StudentName}|{TargetRole}|{IssuedTimestamp}|DheePath`.
+- An immutable SHA-256 checksum is minted over: `{CertificateID}|{StudentName}|{TargetRole}|{IssuedTimestamp}|Disheera`.
 - Public Verification Endpoint: `GET https://api.disheera.site/api/readiness/verify/{CertificateID}`.
 - Web Verification Portal: `https://api.disheera.site/verify.html?id={CertificateID}`.
 
@@ -214,7 +214,7 @@ Upon completing all 4 milestone benchmarks (100% Roadmap Tasks, 100% Proctored E
 
 ### Health Check
 - `GET /api/health`
-- Response: `{ status: "healthy", success: true, platform: "DheePath Technologies Inc.", version: "2.5.0" }`
+- Response: `{ status: "healthy", success: true, platform: "Disheera Technologies Inc.", version: "2.5.0" }`
 
 ### Authentication
 - `POST /api/auth/register` — Body: `{ name, email, password, role }`

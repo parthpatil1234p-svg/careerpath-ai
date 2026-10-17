@@ -134,7 +134,7 @@ const coverFragmentShader = `
     edge = pow(edge, 0.7) * 2.0;
     edge = clamp(edge, 0.0, 1.0);
     
-    // DheePath Radiant Edge Glow (Electric Cyan to Violet)
+    // Disheera Radiant Edge Glow (Electric Cyan to Violet)
     vec3 edgeColor = mix(vec3(0.0, 0.95, 1.0), vec3(0.55, 0.35, 1.0), vUv.x);
     
     vec3 baseColor = mix(texColor.rgb, vec3(0.0), uGrayscale);
@@ -223,7 +223,7 @@ const coverFragmentShaderReverse = `
     vec2 texelSize = 1.0 / uResolution;
     float edge = sobel(uTexture, uv, texelSize);
     
-    // DheePath Radiant Edge Glow (Electric Cyan to Violet)
+    // Disheera Radiant Edge Glow (Electric Cyan to Violet)
     vec3 edgeColor = mix(vec3(0.0, 0.95, 1.0), vec3(0.55, 0.35, 1.0), vUv.x);
     
     vec3 darkBase = vec3(0.0);

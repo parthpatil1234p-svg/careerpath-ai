@@ -1,7 +1,7 @@
 # Implementation Plan: Dedicated College & University Partner Portal (`colleges.html`)
 
 ## Goal Description
-To support our B2B University Outreach (Voice AI Campaign Option 2), we will create a dedicated, high-converting standalone web portal: **`client/colleges.html`** (**DheePath for Universities & Placement Cells — Campus OS**).
+To support our B2B University Outreach (Voice AI Campaign Option 2), we will create a dedicated, high-converting standalone web portal: **`client/colleges.html`** (**Disheera for Universities & Placement Cells — Campus OS**).
 
 While `index.html` serves students and general visitors, Training & Placement Officers (TPOs), Deans, and Principals need a **dedicated, executive-focused institutional portal** that speaks directly to their goals:
 1. Boosting campus placement percentages & average CTC.
@@ -47,7 +47,7 @@ flowchart TD
 
 ### Component 1: Frontend Institutional Portal (`colleges.html`)
 
-#### [NEW] [`client/colleges.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/colleges.html)
+#### [NEW] [`client/colleges.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/colleges.html)
 A complete, mobile-responsive, production-grade page using our design system (`tokens.css`, `base.css`, `components.css`, `layout.css`, Bootstrap 5, Bootstrap Icons):
 
 1. **Top Notch Navbar**:
@@ -79,7 +79,7 @@ A complete, mobile-responsive, production-grade page using our design system (`t
 
 ### Component 2: Frontend Script (`colleges.js`)
 
-#### [NEW] [`client/js/colleges.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/js/colleges.js)
+#### [NEW] [`client/js/colleges.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/js/colleges.js)
 - Implements interactive department tab switching on the TPO dashboard mockup.
 - Handles lead form validation, animated loading state, and submission to `POST /api/campus/demo-request`.
 - Displays an interactive success modal with direct calendar booking link (Calendly/Google Meet) upon form submission.
@@ -88,19 +88,19 @@ A complete, mobile-responsive, production-grade page using our design system (`t
 
 ### Component 3: Navigation Updates Across Existing Pages
 
-#### [MODIFY] [`client/index.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/index.html)
+#### [MODIFY] [`client/index.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/index.html)
 - Update navbar link from `href="#universities"` to `href="colleges.html"`.
 - Update mobile dropdown link to point to `colleges.html`.
 - Add a prominent CTA in the `#universities` section: `[Explore Dedicated University Portal →]` pointing to `colleges.html`.
 
-#### [MODIFY] [`client/dashboard.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/dashboard.html), [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/roadmap.html), [`client/verify.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/client/verify.html)
+#### [MODIFY] [`client/dashboard.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/dashboard.html), [`client/roadmap.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/roadmap.html), [`client/verify.html`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/client/verify.html)
 - Add "For Colleges / Universities" link in the platform footers.
 
 ---
 
 ### Component 4: Backend Campus Lead Capture API
 
-#### [NEW] [`server/models/CampusLead.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/models/CampusLead.js)
+#### [NEW] [`server/models/CampusLead.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/models/CampusLead.js)
 Mongoose schema to store inbound institutional leads:
 - `collegeName`: String, required
 - `contactPerson`: String, required
@@ -111,10 +111,10 @@ Mongoose schema to store inbound institutional leads:
 - `notes`: String
 - `status`: enum `['new', 'contacted', 'demo_scheduled', 'partnered']`, default `'new'`
 
-#### [NEW] [`server/controllers/campusController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/controllers/campusController.js)
+#### [NEW] [`server/controllers/campusController.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/controllers/campusController.js)
 - `submitCampusDemoRequest`: validates request, creates `CampusLead` document in MongoDB, and returns success response.
 
-#### [NEW] [`server/routes/campusRoutes.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/dheepath/server/routes/campusRoutes.js)
+#### [NEW] [`server/routes/campusRoutes.js`](file:///c:/Users/PARTH/OneDrive/Documents/hackethon/Hack%202%20ignite/CareerPath%20AI/disheera/server/routes/campusRoutes.js)
 - Mount `POST /api/campus/demo-request`.
 - Mount in `server/server.js`: `app.use('/api/campus', require('./routes/campusRoutes'))`.
 
@@ -138,7 +138,7 @@ npm test
 
 ### Manual Verification
 1. Open `http://localhost:5500/colleges.html` (or port 5000) in browser:
-   - Verify executive hero, styling, and typography match the DheePath design system.
+   - Verify executive hero, styling, and typography match the Disheera design system.
    - Click department tabs in the TPO Dashboard Mockup: verify skill telemetry updates dynamically.
    - Fill out the "Request Institutional Demo" form: verify clean validation, submission animation, and confirmation dialog.
 2. In `index.html`: verify clicking "For Colleges / TPO" in the top navbar seamlessly takes you to `colleges.html`.

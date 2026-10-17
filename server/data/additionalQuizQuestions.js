@@ -8,7 +8,7 @@
  * Each question conforms strictly to:
  * - id, skill, difficulty, topic, question, options (4), correctIndex (0-3), explanation
  *
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const ADDITIONAL_QUIZ_QUESTIONS = {

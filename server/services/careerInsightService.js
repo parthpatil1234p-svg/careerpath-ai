@@ -1,7 +1,7 @@
 /**
  * careerInsightService.js — AI-Powered Career Fit Brief & Market Insights
  * Powered by Groq Cloud & Google Gemini
- * DheePath · Enterprise Backend Service
+ * Disheera · Enterprise Backend Service
  */
 
 const { callGroq } = require('./groqService');
@@ -270,7 +270,7 @@ async function generateCareerBrief(recommendation, user) {
     const promptMessages = [
       {
         role: 'system',
-        content: `You are an expert Career & Industry Talent Analyst for DheePath.
+        content: `You are an expert Career & Industry Talent Analyst for Disheera.
 Generate an executive Career Fit & Market Brief for this college student.
 Return strictly a raw, valid JSON object (no markdown code fences, no extra text) with these 5 keys:
 {
@@ -356,7 +356,7 @@ Match Score: ${recommendation.finalScore || 'N/A'}%`
     return {
       ...fallback,
       generatedByAI: false,
-      engine: 'DheePath Telemetry Engine',
+      engine: 'Disheera Telemetry Engine',
     };
   });
 }

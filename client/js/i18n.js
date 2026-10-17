@@ -1,6 +1,6 @@
 /**
  * i18n.js - Multilingual Localization (English, मराठी, हिन्दी) & Web Speech API Voice Reader
- * DheePath Technologies Inc.
+ * Disheera Technologies Inc.
  * Enables zero-latency vernacular career guidance for Maharashtra & Khandesh engineering students.
  */
 

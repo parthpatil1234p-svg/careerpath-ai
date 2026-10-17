@@ -1,16 +1,16 @@
-# DheePath — Complete MongoDB to Supabase (PostgreSQL) Migration Plan
+# Disheera — Complete MongoDB to Supabase (PostgreSQL) Migration Plan
 
-> **Platform**: DheePath Technologies Inc.  
+> **Platform**: Disheera Technologies Inc.  
 > **Target Database**: Supabase PostgreSQL (Project ID: `naefjieafxfdzliphaxb`)  
 > **ORM Engine**: Prisma ORM  
 > **Status**: ✅ Fully Implemented (Plan #37)  
-> **Tracking File**: [`dheepath/plans/supabase_complete_migration_plan.md`](./supabase_complete_migration_plan.md)  
+> **Tracking File**: [`disheera/plans/supabase_complete_migration_plan.md`](./supabase_complete_migration_plan.md)  
 
 ---
 
 ## 1. Executive Summary & Goal Description
 
-DheePath is transitioning its persistent database layer from **MongoDB Atlas (NoSQL)** to **Supabase (PostgreSQL)** using **Prisma ORM**. 
+Disheera is transitioning its persistent database layer from **MongoDB Atlas (NoSQL)** to **Supabase (PostgreSQL)** using **Prisma ORM**. 
 
 ### Why Supabase PostgreSQL?
 1. **Relational Integrity**: Strict foreign key constraints and referential cascades prevent orphan records across roadmaps, tasks, attempts, and job applications.
@@ -133,7 +133,7 @@ erDiagram
 ---
 
 ### Phase 2: Prisma ORM Installation & Schema Definition
-- Install Prisma dependencies in `dheepath/server`:
+- Install Prisma dependencies in `disheera/server`:
   ```powershell
   npm install @prisma/client
   npm install -D prisma

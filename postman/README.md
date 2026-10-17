@@ -1,15 +1,15 @@
-# Postman API Collection — DheePath
+# Postman API Collection — Disheera
 
 > **Hack2Ignite 2026–27 · Team 404 Brain Not Found**  
 > *API Testing & Verification Guide*
 
-This directory contains the official Postman API collection for testing, validating, and demonstrating the DheePath RESTful API.
+This directory contains the official Postman API collection for testing, validating, and demonstrating the Disheera RESTful API.
 
 ---
 
 ## 📁 Collection File
 
-- **File:** [`DheePath.postman_collection.json`](DheePath.postman_collection.json)
+- **File:** [`Disheera.postman_collection.json`](Disheera.postman_collection.json)
 - **Format:** Postman Collection v2.1 (Standard JSON)
 
 ---
@@ -58,6 +58,6 @@ To execute an end-to-end API test cycle, run requests in this sequence:
 
 1. Open Postman.
 2. Click **Import** (top left).
-3. Select or drag-and-drop `postman/DheePath.postman_collection.json`.
+3. Select or drag-and-drop `postman/Disheera.postman_collection.json`.
 4. In the collection settings, ensure the `baseUrl` variable points to your target backend (`http://localhost:5000` or your deployed Render URL).
 5. Run the requests sequentially.

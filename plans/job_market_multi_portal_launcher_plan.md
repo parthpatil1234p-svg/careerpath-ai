@@ -1,13 +1,13 @@
 # Implementation Plan: Multi-Site Job Market Hub & Direct Portal Launchers
 
-**DheePath · Team 404 Brain Not Found**  
+**Disheera · Team 404 Brain Not Found**  
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Goal Description
 
-Enhance the **DheePath Job Market** engine on both the **Dashboard** and **Career Recommendations** pages so that students are not limited to a single aggregator link, but can **instantly open and cross-search multiple major job portals simultaneously** (e.g. *LinkedIn Jobs*, *Naukri.com*, *Indeed India*, *Wellfound / AngelList*, *Internshala*, and *Google for Jobs*).
+Enhance the **Disheera Job Market** engine on both the **Dashboard** and **Career Recommendations** pages so that students are not limited to a single aggregator link, but can **instantly open and cross-search multiple major job portals simultaneously** (e.g. *LinkedIn Jobs*, *Naukri.com*, *Indeed India*, *Wellfound / AngelList*, *Internshala*, and *Google for Jobs*).
 
 ### What this accomplishes:
 1. **Multi-Platform Job Market Launch Hub**:

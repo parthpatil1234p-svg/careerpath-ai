@@ -1,12 +1,12 @@
 # Implementation Plan: Critical Security Blockers & Hardening
-**DheePath · Team 404 Brain Not Found**
+**Disheera · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Goal Description
 
-Resolve 5 critical security blockers identified in the codebase to make DheePath production-hardened, compliant, and attack-resilient:
+Resolve 5 critical security blockers identified in the codebase to make Disheera production-hardened, compliant, and attack-resilient:
 1. **Purge Hardcoded Cloudinary Credentials:** Completely remove hardcoded API key/secrets from `cloudinaryService.js` and enforce strict environment variable loading with credential rotation recommendations.
 2. **Proper OTP Email Verification:** Remove the `isVerified: true` bypass in registration and login. Enforce genuine 6-digit OTP email verification with 10-minute expiry before granting access.
 3. **CORS Hardening:** Replace permissive development wildcards and generic `.endsWith('.vercel.app')` matching with a strict, exact-match whitelist of approved frontend domains.

@@ -7,13 +7,13 @@
 
 ## 1. Goal Description
 
-Currently in `dheepath/client/js/roadmap.js`:
+Currently in `disheera/client/js/roadmap.js`:
 1. When a student clicks **"Enter Focus Video Chamber"** (`.btn-open-video-chamber`), the client inspects `task.resource.url`.
 2. Because dynamic tasks were previously generated with generic search queries (`https://www.youtube.com/results?search_query=...`), the regex parser `extractYouTubeId` fails to parse a valid 11-character video ID, forcing the chamber to fall back to a hardcoded placeholder video (`mU6anWqZJcc`).
 3. If a creator disabled iframe embedding or if a video is a 30-second short, the learning experience breaks.
 
 ### What This Feature Delivers to "Enter Focus Video Chamber":
-1. **Dynamic Real-Video Resolution**: When entering the Focus Video Chamber, DheePath resolves and embeds the exact, authoritative YouTube video for that specific skill (e.g. React, Python, Docker, MongoDB) via YouTube Data API v3.
+1. **Dynamic Real-Video Resolution**: When entering the Focus Video Chamber, Disheera resolves and embeds the exact, authoritative YouTube video for that specific skill (e.g. React, Python, Docker, MongoDB) via YouTube Data API v3.
 2. **In-Chamber Instructor Metadata & Alternative Switcher**:
    - The Focus Video Chamber displays the verified channel name (e.g. *freeCodeCamp.org*, *Programming with Mosh*, *Traversy Media*), thumbnail, and duration badge.
    - Adds an interactive **"🔄 Switch Instructor / Course"** selector inside the chamber modal so students can learn from their preferred educator.

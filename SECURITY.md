@@ -1,8 +1,8 @@
-# Security Policy — DheePath
+# Security Policy — Disheera
 
 > **Hack2Ignite 2026–27 · Team 404 Brain Not Found**
 
-The security and privacy of student data are paramount to DheePath. This document outlines our security policies, vulnerability reporting procedure, and architecture safeguards.
+The security and privacy of student data are paramount to Disheera. This document outlines our security policies, vulnerability reporting procedure, and architecture safeguards.
 
 ---
 
@@ -23,7 +23,7 @@ All local configuration must be managed through `server/.env` (excluded by `.git
 
 ## 📢 Vulnerability Reporting Procedure
 
-If you discover a potential vulnerability or security flaw in DheePath:
+If you discover a potential vulnerability or security flaw in Disheera:
 
 1. **Do not create a public GitHub issue.**
 2. Report the vulnerability privately to **Parth Patil (Team Leader)** or via the private team communication channel.
@@ -52,7 +52,7 @@ For the Hack2Ignite Round 1 MVP, the following baseline security controls are ac
 
 ## 🔍 Independent Penetration Testing (Strix AI Audit — Oct 2026)
 
-An automated offensive security penetration test was executed against DheePath's live deployments (`https://disheera.site` & `https://api.disheera.site`) using the **Strix Multi-Agent Cybersecurity Platform (v1.7.0)** conforming to the **OWASP Web Security Testing Guide (WSTG)**:
+An automated offensive security penetration test was executed against Disheera's live deployments (`https://disheera.site` & `https://api.disheera.site`) using the **Strix Multi-Agent Cybersecurity Platform (v1.7.0)** conforming to the **OWASP Web Security Testing Guide (WSTG)**:
 
 - **Overall Risk Rating:** **Low to Moderate (Production Grade)**
 - **Exploitable Vulnerabilities:** **0 Detected (VERIFIED PASS)**

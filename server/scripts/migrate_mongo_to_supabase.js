@@ -46,7 +46,7 @@ const prisma = new PrismaClient();
 
 async function runMigration() {
   console.log('\n============================================================');
-  console.log('🚀 DheePath — MongoDB Atlas to Supabase (PostgreSQL) Migration');
+  console.log('🚀 Disheera — MongoDB Atlas to Supabase (PostgreSQL) Migration');
   console.log('============================================================\n');
 
   const startTime = Date.now();

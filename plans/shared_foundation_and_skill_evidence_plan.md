@@ -1,12 +1,12 @@
 # Implementation Plan: Shared Foundation, Skill Evidence & Roadmap Verification System
-**DheePath · Team 404 Brain Not Found**
+**Disheera · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
 
 ## Executive Summary
 
-This plan unifies the DheePath Platform into a robust, server-authoritative credentialing and learning engine structured across 5 core pillars:
+This plan unifies the Disheera Platform into a robust, server-authoritative credentialing and learning engine structured across 5 core pillars:
 1. **Shared Foundation (Data Models):** Server-authoritative records for **Attempts**, **Skills**, **Resume**, **Roadmap Progress**, **Completed Paths**, and **Profile Status**.
 2. **Canonical Skill Evidence:** A single server function `getSkillEvidence(userId)` that generates the official evidence ledger for the Dashboard table, interactive skill chips, and digital certificates.
 3. **Resume Rules & Server Unlock:** Enforces that a student must have **at least 1 verified skill** before the server accepts a resume upload, supporting safe in-place replacement and PDF/DOCX validation ($\le 5\text{MB}$).

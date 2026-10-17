@@ -24,7 +24,7 @@ const NavLink = ({
   </a>
 );
 
-// Built-in DheePath Compass Logo
+// Built-in Disheera Compass Logo
 const CompassLogo = () => (
   <div className="flex items-center gap-2">
     <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-cyan-400 to-violet-600 flex items-center justify-center text-slate-950 shadow-[0_0_12px_rgba(0,242,254,0.4)]">

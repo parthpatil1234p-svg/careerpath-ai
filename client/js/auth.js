@@ -398,7 +398,7 @@ const Auth = {
         }
       } else {
         brand.setAttribute('href', 'index.html');
-        brand.setAttribute('title', 'DheePath Home');
+        brand.setAttribute('title', 'Disheera Home');
       }
     });
   },

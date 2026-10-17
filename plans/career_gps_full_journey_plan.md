@@ -1,5 +1,5 @@
 # 10-Step "Career GPS" Complete Journey Implementation Plan
-**DheePath · Team 404 Brain Not Found**
+**Disheera · Team 404 Brain Not Found**
 *Hack2Ignite 2026-27*
 
 ---
@@ -135,7 +135,7 @@ flowchart TD
   - `71–84%`: **Interview Ready**
   - `85–100%`: **🔥 JOB READY CERTIFIED**
 * **Official Career Certificate:**
-  - When $\ge 85\%$, student unlocks the **DheePath Verified Job Ready Certificate**:
+  - When $\ge 85\%$, student unlocks the **Disheera Verified Job Ready Certificate**:
     - High-aesthetic printable/downloadable credential.
     - Displays verified skills list, GitHub profile, mock interview score, and cryptographic credential ID.
     - Shareable directly to LinkedIn.
@@ -170,4 +170,4 @@ flowchart TD
 | **AI Mock Interview** | Starting interview presents 3 tailored questions; submitting speech/text yields technical score, feedback, and model answer. |
 | **Project Repo Linking** | Submitting GitHub repo for a roadmap project verifies repository commits and marks milestone `[✓ Project Verified]`. |
 | **Real Job Matching** | Jobs display accurate Match % (e.g. 90%) with green verified tags and 1-click "Bridge the Gap" button for missing tags. |
-| **Job Ready Certificate** | Reaching $\ge 85\%$ readiness unlocks the official DheePath digital credential with verification ID. |
+| **Job Ready Certificate** | Reaching $\ge 85\%$ readiness unlocks the official Disheera digital credential with verification ID. |

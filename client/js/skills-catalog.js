@@ -1,6 +1,6 @@
 /**
- * skills-catalog.js — Standardized 94-Skill Reference Catalog for DheePath
- * DheePath · Skills Ontology
+ * skills-catalog.js — Standardized 94-Skill Reference Catalog for Disheera
+ * Disheera · Skills Ontology
  */
 window.DEFAULT_94_SKILLS = [
   {

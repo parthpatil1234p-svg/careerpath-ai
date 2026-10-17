@@ -13,11 +13,11 @@ Secondary: Campus recruiters and Training & Placement Officers (TPOs) seeking ve
 
 ## Product Purpose
 
-Democratize AI-driven, evidence-based career guidance. DheePath eliminates career blindness and credential inflation by transforming subjective aspirations into deterministic matching, actionable week-by-week learning milestones, and validated proof-of-work.
+Democratize AI-driven, evidence-based career guidance. Disheera eliminates career blindness and credential inflation by transforming subjective aspirations into deterministic matching, actionable week-by-week learning milestones, and validated proof-of-work.
 
 ## Positioning
 
-Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI chatbots, DheePath uses an explainable deterministic matching algorithm (60% Skill Match + 25% Interest Match + 15% Education Fit) coupled with two-factor skill verification (automated GitHub repository code audit + adaptive reality-check quizzes) and corporate recruiter domain verification.
+Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI chatbots, Disheera uses an explainable deterministic matching algorithm (60% Skill Match + 25% Interest Match + 15% Education Fit) coupled with two-factor skill verification (automated GitHub repository code audit + adaptive reality-check quizzes) and corporate recruiter domain verification.
 
 ## Operating Context
 
@@ -36,7 +36,7 @@ Unlike generic roadmap blogs, broad job portals, or ungrounded generative AI cha
 
 ## Brand Commitments
 
-- **Name**: DheePath
+- **Name**: Disheera
 - **Tagline**: Discover Your Career. Bridge Your Skill Gaps. Build Your Future.
 - **Team**: 404 Brain Not Found (Hack2Ignite 2026–27, Problem Statement ED-02)
 - **Voice**: Authoritative, encouraging, pragmatic, objective, and transparent (no inflated hype; clear gap analysis: 🟢 Matched, 🟡 Upgrade, 🔴 Missing).

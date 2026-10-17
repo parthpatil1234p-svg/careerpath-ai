@@ -38,7 +38,7 @@ const uploadAvatar = async (fileData, userId) => {
     cloudinary.uploader.upload(
       fileData,
       {
-        folder: 'dheepath/avatars',
+        folder: 'disheera/avatars',
         public_id: `avatar_${userId || 'user'}_${Date.now()}`,
         overwrite: true,
         resource_type: 'image',
@@ -140,7 +140,7 @@ const uploadResume = async (fileData, userId) => {
     cloudinary.uploader.upload(
       fileData,
       {
-        folder: 'dheepath/resumes',
+        folder: 'disheera/resumes',
         public_id: `resume_${userId || 'user'}_${Date.now()}`,
         resource_type: 'auto',
         overwrite: true,

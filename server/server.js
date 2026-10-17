@@ -1,5 +1,5 @@
 /**
- * server.js — DheePath Express Entry Point (Step 2)
+ * server.js — Disheera Express Entry Point (Step 2)
  *
  * Startup order:
  *  1. Load .env
@@ -226,12 +226,12 @@ const healthHandler = (req, res) => {
   res.status(200).json({
     status: 'healthy',
     success: true,
-    message: 'DheePath Server is running and healthy ✅',
+    message: 'Disheera Server is running and healthy ✅',
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
     version: '2.5.0',
-    platform: 'DheePath Technologies Inc.',
+    platform: 'Disheera Technologies Inc.',
     databases: ['Supabase PostgreSQL (100% Pure · 0% MongoDB)'],
     databaseEngine: 'Supabase PostgreSQL (Prisma ORM)',
     supabaseConfigured: !!process.env.DATABASE_URL,
@@ -364,10 +364,10 @@ app.use('/api/recommendations', aiLimiter);
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Welcome to DheePath API 🚀',
+    message: 'Welcome to Disheera API 🚀',
     frontendUrl: process.env.CLIENT_URL || 'http://localhost:5500',
     version: '1.0.0',
-    platform: 'DheePath Enterprise',
+    platform: 'Disheera Enterprise',
     endpoints: {
       health: 'GET /api/health',
       version: 'GET /api/version',
@@ -396,7 +396,7 @@ app.get('/', (req, res) => {
 app.get('/api/version', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'DheePath API',
+    message: 'Disheera API',
     data: {
       version: '1.0.0',
       environment: process.env.NODE_ENV || 'development',
@@ -493,7 +493,7 @@ if (!process.env.VERCEL) {
 
   server.listen(PORT, () => {
     console.log('');
-    console.log('🚀 DheePath Unified Server started!');
+    console.log('🚀 Disheera Unified Server started!');
     console.log(`📡 Listening on      : http://localhost:${PORT}`);
     console.log(`⚡ REST APIs         : http://localhost:${PORT}/api`);
     console.log(`🔌 WebSockets        : ws://localhost:${PORT}`);
@@ -507,7 +507,7 @@ if (!process.env.VERCEL) {
     console.log(`📊 Dashboard route   : http://localhost:${PORT}/api/dashboard`);
     console.log(`🌱 Environment       : ${process.env.NODE_ENV || 'development'}`);
     console.log(`📧 Email Service     : Configured via ${process.env.EMAIL_USER || 'Disabled'}`);
-    console.log('👥 Platform          : DheePath Dual-Engine Hybrid Architecture');
+    console.log('👥 Platform          : Disheera Dual-Engine Hybrid Architecture');
     console.log('');
   });
 }
