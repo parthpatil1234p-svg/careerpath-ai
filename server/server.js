@@ -152,6 +152,7 @@ const rawOrigins = [
   process.env.PROD_CLIENT_URL,
   'https://disheera.site',
   'https://www.disheera.site',
+  'https://api.disheera.site',
   'https://careerpath.is-local.org',
   'https://www.careerpath.is-local.org',
   'https://dheepath.vercel.app',

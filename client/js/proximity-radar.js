@@ -206,7 +206,7 @@
     const btnGpsText = document.getElementById('btnGpsText');
 
     try {
-      const baseUrl = window.CONFIG?.API_BASE_URL || (window.location.origin.includes('5500') ? 'http://localhost:5000/api' : 'https://careerpath-ai-bdbt.onrender.com/api');
+      const baseUrl = window.CONFIG?.API_BASE_URL || (window.location.origin.includes('5500') ? 'http://localhost:5000/api' : 'https://api.disheera.site/api');
       const res = await fetch(`${baseUrl}/careers/regional/detect-location`);
       if (res.ok) {
         const json = await res.json();
@@ -302,7 +302,7 @@
       if (window.API?.get) {
         json = await window.API.get(`/careers/regional/companies?${params.toString()}`);
       } else {
-        const baseUrl = window.CONFIG?.API_BASE_URL || (window.location.origin.includes('5500') ? 'http://localhost:5000/api' : 'https://careerpath-ai-bdbt.onrender.com/api');
+        const baseUrl = window.CONFIG?.API_BASE_URL || (window.location.origin.includes('5500') ? 'http://localhost:5000/api' : 'https://api.disheera.site/api');
         const res = await fetch(`${baseUrl}/careers/regional/companies?${params.toString()}`);
         json = await res.json();
       }
