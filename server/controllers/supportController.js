@@ -7,7 +7,7 @@
  * - Information Technology Act 2000
  * 
  * Official Grievance Officer: Parth Patil
- * Email: parthpatil@disheera.site
+ * Email: parthpatil@careerpath.is-local.org
  * WhatsApp: +91 74990 85045 (Chat Only · No Voice Calls)
  * Location: GHRCEM, Jalgaon, Maharashtra, India
  * 
@@ -89,7 +89,7 @@ Aapka support ticket receive ho gaya hai:
 • *Status:* Priority Open · Dispatched to Grievance Desk
 • *Assigned Officer:* Parth Patil (Technical & Grievance Lead)
 • *Official WhatsApp:* +91 74990 85045 (Chat Only)
-• *Grievance Email:* parthpatil@disheera.site
+• *Grievance Email:* parthpatil@careerpath.is-local.org
 • *Statutory SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
 • *Campus Location:* GHRCEM, Jalgaon, Maharashtra, India
 
@@ -116,7 +116,7 @@ Hamari support team aapse jald hi connect karegi!
         category: categoryLabel,
         subject: cleanSubject,
         officer: 'Parth Patil',
-        email: 'parthpatil@disheera.site',
+        email: 'parthpatil@careerpath.is-local.org',
         whatsapp: '+91 74990 85045',
         sla: '24 Hours (DPDP Act 2023 Statutory SLA)'
       }
@@ -138,7 +138,7 @@ const getGrievanceDetails = (req, res) => {
       platform: 'DheePath Technologies Inc.',
       grievanceOfficer: 'Parth Patil',
       designation: 'Grievance Redressal & Technical Lead',
-      email: 'parthpatil@disheera.site',
+      email: 'parthpatil@careerpath.is-local.org',
       whatsapp: '+91 74990 85045',
       whatsappPolicy: 'WhatsApp Chat Only · 24x7 Automated Logging · No Voice Calls',
       institution: 'G.H. Raisoni College of Engineering and Management (GHRCEM)',

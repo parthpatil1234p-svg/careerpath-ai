@@ -974,7 +974,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 • Type *NOTES* ➔ Download Weekly Study Notes PDF
 
 📞 Official WhatsApp Support: +91 74990 85045 (Chat Only)
-✉️ Official Grievance: parthpatil@disheera.site
+✉️ Official Grievance: parthpatil@careerpath.is-local.org
 🌐 Portal: https://disheera.site
 
 🚀 DheePath · Your 24x7 Career GPS`;
@@ -1042,7 +1042,7 @@ Kripya apna sawal ya issue yahan *WhatsApp text message* me bhejiye:
 • *Status:* Priority Open · Dispatched to Grievance Desk
 • *Assigned Officer:* Parth Patil (Technical & Grievance Lead)
 • *Official WhatsApp:* +91 74990 85045 (Chat Only)
-• *Grievance Email:* parthpatil@disheera.site
+• *Grievance Email:* parthpatil@careerpath.is-local.org
 • *Statutory SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
 • *Campus Location:* GHRCEM, Jalgaon, Maharashtra, India
 
@@ -1082,7 +1082,7 @@ Bas reply karein: *TICKET: [Aapka issue]* (e.g. *TICKET: OTP nahi mila*)
 Hum priority review shuru kar denge!
 
 📞 Support WhatsApp: +91 74990 85045
-✉️ Email: parthpatil@disheera.site`;
+✉️ Email: parthpatil@careerpath.is-local.org`;
 
       await whatsappService.sendTextMessage(senderPhone, otpHelpReply, {
         context: 'SUPPORT_OTP_GUIDE',
@@ -1104,7 +1104,7 @@ Namaste ${userContext.name}! Weekly milestone tests strict server proctoring ke 
    • Strike 2: -3 min penalty.
    • Strike 3: Test termination & 24-hour lockout.
 3. *Emergency Reset Request:*
-   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@disheera.site* par bhejiye with subject "Milestone Test Reset".
+   • Agar genuine technical disconnect hua tha, apna registered email *parthpatil@careerpath.is-local.org* par bhejiye with subject "Milestone Test Reset".
 
 💬 *Raise Ticket:* Reply with *TICKET: Milestone reset request*
 📞 WhatsApp: +91 74990 85045`;
@@ -1130,7 +1130,7 @@ Namaste ${userContext.name}! Verified digital certificates se judi jaankari:
    *TICKET: Certificate name correction [Aapka name]*
 
 📞 Grievance Desk WhatsApp: +91 74990 85045
-✉️ parthpatil@disheera.site`;
+✉️ parthpatil@careerpath.is-local.org`;
 
       await whatsappService.sendTextMessage(senderPhone, certHelpReply, {
         context: 'SUPPORT_CERT_GUIDE',
@@ -1149,7 +1149,7 @@ Corporate hiring & talent radar support:
 1. *Recruiter Verification:* Free webmail (Gmail/Yahoo) is blocked; corporate work email is mandatory.
 2. *4-Tier Anti-Fraud Gate:* DNS MX resolution, HTTP live probe, and OTP verification.
 3. *Direct Talent Radar:* Recruiters search students based on real, verified skill badges.
-4. *Campus / TPO Partnerships:* placement@disheera.site
+4. *Campus / TPO Partnerships:* placement@careerpath.is-local.org
 
 💬 *Support Escalation:*
 Reply *TICKET: Recruiter onboarding assistance*
@@ -1224,7 +1224,7 @@ Aapki *1-on-1 Human Academic & Career Counseling* request register ho gayi hai:
    👉 *QUERY: [Aapka doubt ya portfolio link]*
 
 ✉️ *Direct Counselor Email:*
-parthpatil@disheera.site
+parthpatil@careerpath.is-local.org
 
 🌐 *Web Portal:* https://disheera.site
 🚀 *DheePath · 24x7 Verified Talent OS*`;
@@ -1334,7 +1334,7 @@ Aapke phone (${senderPhone}) se associated active requests:
 ${ticketListStr}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@disheera.site*.
+Grievance Officer (Parth Patil) in sabhi requests par actively work kar rahe hain. Urgent escalation ke liye email karein: *parthpatil@careerpath.is-local.org*.
 
 🚀 *DheePath · 24x7 Verified Talent OS*`;
       }
@@ -1358,7 +1358,7 @@ DheePath Support System me aapka swagat hai:
 📞 *OFFICIAL SUPPORT CHANNELS:*
 • *WhatsApp Support:* +91 74990 85045
   _(Chat Only · 24x7 Active Ticket Logging · No Voice Calls)_
-• *Grievance Email:* parthpatil@disheera.site
+• *Grievance Email:* parthpatil@careerpath.is-local.org
 • *Grievance Officer:* Parth Patil
 • *Location:* GHRCEM, Jalgaon, Maharashtra, India
 • *Response SLA:* Within 24 Hours (DPDP Act 2023 & IT Rules 2021)
