@@ -9990,8 +9990,8 @@ body.assessment-page .assessment-layout {
   padding: 0 12px !important;
   display: flex !important;
   justify-content: center !important;
-  max-width: 1440px !important;
-  width: 98% !important;
+  max-width: 1880px !important;
+  width: 96% !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -10004,14 +10004,14 @@ body.assessment-page .assessment-layout {
   justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
-  max-width: 1380px;
+  max-width: 1840px;
   min-height: 56px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: 9999px;
-  padding: 0.35rem 0.85rem 0.35rem 1.15rem;
+  padding: 0.35rem 1.25rem 0.35rem 1.5rem;
   box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.07), 0 4px 12px -2px rgba(15, 23, 42, 0.03), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin: 0 auto;
@@ -13146,16 +13146,57 @@ img {
 /* ==========================================================================
    Hero Grid & Interactive Route Map Hub (Floto Compliant)
    ========================================================================== */
+.landing-page .container,
+.landing-hero .hero-container,
+.landing-hero .container,
+.landing-hero .container-fluid {
+  max-width: 1880px !important;
+  width: 96% !important;
+  padding-left: clamp(1rem, 2.5vw, 3rem) !important;
+  padding-right: clamp(1rem, 2.5vw, 3rem) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .hero-grid {
   display: grid !important;
-  grid-template-columns: 1fr 1.25fr !important;
-  gap: 2.5rem !important;
+  grid-template-columns: 1fr 1.15fr !important;
+  gap: clamp(2rem, 3.5vw, 4.5rem) !important;
   align-items: center !important;
   position: relative !important;
   z-index: 1 !important;
-  max-width: 1400px !important;
+  max-width: 1840px !important;
   width: 100% !important;
   margin: 0 auto !important;
+}
+
+.hero-text-col {
+  width: 100% !important;
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 3.6vw, 3.75rem) !important;
+  line-height: 1.15 !important;
+}
+
+.hero-subtitle {
+  max-width: 100% !important;
+  font-size: var(--fs-md) !important; /* 18px */
+}
+
+.hero-actions {
+  gap: 1.25rem !important;
+}
+
+.hero-stats {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  gap: clamp(1.5rem, 3vw, 3.5rem) !important;
+}
+
+.trust-strip {
+  width: 100% !important;
+  justify-content: space-between !important;
 }
 
 @media (max-width: 1199px) {
@@ -13175,7 +13216,7 @@ img {
 .hero-route-hub {
   position: relative;
   width: 100%;
-  padding: 1.5rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);

@@ -74,8 +74,8 @@ body.assessment-page .assessment-layout {
   padding: 0 12px !important;
   display: flex !important;
   justify-content: center !important;
-  max-width: 1440px !important;
-  width: 98% !important;
+  max-width: 1880px !important;
+  width: 96% !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -88,14 +88,14 @@ body.assessment-page .assessment-layout {
   justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
-  max-width: 1380px;
+  max-width: 1840px;
   min-height: 56px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: 9999px;
-  padding: 0.35rem 0.85rem 0.35rem 1.15rem;
+  padding: 0.35rem 1.25rem 0.35rem 1.5rem;
   box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.07), 0 4px 12px -2px rgba(15, 23, 42, 0.03), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin: 0 auto;

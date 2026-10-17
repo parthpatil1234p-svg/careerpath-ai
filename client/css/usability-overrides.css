@@ -520,16 +520,57 @@ img {
 /* ==========================================================================
    Hero Grid & Interactive Route Map Hub (Floto Compliant)
    ========================================================================== */
+.landing-page .container,
+.landing-hero .hero-container,
+.landing-hero .container,
+.landing-hero .container-fluid {
+  max-width: 1880px !important;
+  width: 96% !important;
+  padding-left: clamp(1rem, 2.5vw, 3rem) !important;
+  padding-right: clamp(1rem, 2.5vw, 3rem) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .hero-grid {
   display: grid !important;
-  grid-template-columns: 1fr 1.25fr !important;
-  gap: 2.5rem !important;
+  grid-template-columns: 1fr 1.15fr !important;
+  gap: clamp(2rem, 3.5vw, 4.5rem) !important;
   align-items: center !important;
   position: relative !important;
   z-index: 1 !important;
-  max-width: 1400px !important;
+  max-width: 1840px !important;
   width: 100% !important;
   margin: 0 auto !important;
+}
+
+.hero-text-col {
+  width: 100% !important;
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 3.6vw, 3.75rem) !important;
+  line-height: 1.15 !important;
+}
+
+.hero-subtitle {
+  max-width: 100% !important;
+  font-size: var(--fs-md) !important; /* 18px */
+}
+
+.hero-actions {
+  gap: 1.25rem !important;
+}
+
+.hero-stats {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  gap: clamp(1.5rem, 3vw, 3.5rem) !important;
+}
+
+.trust-strip {
+  width: 100% !important;
+  justify-content: space-between !important;
 }
 
 @media (max-width: 1199px) {
@@ -549,7 +590,7 @@ img {
 .hero-route-hub {
   position: relative;
   width: 100%;
-  padding: 1.5rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
   background: #FFFFFF;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
