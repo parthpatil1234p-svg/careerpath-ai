@@ -52,7 +52,7 @@ For the Hack2Ignite Round 1 MVP, the following baseline security controls are ac
 
 ## 🔍 Independent Penetration Testing (Strix AI Audit — Oct 2026)
 
-An automated offensive security penetration test was executed against DheePath's live deployments (`https://dheepath-jade.vercel.app` & `https://careerpath-ai-bdbt.onrender.com`) using the **Strix Multi-Agent Cybersecurity Platform (v1.7.0)** conforming to the **OWASP Web Security Testing Guide (WSTG)**:
+An automated offensive security penetration test was executed against DheePath's live deployments (`https://disheera.site` & `https://api.disheera.site`) using the **Strix Multi-Agent Cybersecurity Platform (v1.7.0)** conforming to the **OWASP Web Security Testing Guide (WSTG)**:
 
 - **Overall Risk Rating:** **Low to Moderate (Production Grade)**
 - **Exploitable Vulnerabilities:** **0 Detected (VERIFIED PASS)**

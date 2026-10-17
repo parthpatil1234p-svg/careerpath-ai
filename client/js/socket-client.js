@@ -20,7 +20,7 @@
       return window.CONFIG.SOCKET_URL;
     }
     const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-    return isLocal ? 'http://localhost:5000' : 'https://careerpath-ai-bdbt.onrender.com';
+    return isLocal ? 'http://localhost:5000' : 'https://api.disheera.site';
   }
 
   function getAuthToken() {

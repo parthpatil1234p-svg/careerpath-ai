@@ -59,7 +59,7 @@ const API = {
         // If local backend is offline, gracefully failover to live Render cloud backend
         if (url.includes('localhost:5000') || url.includes('127.0.0.1:5000')) {
           console.warn('⚠️ Local backend at localhost:5000 is offline. Failing over to live Render cloud backend...');
-          const cloudUrl = url.replace(/https?:\/\/(localhost|127\.0\.0\.1):5000\/api/, 'https://careerpath-ai-bdbt.onrender.com/api');
+          const cloudUrl = url.replace(/https?:\/\/(localhost|127\.0\.0\.1):5000\/api/, 'https://api.disheera.site/api');
           response = await fetch(cloudUrl, fetchConfig);
         } else {
           throw fetchErr;

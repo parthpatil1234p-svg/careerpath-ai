@@ -25,7 +25,7 @@
   function getApiBaseUrl() {
     if (window.CONFIG?.API_BASE_URL) return window.CONFIG.API_BASE_URL;
     if (window.location.origin.includes('5500')) return 'http://localhost:5000/api';
-    return 'https://careerpath-ai-bdbt.onrender.com/api';
+    return 'https://api.disheera.site/api';
   }
 
   async function loadTpoAnalytics(college = null, batch = null) {

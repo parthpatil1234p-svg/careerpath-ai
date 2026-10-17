@@ -146,7 +146,7 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
 ].filter(Boolean);
 
-// Optional: specific production domain, e.g. 'https://dheepath.vercel.app'
+// Optional: specific production domain, e.g. 'https://disheera.site'
 if (process.env.PROD_CLIENT_URL) {
   allowedOrigins.push(process.env.PROD_CLIENT_URL);
 }

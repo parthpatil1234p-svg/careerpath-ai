@@ -9,7 +9,7 @@
 
   function getApiBase() {
     return window.API_BASE_URL ||
-      (window.location.origin.includes('5500') ? 'http://localhost:5000' : 'https://careerpath-ai-bdbt.onrender.com');
+      (window.location.origin.includes('5500') ? 'http://localhost:5000' : 'https://api.disheera.site');
   }
 
   function getTargetStudentId() {

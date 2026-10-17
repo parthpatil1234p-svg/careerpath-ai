@@ -1509,7 +1509,7 @@ WHATSAPP FORMATTING GUIDELINES:
 
 Aapka sawal mil gaya hai! DheePath Mentor abhi heavy load handle kar raha hai. 
 Aap apne roadmap ke *Week ${userContext.activeWeek}* tasks aur verified quiz web portal par access kar sakte hain:
-👉 https://careerpath-ai-bdbt.onrender.com/roadmap.html
+👉 https://api.disheera.site/roadmap.html
 
 💡 _Need help? Type *SUPPORT* for official Grievance Desk (+91 74990 85045)_
 🚀 DheePath · 24x7 Autonomous Career GPS`;

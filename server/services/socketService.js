@@ -28,9 +28,9 @@ function isAllowedOrigin(origin) {
     origin === 'https://www.disheera.site' ||
     origin === 'https://api.disheera.site' ||
     origin === 'https://apivercel.disheera.site' ||
-    origin === 'https://careerpath.is-local.org' ||
-    origin === 'https://www.careerpath.is-local.org' ||
-    origin === 'https://dheepath.vercel.app' ||
+    origin === 'https://disheera.site' ||
+    origin === 'https://www.disheera.site' ||
+    origin === 'https://disheera.site' ||
     (process.env.CLIENT_URL && origin === process.env.CLIENT_URL) ||
     (process.env.PROD_CLIENT_URL && origin === process.env.PROD_CLIENT_URL)
   ) {

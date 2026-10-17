@@ -247,9 +247,9 @@ const isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname
 // 2. Render hosts persistent Socket.io & worker services
 const PRODUCTION_REST_API = window.location.origin.includes('vercel.app') 
   ? `${window.location.origin}/api` 
-  : 'https://dheepath.vercel.app/api';
+  : 'https://disheera.site/api';
 
-const PRODUCTION_REALTIME_URL = 'https://careerpath-ai-bdbt.onrender.com';
+const PRODUCTION_REALTIME_URL = 'https://api.disheera.site';
 
 const CONFIG = {
   // Stateless REST API (Vercel in Prod, localhost:5000 in dev)
@@ -267,7 +267,7 @@ const CONFIG = {
 Update Render configuration to identify as the persistent real-time & worker service:
 - Sets `PORT: 10000`.
 - Sets `SERVER_ROLE: realtime-worker`.
-- Sets `CLIENT_URL: https://dheepath.vercel.app`.
+- Sets `CLIENT_URL: https://disheera.site`.
 - Configures health check at `/api/health`.
 
 ---
@@ -294,7 +294,7 @@ Update Render configuration to identify as the persistent real-time & worker ser
 - **Environment Variables Matrix**:
   - `MONGODB_URI`: Shared between Vercel Environment Variables and Render Environment Variables.
   - `JWT_SECRET`: Identical on both Vercel and Render so tokens signed by Vercel REST authentication are valid for Render Socket.io authentication.
-  - `CLIENT_URL`: Configured on Render to allow CORS from `https://dheepath.vercel.app` as well as `http://localhost:5000` and `http://localhost:5500`.
+  - `CLIENT_URL`: Configured on Render to allow CORS from `https://disheera.site` as well as `http://localhost:5000` and `http://localhost:5500`.
 - **CORS Dual-Whitelisting in `server/server.js`**:
   Allow both Vercel production domains, local development origins (`localhost:5000`, `localhost:5500`, `127.0.0.1`), and mobile wrappers cleanly without wildcard security risks.
 

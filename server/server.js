@@ -127,10 +127,10 @@ app.use(helmet({
         "http://127.0.0.1:5500",
         "https://disheera.site",
         "https://www.disheera.site",
-        "https://dheepath.vercel.app",
-        "https://careerpath.is-local.org",
-        "https://www.careerpath.is-local.org",
-        "https://careerpath-ai-bdbt.onrender.com",
+        "https://disheera.site",
+        "https://disheera.site",
+        "https://www.disheera.site",
+        "https://api.disheera.site",
         "https://api.groq.com",
         "https://generativelanguage.googleapis.com",
         "https://analytics.open-domains.com"
@@ -154,9 +154,9 @@ const rawOrigins = [
   'https://www.disheera.site',
   'https://api.disheera.site',
   'https://apivercel.disheera.site',
-  'https://careerpath.is-local.org',
-  'https://www.careerpath.is-local.org',
-  'https://dheepath.vercel.app',
+  'https://disheera.site',
+  'https://www.disheera.site',
+  'https://disheera.site',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
   'http://localhost:5000',
@@ -181,7 +181,7 @@ const corsOptions = {
     if (/^https:\/\/([a-z0-9-]+\.)?disheera\.site$/i.test(normalizedOrigin)) {
       return callback(null, true);
     }
-    // Allow is-local.org subdomains (e.g. careerpath.is-local.org, www.careerpath.is-local.org)
+    // Allow is-local.org subdomains (e.g. disheera.site, www.disheera.site)
     if (/^https:\/\/([a-z0-9-]+\.)?is-local\.org$/i.test(normalizedOrigin)) {
       return callback(null, true);
     }

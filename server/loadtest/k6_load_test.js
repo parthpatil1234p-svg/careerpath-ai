@@ -38,7 +38,7 @@ const DEMO_PASSWORD = __ENV.DEMO_PASSWORD || '123456';
 const IS_QUICK = __ENV.QUICK === 'true';
 
 // SAFETY GUARD: Prevent accidental execution against live production
-if (BASE_URL.includes('careerpath-ai-bdbt.onrender.com') || BASE_URL.includes('careerpath.ai')) {
+if (BASE_URL.includes('api.disheera.site') || BASE_URL.includes('careerpath.ai')) {
   throw new Error(
     `[SECURITY HALT] Load test target '${BASE_URL}' appears to be PRODUCTION! ` +
     `Per testing policy, k6 load tests may ONLY target local (localhost / 127.0.0.1) or staging environments.`

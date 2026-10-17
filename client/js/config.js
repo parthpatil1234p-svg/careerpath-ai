@@ -26,8 +26,8 @@
     window.location.hostname === 'disheera.site' ||
     window.location.hostname === 'www.disheera.site' ||
     window.location.hostname.endsWith('disheera.site') ||
-    window.location.hostname === 'careerpath.is-local.org' ||
-    window.location.hostname === 'www.careerpath.is-local.org' ||
+    window.location.hostname === 'disheera.site' ||
+    window.location.hostname === 'www.disheera.site' ||
     window.location.hostname.endsWith('.is-local.org');
 
   // Local development backend URL
