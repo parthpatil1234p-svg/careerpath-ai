@@ -200,6 +200,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
+// ── Vercel Serverless Path Normalizer (Dual-Engine Architecture) ──
+app.use((req, res, next) => {
+  const forwardedUri = req.headers['x-forwarded-uri'] || req.headers['x-matched-path'];
+  if (forwardedUri && (req.url === '/server.js' || req.url.startsWith('/server.js?'))) {
+    req.url = forwardedUri;
+  } else if (req.url.startsWith('/server.js')) {
+    req.url = req.url.replace('/server.js', '') || '/';
+  }
+  next();
+});
+
 // ── HTTP Request Logger: only in development ──────────────────
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
