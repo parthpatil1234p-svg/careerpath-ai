@@ -429,7 +429,9 @@ const getMyResume = async (req, res, next) => {
       if (activeRoadmap?.career?.title) {
         targetRole = activeRoadmap.career.title;
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('[userController] Could not fetch active roadmap target role:', e.message);
+    }
 
     let resumeData = null;
     if (resume) {
@@ -704,7 +706,9 @@ const viewResume = async (req, res, next) => {
       const user = await User.findById(req.user._id);
       const previewUrl = getResumePreviewUrl(user?.resumeUrl);
       if (previewUrl) return res.redirect(previewUrl);
-    } catch (e) {}
+    } catch (e) {
+      console.warn('[userController] Resume preview redirect fallback error:', e.message);
+    }
     return res.status(500).send('Error retrieving resume document.');
   }
 };
@@ -873,7 +877,9 @@ const sendLinkPhoneOtp = async (req, res, next) => {
 
     await user.save();
 
-    console.log(`\n📱 [LINK PHONE WHATSAPP OTP] Sent OTP: ${otp} to ${formattedPhone} for user: ${user.name} (${user.email})\n`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`\n📱 [LINK PHONE WHATSAPP OTP] Sent OTP: ${otp} to ${formattedPhone} for user: ${user.name} (${user.email})\n`);
+    }
 
     let whatsappSent = false;
     try {

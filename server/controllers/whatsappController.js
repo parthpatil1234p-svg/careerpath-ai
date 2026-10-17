@@ -527,7 +527,9 @@ Duplicate replies se bachne ke liye ye message send nahi kiya gaya. Agar fir bhi
         if (studentUser && studentUser.name) {
           studentName = studentUser.name;
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn('[whatsappController] Could not resolve student name by phone:', e.message);
+      }
     }
 
     const formattedTarget = whatsappService.formatPhoneNumber(targetPhone);

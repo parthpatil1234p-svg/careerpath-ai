@@ -197,7 +197,9 @@ const registerRecruiter = async (req, res, next) => {
       await company.save();
     }
 
-    console.log(`\n🔑 [RECRUITER REGISTRATION OTP] 6-digit corporate code for ${normalizedEmail}: ${otpCode}\n`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`\n🔑 [RECRUITER REGISTRATION OTP] 6-digit corporate code for ${normalizedEmail}: ${otpCode}\n`);
+    }
 
     let mailSent = false;
     try {

@@ -181,7 +181,9 @@ const registerUser = async (req, res, next) => {
         };
         await existingUser.save();
 
-        console.log(`\n🔑 [REGISTRATION UNVERIFIED DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`\n🔑 [REGISTRATION UNVERIFIED DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+        }
         let mailSent = false;
         try {
           const mailRes = await sendOtpEmail(normalizedEmail, existingUser.name, emailOtp);
@@ -238,7 +240,9 @@ const registerUser = async (req, res, next) => {
 
     await user.save();
 
-    console.log(`\n🔑 [NEW REGISTRATION DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`\n🔑 [NEW REGISTRATION DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+    }
     let mailSent = false;
     try {
       const mailRes = await sendOtpEmail(normalizedEmail, user.name, emailOtp);
@@ -477,7 +481,9 @@ const resendOtp = async (req, res, next) => {
     };
     await user.save();
 
-    console.log(`\n🔄 [OTP RESENT DUAL] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`\n🔄 [OTP RESENT DUAL] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+    }
     let mailSent = false;
     try {
       const mailRes = await sendOtpEmail(normalizedEmail, user.name, emailOtp);
@@ -741,7 +747,9 @@ const loginUser = async (req, res, next) => {
         };
         await user.save();
 
-        console.log(`\n🔑 [LOGIN UNVERIFIED DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`\n🔑 [LOGIN UNVERIFIED DUAL OTP] Email OTP: ${emailOtp} | WhatsApp OTP: ${whatsappOtp} for ${normalizedEmail}\n`);
+        }
         let mailSent = false;
         try {
           const mailRes = await sendOtpEmail(normalizedEmail, user.name, emailOtp);
